@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="h-full bg-gray-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Análise Operacional (CAF)</title>
+    
+    <!-- 1. Bibliotecas de Terceiros (CDNs) -->
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- PapaParse (Leitor de CSV) -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    
+    <!-- Chart.js (Gráficos) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- jsPDF (Exportação PDF) -->
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+
+    <!-- 2. Arquivos Locais do Projeto -->
+
+    <!-- Link para o arquivo de CSS customizado -->
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body class="h-full">
+
+        <header class="text-center mb-8">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-blue-700 cursor-pointer">Dashboard de Análise Operacional</h1>
+        </div>
+        </header>
+
+
+    <!-- Tela de Upload (RF01, RF-A01) -->
+    <div id="uploadScreen" class="fixed inset-0 bg-gray-100 bg-opacity-0 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl p-8 max-w-lg w-full text-center">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Dashboard de Análise Operacional</h2>
+            <p class="text-gray-600 mb-6">Para começar, carregue um ou mais arquivos CSV (Ex: "Análises outubro.csv").</p>
+            <div id="dropzone" class="border-2 border-dashed border-gray-400 rounded-lg p-12 cursor-pointer bg-gray-50 hover:bg-gray-100">
+                <input type="file" id="fileInput" accept=".csv" multiple class="hidden">
+                <label for="fileInput" class="text-gray-700">
+                    Arraste os arquivos para cá ou <strong>clique para selecionar</strong>.
+                </label>
+            </div>
+            <p id="uploadStatus" class="mt-4 text-sm text-gray-500"></p>
+        </div>
+    </div>
+
+    <!-- Tela Principal do Dashboard (Oculta por padrão) -->
+    <div id="dashboardScreen" class="hidden min-h-full">
+        <div class="container mx-auto p-4 md:p-8">
+            
+            <!-- Cabeçalho -->
+            <header class="mb-6 flex flex-col md:flex-row justify-between items-center">
+                <h1 class="text-3xl font-bold text-gray-900">Dashboard de Performance Operacional</h1>
+                <div class="flex gap-2 mt-4 md:mt-0">
+                    <button id="reloadButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow">
+                        Carregar Novo(s)
+                    </button>
+                    <!-- RF-A02: Botão de Exportar PDF -->
+                    <button id="exportPdfButton" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow">
+                        Exportar Relatório PDF
+                    </button>
+                </div>
+            </header>
+
+            <!-- Seção de Filtros (RF07) -->
+            <section id="filters" class="bg-white p-4 rounded-lg shadow-md mb-6">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">Filtros Globais</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <div>
+                        <label for="filterPeriodStart" class="block text-sm font-medium text-gray-700">Data Início (Análise)</label>
+                        <input type="date" id="filterPeriodStart" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="filterPeriodEnd" class="block text-sm font-medium text-gray-700">Data Fim (Análise)</label>
+                        <input type="date" id="filterPeriodEnd" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="filterAnalyst" class="block text-sm font-medium text-gray-700">Analista</label>
+                        <select id="filterAnalyst" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                            <option value="all">Todos</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="filterSituation" class="block text-sm font-medium text-gray-700">Situação</label>
+                        <select id="filterSituation" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                            <option value="all">Todas</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="filterUf" class="block text-sm font-medium text-gray-700">UF</label>
+                        <select id="filterUf" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                            <option value="all">Todas</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção 1: KPIs Gerais (RF02) -->
+            <section id="kpis" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+                <!-- Os KPIs serão inseridos aqui via JS -->
+            </section>
+
+            <!-- Seção 2: Desempenho da Equipe (RF03) -->
+            <section id="team-performance" class="mb-6">
+                <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                    <h2 class="text-xl font-semibold text-gray-800 title-with-tooltip">
+                        Performance de Analistas
+                        <div class="tooltip-container">
+                            <span class="tooltip-icon">i</span>
+                            <span class="tooltip-text">
+                                <strong>O que mede:</strong> Performance e consistência de cada analista.<br><br>
+                                <strong>Como interpretar:</strong> Use o <strong>Desvio Padrão</strong> para ver a consistência. Um valor baixo significa um fluxo de trabalho estável. Um valor alto sugere picos de trabalho e dias ociosos.
+                            </span>
+                        </div>
+                    </h2>
+                    <div class="overflow-x-auto mt-4">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Mês</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Média Diária</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Desvio Padrão</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Participação</th>
+                                </tr>
+                            </thead>
+                            <tbody id="teamTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Linhas da tabela inseridas via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-lg font-semibold text-gray-800 title-with-tooltip">
+                            Carga de Trabalho (Volume)
+                            <div class="tooltip-container">
+                                <span class="tooltip-icon">i</span>
+                                <span class="tooltip-text"><strong>O que mede:</strong> Total de solicitações analisadas por cada membro da equipe.</span>
+                            </div>
+                        </h3>
+                        <canvas id="chartWorkload"></canvas>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-lg font-semibold text-gray-800 title-with-tooltip">
+                            Qualidade por Analista (Situação)
+                            <div class="tooltip-container">
+                                <span class="tooltip-icon">i</span>
+                                <span class="tooltip-text"><strong>O que mede:</strong> Volume de análises por analista, segmentado pelo resultado (Deferida, Indeferida, etc.).</span>
+                            </div>
+                        </h3>
+                        <canvas id="chartQuality"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção 3: Eficiência Operacional (RF04) -->
+            <section id="efficiency" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold text-gray-800 title-with-tooltip">
+                        Volume de Entrada por Dia
+                        <div class="tooltip-container">
+                            <span class="tooltip-icon">i</span>
+                            <span class="tooltip-text"><strong>O que mede:</strong> Quantidade de solicitações recebidas por dia (baseado na Data Solicitacao).</span>
+                        </div>
+                    </h3>
+                    <canvas id="chartEntryVolume"></canvas>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold text-gray-800 title-with-tooltip">
+                        Distribuição do Tempo de Análise
+                        <div class="tooltip-container">
+                            <span class="tooltip-icon">i</span>
+                            <span class="tooltip-text"><strong>O que mede:</strong> Histograma do tempo (em dias) entre a solicitação e a análise. Ajuda a ver gargalos.</span>
+                        </div>
+                    </h3>
+                    <canvas id="chartAnalysisTime"></canvas>
+                </div>
+            </section>
+
+            <!-- Seção 4: Perfil das Solicitações (RF05) -->
+            <section id="profile" class="mb-6">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">Perfil das Solicitações</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-lg font-semibold text-gray-800">por Tipo</h3>
+                        <canvas id="chartReqType"></canvas>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-lg font-semibold text-gray-800">por Categoria</h3>
+                        <canvas id="chartCategory"></canvas>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-lg font-semibold text-gray-800">por Tipo Fornecedor</h3>
+                        <canvas id="chartSupplierType"></canvas>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-lg font-semibold text-gray-800">por Situação Simpas</h3>
+                        <canvas id="chartSimpas"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção 5: Análise Geográfica (RF06) -->
+            <section id="geo" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold text-gray-800">Top 10 Cidades</h3>
+                    <canvas id="chartTopCities"></canvas>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold text-gray-800">Top 10 Estados (UF)</h3>
+                    <canvas id="chartTopUf"></canvas>
+                </div>
+            </section>
+            
+            <!-- Seção 6: Tendência Mensal (RF-A03) -->
+            <section id="trend" class="bg-white p-6 rounded-lg shadow-md mb-6 hidden">
+                <h2 class="text-xl font-semibold text-gray-800 title-with-tooltip">
+                    Tendência Mensal
+                    <div class="tooltip-container">
+                        <span class="tooltip-icon">i</span>
+                        <span class="tooltip-text">
+                            <strong>O que mede:</strong> Volume de solicitações e tempo médio de análise ao longo dos meses.<br><br>
+                            <strong>Como interpretar:</strong> Permite identificar a sazonalidade da demanda e se a eficiência da equipe está melhorando (tempo caindo) ou piorando ao longo do tempo.
+                        </span>
+                    </div>
+                </h2>
+                <canvas id="chartMonthlyTrend" height="100"></canvas>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- 3. Arquivo de Script Local -->
+    <!-- Deve ser carregado no final, após o corpo da página ser definido -->
+    <script src="script.js"></script>
+
+</body>
+</html>

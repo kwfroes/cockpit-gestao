@@ -1,0 +1,63 @@
+/* Estilização para a tela de carregamento */
+#uploadScreen {
+    transition: opacity 0.5s ease-out;
+}
+
+/* Estilização para os Tooltips de Ajuda (RNF01) */
+.tooltip-container {
+    position: relative;
+    display: inline-block;
+    cursor: help;
+}
+.tooltip-icon {
+    font-size: 0.8rem;
+    color: #6b7280;
+    border: 1px solid #9ca3af;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+}
+.tooltip-text {
+    visibility: hidden;
+    width: 300px;
+    background-color: #374151;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 10px;
+    position: absolute;
+    z-index: 50;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -150px; /* Metade da largura */
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    font-weight: normal;
+}
+.tooltip-text::after { /* Flecha */
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #374151 transparent transparent transparent;
+}
+.tooltip-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+/* Ajuste para ícone no título */
+.title-with-tooltip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
