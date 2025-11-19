@@ -1,0 +1,55 @@
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Estilo para a barra de rolagem */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+#familyResults, #familyAutocompleteWrapper {
+    position: relative;
+}
+
+#familyResults div {
+    padding: 8px;
+    cursor: pointer;
+    background-color: white;
+}
+
+#familyResults div:hover {
+    background-color: #f0f0f0;
+}
+
+#familyResults {
+    border: 1px solid #ddd;
+    border-top: none;
+    max-height: 150px;
+    overflow-y: auto;
+    position: absolute;
+    width: 100%;
+    background: white;
+    z-index: 10;
+}
+
+/* NOVAS CLASSES PARA O HISTÓRICO EXPANSÍVEL */
+.history-message-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background-color: #f9fafb; /* bg-gray-50 */
+    border-radius: 0.25rem;
+}

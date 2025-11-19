@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cockpit Gestão - 2025</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="theme.css">
+
+  <style>
+    :root {
+      --primary: #004A80;
+      --sidebar: #0f172a; /* Azul muito escuro (Slate 900) */
+    }
+    
+    /* CORREÇÃO: Define a classe que estava faltando */
+    .bg-sidebar { 
+      background-color: var(--sidebar); 
+    }
+
+    /* Estilo do link ativo */
+    .active-link { 
+      background-color: #1e293b; /* Slate 800 */
+      border-left: 4px solid var(--primary);
+      color: #ffffff !important; /* Força branco no ativo */
+    }
+
+    /* Ajuste do iframe */
+    iframe { border: none; width: 100%; height: calc(100vh - 64px); background: #f3f4f6; }
+  </style>
+</head>
+<body class="h-full bg-gray-100 overflow-hidden">
+
+  <header class="fixed top-0 left-0 right-0 h-16 bg-white shadow-md z-50 flex items-center justify-between px-6">
+    <div class="flex items-center gap-2">
+       <h1 class="text-2xl font-bold text-[var(--primary)]">Cockpit Gestão</h1>
+    </div>
+    <div class="text-sm text-gray-600">Kevin Fróes • 2025</div>
+  </header>
+
+  <aside class="fixed left-0 top-16 bottom-0 w-64 bg-sidebar overflow-y-auto z-40 shadow-xl">
+    <nav class="mt-6 flex flex-col gap-1">
+      
+      <a href="#dashboard" class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400 active-link">
+        <span>📊</span> Dashboard Operacional
+      </a>
+
+      <a href="#gerador" class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400">
+        <span>✉️</span> Gerador de Mensagens
+      </a>
+
+      <a href="#contratos" class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400">
+        <span>📄</span> Contratos Públicos
+      </a>
+
+    </nav>
+  </aside>
+
+  <main class="ml-64 pt-16 h-full">
+    <iframe id="appFrame" src="apps/gerador/index.html" allowfullscreen></iframe>
+  </main>
+
+  <script>
+    // Lógica de navegação
+    const links = document.querySelectorAll('aside a');
+    const frame = document.getElementById('appFrame');
+    
+    const routes = {
+      '#dashboard': 'apps/dashboard/index.html',
+      '#gerador':   'apps/gerador/index.html',
+      '#contratos': 'apps/contratos/index.html'
+    };
+
+    function updateActiveLink(hash) {
+        links.forEach(link => {
+            link.classList.remove('active-link');
+            link.classList.add('text-gray-400'); // Reseta para cinza
+            
+            if(link.getAttribute('href') === hash) {
+                link.classList.add('active-link');
+                link.classList.remove('text-gray-400'); // Remove cinza no ativo
+            }
+        });
+    }
+
+    links.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const hash = link.getAttribute('href');
+        history.pushState(null, null, hash);
+        frame.src = routes[hash] || routes['#gerador'];
+        updateActiveLink(hash);
+      });
+    });
+
+    window.addEventListener('popstate', () => {
+      const hash = window.location.hash || '#gerador';
+      frame.src = routes[hash];
+      updateActiveLink(hash);
+    });
+
+    // Inicialização
+    const initialHash = window.location.hash || '#gerador';
+    frame.src = routes[initialHash] || routes['#gerador'];
+    updateActiveLink(initialHash);
+  </script>
+</body>
+</html>

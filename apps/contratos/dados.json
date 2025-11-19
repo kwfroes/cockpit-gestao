@@ -1,0 +1,1498 @@
+{
+  "contratos": [
+    {
+      "unidade": {
+        "nome": "Secretaria da Administração do Estado da Bahia",
+        "cnpj": "13.323.274/0001-63",
+        "endereco": "2ª Avenida, 200, CAB, Salvador - Bahia",
+        "rep": "Rodrigo Pimentel de Souza Lima"
+      },
+      "empresa": {
+        "nome": "Serviço Federal de Processamento de Dados",
+        "cnpj": "33.683.111/0001-07",
+        "endereco": "SGAN, Quadra 601, Módulo V, Brasília/DF, CEP 70836-900",
+        "rep": "Carlos Henrique Rodrigues Alexandria"
+      },
+      "processoSei": "009.0242.2025.0024099-97",
+      "objeto": "Serviços técnicos especializados  de tecnologia da informação, denominado “INFOCONV”",
+      "valorTotal": 89491.04,
+      "estimativaMensal": 7457.59,
+      "tempoContrato": "12 meses",
+      "dataAssinatura": "2025-09-19",
+      "dataInicio": "2025-09-22",
+      "dataFim": "2026-09-22",
+      "id": "contrato_1762960911454",
+      "pagamentos": [
+        {
+          "id": "pag_1762961004069",
+          "data": "2025-11-12",
+          "valorPago": 2200.48,
+          "notaFiscal": "762781",
+          "processoPagamentoSei": "009.0242.2025.0056473-50",
+          "detalhes": [
+            {
+              "id": "item_1762961729265",
+              "descricao": "Emissão CND",
+              "quantidade": 1275,
+              "valorUnitario": 0.593
+            },
+            {
+              "id": "item_1762961743209",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 574.864
+            },
+            {
+              "id": "item_1762961755305",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 2565,
+              "valorUnitario": 0.339
+            }
+          ],
+          "periodoDe": "2025-09-21",
+          "periodoAte": "2025-10-20",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=136487334"
+        }
+      ],
+      "numeroContrato": "055/2025",
+      "tipoContrato": "Inexigibilidade",
+      "linkSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=123330907"
+    },
+    {
+      "unidade": {
+        "nome": "Secretaria da Administração do Estado da Bahia",
+        "cnpj": "13.323.274/0001-63",
+        "endereco": "2ª Avenida, 200, CAB, Salvador - Bahia",
+        "rep": "Rodrigo Pimentel de Souza Lima"
+      },
+      "empresa": {
+        "nome": "SERVIÇO FEDERAL DE PROCESSAMENTO DE DADOS",
+        "cnpj": "33.683.111/0001-07",
+        "endereco": "SGAN, Quadra 601, Módulo V, Brasília/DF, CEP 70836-900",
+        "rep": "CARLOS HENRIQUE RODRIGUES ALEXANDRIA"
+      },
+      "processoSei": "009.0242.2025.0024099-97",
+      "numeroContrato": "055/2025",
+      "tipoContrato": "Inexigibilidade",
+      "objeto": "Serviços técnicos especializados  de tecnologia da informação, denominado “INFOCONV”",
+      "estimativaMensal": 7457.59,
+      "tempoContrato": "12 meses",
+      "dataAssinatura": "2025-09-19",
+      "dataInicio": "2025-09-22",
+      "valorTotal": 0,
+      "dataFim": "2026-09-22",
+      "aditivo": {
+        "tipo": "GestorFiscal",
+        "numero": "1º",
+        "processoSei": "009.0242.2025.0058052-81",
+        "linkSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=137130333",
+        "justificativa": "Inclusão de Gestor e Fiscal",
+        "dataAssinatura": "2025-12-03",
+        "gestor": {
+          "nome": "Tatiana Ferreira Almeida de Amorim",
+          "matricula": "09.531.063-6"
+        },
+        "fiscais": [
+          {
+            "nome": "Cristiane Souza Nascimento",
+            "matricula": "92.123.30-6"
+          },
+          {
+            "nome": "Kevin Wilber Silva Fróes",
+            "matricula": "92.122.93-3"
+          }
+        ]
+      },
+      "id": "contrato_1762970245777",
+      "pagamentos": [],
+      "parentId": "contrato_1762960911454",
+      "linkSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=123330907"
+    },
+    {
+      "unidade": {
+        "nome": "Secretaria da Administração do Estado da Bahia",
+        "cnpj": "13.323.274/0001-63",
+        "endereco": "2ª Avenida, 200, CAB, Salvador - Bahia",
+        "rep": "Edelvino da Silva Góes Filho"
+      },
+      "empresa": {
+        "nome": "Serviço Federal de Processamento de Dados",
+        "cnpj": "33.683.111/0001-07",
+        "endereco": "SGAN, Quadra 601, Módulo V, Brasília/DF, CEP 70836-900",
+        "rep": "Jacimar Gomes Ferreira"
+      },
+      "processoSei": "009.0242.2022.0003951-12",
+      "numeroContrato": "025/2021",
+      "tipoContrato": "Inexigibilidade",
+      "objeto": "Serviço especializado de tecnologia da informação, denominado “INFOCONV”",
+      "estimativaMensal": 2030.68,
+      "tempoContrato": "12 meses",
+      "dataAssinatura": "2021-06-21",
+      "dataInicio": "2021-06-21",
+      "linkSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=45625305",
+      "valorTotal": 24368.16,
+      "dataFim": "2022-06-20",
+      "id": "contrato_1763149379825",
+      "pagamentos": [
+        {
+          "data": "2021-11-25",
+          "valorPago": 576.84,
+          "notaFiscal": "249836",
+          "processoPagamentoSei": "009.0242.2021.0030635-60",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=37736566",
+          "periodoDe": "2021-06-21",
+          "periodoAte": "2021-07-20",
+          "id": "pag_1763150767291",
+          "detalhes": [
+            {
+              "id": "item_1763151893243",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            }
+          ]
+        },
+        {
+          "data": "2021-09-24",
+          "valorPago": 576.84,
+          "notaFiscal": "259006",
+          "processoPagamentoSei": "009.0242.2021.0035670-11",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=39154871",
+          "periodoDe": "2021-07-21",
+          "periodoAte": "2021-08-20",
+          "id": "pag_1763150862580",
+          "detalhes": [
+            {
+              "id": "item_1763151875130",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            }
+          ]
+        },
+        {
+          "data": "2021-10-15",
+          "valorPago": 576.84,
+          "notaFiscal": "268224",
+          "processoPagamentoSei": "009.0242.2021.0039418-26",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=40282924",
+          "periodoDe": "2021-08-21",
+          "periodoAte": "2021-09-20",
+          "id": "pag_1763150928574",
+          "detalhes": [
+            {
+              "id": "item_1763151885307",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            }
+          ]
+        },
+        {
+          "data": "2021-12-20",
+          "valorPago": 1010,
+          "notaFiscal": "276278",
+          "processoPagamentoSei": "009.0242.2021.0045859-85",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=42432446",
+          "periodoDe": "2021-09-21",
+          "periodoAte": "2021-10-20",
+          "id": "pag_1763151345561",
+          "detalhes": [
+            {
+              "id": "item_1763151519108",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763151531852",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 1274,
+              "valorUnitario": 0.34
+            }
+          ]
+        },
+        {
+          "data": "2021-12-14",
+          "valorPago": 576.84,
+          "notaFiscal": "285072",
+          "processoPagamentoSei": "009.0242.2021.0048328-26",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=43219416",
+          "periodoDe": "2021-10-21",
+          "periodoAte": "2021-11-20",
+          "id": "pag_1763151406546",
+          "detalhes": [
+            {
+              "id": "item_1763151900675",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            }
+          ]
+        },
+        {
+          "data": "2022-01-26",
+          "valorPago": 576.84,
+          "notaFiscal": "294250",
+          "processoPagamentoSei": "009.0242.2022.0000592-79",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=44706833",
+          "periodoDe": "2021-11-21",
+          "periodoAte": "2021-12-20",
+          "id": "pag_1763151733040",
+          "detalhes": [
+            {
+              "id": "item_1763151907772",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            }
+          ]
+        },
+        {
+          "data": "2022-02-14",
+          "valorPago": 576.84,
+          "notaFiscal": "302604",
+          "processoPagamentoSei": "009.0242.2022.0004551-15",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=45788413",
+          "periodoDe": "2021-12-21",
+          "periodoAte": "2022-01-20",
+          "id": "pag_1763152541668",
+          "detalhes": [
+            {
+              "id": "item_1763403490769",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            }
+          ]
+        },
+        {
+          "data": "2022-03-04",
+          "valorPago": 576.84,
+          "notaFiscal": "311607",
+          "processoPagamentoSei": "009.0242.2022.0008590-46",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=47171649",
+          "periodoDe": "2022-01-21",
+          "periodoAte": "2022-02-20",
+          "id": "pag_1763152624701",
+          "detalhes": [
+            {
+              "id": "item_1763403617052",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            }
+          ]
+        },
+        {
+          "data": "2022-04-07",
+          "valorPago": 576.84,
+          "notaFiscal": "330059",
+          "processoPagamentoSei": "009.0242.2022.0013410-75",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=48794380",
+          "periodoDe": "2022-02-21",
+          "periodoAte": "2022-03-20",
+          "id": "pag_1763152682959",
+          "detalhes": [
+            {
+              "id": "item_1763403625773",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            }
+          ]
+        },
+        {
+          "data": "2022-05-17",
+          "valorPago": 2811.66,
+          "notaFiscal": "344839",
+          "processoPagamentoSei": "009.0242.2022.0018163-67",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=50459680",
+          "periodoDe": "2022-03-21",
+          "periodoAte": "2022-04-20",
+          "id": "pag_1763152768546",
+          "detalhes": [
+            {
+              "id": "item_1763152807434",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763152826772",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 6573,
+              "valorUnitario": 0.34
+            }
+          ]
+        },
+        {
+          "data": "2022-06-15",
+          "valorPago": 576.84,
+          "notaFiscal": "358978",
+          "processoPagamentoSei": "009.0242.2022.0025060-35",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=52703984",
+          "periodoDe": "2022-04-21",
+          "periodoAte": "2022-05-20",
+          "id": "pag_1763152906341",
+          "detalhes": [
+            {
+              "id": "item_1763403634326",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            }
+          ]
+        },
+        {
+          "data": "2022-07-08",
+          "valorPago": 576.84,
+          "notaFiscal": "373769",
+          "processoPagamentoSei": "009.0242.2022.0029026-58",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=54165290",
+          "periodoDe": "2022-05-21",
+          "periodoAte": "2022-06-20",
+          "id": "pag_1763152961390",
+          "detalhes": [
+            {
+              "id": "item_1763403643725",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            }
+          ]
+        },
+        {
+          "data": "2022-08-16",
+          "valorPago": 576.84,
+          "notaFiscal": "382215",
+          "processoPagamentoSei": "009.0242.2022.0035030-64",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=56373782",
+          "periodoDe": "2022-06-21",
+          "periodoAte": "2022-07-20",
+          "id": "pag_1763153101930",
+          "detalhes": [
+            {
+              "id": "item_1763403652005",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            }
+          ]
+        },
+        {
+          "data": "2022-09-08",
+          "valorPago": 576.84,
+          "notaFiscal": "390486",
+          "processoPagamentoSei": "009.0242.2022.0039513-00",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=58051663",
+          "periodoDe": "2022-07-21",
+          "periodoAte": "2022-08-20",
+          "id": "pag_1763153163242",
+          "detalhes": [
+            {
+              "id": "item_1763403664525",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            }
+          ]
+        },
+        {
+          "data": "2022-10-13",
+          "valorPago": 941.32,
+          "notaFiscal": "398329",
+          "processoPagamentoSei": "009.0242.2022.0053326-58",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=60044706",
+          "periodoDe": "2022-08-21",
+          "periodoAte": "2022-09-20",
+          "id": "pag_1763155152071",
+          "detalhes": [
+            {
+              "id": "item_1763155211119",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763155222278",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 1072,
+              "valorUnitario": 0.34
+            }
+          ]
+        },
+        {
+          "data": "2022-11-22",
+          "valorPago": 708.76,
+          "notaFiscal": "406281",
+          "processoPagamentoSei": "009.0242.2022.0067138-25",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=61614287",
+          "periodoDe": "2022-09-21",
+          "periodoAte": "2022-10-20",
+          "id": "pag_1763155284271",
+          "detalhes": [
+            {
+              "id": "item_1763155349648",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763155359168",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 388,
+              "valorUnitario": 0.34
+            }
+          ]
+        },
+        {
+          "data": "2022-12-12",
+          "valorPago": 836.94,
+          "notaFiscal": "415040",
+          "processoPagamentoSei": "009.0242.2022.0075999-96",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=63500852",
+          "periodoDe": "2022-10-21",
+          "periodoAte": "2022-11-20",
+          "id": "pag_1763155415025",
+          "detalhes": [
+            {
+              "id": "item_1763155458146",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763155465810",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 765,
+              "valorUnitario": 0.34
+            }
+          ]
+        },
+        {
+          "data": "2023-01-26",
+          "valorPago": 628.86,
+          "notaFiscal": "423057",
+          "processoPagamentoSei": "009.0242.2022.0080497-87",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=65027004",
+          "periodoDe": "2022-11-21",
+          "periodoAte": "2022-12-20",
+          "id": "pag_1763155520402",
+          "detalhes": [
+            {
+              "id": "item_1763155534955",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763155542907",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 153,
+              "valorUnitario": 0.34
+            }
+          ]
+        },
+        {
+          "data": "2023-02-16",
+          "valorPago": 590.1,
+          "notaFiscal": "015373",
+          "processoPagamentoSei": "009.0242.2023.0006018-13",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=66679966",
+          "periodoDe": "2022-12-21",
+          "periodoAte": "2023-01-20",
+          "id": "pag_1763385155753",
+          "detalhes": [
+            {
+              "id": "item_1763385191954",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763385200922",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 39,
+              "valorUnitario": 0.34
+            }
+          ]
+        },
+        {
+          "data": "2023-03-16",
+          "valorPago": 601.66,
+          "notaFiscal": "032781",
+          "processoPagamentoSei": "009.0242.2023.0010832-98",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=68223743",
+          "periodoDe": "2023-01-21",
+          "periodoAte": "2023-02-20",
+          "id": "pag_1763385292636",
+          "detalhes": [
+            {
+              "id": "item_1763403800808",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763403811938",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 73,
+              "valorUnitario": 0.34
+            }
+          ]
+        },
+        {
+          "data": "2023-04-20",
+          "valorPago": 576.84,
+          "notaFiscal": "51801",
+          "processoPagamentoSei": "009.0242.2023.0017719-33",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=70491569",
+          "periodoDe": "2023-02-21",
+          "periodoAte": "2023-03-20",
+          "id": "pag_1763385454024",
+          "detalhes": [
+            {
+              "id": "item_1763403681157",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            }
+          ]
+        },
+        {
+          "data": "2023-05-19",
+          "valorPago": 576.84,
+          "notaFiscal": "69629",
+          "processoPagamentoSei": "009.0242.2023.0023500-28",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=72522353",
+          "periodoDe": "2023-03-21",
+          "periodoAte": "2023-04-20",
+          "id": "pag_1763385737861",
+          "detalhes": [
+            {
+              "id": "item_1763403690998",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            }
+          ]
+        },
+        {
+          "data": "2023-06-16",
+          "valorPago": 1023.94,
+          "notaFiscal": "86421",
+          "processoPagamentoSei": "009.0242.2023.0028366-05",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=74197712",
+          "periodoDe": "2023-04-21",
+          "periodoAte": "2023-05-20",
+          "id": "pag_1763385836287",
+          "detalhes": [
+            {
+              "id": "item_1763403947291",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763403960147",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 1315,
+              "valorUnitario": 0.34
+            }
+          ]
+        },
+        {
+          "data": "2023-08-01",
+          "valorPago": 598.26,
+          "notaFiscal": "104562",
+          "processoPagamentoSei": "009.0242.2023.0034200-38",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=76183861",
+          "periodoDe": "2023-02-21",
+          "periodoAte": "2023-06-20",
+          "id": "pag_1763386104141",
+          "detalhes": [
+            {
+              "id": "item_1763403896770",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763403904858",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 63,
+              "valorUnitario": 0.34
+            }
+          ]
+        },
+        {
+          "data": "2023-10-27",
+          "valorPago": 686.76,
+          "notaFiscal": "123055",
+          "processoPagamentoSei": "009.0242.2023.0041075-11",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=78843966",
+          "periodoDe": "2023-06-21",
+          "periodoAte": "2023-07-20",
+          "id": "pag_1763386334311",
+          "detalhes": [
+            {
+              "id": "item_1763387038781",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763387045806",
+              "descricao": "Emissão CND",
+              "quantidade": 229,
+              "valorUnitario": 0.48
+            }
+          ]
+        },
+        {
+          "data": "2023-09-15",
+          "valorPago": 792.06,
+          "notaFiscal": "142305",
+          "processoPagamentoSei": "009.0242.2023.0045509-62",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=80488355",
+          "periodoDe": "2023-07-21",
+          "periodoAte": "2023-08-20",
+          "id": "pag_1763386736086",
+          "detalhes": [
+            {
+              "id": "item_1763404022732",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763404030940",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 633,
+              "valorUnitario": 0.34
+            }
+          ]
+        },
+        {
+          "data": "2023-10-10",
+          "valorPago": 902.08,
+          "notaFiscal": "161675",
+          "processoPagamentoSei": "009.0242.2023.0056988-15",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=82372574",
+          "periodoDe": "2023-08-21",
+          "periodoAte": "2023-09-20",
+          "id": "pag_1763386896555",
+          "detalhes": [
+            {
+              "id": "item_1763386924555",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763386935619",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 382,
+              "valorUnitario": 0.34
+            },
+            {
+              "id": "item_1763386943093",
+              "descricao": "Emissão CND",
+              "quantidade": 407,
+              "valorUnitario": 0.48
+            }
+          ]
+        },
+        {
+          "data": "2023-11-10",
+          "valorPago": 576.84,
+          "notaFiscal": "181589",
+          "processoPagamentoSei": "009.0242.2023.0068269-65",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=84630997",
+          "periodoDe": "2023-09-21",
+          "periodoAte": "2023-10-20",
+          "id": "pag_1763389057648",
+          "detalhes": [
+            {
+              "id": "item_1763403700119",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            }
+          ]
+        },
+        {
+          "data": "2023-12-07",
+          "valorPago": 2135.5,
+          "notaFiscal": "186500",
+          "processoPagamentoSei": "009.0242.2023.0073539-12",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=86384688",
+          "periodoDe": "2023-10-21",
+          "periodoAte": "2023-11-20",
+          "id": "pag_1763389155241",
+          "detalhes": [
+            {
+              "id": "item_1763389179361",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763389188194",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 2893,
+              "valorUnitario": 0.34
+            },
+            {
+              "id": "item_1763389198617",
+              "descricao": "Emissão CND",
+              "quantidade": 1198,
+              "valorUnitario": 0.48
+            }
+          ]
+        },
+        {
+          "data": "2024-01-29",
+          "valorPago": 991.4,
+          "notaFiscal": "206075",
+          "processoPagamentoSei": "009.0242.2024.0000011-24",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=88587946",
+          "periodoDe": "2023-11-21",
+          "periodoAte": "2023-12-20",
+          "id": "pag_1763389267010",
+          "detalhes": [
+            {
+              "id": "item_1763389284395",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763389292683",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 464,
+              "valorUnitario": 0.34
+            },
+            {
+              "id": "item_1763389298858",
+              "descricao": "Emissão CND",
+              "quantidade": 535,
+              "valorUnitario": 0.48
+            }
+          ]
+        },
+        {
+          "data": "2024-02-15",
+          "valorPago": 2532.78,
+          "notaFiscal": "238343",
+          "processoPagamentoSei": "009.0242.2024.0004282-68",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=90003193",
+          "periodoDe": "2023-12-21",
+          "periodoAte": "2024-01-20",
+          "id": "pag_1763398763154",
+          "detalhes": [
+            {
+              "id": "item_1763398772979",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763398784866",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 5229,
+              "valorUnitario": 0.34
+            },
+            {
+              "id": "item_1763398795545",
+              "descricao": "Emissão CND",
+              "quantidade": 371,
+              "valorUnitario": 0.48
+            }
+          ]
+        },
+        {
+          "data": "2024-03-13",
+          "valorPago": 1128.24,
+          "notaFiscal": "257827",
+          "processoPagamentoSei": "009.0242.2024.0008307-75",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=91749445",
+          "periodoDe": "2024-01-21",
+          "periodoAte": "2024-02-20",
+          "id": "pag_1763398860035",
+          "detalhes": [
+            {
+              "id": "item_1763398866932",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763398880070",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 906,
+              "valorUnitario": 0.34
+            },
+            {
+              "id": "item_1763398923414",
+              "descricao": "Emissão CND",
+              "quantidade": 507,
+              "valorUnitario": 0.48
+            }
+          ]
+        },
+        {
+          "data": "2024-04-15",
+          "valorPago": 700.2,
+          "notaFiscal": "279681",
+          "processoPagamentoSei": "009.0242.2024.0012589-60",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=93495663",
+          "periodoDe": "2024-02-21",
+          "periodoAte": "2024-03-20",
+          "id": "pag_1763400513620",
+          "detalhes": [
+            {
+              "id": "item_1763400525012",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763400544114",
+              "descricao": "Emissão CND",
+              "quantidade": 257,
+              "valorUnitario": 0.48
+            }
+          ]
+        },
+        {
+          "data": "2024-05-15",
+          "valorPago": 1217.36,
+          "notaFiscal": "300830",
+          "processoPagamentoSei": "009.0242.2024.0017854-04",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=95895425",
+          "periodoDe": "2024-03-21",
+          "periodoAte": "2024-04-20",
+          "id": "pag_1763400628229",
+          "detalhes": [
+            {
+              "id": "item_1763400636988",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763400646380",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 1058,
+              "valorUnitario": 0.34
+            },
+            {
+              "id": "item_1763400653164",
+              "descricao": "Emissão CND",
+              "quantidade": 585,
+              "valorUnitario": 0.48
+            }
+          ]
+        },
+        {
+          "data": "2024-06-16",
+          "valorPago": 1936.42,
+          "notaFiscal": "317347",
+          "processoPagamentoSei": "009.0242.2024.0023557-81",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=98203246",
+          "periodoDe": "2024-04-21",
+          "periodoAte": "2024-05-20",
+          "id": "pag_1763400784047",
+          "detalhes": [
+            {
+              "id": "item_1763400790037",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763400802542",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 2491,
+              "valorUnitario": 0.34
+            },
+            {
+              "id": "item_1763400812318",
+              "descricao": "Emissão CND",
+              "quantidade": 1068,
+              "valorUnitario": 0.48
+            }
+          ]
+        },
+        {
+          "data": "2024-07-16",
+          "valorPago": 924.16,
+          "notaFiscal": "336791",
+          "processoPagamentoSei": "009.0242.2024.0031578-42",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=101448683",
+          "periodoDe": "2024-05-21",
+          "periodoAte": "2024-06-20",
+          "id": "pag_1763400901039",
+          "detalhes": [
+            {
+              "id": "item_1763400910286",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763400916551",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 286,
+              "valorUnitario": 0.34
+            },
+            {
+              "id": "item_1763400923841",
+              "descricao": "Emissão CND",
+              "quantidade": 521,
+              "valorUnitario": 0.48
+            }
+          ]
+        },
+        {
+          "data": "2024-08-07",
+          "valorPago": 768.36,
+          "notaFiscal": "353163",
+          "processoPagamentoSei": "009.0242.2024.0034262-58",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=102673728",
+          "periodoDe": "2024-06-21",
+          "periodoAte": "2024-07-20",
+          "id": "pag_1763401050769",
+          "detalhes": [
+            {
+              "id": "item_1763401058353",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763401065289",
+              "descricao": "Emissão CND",
+              "quantidade": 399,
+              "valorUnitario": 0.48
+            }
+          ]
+        },
+        {
+          "data": "2024-09-06",
+          "valorPago": 820.68,
+          "notaFiscal": "384429",
+          "processoPagamentoSei": "009.0242.2024.0038757-29",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=104756955",
+          "periodoDe": "2024-07-21",
+          "periodoAte": "2024-08-20",
+          "id": "pag_1763401159418",
+          "detalhes": [
+            {
+              "id": "item_1763401168474",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763401211058",
+              "descricao": "Emissão CND",
+              "quantidade": 508,
+              "valorUnitario": 0.48
+            }
+          ]
+        },
+        {
+          "data": "2024-10-11",
+          "valorPago": 804.36,
+          "notaFiscal": "410866",
+          "processoPagamentoSei": "009.0242.2024.0045033-96",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=107618149",
+          "periodoDe": "2024-08-21",
+          "periodoAte": "2024-09-20",
+          "id": "pag_1763401314460",
+          "detalhes": [
+            {
+              "id": "item_1763401326500",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763401335275",
+              "descricao": "Emissão CND",
+              "quantidade": 474,
+              "valorUnitario": 0.48
+            }
+          ]
+        },
+        {
+          "data": "2024-11-06",
+          "valorPago": 1061.88,
+          "notaFiscal": "419144",
+          "processoPagamentoSei": "009.0242.2024.0049779-32",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=109754555",
+          "periodoDe": "2024-09-21",
+          "periodoAte": "2024-10-20",
+          "id": "pag_1763401396581",
+          "detalhes": [
+            {
+              "id": "item_1763401404476",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763401413444",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 540,
+              "valorUnitario": 0.34
+            },
+            {
+              "id": "item_1763401423637",
+              "descricao": "Emissão CND",
+              "quantidade": 628,
+              "valorUnitario": 0.48
+            }
+          ]
+        },
+        {
+          "data": "2024-12-12",
+          "valorPago": 2016.42,
+          "notaFiscal": "453909",
+          "processoPagamentoSei": "009.0242.2024.0054604-29",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=112172917",
+          "periodoDe": "2024-10-21",
+          "periodoAte": "2024-11-20",
+          "id": "pag_1763401482150",
+          "detalhes": [
+            {
+              "id": "item_1763401511390",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763401522383",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 1803,
+              "valorUnitario": 0.34
+            },
+            {
+              "id": "item_1763401528886",
+              "descricao": "Emissão CND",
+              "quantidade": 1722,
+              "valorUnitario": 0.48
+            }
+          ]
+        },
+        {
+          "data": "2025-01-22",
+          "valorPago": 822.12,
+          "notaFiscal": "481725",
+          "processoPagamentoSei": "009.0242.2025.0000010-61",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=114130420",
+          "periodoDe": "2024-11-21",
+          "periodoAte": "2024-12-20",
+          "id": "pag_1763401630015",
+          "detalhes": [
+            {
+              "id": "item_1763401656624",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763401664727",
+              "descricao": "Emissão CND",
+              "quantidade": 511,
+              "valorUnitario": 0.48
+            }
+          ]
+        },
+        {
+          "data": "2025-02-05",
+          "valorPago": 941.16,
+          "notaFiscal": "506302",
+          "processoPagamentoSei": "009.0242.2025.0003751-49",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=115611204",
+          "periodoDe": "2024-12-21",
+          "periodoAte": "2025-01-20",
+          "id": "pag_1763402025236",
+          "detalhes": [
+            {
+              "id": "item_1763402039499",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763402047068",
+              "descricao": "Emissão CND",
+              "quantidade": 759,
+              "valorUnitario": 0.48
+            }
+          ]
+        },
+        {
+          "data": "2025-03-14",
+          "valorPago": 913.32,
+          "notaFiscal": "533783",
+          "processoPagamentoSei": "009.0242.2025.0009710-01",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=118152353",
+          "periodoDe": "2025-01-21",
+          "periodoAte": "2025-02-20",
+          "id": "pag_1763402155188",
+          "detalhes": [
+            {
+              "id": "item_1763402165436",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763402172388",
+              "descricao": "Emissão CND",
+              "quantidade": 701,
+              "valorUnitario": 0.48
+            }
+          ]
+        },
+        {
+          "data": "2025-05-07",
+          "valorPago": 7870.52,
+          "notaFiscal": "582136",
+          "processoPagamentoSei": "009.0242.2025.0018990-01",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=122040307",
+          "periodoDe": "2025-02-21",
+          "periodoAte": "2025-03-20",
+          "id": "pag_1763402252998",
+          "detalhes": [
+            {
+              "id": "item_1763402269590",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763402284446",
+              "descricao": "Emissão CND",
+              "quantidade": 21452,
+              "valorUnitario": 0.34
+            }
+          ]
+        },
+        {
+          "data": "2025-05-14",
+          "valorPago": 1404.74,
+          "notaFiscal": "589130",
+          "processoPagamentoSei": "009.0242.2025.0018580-71",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=121890388",
+          "periodoDe": "2025-03-21",
+          "periodoAte": "2025-04-20",
+          "id": "pag_1763402478560",
+          "detalhes": [
+            {
+              "id": "item_1763402484881",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763402494201",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 2435,
+              "valorUnitario": 0.34
+            }
+          ]
+        },
+        {
+          "data": "2025-06-17",
+          "valorPago": 1940.58,
+          "notaFiscal": "617819",
+          "processoPagamentoSei": "009.0242.2025.0027766-39",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=124572999",
+          "periodoDe": "2025-04-21",
+          "periodoAte": "2025-05-20",
+          "id": "pag_1763402605977",
+          "detalhes": [
+            {
+              "id": "item_1763402613650",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763402621697",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 4011,
+              "valorUnitario": 0.34
+            }
+          ]
+        },
+        {
+          "data": "2025-07-07",
+          "valorPago": 925.34,
+          "notaFiscal": "644666",
+          "processoPagamentoSei": "009.0242.2025.0032583-81",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=126517962",
+          "periodoDe": "2025-05-21",
+          "periodoAte": "2025-06-20",
+          "id": "pag_1763402683859",
+          "detalhes": [
+            {
+              "id": "item_1763402690530",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763402698130",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 1025,
+              "valorUnitario": 0.34
+            }
+          ]
+        },
+        {
+          "data": "2025-08-11",
+          "valorPago": 1163,
+          "notaFiscal": "674612",
+          "processoPagamentoSei": "009.0242.2025.0038596-27",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=129139850",
+          "periodoDe": "2025-06-21",
+          "periodoAte": "2025-07-20",
+          "id": "pag_1763402812270",
+          "detalhes": [
+            {
+              "id": "item_1763402821028",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763402827316",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 1724,
+              "valorUnitario": 0.34
+            }
+          ]
+        },
+        {
+          "data": "2025-10-02",
+          "valorPago": 1770.24,
+          "notaFiscal": "704549",
+          "processoPagamentoSei": "009.0242.2025.0045591-04",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=132122118",
+          "periodoDe": "2025-07-21",
+          "periodoAte": "2025-08-20",
+          "id": "pag_1763402891576",
+          "detalhes": [
+            {
+              "id": "item_1763402901405",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763402910569",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 3510,
+              "valorUnitario": 0.34
+            }
+          ]
+        },
+        {
+          "data": "2025-10-22",
+          "valorPago": 4999.9,
+          "notaFiscal": "733890",
+          "processoPagamentoSei": "009.0242.2025.0049264-50",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=133802717",
+          "periodoDe": "2025-08-21",
+          "periodoAte": "2025-09-20",
+          "id": "pag_1763402998491",
+          "detalhes": [
+            {
+              "id": "item_1763403009171",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 576.84
+            },
+            {
+              "id": "item_1763403018259",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 13009,
+              "valorUnitario": 0.34
+            }
+          ],
+          "isTRD": false
+        },
+        {
+          "data": "2025-11-17",
+          "valorPago": 7548,
+          "notaFiscal": "733889",
+          "processoPagamentoSei": "009.0242.2025.0054109-37",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=135549686",
+          "periodoDe": "2025-08-21",
+          "periodoAte": "2025-09-20",
+          "isTRD": true,
+          "id": "pag_1763415804531",
+          "detalhes": [
+            {
+              "id": "item_1763415819370",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 22200,
+              "valorUnitario": 0.34
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unidade": {
+        "nome": "Secretaria da Administração do Estado da Bahia",
+        "cnpj": "13.323.274/0001-63",
+        "endereco": "2ª Avenida, 200, CAB, Salvador - Bahia",
+        "rep": "Edelvino da Silva Góes Filho"
+      },
+      "empresa": {
+        "nome": "Serviço Federal de Processamento de Dados",
+        "cnpj": "33.683.111/0001-07",
+        "endereco": "SGAN, Quadra 601, Módulo V, Brasília/DF, CEP 70836-900",
+        "rep": "Jacimar Gomes Ferreira"
+      },
+      "processoSei": "009.0242.2022.0003951-12",
+      "numeroContrato": "025/2021",
+      "tipoContrato": "Inexigibilidade",
+      "objeto": "Serviço especializado de tecnologia da informação, denominado “INFOCONV”.",
+      "estimativaMensal": 2030.68,
+      "tempoContrato": "12 meses",
+      "dataAssinatura": "2021-06-21",
+      "dataInicio": "2021-06-21",
+      "linkSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=45625305",
+      "valorTotal": 24368.16,
+      "dataFim": "2023-06-21",
+      "aditivo": {
+        "tipo": "Prazo",
+        "numero": "1º",
+        "processoSei": "009.0242.2022.0003951-12",
+        "linkSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=45625305",
+        "justificativa": "Prorrogar a vigência do contrato por um período de 12 meses, contados a partir de 21/06/2022 e com término previsto para 21/06/2023.",
+        "dataAssinatura": "2022-06-07"
+      },
+      "id": "contrato_1763149469008",
+      "pagamentos": [],
+      "parentId": "contrato_1763149379825"
+    },
+    {
+      "unidade": {
+        "nome": "Secretaria da Administração do Estado da Bahia",
+        "cnpj": "13.323.274/0001-63",
+        "endereco": "2ª Avenida, 200, CAB, Salvador - Bahia",
+        "rep": "Edelvino da Silva Góes Filho"
+      },
+      "empresa": {
+        "nome": "Serviço Federal de Processamento de Dados",
+        "cnpj": "33.683.111/0001-07",
+        "endereco": "SGAN, Quadra 601, Módulo V, Brasília/DF, CEP 70836-900",
+        "rep": "Jacimar Gomes Ferreira"
+      },
+      "processoSei": "009.0242.2022.0003951-12",
+      "numeroContrato": "025/2021",
+      "tipoContrato": "Inexigibilidade",
+      "objeto": "Serviço especializado de tecnologia da informação, denominado “INFOCONV”.",
+      "estimativaMensal": 2030.68,
+      "tempoContrato": "12 meses",
+      "dataAssinatura": "2021-06-21",
+      "dataInicio": "2021-06-21",
+      "linkSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=45625305",
+      "valorTotal": 24368.16,
+      "dataFim": "2024-06-21",
+      "aditivo": {
+        "tipo": "Prazo",
+        "numero": "2º",
+        "processoSei": "009.0242.2023.0005398-24",
+        "linkSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=66507060",
+        "justificativa": "Prorrogar a vigência do contrato por um período de 12 meses, contados a partir de 21/06/2023 e com término previsto para 21/06/2024.",
+        "dataAssinatura": "2024-04-11"
+      },
+      "id": "contrato_1763149671419",
+      "pagamentos": [],
+      "parentId": "contrato_1763149379825"
+    },
+    {
+      "unidade": {
+        "nome": "Secretaria da Administração do Estado da Bahia",
+        "cnpj": "13.323.274/0001-63",
+        "endereco": "2ª Avenida, 200, CAB, Salvador - Bahia",
+        "rep": "Edelvino da Silva Góes Filho"
+      },
+      "empresa": {
+        "nome": "Serviço Federal de Processamento de Dados",
+        "cnpj": "33.683.111/0001-07",
+        "endereco": "SGAN, Quadra 601, Módulo V, Brasília/DF, CEP 70836-900",
+        "rep": "Jacimar Gomes Ferreira"
+      },
+      "processoSei": "009.0242.2022.0003951-12",
+      "numeroContrato": "025/2021",
+      "tipoContrato": "Inexigibilidade",
+      "objeto": "Serviço especializado de tecnologia da informação, denominado “INFOCONV”.",
+      "estimativaMensal": 2030.68,
+      "tempoContrato": "12 meses",
+      "dataAssinatura": "2021-06-21",
+      "dataInicio": "2021-06-21",
+      "linkSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=45625305",
+      "valorTotal": 24368.16,
+      "dataFim": "2025-06-21",
+      "aditivo": {
+        "tipo": "Prazo",
+        "numero": "3º",
+        "processoSei": "009.0242.2024.0008480-46",
+        "linkSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=91822510",
+        "justificativa": "Prorrogar a vigência do contrato por um período de 12 (doze) meses, contados a partir de 21/06/2024, incluindo-se a data de início na contagem deste prazo, e com término previsto para 21/06/2025.",
+        "dataAssinatura": "2024-06-19"
+      },
+      "id": "contrato_1763149821770",
+      "pagamentos": [],
+      "parentId": "contrato_1763149379825"
+    },
+    {
+      "unidade": {
+        "nome": "Secretaria da Administração do Estado da Bahia",
+        "cnpj": "13.323.274/0001-63",
+        "endereco": "2ª Avenida, 200, CAB, Salvador - Bahia",
+        "rep": "Edelvino da Silva Góes Filho"
+      },
+      "empresa": {
+        "nome": "Serviço Federal de Processamento de Dados",
+        "cnpj": "33.683.111/0001-07",
+        "endereco": "SGAN, Quadra 601, Módulo V, Brasília/DF, CEP 70836-900",
+        "rep": "Jacimar Gomes Ferreira"
+      },
+      "processoSei": "009.0242.2022.0003951-12",
+      "numeroContrato": "025/2021",
+      "tipoContrato": "Inexigibilidade",
+      "objeto": "Serviço especializado de tecnologia da informação, denominado “INFOCONV”.",
+      "estimativaMensal": 2030.68,
+      "tempoContrato": "12 meses",
+      "dataAssinatura": "2021-06-21",
+      "dataInicio": "2021-06-21",
+      "linkSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=45625305",
+      "valorTotal": 6073.28,
+      "dataFim": "2025-09-21",
+      "aditivo": {
+        "tipo": "Prazo",
+        "numero": "4º",
+        "processoSei": "009.0242.2025.0032868-30",
+        "linkSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=126630769",
+        "justificativa": "Prorrogar a vigência do contrato por um período de 03 (três) meses, contados a partir de 21/06/2025, incluindo-se a data de início na contagem deste prazo, e com término previsto para 21/09/2025.",
+        "dataAssinatura": "2025-06-18"
+      },
+      "id": "contrato_1763150023407",
+      "pagamentos": [],
+      "parentId": "contrato_1763149379825"
+    }
+  ]
+}
