@@ -1330,7 +1330,7 @@
           "isTRD": false
         },
         {
-          "data": "2025-11-17",
+          "data": "2025-11-28",
           "valorPago": 7548,
           "notaFiscal": "733889",
           "processoPagamentoSei": "009.0242.2025.0054109-37",
@@ -1493,6 +1493,101 @@
       "id": "contrato_1763150023407",
       "pagamentos": [],
       "parentId": "contrato_1763149379825"
+    },
+    {
+      "unidade": {
+        "nome": "Secretaria da Administração do Estado da Bahia",
+        "cnpj": "13.323.274/0001-63",
+        "endereco": "2ª Avenida, 200, CAB, Salvador - Bahia",
+        "rep": "Edelvino da Silva Góes Filho"
+      },
+      "empresa": {
+        "nome": "Universidade Estadual de Santa Cruz",
+        "cnpj": "40.738.999/0001-95",
+        "endereco": "Rodovia Jorge Amado, Km 116, bairro Salobrinho, Ilhéus/BA, CEP: 45.662-900",
+        "rep": "Mauricio Santana Moreau"
+      },
+      "processoSei": "009.0242.2020.0010804-82",
+      "numeroContrato": "009/2020",
+      "tipoContrato": "Cooperacao Tecnica",
+      "objeto": "A operacionalização do Posto Avançado de Cadastramento de Fornecedor - PCF, na sede da UESC.",
+      "estimativaMensal": 0,
+      "tempoContrato": "5 anos",
+      "dataAssinatura": "2020-07-21",
+      "dataInicio": "2020-07-22",
+      "linkSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=18906495",
+      "valorTotal": 0,
+      "dataFim": "2025-07-22",
+      "id": "contrato_1763908311012",
+      "pagamentos": []
+    },
+    {
+      "unidade": {
+        "nome": "Secretaria da Administração do Estado da Bahia",
+        "cnpj": "13.323.274/0001-63",
+        "endereco": "2ª Avenida, 200, CAB, Salvador - Bahia",
+        "rep": "Edelvino da Silva Góes Filho"
+      },
+      "empresa": {
+        "nome": "Universidade Estadual de Santa Cruz",
+        "cnpj": "40.738.999/0001-95",
+        "endereco": "Rodovia Jorge Amado, Km 116, bairro Salobrinho, Ilhéus/BA, CEP: 45.662-900",
+        "rep": "Mauricio Santana Moreau"
+      },
+      "processoSei": "009.0242.2020.0010804-82",
+      "numeroContrato": "009/2020",
+      "tipoContrato": "Cooperacao Tecnica",
+      "objeto": "A cooperação técnica entre os partícipes para operacionalização do Posto Avançado de Cadastramento de Fornecedor - PCF, na sede da UESC.",
+      "estimativaMensal": 0,
+      "tempoContrato": "5 anos",
+      "dataAssinatura": "2020-07-21",
+      "dataInicio": "2020-07-22",
+      "linkSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=18906495",
+      "valorTotal": 0,
+      "dataFim": "2030-07-21",
+      "aditivo": {
+        "tipo": "Prazo",
+        "numero": "1º",
+        "processoSei": "009.0242.2025.0012882-07",
+        "linkSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=119655687",
+        "justificativa": "A prorrogação do prazo de vigência do Convênio de Cooperação Técnica nº 009/2020 por mais 60 (sessenta) meses, a contar de 21/07/2025, excluindo-se esta data de início na contagem do prazo, com o término em 21/07/2030 incluindo-se esta data na contagem do prazo.",
+        "dataAssinatura": "2025-07-18"
+      },
+      "id": "contrato_1763908404970",
+      "pagamentos": [],
+      "parentId": "contrato_1763908311012"
+    }
+  ],
+  "empresas": [
+    {
+      "id": "emp_1763911660531_u",
+      "cnpj": "13.323.274/0001-63",
+      "nome": "Secretaria da Administração do Estado da Bahia",
+      "endereco": "2ª Avenida, 200, CAB, Salvador - Bahia",
+      "representantes": [
+        "Rodrigo Pimentel de Souza Lima",
+        "Edelvino da Silva Góes Filho"
+      ],
+      "isPadrao": true
+    },
+    {
+      "id": "emp_1763911660531_e",
+      "cnpj": "33.683.111/0001-07",
+      "nome": "Serviço Federal de Processamento de Dados",
+      "endereco": "SGAN, Quadra 601, Módulo V, Brasília/DF, CEP 70836-900",
+      "representantes": [
+        "Carlos Henrique Rodrigues Alexandria",
+        "Jacimar Gomes Ferreira"
+      ],
+      "isPadrao": false
+    },
+    {
+      "id": "emp_1763911660531_e",
+      "cnpj": "40.738.999/0001-95",
+      "nome": "Universidade Estadual de Santa Cruz",
+      "endereco": "Rodovia Jorge Amado, Km 116, bairro Salobrinho, Ilhéus/BA, CEP: 45.662-900",
+      "representantes": ["Mauricio Santana Moreau"],
+      "isPadrao": false
     }
   ]
 }

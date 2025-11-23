@@ -1,495 +1,1168 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Acompanhamento de Contratos</title>
-    
+
     <!-- Carrega o Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- jsPDF para exportação de PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.js"></script>
-    
+
     <!-- Nosso CSS (agora em arquivo separado) -->
-    <link rel="stylesheet" href="style.css">
-    
+    <link rel="stylesheet" href="style.css" />
+
     <!-- Configuração do Tailwind (para a fonte 'Inter') -->
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                }
-            }
-        }
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
     </script>
-</head>
-<body class="bg-gray-100">
-
+  </head>
+  <body class="bg-gray-100">
     <!-- Cabeçalho -->
     <header class="text-center mb-8">
-        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <h1  class="text-3xl font-bold text-blue-700 cursor-pointer">Acompanhamento de Contratos Públicos</h1>
-            <div>
-                <button id="btn-exportar" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-150 ease-in-out">
-                    Exportar Dados (JSON)
-                </button>
-            </div>
+      <div
+        class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center"
+      >
+        <h1 class="text-3xl font-bold text-blue-700 cursor-pointer">
+          Acompanhamento de Contratos Públicos
+        </h1>
+        <div>
+          <button
+            id="btn-exportar"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-150 ease-in-out"
+          >
+            Exportar Dados (JSON)
+          </button>
         </div>
+      </div>
     </header>
 
     <!-- Conteúdo Principal -->
     <main class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-        
-        <!-- Botão de Adicionar Contrato -->
-        <div class="mb-6 flex justify-end">
-            <button id="btn-abrir-modal-contrato" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-5 rounded-lg shadow transition duration-150 ease-in-out">
-                + Novo Contrato
-            </button>
-        </div>
+      <!-- Botão de Adicionar Contrato -->
+      <div class="mb-6 flex justify-end space-x-3">
+        <button
+          id="btn-abrir-modal-contrato"
+          class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-5 rounded-lg shadow transition duration-150 ease-in-out"
+        >
+          + Novo Contrato
+        </button>
+        <button
+          id="btn-gerenciar-empresas"
+          class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-5 rounded-lg shadow transition duration-150 ease-in-out"
+        >
+          🏢 Entidades
+        </button>
+      </div>
 
-        <!-- Lista de Contratos -->
-        <div id="lista-contratos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Os cards dos contratos serão inseridos aqui via JS -->
-        </div>
-        
-        <!-- Mensagem de fallback -->
-        <p id="msg-sem-contratos" class="text-gray-600 col-span-full text-center py-6">Nenhum contrato cadastrado. Carregando dados...</p>
+      <!-- Lista de Contratos -->
+      <div
+        id="lista-contratos"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+      >
+        <!-- Os cards dos contratos serão inseridos aqui via JS -->
+      </div>
+
+      <!-- Mensagem de fallback -->
+      <p
+        id="msg-sem-contratos"
+        class="text-gray-600 col-span-full text-center py-6"
+      >
+        Nenhum contrato cadastrado. Carregando dados...
+      </p>
     </main>
 
     <!-- ========================================== -->
     <!-- MODAIS (Estrutura HTML) -->
     <!-- ========================================== -->
 
-    <!-- Modal: Confirmar exclusão -->
-    <div id="modal-confirmacao" class="modal z-60"> <div class="modal-content !max-w-sm">
-            <div class="flex justify-between items-center mb-4">
-                <h2 id="confirmacao-titulo" class="text-xl font-bold text-gray-800">Confirmar Ação</h2>
-                <button class="modal-close text-gray-500 hover:text-gray-800 text-3xl">&times;</button>
-            </div>
-            
-            <div class="modal-body">
-                <p id="confirmacao-mensagem" class="text-gray-700">Tem certeza que deseja executar esta ação?</p>
-            </div>
-            
-            <div class="flex justify-end pt-6 space-x-3">
-                <button typeid="button" class="btn-confirmacao-nao modal-close bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg">
-                    Cancelar
-                </button>
-                <button type="button" id="btn-confirmacao-sim" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg">
-                    Excluir
-                </button>
-            </div>
+    <!-- Modal: Gerenciar Empresas e Editar Empresa -->
+    <div id="modal-gerenciar-empresas" class="modal">
+      <div class="modal-content !max-w-4xl">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-bold text-gray-800">
+            Banco de Pessoas Jurídicas
+          </h2>
+          <button
+            class="modal-close text-gray-500 hover:text-gray-800 text-3xl"
+          >
+            &times;
+          </button>
         </div>
+        <div class="mb-4 flex justify-end">
+          <button
+            id="btn-nova-empresa"
+            class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow"
+          >
+            + Nova Empresa/Unidade
+          </button>
+        </div>
+        <div class="overflow-x-auto max-h-96">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th
+                  class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase"
+                >
+                  CNPJ
+                </th>
+                <th
+                  class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase"
+                >
+                  Razão Social
+                </th>
+                <th
+                  class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase"
+                >
+                  Padrão?
+                </th>
+                <th
+                  class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase"
+                >
+                  Ações
+                </th>
+              </tr>
+            </thead>
+            <tbody
+              id="lista-banco-empresas"
+              class="bg-white divide-y divide-gray-200"
+            ></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="modal-form-empresa-banco" class="modal z-60">
+      <div class="modal-content !max-w-2xl">
+        <div class="flex justify-between items-center mb-4">
+          <h2 id="titulo-modal-empresa" class="text-xl font-bold text-gray-800">
+            Dados da Empresa
+          </h2>
+          <button
+            class="modal-close text-gray-500 hover:text-gray-800 text-3xl"
+          >
+            &times;
+          </button>
+        </div>
+
+        <form id="form-cadastro-empresa" class="space-y-4">
+          <input type="hidden" id="banco-empresa-id" />
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input
+              type="text"
+              id="banco-cnpj"
+              placeholder="CNPJ"
+              class="p-2 border rounded-md"
+              required
+            />
+            <input
+              type="text"
+              id="banco-nome"
+              placeholder="Razão Social / Nome"
+              class="p-2 border rounded-md capitalize-input"
+              required
+            />
+          </div>
+          <input
+            type="text"
+            id="banco-endereco"
+            placeholder="Endereço Completo"
+            class="p-2 border rounded-md w-full"
+            required
+          />
+
+          <div class="border p-3 rounded-md bg-gray-50">
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Representantes Legais</label
+            >
+            <div class="flex gap-2 mb-2">
+              <input
+                type="text"
+                id="novo-representante-input"
+                placeholder="Nome do Representante"
+                class="p-2 border rounded-md w-full capitalize-input"
+              />
+              <button
+                type="button"
+                id="btn-add-rep-lista"
+                class="bg-blue-600 text-white px-3 rounded-lg font-bold"
+              >
+                +
+              </button>
+            </div>
+            <ul
+              id="lista-representantes-tags"
+              class="flex flex-wrap gap-2"
+            ></ul>
+          </div>
+
+          <div class="flex items-center">
+            <input
+              type="checkbox"
+              id="banco-is-padrao"
+              class="h-4 w-4 text-purple-600 border-gray-300 rounded"
+            />
+            <label
+              for="banco-is-padrao"
+              class="ml-2 block text-sm text-gray-900"
+            >
+              Definir como minha Unidade Padrão (Preenchimento automático)
+            </label>
+          </div>
+
+          <div class="flex justify-end pt-4">
+            <button
+              type="submit"
+              class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg"
+            >
+              Salvar Empresa
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal: Confirmar exclusão -->
+    <div id="modal-confirmacao" class="modal z-60">
+      <div class="modal-content !max-w-sm">
+        <div class="flex justify-between items-center mb-4">
+          <h2 id="confirmacao-titulo" class="text-xl font-bold text-gray-800">
+            Confirmar Ação
+          </h2>
+          <button
+            class="modal-close text-gray-500 hover:text-gray-800 text-3xl"
+          >
+            &times;
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <p id="confirmacao-mensagem" class="text-gray-700">
+            Tem certeza que deseja executar esta ação?
+          </p>
+        </div>
+
+        <div class="flex justify-end pt-6 space-x-3">
+          <button
+            typeid="button"
+            class="btn-confirmacao-nao modal-close bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            id="btn-confirmacao-sim"
+            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg"
+          >
+            Excluir
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Modal: Adicionar/Editar Contrato -->
     <div id="modal-contrato" class="modal">
-        <div class="modal-content !max-w-4xl">
-            <div class="flex justify-between items-center mb-4">
-                <h2 id="modal-contrato-titulo" class="text-xl font-bold">Novo Contrato</h2>
-                <button class="modal-close text-gray-500 hover:text-gray-800 text-3xl">&times;</button>
-            </div>
-            
-            <!-- Indicador de Etapas -->
-            <div id="stepper-contrato" class="flex items-center justify-center mb-6">
-                <div id="step-dot-1" class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">1</div>
-                <div class="flex-auto border-t-2 border-gray-300 mx-2"></div>
-                <div id="step-dot-2" class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold text-sm">2</div>
-                <div class="flex-auto border-t-2 border-gray-300 mx-2"></div>
-                <div id="step-dot-3" class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold text-sm">3</div>
-            </div>
-            
-            <form id="form-contrato" class="modal-body space-y-6">
-                <input type="hidden" id="contrato-id">
-                <input type="hidden" id="contrato-parentId">
-                
-                <!-- Etapa 1: Unidade Contratante -->
-                <fieldset id="form-step-1" class="form-step border border-gray-300 p-4 rounded-lg">
-                    <legend class="text-lg font-semibold px-2">Unidade Contratante</legend>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" id="unidade-cnpj" placeholder="CNPJ" class="p-2 border rounded-md" required>
-                        <input type="text" id="unidade-nome" placeholder="Razão Social" class="p-2 border rounded-md capitalize-input" required>
-                        <input type="text" id="unidade-endereco" placeholder="Endereço Completo" class="p-2 border rounded-md col-span-1 md:col-span-2" required>
-                        <input type="text" id="unidade-rep" placeholder="Representante Legal" class="p-2 border rounded-md col-span-1 md:col-span-2 capitalize-input" required>
-                    </div>
-                </fieldset>
-                
-                <!-- Etapa 2: Empresa Contratada -->
-                <fieldset id="form-step-2" class="form-step border border-gray-300 p-4 rounded-lg" style="display: none;">
-                    <legend class="text-lg font-semibold px-2">Empresa Contratada</legend>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" id="empresa-cnpj" placeholder="CNPJ" class="p-2 border rounded-md" required>
-                        <input type="text" id="empresa-nome" placeholder="Razão Social" class="p-2 border rounded-md capitalize-input" required>
-                        <input type="text" id="empresa-endereco" placeholder="Endereço Completo" class="p-2 border rounded-md col-span-1 md:col-span-2" required>
-                        <input type="text" id="empresa-rep" placeholder="Representante Legal" class="p-2 border rounded-md col-span-1 md:col-span-2 capitalize-input" required>
-                    </div>
-                </fieldset>
-
-                <!-- Etapa 3: Dados do Contrato -->
-                <fieldset id="form-step-3" class="form-step border border-gray-300 p-4 rounded-lg" style="display: none;">
-                    
-                    <fieldset id="fieldset-aditivo" class="border border-red-300 p-4 rounded-lg mb-6 bg-red-50" style="display: none;">
-                        <legend class="text-lg font-semibold px-2 text-red-700">Dados do Aditivo</legend>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                            <div>
-                                <label for="aditivo-tipo" class="block text-sm font-medium text-gray-700">Tipo de Aditivo</label>
-                                <select id="aditivo-tipo" class="p-2 border rounded-md w-full bg-white" required>
-                                    <option value="">Selecione...</option>
-                                    <option value="Valor">Aditivo de Valor</option>
-                                    <option value="Prazo">Aditivo de Prazo</option>
-                                    <option value="GestorFiscal">Alteração Gestor/Fiscal</option>
-                                    <option value="Outro">Outro</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="aditivo-numero" class="block text-sm font-medium text-gray-700">Número do Aditivo</label>
-                                <input type="text" id="aditivo-numero" placeholder="Ex: 1º Termo Aditivo" class="p-2 border rounded-md w-full" required>
-                            </div>
-                            <input type="text" id="aditivo-processo-sei" placeholder="Nº Processo SEI (Aditivo)*" class="p-2 border rounded-md" required>
-                            <input type="url" id="aditivo-link-sei" placeholder="Link do Processo SEI (Aditivo)" class="p-2 border rounded-md col-span-1 md:col-span-2">
-                            <div>
-                                <label for="aditivo-data-assinatura" class="block text-sm font-medium text-gray-700">Data Assinatura (Aditivo)</label>
-                                <input type="date" id="aditivo-data-assinatura" class="p-2 border rounded-md w-full" required>
-                            </div>
-                            <input type="text" id="aditivo-justificativa" placeholder="Justificativa / Objeto do Aditivo" class="p-2 border rounded-md col-span-1 md:col-span-3" required>
-                        </div>
-                
-                        <div id="aditivo-gestor-fiscal-fields" class="space-y-4 p-3 border-t border-red-200" style="display: none;">
-                            <div>
-                                <h4 class="text-md font-semibold text-gray-800">Gestor do Contrato</h4>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                                    <input type="text" id="aditivo-gestor-nome" placeholder="Nome do Gestor" class="p-2 border rounded-md">
-                                    <input type="text" id="aditivo-gestor-matricula" placeholder="Matrícula do Gestor" class="p-2 border rounded-md">
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <div class="flex justify-between items-center mb-2">
-                                    <h4 class="text-md font-semibold text-gray-800">Fiscais do Contrato</h4>
-                                    <button type="button" id="btn-adicionar-fiscal" class="bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1 px-2 rounded-lg">+ Adicionar Fiscal</button>
-                                </div>
-                                <div id="fiscais-container" class="space-y-2">
-                                    </div>
-                            </div>
-                        </div>
-
-                    </fieldset>
-                    
-                    <legend class="text-lg font-semibold px-2">Dados do Contrato</legend>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        
-                        <input type="text" id="contrato-processo-sei" placeholder="Nº Processo SEI*" class="p-2 border rounded-md col-span-1" required>
-                        <input type="url" id="contrato-link-sei" placeholder="Link do Processo SEI" class="p-2 border rounded-md col-span-1 md:col-span-2">
-                        <input type="text" id="contrato-numero" placeholder="Nº do Contrato*" class="p-2 border rounded-md col-span-1">
-                        <div>
-                            <label for="contrato-tipo" class="block text-sm font-medium text-gray-700">Tipo de Contrato</label>
-                            <select id="contrato-tipo" class="p-2 border rounded-md w-full bg-white" required>
-                                <option value="">Selecione...</option>
-                                <option value="Dispensa">Dispensa</option>
-                                <option value="Licitação">Licitação</option>
-                                <option value="Inexigibilidade">Inexigibilidade</option>
-                                <option value="Cooperacao Tecnica">Termo de Cooperação Técnica</option>
-                            </select>
-                        </div>
-                        <input type="text" id="contrato-objeto" placeholder="Objeto do Contrato*" class="p-2 border rounded-md col-span-1 md:col-span-3" required>
-                        
-                        <div class="col-span-1">
-                            <label for="contrato-estimativa-mensal" class="block text-sm font-medium text-gray-700">Estimativa Mensal (R$)</label>
-                            <input type="text" id="contrato-estimativa-mensal" placeholder="8.333,33" class="p-2 border rounded-md w-full currency-input" required>
-                        </div>
-                        <input type="text" id="contrato-tempo" placeholder="Tempo de Contrato (ex: 12 meses)" class="p-2 border rounded-md col-span-1" required>
-                        
-                        <div class="col-span-1">
-                            <label for="contrato-data-assinatura" class="block text-sm font-medium text-gray-700">Data Assinatura</label>
-                            <input type="date" id="contrato-data-assinatura" class="p-2 border rounded-md w-full" required>
-                        </div>
-                        <div class="col-span-1">
-                            <label for="contrato-data-inicio" class="block text-sm font-medium text-gray-700">Data Início</label>
-                            <input type="date" id="contrato-data-inicio" class="p-2 border rounded-md w-full" required>
-                        </div>
-                    </div>
-                    
-                    <div id="aditivo-valor-fields" class="grid grid-cols-1 md:grid-cols-3 gap-4 p-3 border-t border-gray-200 mt-4" style="display: none;">
-                        <div class="col-span-1">
-                            <label id="label-valor-total" for="contrato-valor-total" class="block text-sm font-medium text-gray-700">Valor Total (R$)</label>
-                            <input type="text" id="contrato-valor-total" placeholder="10.000,00" class="p-2 border rounded-md w-full currency-input">
-                        </div>
-                    </div>
-            
-                    <div id="aditivo-prazo-fields" class="grid grid-cols-1 md:grid-cols-3 gap-4 p-3 border-t border-gray-200 mt-2" style="display: none;">
-                        <div class="col-span-1">
-                            <label id="label-data-fim" for="contrato-data-fim" class="block text-sm font-medium text-gray-700">Data Fim</label>
-                            <input type="date" id="contrato-data-fim" class="p-2 border rounded-md w-full">
-                        </div>
-                    </div>
-                    
-                </fieldset>
-
-                <!-- Botões de Navegação -->
-                <div class="flex justify-between pt-4">
-                    <div>
-                        <button type="button" id="btn-form-anterior" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg mr-2">
-                            Anterior
-                        </button>
-                        <button type="button" class="modal-close bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg">
-                            Cancelar
-                        </button>
-                    </div>
-                    <div>
-                        <button type="button" id="btn-form-proximo" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
-                            Próximo
-                        </button>
-                        <button type="submit" id="btn-form-salvar" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">
-                            Salvar Contrato
-                        </button>
-                    </div>
-                </div>
-            </form>
+      <div class="modal-content !max-w-4xl">
+        <div class="flex justify-between items-center mb-4">
+          <h2 id="modal-contrato-titulo" class="text-xl font-bold">
+            Novo Contrato
+          </h2>
+          <button
+            class="modal-close text-gray-500 hover:text-gray-800 text-3xl"
+          >
+            &times;
+          </button>
         </div>
+
+        <!-- Indicador de Etapas -->
+        <div
+          id="stepper-contrato"
+          class="flex items-center justify-center mb-6"
+        >
+          <div
+            id="step-dot-1"
+            class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm"
+          >
+            1
+          </div>
+          <div class="flex-auto border-t-2 border-gray-300 mx-2"></div>
+          <div
+            id="step-dot-2"
+            class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold text-sm"
+          >
+            2
+          </div>
+          <div class="flex-auto border-t-2 border-gray-300 mx-2"></div>
+          <div
+            id="step-dot-3"
+            class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold text-sm"
+          >
+            3
+          </div>
+        </div>
+
+        <form id="form-contrato" class="modal-body space-y-6">
+          <input type="hidden" id="contrato-id" />
+          <input type="hidden" id="contrato-parentId" />
+
+          <!-- Etapa 1: Unidade Contratante -->
+          <fieldset
+            id="form-step-1"
+            class="form-step border border-gray-300 p-4 rounded-lg"
+          >
+            <legend class="text-lg font-semibold px-2">
+              Unidade Contratante
+            </legend>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input
+                type="text"
+                id="unidade-cnpj"
+                placeholder="CNPJ"
+                class="p-2 border rounded-md"
+                list="list-cnpjs"
+                required
+              />
+              <datalist id="list-cnpjs"></datalist>
+
+              <input
+                type="text"
+                id="unidade-nome"
+                placeholder="Razão Social"
+                class="p-2 border rounded-md capitalize-input"
+                required
+              />
+              <input
+                type="text"
+                id="unidade-endereco"
+                placeholder="Endereço Completo"
+                class="p-2 border rounded-md col-span-1 md:col-span-2"
+                required
+              />
+              <input
+                type="text"
+                id="unidade-rep"
+                placeholder="Representante Legal"
+                class="p-2 border rounded-md col-span-1 md:col-span-2 capitalize-input"
+                list="list-reps-unidade"
+                required
+              />
+              <datalist id="list-reps-unidade"></datalist>
+            </div>
+          </fieldset>
+
+          <!-- Etapa 2: Empresa Contratada -->
+          <fieldset
+            id="form-step-2"
+            class="form-step border border-gray-300 p-4 rounded-lg"
+            style="display: none"
+          >
+            <legend class="text-lg font-semibold px-2">
+              Empresa Contratada
+            </legend>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input
+                type="text"
+                id="empresa-cnpj"
+                placeholder="CNPJ"
+                class="p-2 border rounded-md"
+                list="list-cnpjs"
+                required
+              />
+              <input
+                type="text"
+                id="empresa-nome"
+                placeholder="Razão Social"
+                class="p-2 border rounded-md capitalize-input"
+                required
+              />
+              <input
+                type="text"
+                id="empresa-endereco"
+                placeholder="Endereço Completo"
+                class="p-2 border rounded-md col-span-1 md:col-span-2"
+                required
+              />
+              <input
+                type="text"
+                id="empresa-rep"
+                placeholder="Representante Legal"
+                class="p-2 border rounded-md col-span-1 md:col-span-2 capitalize-input"
+                list="list-reps-empresa"
+                required
+              />
+              <datalist id="list-reps-empresa"></datalist>
+            </div>
+          </fieldset>
+
+          <!-- Etapa 3: Dados do Contrato -->
+          <fieldset
+            id="form-step-3"
+            class="form-step border border-gray-300 p-4 rounded-lg"
+            style="display: none"
+          >
+            <fieldset
+              id="fieldset-aditivo"
+              class="border border-red-300 p-4 rounded-lg mb-6 bg-red-50"
+              style="display: none"
+            >
+              <legend class="text-lg font-semibold px-2 text-red-700">
+                Dados do Aditivo
+              </legend>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div>
+                  <label
+                    for="aditivo-tipo"
+                    class="block text-sm font-medium text-gray-700"
+                    >Tipo de Aditivo</label
+                  >
+                  <select
+                    id="aditivo-tipo"
+                    class="p-2 border rounded-md w-full bg-white"
+                    required
+                  >
+                    <option value="">Selecione...</option>
+                    <option value="Valor">Aditivo de Valor</option>
+                    <option value="Prazo">Aditivo de Prazo</option>
+                    <option value="GestorFiscal">
+                      Alteração Gestor/Fiscal
+                    </option>
+                    <option value="Outro">Outro</option>
+                  </select>
+                </div>
+                <div>
+                  <label
+                    for="aditivo-numero"
+                    class="block text-sm font-medium text-gray-700"
+                    >Número do Aditivo</label
+                  >
+                  <input
+                    type="text"
+                    id="aditivo-numero"
+                    placeholder="Ex: 1º Termo Aditivo"
+                    class="p-2 border rounded-md w-full"
+                    required
+                  />
+                </div>
+                <input
+                  type="text"
+                  id="aditivo-processo-sei"
+                  placeholder="Nº Processo SEI (Aditivo)*"
+                  class="p-2 border rounded-md"
+                  required
+                />
+                <input
+                  type="url"
+                  id="aditivo-link-sei"
+                  placeholder="Link do Processo SEI (Aditivo)"
+                  class="p-2 border rounded-md col-span-1 md:col-span-2"
+                />
+                <div>
+                  <label
+                    for="aditivo-data-assinatura"
+                    class="block text-sm font-medium text-gray-700"
+                    >Data Assinatura (Aditivo)</label
+                  >
+                  <input
+                    type="date"
+                    id="aditivo-data-assinatura"
+                    class="p-2 border rounded-md w-full"
+                    required
+                  />
+                </div>
+                <input
+                  type="text"
+                  id="aditivo-justificativa"
+                  placeholder="Justificativa / Objeto do Aditivo"
+                  class="p-2 border rounded-md col-span-1 md:col-span-3"
+                  required
+                />
+              </div>
+
+              <div
+                id="aditivo-gestor-fiscal-fields"
+                class="space-y-4 p-3 border-t border-red-200"
+                style="display: none"
+              >
+                <div>
+                  <h4 class="text-md font-semibold text-gray-800">
+                    Gestor do Contrato
+                  </h4>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                    <input
+                      type="text"
+                      id="aditivo-gestor-nome"
+                      placeholder="Nome do Gestor"
+                      class="p-2 border rounded-md"
+                    />
+                    <input
+                      type="text"
+                      id="aditivo-gestor-matricula"
+                      placeholder="Matrícula do Gestor"
+                      class="p-2 border rounded-md"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between items-center mb-2">
+                    <h4 class="text-md font-semibold text-gray-800">
+                      Fiscais do Contrato
+                    </h4>
+                    <button
+                      type="button"
+                      id="btn-adicionar-fiscal"
+                      class="bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1 px-2 rounded-lg"
+                    >
+                      + Adicionar Fiscal
+                    </button>
+                  </div>
+                  <div id="fiscais-container" class="space-y-2"></div>
+                </div>
+              </div>
+            </fieldset>
+
+            <legend class="text-lg font-semibold px-2">
+              Dados do Contrato
+            </legend>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <input
+                type="text"
+                id="contrato-processo-sei"
+                placeholder="Nº Processo SEI*"
+                class="p-2 border rounded-md col-span-1"
+                required
+              />
+              <input
+                type="url"
+                id="contrato-link-sei"
+                placeholder="Link do Processo SEI"
+                class="p-2 border rounded-md col-span-1 md:col-span-2"
+              />
+              <input
+                type="text"
+                id="contrato-numero"
+                placeholder="Nº do Contrato*"
+                class="p-2 border rounded-md col-span-1"
+              />
+              <div>
+                <label
+                  for="contrato-tipo"
+                  class="block text-sm font-medium text-gray-700"
+                  >Tipo de Contrato</label
+                >
+                <select
+                  id="contrato-tipo"
+                  class="p-2 border rounded-md w-full bg-white"
+                  required
+                >
+                  <option value="">Selecione...</option>
+                  <option value="Dispensa">Dispensa</option>
+                  <option value="Licitação">Licitação</option>
+                  <option value="Inexigibilidade">Inexigibilidade</option>
+                  <option value="Cooperacao Tecnica">
+                    Termo de Cooperação Técnica
+                  </option>
+                </select>
+              </div>
+              <input
+                type="text"
+                id="contrato-objeto"
+                placeholder="Objeto do Contrato*"
+                class="p-2 border rounded-md col-span-1 md:col-span-3"
+                required
+              />
+
+              <div class="col-span-1">
+                <label
+                  for="contrato-estimativa-mensal"
+                  class="block text-sm font-medium text-gray-700"
+                  >Estimativa Mensal (R$)</label
+                >
+                <input
+                  type="text"
+                  id="contrato-estimativa-mensal"
+                  placeholder="8.333,33"
+                  class="p-2 border rounded-md w-full currency-input"
+                  required
+                />
+              </div>
+              <input
+                type="text"
+                id="contrato-tempo"
+                placeholder="Tempo de Contrato (ex: 12 meses)"
+                class="p-2 border rounded-md col-span-1"
+                required
+              />
+
+              <div class="col-span-1">
+                <label
+                  for="contrato-data-assinatura"
+                  class="block text-sm font-medium text-gray-700"
+                  >Data Assinatura</label
+                >
+                <input
+                  type="date"
+                  id="contrato-data-assinatura"
+                  class="p-2 border rounded-md w-full"
+                  required
+                />
+              </div>
+              <div class="col-span-1">
+                <label
+                  for="contrato-data-inicio"
+                  class="block text-sm font-medium text-gray-700"
+                  >Data Início</label
+                >
+                <input
+                  type="date"
+                  id="contrato-data-inicio"
+                  class="p-2 border rounded-md w-full"
+                  required
+                />
+              </div>
+            </div>
+
+            <div
+              id="aditivo-valor-fields"
+              class="grid grid-cols-1 md:grid-cols-3 gap-4 p-3 border-t border-gray-200 mt-4"
+              style="display: none"
+            >
+              <div class="col-span-1">
+                <label
+                  id="label-valor-total"
+                  for="contrato-valor-total"
+                  class="block text-sm font-medium text-gray-700"
+                  >Valor Total (R$)</label
+                >
+                <input
+                  type="text"
+                  id="contrato-valor-total"
+                  placeholder="10.000,00"
+                  class="p-2 border rounded-md w-full currency-input"
+                />
+              </div>
+            </div>
+
+            <div
+              id="aditivo-prazo-fields"
+              class="grid grid-cols-1 md:grid-cols-3 gap-4 p-3 border-t border-gray-200 mt-2"
+              style="display: none"
+            >
+              <div class="col-span-1">
+                <label
+                  id="label-data-fim"
+                  for="contrato-data-fim"
+                  class="block text-sm font-medium text-gray-700"
+                  >Data Fim</label
+                >
+                <input
+                  type="date"
+                  id="contrato-data-fim"
+                  class="p-2 border rounded-md w-full"
+                />
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Botões de Navegação -->
+          <div class="flex justify-between pt-4">
+            <div>
+              <button
+                type="button"
+                id="btn-form-anterior"
+                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg mr-2"
+              >
+                Anterior
+              </button>
+              <button
+                type="button"
+                class="modal-close bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg"
+              >
+                Cancelar
+              </button>
+            </div>
+            <div>
+              <button
+                type="button"
+                id="btn-form-proximo"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
+              >
+                Próximo
+              </button>
+              <button
+                type="submit"
+                id="btn-form-salvar"
+                class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg"
+              >
+                Salvar Contrato
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
 
     <!-- Modal: Visualizar Contrato e Pagamentos -->
     <div id="modal-visualizar-contrato" class="modal">
-        <div class="modal-content">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold">Detalhes do Contrato</h2>
-                <button class="modal-close text-gray-500 hover:text-gray-800 text-3xl">&times;</button>
-            </div>
-            
-            <div class="modal-body space-y-6" id="visualizar-contrato-body">
-                <!-- Conteúdo injetado via JS -->
-            </div>
-            
-            <div class="flex justify-between items-center pt-4">
-                            <button type="button" id="btn-exportar-pdf" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg">
-                                Exportar PDF
-                            </button>
-            <div class="flex justify-end items-center pt-4">
-                <button class="btn-abrir-modal-pagamento bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mr-4" data-id="contrato_1763149379825">
-                                + Pagamento
-                            </button>
-                            <button type="button" class="modal-close bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg">
-                                Fechar
-                            </button>
-            </div> </div>
+      <div class="modal-content">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-bold">Detalhes do Contrato</h2>
+          <button
+            class="modal-close text-gray-500 hover:text-gray-800 text-3xl"
+          >
+            &times;
+          </button>
         </div>
+
+        <div class="modal-body space-y-6" id="visualizar-contrato-body">
+          <!-- Conteúdo injetado via JS -->
+        </div>
+
+        <div class="flex justify-between items-center pt-4">
+          <button
+            type="button"
+            id="btn-exportar-pdf"
+            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg"
+          >
+            Exportar PDF
+          </button>
+          <div class="flex justify-end items-center pt-4">
+            <button
+              class="btn-abrir-modal-pagamento bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mr-4"
+              data-id="contrato_1763149379825"
+            >
+              + Pagamento
+            </button>
+            <button
+              type="button"
+              class="modal-close bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg"
+            >
+              Fechar
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Modal: Adicionar Pagamento -->
     <div id="modal-pagamento" class="modal">
-        <div class="modal-content !max-w-md">
-            <div class="flex justify-between items-center mb-4">
-                <h2 id="modal-pagamento-titulo" class="text-xl font-bold">Adicionar Pagamento</h2>
-                <button class="modal-close text-gray-500 hover:text-gray-800 text-3xl">&times;</button>
-            </div>
-            
-            <form id="form-pagamento" class="modal-body space-y-4">
-                <input type="hidden" id="pagamento-contrato-id">
-                <input type="hidden" id="pagamento-id">
-                <h3 id="pagamento-contrato-objeto" class="text-lg font-semibold text-gray-700"></h3>
-                <div>
-                    <label for="pagamento-data" class="block text-sm font-medium text-gray-700">Data do Pagamento</label>
-                    <input type="date" id="pagamento-data" class="p-2 border rounded-md w-full" required>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label for="pagamento-periodo-de" class="block text-sm font-medium text-gray-700">Período (De)</label>
-                        <input type="date" id="pagamento-periodo-de" class="p-2 border rounded-md w-full">
-                    </div>
-                    <div>
-                        <label for="pagamento-periodo-ate" class="block text-sm font-medium text-gray-700">Período (Até)</label>
-                        <input type="date" id="pagamento-periodo-ate" class="p-2 border rounded-md w-full">
-                    </div>
-                </div>
-                <div>
-                    <label for="pagamento-valor" class="block text-sm font-medium text-gray-700">Valor Pago (R$)</label>
-                    <input type="text" id="pagamento-valor" placeholder="5.000,00" class="p-2 border rounded-md w-full currency-input" required>
-                </div>
-                <div>
-                    <label for="pagamento-nf" class="block text-sm font-medium text-gray-700">Nº Nota Fiscal</label>
-                    <input type="text" id="pagamento-nf" placeholder="12345" class="p-2 border rounded-md w-full" required>
-                </div>
-                <div>
-                    <label for="pagamento-processo-sei" class="block text-sm font-medium text-gray-700">Nº Processo SEI Pagamento</label>
-                    <input type="text" id="pagamento-processo-sei" placeholder="12345.6789/2025-00" class="p-2 border rounded-md w-full" required>
-                    <input type="url" id="pagamento-link-sei" placeholder="Link do Processo SEI (Pagamento, opcional)" class="p-2 border rounded-md w-full">
-                </div>
-                <div class="flex items-center pt-2">
-                    <input type="checkbox" id="pagamento-is-trd" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                    <label for="pagamento-is-trd" class="ml-2 block text-sm font-medium text-gray-900">
-                        Pagamento via TRD (Termo de Reconhecimento de Débito)
-                    </label>
-                </div>
-                <div class="flex justify-end pt-4">
-                    <button type="button" class="modal-close bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg mr-2">
-                        Cancelar
-                    </button>
-                    <button type="submit" id="modal-pagamento-submit-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
-                        Adicionar Pagamento
-                    </button>
-                </div>
-            </form>
+      <div class="modal-content !max-w-md">
+        <div class="flex justify-between items-center mb-4">
+          <h2 id="modal-pagamento-titulo" class="text-xl font-bold">
+            Adicionar Pagamento
+          </h2>
+          <button
+            class="modal-close text-gray-500 hover:text-gray-800 text-3xl"
+          >
+            &times;
+          </button>
         </div>
+
+        <form id="form-pagamento" class="modal-body space-y-4">
+          <input type="hidden" id="pagamento-contrato-id" />
+          <input type="hidden" id="pagamento-id" />
+          <h3
+            id="pagamento-contrato-objeto"
+            class="text-lg font-semibold text-gray-700"
+          ></h3>
+          <div>
+            <label
+              for="pagamento-data"
+              class="block text-sm font-medium text-gray-700"
+              >Data do Pagamento</label
+            >
+            <input
+              type="date"
+              id="pagamento-data"
+              class="p-2 border rounded-md w-full"
+              required
+            />
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label
+                for="pagamento-periodo-de"
+                class="block text-sm font-medium text-gray-700"
+                >Período (De)</label
+              >
+              <input
+                type="date"
+                id="pagamento-periodo-de"
+                class="p-2 border rounded-md w-full"
+              />
+            </div>
+            <div>
+              <label
+                for="pagamento-periodo-ate"
+                class="block text-sm font-medium text-gray-700"
+                >Período (Até)</label
+              >
+              <input
+                type="date"
+                id="pagamento-periodo-ate"
+                class="p-2 border rounded-md w-full"
+              />
+            </div>
+          </div>
+          <div>
+            <label
+              for="pagamento-valor"
+              class="block text-sm font-medium text-gray-700"
+              >Valor Pago (R$)</label
+            >
+            <input
+              type="text"
+              id="pagamento-valor"
+              placeholder="5.000,00"
+              class="p-2 border rounded-md w-full currency-input"
+              required
+            />
+          </div>
+          <div>
+            <label
+              for="pagamento-nf"
+              class="block text-sm font-medium text-gray-700"
+              >Nº Nota Fiscal</label
+            >
+            <input
+              type="text"
+              id="pagamento-nf"
+              placeholder="12345"
+              class="p-2 border rounded-md w-full"
+              required
+            />
+          </div>
+          <div>
+            <label
+              for="pagamento-processo-sei"
+              class="block text-sm font-medium text-gray-700"
+              >Nº Processo SEI Pagamento</label
+            >
+            <input
+              type="text"
+              id="pagamento-processo-sei"
+              placeholder="12345.6789/2025-00"
+              class="p-2 border rounded-md w-full"
+              required
+            />
+            <input
+              type="url"
+              id="pagamento-link-sei"
+              placeholder="Link do Processo SEI (Pagamento, opcional)"
+              class="p-2 border rounded-md w-full"
+            />
+          </div>
+          <div class="flex items-center pt-2">
+            <input
+              type="checkbox"
+              id="pagamento-is-trd"
+              class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <label
+              for="pagamento-is-trd"
+              class="ml-2 block text-sm font-medium text-gray-900"
+            >
+              Pagamento via TRD (Termo de Reconhecimento de Débito)
+            </label>
+          </div>
+          <div class="flex justify-end pt-4">
+            <button
+              type="button"
+              class="modal-close bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg mr-2"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              id="modal-pagamento-submit-btn"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
+            >
+              Adicionar Pagamento
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <!-- Modal: Detalhar Pagamento (Itens da NF) -->
     <div id="modal-detalhes-pagamento" class="modal">
-        <div class="modal-content !max-w-2xl">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold">Detalhes da Nota Fiscal</h2>
-                <button class="modal-close text-gray-500 hover:text-gray-800 text-3xl">&times;</button>
-            </div>
-            
-            <div class="modal-body space-y-4">
-                <input type="hidden" id="detalhe-contrato-id">
-                <input type="hidden" id="detalhe-pagamento-id">
-                <h3 id="detalhe-pagamento-info" class="text-lg font-semibold text-gray-700"></h3>
-                
-                <form id="form-detalhe-item" class="grid grid-cols-4 gap-3 p-3 bg-gray-100 rounded-lg">
-                    <input type="text" id="detalhe-item-desc" placeholder="Descrição (ex: Emissão)" class="p-2 border rounded-md col-span-4 md:col-span-2" required>
-                    <input type="number" id="detalhe-item-qtd" min="0" placeholder="Qtd" class="p-2 border rounded-md col-span-2 md:col-span-1" required>
-                    <input type="text" id="detalhe-item-valor" placeholder="Valor Unit." class="p-2 border rounded-md col-span-2 md:col-span-1 currency-input-3dec" required>
-                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg col-span-4">
-                        Adicionar Item
-                    </button>
-                </form>
-
-                <div class="mt-4">
-                    <h4 class="font-semibold mb-2">Itens Adicionados:</h4>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descrição</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Qtd</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Valor Unit.</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ação</th>
-                                 </tr>
-                            </thead>
-                            <tbody id="lista-detalhes-itens" class="bg-white divide-y divide-gray-200">
-                                <!-- Itens injetados via JS -->
-                            </tbody>
-                            <tfoot class="bg-gray-100">
-                                <tr>
-                                    <td colspan="3" class="px-4 py-2 text-right font-bold">Total dos Itens:</td>
-                                    <td id="detalhe-item-total-geral" class="px-4 py-2 font-bold">R$ 0,00</td>
-                                    <td></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="flex justify-end pt-4">
-                <button type="button" id="btn-detalhes-novo-pagamento" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mr-2">
-                    + Novo Pagamento
-                </button>
-                <button type="button" class="modal-close bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg">
-                    Fechar
-                </button>
-            </div>
+      <div class="modal-content !max-w-2xl">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-bold">Detalhes da Nota Fiscal</h2>
+          <button
+            class="modal-close text-gray-500 hover:text-gray-800 text-3xl"
+          >
+            &times;
+          </button>
         </div>
+
+        <div class="modal-body space-y-4">
+          <input type="hidden" id="detalhe-contrato-id" />
+          <input type="hidden" id="detalhe-pagamento-id" />
+          <h3
+            id="detalhe-pagamento-info"
+            class="text-lg font-semibold text-gray-700"
+          ></h3>
+
+          <form
+            id="form-detalhe-item"
+            class="grid grid-cols-4 gap-3 p-3 bg-gray-100 rounded-lg"
+          >
+            <input
+              type="text"
+              id="detalhe-item-desc"
+              placeholder="Descrição (ex: Emissão)"
+              class="p-2 border rounded-md col-span-4 md:col-span-2"
+              required
+            />
+            <input
+              type="number"
+              id="detalhe-item-qtd"
+              min="0"
+              placeholder="Qtd"
+              class="p-2 border rounded-md col-span-2 md:col-span-1"
+              required
+            />
+            <input
+              type="text"
+              id="detalhe-item-valor"
+              placeholder="Valor Unit."
+              class="p-2 border rounded-md col-span-2 md:col-span-1 currency-input-3dec"
+              required
+            />
+            <button
+              type="submit"
+              class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg col-span-4"
+            >
+              Adicionar Item
+            </button>
+          </form>
+
+          <div class="mt-4">
+            <h4 class="font-semibold mb-2">Itens Adicionados:</h4>
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th
+                      class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Descrição
+                    </th>
+                    <th
+                      class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Qtd
+                    </th>
+                    <th
+                      class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Valor Unit.
+                    </th>
+                    <th
+                      class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Total
+                    </th>
+                    <th
+                      class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Ação
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="lista-detalhes-itens"
+                  class="bg-white divide-y divide-gray-200"
+                >
+                  <!-- Itens injetados via JS -->
+                </tbody>
+                <tfoot class="bg-gray-100">
+                  <tr>
+                    <td colspan="3" class="px-4 py-2 text-right font-bold">
+                      Total dos Itens:
+                    </td>
+                    <td
+                      id="detalhe-item-total-geral"
+                      class="px-4 py-2 font-bold"
+                    >
+                      R$ 0,00
+                    </td>
+                    <td></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-end pt-4">
+          <button
+            type="button"
+            id="btn-detalhes-novo-pagamento"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mr-2"
+          >
+            + Novo Pagamento
+          </button>
+          <button
+            type="button"
+            class="modal-close bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg"
+          >
+            Fechar
+          </button>
+        </div>
+      </div>
     </div>
 
     <div id="modal-detalhes-aditivo" class="modal">
-    <div class="modal-content !max-w-3xl">
+      <div class="modal-content !max-w-3xl">
         <div class="flex justify-between items-center mb-4">
-            <h2 id="detalhe-aditivo-titulo" class="text-xl font-bold">Detalhes do Aditivo</h2>
-            <button class="modal-close text-gray-500 hover:text-gray-800 text-3xl">&times;</button>
+          <h2 id="detalhe-aditivo-titulo" class="text-xl font-bold">
+            Detalhes do Aditivo
+          </h2>
+          <button
+            class="modal-close text-gray-500 hover:text-gray-800 text-3xl"
+          >
+            &times;
+          </button>
         </div>
-        
+
         <div class="modal-body space-y-4">
-            
-            <fieldset class="border border-gray-300 p-4 rounded-lg">
-                <legend class="text-lg font-semibold px-2">Informações</legend>
-                <div id="detalhe-aditivo-info" class="space-y-2">
-                    </div>
-            </fieldset>
+          <fieldset class="border border-gray-300 p-4 rounded-lg">
+            <legend class="text-lg font-semibold px-2">Informações</legend>
+            <div id="detalhe-aditivo-info" class="space-y-2"></div>
+          </fieldset>
 
-            <fieldset class="border border-gray-300 p-4 rounded-lg">
-                <legend class="text-lg font-semibold px-2">Pagamentos Associados ao Período</legend>
-                <div id="detalhe-aditivo-pagamentos" class="overflow-y-auto max-h-64">
-                    </div>
-            </fieldset>
-
+          <fieldset class="border border-gray-300 p-4 rounded-lg">
+            <legend class="text-lg font-semibold px-2">
+              Pagamentos Associados ao Período
+            </legend>
+            <div
+              id="detalhe-aditivo-pagamentos"
+              class="overflow-y-auto max-h-64"
+            ></div>
+          </fieldset>
         </div>
-        
+
         <div class="flex justify-end pt-4">
-            <button type="button" class="modal-close bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg">
-                Fechar
-            </button>
+          <button
+            type="button"
+            class="modal-close bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg"
+          >
+            Fechar
+          </button>
         </div>
+      </div>
     </div>
-    </div>
-    
+
     <!-- Toast de Notificação -->
     <div id="toast">Mensagem do toast</div>
 
     <!-- Template para Card de Contrato -->
     <template id="template-card-contrato">
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col">
-            <div class="p-5 flex-grow">
-                <div class="mb-2">
-                    <span class="text-sm text-gray-500" data-field="processoSei"></span>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-3" data-field="objeto"></h3>
-                <p class="text-sm text-gray-700 mb-4">
-                    <span class="font-semibold">Contratada:</span>
-                    <span data-field="empresaNome"></span>
-                </p>
-                <div class="mb-4">
-                    <div class="flex justify-between text-sm font-medium text-gray-700 mb-1">
-                        <span>Valor Pago</span>
-                        <span>
-                            <span data-field="totalPago"></span> / 
-                            <span data-field="valorTotal"></span>
-                        </span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div class="bg-blue-600 h-2.5 rounded-full" data-field="progressoValor" style="width: 0%"></div>
-                    </div>
-                </div>
-                <div>
-                    <div class="flex justify-between text-sm font-medium text-gray-700 mb-1">
-                        <span>Tempo Restante</span>
-                        <span data-field="diasRestantes"></span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div class="bg-green-600 h-2.5 rounded-full" data-field="progressoTempo" style="width: 0%"></div>
-                    </div>
-                </div>
+      <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col">
+        <div class="p-5 flex-grow">
+          <div class="mb-2">
+            <span class="text-sm text-gray-500" data-field="processoSei"></span>
+          </div>
+          <h3
+            class="text-xl font-bold text-gray-900 mb-3"
+            data-field="objeto"
+          ></h3>
+          <p class="text-sm text-gray-700 mb-4">
+            <span class="font-semibold">Contratada:</span>
+            <span data-field="empresaNome"></span>
+          </p>
+          <div class="mb-4">
+            <div
+              class="flex justify-between text-sm font-medium text-gray-700 mb-1"
+            >
+              <span>Valor Pago</span>
+              <span>
+                <span data-field="totalPago"></span> /
+                <span data-field="valorTotal"></span>
+              </span>
             </div>
-            <div class="p-4 bg-gray-50 border-t border-gray-200 grid grid-cols-2 gap-3">
-                <button class="btn-visualizar-contrato text-center w-full bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-300 rounded-lg shadow-sm transition duration-150">
-                    Ver Detalhes
-                </button>
-                <button class="btn-abrir-modal-pagamento text-center w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-sm transition duration-150">
-                    + Pagamento
-                </button>
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+              <div
+                class="bg-blue-600 h-2.5 rounded-full"
+                data-field="progressoValor"
+                style="width: 0%"
+              ></div>
             </div>
+          </div>
+          <div>
+            <div
+              class="flex justify-between text-sm font-medium text-gray-700 mb-1"
+            >
+              <span>Tempo Restante</span>
+              <span data-field="diasRestantes"></span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+              <div
+                class="bg-green-600 h-2.5 rounded-full"
+                data-field="progressoTempo"
+                style="width: 0%"
+              ></div>
+            </div>
+          </div>
         </div>
+        <div
+          class="p-4 bg-gray-50 border-t border-gray-200 grid grid-cols-2 gap-3"
+        >
+          <button
+            class="btn-visualizar-contrato text-center w-full bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-300 rounded-lg shadow-sm transition duration-150"
+          >
+            Ver Detalhes
+          </button>
+          <button
+            class="btn-abrir-modal-pagamento text-center w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-sm transition duration-150"
+          >
+            + Pagamento
+          </button>
+        </div>
+      </div>
     </template>
 
     <!-- Template para linha de Fiscal (OCULTO) -->
     <template id="template-fiscal-row">
-        <div class="fiscal-row grid grid-cols-12 gap-2 items-center">
-            <input type="text" name="fiscal-nome" placeholder="Nome do Fiscal" class="p-2 border rounded-md col-span-6 fiscal-nome" required>
-            <input type="text" name="fiscal-matricula" placeholder="Matrícula do Fiscal" class="p-2 border rounded-md col-span-5 fiscal-matricula" required>
-            <button type="button" class="btn-remover-fiscal bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded-lg col-span-1 text-center">X</button>
-        </div>
+      <div class="fiscal-row grid grid-cols-12 gap-2 items-center">
+        <input
+          type="text"
+          name="fiscal-nome"
+          placeholder="Nome do Fiscal"
+          class="p-2 border rounded-md col-span-6 fiscal-nome"
+          required
+        />
+        <input
+          type="text"
+          name="fiscal-matricula"
+          placeholder="Matrícula do Fiscal"
+          class="p-2 border rounded-md col-span-5 fiscal-matricula"
+          required
+        />
+        <button
+          type="button"
+          class="btn-remover-fiscal bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded-lg col-span-1 text-center"
+        >
+          X
+        </button>
+      </div>
     </template>
 
-    <!-- Nosso JavaScript (agora em arquivo separado) -->
-    <!-- 'defer' garante que o script só execute após o HTML ser lido -->
     <script src="script.js" defer></script>
-
-</body>
+  </body>
 </html>
