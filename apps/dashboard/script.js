@@ -378,14 +378,13 @@ window.onload = function () {
       const analysts = new Set();
       const situations = new Set();
       const ufs = new Set();
-      const years = new Set(); // Novo Set para Anos
+      const years = new Set(); 
 
       data.forEach((row) => {
         if (row["Usuario Analista"]) analysts.add(row["Usuario Analista"]);
         if (row["Situação Solicitação"]) situations.add(row["Situação Solicitação"]);
         if (row["Codigo Uf"]) ufs.add(row["Codigo Uf"]);
         
-        // Captura o Ano da data de análise
         if (row._dataAnalise) {
             years.add(row._dataAnalise.getFullYear());
         }
@@ -395,14 +394,44 @@ window.onload = function () {
       populateSelect("filterSituation", [...situations].sort());
       populateSelect("filterUf", [...ufs].sort());
       
-      // Popula o select de Ano (Ordem decrescente: 2025, 2024...)
+      // Popula o select de Ano
       populateSelect("filterYear", [...years].sort((a, b) => b - a)); 
 
-      // Limpa filtros iniciais
-      document.getElementById("filterPeriodStart").value = "";
-      document.getElementById("filterPeriodEnd").value = "";
-      document.getElementById("filterMonth").value = "all";
-      document.getElementById("filterYear").value = "all";
+      // --- NOVA LÓGICA DE PADRÃO (Mês Anterior) ---
+      
+      const today = new Date();
+      let targetYear = today.getFullYear();
+      let targetMonth = today.getMonth() - 1; // 0-11 (Jan é 0)
+
+      // Ajuste para virada de ano: Se estamos em Janeiro (0), queremos Dezembro (11) do ano passado
+      if (targetMonth < 0) {
+          targetMonth = 11;
+          targetYear -= 1;
+      }
+
+      const yearSelect = document.getElementById("filterYear");
+      const monthSelect = document.getElementById("filterMonth");
+
+      // Verifica se o ano alvo existe nas opções carregadas (para evitar erro se o CSV for antigo)
+      // Convertemos para String pois o value do option é string
+      const yearExists = [...yearSelect.options].some(opt => opt.value === targetYear.toString());
+
+      if (yearExists) {
+          yearSelect.value = targetYear;
+          monthSelect.value = targetMonth;
+          
+          // Chama a função de atalho para preencher as datas de Início/Fim automaticamente
+          // (Certifique-se que a função applyMonthYearShortcut já está definida no seu código)
+          if (typeof applyMonthYearShortcut === "function") {
+              applyMonthYearShortcut();
+          }
+      } else {
+          // Se não tiver dados do mês/ano anterior, deixa em "Todos"
+          yearSelect.value = "all";
+          monthSelect.value = "all";
+          document.getElementById("filterPeriodStart").value = "";
+          document.getElementById("filterPeriodEnd").value = "";
+      }
     }
 
     // --- NOVA FUNÇÃO: O "Atalho" que preenche as datas ---
