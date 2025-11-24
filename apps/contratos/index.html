@@ -287,30 +287,17 @@
         </div>
 
         <!-- Indicador de Etapas -->
-        <div
-          id="stepper-contrato"
-          class="flex items-center justify-center mb-6"
-        >
-          <div
-            id="step-dot-1"
-            class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm"
-          >
-            1
-          </div>
-          <div class="flex-auto border-t-2 border-gray-300 mx-2"></div>
-          <div
-            id="step-dot-2"
-            class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold text-sm"
-          >
-            2
-          </div>
-          <div class="flex-auto border-t-2 border-gray-300 mx-2"></div>
-          <div
-            id="step-dot-3"
-            class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold text-sm"
-          >
-            3
-          </div>
+        <div id="stepper-contrato" class="flex items-center justify-center mb-6">
+            <div id="step-dot-1" onclick="tentarNavegarParaPasso(1)" class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm cursor-pointer hover:opacity-80 transition">1</div>
+            <div class="flex-auto border-t-2 border-gray-300 mx-2"></div>
+            
+            <div id="step-dot-2" onclick="tentarNavegarParaPasso(2)" class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold text-sm cursor-pointer hover:opacity-80 transition">2</div>
+            <div class="flex-auto border-t-2 border-gray-300 mx-2"></div>
+            
+            <div id="step-dot-3" onclick="tentarNavegarParaPasso(3)" class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold text-sm cursor-pointer hover:opacity-80 transition">3</div>
+            <div class="flex-auto border-t-2 border-gray-300 mx-2"></div>
+            
+            <div id="step-dot-4" onclick="tentarNavegarParaPasso(4)" class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold text-sm cursor-pointer hover:opacity-80 transition">4</div>
         </div>
 
         <form id="form-contrato" class="modal-body space-y-6">
@@ -675,6 +662,32 @@
                 />
               </div>
             </div>
+          </fieldset>
+            <!-- Etapa 4: Dados do Gestor/Fiscal -->
+          <fieldset id="form-step-4" class="form-step border border-gray-300 p-4 rounded-lg" style="display: none;">
+              <legend class="text-lg font-semibold px-2">Gestão e Fiscalização</legend>
+              
+              <div class="space-y-6">
+                  <div class="bg-gray-50 p-3 rounded-md border border-gray-200">
+                      <h4 class="text-md font-semibold text-gray-800 border-b pb-1 mb-3">Gestor do Contrato</h4>
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <input type="text" id="contrato-gestor-nome" placeholder="Nome do Gestor" class="p-2 border rounded-md capitalize-input">
+                          <input type="text" id="contrato-gestor-matricula" placeholder="Matrícula do Gestor" class="p-2 border rounded-md">
+                      </div>
+                  </div>
+
+                  <div>
+                      <div class="flex justify-between items-center mb-2 border-b pb-1">
+                          <h4 class="text-md font-semibold text-gray-800">Fiscais do Contrato</h4>
+                          <button type="button" id="btn-adicionar-fiscal-step4" class="bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1 px-2 rounded-lg shadow">
+                              + Adicionar Fiscal
+                          </button>
+                      </div>
+                      <div id="fiscais-container-step4" class="space-y-2">
+                          </div>
+                      <p class="text-xs text-gray-500 mt-2">Se houver fiscais, adicione-os acima.</p>
+                  </div>
+              </div>
           </fieldset>
 
           <!-- Botões de Navegação -->
@@ -1154,12 +1167,12 @@
           class="p-2 border rounded-md col-span-5 fiscal-matricula"
           required
         />
-        <button
-          type="button"
-          class="btn-remover-fiscal bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded-lg col-span-1 text-center"
-        >
-          X
-        </button>
+      <button type="button"
+              class="btn-remover-fiscal bg-red-500 hover:bg-red-600 text-white 
+                    rounded-md w-6 h-6 text-xs flex items-center justify-center 
+                    transition shadow-sm">
+        ×
+      </button>
       </div>
     </template>
 
