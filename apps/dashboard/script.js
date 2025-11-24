@@ -1,6 +1,6 @@
 // Espera a página inteira carregar
 window.onload = function () {
-  // --- CORREÇÃO: Funções Nativas de Data (para substituir date-fns) ---
+  // --- Funções Nativas de Data (para substituir date-fns) ---
 
   /**
    * Converte uma string de data (dd/MM/yyyy HH:mm:ss ou yyyy-MM-dd) para um objeto Date.
@@ -113,6 +113,71 @@ window.onload = function () {
   let filteredData = [];
   const chartInstances = {}; // Armazena instâncias de gráficos para destruí-las
 
+  // --- NOVA FUNÇÃO: Tentar carregar relatorio.json ao iniciar ---
+  async function tryAutoLoadJson() {
+      try {
+          const response = await fetch('./relatorio.json');
+          if (response.ok) {
+              const jsonOptimized = await response.json();
+              const jsonRaw = restoreDataFromImport(jsonOptimized);
+              
+              // Processa os dados (cria as datas _dataAnalise, etc)
+              allData = processRawData(jsonRaw);
+              filteredData = [...allData];
+              
+              // Pula a tela de upload e vai direto para o dashboard
+              initDashboard(allData);
+              document.getElementById("uploadScreen").classList.add("hidden");
+              document.getElementById("dashboardScreen").classList.remove("hidden");
+              
+              console.log("Histórico JSON carregado automaticamente.");
+              document.getElementById("uploadStatus").textContent = "Histórico carregado. Adicione CSVs se desejar.";
+          }
+      } catch (error) {
+          console.log("Nenhum arquivo relatorio.json encontrado ou bloqueado pelo navegador (CORS).");
+          // Se falhar, apenas segue a vida na tela de upload padrão
+      }
+  }
+
+  // Chama a função ao iniciar
+  tryAutoLoadJson();
+
+// --- FUNÇÃO AUXILIAR DE VISIBILIDADE (NOVO) ---
+  function toggleHeaderButtons(show) {
+      const ids = ["btnHeaderReset", "exportJsonButton", "exportPdfButton"];
+      ids.forEach(id => {
+          const btn = document.getElementById(id);
+          if (btn) {
+              if (show) btn.classList.remove("hidden");
+              else btn.classList.add("hidden");
+          }
+      });
+  }
+
+  // Ajuste no Auto-Load para mostrar botões se der certo
+  async function tryAutoLoadJson() {
+      try {
+          const response = await fetch('./relatorio.json');
+          if (response.ok) {
+              const jsonOptimized = await response.json();
+              const jsonRaw = restoreDataFromImport(jsonOptimized);
+              allData = processRawData(jsonRaw);
+              filteredData = [...allData];
+              
+              initDashboard(allData);
+              toggleHeaderButtons(true); // <--- MOSTRA OS BOTÕES
+              
+              document.getElementById("uploadScreen").classList.add("hidden");
+              document.getElementById("dashboardScreen").classList.remove("hidden");
+              console.log("Histórico JSON carregado automaticamente.");
+              document.getElementById("uploadStatus").textContent = "Histórico carregado.";
+          }
+      } catch (error) {
+          console.log("Nenhum arquivo relatorio.json encontrado.");
+      }
+  }
+  tryAutoLoadJson();
+
   // --- 1. LÓGICA DE UPLOAD (RF01, RF-A01) ---
 
   const uploadScreen = document.getElementById("uploadScreen");
@@ -120,7 +185,40 @@ window.onload = function () {
   const dropzone = document.getElementById("dropzone");
   const fileInput = document.getElementById("fileInput");
   const uploadStatus = document.getElementById("uploadStatus");
-  const reloadButton = document.getElementById("reloadButton");
+
+  // Captura os botões com os NOVOS IDs
+  const btnHeaderReset = document.getElementById("btnHeaderReset");
+  const btnDashboardReset = document.getElementById("btnDashboardReset");
+
+  // Função unificada de Reset
+  function resetApplication() {
+    if (allData.length > 0 && !confirm("Isso limpará os dados atuais e voltará para a tela de upload. Deseja continuar?")) {
+        return;
+    }
+    allData = [];
+    filteredData = [];
+    Object.values(chartInstances).forEach((chart) => chart.destroy());
+    
+    dashboardScreen.classList.add("hidden");
+    uploadScreen.classList.remove("hidden");
+    setTimeout(() => { uploadScreen.style.opacity = "1"; }, 10); // Restaura opacidade
+    
+    toggleHeaderButtons(false); // <--- ESCONDE OS BOTÕES
+    
+    fileInput.value = "";
+    uploadStatus.textContent = "";
+    
+    // Limpa filtros
+    document.getElementById("filterPeriodStart").value = "";
+    document.getElementById("filterPeriodEnd").value = "";
+    document.getElementById("filterAnalyst").value = "all";
+    document.getElementById("filterSituation").value = "all";
+    document.getElementById("filterUf").value = "all";
+  }
+
+  // Adiciona eventos aos botões novos
+  if (btnHeaderReset) btnHeaderReset.addEventListener("click", resetApplication);
+  if (btnDashboardReset) btnDashboardReset.addEventListener("click", resetApplication);
 
   // Eventos de Drag-and-Drop
   dropzone.addEventListener("dragover", (e) => {
@@ -137,69 +235,53 @@ window.onload = function () {
   });
   dropzone.addEventListener("click", () => fileInput.click());
   fileInput.addEventListener("change", () => handleFiles(fileInput.files));
-  reloadButton.addEventListener("click", () => {
-    // Reseta o estado e mostra a tela de upload
-    allData = [];
-    filteredData = [];
-    Object.values(chartInstances).forEach((chart) => chart.destroy());
-    dashboardScreen.classList.add("hidden");
-    uploadScreen.style.opacity = "1";
-    uploadScreen.classList.remove("hidden");
-    fileInput.value = ""; // Limpa o input de arquivo
-    // CORREÇÃO: Limpa os filtros de data
-    document.getElementById("filterPeriodStart").value = "";
-    document.getElementById("filterPeriodEnd").value = "";
-    document.getElementById("filterAnalyst").value = "all";
-    document.getElementById("filterSituation").value = "all";
-    document.getElementById("filterUf").value = "all";
-  });
 
   function handleFiles(files) {
     if (files.length === 0) {
-      uploadStatus.textContent = "Nenhum arquivo selecionado.";
-      return;
+        uploadStatus.textContent = "Nenhum arquivo selecionado.";
+        return;
     }
-
     uploadStatus.textContent = `Carregando ${files.length} arquivo(s)...`;
-    console.time("ProcessamentoCSV");
-
+    
     let filesProcessed = 0;
-    let consolidatedData = [];
+    let consolidatedData = []; 
 
     Array.from(files).forEach((file) => {
-      // Usa a biblioteca PapaParse (carregada no index.html)
-      Papa.parse(file, {
-        header: true,
-        delimiter: ";",
-        skipEmptyLines: true,
-        complete: (results) => {
-          consolidatedData = consolidatedData.concat(results.data);
-          filesProcessed++;
+        Papa.parse(file, {
+            header: true,
+            delimiter: ";",
+            skipEmptyLines: true,
+            complete: (results) => {
+                consolidatedData = consolidatedData.concat(results.data);
+                filesProcessed++;
 
-          if (filesProcessed === files.length) {
-            console.timeEnd("ProcessamentoCSV");
-            uploadStatus.textContent = `Sucesso! ${consolidatedData.length} linhas totais carregadas.`;
+                if (filesProcessed === files.length) {
+                    const newProcessedData = processRawData(consolidatedData);
 
-            // Processa os dados brutos (parsing de datas, etc.)
-            allData = processRawData(consolidatedData);
-            filteredData = [...allData];
-
-            // Inicializa o dashboard
-            initDashboard(allData);
-
-            // Esconde a tela de upload e mostra o dashboard
-            uploadScreen.style.opacity = "0";
-            setTimeout(() => {
-              uploadScreen.classList.add("hidden");
-              dashboardScreen.classList.remove("hidden");
-            }, 500); // Aguarda a transição
-          }
-        },
-        error: (err) => {
-          console.error("Erro ao processar o arquivo:", err);
-          uploadStatus.textContent = `Erro ao ler o arquivo ${file.name}.`;
-        },
-      });
+                    if (allData.length > 0) {
+                        allData = mergeData(allData, newProcessedData); 
+                    } else {
+                        allData = newProcessedData;
+                    }
+                    
+                    filteredData = [...allData];
+                    initDashboard(allData);
+                    toggleHeaderButtons(true); // <--- MOSTRA OS BOTÕES
+                    
+                    uploadStatus.textContent = `Sucesso! ${allData.length} linhas totais carregadas.`;
+                    
+                    uploadScreen.style.opacity = "0";
+                    setTimeout(() => {
+                        uploadScreen.classList.add("hidden");
+                        dashboardScreen.classList.remove("hidden");
+                    }, 500);
+                }
+            },
+            error: (err) => {
+                console.error("Erro ao processar:", err);
+                uploadStatus.textContent = `Erro ao ler o arquivo.`;
+            },
+        });
     });
   }
 
@@ -265,52 +347,96 @@ window.onload = function () {
   // --- 3. LÓGICA DE FILTROS (RF07) ---
 
   const filterControls = [
-    "filterPeriodStart",
-    "filterPeriodEnd",
-    "filterAnalyst",
-    "filterSituation",
-    "filterUf",
-  ];
+      "filterPeriodStart", // Mantemos os listeners manuais
+      "filterPeriodEnd",   // Mantemos os listeners manuais
+      "filterAnalyst",
+      "filterSituation",
+      "filterUf",
+    ];
 
-  function initDashboard(data) {
-    populateFilters(data);
-    updateDashboard();
+    function initDashboard(data) {
+      populateFilters(data);
+      
+      // Listeners especiais para os atalhos de Mês/Ano
+      // Eles chamam a função que preenche as datas automaticamente
+      const monthSelect = document.getElementById("filterMonth");
+      const yearSelect = document.getElementById("filterYear");
+      
+      if (monthSelect) monthSelect.addEventListener("change", applyMonthYearShortcut);
+      if (yearSelect) yearSelect.addEventListener("change", applyMonthYearShortcut);
 
-    // Adiciona listeners aos filtros
-    filterControls.forEach((id) => {
-      document.getElementById(id).addEventListener("change", updateDashboard);
-    });
-  }
+      // Listeners padrão para todos os outros filtros (Update direto)
+      filterControls.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener("change", updateDashboard);
+      });
+      
+      updateDashboard();
+    }
 
-  function populateFilters(data) {
-    const analysts = new Set();
-    const situations = new Set();
-    const ufs = new Set();
-    // CORREÇÃO: Não vamos mais pré-definir as datas
-    // let minDate = new Date();
-    // let maxDate = new Date(1970, 0, 1);
+    function populateFilters(data) {
+      const analysts = new Set();
+      const situations = new Set();
+      const ufs = new Set();
+      const years = new Set(); // Novo Set para Anos
 
-    data.forEach((row) => {
-      if (row["Usuario Analista"]) analysts.add(row["Usuario Analista"]);
-      if (row["Situação Solicitação"])
-        situations.add(row["Situação Solicitação"]);
-      if (row["Codigo Uf"]) ufs.add(row["Codigo Uf"]);
+      data.forEach((row) => {
+        if (row["Usuario Analista"]) analysts.add(row["Usuario Analista"]);
+        if (row["Situação Solicitação"]) situations.add(row["Situação Solicitação"]);
+        if (row["Codigo Uf"]) ufs.add(row["Codigo Uf"]);
+        
+        // Captura o Ano da data de análise
+        if (row._dataAnalise) {
+            years.add(row._dataAnalise.getFullYear());
+        }
+      });
 
-      // if (row._dataAnalise) {
-      //     if (row._dataAnalise < minDate) minDate = row._dataAnalise;
-      //     if (row._dataAnalise > maxDate) maxDate = row._dataAnalise;
-      // }
-    });
+      populateSelect("filterAnalyst", [...analysts].sort());
+      populateSelect("filterSituation", [...situations].sort());
+      populateSelect("filterUf", [...ufs].sort());
+      
+      // Popula o select de Ano (Ordem decrescente: 2025, 2024...)
+      populateSelect("filterYear", [...years].sort((a, b) => b - a)); 
 
-    // Popula os selects
-    populateSelect("filterAnalyst", [...analysts].sort());
-    populateSelect("filterSituation", [...situations].sort());
-    populateSelect("filterUf", [...ufs].sort());
+      // Limpa filtros iniciais
+      document.getElementById("filterPeriodStart").value = "";
+      document.getElementById("filterPeriodEnd").value = "";
+      document.getElementById("filterMonth").value = "all";
+      document.getElementById("filterYear").value = "all";
+    }
 
-    // CORREÇÃO: Deixa os campos de data limpos por padrão
-    document.getElementById("filterPeriodStart").value = "";
-    document.getElementById("filterPeriodEnd").value = "";
-  }
+    // --- NOVA FUNÇÃO: O "Atalho" que preenche as datas ---
+    function applyMonthYearShortcut() {
+        const monthVal = document.getElementById("filterMonth").value;
+        const yearVal = document.getElementById("filterYear").value;
+        
+        const startInput = document.getElementById("filterPeriodStart");
+        const endInput = document.getElementById("filterPeriodEnd");
+
+        // Só aplica se o usuário escolheu PELO MENOS o Ano
+        if (yearVal !== "all") {
+            const year = parseInt(yearVal);
+            
+            if (monthVal !== "all") {
+                // Caso 1: Mês + Ano -> Dia 1 até Fim do Mês
+                const month = parseInt(monthVal);
+                const firstDay = new Date(year, month, 1);
+                const lastDay = new Date(year, month + 1, 0); // Último dia do mês
+
+                startInput.value = _native_formatDate(firstDay, "yyyy-MM-dd");
+                endInput.value = _native_formatDate(lastDay, "yyyy-MM-dd");
+            } else {
+                // Caso 2: Só Ano -> Ano inteiro
+                const firstDay = new Date(year, 0, 1);
+                const lastDay = new Date(year, 11, 31);
+
+                startInput.value = _native_formatDate(firstDay, "yyyy-MM-dd");
+                endInput.value = _native_formatDate(lastDay, "yyyy-MM-dd");
+            }
+            // Atualiza o dashboard
+            updateDashboard();
+        }
+    }
 
   function populateSelect(id, options) {
     const select = document.getElementById(id);
@@ -365,6 +491,47 @@ window.onload = function () {
 
       return dateMatch && analystMatch && situationMatch && ufMatch;
     });
+  }
+
+  // Transforma Array de Objetos em Formato Matriz (Leve)
+  function optimizeDataForExport(data) {
+      if (data.length === 0) return { cols: [], rows: [] };
+      // Pega as chaves do primeiro objeto (ignorando as chaves internas que começam com _)
+      const keys = Object.keys(data[0]).filter(k => !k.startsWith('_')); 
+      
+      const rows = data.map(obj => {
+          return keys.map(k => obj[k]); // Mapeia apenas os valores na ordem das chaves
+      });
+      
+      return { cols: keys, rows: rows };
+  }
+
+  // Transforma Formato Matriz de volta em Array de Objetos (Para uso no App)
+  function restoreDataFromImport(optimizedData) {
+      const { cols, rows } = optimizedData;
+      return rows.map(row => {
+          const obj = {};
+          cols.forEach((key, index) => {
+              obj[key] = row[index];
+          });
+          return obj;
+      });
+  }
+
+  function mergeData(oldData, newData) {
+    // Cria um Set com assinaturas únicas dos dados antigos para verificação rápida
+    // Assinatura = concatenação de campos chave (Ex: Data + Solicitante + Protocolo)
+    const existingSignatures = new Set(oldData.map(item => 
+        `${item['Data Solicitacao']}|${item['Numero Protocolo']}|${item['Nome Fornecedor']}`
+    ));
+
+    const uniqueNewData = newData.filter(item => {
+        const signature = `${item['Data Solicitacao']}|${item['Numero Protocolo']}|${item['Nome Fornecedor']}`;
+        return !existingSignatures.has(signature);
+    });
+
+    console.log(`Merge: ${oldData.length} antigos + ${uniqueNewData.length} novos únicos.`);
+    return [...oldData, ...uniqueNewData];
   }
 
   // --- 4. FUNÇÃO PRINCIPAL DE ATUALIZAÇÃO ---
@@ -886,9 +1053,13 @@ window.onload = function () {
 
   // --- 7. EXPORTAÇÃO DE PDF (RF-A02) ---
 
-  document
-    .getElementById("exportPdfButton")
-    .addEventListener("click", exportPDF);
+  
+  const btnPdfHeader = document.getElementById("exportPdfButton");
+  const btnPdfDash = document.getElementById("exportPdfButtonDashboard"); 
+  
+  // Adiciona o evento apenas se o botão existir (evita erros)
+  if (btnPdfHeader) btnPdfHeader.addEventListener("click", exportPDF);
+  if (btnPdfDash) btnPdfDash.addEventListener("click", exportPDF);
 
   function exportPDF() {
     // Acessa o jsPDF do window (carregado no index.html)
@@ -1008,4 +1179,58 @@ window.onload = function () {
     // Salva o arquivo
     doc.save(`Relatorio_Operacional_${start}_a_${end}.pdf`);
   }
+
+  // --- 8. EXPORTAÇÃO JSON E ROTINAS DE DADOS (NOVO) ---
+
+  // Função auxiliar: Transforma Array de Objetos em Formato Matriz (Mais leve)
+  function optimizeDataForExport(data) {
+    if (!data || data.length === 0) return { cols: [], rows: [] };
+    
+    // Pega as chaves do primeiro objeto (ignorando as chaves internas que começam com _)
+    const keys = Object.keys(data[0]).filter(k => !k.startsWith('_')); 
+    
+    const rows = data.map(obj => {
+        return keys.map(k => obj[k]); // Mapeia apenas os valores na ordem das chaves
+    });
+    
+    return { cols: keys, rows: rows };
+  }
+
+  // Evento do Botão Exportar JSON
+  const btnExportJson = document.getElementById("exportJsonButton");
+  if (btnExportJson) {
+      btnExportJson.addEventListener("click", () => {
+        if (allData.length === 0) {
+            alert("Não há dados para exportar.");
+            return;
+        }
+
+        // 1. Limpa dados calculados (chaves começadas com '_') para economizar espaço
+        // Precisamos salvar apenas os dados "crus" que vieram do CSV original
+        const cleanData = allData.map(row => {
+            const newRow = { ...row };
+            Object.keys(newRow).forEach(key => {
+                if (key.startsWith('_')) delete newRow[key];
+            });
+            return newRow;
+        });
+
+        // 2. Otimiza o formato (Matriz: cols + rows)
+        const optimizedJson = optimizeDataForExport(cleanData);
+        const jsonString = JSON.stringify(optimizedJson);
+
+        // 3. Cria e dispara o download
+        const blob = new Blob([jsonString], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "relatorio.json"; // Nome padrão para facilitar o carregamento futuro
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+  }
+
+
 }; // FECHA O window.onload

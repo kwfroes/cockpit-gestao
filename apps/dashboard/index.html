@@ -31,6 +31,8 @@
         <header class="text-center mb-8">
         <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <h1 class="text-3xl font-bold text-blue-700 cursor-pointer">Dashboard de Análise Operacional</h1>
+
+
         </div>
         </header>
 
@@ -57,21 +59,52 @@
             <!-- Cabeçalho -->
             <header class="mb-6 flex flex-col md:flex-row justify-between items-center">
                 <h1 class="text-3xl font-bold text-gray-900">Dashboard de Performance Operacional</h1>
-                <div class="flex gap-2 mt-4 md:mt-0">
-                    <button id="reloadButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow">
-                        Carregar Novo(s)
-                    </button>
-                    <!-- RF-A02: Botão de Exportar PDF -->
-                    <button id="exportPdfButton" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow">
-                        Exportar Relatório PDF
-                    </button>
-                </div>
+                    <div class="flex gap-2 mt-4 md:mt-0">
+                        <input type="file" id="jsonInput" accept=".json" class="hidden"> 
+                        
+                        <button id="btnHeaderReset" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow hidden">
+                            Carregar CSV
+                        </button>
+                        
+                        <button id="exportJsonButton" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg shadow hidden">
+                            Salvar Backup (JSON)
+                        </button>
+                        
+                        <button id="exportPdfButton" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow hidden">
+                            Exportar Relatório PDF
+                        </button>
+                    </div>
             </header>
 
             <!-- Seção de Filtros (RF07) -->
             <section id="filters" class="bg-white p-4 rounded-lg shadow-md mb-6">
                 <h2 class="text-xl font-semibold mb-4 text-gray-800">Filtros Globais</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <div>
+                        <label for="filterMonth" class="block text-sm font-medium text-gray-700">Mês</label>
+                        <select id="filterMonth" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                            <option value="all">Selecione...</option>
+                            <option value="0">Janeiro</option>
+                            <option value="1">Fevereiro</option>
+                            <option value="2">Março</option>
+                            <option value="3">Abril</option>
+                            <option value="4">Maio</option>
+                            <option value="5">Junho</option>
+                            <option value="6">Julho</option>
+                            <option value="7">Agosto</option>
+                            <option value="8">Setembro</option>
+                            <option value="9">Outubro</option>
+                            <option value="10">Novembro</option>
+                            <option value="11">Dezembro</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="filterYear" class="block text-sm font-medium text-gray-700">Ano</label>
+                        <select id="filterYear" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                            <option value="all">Selecione...</option>
+                            </select>
+                    </div>
                     <div>
                         <label for="filterPeriodStart" class="block text-sm font-medium text-gray-700">Data Início (Análise)</label>
                         <input type="date" id="filterPeriodStart" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">

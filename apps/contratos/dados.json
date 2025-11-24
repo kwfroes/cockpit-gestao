@@ -25,7 +25,7 @@
       "pagamentos": [
         {
           "id": "pag_1762961004069",
-          "data": "2025-11-12",
+          "data": "2025-11-11",
           "valorPago": 2200.48,
           "notaFiscal": "762781",
           "processoPagamentoSei": "009.0242.2025.0056473-50",
@@ -51,7 +51,8 @@
           ],
           "periodoDe": "2025-09-21",
           "periodoAte": "2025-10-20",
-          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=136487334"
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=136487334",
+          "isTRD": false
         }
       ],
       "numeroContrato": "055/2025",
@@ -1556,6 +1557,47 @@
       "id": "contrato_1763908404970",
       "pagamentos": [],
       "parentId": "contrato_1763908311012"
+    },
+    {
+      "unidade": {
+        "nome": "Secretaria da Administração do Estado da Bahia",
+        "cnpj": "13.323.274/0001-63",
+        "endereco": "2ª Avenida, 200, CAB, Salvador - Bahia",
+        "rep": "Rodrigo Pimentel de Souza Lima"
+      },
+      "empresa": {
+        "nome": "Secretaria da Fazenda do Município de Salvador",
+        "cnpj": "13.927.801/0004-91",
+        "endereco": "Rua das Vassouras, nº 01, Ed. Jorge Lins Freire, 3º andar, Centro Histórico, Salvador/Bahia - CEP: 40026-048",
+        "rep": "Giovanna Guiotti Testa Victer"
+      },
+      "processoSei": "009.0242.2024.0030949-13",
+      "numeroContrato": "XXX/2025",
+      "tipoContrato": "Cooperacao Tecnica",
+      "objeto": "Disponibilizar as informações do Sistema de Administração Tributária - SAT da SECRETARIA DA FAZENDA DO MUNICÍPIO DE SALVADOR.",
+      "estimativaMensal": 0,
+      "tempoContrato": "60 meses",
+      "dataAssinatura": "2025-12-23",
+      "dataInicio": "2025-12-23",
+      "linkSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=101161892",
+      "valorTotal": 0,
+      "dataFim": "2030-12-23",
+      "id": "contrato_1763992663664",
+      "pagamentos": [],
+      "gestorInicial": {
+        "nome": "Tatiana Ferreira Almeida de Amorim",
+        "matricula": "09.531.063-6"
+      },
+      "fiscaisIniciais": [
+        {
+          "nome": "Cristiane Souza Nascimento",
+          "matricula": "92.123.306-0"
+        },
+        {
+          "nome": "Cícera Glecia Alves da Silva ",
+          "matricula": "09.577.974-1"
+        }
+      ]
     }
   ],
   "empresas": [
@@ -1586,7 +1628,9 @@
       "cnpj": "40.738.999/0001-95",
       "nome": "Universidade Estadual de Santa Cruz",
       "endereco": "Rodovia Jorge Amado, Km 116, bairro Salobrinho, Ilhéus/BA, CEP: 45.662-900",
-      "representantes": ["Mauricio Santana Moreau"],
+      "representantes": [
+        "Mauricio Santana Moreau"
+      ],
       "isPadrao": false
     }
   ]
