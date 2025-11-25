@@ -580,6 +580,10 @@ window.onload = function () {
 
     // CORREÇÃO: Passa allData para o gráfico de tendência, pois ele ignora filtros
     renderTrendChart(allData);
+
+    if (typeof updateAnalystSectionVisibility === "function") {
+        updateAnalystSectionVisibility();
+    }
   }
 
   // --- 5. LÓGICA DE RENDERIZAÇÃO (Gráficos e Tabelas) ---
@@ -1258,6 +1262,126 @@ window.onload = function () {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+      });
+  }
+
+// --- 9. DETALHAMENTO DO ANALISTA COM PAGINAÇÃO ---
+
+  const sectionAnalystDetail = document.getElementById("analyst-detail-section");
+  const analystNameDisplay = document.getElementById("analyst-name-display");
+  const analystPagination = document.getElementById("analyst-pagination");
+  const btnPagePrev = document.getElementById("btnPagePrev");
+  const btnPageNext = document.getElementById("btnPageNext");
+  const pageInfo = document.getElementById("pageInfo");
+  const analystTableContainer = document.getElementById("analyst-table-container");
+  const analystTableBody = document.getElementById("analyst-table-body");
+  const analystMsg = document.getElementById("analyst-msg");
+
+  // Variáveis de Estado da Paginação
+  let currentAnalystData = [];
+  let currentPage = 1;
+  const itemsPerPage = 20;
+
+  // Chamada dentro do updateDashboard
+  function updateAnalystSectionVisibility() {
+      const selectedAnalyst = document.getElementById("filterAnalyst").value;
+
+      if (selectedAnalyst === "all") {
+          sectionAnalystDetail.classList.add("hidden");
+          return;
+      }
+
+      // Mostra a seção
+      sectionAnalystDetail.classList.remove("hidden");
+      analystNameDisplay.textContent = selectedAnalyst;
+      
+      // 1. Carrega e Prepara os Dados
+      // Filtra de allData para ter todo o histórico (ou filteredData se quiser respeitar os filtros de data)
+      currentAnalystData = allData.filter(d => d["Usuario Analista"] === selectedAnalyst);
+      
+      // Ordena: Mais recentes primeiro
+      currentAnalystData.sort((a, b) => {
+          const dateA = a._dataAnalise ? a._dataAnalise.getTime() : 0;
+          const dateB = b._dataAnalise ? b._dataAnalise.getTime() : 0;
+          return dateB - dateA;
+      });
+
+      // 2. Reseta para página 1 e renderiza
+      currentPage = 1;
+      renderAnalystTable();
+  }
+
+  function renderAnalystTable() {
+      // Verifica se há dados
+      if (currentAnalystData.length === 0) {
+          analystTableContainer.classList.add("hidden");
+          analystPagination.classList.add("hidden");
+          analystMsg.classList.remove("hidden");
+          return;
+      }
+
+      analystTableContainer.classList.remove("hidden");
+      analystMsg.classList.add("hidden");
+      analystPagination.classList.remove("hidden");
+
+      // Cálculos de Paginação
+      const totalPages = Math.ceil(currentAnalystData.length / itemsPerPage);
+      
+      // Garante limites seguros
+      if (currentPage < 1) currentPage = 1;
+      if (currentPage > totalPages) currentPage = totalPages;
+
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const pageData = currentAnalystData.slice(startIndex, endIndex);
+
+      // Renderiza Linhas
+      analystTableBody.innerHTML = "";
+      pageData.forEach(row => {
+          const dataFormatada = row._dataAnalise ? _native_formatDate(row._dataAnalise, "dd/MM/yy") : "N/A";
+          
+          let statusClass = "text-gray-600";
+          if(row["Situação Solicitação"] === "Deferida") statusClass = "text-green-600 font-bold";
+          if(row["Situação Solicitação"] === "Deferida Parcial") statusClass = "text-yellow-600 font-bold";
+          if(row["Situação Solicitação"] === "Indeferida") statusClass = "text-red-600 font-bold";
+          if(row["Situação Solicitação"] === "Em Análise") statusClass = "text-blue-600 font-bold";
+
+          const tr = `
+            <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${dataFormatada}</td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">${row["CNPJ/CPF"] || ""}</td>
+                <td class="px-4 py-2 text-sm text-gray-600 truncate max-w-xs" title="${row["Razão Social/Nome"]}">${row["Razão Social/Nome"] || ""}</td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm ${statusClass}">${row["Situação Solicitação"] || ""}</td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${row["Tipo Solicitacão"] || ""}</td>
+            </tr>
+          `;
+          analystTableBody.innerHTML += tr;
+      });
+
+      // Atualiza Controles
+      pageInfo.textContent = `Pág ${currentPage} de ${totalPages}`;
+      
+      btnPagePrev.disabled = currentPage === 1;
+      btnPageNext.disabled = currentPage === totalPages;
+  }
+
+  // Event Listeners da Paginação
+  if (btnPagePrev) {
+      btnPagePrev.addEventListener("click", () => {
+          if (currentPage > 1) {
+              currentPage--;
+              renderAnalystTable();
+          }
+      });
+  }
+
+  if (btnPageNext) {
+      btnPageNext.addEventListener("click", () => {
+          const totalPages = Math.ceil(currentAnalystData.length / itemsPerPage);
+          if (currentPage < totalPages) {
+              currentPage++;
+              renderAnalystTable();
+          }
       });
   }
 
