@@ -178,7 +178,7 @@ window.onload = function () {
   }
   tryAutoLoadJson();
 
-  // --- 1. LÓGICA DE UPLOAD (RF01, RF-A01) ---
+// --- 1. LÓGICA DE UPLOAD (RF01, RF-A01) ---
 
   const uploadScreen = document.getElementById("uploadScreen");
   const dashboardScreen = document.getElementById("dashboardScreen");
@@ -186,24 +186,44 @@ window.onload = function () {
   const fileInput = document.getElementById("fileInput");
   const uploadStatus = document.getElementById("uploadStatus");
 
-  // Captura os botões com os NOVOS IDs
-  const btnHeaderReset = document.getElementById("btnHeaderReset");
-  const btnDashboardReset = document.getElementById("btnDashboardReset");
+  // --- NOVOS ELEMENTOS (Adicionar e Limpar) ---
+  const addCsvInput = document.getElementById("addCsvInput");
+  const btnAddCsv = document.getElementById("btnAddCsv");
+  const btnFullReset = document.getElementById("btnFullReset");
+
+  // 1. Lógica de ADICIONAR (Mesclar)
+  if (btnAddCsv) {
+      btnAddCsv.addEventListener("click", () => {
+          addCsvInput.click(); 
+      });
+  }
+
+  if (addCsvInput) {
+      addCsvInput.addEventListener("change", () => {
+          handleFiles(addCsvInput.files);
+          addCsvInput.value = ""; // Limpa para permitir selecionar o mesmo arquivo
+      });
+  }
+
+  // 2. Lógica de RESET (Limpar Tudo - Lixeira)
+  if (btnFullReset) {
+      btnFullReset.addEventListener("click", resetApplication);
+  }
 
   // Função unificada de Reset
   function resetApplication() {
-    if (allData.length > 0 && !confirm("Isso limpará os dados atuais e voltará para a tela de upload. Deseja continuar?")) {
+    if (allData.length > 0 && !confirm("Tem certeza? Isso apagará TODOS os dados da tela para começar do zero.")) {
         return;
     }
+    // Zera tudo
     allData = [];
     filteredData = [];
     Object.values(chartInstances).forEach((chart) => chart.destroy());
     
+    // Volta para tela inicial
     dashboardScreen.classList.add("hidden");
     uploadScreen.classList.remove("hidden");
-    setTimeout(() => { uploadScreen.style.opacity = "1"; }, 10); // Restaura opacidade
-    
-    toggleHeaderButtons(false); // <--- ESCONDE OS BOTÕES
+    setTimeout(() => { uploadScreen.style.opacity = "1"; }, 10);
     
     fileInput.value = "";
     uploadStatus.textContent = "";
@@ -214,11 +234,9 @@ window.onload = function () {
     document.getElementById("filterAnalyst").value = "all";
     document.getElementById("filterSituation").value = "all";
     document.getElementById("filterUf").value = "all";
+    document.getElementById("filterMonth").value = "all";
+    document.getElementById("filterYear").value = "all";
   }
-
-  // Adiciona eventos aos botões novos
-  if (btnHeaderReset) btnHeaderReset.addEventListener("click", resetApplication);
-  if (btnDashboardReset) btnDashboardReset.addEventListener("click", resetApplication);
 
   // Eventos de Drag-and-Drop
   dropzone.addEventListener("dragover", (e) => {
@@ -258,6 +276,7 @@ window.onload = function () {
                 if (filesProcessed === files.length) {
                     const newProcessedData = processRawData(consolidatedData);
 
+                    // LÓGICA DE MERGE (IMPORTANTE)
                     if (allData.length > 0) {
                         allData = mergeData(allData, newProcessedData); 
                     } else {
@@ -266,7 +285,9 @@ window.onload = function () {
                     
                     filteredData = [...allData];
                     initDashboard(allData);
-                    toggleHeaderButtons(true); // <--- MOSTRA OS BOTÕES
+                    
+                    // --- REMOVIDO: toggleHeaderButtons(true) --- 
+                    // (Não existe mais, pois os botões estão sempre visíveis no dashboard)
                     
                     uploadStatus.textContent = `Sucesso! ${allData.length} linhas totais carregadas.`;
                     
@@ -284,7 +305,7 @@ window.onload = function () {
         });
     });
   }
-
+  
   // --- 2. PROCESSAMENTO DE DADOS ---
 
   function processRawData(data) {
