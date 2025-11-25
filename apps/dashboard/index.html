@@ -59,21 +59,25 @@
             <!-- Cabeçalho -->
             <header class="mb-6 flex flex-col md:flex-row justify-between items-center">
                 <h1 class="text-3xl font-bold text-gray-900">Dashboard de Performance Operacional</h1>
-                    <div class="flex gap-2 mt-4 md:mt-0">
-                        <input type="file" id="jsonInput" accept=".json" class="hidden"> 
-                        
-                        <button id="btnHeaderReset" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow hidden">
-                            Carregar CSV
-                        </button>
-                        
-                        <button id="exportJsonButton" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg shadow hidden">
-                            Salvar Backup (JSON)
-                        </button>
-                        
-                        <button id="exportPdfButton" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow hidden">
-                            Exportar Relatório PDF
-                        </button>
-                    </div>
+                <div class="flex gap-2 mt-4 md:mt-0">
+                    <input type="file" id="addCsvInput" accept=".csv" multiple class="hidden"> 
+
+                    <button id="btnAddCsv" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow flex items-center gap-2">
+                        <span>+</span> Adicionar CSV
+                    </button>
+                    
+                    <button id="exportJsonButton" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg shadow">
+                        Salvar Backup (JSON)
+                    </button>
+                    
+                    <button id="exportPdfButtonDashboard" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow">
+                        Exportar Relatório PDF
+                    </button>
+
+                    <button id="btnFullReset" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-3 rounded-lg shadow" title="Limpar tudo e começar do zero">
+                        🗑️
+                    </button>
+                </div>
             </header>
 
             <!-- Seção de Filtros (RF07) -->
