@@ -599,8 +599,28 @@ window.onload = function () {
     renderRequestProfile(filteredData);
     renderGeography(filteredData);
 
-    // CORREÇÃO: Passa allData para o gráfico de tendência, pois ele ignora filtros
-    renderTrendChart(allData);
+    // 4. LÓGICA ESPECIAL PARA TENDÊNCIA (Ignora datas quebradas, respeita Ano e Analista)
+    const selectedAnalyst = document.getElementById("filterAnalyst").value;
+    const selectedYear = document.getElementById("filterYear").value;
+
+    // Criamos um dataset específico para a tendência
+    const trendData = allData.filter(row => {
+        // Filtro 1: Analista (se não for "todos", tem que bater o nome)
+        const matchAnalyst = (selectedAnalyst === "all" || row["Usuario Analista"] === selectedAnalyst);
+        
+        // Filtro 2: Ano (se não for "todos", tem que bater o ano)
+        // Isso permite ver a tendência do ano todo de 2025, mesmo se o filtro de data for só "Outubro"
+        let matchYear = true;
+        if (selectedYear !== "all" && row._dataAnalise) {
+            matchYear = row._dataAnalise.getFullYear() === parseInt(selectedYear);
+        }
+
+        // Retorna true apenas se passar pelo Analista e pelo Ano
+        return matchAnalyst && matchYear;
+    });
+
+    // Renderiza a Tendência com esse dado mais "amplo"
+    renderTrendChart(trendData);
 
     if (typeof updateAnalystSectionVisibility === "function") {
         updateAnalystSectionVisibility();
@@ -1318,8 +1338,7 @@ window.onload = function () {
       
       // 1. Carrega e Prepara os Dados
       // Filtra de allData para ter todo o histórico (ou filteredData se quiser respeitar os filtros de data)
-      currentAnalystData = allData.filter(d => d["Usuario Analista"] === selectedAnalyst);
-      
+      currentAnalystData = [...filteredData];      
       // Ordena: Mais recentes primeiro
       currentAnalystData.sort((a, b) => {
           const dateA = a._dataAnalise ? a._dataAnalise.getTime() : 0;
