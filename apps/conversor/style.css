@@ -1,0 +1,108 @@
+@charset "UTF-8";
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f1f1f1;
+}
+
+/* Scrollbar Personalizada */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #555; }
+
+/* Estilos dos Cards */
+.app-card {
+    background-color: #fefefe;
+    padding: 24px;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto 2rem auto;
+    animation: slideDown 0.3s ease-out;
+}
+
+/* Borda colorida para Ferramenta 2 */
+.app-card.border-green {
+    border-top: 4px solid #22c55e; /* green-500 */
+}
+
+/* Borda colorida para Ferramenta 1 */
+.app-card.border-blue {
+    border-top: 4px solid #3b82f6; /* blue-500 */
+}
+
+
+@keyframes slideDown {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Notificação Toast */
+#toast {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    padding: 16px;
+    position: fixed;
+    z-index: 100;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 30px;
+    opacity: 0;
+    transition: visibility 0.5s, opacity 0.5s linear;
+}
+#toast.show { visibility: visible; opacity: 1; }
+
+/* Inputs e Botões */
+.input-padrao {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    margin-top: 0.25rem;
+}
+
+.btn-primary {
+    background-color: #2563eb;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    width: 100%;
+    text-align: center;
+}
+.btn-primary:hover { background-color: #1d4ed8; }
+.btn-primary:disabled { background-color: #9ca3af; cursor: not-allowed; }
+
+.btn-success {
+    background-color: #16a34a;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+}
+.btn-success:hover { background-color: #15803d; }
+
+/* Label de Seção */
+.section-label {
+    max-width: 800px;
+    margin: 2rem auto 0.5rem auto;
+    color: #6b7280;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Utilitários de visibilidade (replicando Tailwind 'hidden') */
+.hidden { display: none !important; }
