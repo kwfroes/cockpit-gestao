@@ -34,27 +34,64 @@
 <body class="h-full bg-gray-100 overflow-hidden">
 
   <header class="fixed top-0 left-0 right-0 h-16 bg-white shadow-md z-50 flex items-center justify-between px-6">
-    <div class="flex items-center gap-2">
-       <h1 class="text-2xl font-bold text-[var(--primary)]">Cockpit Gestão</h1>
-    </div>
-    <div class="text-sm text-gray-600">Kevin Fróes • 2025</div>
+      <div class="flex items-center gap-3">
+        
+        <img src="logo.svg" alt="Logo Cockpit" class="w-12 h-12 rounded-xl">
+
+        <h1 class="text-2xl font-bold text-[var(--primary)] tracking-tight">
+            Cockpit <span class="font-normal text-gray-600">Gestão</span>
+        </h1>
+      </div>
+      
+      <div class="text-sm text-gray-600">Kevin Fróes • 2025</div>
   </header>
 
   <aside class="fixed left-0 top-16 bottom-0 w-64 bg-sidebar overflow-y-auto z-40 shadow-xl">
     <nav class="mt-6 flex flex-col gap-1">
       
-      <a href="#dashboard" class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400 active-link">
-        <span>📊</span> Dashboard Operacional
+      <a href="#dashboard" class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400 active-link group">
+        <svg class="w-5 h-5 transition-colors duration-200" 
+            viewBox="0 0 16 16" 
+            fill="currentColor" 
+            xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 1H1V7H3.38197L4.88196 4L7.11803 4L10 9.76393L11.382 7H15V1Z"/>
+          <path d="M15 9H12.618L11.118 12L8.88197 12L6 6.23607L4.61803 9H1V15H15V9Z"/>
+        </svg>
+        Dashboard Operacional
       </a>
 
-      <a href="#gerador" class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400">
-        <span>✉️</span> Gerador de Mensagens
+      <a href="#gerador" class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400 group">
+        <svg class="w-5 h-5 transition-colors duration-200" 
+            viewBox="0 0 16 16" 
+            fill="currentColor" 
+            xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 5.3585V14H16V5.35849L8 10.3585L0 5.3585Z"/>
+          <path d="M16 3V2H0V3L8 8L16 3Z"/>
+        </svg>
+        Gerador de Mensagens
+      </a>
+      
+      <a href="#contratos" class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400 group">
+        <svg class="w-5 h-5 transition-colors duration-200" 
+            viewBox="0 0 16 16" 
+            fill="currentColor" 
+            xmlns="http://www.w3.org/2000/svg">
+          <path d="M7 0H2V16H14V7H7V0Z"/>
+          <path d="M9 0V5H14L9 0Z"/>
+        </svg>
+        Contratos Públicos
       </a>
 
-      <a href="#contratos" class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400">
-        <span>📄</span> Contratos Públicos
+      <a href="#conversor" class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400 group">
+        <svg class="w-5 h-5 transition-colors duration-200" 
+            viewBox="0 0 16 16" 
+            fill="currentColor" 
+            xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 8H9V4.8198L5.15728 4.05126C4.98683 4.01717 4.81343 4 4.63961 4C3.18179 4 2 5.18179 2 6.63961V9H0V6.63961C0 4.07722 2.07722 2 4.63961 2C4.94514 2 5.24992 2.03018 5.54951 2.0901L9 2.7802V0H10L14 4L10 8Z"/>
+          <path d="M16 7V9.36039C16 11.9228 13.9228 14 11.3604 14C11.0549 14 10.7501 13.9698 10.4505 13.9099L7 13.2198V16H6L2 12L6 8H7V11.1802L10.8427 11.9487C11.0132 11.9828 11.1866 12 11.3604 12C12.8182 12 14 10.8182 14 9.36039V7H16Z"/>
+        </svg>
+        Conversor CSV
       </a>
-
     </nav>
   </aside>
 
@@ -70,7 +107,8 @@
     const routes = {
       '#dashboard': 'apps/dashboard/index.html',
       '#gerador':   'apps/gerador/index.html',
-      '#contratos': 'apps/contratos/index.html'
+      '#contratos': 'apps/contratos/index.html',
+      '#conversor': 'apps/conversor/index.html'
     };
 
     function updateActiveLink(hash) {
@@ -106,5 +144,14 @@
     frame.src = routes[initialHash] || routes['#gerador'];
     updateActiveLink(initialHash);
   </script>
+
+  ''''<div class="hidden md:flex flex-col space-y-4 p-3 bg-white shadow-lg border rounded-l-xl fixed top-1/4 right-0 transform -translate-y-1/2 z-40">
+        <a href="https://www.cadastrodefornecedores.saeb.ba.gov.br/loginrestrito" target="_blank" rel="noopener noreferrer" title="Acessar CAF Digital" class="transition transform hover:scale-105">
+            <img src="https://comprasnet.ba.gov.br/sites/default/files/banner-caf-digital_comprasnet.jpg" alt="Acesso ao CAF Digital" class="w-40 rounded-md shadow-sm">
+        </a>
+        <a href="https://www.comprasnetadm.ba.gov.br/Home/Login" target="_blank" rel="noopener noreferrer" title="Acessar Comprasnet" class="transition transform hover:scale-105">
+            <img src="https://comprasnet.ba.gov.br/sites/all/modules/secom_bar/images/logomarca.png" alt="Acesso ao Comprasnet" class="w-40 rounded-md shadow-sm">
+        </a>
+    </div>
 </body>
 </html>

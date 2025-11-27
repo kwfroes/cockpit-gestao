@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema CAF Digital</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+</head>
+<body class="p-4 pb-12">
+
+<div class="section-label">Dashboard</div>
+    <div class="app-card border-blue">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">Filtro de CSV por Período</h1>
+        
+        <div class="grid grid-cols-1 gap-6 mb-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">1. Arquivo CSV Original (.csv)</label>
+                <input type="file" id="csvFile" accept=".csv" class="input-padrao text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                <p class="text-xs text-gray-500 mt-1">O arquivo deve usar separador ";" e ter a coluna "Data Análise" (dd/mm/yyyy).</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">De (Mês/Ano)</label>
+                    <input type="month" id="filterStart" class="input-padrao">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Até (Mês/Ano)</label>
+                    <input type="month" id="filterEnd" class="input-padrao">
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-4">
+            <button id="btnProcess" onclick="processarCSV()" class="btn-primary">
+                Processar Período
+            </button>
+            
+            <div id="progressContainer" class="hidden w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+            </div>
+            <p id="statusText" class="text-center text-sm text-gray-600 mt-2 hidden">Aguardando...</p>
+
+            <div id="resultArea" class="hidden border rounded-lg p-4 bg-gray-50 mt-4">
+                <h3 class="font-bold text-gray-700">Resumo do Filtro:</h3>
+                <ul class="text-sm text-gray-600 mt-2 space-y-1">
+                    <li>Total processado: <span id="totalLines" class="font-mono font-bold">0</span></li>
+                    <li>Linhas no período: <span id="foundLines" class="font-mono font-bold text-blue-600">0</span></li>
+                </ul>
+                <div class="mt-4">
+                    <button id="btnDownload" class="btn-success">Baixar CSV Filtrado</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-label">Gerador</div>
+    <div class="app-card border-green">
+        <h1 class="text-2xl font-bold text-gray-800 mb-2 border-b pb-2" alt="Unifica Excel + CSV complementar. Mantém letras (estrangeiros).">Conversor Excel + Merge CSV</h1>
+        <p class="text-sm text-gray-600 mb-4">
+            Separador de saída: <b>(;;)</b>
+        </p>
+
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">1. Arquivo Excel Principal (.xlsx)</label>
+            <input type="file" id="xlsxFile" accept=".xlsx, .xls" class="input-padrao text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
+        </div>
+
+        <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700">2. Arquivo CSV Complementar (Fixo)</label>
+            <input type="file" id="csvExtraFile" accept=".csv" class="input-padrao text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100">
+            <p class="text-xs text-gray-500 mt-1">Colunas esperadas: CNPJ; RAZÃO SOCIAL; EMAIL</p>
+        </div>
+
+        <button id="btnConvert" onclick="converterExcelEMerge()" class="btn-success">
+            Processar e Unificar
+        </button>
+
+        <div id="loaderConvert" class="hidden text-center mt-4">
+            <div class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-green-600"></div>
+            <p id="convertStatus" class="text-sm text-gray-600 mt-2">Iniciando...</p>
+        </div>
+
+        <div id="resultConvert" class="hidden border rounded-lg p-4 bg-gray-50 mt-4">
+            <p class="text-sm text-green-700 font-bold mb-2">Sucesso! Arquivos unificados.</p>
+            <ul class="text-sm text-gray-600 mb-4 space-y-1">
+                <li>Linhas do Excel: <span id="countExcel" class="font-bold">0</span></li>
+                <li>Linhas do CSV Extra: <span id="countCsv" class="font-bold">0</span></li>
+                <li>Total Final: <span id="countTotal" class="font-bold text-blue-600">0</span></li>
+            </ul>
+            <a id="downloadLinkConvert" href="#" class="block w-full bg-blue-600 text-white text-center py-2 rounded hover:bg-blue-700 transition">
+                Baixar CSV para Gerador de Mensagens
+            </a>
+        </div>
+    </div>
+
+    <div id="toast">Operação concluída com sucesso!</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
