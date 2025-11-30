@@ -1,0 +1,28 @@
+/* apps/home/style.css */
+
+/* Animação suave de entrada para o Header */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -20px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown 0.8s ease-out forwards;
+}
+
+/* Efeito extra para os cards (opcional, já que usa Tailwind, 
+   mas bom para garantir comportamentos específicos) */
+.nav-card {
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-card:active {
+  transform: scale(0.98);
+}

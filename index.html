@@ -1,181 +1,211 @@
 <!DOCTYPE html>
 <html lang="pt-BR" class="h-full">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cockpit Gestão - 2025</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cockpit Gestão - 2025</title>
 
-  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
-  <link rel="icon" type="image/x-icon" href="icons/favicon.ico">
-  <link rel="manifest" href="icons/site.webmanifest">
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/android-chrome-192x192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="icons/android-chrome-512x512.png">
-  
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="theme.css">
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="icons/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="icons/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="icons/favicon-16x16.png"
+    />
+    <link rel="icon" type="image/x-icon" href="icons/favicon.ico" />
+    <link rel="manifest" href="icons/site.webmanifest" />
 
-  <style>
-    :root {
-      --primary: #004A80;
-      --sidebar: #0f172a;
-    }
-    
-    .bg-sidebar { background-color: var(--sidebar); }
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
 
-    .active-link { 
-      background-color: #1e293b;
-      border-left: 4px solid var(--primary);
-      color: #ffffff !important;
-    }
+    <link rel="stylesheet" href="theme.css" />
+  </head>
+  <body class="h-full bg-gray-100 overflow-hidden relative">
+    <div
+      id="sidebarOverlay"
+      class="fixed inset-0 bg-black/50 z-30 hidden transition-opacity opacity-0 md:hidden"
+      onclick="toggleSidebar()"
+    ></div>
 
-    /* Ajuste do iframe para considerar header mobile */
-    iframe { border: none; width: 100%; height: calc(100vh - 64px); background: #f3f4f6; }
-  </style>
-</head>
-<body class="h-full bg-gray-100 overflow-hidden relative">
-
-  <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-30 hidden transition-opacity opacity-0 md:hidden" onclick="toggleSidebar()"></div>
-
-  <header class="fixed top-0 left-0 right-0 h-16 bg-white shadow-md z-50 flex items-center justify-between px-4 md:px-6">
+    <header
+      class="fixed top-0 left-0 right-0 h-16 bg-white shadow-md z-50 flex items-center justify-between px-4 md:px-6"
+    >
       <div class="flex items-center gap-3">
-        <button onclick="toggleSidebar()" class="md:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        <button
+          id="menuButton"
+          onclick="toggleSidebar()"
+          class="p-2 mr-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors transition-transform duration-300"
+          title="Alternar Menu"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            ></path>
+          </svg>
         </button>
-        
-        <img src="icons/android-chrome-192x192.png" alt="Logo Cockpit" class="w-10 h-10 md:w-12 md:h-12 rounded-xl">
 
-
-        <h1 class="text-xl md:text-2xl font-bold text-[var(--primary)] tracking-tight truncate">
+        <a
+          href="#home"
+          class="flex items-center gap-3 hover:opacity-80 transition-opacity select-none"
+          title="Ir para o Início"
+        >
+          <img
+            src="icons/android-chrome-192x192.png"
+            alt="Logo Cockpit"
+            class="w-10 h-10 md:w-12 md:h-12 rounded-xl"
+          />
+          <h1
+            class="text-xl md:text-2xl font-bold text-[var(--primary)] tracking-tight truncate"
+          >
             Cockpit <span class="font-normal text-gray-600">Gestão</span>
-        </h1>
+          </h1>
+        </a>
       </div>
-      
+
       <div class="text-xs md:text-sm text-gray-600 text-right">
         <span class="block md:inline">Kevin Fróes</span>
         <span class="hidden md:inline">•</span>
         <span class="block md:inline">2025</span>
       </div>
-  </header>
+    </header>
 
-  <aside id="sidebar" class="fixed left-0 top-16 bottom-0 w-64 bg-sidebar overflow-y-auto z-40 shadow-xl transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
-    <nav class="mt-6 flex flex-col gap-1 pb-20">
-      
-      <a href="#dashboard" class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400 active-link group" onclick="closeSidebarOnMobile()">
-        <svg class="w-5 h-5" viewBox="0 0 16 16" fill="currentColor"><path d="M15 1H1V7H3.38197L4.88196 4L7.11803 4L10 9.76393L11.382 7H15V1Z"/><path d="M15 9H12.618L11.118 12L8.88197 12L6 6.23607L4.61803 9H1V15H15V9Z"/></svg>
-        Dashboard Operacional
-      </a>
-
-      <a href="#gerador" class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400 group" onclick="closeSidebarOnMobile()">
-        <svg class="w-5 h-5" viewBox="0 0 16 16" fill="currentColor"><path d="M0 5.3585V14H16V5.35849L8 10.3585L0 5.3585Z"/><path d="M16 3V2H0V3L8 8L16 3Z"/></svg>
-        Gerador de Mensagens
-      </a>
-      
-      <a href="#contratos" class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400 group" onclick="closeSidebarOnMobile()">
-        <svg class="w-5 h-5" viewBox="0 0 16 16" fill="currentColor"><path d="M7 0H2V16H14V7H7V0Z"/><path d="M9 0V5H14L9 0Z"/></svg>
-        Contratos Públicos
-      </a>
-
-      <a href="#conversor" class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400 group" onclick="closeSidebarOnMobile()">
-        <svg class="w-5 h-5" viewBox="0 0 16 16" fill="currentColor"><path d="M10 8H9V4.8198L5.15728 4.05126C4.98683 4.01717 4.81343 4 4.63961 4C3.18179 4 2 5.18179 2 6.63961V9H0V6.63961C0 4.07722 2.07722 2 4.63961 2C4.94514 2 5.24992 2.03018 5.54951 2.0901L9 2.7802V0H10L14 4L10 8Z"/><path d="M16 7V9.36039C16 11.9228 13.9228 14 11.3604 14C11.0549 14 10.7501 13.9698 10.4505 13.9099L7 13.2198V16H6L2 12L6 8H7V11.1802L10.8427 11.9487C11.0132 11.9828 11.1866 12 11.3604 12C12.8182 12 14 10.8182 14 9.36039V7H16Z"/></svg>
-        Conversor CSV
-      </a>
-
-      <div class="md:hidden mt-4 pt-4 border-t border-gray-700 px-6">
-          <p class="text-xs text-gray-500 mb-3 uppercase font-bold">Links Externos</p>
-          <a href="https://www.cadastrodefornecedores.saeb.ba.gov.br/loginrestrito" target="_blank" class="block py-2 text-gray-400 hover:text-white text-sm">CAF Digital</a>
-          <a href="https://www.comprasnetadm.ba.gov.br/Home/Login" target="_blank" class="block py-2 text-gray-400 hover:text-white text-sm">Comprasnet</a>
-      </div>
-    </nav>
-  </aside>
-
-  <main class="pt-16 h-full transition-all duration-300 md:ml-64">
-    <iframe id="appFrame" src="apps/gerador/index.html" allowfullscreen></iframe>
-  </main>
-
-  <div class="hidden md:flex flex-col space-y-4 p-3 bg-white shadow-lg border rounded-l-xl fixed top-1/4 right-0 transform -translate-y-1/2 z-40">
-        <a href="https://www.cadastrodefornecedores.saeb.ba.gov.br/loginrestrito" target="_blank" rel="noopener noreferrer" title="Acessar CAF Digital" class="transition transform hover:scale-105">
-            <img src="https://comprasnet.ba.gov.br/sites/default/files/banner-caf-digital_comprasnet.jpg" alt="Acesso ao CAF Digital" class="w-40 rounded-md shadow-sm">
+    <aside
+      id="sidebar"
+      class="fixed left-0 top-16 bottom-0 w-64 bg-sidebar overflow-y-auto z-40 shadow-xl transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out"
+    >
+      <nav class="mt-6 flex flex-col gap-1 pb-20">
+        <a
+          href="#dashboard"
+          class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400 active-link group"
+        >
+          <svg class="w-5 h-5" viewBox="0 0 16 16" fill="currentColor">
+            <path
+              d="M15 1H1V7H3.38197L4.88196 4L7.11803 4L10 9.76393L11.382 7H15V1Z"
+            />
+            <path
+              d="M15 9H12.618L11.118 12L8.88197 12L6 6.23607L4.61803 9H1V15H15V9Z"
+            />
+          </svg>
+          Dashboard Operacional
         </a>
-        <a href="https://www.comprasnetadm.ba.gov.br/Home/Login" target="_blank" rel="noopener noreferrer" title="Acessar Comprasnet" class="transition transform hover:scale-105">
-            <img src="https://comprasnet.ba.gov.br/sites/all/modules/secom_bar/images/logomarca.png" alt="Acesso ao Comprasnet" class="w-40 rounded-md shadow-sm">
+        <a
+          href="#gerador"
+          class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400 group"
+        >
+          <svg class="w-5 h-5" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M0 5.3585V14H16V5.35849L8 10.3585L0 5.3585Z" />
+            <path d="M16 3V2H0V3L8 8L16 3Z" />
+          </svg>
+          Gerador de Mensagens
         </a>
+        <a
+          href="#contratos"
+          class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400 group"
+        >
+          <svg class="w-5 h-5" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M7 0H2V16H14V7H7V0Z" />
+            <path d="M9 0V5H14L9 0Z" />
+          </svg>
+          Contratos Públicos
+        </a>
+        <a
+          href="#conversor"
+          class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400 group"
+        >
+          <svg class="w-5 h-5" viewBox="0 0 16 16" fill="currentColor">
+            <path
+              d="M10 8H9V4.8198L5.15728 4.05126C4.98683 4.01717 4.81343 4 4.63961 4C3.18179 4 2 5.18179 2 6.63961V9H0V6.63961C0 4.07722 2.07722 2 4.63961 2C4.94514 2 5.24992 2.03018 5.54951 2.0901L9 2.7802V0H10L14 4L10 8Z"
+            />
+            <path
+              d="M16 7V9.36039C16 11.9228 13.9228 14 11.3604 14C11.0549 14 10.7501 13.9698 10.4505 13.9099L7 13.2198V16H6L2 12L6 8H7V11.1802L10.8427 11.9487C11.0132 11.9828 11.1866 12 11.3604 12C12.8182 12 14 10.8182 14 9.36039V7H16Z"
+            />
+          </svg>
+          Conversor CSV
+        </a>
+        <div class="md:hidden mt-4 pt-4 border-t border-gray-700 px-6">
+          <p class="text-xs text-gray-500 mb-3 uppercase font-bold">
+            Links Externos
+          </p>
+          <a
+            href="https://www.cadastrodefornecedores.saeb.ba.gov.br/loginrestrito"
+            target="_blank"
+            class="block py-2 text-gray-400 hover:text-white text-sm"
+            >CAF Digital</a
+          >
+          <a
+            href="https://www.comprasnetadm.ba.gov.br/Home/Login"
+            target="_blank"
+            class="block py-2 text-gray-400 hover:text-white text-sm"
+            >Comprasnet</a
+          >
+        </div>
+      </nav>
+    </aside>
+
+    <main
+      id="mainContent"
+      class="pt-16 h-full transition-all duration-300 md:ml-64"
+    >
+      <iframe
+        id="appFrame"
+        src="apps/gerador/index.html"
+        allowfullscreen
+      ></iframe>
+    </main>
+
+    <div
+      id="floatingLinks"
+      class="hidden md:flex flex-col space-y-4 p-3 bg-white shadow-lg border rounded-l-xl fixed top-1/4 right-0 transform -translate-y-1/2 z-40"
+    >
+      <a
+        href="https://www.cadastrodefornecedores.saeb.ba.gov.br/loginrestrito"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Acessar CAF Digital"
+        class="transition transform hover:scale-105"
+      >
+        <img
+          src="https://comprasnet.ba.gov.br/sites/default/files/banner-caf-digital_comprasnet.jpg"
+          alt="Acesso ao CAF Digital"
+          class="w-40 rounded-md shadow-sm"
+        />
+      </a>
+      <a
+        href="https://www.comprasnetadm.ba.gov.br/Home/Login"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Acessar Comprasnet"
+        class="transition transform hover:scale-105"
+      >
+        <img
+          src="https://comprasnet.ba.gov.br/sites/all/modules/secom_bar/images/logomarca.png"
+          alt="Acesso ao Comprasnet"
+          class="w-40 rounded-md shadow-sm"
+        />
+      </a>
     </div>
 
-  <script>
-    // --- Lógica de Responsividade ---
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebarOverlay');
-
-    function toggleSidebar() {
-        // Alterna classes para mostrar/esconder sidebar no mobile
-        if (sidebar.classList.contains('-translate-x-full')) {
-            // Abrir
-            sidebar.classList.remove('-translate-x-full');
-            overlay.classList.remove('hidden');
-            setTimeout(() => overlay.classList.remove('opacity-0'), 10); // Fade in suave
-        } else {
-            // Fechar
-            sidebar.classList.add('-translate-x-full');
-            overlay.classList.add('opacity-0');
-            setTimeout(() => overlay.classList.add('hidden'), 300); // Espera transição
-        }
-    }
-
-    // Fecha sidebar ao clicar em um link (UX Mobile)
-    function closeSidebarOnMobile() {
-        if (window.innerWidth < 768) { // Apenas se for tela pequena
-            toggleSidebar();
-        }
-    }
-
-    // --- Lógica de Roteamento Original ---
-    const links = document.querySelectorAll('aside a:not([target="_blank"])'); // Exclui links externos
-    const frame = document.getElementById('appFrame');
-    
-    const routes = {
-      '#dashboard': 'apps/dashboard/index.html',
-      '#gerador':   'apps/gerador/index.html',
-      '#contratos': 'apps/contratos/index.html',
-      '#conversor': 'apps/conversor/index.html'
-    };
-
-    function updateActiveLink(hash) {
-        links.forEach(link => {
-            link.classList.remove('active-link');
-            link.classList.add('text-gray-400');
-            
-            if(link.getAttribute('href') === hash) {
-                link.classList.add('active-link');
-                link.classList.remove('text-gray-400');
-            }
-        });
-    }
-
-    links.forEach(link => {
-      link.addEventListener('click', e => {
-        // Se for link externo na sidebar mobile, não faz roteamento
-        if (link.getAttribute('target') === '_blank') return;
-
-        e.preventDefault();
-        const hash = link.getAttribute('href');
-        history.pushState(null, null, hash);
-        frame.src = routes[hash] || routes['#gerador'];
-        updateActiveLink(hash);
-      });
-    });
-
-    window.addEventListener('popstate', () => {
-      const hash = window.location.hash || '#gerador';
-      frame.src = routes[hash];
-      updateActiveLink(hash);
-    });
-
-    const initialHash = window.location.hash || '#gerador';
-    frame.src = routes[initialHash] || routes['#gerador'];
-    updateActiveLink(initialHash);
-  </script>
-</body>
+    <script src="main.js"></script>
+  </body>
 </html>

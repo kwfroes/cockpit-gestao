@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home - Cockpit Gestão</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../../theme.css" />
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="bg-gray-50 text-gray-800 p-6 md:p-10 min-h-screen flex flex-col">
+    <header class="mb-10 text-center md:text-left animate-fade-in-down">
+      <h1 class="text-3xl md:text-4xl font-bold text-[var(--primary-600)] mb-2">
+        <span id="greeting">Olá</span>, Kevin.
+      </h1>
+      <p
+        class="text-gray-500 text-lg flex flex-col md:flex-row gap-2 md:items-center justify-center md:justify-start"
+      >
+        <span id="currentDate">Carregando data...</span>
+        <span class="hidden md:inline text-gray-300">•</span>
+        <span
+          id="currentTime"
+          class="font-mono font-medium text-[var(--primary-500)] text-xl"
+          >--:--:--</span
+        >
+      </p>
+    </header>
+
+    <main
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-5xl mx-auto w-full flex-grow"
+    >
+      <div
+        data-route="#dashboard"
+        class="nav-card card group hover:border-[var(--primary-500)] border border-transparent relative overflow-hidden"
+      >
+        <div
+          class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
+        >
+          <svg class="w-24 h-24" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M15 1H1V7H3.38197L4.88196 4L7.11803 4L10 9.76393L11.382 7H15V1Z"
+            />
+            <path
+              d="M15 9H12.618L11.118 12L8.88197 12L6 6.23607L4.61803 9H1V15H15V9Z"
+            />
+          </svg>
+        </div>
+        <div class="flex items-center gap-4 mb-3">
+          <div class="p-3 bg-blue-100 rounded-lg text-[var(--primary-600)]">
+            <svg
+              class="w-8 h-8"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+              ></path>
+            </svg>
+          </div>
+          <h2 class="text-xl font-bold text-gray-800">Dashboard Operacional</h2>
+        </div>
+        <p class="text-gray-600 text-sm leading-relaxed">
+          Transforme montanhas de CSVs em um painel vivo. Acompanhe KPIs, tempos
+          de análise e produtividade da equipe em tempo real.
+        </p>
+      </div>
+
+      <div
+        data-route="#gerador"
+        class="nav-card card group hover:border-indigo-600 border border-transparent relative overflow-hidden"
+      >
+        <div
+          class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
+        >
+          <svg class="w-24 h-24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M0 5.3585V14H16V5.35849L8 10.3585L0 5.3585Z" />
+            <path d="M16 3V2H0V3L8 8L16 3Z" />
+          </svg>
+        </div>
+        <div class="flex items-center gap-4 mb-3">
+          <div class="p-3 bg-indigo-100 rounded-lg text-indigo-600">
+            <svg
+              class="w-8 h-8"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+              ></path>
+            </svg>
+          </div>
+          <h2 class="text-xl font-bold text-gray-800">Gerador de Mensagens</h2>
+        </div>
+        <p class="text-gray-600 text-sm leading-relaxed">
+          Atalho para geração de textos padronizados. Crie mensagens
+          profissionais com autocompletar e mantenha o histórico organizado.
+        </p>
+      </div>
+
+      <div
+        data-route="#contratos"
+        class="nav-card card group hover:border-emerald-600 border border-transparent relative overflow-hidden"
+      >
+        <div
+          class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
+        >
+          <svg class="w-24 h-24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M7 0H2V16H14V7H7V0Z" />
+            <path d="M9 0V5H14L9 0Z" />
+          </svg>
+        </div>
+        <div class="flex items-center gap-4 mb-3">
+          <div class="p-3 bg-emerald-100 rounded-lg text-emerald-600">
+            <svg
+              class="w-8 h-8"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              ></path>
+            </svg>
+          </div>
+          <h2 class="text-xl font-bold text-gray-800">Contratos Públicos</h2>
+        </div>
+        <p class="text-gray-600 text-sm leading-relaxed">
+          Hub central para contratos, aditivos e pagamentos. Controle financeiro
+          visual e alertas de prazos sem planilhas complexas.
+        </p>
+      </div>
+
+      <div
+        data-route="#conversor"
+        class="nav-card card group hover:border-amber-600 border border-transparent relative overflow-hidden"
+      >
+        <div
+          class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
+        >
+          <svg class="w-24 h-24" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M10 8H9V4.8198L5.15728 4.05126C4.98683 4.01717 4.81343 4 4.63961 4C3.18179 4 2 5.18179 2 6.63961V9H0V6.63961C0 4.07722 2.07722 2 4.63961 2C4.94514 2 5.24992 2.03018 5.54951 2.0901L9 2.7802V0H10L14 4L10 8Z"
+            />
+            <path
+              d="M16 7V9.36039C16 11.9228 13.9228 14 11.3604 14C11.0549 14 10.7501 13.9698 10.4505 13.9099L7 13.2198V16H6L2 12L6 8H7V11.1802L10.8427 11.9487C11.0132 11.9828 11.1866 12 11.3604 12C12.8182 12 14 10.8182 14 9.36039V7H16Z"
+            />
+          </svg>
+        </div>
+        <div class="flex items-center gap-4 mb-3">
+          <div class="p-3 bg-amber-100 rounded-lg text-amber-600">
+            <svg
+              class="w-8 h-8"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M22 15C22 18.87 18.87 22 15 22L16.05 20.25"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M2 9C2 5.13 5.13 2 9 2L7.95 3.75"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M13.7 4.44995L17.6799 6.74994L21.6199 4.45996"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M17.6799 10.82V6.73999"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M16.74 2.21L14.34 3.53996C13.8 3.83996 13.35 4.59995 13.35 5.21995V7.75999C13.35 8.37999 13.79 9.13998 14.34 9.43998L16.74 10.77C17.25 11.06 18.09 11.06 18.61 10.77L21.01 9.43998C21.55 9.13998 22 8.37999 22 7.75999V5.21995C22 4.59995 21.56 3.83996 21.01 3.53996L18.61 2.21C18.1 1.93 17.26 1.93 16.74 2.21Z"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M2.34998 15.45L6.31998 17.7499L10.27 15.46"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M6.31995 21.82V17.74"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M5.39 13.21L2.99001 14.54C2.45001 14.84 2 15.5999 2 16.2199V18.76C2 19.38 2.44001 20.14 2.99001 20.44L5.39 21.77C5.9 22.06 6.73999 22.06 7.25999 21.77L9.66 20.44C10.2 20.14 10.65 19.38 10.65 18.76V16.2199C10.65 15.5999 10.21 14.84 9.66 14.54L7.25999 13.21C6.73999 12.93 5.9 12.93 5.39 13.21Z"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+          <h2 class="text-xl font-bold text-gray-800">Conversor & Filtro</h2>
+        </div>
+        <p class="text-gray-600 text-sm leading-relaxed">
+          Prepare seus dados: mescle Excels com CSVs e filtre arquivos por
+          período para preparar o uso para as ferramentas.
+        </p>
+      </div>
+    </main>
+
+    <footer class="mt-10 border-t pt-6 text-center">
+      <p class="text-sm text-gray-400 mb-4 uppercase font-bold tracking-wider">
+        Acesso Externo Rápido
+      </p>
+      <div class="flex justify-center gap-4">
+        <a
+          href="https://www.cadastrodefornecedores.saeb.ba.gov.br/loginrestrito"
+          target="_blank"
+          class="px-4 py-2 bg-white border rounded-lg text-sm text-gray-600 hover:text-[var(--primary-600)] hover:border-[var(--primary-600)] transition shadow-sm flex items-center gap-2"
+        >
+          <img
+            src="https://comprasnet.ba.gov.br/sites/default/files/banner-caf-digital_comprasnet.jpg"
+            class="w-30 h-6 rounded-sm object-cover"
+          />
+          CAF Digital
+        </a>
+        <a
+          href="https://www.comprasnetadm.ba.gov.br/Home/Login"
+          target="_blank"
+          class="px-4 py-2 bg-white border rounded-lg text-sm text-gray-600 hover:text-blue-600 hover:border-blue-600 transition shadow-sm flex items-center gap-2"
+        >
+          <img
+            src="https://comprasnet.ba.gov.br/sites/all/modules/secom_bar/images/logomarca.png"
+            class="w-30 h-6 object-contain"
+          />
+          Comprasnet
+        </a>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
