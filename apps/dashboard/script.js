@@ -113,72 +113,45 @@ window.onload = function () {
   let filteredData = [];
   const chartInstances = {}; // Armazena instâncias de gráficos para destruí-las
 
-  // --- NOVA FUNÇÃO: Tentar carregar relatorio.json ao iniciar ---
-  async function tryAutoLoadJson() {
-      try {
-          const response = await fetch('./relatorio.json');
-          if (response.ok) {
-              const jsonOptimized = await response.json();
-              const jsonRaw = restoreDataFromImport(jsonOptimized);
-              
-              // Processa os dados (cria as datas _dataAnalise, etc)
-              allData = processRawData(jsonRaw);
-              filteredData = [...allData];
-              
-              // Pula a tela de upload e vai direto para o dashboard
-              initDashboard(allData);
-              document.getElementById("uploadScreen").classList.add("hidden");
-              document.getElementById("dashboardScreen").classList.remove("hidden");
-              
-              console.log("Histórico JSON carregado automaticamente.");
-              document.getElementById("uploadStatus").textContent = "Histórico carregado. Adicione CSVs se desejar.";
-          }
-      } catch (error) {
-          console.log("Nenhum arquivo relatorio.json encontrado ou bloqueado pelo navegador (CORS).");
-          // Se falhar, apenas segue a vida na tela de upload padrão
-      }
-  }
-
-  // Chama a função ao iniciar
-  tryAutoLoadJson();
-
-// --- FUNÇÃO AUXILIAR DE VISIBILIDADE (NOVO) ---
+  // --- FUNÇÃO AUXILIAR DE VISIBILIDADE (NOVO) ---
   function toggleHeaderButtons(show) {
-      const ids = ["btnHeaderReset", "exportJsonButton", "exportPdfButton"];
-      ids.forEach(id => {
-          const btn = document.getElementById(id);
-          if (btn) {
-              if (show) btn.classList.remove("hidden");
-              else btn.classList.add("hidden");
-          }
-      });
+    const ids = ["btnHeaderReset", "exportJsonButton", "exportPdfButton"];
+    ids.forEach((id) => {
+      const btn = document.getElementById(id);
+      if (btn) {
+        if (show) btn.classList.remove("hidden");
+        else btn.classList.add("hidden");
+      }
+    });
   }
 
   // Ajuste no Auto-Load para mostrar botões se der certo
   async function tryAutoLoadJson() {
-      try {
-          const response = await fetch('./relatorio.json');
-          if (response.ok) {
-              const jsonOptimized = await response.json();
-              const jsonRaw = restoreDataFromImport(jsonOptimized);
-              allData = processRawData(jsonRaw);
-              filteredData = [...allData];
-              
-              initDashboard(allData);
-              toggleHeaderButtons(true); // <--- MOSTRA OS BOTÕES
-              
-              document.getElementById("uploadScreen").classList.add("hidden");
-              document.getElementById("dashboardScreen").classList.remove("hidden");
-              console.log("Histórico JSON carregado automaticamente.");
-              document.getElementById("uploadStatus").textContent = "Histórico carregado.";
-          }
-      } catch (error) {
-          console.log("Nenhum arquivo relatorio.json encontrado.");
+    try {
+      const response = await fetch("./relatorio.json");
+      if (response.ok) {
+        const jsonOptimized = await response.json();
+        const jsonRaw = restoreDataFromImport(jsonOptimized);
+        allData = processRawData(jsonRaw);
+        filteredData = [...allData];
+
+        initDashboard(allData);
+        toggleHeaderButtons(true); // <--- MOSTRA OS BOTÕES
+
+        document.getElementById("uploadScreen").classList.add("hidden");
+        document.getElementById("dashboardScreen").classList.remove("hidden");
+        console.log("Histórico JSON carregado automaticamente.");
+        document.getElementById("uploadStatus").textContent =
+          "Histórico carregado.";
+        atualizarStatsExternos();
       }
+    } catch (error) {
+      console.log("Nenhum arquivo relatorio.json encontrado.");
+    }
   }
   tryAutoLoadJson();
 
-// --- 1. LÓGICA DE UPLOAD (RF01, RF-A01) ---
+  // --- 1. LÓGICA DE UPLOAD (RF01, RF-A01) ---
 
   const uploadScreen = document.getElementById("uploadScreen");
   const dashboardScreen = document.getElementById("dashboardScreen");
@@ -193,41 +166,48 @@ window.onload = function () {
 
   // 1. Lógica de ADICIONAR (Mesclar)
   if (btnAddCsv) {
-      btnAddCsv.addEventListener("click", () => {
-          addCsvInput.click(); 
-      });
+    btnAddCsv.addEventListener("click", () => {
+      addCsvInput.click();
+    });
   }
 
   if (addCsvInput) {
-      addCsvInput.addEventListener("change", () => {
-          handleFiles(addCsvInput.files);
-          addCsvInput.value = ""; // Limpa para permitir selecionar o mesmo arquivo
-      });
+    addCsvInput.addEventListener("change", () => {
+      handleFiles(addCsvInput.files);
+      addCsvInput.value = ""; // Limpa para permitir selecionar o mesmo arquivo
+    });
   }
 
   // 2. Lógica de RESET (Limpar Tudo - Lixeira)
   if (btnFullReset) {
-      btnFullReset.addEventListener("click", resetApplication);
+    btnFullReset.addEventListener("click", resetApplication);
   }
 
   // Função unificada de Reset
   function resetApplication() {
-    if (allData.length > 0 && !confirm("Tem certeza? Isso apagará TODOS os dados da tela para começar do zero.")) {
-        return;
+    if (
+      allData.length > 0 &&
+      !confirm(
+        "Tem certeza? Isso apagará TODOS os dados da tela para começar do zero."
+      )
+    ) {
+      return;
     }
     // Zera tudo
     allData = [];
     filteredData = [];
     Object.values(chartInstances).forEach((chart) => chart.destroy());
-    
+
     // Volta para tela inicial
     dashboardScreen.classList.add("hidden");
     uploadScreen.classList.remove("hidden");
-    setTimeout(() => { uploadScreen.style.opacity = "1"; }, 10);
-    
+    setTimeout(() => {
+      uploadScreen.style.opacity = "1";
+    }, 10);
+
     fileInput.value = "";
     uploadStatus.textContent = "";
-    
+
     // Limpa filtros
     document.getElementById("filterPeriodStart").value = "";
     document.getElementById("filterPeriodEnd").value = "";
@@ -236,6 +216,7 @@ window.onload = function () {
     document.getElementById("filterUf").value = "all";
     document.getElementById("filterMonth").value = "all";
     document.getElementById("filterYear").value = "all";
+    atualizarStatsExternos();
   }
 
   // Eventos de Drag-and-Drop
@@ -256,56 +237,58 @@ window.onload = function () {
 
   function handleFiles(files) {
     if (files.length === 0) {
-        uploadStatus.textContent = "Nenhum arquivo selecionado.";
-        return;
+      uploadStatus.textContent = "Nenhum arquivo selecionado.";
+      return;
     }
     uploadStatus.textContent = `Carregando ${files.length} arquivo(s)...`;
-    
+
     let filesProcessed = 0;
-    let consolidatedData = []; 
+    let consolidatedData = [];
 
     Array.from(files).forEach((file) => {
-        Papa.parse(file, {
-            header: true,
-            delimiter: ";",
-            skipEmptyLines: true,
-            complete: (results) => {
-                consolidatedData = consolidatedData.concat(results.data);
-                filesProcessed++;
+      Papa.parse(file, {
+        header: true,
+        delimiter: ";",
+        skipEmptyLines: true,
+        complete: (results) => {
+          consolidatedData = consolidatedData.concat(results.data);
+          filesProcessed++;
 
-                if (filesProcessed === files.length) {
-                    const newProcessedData = processRawData(consolidatedData);
+          if (filesProcessed === files.length) {
+            const newProcessedData = processRawData(consolidatedData);
 
-                    // LÓGICA DE MERGE (IMPORTANTE)
-                    if (allData.length > 0) {
-                        allData = mergeData(allData, newProcessedData); 
-                    } else {
-                        allData = newProcessedData;
-                    }
-                    
-                    filteredData = [...allData];
-                    initDashboard(allData);
-                    
-                    // --- REMOVIDO: toggleHeaderButtons(true) --- 
-                    // (Não existe mais, pois os botões estão sempre visíveis no dashboard)
-                    
-                    uploadStatus.textContent = `Sucesso! ${allData.length} linhas totais carregadas.`;
-                    
-                    uploadScreen.style.opacity = "0";
-                    setTimeout(() => {
-                        uploadScreen.classList.add("hidden");
-                        dashboardScreen.classList.remove("hidden");
-                    }, 500);
-                }
-            },
-            error: (err) => {
-                console.error("Erro ao processar:", err);
-                uploadStatus.textContent = `Erro ao ler o arquivo.`;
-            },
-        });
+            // LÓGICA DE MERGE (IMPORTANTE)
+            if (allData.length > 0) {
+              allData = mergeData(allData, newProcessedData);
+            } else {
+              allData = newProcessedData;
+            }
+
+            filteredData = [...allData];
+            initDashboard(allData);
+
+            // --- REMOVIDO: toggleHeaderButtons(true) ---
+            // (Não existe mais, pois os botões estão sempre visíveis no dashboard)
+
+            uploadStatus.textContent = `Sucesso! ${allData.length} linhas totais carregadas.`;
+
+            atualizarStatsExternos();
+
+            uploadScreen.style.opacity = "0";
+            setTimeout(() => {
+              uploadScreen.classList.add("hidden");
+              dashboardScreen.classList.remove("hidden");
+            }, 500);
+          }
+        },
+        error: (err) => {
+          console.error("Erro ao processar:", err);
+          uploadStatus.textContent = `Erro ao ler o arquivo.`;
+        },
+      });
     });
   }
-  
+
   // --- 2. PROCESSAMENTO DE DADOS ---
 
   function processRawData(data) {
@@ -368,125 +351,133 @@ window.onload = function () {
   // --- 3. LÓGICA DE FILTROS (RF07) ---
 
   const filterControls = [
-      "filterPeriodStart", // Mantemos os listeners manuais
-      "filterPeriodEnd",   // Mantemos os listeners manuais
-      "filterAnalyst",
-      "filterSituation",
-      "filterUf",
-    ];
+    "filterPeriodStart", // Mantemos os listeners manuais
+    "filterPeriodEnd", // Mantemos os listeners manuais
+    "filterAnalyst",
+    "filterSituation",
+    "filterUf",
+  ];
 
-    function initDashboard(data) {
-      populateFilters(data);
-      
-      // Listeners especiais para os atalhos de Mês/Ano
-      // Eles chamam a função que preenche as datas automaticamente
-      const monthSelect = document.getElementById("filterMonth");
-      const yearSelect = document.getElementById("filterYear");
-      
-      if (monthSelect) monthSelect.addEventListener("change", applyMonthYearShortcut);
-      if (yearSelect) yearSelect.addEventListener("change", applyMonthYearShortcut);
+  function initDashboard(data) {
+    populateFilters(data);
 
-      // Listeners padrão para todos os outros filtros (Update direto)
-      filterControls.forEach((id) => {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener("change", updateDashboard);
-      });
-      
+    // Listeners especiais para os atalhos de Mês/Ano
+    // Eles chamam a função que preenche as datas automaticamente
+    const monthSelect = document.getElementById("filterMonth");
+    const yearSelect = document.getElementById("filterYear");
+
+    if (monthSelect)
+      monthSelect.addEventListener("change", applyMonthYearShortcut);
+    if (yearSelect)
+      yearSelect.addEventListener("change", applyMonthYearShortcut);
+
+    // Listeners padrão para todos os outros filtros (Update direto)
+    filterControls.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener("change", updateDashboard);
+    });
+
+    updateDashboard();
+  }
+
+  function populateFilters(data) {
+    const analysts = new Set();
+    const situations = new Set();
+    const ufs = new Set();
+    const years = new Set();
+
+    data.forEach((row) => {
+      if (row["Usuario Analista"]) analysts.add(row["Usuario Analista"]);
+      if (row["Situação Solicitação"])
+        situations.add(row["Situação Solicitação"]);
+      if (row["Codigo Uf"]) ufs.add(row["Codigo Uf"]);
+
+      if (row._dataAnalise) {
+        years.add(row._dataAnalise.getFullYear());
+      }
+    });
+
+    populateSelect("filterAnalyst", [...analysts].sort());
+    populateSelect("filterSituation", [...situations].sort());
+    populateSelect("filterUf", [...ufs].sort());
+
+    // Popula o select de Ano
+    populateSelect(
+      "filterYear",
+      [...years].sort((a, b) => b - a)
+    );
+
+    // --- NOVA LÓGICA DE PADRÃO (Mês Anterior) ---
+
+    const today = new Date();
+    let targetYear = today.getFullYear();
+    let targetMonth = today.getMonth() - 1; // 0-11 (Jan é 0)
+
+    // Ajuste para virada de ano: Se estamos em Janeiro (0), queremos Dezembro (11) do ano passado
+    if (targetMonth < 0) {
+      targetMonth = 11;
+      targetYear -= 1;
+    }
+
+    const yearSelect = document.getElementById("filterYear");
+    const monthSelect = document.getElementById("filterMonth");
+
+    // Verifica se o ano alvo existe nas opções carregadas (para evitar erro se o CSV for antigo)
+    // Convertemos para String pois o value do option é string
+    const yearExists = [...yearSelect.options].some(
+      (opt) => opt.value === targetYear.toString()
+    );
+
+    if (yearExists) {
+      yearSelect.value = targetYear;
+      monthSelect.value = targetMonth;
+
+      // Chama a função de atalho para preencher as datas de Início/Fim automaticamente
+      // (Certifique-se que a função applyMonthYearShortcut já está definida no seu código)
+      if (typeof applyMonthYearShortcut === "function") {
+        applyMonthYearShortcut();
+      }
+    } else {
+      // Se não tiver dados do mês/ano anterior, deixa em "Todos"
+      yearSelect.value = "all";
+      monthSelect.value = "all";
+      document.getElementById("filterPeriodStart").value = "";
+      document.getElementById("filterPeriodEnd").value = "";
+    }
+  }
+
+  // --- NOVA FUNÇÃO: O "Atalho" que preenche as datas ---
+  function applyMonthYearShortcut() {
+    const monthVal = document.getElementById("filterMonth").value;
+    const yearVal = document.getElementById("filterYear").value;
+
+    const startInput = document.getElementById("filterPeriodStart");
+    const endInput = document.getElementById("filterPeriodEnd");
+
+    // Só aplica se o usuário escolheu PELO MENOS o Ano
+    if (yearVal !== "all") {
+      const year = parseInt(yearVal);
+
+      if (monthVal !== "all") {
+        // Caso 1: Mês + Ano -> Dia 1 até Fim do Mês
+        const month = parseInt(monthVal);
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0); // Último dia do mês
+
+        startInput.value = _native_formatDate(firstDay, "yyyy-MM-dd");
+        endInput.value = _native_formatDate(lastDay, "yyyy-MM-dd");
+      } else {
+        // Caso 2: Só Ano -> Ano inteiro
+        const firstDay = new Date(year, 0, 1);
+        const lastDay = new Date(year, 11, 31);
+
+        startInput.value = _native_formatDate(firstDay, "yyyy-MM-dd");
+        endInput.value = _native_formatDate(lastDay, "yyyy-MM-dd");
+      }
+      // Atualiza o dashboard
       updateDashboard();
     }
-
-    function populateFilters(data) {
-      const analysts = new Set();
-      const situations = new Set();
-      const ufs = new Set();
-      const years = new Set(); 
-
-      data.forEach((row) => {
-        if (row["Usuario Analista"]) analysts.add(row["Usuario Analista"]);
-        if (row["Situação Solicitação"]) situations.add(row["Situação Solicitação"]);
-        if (row["Codigo Uf"]) ufs.add(row["Codigo Uf"]);
-        
-        if (row._dataAnalise) {
-            years.add(row._dataAnalise.getFullYear());
-        }
-      });
-
-      populateSelect("filterAnalyst", [...analysts].sort());
-      populateSelect("filterSituation", [...situations].sort());
-      populateSelect("filterUf", [...ufs].sort());
-      
-      // Popula o select de Ano
-      populateSelect("filterYear", [...years].sort((a, b) => b - a)); 
-
-      // --- NOVA LÓGICA DE PADRÃO (Mês Anterior) ---
-      
-      const today = new Date();
-      let targetYear = today.getFullYear();
-      let targetMonth = today.getMonth() - 1; // 0-11 (Jan é 0)
-
-      // Ajuste para virada de ano: Se estamos em Janeiro (0), queremos Dezembro (11) do ano passado
-      if (targetMonth < 0) {
-          targetMonth = 11;
-          targetYear -= 1;
-      }
-
-      const yearSelect = document.getElementById("filterYear");
-      const monthSelect = document.getElementById("filterMonth");
-
-      // Verifica se o ano alvo existe nas opções carregadas (para evitar erro se o CSV for antigo)
-      // Convertemos para String pois o value do option é string
-      const yearExists = [...yearSelect.options].some(opt => opt.value === targetYear.toString());
-
-      if (yearExists) {
-          yearSelect.value = targetYear;
-          monthSelect.value = targetMonth;
-          
-          // Chama a função de atalho para preencher as datas de Início/Fim automaticamente
-          // (Certifique-se que a função applyMonthYearShortcut já está definida no seu código)
-          if (typeof applyMonthYearShortcut === "function") {
-              applyMonthYearShortcut();
-          }
-      } else {
-          // Se não tiver dados do mês/ano anterior, deixa em "Todos"
-          yearSelect.value = "all";
-          monthSelect.value = "all";
-          document.getElementById("filterPeriodStart").value = "";
-          document.getElementById("filterPeriodEnd").value = "";
-      }
-    }
-
-    // --- NOVA FUNÇÃO: O "Atalho" que preenche as datas ---
-    function applyMonthYearShortcut() {
-        const monthVal = document.getElementById("filterMonth").value;
-        const yearVal = document.getElementById("filterYear").value;
-        
-        const startInput = document.getElementById("filterPeriodStart");
-        const endInput = document.getElementById("filterPeriodEnd");
-
-        // Só aplica se o usuário escolheu PELO MENOS o Ano
-        if (yearVal !== "all") {
-            const year = parseInt(yearVal);
-            
-            if (monthVal !== "all") {
-                // Caso 1: Mês + Ano -> Dia 1 até Fim do Mês
-                const month = parseInt(monthVal);
-                const firstDay = new Date(year, month, 1);
-                const lastDay = new Date(year, month + 1, 0); // Último dia do mês
-
-                startInput.value = _native_formatDate(firstDay, "yyyy-MM-dd");
-                endInput.value = _native_formatDate(lastDay, "yyyy-MM-dd");
-            } else {
-                // Caso 2: Só Ano -> Ano inteiro
-                const firstDay = new Date(year, 0, 1);
-                const lastDay = new Date(year, 11, 31);
-
-                startInput.value = _native_formatDate(firstDay, "yyyy-MM-dd");
-                endInput.value = _native_formatDate(lastDay, "yyyy-MM-dd");
-            }
-            // Atualiza o dashboard
-            updateDashboard();
-        }
-    }
+  }
 
   function populateSelect(id, options) {
     const select = document.getElementById(id);
@@ -545,42 +536,47 @@ window.onload = function () {
 
   // Transforma Array de Objetos em Formato Matriz (Leve)
   function optimizeDataForExport(data) {
-      if (data.length === 0) return { cols: [], rows: [] };
-      // Pega as chaves do primeiro objeto (ignorando as chaves internas que começam com _)
-      const keys = Object.keys(data[0]).filter(k => !k.startsWith('_')); 
-      
-      const rows = data.map(obj => {
-          return keys.map(k => obj[k]); // Mapeia apenas os valores na ordem das chaves
-      });
-      
-      return { cols: keys, rows: rows };
+    if (data.length === 0) return { cols: [], rows: [] };
+    // Pega as chaves do primeiro objeto (ignorando as chaves internas que começam com _)
+    const keys = Object.keys(data[0]).filter((k) => !k.startsWith("_"));
+
+    const rows = data.map((obj) => {
+      return keys.map((k) => obj[k]); // Mapeia apenas os valores na ordem das chaves
+    });
+
+    return { cols: keys, rows: rows };
   }
 
   // Transforma Formato Matriz de volta em Array de Objetos (Para uso no App)
   function restoreDataFromImport(optimizedData) {
-      const { cols, rows } = optimizedData;
-      return rows.map(row => {
-          const obj = {};
-          cols.forEach((key, index) => {
-              obj[key] = row[index];
-          });
-          return obj;
+    const { cols, rows } = optimizedData;
+    return rows.map((row) => {
+      const obj = {};
+      cols.forEach((key, index) => {
+        obj[key] = row[index];
       });
+      return obj;
+    });
   }
 
   function mergeData(oldData, newData) {
     // Cria um Set com assinaturas únicas dos dados antigos para verificação rápida
     // Assinatura = concatenação de campos chave (Ex: Data + Solicitante + Protocolo)
-    const existingSignatures = new Set(oldData.map(item => 
-        `${item['Data Solicitacao']}|${item['Numero Protocolo']}|${item['Nome Fornecedor']}`
-    ));
+    const existingSignatures = new Set(
+      oldData.map(
+        (item) =>
+          `${item["Data Solicitacao"]}|${item["Numero Protocolo"]}|${item["Nome Fornecedor"]}`
+      )
+    );
 
-    const uniqueNewData = newData.filter(item => {
-        const signature = `${item['Data Solicitacao']}|${item['Numero Protocolo']}|${item['Nome Fornecedor']}`;
-        return !existingSignatures.has(signature);
+    const uniqueNewData = newData.filter((item) => {
+      const signature = `${item["Data Solicitacao"]}|${item["Numero Protocolo"]}|${item["Nome Fornecedor"]}`;
+      return !existingSignatures.has(signature);
     });
 
-    console.log(`Merge: ${oldData.length} antigos + ${uniqueNewData.length} novos únicos.`);
+    console.log(
+      `Merge: ${oldData.length} antigos + ${uniqueNewData.length} novos únicos.`
+    );
     return [...oldData, ...uniqueNewData];
   }
 
@@ -604,26 +600,28 @@ window.onload = function () {
     const selectedYear = document.getElementById("filterYear").value;
 
     // Criamos um dataset específico para a tendência
-    const trendData = allData.filter(row => {
-        // Filtro 1: Analista (se não for "todos", tem que bater o nome)
-        const matchAnalyst = (selectedAnalyst === "all" || row["Usuario Analista"] === selectedAnalyst);
-        
-        // Filtro 2: Ano (se não for "todos", tem que bater o ano)
-        // Isso permite ver a tendência do ano todo de 2025, mesmo se o filtro de data for só "Outubro"
-        let matchYear = true;
-        if (selectedYear !== "all" && row._dataAnalise) {
-            matchYear = row._dataAnalise.getFullYear() === parseInt(selectedYear);
-        }
+    const trendData = allData.filter((row) => {
+      // Filtro 1: Analista (se não for "todos", tem que bater o nome)
+      const matchAnalyst =
+        selectedAnalyst === "all" ||
+        row["Usuario Analista"] === selectedAnalyst;
 
-        // Retorna true apenas se passar pelo Analista e pelo Ano
-        return matchAnalyst && matchYear;
+      // Filtro 2: Ano (se não for "todos", tem que bater o ano)
+      // Isso permite ver a tendência do ano todo de 2025, mesmo se o filtro de data for só "Outubro"
+      let matchYear = true;
+      if (selectedYear !== "all" && row._dataAnalise) {
+        matchYear = row._dataAnalise.getFullYear() === parseInt(selectedYear);
+      }
+
+      // Retorna true apenas se passar pelo Analista e pelo Ano
+      return matchAnalyst && matchYear;
     });
 
     // Renderiza a Tendência com esse dado mais "amplo"
     renderTrendChart(trendData);
 
     if (typeof updateAnalystSectionVisibility === "function") {
-        updateAnalystSectionVisibility();
+      updateAnalystSectionVisibility();
     }
   }
 
@@ -1127,10 +1125,9 @@ window.onload = function () {
 
   // --- 7. EXPORTAÇÃO DE PDF (RF-A02) ---
 
-  
   const btnPdfHeader = document.getElementById("exportPdfButton");
-  const btnPdfDash = document.getElementById("exportPdfButtonDashboard"); 
-  
+  const btnPdfDash = document.getElementById("exportPdfButtonDashboard");
+
   // Adiciona o evento apenas se o botão existir (evita erros)
   if (btnPdfHeader) btnPdfHeader.addEventListener("click", exportPDF);
   if (btnPdfDash) btnPdfDash.addEventListener("click", exportPDF);
@@ -1259,62 +1256,66 @@ window.onload = function () {
   // Função auxiliar: Transforma Array de Objetos em Formato Matriz (Mais leve)
   function optimizeDataForExport(data) {
     if (!data || data.length === 0) return { cols: [], rows: [] };
-    
+
     // Pega as chaves do primeiro objeto (ignorando as chaves internas que começam com _)
-    const keys = Object.keys(data[0]).filter(k => !k.startsWith('_')); 
-    
-    const rows = data.map(obj => {
-        return keys.map(k => obj[k]); // Mapeia apenas os valores na ordem das chaves
+    const keys = Object.keys(data[0]).filter((k) => !k.startsWith("_"));
+
+    const rows = data.map((obj) => {
+      return keys.map((k) => obj[k]); // Mapeia apenas os valores na ordem das chaves
     });
-    
+
     return { cols: keys, rows: rows };
   }
 
   // Evento do Botão Exportar JSON
   const btnExportJson = document.getElementById("exportJsonButton");
   if (btnExportJson) {
-      btnExportJson.addEventListener("click", () => {
-        if (allData.length === 0) {
-            alert("Não há dados para exportar.");
-            return;
-        }
+    btnExportJson.addEventListener("click", () => {
+      if (allData.length === 0) {
+        alert("Não há dados para exportar.");
+        return;
+      }
 
-        // 1. Limpa dados calculados (chaves começadas com '_') para economizar espaço
-        // Precisamos salvar apenas os dados "crus" que vieram do CSV original
-        const cleanData = allData.map(row => {
-            const newRow = { ...row };
-            Object.keys(newRow).forEach(key => {
-                if (key.startsWith('_')) delete newRow[key];
-            });
-            return newRow;
+      // 1. Limpa dados calculados (chaves começadas com '_') para economizar espaço
+      // Precisamos salvar apenas os dados "crus" que vieram do CSV original
+      const cleanData = allData.map((row) => {
+        const newRow = { ...row };
+        Object.keys(newRow).forEach((key) => {
+          if (key.startsWith("_")) delete newRow[key];
         });
-
-        // 2. Otimiza o formato (Matriz: cols + rows)
-        const optimizedJson = optimizeDataForExport(cleanData);
-        const jsonString = JSON.stringify(optimizedJson);
-
-        // 3. Cria e dispara o download
-        const blob = new Blob([jsonString], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "relatorio.json"; // Nome padrão para facilitar o carregamento futuro
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        return newRow;
       });
+
+      // 2. Otimiza o formato (Matriz: cols + rows)
+      const optimizedJson = optimizeDataForExport(cleanData);
+      const jsonString = JSON.stringify(optimizedJson);
+
+      // 3. Cria e dispara o download
+      const blob = new Blob([jsonString], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "relatorio.json"; // Nome padrão para facilitar o carregamento futuro
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
   }
 
-// --- 9. DETALHAMENTO DO ANALISTA COM PAGINAÇÃO ---
+  // --- 9. DETALHAMENTO DO ANALISTA COM PAGINAÇÃO ---
 
-  const sectionAnalystDetail = document.getElementById("analyst-detail-section");
+  const sectionAnalystDetail = document.getElementById(
+    "analyst-detail-section"
+  );
   const analystNameDisplay = document.getElementById("analyst-name-display");
   const analystPagination = document.getElementById("analyst-pagination");
   const btnPagePrev = document.getElementById("btnPagePrev");
   const btnPageNext = document.getElementById("btnPageNext");
   const pageInfo = document.getElementById("pageInfo");
-  const analystTableContainer = document.getElementById("analyst-table-container");
+  const analystTableContainer = document.getElementById(
+    "analyst-table-container"
+  );
   const analystTableBody = document.getElementById("analyst-table-body");
   const analystMsg = document.getElementById("analyst-msg");
 
@@ -1325,105 +1326,162 @@ window.onload = function () {
 
   // Chamada dentro do updateDashboard
   function updateAnalystSectionVisibility() {
-      const selectedAnalyst = document.getElementById("filterAnalyst").value;
+    const selectedAnalyst = document.getElementById("filterAnalyst").value;
 
-      if (selectedAnalyst === "all") {
-          sectionAnalystDetail.classList.add("hidden");
-          return;
-      }
+    if (selectedAnalyst === "all") {
+      sectionAnalystDetail.classList.add("hidden");
+      return;
+    }
 
-      // Mostra a seção
-      sectionAnalystDetail.classList.remove("hidden");
-      analystNameDisplay.textContent = selectedAnalyst;
-      
-      // 1. Carrega e Prepara os Dados
-      // Filtra de allData para ter todo o histórico (ou filteredData se quiser respeitar os filtros de data)
-      currentAnalystData = [...filteredData];      
-      // Ordena: Mais recentes primeiro
-      currentAnalystData.sort((a, b) => {
-          const dateA = a._dataAnalise ? a._dataAnalise.getTime() : 0;
-          const dateB = b._dataAnalise ? b._dataAnalise.getTime() : 0;
-          return dateB - dateA;
-      });
+    // Mostra a seção
+    sectionAnalystDetail.classList.remove("hidden");
+    analystNameDisplay.textContent = selectedAnalyst;
 
-      // 2. Reseta para página 1 e renderiza
-      currentPage = 1;
-      renderAnalystTable();
+    // 1. Carrega e Prepara os Dados
+    // Filtra de allData para ter todo o histórico (ou filteredData se quiser respeitar os filtros de data)
+    currentAnalystData = [...filteredData];
+    // Ordena: Mais recentes primeiro
+    currentAnalystData.sort((a, b) => {
+      const dateA = a._dataAnalise ? a._dataAnalise.getTime() : 0;
+      const dateB = b._dataAnalise ? b._dataAnalise.getTime() : 0;
+      return dateB - dateA;
+    });
+
+    // 2. Reseta para página 1 e renderiza
+    currentPage = 1;
+    renderAnalystTable();
   }
 
   function renderAnalystTable() {
-      // Verifica se há dados
-      if (currentAnalystData.length === 0) {
-          analystTableContainer.classList.add("hidden");
-          analystPagination.classList.add("hidden");
-          analystMsg.classList.remove("hidden");
-          return;
-      }
+    // Verifica se há dados
+    if (currentAnalystData.length === 0) {
+      analystTableContainer.classList.add("hidden");
+      analystPagination.classList.add("hidden");
+      analystMsg.classList.remove("hidden");
+      return;
+    }
 
-      analystTableContainer.classList.remove("hidden");
-      analystMsg.classList.add("hidden");
-      analystPagination.classList.remove("hidden");
+    analystTableContainer.classList.remove("hidden");
+    analystMsg.classList.add("hidden");
+    analystPagination.classList.remove("hidden");
 
-      // Cálculos de Paginação
-      const totalPages = Math.ceil(currentAnalystData.length / itemsPerPage);
-      
-      // Garante limites seguros
-      if (currentPage < 1) currentPage = 1;
-      if (currentPage > totalPages) currentPage = totalPages;
+    // Cálculos de Paginação
+    const totalPages = Math.ceil(currentAnalystData.length / itemsPerPage);
 
-      const startIndex = (currentPage - 1) * itemsPerPage;
-      const endIndex = startIndex + itemsPerPage;
-      const pageData = currentAnalystData.slice(startIndex, endIndex);
+    // Garante limites seguros
+    if (currentPage < 1) currentPage = 1;
+    if (currentPage > totalPages) currentPage = totalPages;
 
-      // Renderiza Linhas
-      analystTableBody.innerHTML = "";
-      pageData.forEach(row => {
-          const dataFormatada = row._dataAnalise ? _native_formatDate(row._dataAnalise, "dd/MM/yy") : "N/A";
-          
-          let statusClass = "text-gray-600";
-          if(row["Situação Solicitação"] === "Deferida") statusClass = "text-green-600 font-bold";
-          if(row["Situação Solicitação"] === "Deferida Parcial") statusClass = "text-yellow-600 font-bold";
-          if(row["Situação Solicitação"] === "Indeferida") statusClass = "text-red-600 font-bold";
-          if(row["Situação Solicitação"] === "Em Análise") statusClass = "text-blue-600 font-bold";
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const pageData = currentAnalystData.slice(startIndex, endIndex);
 
-          const tr = `
+    // Renderiza Linhas
+    analystTableBody.innerHTML = "";
+    pageData.forEach((row) => {
+      const dataFormatada = row._dataAnalise
+        ? _native_formatDate(row._dataAnalise, "dd/MM/yy")
+        : "N/A";
+
+      let statusClass = "text-gray-600";
+      if (row["Situação Solicitação"] === "Deferida")
+        statusClass = "text-green-600 font-bold";
+      if (row["Situação Solicitação"] === "Deferida Parcial")
+        statusClass = "text-yellow-600 font-bold";
+      if (row["Situação Solicitação"] === "Indeferida")
+        statusClass = "text-red-600 font-bold";
+      if (row["Situação Solicitação"] === "Em Análise")
+        statusClass = "text-blue-600 font-bold";
+
+      const tr = `
             <tr class="hover:bg-gray-50 transition-colors">
                 <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${dataFormatada}</td>
-                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">${row["CNPJ/CPF"] || ""}</td>
-                <td class="px-4 py-2 text-sm text-gray-600 truncate max-w-xs" title="${row["Razão Social/Nome"]}">${row["Razão Social/Nome"] || ""}</td>
-                <td class="px-4 py-2 whitespace-nowrap text-sm ${statusClass}">${row["Situação Solicitação"] || ""}</td>
-                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${row["Tipo Solicitacão"] || ""}</td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">${
+                  row["CNPJ/CPF"] || ""
+                }</td>
+                <td class="px-4 py-2 text-sm text-gray-600 truncate max-w-xs" title="${
+                  row["Razão Social/Nome"]
+                }">${row["Razão Social/Nome"] || ""}</td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm ${statusClass}">${
+        row["Situação Solicitação"] || ""
+      }</td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${
+                  row["Tipo Solicitacão"] || ""
+                }</td>
             </tr>
           `;
-          analystTableBody.innerHTML += tr;
-      });
+      analystTableBody.innerHTML += tr;
+    });
 
-      // Atualiza Controles
-      pageInfo.textContent = `Pág ${currentPage} de ${totalPages}`;
-      
-      btnPagePrev.disabled = currentPage === 1;
-      btnPageNext.disabled = currentPage === totalPages;
+    // Atualiza Controles
+    pageInfo.textContent = `Pág ${currentPage} de ${totalPages}`;
+
+    btnPagePrev.disabled = currentPage === 1;
+    btnPageNext.disabled = currentPage === totalPages;
   }
 
   // Event Listeners da Paginação
   if (btnPagePrev) {
-      btnPagePrev.addEventListener("click", () => {
-          if (currentPage > 1) {
-              currentPage--;
-              renderAnalystTable();
-          }
-      });
+    btnPagePrev.addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderAnalystTable();
+      }
+    });
   }
 
   if (btnPageNext) {
-      btnPageNext.addEventListener("click", () => {
-          const totalPages = Math.ceil(currentAnalystData.length / itemsPerPage);
-          if (currentPage < totalPages) {
-              currentPage++;
-              renderAnalystTable();
-          }
-      });
+    btnPageNext.addEventListener("click", () => {
+      const totalPages = Math.ceil(currentAnalystData.length / itemsPerPage);
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderAnalystTable();
+      }
+    });
   }
 
+  // ==========================================================
+  // INTEGRAÇÃO COM HOME (DASHBOARD)
+  // ==========================================================
 
+  function gerarEstatisticasDashboard() {
+    // Usa a variável 'allData' que já existe neste escopo
+    if (!allData) return { solicitacoes: 0, indeferidas: 0 };
+
+    const total = allData.length;
+    const indeferidas = allData.filter(
+      (d) => d["Situação Solicitação"] === "Indeferida"
+    ).length;
+
+    return {
+      solicitacoes: total,
+      indeferidas: indeferidas,
+    };
+  }
+
+  function atualizarStatsExternos() {
+    try {
+      const stats = gerarEstatisticasDashboard();
+      // Salva com a chave 'stats_dashboard' que a Home espera
+      localStorage.setItem("stats_dashboard", JSON.stringify(stats));
+      // console.log('Stats Dashboard atualizados:', stats);
+    } catch (e) {
+      console.error("Erro ao atualizar stats do dashboard:", e);
+    }
+  }
+
+  // Listener para o PostMessage
+  window.addEventListener("message", (event) => {
+    if (event.data && event.data.type === "GET_STATS") {
+      const stats = gerarEstatisticasDashboard();
+      event.source.postMessage(
+        {
+          type: "STATS_RESPONSE",
+          app: "dashboard", // Identificador para a Home saber quem respondeu
+          data: stats,
+        },
+        event.origin
+      );
+    }
+  });
 }; // FECHA O window.onload

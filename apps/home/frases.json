@@ -1,0 +1,510 @@
+{
+  "categorias": [
+    {
+      "nome": "Memento Mori e Ação Imediata",
+      "descricao": "Frases que nos lembram da mortalidade para motivar a ação virtuosa, o foco no presente e a superação do medo.",
+      "frases": [
+        {
+          "id": 1,
+          "frase": "A morte sorri para todos e só o que podemos fazer é sorrir de volta.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 2,
+          "frase": "Não se comporte como se estivesse destinado a viver para sempre. Tudo que acontece depende de você. Enquanto você viver e enquanto você puder, seja bom agora.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 3,
+          "frase": "Pense em você como alguém que morreu. Você já viveu a sua vida até aqui. Agora, agarre os dias que te sobraram, e viva-os de maneira adequada.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 4,
+          "frase": "A morte paira sobre você. Enquanto você vive, enquanto está em seu poder, seja bom.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 5,
+          "frase": "Não desprezes a morte; dá-lhe boa acolhida, como a uma das coisas que a Natureza quer.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 6,
+          "frase": "Considere-se morto e tenha completado sua vida até o presente; e viva de acordo com a natureza o restante que lhe for permitido.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 7,
+          "frase": "A morte está ao nosso lado.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 8,
+          "frase": "Sofremos mais em nossa imaginação do que na realidade.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 9,
+          "frase": "Não é uma questão de morrer cedo ou tarde, mas de morrer bem ou mal. Morrer bem significa escapar vivo do risco de morrer doente.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 10,
+          "frase": "A Morte, no entanto, deve ser olhada no rosto por jovens e velhos.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 11,
+          "frase": "Vamos preparar nossas mentes como se tivéssemos chegado ao fim da vida.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 12,
+          "frase": "Não é da morte que temos medo, mas de pensar nela.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 13,
+          "frase": "Nada há de mais divino para o homem do que meditar na sua mortalidade.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 14,
+          "frase": "Não recebemos uma vida breve, mas a fazemos, nem somos dela carentes, mas esbanjadores.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 15,
+          "frase": "Se devo morrer, morrerei quando chegar a hora. Como, ao que me parece, ainda não é a hora, vou comer porque estou com fome.",
+          "autor": "Epicteto"
+        },
+        {
+          "id": 16,
+          "frase": "Doente e ainda assim feliz, em perigo e ainda assim feliz, morrendo e ainda assim feliz, no exílio e ainda assim feliz, na desgraça e feliz.",
+          "autor": "Epicteto"
+        },
+        {
+          "id": 17,
+          "frase": "Tem a cada dia diante dos olhos a morte, o exílio e tudo o que parece assustador, principalmente a morte: jamais terás então qualquer pensamento baixo ou covarde.",
+          "autor": "Epicteto"
+        },
+        {
+          "id": 18,
+          "frase": "Os homens são perturbados não pelas coisas, mas pelas opiniões que eles têm delas. A morte, por exemplo, nada tem de terrível.",
+          "autor": "Epicteto"
+        },
+        {
+          "id": 19,
+          "frase": "Pense em si mesmo como já tendo morrido, e tido a vida que teve até hoje. Agora viva daqui para frente de acordo com a natureza.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 20,
+          "frase": "Você poderia deixar a vida agora. Deixe que isso determine o que você faz, diz e pensa.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 21,
+          "frase": "Escolha não ser atingido e você não se sentirá atingido, não se sinta atingido e você não terá sido. Memento Mori.",
+          "autor": "Autor Não Identificado (Baseado em M. Aurélio)"
+        },
+        {
+          "id": 22,
+          "frase": "Viver com medo é renunciar à vida antes que a morte chegue. Memento Mori.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 23,
+          "frase": "Não aja como se você fosse viver mil anos. A morte paira sobre você. Enquanto você vive, enquanto é possível, seja bom.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 24,
+          "frase": "Comece a viver agora e considere cada dia separado como uma vida separada.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 25,
+          "frase": "A Morte, no entanto, deve ser olhada no rosto por jovens e velhos. Prepare suas mentes como se tivéssemos chegado ao fim da vida.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 26,
+          "frase": "Pratica cada um dos teus atos como se fosse o último da tua vida.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 27,
+          "frase": "Ninguém jamais perde uma vida diferente daquela que está vivendo e ninguém vive uma vida diferente daquela que está perdendo.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 28,
+          "frase": "Qualquer tempo que já passou pertence à morte. Pensamos que a morte é coisa do futuro, mas parte dela já é coisa do passado.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 29,
+          "frase": "A maior parte da vida é gasta fazendo o que não deveríamos, e não fazendo o que deveríamos.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 30,
+          "frase": "Não é a morte que um homem deve temer, mas sim nunca começar a viver.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 31,
+          "frase": "Não procrastine. A vida está passando. Não seja um tolo: você morrerá.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 32,
+          "frase": "Acertemos as contas com a vida dia após dia.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 33,
+          "frase": "A morte é o desejo da natureza. Aceite-a como inevitável e use-a como guia.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 34,
+          "frase": "O que fazemos agora ecoa pela eternidade. Memento Mori.",
+          "autor": "Marco Aurélio"
+        }
+      ]
+    },
+    {
+      "nome": "Controle Interno e Aceitação",
+      "descricao": "Frases que focam na dicotomia do controle, distinguindo o que está em nosso poder (opiniões, julgamentos) e o que não está (eventos externos, ações dos outros).",
+      "frases": [
+        {
+          "id": 35,
+          "frase": "Você tem poder sobre sua mente – não sobre eventos externos. Perceba isso e você encontrará a sua força.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 36,
+          "frase": "Aceite o que não pode controlar. Adapte-se ao que pode mudar.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 37,
+          "frase": "A felicidade e a liberdade começam com a clara compreensão de um princípio: algumas coisas estão sob nosso controle, e outras não.",
+          "autor": "Epicteto"
+        },
+        {
+          "id": 38,
+          "frase": "Seja indiferente ao que não está em seu poder. Concentre-se no que está.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 39,
+          "frase": "Não espere que os eventos aconteçam como você deseja. Decida desejar o que acontece.",
+          "autor": "Epicteto"
+        },
+        {
+          "id": 40,
+          "frase": "Nada acontece a alguém que a natureza não o tenha preparado para suportar.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 41,
+          "frase": "Se você está sofrendo por coisas externas, não são elas que te perturbam, mas o seu próprio julgamento sobre elas. E está em seu poder anular este julgamento agora.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 42,
+          "frase": "Quando se navega sem destino, nenhum vento é favorável.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 43,
+          "frase": "Aprenda a fazer distinção entre o que te acontece e como você reage a isso.",
+          "autor": "Epicteto"
+        },
+        {
+          "id": 44,
+          "frase": "A virtude é a única coisa que não pode ser tirada de você.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 45,
+          "frase": "Não adianta orar por um fardo mais leve, mas sim por ombros mais fortes.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 46,
+          "frase": "O que não corrompe o homem em si não pode corromper sua vida, nem fazê-lo qualquer dano seja exterior ou internamente.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 47,
+          "frase": "O sofrimento vem do desejo inútil de controlar o que é incontrolável.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 48,
+          "frase": "Apenas um tolo tem medo de perder o que não pode ser guardado.",
+          "autor": "Autor Não Identificado"
+        }
+      ]
+    },
+    {
+      "nome": "Resiliência e Adversidade",
+      "descricao": "Citações sobre a importância de enfrentar as dificuldades como oportunidades para fortalecer o caráter.",
+      "frases": [
+        {
+          "id": 49,
+          "frase": "O obstáculo no caminho torna-se o caminho. O que impede a ação impulsiona a ação.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 50,
+          "frase": "O homem que sofre antes de ser necessário, sofre mais do que o necessário.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 51,
+          "frase": "A dor é um teste, não uma punição. Use-a para fortalecer sua resiliência.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 52,
+          "frase": "A dificuldade atrai o homem de caráter, pois é provocado por ela.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 53,
+          "frase": "As dificuldades fortalecem a mente, assim como o trabalho o faz com o corpo.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 54,
+          "frase": "A maior prova de coragem é suportar a derrota sem perder o ânimo.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 55,
+          "frase": "Nada de desgosto, nem de desânimo; se acabas de fracassar, recomeça.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 56,
+          "frase": "Muitos são prejudicados pelo próprio medo, e muitos podem ter chegado ao seu destino enquanto o temiam.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 57,
+          "frase": "A melhor vingança é não se tornar igual ao agressor.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 58,
+          "frase": "A calamidade é a oportunidade de um homem virtuoso.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 59,
+          "frase": "A dor é inevitável. O sofrimento é opcional.",
+          "autor": "Autor Não Identificado (Adaptação)"
+        },
+        {
+          "id": 60,
+          "frase": "Você só perde o que se apega.",
+          "autor": "Autor Não Identificado"
+        }
+      ]
+    },
+    {
+      "nome": "Ação e Propósito",
+      "descricao": "Frases sobre o foco no momento presente, a importância da ação correta e a busca por um propósito virtuoso na vida.",
+      "frases": [
+        {
+          "id": 61,
+          "frase": "Se não está certo, não o faça; se não é verdade, não o diga.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 62,
+          "frase": "A melhor preparação para o futuro é o presente bem vivido.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 63,
+          "frase": "Tudo o que você precisa é isto: certeza de julgamento no momento presente.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 64,
+          "frase": "Primeiro diga a si mesmo o que você seria; e então faça o que você tem que fazer.",
+          "autor": "Epicteto"
+        },
+        {
+          "id": 65,
+          "frase": "Não explique sua filosofia, mas sim incorpore-a.",
+          "autor": "Epicteto"
+        },
+        {
+          "id": 66,
+          "frase": "O homem conquista o mundo ao conquistar-se a si mesmo.",
+          "autor": "Zenão de Cítio"
+        },
+        {
+          "id": 67,
+          "frase": "Devemos abandonar muitas coisas de que somos dependentes por considerá-las boas, do contrário desaparecerá a coragem.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 68,
+          "frase": "É loucura esperar que homens maus não façam maldades.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 69,
+          "frase": "Palavras são opiniões, não fatos. Ação é a única verdade.",
+          "autor": "Autor Não Identificado"
+        }
+      ]
+    },
+    {
+      "nome": "Julgamento e Percepção",
+      "descricao": "Frases que abordam a importância de examinar e controlar os pensamentos, sendo a mente a fonte de toda a angústia ou felicidade.",
+      "frases": [
+        {
+          "id": 70,
+          "frase": "As pessoas ficam perturbadas, não pelas coisas, mas pela imagem que formam delas.",
+          "autor": "Epicteto"
+        },
+        {
+          "id": 71,
+          "frase": "A alma é tingida com a cor de seus pensamentos.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 72,
+          "frase": "Se vives de acordo com as leis da natureza, nunca serás pobre; se vives de acordo com as opiniões alheias, nunca serás rico.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 73,
+          "frase": "A felicidade de sua vida depende da qualidade de seus pensamentos.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 74,
+          "frase": "Tudo o que ouvimos é uma opinião, não um fato. Tudo o que vemos é uma perspectiva, não a verdade.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 75,
+          "frase": "Manterei constante vigilância sobre mim mesmo e submeterei cada dia a uma revisão.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 76,
+          "frase": "Se desejas melhorar, contenta-te em parecer desinformado ou estúpido em assuntos que desconheces.",
+          "autor": "Epicteto"
+        },
+        {
+          "id": 77,
+          "frase": "A maior causa da angústia é nunca examinar nossos próprios pensamentos.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 78,
+          "frase": "A calma é poder.",
+          "autor": "Autor Não Identificado (Ideia Estoica)"
+        },
+        {
+          "id": 79,
+          "frase": "Não se explique. Seus amigos não precisam, e seus inimigos não vão acreditar.",
+          "autor": "Autor Não Identificado (Atribuído a Epicteto)"
+        },
+        {
+          "id": 80,
+          "frase": "Lembre-se que a sua principal tarefa é manter o seu próprio caráter inatacável.",
+          "autor": "Epicteto"
+        }
+      ]
+    },
+    {
+      "nome": "Simplicidade e Contentamento",
+      "descricao": "Ênfase na auto-suficiência, no desapego material e na moderação dos desejos como caminhos para a tranquilidade (Ataraxia).",
+      "frases": [
+        {
+          "id": 81,
+          "frase": "A riqueza não consiste em ter grandes posses, mas em ter poucas necessidades.",
+          "autor": "Epicteto"
+        },
+        {
+          "id": 82,
+          "frase": "O homem sábio contenta-se com o seu quinhão, seja ele qual for.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 83,
+          "frase": "Pobre não é aquele que tem pouco, mas antes aquele que muito deseja.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 84,
+          "frase": "Quem não se contenta com pouco, não se contenta com nada.",
+          "autor": "Epicuro (Adotada pelo Estoicismo)"
+        },
+        {
+          "id": 85,
+          "frase": "A vida mais feliz é aquela que consiste em desejar o que se tem.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 86,
+          "frase": "Desterra de ti desejos e receios e nada terás que te tiranize.",
+          "autor": "Epicteto"
+        },
+        {
+          "id": 87,
+          "frase": "Pratique a simplicidade. O luxo é um peso, não uma liberdade.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 88,
+          "frase": "Não busque a felicidade fora, mas sim dentro de você, caso contrário nunca a encontrará.",
+          "autor": "Epicteto"
+        },
+        {
+          "id": 89,
+          "frase": "O prazer é um visitante, não um anfitrião.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 90,
+          "frase": "A única escravidão real é a subserviência aos seus próprios desejos descontrolados.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 91,
+          "frase": "O sucesso não é o destino final; é a qualidade da jornada e a firmeza do seu caráter que importam.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 92,
+          "frase": "A paz começa quando o desejo de mudar os outros termina.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 93,
+          "frase": "Apressa-te a viver bem. A vida é aquilo que os teus pensamentos fizeram dela.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 94,
+          "frase": "Se queres algo de bom, pega-o dentro de ti mesmo.",
+          "autor": "Epicteto"
+        }
+      ]
+    }
+  ]
+}
