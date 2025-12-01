@@ -121,19 +121,21 @@ function renderStats() {
   const cardsData = [
     {
       ...STATS_CONFIG.dashboard,
-      principal: stats.dashboard.solicitacoes || 0,
+      principal: (stats.dashboard.solicitacoes || 0).toLocaleString("pt-BR"),
       label: "Análises",
-      sub: `${stats.dashboard.indeferidas || 0} indeferidas`,
+      sub: `${(stats.dashboard.indeferidas || 0).toLocaleString(
+        "pt-BR"
+      )} indeferidas`,
     },
     {
       ...STATS_CONFIG.gerador,
-      principal: stats.gerador.mensagens || 0,
+      principal: (stats.gerador.mensagens || 0).toLocaleString("pt-BR"),
       label: "Geradas",
       sub: `${stats.gerador.percentualDeferidas || 0}% deferidas`,
     },
     {
       ...STATS_CONFIG.contratos,
-      principal: stats.contratos.ativos || 0,
+      principal: (stats.contratos.ativos || 0).toLocaleString("pt-BR"),
       label: "Ativos",
       // Lógica especial: Se houver contratos a vencer, destaca em vermelho
       subHtml:
@@ -142,12 +144,12 @@ function renderStats() {
              ⚠️ ${stats.contratos.vencendo} a vencer 
              <span class="text-gray-400 font-medium ml-1 text-[10px]">• ${
                stats.contratos.qtdPagamentos || 0
-             } pgts</span>
+             } pagamentos</span>
            </span>`
           : `<span class="text-gray-400 text-xs">
              ${formatMoneyCompact(stats.contratos.valorTotal || 0)} 
              <span class="mx-1 text-gray-300">•</span> 
-             ${stats.contratos.qtdPagamentos || 0} pgts
+             ${stats.contratos.qtdPagamentos || 0} pagamentos
            </span>`,
     },
     //{
