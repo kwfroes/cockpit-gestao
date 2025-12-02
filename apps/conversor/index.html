@@ -100,6 +100,28 @@
         </div>
     </div>
 
+    <div class="section-label">Utilidades</div>
+    <div class="app-card border-purple">
+        <h1 class="text-2xl font-bold text-gray-800 mb-2 border-b pb-2">Conversor Excel p/ CSV (Alta Capacidade)</h1>
+        <p class="text-sm text-gray-600 mb-4">
+            Converte arquivos grandes (300k+ linhas). Gera um CSV separado por ponto e vírgula <b>(;)</b> pronto para a Ferramenta 1.
+        </p>
+
+        <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700">Arquivo Excel (.xlsx)</label>
+            <input type="file" id="xlsxGenFile" accept=".xlsx, .xls" class="input-padrao text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
+        </div>
+
+        <button id="btnGenConvert" onclick="converterExcelGenerico()" class="btn-primary bg-purple-600 hover:bg-purple-700">
+            Converter Agora
+        </button>
+
+        <div id="loaderGen" class="hidden text-center mt-4">
+            <div class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-purple-600"></div>
+            <p id="statusGen" class="text-sm text-gray-600 mt-2">Lendo arquivo gigante...</p>
+        </div>
+    </div>
+
     <div id="toast">Operação concluída com sucesso!</div>
 
     <script src="script.js"></script>

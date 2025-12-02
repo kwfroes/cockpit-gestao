@@ -1598,6 +1598,43 @@
           "matricula": "09.577.974-1"
         }
       ]
+    },
+    {
+      "unidade": {
+        "nome": "Secretaria da Administração do Estado da Bahia",
+        "cnpj": "13.323.274/0001-63",
+        "endereco": "2ª Avenida, 200, CAB, Salvador - Bahia",
+        "rep": "Rodrigo Pimentel de Souza Lima"
+      },
+      "empresa": {
+        "nome": "Companhia de Empresa Gráfica da Bahia",
+        "cnpj": "15.257.819/0001-06",
+        "endereco": "Rua Mello Moraes Filho, 189, Fazenda Grande do Retiro, CEP: 40.350-900 Salvador ̶̶ Bahia",
+        "rep": "Karina Brito Felix"
+      },
+      "processoSei": "009.0242.2024.0055010-44",
+      "numeroContrato": "004/2025",
+      "tipoContrato": "Dispensa",
+      "objeto": "Emissão de Certificado Digital tipo A1 EEQUIPAMENTO PARA SERVIDOR WEB SSL, sem fornecimento de Token.",
+      "estimativaMensal": 0,
+      "tempoContrato": "12 meses",
+      "dataAssinatura": "2025-02-10",
+      "dataInicio": "2025-02-13",
+      "linkSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=112375656",
+      "valorTotal": 1423.4,
+      "dataFim": "2026-02-13",
+      "gestorInicial": {
+        "nome": "Geisiane Dias Magalhães",
+        "matricula": "000000"
+      },
+      "fiscaisIniciais": [
+        {
+          "nome": "Cícera Glécia Alves da Silva",
+          "matricula": "0000000"
+        }
+      ],
+      "id": "contrato_1764687252317",
+      "pagamentos": []
     }
   ],
   "empresas": [

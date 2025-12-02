@@ -226,3 +226,61 @@ async function converterExcelEMerge() {
         }
     }, 100);
 }
+
+
+// ==========================================
+// FERRAMENTA 3: CONVERSOR VIA SERVIDOR (PYTHON/RENDER)
+// ==========================================
+async function converterExcelGenerico() {
+    const fileInput = document.getElementById('xlsxGenFile');
+    const btn = document.getElementById('btnGenConvert');
+    const loader = document.getElementById('loaderGen');
+    const statusText = document.getElementById('statusGen');
+
+    // CONFIGURE AQUI O SEU SEU SERVIDOR NO RENDER
+    const API_URL = "https://api-cockpit-python.onrender.com"; // ← troque se for outro app
+
+    if (!fileInput.files.length) return alert("Selecione um arquivo Excel.");
+
+    const file = fileInput.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+
+    btn.disabled = true;
+    loader.classList.remove('hidden');
+    statusText.innerText = "Enviando para o servidor (1ª vez do dia pode levar até 1 min)...";
+
+    showToast("Iniciando upload para nuvem...");
+
+    try {
+        const response = await fetch(`${API_URL}/converter`, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(errorText || "Erro no servidor Render (pode ser timeout do plano free)");
+        }
+
+        statusText.innerText = "Processamento concluído! Baixando...";
+        const blob = await response.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = downloadUrl;
+        a.download = file.name.replace(/\.[^/.]+$/, "") + "_CONVERTIDO.csv";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(downloadUrl);
+
+        showToast("Conversão concluída com sucesso!");
+    } catch (error) {
+        console.error(error);
+        alert("Erro na conversão: " + error.message);
+    } finally {
+        btn.disabled = false;
+        loader.classList.add('hidden');
+        statusText.innerText = "";
+    }
+}

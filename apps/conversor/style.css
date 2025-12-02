@@ -23,14 +23,19 @@ body {
     animation: slideDown 0.3s ease-out;
 }
 
+/* Borda colorida para Ferramenta 1 */
+.app-card.border-blue {
+    border-top: 4px solid #3b82f6; /* blue-500 */
+}
+
 /* Borda colorida para Ferramenta 2 */
 .app-card.border-green {
     border-top: 4px solid #22c55e; /* green-500 */
 }
 
-/* Borda colorida para Ferramenta 1 */
-.app-card.border-blue {
-    border-top: 4px solid #3b82f6; /* blue-500 */
+/* Borda colorida para Ferramenta 3 */
+.app-card.border-purple {
+    border-top: 4px solid #a855f7; /* purple-500 */
 }
 
 
