@@ -98,26 +98,65 @@
                     </div>
                 </div>
             </section>
+
             <section id="contact-section">
                 <h2 class="text-xl font-semibold mb-4 border-b pb-2 text-gray-700">3. Contato com Fornecedor</h2>
                 <div class="flex items-center">
                     <input type="checkbox" id="contactMade" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                     <label for="contactMade" class="ml-3 block text-sm font-medium text-gray-700">Houve contato com o fornecedor?</label>
                 </div>
-                <div id="contactDetailsWrapper" class="hidden mt-4 grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 p-4 rounded-lg">
+
+                <div id="contactDetailsWrapper" class="hidden mt-4 grid grid-cols-1 md:grid-cols-3 gap-6 bg-gray-50 p-4 rounded-lg">
                     <div>
                         <label for="contactName" class="block text-sm font-medium text-gray-700 mb-1">Nome do Contato</label>
                         <input type="text" id="contactName" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Ex: Joelson Miranda">
                     </div>
+
                     <div>
                         <label for="contactRole" class="block text-sm font-medium text-gray-700 mb-1">Cargo</label>
                         <select id="contactRole" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                             <option>Dirigente</option>
-                            <option>Diretor(a)</option>
-                            <option selected>Sócio(a)</option>
+                            <option>Diretor</option>
+                            <option selected>Sócio</option>
                             <option>Representante Legal</option>
                         </select>
                     </div>
+                    
+                    <div>
+                        <label for="contactPhone" class="block text-sm font-medium text-gray-700 mb-1">Telefone (WhatsApp)</label>
+                        <input type="text" id="contactPhone" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="(71) 9 9999-9999" maxlength="16">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Gênero</label>
+                        <div class="flex space-x-4 p-3 border border-gray-300 rounded-lg bg-white items-center">
+                            <div class="flex items-center">
+                                <input type="radio" id="contactGenderM" name="contactGender" value="M" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500" checked>
+                                <label for="contactGenderM" class="ml-2 block text-sm font-medium text-gray-700">Masculino (Sr.)</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="radio" id="contactGenderF" name="contactGender" value="F" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                <label for="contactGenderF" class="ml-2 block text-sm font-medium text-gray-700">Feminino (Sra.)</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <label for="contactSuccess" class="block text-sm font-medium text-gray-700 mb-1">Status do Contato</label>
+                        <select id="contactSuccess" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                            <option value="S">Êxito (Fornecedor ciente e regularizando)</option>
+                            <option value="N">Sem Êxito (Caixa postal, ocupado, etc.)</option>
+                        </select>
+                    </div>
+                </div>
+
+            </section>
+            <section id="legal-flag-section" class="mt-4">
+                <div class="flex items-center">
+                    <input type="checkbox" id="omitLegalFlag" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                    <label for="omitLegalFlag" class="ml-3 block text-sm font-medium text-gray-700">
+                    <span class="text-red-600 font-semibold">OMITIR</span> Referência Legal
+                    </label>
                 </div>
             </section>
             <section id="rejected-docs-section" class="hidden">

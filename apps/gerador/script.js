@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
    * @description Armazena referências a inputs, modais e botões em variáveis globais.
    */
   const dbName = "CafDatabase";
-  const dbVersion = 5;
+  const dbVersion = 6;
   const dbStatus = document.getElementById("db-status");
   const familyDbStatus = document.getElementById("family-db-status");
   const cnpjInputForDb = document.getElementById("cnpj");
@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const contactsDbStatus = document.getElementById("contacts-db-status");
   const modalcontactNameInput = document.getElementById("contactNameInput");
   const modalcontactRoleInput = document.getElementById("contactRoleInput");
-  const contactPhoneInput = document.getElementById("contactPhoneInput");
+  //const contactPhoneInput = document.getElementById("contactPhoneInput");
   const contactsModal = document.getElementById("contactsModal");
   const openContactsModalBtn = document.getElementById("openContactsModalBtn");
   const closeContactsModalBtn = document.getElementById(
@@ -275,6 +275,19 @@ document.addEventListener("DOMContentLoaded", function () {
       v = v.replace(/\.(\d{3})(\d)/, ".$1/$2");
       v = v.replace(/(\d{4})(\d)/, "$1-$2");
     }
+    return v;
+  }
+
+  /**
+   * @functionality 505
+   * @category 5xx: Utilitários e Validações
+   * @name Formatação de Máscara Dinâmica de Telefone (XX) X XXXX-XXXX
+   * @description Aplica máscara de telefone a uma string de dígitos.
+   */
+  function formatPhone(v) {
+    v = v.replace(/\D/g, "");
+    v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
+    v = v.replace(/(\d)(\d{4})$/, "$1-$2");
     return v;
   }
 
@@ -2050,6 +2063,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const contactRoleInput = document.getElementById("contactRole");
   let rejectedDocs = [];
   let selectedFamilyId = null;
+  const contactPhoneInput = document.getElementById("contactPhone");
+  const contactSuccessSelect = document.getElementById("contactSuccess");
+  const omitLegalFlagCheckbox = document.getElementById("omitLegalFlag");
 
   /**
    * @functionality 312
@@ -2071,7 +2087,12 @@ document.addEventListener("DOMContentLoaded", function () {
     contactMadeCheckbox.checked = false;
     contactDetailsWrapper.classList.add("hidden");
     contactNameInput.value = "";
-    contactRoleInput.value = "Sócio(a)";
+    contactRoleInput.value = "Sócio";
+    if (contactPhoneInput) contactPhoneInput.value = "";
+    if (contactSuccessSelect) contactSuccessSelect.value = "S";
+    const contactGenderM = document.getElementById("contactGenderM");
+    if (contactGenderM) contactGenderM.checked = true; // Volta para Masculino
+
   }
 
   /**
@@ -2358,6 +2379,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const contactMade = contactMadeCheckbox.checked;
     const contactName = contactNameInput.value.trim();
     const contactRole = contactRoleInput.value;
+    const contactPhone = contactPhoneInput.value.trim();
+    const contactSuccess = contactSuccessSelect.value;
+    const contactGender = document.querySelector('input[name="contactGender"]:checked').value;
+    const omitLegal = omitLegalFlagCheckbox.checked;
 
     if (!companyName || !cnpj) {
       alert("Por favor, preencha o CNPJ/CPF e o Nome/Razão Social.");
@@ -2373,21 +2398,28 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    if (contactMade && (!contactName || !contactRole)) {
+    if (contactMade && (!contactName || !contactRole || !contactPhone)) {
       alert("Por favor, preencha o Nome do Contato e o Cargo.");
       return;
     }
 
-    const legalFooter = `Importante salientar que as documentações necessárias para registro no Cadastro de Fornecedores do estado da Bahia – CAF obedecem ao quanto previsto nos art. 62 a 70 e 87 e 88, da Lei Federal nº 14.133/2021 c/c o art. 76 da Lei Estadual nº 14.634/2023.`;
+    //const legalFooter = `Importante salientar que as documentações necessárias para registro no Cadastro de Fornecedores do estado da Bahia – CAF obedecem ao quanto previsto nos art. 62 a 70 e 87 e 88, da Lei Federal nº 14.133/2021 c/c o art. 76 da Lei Estadual nº 14.634/2023.`;
+    const legalParagraph = `Importante salientar que as documentações necessárias para registro no Cadastro de Fornecedores do estado da Bahia – CAF obedecem ao quanto previsto nos art. 62 a 70 e 87 e 88, da Lei Federal nº 14.133/2021 c/c o art. 76 da Lei Estadual nº 14.634/2023.`;
+    const finalLegalFooter = omitLegal ? '' : `${legalParagraph}\n\n`; // Se omitir, é vazio, senão, inclui o parágrafo e 2 quebras de linha.
     const defaultEmailFooter = `O fornecedor é notificado automaticamente por e-mail.`;
-    const contactMadeFooter = `O fornecedor é notificado automaticamente por e-mail. Contudo, em contato com o(a) Sr.(a) *${contactName}*, *${contactRole}* da Empresa, foram esclarecidos os motivos do indeferimento, tendo sido informado que estão sendo adotadas as providências necessárias para correção e que será sinalizado quando houver nova solicitação.`;
+    const honorific = contactGender === 'M' ? 'Sr.' : 'Sra.';
+    const roleString = contactGender === 'M' ? contactRole : contactRole.replace('o', 'a');
+    //const contactMadeFooter = `O fornecedor é notificado automaticamente por e-mail. Contudo, em contato com o(a) Sr.(a) *${contactName}*, *${contactRole}* da Empresa, foram esclarecidos os motivos do indeferimento, tendo sido informado que estão sendo adotadas as providências necessárias para correção e que será sinalizado quando houver nova solicitação.`;
+    const contactMadeSuccessFooter = `O fornecedor é notificado automaticamente por e-mail. Contudo, em contato com ${contactGender === 'M' ? 'o' : 'a'} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, foram esclarecidos os motivos do indeferimento, tendo sido informado que as providências necessárias para regularização já estão sendo adotadas e que será sinalizado quando houver nova solicitação.`;
+    const contactMadeFailedFooter = `O fornecedor é notificado automaticamente por e-mail. Contudo, em tentativa de contato telefônico com ${contactGender === 'M' ? 'o' : 'a'} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, não obtivemos êxito, tendo a chamada sido direcionada para a caixa postal.`;
     let message = "";
     const docIdentifier =
       cnpj.replace(/\D/g, "").length > 11 ? "CNPJ sob o nº" : "CPF sob o nº";
 
-    switch (status) {
+switch (status) {
       case "Deferida":
-        message = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, foi analisada e *${status}* em *${analysisDate}* para o tipo de cadastro *${registrationType}*.\n\n${legalFooter}\n\n${defaultEmailFooter}`;
+        //message = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, foi analisada e *${status}* em *${analysisDate}* para o tipo de cadastro *${registrationType}*.\n\n${legalFooter}\n\n${defaultEmailFooter}`;
+        message = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, foi analisada e *${status}* em *${analysisDate}* para o tipo de cadastro *${registrationType}*.\n\n${finalLegalFooter}${defaultEmailFooter}`;
         break;
       case "Deferida Parcial":
       case "Indeferida":
@@ -2415,18 +2447,26 @@ document.addEventListener("DOMContentLoaded", function () {
             docsText += `*Motivo*: _${doc.reason}_\n\n`;
           });
         }
-        const finalEmailFooter = contactMade
-          ? contactMadeFooter
-          : defaultEmailFooter;
-        message = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, foi analisada e *${status}* em *${analysisDate}* para o tipo de cadastro *${registrationType}*, conforme análise abaixo:\n\n${docsText}${legalFooter}\n\n${finalEmailFooter}`;
-        break;
-      case "Pendente de Envio":
-        message = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, encontra-se *Pendente de Envio*.\n\nÉ necessário que o fornecedor acesse o CAF Digital, atualize os dados necessários e realize o envio da solicitação para análise pela Comissão de Inscrição e Registro Cadastral.`;
-        break;
-      case "Pendente do Termo":
-        message = `A solicitação enviada pelo fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, encontra-se *Pendente do envio do Termo de Concordância e Veracidade*.\n\nO fornecedor poderá realizar o envio do referido Termo por meio do *CAF Digital*, assinando-o eletronicamente com Certificado ICP-Brasil (por exemplo, utilizando o Assinador gov.br), ou optar pela entrega presencial, conforme orientações contidas no próprio Termo.`;
-        break;
-    }
+
+    let finalEmailFooter = defaultEmailFooter;
+
+          if (contactMade) {
+              // Verifica o sucesso (S) ou falha (N) do contato
+              finalEmailFooter = contactSuccess === 'S' 
+                  ? contactMadeSuccessFooter 
+                  : contactMadeFailedFooter;
+          }
+          
+          //message = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, foi analisada e *${status}* em *${analysisDate}* para o tipo de cadastro *${registrationType}*, conforme análise abaixo:\n\n${docsText}${legalFooter}\n\n${finalEmailFooter}`;
+          message = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, foi analisada e *${status}* em *${analysisDate}* para o tipo de cadastro *${registrationType}*, conforme análise abaixo:\n\n${docsText}${finalLegalFooter}${finalEmailFooter}`;
+          break; // Fim do bloco Deferida Parcial/Indeferida
+        case "Pendente de Envio":
+          message = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, encontra-se *Pendente de Envio*.\n\nÉ necessário que o fornecedor acesse o CAF Digital, atualize os dados necessários e realize o envio da solicitação para análise pela Comissão de Inscrição e Registro Cadastral.`;
+          break;
+        case "Pendente do Termo":
+          message = `A solicitação enviada pelo fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, encontra-se *Pendente do envio do Termo de Concordância e Veracidade*.\n\nO fornecedor poderá realizar o envio do referido Termo por meio do *CAF Digital*, assinando-o eletronicamente com Certificado ICP-Brasil (por exemplo, utilizando o Assinador gov.br), ou optar pela entrega presencial, conforme orientações contidas no próprio Termo.`;
+          break;
+  }
 
     resultText.value = message;
     resultSection.classList.remove("hidden");
@@ -2667,6 +2707,13 @@ document.addEventListener("DOMContentLoaded", function () {
   copyBtn.addEventListener("click", () => copyToClipboard(resultText.value));
   docCategoryInput.addEventListener("change", populateDocNames);
   docNameSelect.addEventListener("change", handleDocNameChange);
+
+  if (contactPhoneInput) {
+  contactPhoneInput.addEventListener("input", (e) => {
+    e.target.value = formatPhone(e.target.value);
+  });
+}
+
   /**
    * @functionality 311
    * @category 3xx: Geração de Mensagens e Formulários

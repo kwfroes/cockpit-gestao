@@ -1123,134 +1123,428 @@ window.onload = function () {
     });
   }
 
-  // --- 7. EXPORTAÇÃO DE PDF (RF-A02) ---
+  // ==========================================================
+  // LÓGICA DE GERAÇÃO DE ANÁLISE (IA)
+  // ==========================================================
+
+  // Variável para mostrar/esconder o loading durante a geração do PDF
+  const loadingIndicator = document.createElement('div');
+  loadingIndicator.id = 'pdfLoadingIndicator';
+  loadingIndicator.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] hidden text-white text-lg font-bold';
+  loadingIndicator.innerHTML = '<div class="bg-blue-700 p-4 rounded-lg shadow-2xl">Gerando Análise e PDF... Aguarde!</div>';
+  document.body.appendChild(loadingIndicator);
+
+
+  /**
+   * Função auxiliar para chamar a API Gemini com retry.
+   * @param {object} payload Payload da API
+   * @returns {Promise<string>} Texto gerado ou string de erro.
+   */
+  async function callGeminiApi(payload) {
+    // >>> IMPORTANTE: PARA FUNCIONAR NO GITHUB PAGES, VOCÊ DEVE INSERIR SUA CHAVE AQUI <<<
+    // AVISO: Hardcoding de chaves expõe seu segredo publicamente!
+    const apiKey = "AIzaSyBdFvSYj4N_iKmqLpHqSHJjZtKOUVZKKMk"; // <--- SUBSTITUA ESTE VALOR COM SUA CHAVE REAL AQUI!
+
+    if (!apiKey) {
+      console.error("ERRO: A chave da API Gemini está ausente.");
+      return "Erro ao gerar a análise automática. Chave da API ausente. Por favor, obtenha e insira sua chave da Gemini API no código para uso no GitHub Pages.";
+    }
+
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+    const maxRetries = 3;
+    let delay = 1000;
+
+    for (let i = 0; i < maxRetries; i++) {
+      try {
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          // Re-adicionamos o header Content-Type para chamadas fetch padrão em navegadores
+          headers: { 'Content-Type': 'application/json' }, 
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        
+        if (!response.ok) {
+          // Se houver um erro HTTP (ex: 400, 401, 500), mostramos a resposta completa para debug
+          console.error(`Erro HTTP ${response.status}. Resposta do servidor:`, result);
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+        
+        if (text) {
+          return text;
+        } else {
+          console.warn("Resposta da IA vazia. Objeto de resposta:", result);
+          throw new Error("Resposta da IA vazia ou mal formatada.");
+        }
+
+      } catch (error) {
+        if (i === maxRetries - 1) {
+          console.error("Falha final ao chamar a API Gemini:", error);
+          return "Erro ao gerar a análise automática. Por favor, verifique a chave inserida e a conexão.";
+        }
+        // Exponential backoff
+        await new Promise(resolve => setTimeout(resolve, delay));
+        delay *= 2; 
+      }
+    }
+    return "Erro desconhecido ao comunicar com o serviço de análise.";
+  }
+
+  /**
+   * Prepara os dados, monta o prompt e chama a API Gemini para gerar o resumo.
+   * @param {Array<object>} data Dados filtrados do dashboard.
+   * @returns {Promise<string>} Resumo analítico gerado pela IA.
+   */
+  async function generateAnalysisSummary(data) {
+    if (data.length === 0) {
+      return "Não há dados no período selecionado para realizar a análise.";
+    }
+
+    // 1. Coleta dos KPIs
+    const temposAnalise = data
+      .map((d) => d._tempoAnalise)
+      .filter((t) => t !== null && t >= 0);
+    const total = data.length;
+    const mediaTempo = stats.mean(temposAnalise).toFixed(1);
+    const medianaTempo = stats.median(temposAnalise).toFixed(1);
+    const deferidas = data.filter(d => d["Situação Solicitação"] === "Deferida").length;
+    const indeferidas = data.filter(d => d["Situação Solicitação"] === "Indeferida").length;
+    const taxaDeferimento = total > 0 ? ((deferidas / total) * 100).toFixed(1) : 0;
+    const taxaIndeferimento = total > 0 ? ((indeferidas / total) * 100).toFixed(1) : 0;
+
+    // 2. Coleta de Dados Agrupados (Top N)
+    const groupedByAnalyst = stats.groupBy(data, "Usuario Analista");
+    const performanceData = [];
+    for (const [analyst, rows] of Object.entries(groupedByAnalyst)) {
+        if (!analyst || analyst === "undefined") continue;
+        const dailyCounts = stats.countBy(rows.filter((r) => r._diaAnalise), "_diaAnalise");
+        performanceData.push({
+            nome: analyst,
+            totalMes: rows.length,
+            mediaDiaria: (Object.values(dailyCounts).length > 0 ? rows.length / Object.values(dailyCounts).length : 0).toFixed(1),
+            desvioPadrao: stats.stdDev(Object.values(dailyCounts)).toFixed(2),
+        });
+    }
+    performanceData.sort((a, b) => b.totalMes - a.totalMes);
+    
+    // 3. Estrutura de Dados para a IA
+    const analysisData = {
+        resumoGeral: {
+            totalSolicitacoes: total,
+            tempoMedioAnaliseDias: mediaTempo,
+            tempoMedianoAnaliseDias: medianaTempo,
+            taxaDeferimento: `${taxaDeferimento}%`,
+            taxaIndeferimento: `${taxaIndeferimento}%`,
+        },
+        top5AnalistasPorVolume: performanceData.slice(0, 5).map(a => ({
+            nome: a.nome,
+            volume: a.totalMes,
+            consistenciaDesvioPadrao: a.desvioPadrao
+        })),
+        top3SolicitacoesPorTipo: stats.getTopN(stats.countBy(data, "Tipo Solicitacão"), 3),
+        top3SituacaoPorUF: stats.getTopN(stats.countBy(data, "Codigo Uf"), 3),
+        
+    };
+    
+    const userQuery = `Gere um resumo executivo em português (2 a 3 parágrafos, máximo 500 caracteres) da performance operacional baseado nestes dados JSON. Foque em destacar os principais pontos de atenção (como gargalos no tempo médio, alta taxa de indeferimento ou baixa consistência dos analistas) e pontos fortes. Dê um tom profissional e direto. Dados para análise: ${JSON.stringify(analysisData)}`;
+
+    const systemPrompt = "Você é um Analista de Performance Sênior. Sua tarefa é transformar dados operacionais brutos em um resumo executivo conciso, profissional e estratégico, focado em insights e acionabilidade.";
+
+    const payload = {
+        contents: [{ parts: [{ text: userQuery }] }],
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        config: {
+            // Garante que o texto seja direto e não divague
+            temperature: 0.2,
+            maxOutputTokens: 200, 
+        }
+    };
+
+    return callGeminiApi(payload);
+  }
+ 
+
+// --- 7. EXPORTAÇÃO DE PDF (RF-A02) ---
 
   const btnPdfHeader = document.getElementById("exportPdfButton");
   const btnPdfDash = document.getElementById("exportPdfButtonDashboard");
 
   // Adiciona o evento apenas se o botão existir (evita erros)
-  if (btnPdfHeader) btnPdfHeader.addEventListener("click", exportPDF);
-  if (btnPdfDash) btnPdfDash.addEventListener("click", exportPDF);
+  // O event listener precisa ser atualizado para chamar a função assíncrona
+  if (btnPdfHeader) btnPdfHeader.addEventListener("click", () => exportPDF().catch(console.error));
+  if (btnPdfDash) btnPdfDash.addEventListener("click", () => exportPDF().catch(console.error));
 
-  function exportPDF() {
-    // Acessa o jsPDF do window (carregado no index.html)
+  /**
+   * Gera o Relatório em PDF. Agora é assíncrona para aguardar a análise da IA.
+   */
+  async function exportPDF() {
+    loadingIndicator.classList.remove('hidden');
+
+    // 1. Acessa o jsPDF e verifica a biblioteca
     const { jsPDF } = window.jspdf;
     if (!jsPDF) {
       console.error("jsPDF não carregado!");
-      alert(
-        "Erro: A biblioteca de PDF não carregou. Tente recarregar a página."
-      );
+      loadingIndicator.classList.add('hidden');
       return;
     }
-    const doc = new jsPDF();
 
-    // Título e Período
+    // 2. GERAÇÃO DA ANÁLISE DE IA
+    const analysisText = await generateAnalysisSummary(filteredData);
+    
+    // 3. INICIALIZAÇÃO DO PDF
+    const data = filteredData;
+    const doc = new jsPDF();
+    let currentY = 22; // Posição Y inicial
+
+    // Título do Relatório
     const start = document.getElementById("filterPeriodStart").value || "N/A";
     const end = document.getElementById("filterPeriodEnd").value || "N/A";
     doc.setFontSize(18);
-    doc.text("Relatório de Performance Operacional", 14, 22);
+    doc.text("Relatório de Performance Operacional", 14, currentY);
+    currentY += 8;
     doc.setFontSize(11);
-    doc.text(`Período de Análise: ${start} a ${end}`, 14, 30);
-
-    // Seção de KPIs (RF02)
+    doc.text(`Período de Análise: ${start} a ${end}`, 14, currentY);
+    currentY += 10;
+    
+    // 4. ADICIONA O RESUMO DA ANÁLISE (IA)
     doc.setFontSize(14);
-    doc.text("Indicadores Chave (KPIs)", 14, 45);
+    doc.text("Resumo Executivo (Análise de IA)", 14, currentY);
+    currentY += 5;
+    doc.setFontSize(10);
+    
+    // Divide o texto da IA em linhas para caber no PDF
+    const splitText = doc.splitTextToSize(analysisText, 180); // 180mm de largura
+    doc.text(splitText, 14, currentY);
+    currentY += splitText.length * 5; // Ajusta Y baseado no número de linhas
 
-    // Adiciona verificação de segurança para KPIs
+    currentY += 10; // Espaço antes dos KPIs
+
+    // 5. Seção de KPIs (RF02)
+    doc.setFontSize(14);
+    doc.text("Indicadores Chave (KPIs)", 14, currentY);
+    currentY += 5;
+
+    // ... (Mantém a lógica de coleta de KPIs do HTML, pois ela é rápida)
     const kpiSection = document.getElementById("kpis");
     let kpiData = [];
     if (kpiSection.querySelector("p.text-gray-500")) {
       kpiData.push(["KPIs", "Sem dados para exibir"]);
     } else {
       kpiData = [
-        [
-          "Total Solicitações:",
-          kpiSection.querySelector("div:nth-child(1) p").textContent,
-        ],
-        [
-          "Tempo Médio Análise:",
-          kpiSection.querySelector("div:nth-child(2) p").textContent,
-        ],
-        [
-          "Tempo Mediano Análise:",
-          kpiSection.querySelector("div:nth-child(3) p").textContent,
-        ],
-        [
-          "Taxa Deferimento:",
-          kpiSection.querySelector("div:nth-child(4) p").textContent,
-        ],
-        [
-          "Taxa Indeferimento:",
-          kpiSection.querySelector("div:nth-child(5) p").textContent,
-        ],
-        [
-          "Taxa Assinatura Digital:",
-          kpiSection.querySelector("div:nth-child(6) p").textContent,
-        ],
+        ["Total Solicitações:", kpiSection.querySelector("div:nth-child(1) p").textContent],
+        ["Tempo Médio Análise:", kpiSection.querySelector("div:nth-child(2) p").textContent],
+        ["Tempo Mediano Análise:", kpiSection.querySelector("div:nth-child(3) p").textContent],
+        ["Taxa Deferimento:", kpiSection.querySelector("div:nth-child(4) p").textContent],
+        ["Taxa Indeferimento:", kpiSection.querySelector("div:nth-child(5) p").textContent],
+        ["Taxa Assinatura Digital:", kpiSection.querySelector("div:nth-child(6) p").textContent],
       ];
     }
 
     doc.autoTable({
-      startY: 50,
+      startY: currentY,
       head: [["Indicador", "Valor"]],
       body: kpiData,
       theme: "striped",
       headStyles: { fillColor: [41, 128, 186] },
     });
+    currentY = doc.autoTable.previous.finalY;
 
-    // Seção Performance da Equipe (Tabela RF03)
+    // 6. Seção Performance da Equipe (Tabela RF03)
+    currentY += 15;
     doc.setFontSize(14);
-    doc.text("Performance da Equipe", 14, doc.autoTable.previous.finalY + 15);
+    doc.text("Performance da Equipe", 14, currentY);
+    currentY += 5;
 
-    const tableBody = document.getElementById("teamTableBody");
-    if (tableBody.querySelector("td.text-gray-500")) {
+    // --- CÁLCULO DE PERFORMANCE PARA O PDF (Garante dados consistentes) ---
+    const totalVisivel = data.length;
+    const groupedByAnalyst = stats.groupBy(data, "Usuario Analista");
+    const performanceData = [];
+    const teamHead = [
+      "Nome",
+      "Total Mês",
+      "Média Diária",
+      "Desvio Padrão",
+      "Participação",
+    ];
+    let teamBody = [];
+
+    for (const [analyst, rows] of Object.entries(groupedByAnalyst)) {
+      if (!analyst || analyst === "undefined") continue;
+
+      const totalMes = rows.length;
+      // Cálculo da Média Diária (baseado em dias únicos de trabalho)
+      const dailyCounts = stats.countBy(
+        rows.filter((r) => r._diaAnalise),
+        "_diaAnalise"
+      );
+      const dailyValues = Object.values(dailyCounts);
+      const diasUnicos = dailyValues.length;
+
+      const mediaDiaria = diasUnicos > 0 ? totalMes / diasUnicos : 0;
+      const desvioPadrao = stats.stdDev(dailyValues);
+      const participacao =
+        totalVisivel > 0 ? (totalMes / totalVisivel) * 100 : 0;
+
+      performanceData.push({
+        totalMes: totalMes,
+        data: [
+          analyst,
+          totalMes.toLocaleString("pt-BR"),
+          mediaDiaria.toFixed(1),
+          desvioPadrao.toFixed(2),
+          `${participacao.toFixed(1)}%`,
+        ],
+      });
+    }
+
+    // Ordena e monta o corpo da tabela
+    performanceData.sort((a, b) => b.totalMes - a.totalMes);
+    teamBody = performanceData.map((d) => d.data);
+    // ----------------------------------------------------------------------
+
+    if (teamBody.length === 0) {
       doc.setFontSize(11);
       doc.text(
         "Sem dados de equipe para exibir.",
         14,
-        doc.autoTable.previous.finalY + 22
+        currentY + 5
       );
+      currentY += 10;
     } else {
       doc.autoTable({
-        startY: doc.autoTable.previous.finalY + 20,
-        html: "#teamTableBody", // Pega dados da tabela renderizada
-        head: [
-          [
-            "Nome",
-            "Total Mês",
-            "Média Diária",
-            "Desvio Padrão",
-            "Participação",
-          ],
-        ],
+        startY: currentY + 5,
+        head: [teamHead], // Usa o novo cabeçalho
+        body: teamBody,  // Usa os dados recalculados
         theme: "grid",
       });
+      currentY = doc.autoTable.previous.finalY;
     }
 
-    // Gráficos (Opcional, mas incluído)
+    // 7. Gráficos (Opcional, mas incluído com layout em duas colunas)
     try {
-      // Adiciona verificação se os gráficos existem
-      const chartWorkloadEl = document.getElementById("chartWorkload");
-      const chartQualityEl = document.getElementById("chartQuality");
+      // IDs dos gráficos que queremos exportar
+      const chartIds = [
+        "chartWorkload",        // Carga de Trabalho
+        "chartAnalysisTime",    // Distribuição do Tempo
+        "chartEntryVolume",     // Volume de Entrada
+        "chartQuality",         // Qualidade por Analista
+        "chartMonthlyTrend"     // Tendência Mensal (se estiver visível)
+      ];
 
-      if (chartInstances["chartWorkload"] && chartInstances["chartQuality"]) {
-        const chartWorkload = chartWorkloadEl.toDataURL("image/png", 1.0);
-        const chartQuality = chartQualityEl.toDataURL("image/png", 1.0);
+      let yPos = 30;
+      const chartWidth = 90; // Largura do gráfico em mm (para duas colunas)
+      const chartHeight = 60; // Altura do gráfico em mm
+      const marginX = 14;
+      const marginY = 10;
+      let xPos = marginX;
+      let chartIndex = 0;
 
+      doc.addPage();
+      doc.setFontSize(14);
+      doc.text("Gráficos de Performance e Eficiência", marginX, 22);
+
+      chartIds.forEach((id) => {
+        const chartInstance = chartInstances[id];
+        const chartEl = document.getElementById(id);
+
+        // Verifica se a instância existe e se o elemento está visível
+        if (chartInstance && chartEl && chartEl.closest('section') && !chartEl.closest('section').classList.contains('hidden')) {
+            
+          // 1. Converte o gráfico para Base64 (Qualidade 1.0 para nitidez)
+          const chartImage = chartEl.toDataURL("image/png", 1.0);
+
+          // 2. Decide a posição (duas colunas)
+          if (chartIndex % 2 === 0) {
+            // Coluna 1
+            xPos = marginX;
+          } else {
+            // Coluna 2
+            xPos = marginX + chartWidth + marginY;
+          }
+
+          // 3. Adiciona página se não houver espaço suficiente para mais um gráfico
+          if (yPos + chartHeight > 280) {
+            doc.addPage();
+            yPos = 30;
+            doc.setFontSize(14);
+            doc.text("Gráficos de Performance e Eficiência (cont.)", marginX, 22);
+            xPos = marginX; // Reseta para a primeira coluna
+          }
+
+          // 4. Adiciona a imagem ao PDF
+          doc.addImage(chartImage, "PNG", xPos, yPos, chartWidth, chartHeight);
+          
+          // 5. Atualiza a posição Y para a próxima linha
+          if (chartIndex % 2 !== 0) {
+            yPos += chartHeight + marginY;
+          }
+          
+          chartIndex++;
+        }
+      });
+
+      // Adicionar uma nova página para os Gráficos de Perfil (Pizza)
+      if (chartIndex > 0) {
         doc.addPage();
         doc.setFontSize(14);
-        doc.text("Gráficos de Performance", 14, 22);
-        doc.addImage(chartWorkload, "PNG", 14, 30, 180, 90);
-        doc.addImage(chartQuality, "PNG", 14, 130, 180, 90);
+        doc.text("Perfil das Solicitações e Geográfico", marginX, 22);
+
+        // Gráficos de Perfil e Geo
+        const profileChartIds = [
+            "chartReqType",
+            "chartCategory",
+            "chartTopCities",
+            "chartTopUf"
+        ];
+        
+        yPos = 30;
+        xPos = marginX;
+        chartIndex = 0;
+        
+        profileChartIds.forEach((id) => {
+            const chartInstance = chartInstances[id];
+            const chartEl = document.getElementById(id);
+
+            if (chartInstance && chartEl) {
+                const chartImage = chartEl.toDataURL("image/png", 1.0);
+
+                if (chartIndex % 2 === 0) {
+                    xPos = marginX;
+                } else {
+                    xPos = marginX + chartWidth + marginY;
+                }
+                
+                if (yPos + chartHeight > 280) {
+                    doc.addPage();
+                    yPos = 30;
+                    doc.setFontSize(14);
+                    doc.text("Perfil das Solicitações e Geográfico (cont.)", marginX, 22);
+                    xPos = marginX;
+                }
+                
+                doc.addImage(chartImage, "PNG", xPos, yPos, chartWidth, chartHeight);
+                
+                if (chartIndex % 2 !== 0) {
+                    yPos += chartHeight + marginY;
+                }
+                
+                chartIndex++;
+            }
+        });
       }
+
     } catch (e) {
       console.error("Erro ao adicionar gráficos ao PDF:", e);
     }
-
-    // Salva o arquivo
+    
+    // 8. Finaliza
     doc.save(`Relatorio_Operacional_${start}_a_${end}.pdf`);
+    loadingIndicator.classList.add('hidden'); // Esconde o loading
   }
-
+  
   // --- 8. EXPORTAÇÃO JSON E ROTINAS DE DADOS (NOVO) ---
 
   // Função auxiliar: Transforma Array de Objetos em Formato Matriz (Mais leve)
@@ -1318,6 +1612,7 @@ window.onload = function () {
   );
   const analystTableBody = document.getElementById("analyst-table-body");
   const analystMsg = document.getElementById("analyst-msg");
+  const analystCountInfo = document.getElementById("analyst-count-info");
 
   // Variáveis de Estado da Paginação
   let currentAnalystData = [];
@@ -1358,14 +1653,17 @@ window.onload = function () {
       analystTableContainer.classList.add("hidden");
       analystPagination.classList.add("hidden");
       analystMsg.classList.remove("hidden");
+      analystCountInfo.classList.add("hidden");
       return;
     }
 
     analystTableContainer.classList.remove("hidden");
     analystMsg.classList.add("hidden");
     analystPagination.classList.remove("hidden");
+    analystCountInfo.classList.remove("hidden");
 
     // Cálculos de Paginação
+    const totalRecords = currentAnalystData.length;
     const totalPages = Math.ceil(currentAnalystData.length / itemsPerPage);
 
     // Garante limites seguros
@@ -1413,12 +1711,31 @@ window.onload = function () {
       analystTableBody.innerHTML += tr;
     });
 
-    // Atualiza Controles
+    // --- NOVA LÓGICA DE ATUALIZAÇÃO DE CONTROLES E CONTAGEM ---
+
+    // 1. Atualiza Controles da Paginação
     pageInfo.textContent = `Pág ${currentPage} de ${totalPages}`;
 
     btnPagePrev.disabled = currentPage === 1;
     btnPageNext.disabled = currentPage === totalPages;
+
+    // 2. Atualiza a Contagem de Registros
+    const startRecord = startIndex + 1;
+    const endRecord = Math.min(endIndex, totalRecords);
+
+    analystCountInfo.textContent = `Mostrando de ${startRecord.toLocaleString(
+        "pt-BR"
+    )} até ${endRecord.toLocaleString(
+        "pt-BR"
+    )} de ${totalRecords.toLocaleString("pt-BR")} registros.`;
   }
+
+    // Atualiza Controles
+    //pageInfo.textContent = `Pág ${currentPage} de ${totalPages}`;
+
+    //btnPagePrev.disabled = currentPage === 1;
+   // btnPageNext.disabled = currentPage === totalPages;
+ // }
 
   // Event Listeners da Paginação
   if (btnPagePrev) {
