@@ -2,6 +2,17 @@
  * apps/home/script.js
  */
 
+/**
+ * @name requestNotificationPermission
+ * @description Pede permissão ao usuário para mostrar notificações no desktop.
+ */
+function requestNotificationPermission() {
+    // Verifica se o navegador suporta a API e se a permissão ainda não foi concedida/negada.
+    if ("Notification" in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+        Notification.requestPermission();
+    }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   // --- 1. Lógica do Relógio ---
   const dateEl = document.getElementById("currentDate");
@@ -278,7 +289,7 @@ function forceUpdateContratos() {
 
 // 2. Forçar Leitura do Gerador (IndexedDB -> Stats)
 function forceUpdateGerador() {
-  const request = indexedDB.open("CafDatabase", 5); // Versão 5 (conforme seu script)
+  const request = indexedDB.open("CafDatabase", 6); // Versão 6 (conforme seu script)
 
   request.onsuccess = function (event) {
     const db = event.target.result;
@@ -328,6 +339,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // ==========================================================
 
 (function initStoicModule() {
+  requestNotificationPermission();
   const ELEMENTS = {
     container: document.getElementById("stoic-container"),
     text: document.getElementById("stoic-text"),
@@ -381,8 +393,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Salva no LocalStorage e atualiza a tela
-  function saveAndRender(item) {
+ // NOVO: Função para disparar a notificação
+function notifyNewQuote(frase, autor) {
+    if (Notification.permission === 'granted') {
+        const title = `📖 Reflexão do Dia`;
+        const body = `"${frase}"\n— ${autor || "Desconhecido"}`;
+        
+        new Notification(title, {
+            body: body,
+            icon: 'favicon-96x96.png', // Utilize um ícone válido do seu projeto
+            tag: 'stoic-quote-update', // Garante que notificações antigas sejam substituídas
+            silent: true // Opcional: pode ser útil para não interromper com som
+        });
+    }
+} 
+
+// Salva no LocalStorage e atualiza a tela
+function saveAndRender(item) {
     const payload = {
       quote: item.frase,
       author: item.autor,
@@ -390,7 +417,10 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     renderQuote(payload.quote, payload.author);
-  }
+    
+    // NOVO: Chama a notificação após renderizar
+    notifyNewQuote(payload.quote, payload.author);
+}
 
   // --- 3. Funcionalidade de "Easter Egg" (Lista Secreta) ---
 
