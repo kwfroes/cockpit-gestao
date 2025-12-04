@@ -1143,7 +1143,7 @@ window.onload = function () {
   async function callGeminiApi(payload) {
     // >>> IMPORTANTE: PARA FUNCIONAR NO GITHUB PAGES, VOCÊ DEVE INSERIR SUA CHAVE AQUI <<<
     // AVISO: Hardcoding de chaves expõe seu segredo publicamente!
-    const apiKey = "AIzaSyBdFvSYj4N_iKmqLpHqSHJjZtKOUVZKKMk"; // <--- SUBSTITUA ESTE VALOR COM SUA CHAVE REAL AQUI!
+    const apiKey = ""; // <--- SUBSTITUA ESTE VALOR COM SUA CHAVE REAL AQUI!
 
     if (!apiKey) {
       console.error("ERRO: A chave da API Gemini está ausente.");
