@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
         mainContent.classList.remove("md:ml-64");
 
         // Gira o botão para indicar menu fechado
-        if (menuButton) menuButton.classList.add("rotate-90");
+        if (menuButton) menuButton.classList.remove("rotate-90");
         if (floatingLinks) floatingLinks.style.display = "none";
       } else {
         // --- MODO APPS: Com Menu (Mostra Sidebar) ---
@@ -127,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
         mainContent.classList.add("md:ml-64");
 
         // Reseta a rotação do botão
-        if (menuButton) menuButton.classList.remove("rotate-90");
+        if (menuButton) menuButton.classList.add("rotate-90");
         if (floatingLinks) floatingLinks.style.display = "";
       }
     }
