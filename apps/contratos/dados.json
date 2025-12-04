@@ -1619,18 +1619,18 @@
       "estimativaMensal": 0,
       "tempoContrato": "12 meses",
       "dataAssinatura": "2025-02-10",
-      "dataInicio": "2025-02-13",
+      "dataInicio": "2025-03-04",
       "linkSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=112375656",
       "valorTotal": 1423.4,
-      "dataFim": "2026-02-13",
+      "dataFim": "2026-03-04",
       "gestorInicial": {
         "nome": "Geisiane Dias Magalhães",
-        "matricula": "000000"
+        "matricula": "09.545.200-6"
       },
       "fiscaisIniciais": [
         {
           "nome": "Cícera Glécia Alves da Silva",
-          "matricula": "0000000"
+          "matricula": "09.577.974-1"
         }
       ],
       "id": "contrato_1764687252317",

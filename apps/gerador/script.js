@@ -13,8 +13,8 @@ document.addEventListener("DOMContentLoaded", function () {
    */
   const APP_AUTHOR = "Kevin Fróes";
   const APP_NAME = "Gerador de Mensagens";
-  const APP_VERSION = "3.0.4";
-  const APP_VERSION_DATE = "31/10/2025";
+  const APP_VERSION = "3.1.0";
+  const APP_VERSION_DATE = "04/12/2025";
 
   // --- ELEMENTOS DO DOM ---
   /**
@@ -118,6 +118,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const contactsDbStatus = document.getElementById("contacts-db-status");
   const modalcontactNameInput = document.getElementById("contactNameInput");
   const modalcontactRoleInput = document.getElementById("contactRoleInput");
+  const contactPhoneInputModal = document.getElementById("contactPhoneInput");
   //const contactPhoneInput = document.getElementById("contactPhoneInput");
   const contactsModal = document.getElementById("contactsModal");
   const openContactsModalBtn = document.getElementById("openContactsModalBtn");
@@ -247,7 +248,7 @@ document.addEventListener("DOMContentLoaded", function () {
    * @name Escapamento de HTML em Renderização de Histórico para Prevenção de XSS
    * @description Usa escapeHtml para sanitizar mensagens no histórico.
    */
-  function escapeHtml(text) {
+  window.escapeHtml = function (text) {
     if (typeof text !== "string") return "";
     const div = document.createElement("div");
     div.textContent = text;
@@ -1184,114 +1185,127 @@ document.addEventListener("DOMContentLoaded", function () {
         <path d="M7.41 18.59L8.83 20 12 16.83 15.17 20l1.41-1.41L12 14l-4.59 4.59zm9.18-13.18L15.17 4 12 7.17 8.83 4 7.41 5.41 12 10l4.59-4.59z"/>
     </svg>`;
 
-  async function renderHistory(
-    cnpjFilter = "",
-    startDateFilter = "",
-    endDateFilter = ""
-  ) {
-    const container = document.getElementById("historyListContainer");
-    container.innerHTML =
-      '<p class="text-gray-500 text-center">Carregando histórico...</p>';
-    if (!db) {
-      container.innerHTML =
-        '<p class="text-red-500 text-center">Banco de dados não disponível.</p>';
-      return;
-    }
+async function renderHistory(cnpjFilter = "", startDateFilter = "", endDateFilter = "") {
+  const container = document.getElementById("historyListContainer");
+  container.innerHTML = '<p class="text-gray-500 text-center">Carregando histórico...</p>';
 
-    const transaction = db.transaction(["history"], "readonly");
-    const store = transaction.objectStore("history");
-    const allRecords = await new Promise((resolve, reject) => {
-      const request = store.getAll();
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
-    });
+  if (!db) {
+    container.innerHTML = '<p class="text-red-500 text-center">Banco de dados não disponível.</p>';
+    return;
+  }
 
-    // --- LÓGICA DE FILTRAGEM (NOVO) ---
-    let filteredRecords = allRecords;
+  // --- MAPEAMENTO DE CORES PARA OS STATUS ---
+  const statusColorMap = {
+    'Deferida': 'text-green-600',
+    'Deferida Parcial': 'text-yellow-600',
+    'Indeferida': 'text-red-600',
+    'Pendente de Envio': 'text-blue-600',
+    'Pendente do Termo': 'text-indigo-600'
+  };
 
-    // Filtro por CNPJ/CPF
-    if (cnpjFilter) {
-      const cleanedCnpjFilter = cnpjFilter.replace(/\D/g, "");
-      filteredRecords = filteredRecords.filter((item) => {
-        const cleanedItemCnpj = item.cnpj.replace(/\D/g, "");
-        return cleanedItemCnpj.includes(cleanedCnpjFilter);
-      });
-    }
+  // --- SVG DO ÍCONE DE TELEFONE ---
+  const phoneIcon = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 text-green-500 inline-block align-middle ml-2" title="Contato telefônico registrado">
+          <path fill-rule="evenodd" d="M5.847.533A2.21 2.21 0 004.391 0H2.206a2.21 2.21 0 00-2.09 1.501c-.098.29-.135.598-.107.903l.001.012a15.13 15.13 0 002.355 6.637c1.29 1.987 2.615 3.304 4.596 4.587a15.197 15.197 0 006.618 2.35h.014a2.21 2.21 0 002.406-2.204v-.075c-.002-.383-.008-1.771 0-2.087A2.204 2.204 0 0014.1 9.386h-.007a8.626 8.626 0 01-1.884-.47 2.21 2.21 0 00-2.327.497l-.515.513a10.903 10.903 0 01-3.313-3.305l.51-.509.003-.003a2.204 2.204 0 00.498-2.326 8.577 8.577 0 01-.47-1.88v-.007A2.204 2.204 0 005.847.533zM4.401 1.5a.71.71 0 01.708.604c.1.753.285 1.493.55 2.205l.001.001a.703.703 0 01-.157.742l-.924.923a.75.75 0 00-.122.902 12.403 12.403 0 004.655 4.646.75.75 0 00.9-.121l.923-.921.002-.002a.71.71 0 01.746-.157h.002c.713.266 1.454.45 2.209.55a.709.709 0 01.606.715 148.67 148.67 0 000 2.134v.07a.702.702 0 01-.481.671.71.71 0 01-.286.035 13.696 13.696 0 01-5.957-2.117c-1.805-1.168-2.979-2.335-4.153-4.144a13.63 13.63 0 01-2.12-5.972.702.702 0 01.419-.704c.09-.04.187-.06.286-.06H4.4zm2.664 2.283v-.001l-.703.264.703-.263z" clip-rule="evenodd"/>
+          <path d="M10.333.005a.75.75 0 10-.166 1.49 4.91 4.91 0 014.338 4.332.75.75 0 001.49-.167A6.41 6.41 0 0010.333.005z"/>
+          <path d="M10.394 2.53a.75.75 0 10-.288 1.472 2.395 2.395 0 011.892 1.892.75.75 0 101.472-.288 3.894 3.894 0 00-3.076-3.076z"/>
+      </svg>
+  `;
 
-    // Filtro por Data Inicial
-    if (startDateFilter) {
-      const parts = startDateFilter.split("-"); // Corrige o bug do fuso horário (YYYY-MM-DD)
-      const startDate = new Date(parts[0], parts[1] - 1, parts[2]); // Cria a data em fuso local
-      startDate.setHours(0, 0, 0, 0); // Considera o início do dia
-      filteredRecords = filteredRecords.filter(
-        (item) => new Date(item.timestamp) >= startDate
-      );
-    }
 
-    // Filtro por Data Final
-    if (endDateFilter) {
-      const parts = endDateFilter.split("-"); // Corrige o bug do fuso horário (YYYY-MM-DD)
-      const endDate = new Date(parts[0], parts[1] - 1, parts[2]); // Cria a data em fuso local
-      endDate.setHours(23, 59, 59, 999); // Considera o fim do dia
-      filteredRecords = filteredRecords.filter(
-        (item) => new Date(item.timestamp) <= endDate
-      );
-    }
+  // Busca todos os registros de uma única vez
+  const transaction = db.transaction(["history"], "readonly");
+  const store = transaction.objectStore("history");
+  const allRecords = await new Promise((resolve, reject) => {
+    const request = store.getAll();
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
 
-    // --- FIM DA LÓGICA DE FILTRAGEM ---
+  // --- FILTRAGEM ---
+  let filteredRecords = allRecords;
 
-    if (filteredRecords.length === 0) {
-      container.innerHTML =
-        '<p class="text-gray-500 text-center">Nenhum registro encontrado para os filtros aplicados.</p>';
-      return;
-    }
-
-    container.innerHTML = "";
-    // Renderiza os registros JÁ FILTRADOS
-    filteredRecords.reverse().forEach((item) => {
-      const date = new Date(item.timestamp);
-      const formattedDate = date.toLocaleString("pt-BR");
-      const element = document.createElement("div");
-      element.className =
-        "border rounded-lg bg-white shadow-sm overflow-hidden";
-      element.innerHTML = `
-                <div class="p-3 flex justify-between items-center bg-gray-50 border-b">
-                    <div class="flex-grow">
-                        <p class="font-bold text-blue-700">${escapeHtml(
-                          item.companyName
-                        )}</p>
-                        <p class="text-sm text-gray-600">${escapeHtml(
-                          item.cnpj
-                        )}</p>
-                        <p class="text-xs text-gray-400 mt-1">Gerado em: ${formattedDate}</p>
-                    </div>
-
-                    <div class="flex items-center space-x-2 ml-2">
-                        <button data-id="${
-                          item.id
-                        }" class="delete-history-btn text-red-500 hover:text-red-700 font-bold p-1 text-lg leading-none">&times;</button>
-                        
-                        <button data-message="${encodeURIComponent(
-                          item.message
-                        )}" title="Copiar" class="copy-history-btn bg-gray-200 text-gray-700 p-2 rounded-lg hover:bg-gray-300 transition">
-                            ${svgIconCopy}
-                        </button>
-                        
-                        <button title="Expandir" class="expand-history-btn text-blue-600 hover:bg-blue-100 rounded-lg p-2 transition">
-                            ${svgIconExpand}
-                        </button>
-                </div>
-
-                </div>
-                <div class="history-message-content" style="max-height: 0; transition: max-height 0.3s ease-out;">
-                    <pre class="p-4 text-xs text-gray-800 whitespace-pre-wrap font-sans">${escapeHtml(
-                      item.message
-                    )}</pre>
-                </div>
-            `;
-      container.appendChild(element);
+  // Filtro por CNPJ/CPF
+  if (cnpjFilter) {
+    const cleanedFilter = cnpjFilter.replace(/\D/g, "");
+    filteredRecords = filteredRecords.filter(item => {
+      const cleanedCnpj = item.cnpj.replace(/\D/g, "");
+      return cleanedCnpj.includes(cleanedFilter);
     });
   }
+
+  // Filtro por data inicial
+  if (startDateFilter) {
+    const [y, m, d] = startDateFilter.split("-");
+    const startDate = new Date(y, m - 1, d);
+    startDate.setHours(0, 0, 0, 0);
+    filteredRecords = filteredRecords.filter(item => new Date(item.timestamp) >= startDate);
+  }
+
+  // Filtro por data final
+  if (endDateFilter) {
+    const [y, m, d] = endDateFilter.split("-");
+    const endDate = new Date(y, m - 1, d);
+    endDate.setHours(23, 59, 59, 999);
+    filteredRecords = filteredRecords.filter(item => new Date(item.timestamp) <= endDate);
+  }
+
+  // --- RESULTADO VAZIO ---
+  if (filteredRecords.length === 0) {
+    container.innerHTML = '<p class="text-gray-500 text-center">Nenhum registro encontrado para os filtros aplicados.</p>';
+    return;
+  }
+
+  // Limpa e começa a renderizar
+  container.innerHTML = "";
+
+  // Ordena do mais recente para o mais antigo
+  filteredRecords.reverse().forEach(item => {
+    const date = new Date(item.timestamp);
+    const formattedDate = date.toLocaleString("pt-BR");
+
+    const status = item.status || "Status Desconhecido";
+    const statusColor = statusColorMap[status] || "text-gray-500";
+    const contactMadeHtml = item.contactMade ? phoneIcon : '';
+
+    const div = document.createElement("div");
+    div.className = "border rounded-lg bg-white shadow-sm overflow-hidden mb-4";
+
+    div.innerHTML = `
+      <div class="p-3 flex justify-between items-center bg-gray-50 border-b">
+        <div class="flex-grow">
+          <p class="font-bold text-blue-700">${escapeHtml(item.companyName)}</p>
+          <p class="text-sm text-gray-600">${escapeHtml(item.cnpj)}</p>
+          <p class="text-xs text-gray-400 mt-1">
+            <span class="font-bold mr-1 ${statusColor}">${escapeHtml(status)}</span> 
+            | Gerado em: ${formattedDate}
+            ${contactMadeHtml}
+          </p>
+        </div>
+
+        <div class="flex items-center space-x-2">
+          <button data-id="${item.id}" class="delete-history-btn text-red-500 hover:text-red-700 font-bold text-2xl leading-none">&times;</button>
+          <button data-message="${encodeURIComponent(item.message)}" title="Copiar" 
+                  class="copy-history-btn bg-gray-200 text-gray-700 p-2 rounded hover:bg-gray-300 transition">
+            ${svgIconCopy}
+          </button>
+          <button title="Expandir" 
+                  class="expand-history-btn text-blue-600 hover:bg-blue-100 rounded p-2 transition">
+            ${svgIconExpand}
+          </button>
+        </div>
+      </div>
+
+      <div class="history-message-content overflow-hidden" style="max-height:0; transition:max-height 0.3s ease-out;">
+        <pre class="p-4 text-xs text-gray-800 whitespace-pre-wrap font-sans break-words">
+${escapeHtml(item.message)}
+        </pre>
+      </div>
+    `;
+
+    container.appendChild(div);
+  });
+}
 
   /**
    * @functionality 211
@@ -2407,11 +2421,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const legalParagraph = `Importante salientar que as documentações necessárias para registro no Cadastro de Fornecedores do estado da Bahia – CAF obedecem ao quanto previsto nos art. 62 a 70 e 87 e 88, da Lei Federal nº 14.133/2021 c/c o art. 76 da Lei Estadual nº 14.634/2023.`;
     const finalLegalFooter = omitLegal ? '' : `${legalParagraph}\n\n`; // Se omitir, é vazio, senão, inclui o parágrafo e 2 quebras de linha.
     const defaultEmailFooter = `O fornecedor é notificado automaticamente por e-mail.`;
+    const noEmailFooter = '';
     const honorific = contactGender === 'M' ? 'Sr.' : 'Sra.';
     const roleString = contactGender === 'M' ? contactRole : contactRole.replace('o', 'a');
     //const contactMadeFooter = `O fornecedor é notificado automaticamente por e-mail. Contudo, em contato com o(a) Sr.(a) *${contactName}*, *${contactRole}* da Empresa, foram esclarecidos os motivos do indeferimento, tendo sido informado que estão sendo adotadas as providências necessárias para correção e que será sinalizado quando houver nova solicitação.`;
     const contactMadeSuccessFooter = `O fornecedor é notificado automaticamente por e-mail. Contudo, em contato com ${contactGender === 'M' ? 'o' : 'a'} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, foram esclarecidos os motivos do indeferimento, tendo sido informado que as providências necessárias para regularização já estão sendo adotadas e que será sinalizado quando houver nova solicitação.`;
     const contactMadeFailedFooter = `O fornecedor é notificado automaticamente por e-mail. Contudo, em tentativa de contato telefônico com ${contactGender === 'M' ? 'o' : 'a'} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, não obtivemos êxito, tendo a chamada sido direcionada para a caixa postal.`;
+    const contactMadePendenteTermoFooter = `Em contato com ${contactGender === 'M' ? 'o' : 'a'} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, foi esclarecido o motivo da pendência, tendo sido informado que as providências necessárias para o envio do Termo de Concordância já estão sendo adotadas e que será sinalizado quando o envio for realizado.`;
+    const contactMadePendenteEnvioFooter = `Em contato com ${contactGender === 'M' ? 'o' : 'a'} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, foi esclarecido o motivo da pendência, tendo sido informado que as providências necessárias para o envio da solicitação já estão sendo adotadas e que será sinalizado quando o envio for realizado.`;
+    const contactMadePendenteFailedFooter = `Em tentativa de contato telefônico com ${contactGender === 'M' ? 'o' : 'a'} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, não obtivemos êxito, tendo a chamada sido direcionada para a caixa postal. Reiteramos a necessidade de regularização da pendência no CAF Digital para que a solicitação possa ser analisada.`;
     let message = "";
     const docIdentifier =
       cnpj.replace(/\D/g, "").length > 11 ? "CNPJ sob o nº" : "CPF sob o nº";
@@ -2461,10 +2479,34 @@ switch (status) {
           message = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, foi analisada e *${status}* em *${analysisDate}* para o tipo de cadastro *${registrationType}*, conforme análise abaixo:\n\n${docsText}${finalLegalFooter}${finalEmailFooter}`;
           break; // Fim do bloco Deferida Parcial/Indeferida
         case "Pendente de Envio":
-          message = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, encontra-se *Pendente de Envio*.\n\nÉ necessário que o fornecedor acesse o CAF Digital, atualize os dados necessários e realize o envio da solicitação para análise pela Comissão de Inscrição e Registro Cadastral.`;
+          let baseMessageEnvio = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, encontra-se *Pendente de Envio*.\n\nÉ necessário que o fornecedor acesse o CAF Digital, atualize os dados necessários e realize o envio da solicitação para análise pela Comissão de Inscrição e Registro Cadastral.`;
+          
+          let finalFooterEnvio = noEmailFooter; // << INICIA VAZIO (SEM NOTIFICAÇÃO DE E-MAIL)
+
+          if (contactMade) {
+            // Se houve contato, verificamos o sucesso/falha
+            finalFooterEnvio = contactSuccess === 'S' 
+                ? contactMadePendenteEnvioFooter
+                : contactMadePendenteFailedFooter;
+          }
+          
+          // Concatena a mensagem base + footer legal (se não omitido) + footer final
+          message = `${baseMessageEnvio}\n\n${finalFooterEnvio}`;
           break;
         case "Pendente do Termo":
-          message = `A solicitação enviada pelo fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, encontra-se *Pendente do envio do Termo de Concordância e Veracidade*.\n\nO fornecedor poderá realizar o envio do referido Termo por meio do *CAF Digital*, assinando-o eletronicamente com Certificado ICP-Brasil (por exemplo, utilizando o Assinador gov.br), ou optar pela entrega presencial, conforme orientações contidas no próprio Termo.`;
+          let baseMessageTermo = `A solicitação enviada pelo fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, encontra-se *Pendente do envio do Termo de Concordância e Veracidade*.\n\nO fornecedor poderá realizar o envio do referido Termo por meio do *CAF Digital*, assinando-o eletronicamente com Certificado ICP-Brasil (por exemplo, utilizando o Assinador gov.br), ou optar pela entrega presencial, conforme orientações contidas no próprio Termo.`;
+          
+          let finalFooterTermo = noEmailFooter; // << INICIA VAZIO (SEM NOTIFICAÇÃO DE E-MAIL)
+
+          if (contactMade) {
+            // Se houve contato, verificamos o sucesso/falha
+            finalFooterTermo = contactSuccess === 'S' 
+                ? contactMadePendenteTermoFooter
+                : contactMadePendenteFailedFooter;
+          }
+
+          // Concatena a mensagem base + footer legal (se não omitido) + footer final
+          message = `${baseMessageTermo}\n\n${finalFooterTermo}`;
           break;
   }
 
@@ -2484,6 +2526,7 @@ switch (status) {
       status: status,
       rejectedDocs: rejectedDocs,
       registrationType: registrationType,
+      contactMade: contactMade,
       // ---
     };
     saveMessageToHistory(messageData);
