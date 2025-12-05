@@ -350,144 +350,194 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const STORAGE_KEY = "cockpit_stoic_data";
   const UPDATE_INTERVAL_MS = 30 * 60 * 1000; // 30 min
-  let allQuotesCache = []; // Cache em memória para não baixar o JSON toda hora ao abrir o modal
+  let allQuotesCache = []; // Cache em memória enriquecido
 
   // --- 1. Lógica de Renderização ---
   function renderQuote(quote, author) {
-    // Efeito visual de troca
     ELEMENTS.container.classList.add("opacity-0");
-
     setTimeout(() => {
       ELEMENTS.text.textContent = `"${quote}"`;
       ELEMENTS.author.textContent = author || "Autor Desconhecido";
       ELEMENTS.container.classList.remove("opacity-0");
-    }, 200); // Pequeno delay para suavizar
+    }, 200);
   }
 
   // --- 2. Busca e Atualização Automática ---
+  async function loadData() {
+    if (allQuotesCache.length > 0) return;
+
+    try {
+      const response = await fetch("frases.json");
+      const data = await response.json();
+      
+      // Achata o array, mas INJETA o nome da categoria em cada frase
+      allQuotesCache = data.categorias.flatMap((cat) => 
+        cat.frases.map(f => ({
+          ...f,
+          categoria: cat.nome // Importante para o filtro
+        }))
+      );
+    } catch (error) {
+      console.error("Erro ao carregar frases:", error);
+    }
+  }
+
   async function updateQuote(forceRandom = false) {
     const now = Date.now();
     const cachedData = JSON.parse(localStorage.getItem(STORAGE_KEY));
 
-    // Se não for forçado e o cache for válido, usa o cache
     if (!forceRandom && cachedData && now < cachedData.nextUpdate) {
       renderQuote(cachedData.quote, cachedData.author);
       return;
     }
 
-    try {
-      // Se já temos as frases na memória, usa; senão, baixa.
-      if (allQuotesCache.length === 0) {
-        const response = await fetch("frases.json");
-        const data = await response.json();
-        allQuotesCache = data.categorias.flatMap((cat) => cat.frases);
-      }
+    await loadData(); // Garante que temos dados
+    if (allQuotesCache.length === 0) return;
 
-      if (allQuotesCache.length === 0) return;
+    const randomItem = allQuotesCache[Math.floor(Math.random() * allQuotesCache.length)];
+    saveAndRender(randomItem);
+  }
 
-      const randomItem =
-        allQuotesCache[Math.floor(Math.random() * allQuotesCache.length)];
-      saveAndRender(randomItem);
-    } catch (error) {
-      console.error("Erro Stoic Module:", error);
+  function notifyNewQuote(frase, autor) {
+    if (Notification.permission === 'granted') {
+      new Notification(`📖 Reflexão do Dia`, {
+        body: `"${frase}"\n— ${autor || "Desconhecido"}`,
+        icon: 'favicon-96x96.png',
+        tag: 'stoic-quote-update',
+        silent: true
+      });
     }
   }
 
- // NOVO: Função para disparar a notificação
-function notifyNewQuote(frase, autor) {
-    if (Notification.permission === 'granted') {
-        const title = `📖 Reflexão do Dia`;
-        const body = `"${frase}"\n— ${autor || "Desconhecido"}`;
-        
-        new Notification(title, {
-            body: body,
-            icon: 'favicon-96x96.png', // Utilize um ícone válido do seu projeto
-            tag: 'stoic-quote-update', // Garante que notificações antigas sejam substituídas
-            silent: true // Opcional: pode ser útil para não interromper com som
-        });
-    }
-} 
-
-// Salva no LocalStorage e atualiza a tela
-function saveAndRender(item) {
+  function saveAndRender(item) {
     const payload = {
       quote: item.frase,
       author: item.autor,
-      nextUpdate: Date.now() + UPDATE_INTERVAL_MS, // Reseta o timer de 30min
+      nextUpdate: Date.now() + UPDATE_INTERVAL_MS,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     renderQuote(payload.quote, payload.author);
-    
-    // NOVO: Chama a notificação após renderizar
     notifyNewQuote(payload.quote, payload.author);
-}
+  }
 
-  // --- 3. Funcionalidade de "Easter Egg" (Lista Secreta) ---
+  // --- 3. Funcionalidade de "Easter Egg" (Lista com Filtros) ---
 
-  // Cria o Modal dinamicamente (para não sujar seu HTML)
   function createModal() {
+    // HTML atualizado com Grid para os filtros
     const modalHTML = `
       <div id="stoic-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50 backdrop-blur-sm transition-opacity">
-        <div class="bg-white w-full max-w-2xl h-[80vh] rounded-xl shadow-2xl flex flex-col overflow-hidden m-4 animate-fade-in-down">
+        <div class="bg-white w-full max-w-3xl h-[85vh] rounded-xl shadow-2xl flex flex-col overflow-hidden m-4 animate-fade-in-down">
+          
           <div class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-            <h3 class="font-bold text-gray-700">Biblioteca de Sabedoria</h3>
-            <button id="stoic-close-btn" class="text-gray-400 hover:text-red-500 text-2xl">&times;</button>
+            <h3 class="font-bold text-gray-700 flex items-center gap-2">
+              <span>🏛️</span> Biblioteca de Sabedoria
+            </h3>
+            <button id="stoic-close-btn" class="text-gray-400 hover:text-red-500 text-2xl px-2">&times;</button>
           </div>
-          <div class="p-2 border-b border-gray-100">
-             <input type="text" id="stoic-search" placeholder="Filtrar por palavra ou autor..." class="w-full p-2 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-400 text-sm">
+
+          <div class="p-4 border-b border-gray-100 bg-white grid grid-cols-1 md:grid-cols-3 gap-3">
+            <input type="text" id="stoic-search" placeholder="🔍 Buscar texto..." 
+              class="w-full p-2 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-400 text-sm">
+            
+            <select id="stoic-filter-author" class="w-full p-2 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-400 text-sm bg-white">
+              <option value="">Todas os Autores</option>
+            </select>
+
+            <select id="stoic-filter-category" class="w-full p-2 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-400 text-sm bg-white">
+              <option value="">Todas as Categorias</option>
+            </select>
           </div>
-          <div id="stoic-list" class="flex-1 overflow-y-auto p-4 space-y-2 bg-white">
+
+          <div id="stoic-list" class="flex-1 overflow-y-auto p-4 space-y-2 bg-gray-50/50">
             </div>
+          
+          <div class="p-2 border-t border-gray-100 text-center text-xs text-gray-400 bg-white">
+            <span id="stoic-count">0</span> frases encontradas
+          </div>
         </div>
       </div>
     `;
     document.body.insertAdjacentHTML("beforeend", modalHTML);
   }
 
-  // Abre o Modal
-  function openModal() {
+  async function openModal() {
     let modal = document.getElementById("stoic-modal");
     if (!modal) {
       createModal();
       modal = document.getElementById("stoic-modal");
 
-      // Eventos do Modal (fechar e filtrar)
-      document.getElementById("stoic-close-btn").onclick = () =>
-        modal.classList.add("hidden");
-      document.getElementById("stoic-search").onkeyup = (e) =>
-        filterList(e.target.value);
+      // Event Listeners
+      document.getElementById("stoic-close-btn").onclick = () => modal.classList.add("hidden");
+      
+      // Eventos de Input para filtrar em tempo real
+      const inputs = ['stoic-search', 'stoic-filter-author', 'stoic-filter-category'];
+      inputs.forEach(id => {
+        document.getElementById(id).addEventListener('input', applyFilters);
+      });
     }
 
-    // Preenche a lista
-    populateList();
+    await populateList(); // Carrega lista e preenche selects
     modal.classList.remove("hidden");
+    
+    // Foca no campo de busca ao abrir
+    setTimeout(() => document.getElementById("stoic-search").focus(), 100);
   }
 
-  // Preenche a lista com as frases
   async function populateList() {
-    if (allQuotesCache.length === 0) {
-      const response = await fetch("frases.json");
-      const data = await response.json();
-      allQuotesCache = data.categorias.flatMap((cat) => cat.frases);
-    }
+    await loadData();
 
     const listContainer = document.getElementById("stoic-list");
-    listContainer.innerHTML = ""; // Limpa
+    const authorSelect = document.getElementById("stoic-filter-author");
+    const categorySelect = document.getElementById("stoic-filter-category");
+    
+    listContainer.innerHTML = "";
 
+    // 1. Extrair Autores e Categorias Únicos para os Selects
+    const uniqueAuthors = [...new Set(allQuotesCache.map(i => i.autor || "Desconhecido"))].sort();
+    const uniqueCategories = [...new Set(allQuotesCache.map(i => i.categoria))].sort();
+
+    // 2. Preencher Selects (apenas se estiverem vazios para não resetar seleção se reabrir)
+    if (authorSelect.options.length <= 1) {
+      uniqueAuthors.forEach(autor => {
+        const opt = document.createElement("option");
+        opt.value = autor;
+        opt.textContent = autor;
+        authorSelect.appendChild(opt);
+      });
+    }
+
+    if (categorySelect.options.length <= 1) {
+      uniqueCategories.forEach(cat => {
+        const opt = document.createElement("option");
+        opt.value = cat;
+        opt.textContent = cat;
+        categorySelect.appendChild(opt);
+      });
+    }
+
+    // 3. Renderizar Lista
     allQuotesCache.forEach((item) => {
       const div = document.createElement("div");
-      div.className =
-        "p-3 rounded-lg border border-gray-100 hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-colors text-sm group";
+      // Adiciona data-attributes para facilitar a filtragem
+      div.setAttribute("data-autor", (item.autor || "Desconhecido").toLowerCase());
+      div.setAttribute("data-categoria", (item.categoria || "").toLowerCase());
+      div.setAttribute("data-texto", item.frase.toLowerCase());
+      
+      div.className = "stoic-item bg-white p-4 rounded-lg border border-gray-100 hover:border-blue-300 hover:shadow-md cursor-pointer transition-all group relative overflow-hidden";
+      
       div.innerHTML = `
-        <p class="text-gray-700 font-medium group-hover:text-blue-800">"${
-          item.frase
-        }"</p>
-        <span class="text-xs text-gray-400 group-hover:text-blue-600 font-bold uppercase mt-1 block">${
-          item.autor || "Desconhecido"
-        }</span>
+        <div class="absolute top-0 left-0 w-1 h-full bg-gray-200 group-hover:bg-blue-500 transition-colors"></div>
+        <div class="pl-2">
+            <span class="text-[10px] inline-block px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 mb-2 font-bold uppercase tracking-wider group-hover:bg-blue-50 group-hover:text-blue-600">
+                ${item.categoria}
+            </span>
+            <p class="text-gray-700 font-serif text-lg leading-relaxed group-hover:text-gray-900">"${item.frase}"</p>
+            <span class="text-xs text-blue-600 font-bold uppercase mt-2 block tracking-widest flex items-center gap-1">
+                — ${item.autor || "Desconhecido"}
+            </span>
+        </div>
       `;
 
-      // Ao clicar, seleciona a frase e fecha
       div.onclick = () => {
         saveAndRender(item);
         document.getElementById("stoic-modal").classList.add("hidden");
@@ -495,16 +545,38 @@ function saveAndRender(item) {
 
       listContainer.appendChild(div);
     });
+
+    // Atualiza contador inicial
+    document.getElementById("stoic-count").textContent = allQuotesCache.length;
   }
 
-  // Filtro simples
-  function filterList(term) {
-    const items = document.querySelectorAll("#stoic-list > div");
-    const search = term.toLowerCase();
-    items.forEach((item) => {
-      const text = item.textContent.toLowerCase();
-      item.style.display = text.includes(search) ? "block" : "none";
+  function applyFilters() {
+    const textTerm = document.getElementById("stoic-search").value.toLowerCase();
+    const authorTerm = document.getElementById("stoic-filter-author").value.toLowerCase();
+    const categoryTerm = document.getElementById("stoic-filter-category").value.toLowerCase();
+    
+    const items = document.querySelectorAll(".stoic-item");
+    let visibleCount = 0;
+
+    items.forEach(item => {
+      const itemText = item.getAttribute("data-texto");
+      const itemAutor = item.getAttribute("data-autor");
+      const itemCat = item.getAttribute("data-categoria");
+
+      // Verifica as 3 condições
+      const matchText = itemText.includes(textTerm);
+      const matchAuthor = authorTerm === "" || itemAutor === authorTerm;
+      const matchCategory = categoryTerm === "" || itemCat === categoryTerm;
+
+      if (matchText && matchAuthor && matchCategory) {
+        item.style.display = "block";
+        visibleCount++;
+      } else {
+        item.style.display = "none";
+      }
     });
+
+    document.getElementById("stoic-count").textContent = visibleCount;
   }
 
   // --- 4. Detector de 3 Cliques ---
@@ -514,22 +586,14 @@ function saveAndRender(item) {
   ELEMENTS.container.addEventListener("click", () => {
     clickCount++;
     clearTimeout(clickTimer);
-
     if (clickCount === 3) {
       openModal();
       clickCount = 0;
     } else {
-      // Reseta o contador se não clicar 3x em 500ms
-      clickTimer = setTimeout(() => {
-        clickCount = 0;
-      }, 500);
+      clickTimer = setTimeout(() => { clickCount = 0; }, 500);
     }
   });
 
-  // Cursor pointer para indicar interatividade (opcional, mas bom UX)
   ELEMENTS.container.style.cursor = "help";
-  // ELEMENTS.container.title = "Dica: Clique 3 vezes para escolher uma frase";
-
-  // Inicializa
   updateQuote();
 })();
