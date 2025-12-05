@@ -173,6 +173,46 @@
           "id": 34,
           "frase": "O que fazemos agora ecoa pela eternidade. Memento Mori.",
           "autor": "Marco Aurélio"
+        },
+        {
+          "id": 124,
+          "frase": "A morte nada é para nós. Pois o que se dissolveu não tem sensação, e o que não tem sensação nada é para nós.",
+          "autor": "Epicuro"
+        },
+        {
+          "id": 125,
+          "frase": "Por que tanto medo do fim da vida? A vida é um empréstimo, não uma dádiva eterna.",
+          "autor": "Lucrécio"
+        },
+        {
+          "id": 126,
+          "frase": "Vivemos como se fôssemos eternos, mas a morte nos espreita em cada respiração.",
+          "autor": "Lucrécio"
+        },
+        {
+          "id": 127,
+          "frase": "Não temos pouco tempo, mas perdemos muito.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 128,
+          "frase": "A vida do tolo é ingrata e cheia de medos; volta-se inteiramente para o futuro.",
+          "autor": "Epicuro"
+        },
+        {
+          "id": 129,
+          "frase": "A morte é o repouso das impressões sensoriais, o fim dos impulsos que nos movem.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 130,
+          "frase": "Ninguém acorda devendo nada à morte, exceto a vida que tomou emprestada.",
+          "autor": "Publilius Syrus"
+        },
+        {
+          "id": 131,
+          "frase": "Enterre-me de bruços, pois em breve o mundo virará de cabeça para baixo.",
+          "autor": "Diógenes de Sinope"
         }
       ]
     },
@@ -249,6 +289,41 @@
           "id": 48,
           "frase": "Apenas um tolo tem medo de perder o que não pode ser guardado.",
           "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 132,
+          "frase": "Nenhum homem é livre se não for mestre de si mesmo.",
+          "autor": "Epicteto"
+        },
+        {
+          "id": 133,
+          "frase": "Se queres ser respeitado, respeita-te a ti mesmo e verás que não precisarás da honra dos outros.",
+          "autor": "Musônio Rufo"
+        },
+        {
+          "id": 134,
+          "frase": "A única maneira de ser livre é desprezar as coisas que não dependem de nós.",
+          "autor": "Epicteto"
+        },
+        {
+          "id": 135,
+          "frase": "O que os outros pensam de mim não é da minha conta.",
+          "autor": "Autor Não Identificado (Máxima Estoica)"
+        },
+        {
+          "id": 136,
+          "frase": "A desgraça não está em não ter nada, mas em desejar o que não se tem.",
+          "autor": "Diógenes de Sinope"
+        },
+        {
+          "id": 137,
+          "frase": "Não procures que tudo corra como queres, mas quere que tudo corra como corre e serás feliz.",
+          "autor": "Epicteto"
+        },
+        {
+          "id": 138,
+          "frase": "Aquele que teme a morte nunca fará nada digno de um homem vivo.",
+          "autor": "Sêneca"
         }
       ]
     },
@@ -315,6 +390,46 @@
           "id": 60,
           "frase": "Você só perde o que se apega.",
           "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 139,
+          "frase": "Nenhum homem é mais infeliz do que aquele que nunca enfrenta a adversidade. Pois ele não tem permissão para provar a si mesmo.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 140,
+          "frase": "O ferro enferruja com o desuso; a água estagnada perde a sua pureza e no frio congela; assim a inatividade mina o vigor da mente.",
+          "autor": "Leonardo da Vinci (Influência Estoica)"
+        },
+        {
+          "id": 141,
+          "frase": "Treina a ti mesmo no inverno para que possas suportar o frio da vida.",
+          "autor": "Epicteto"
+        },
+        {
+          "id": 142,
+          "frase": "A prosperidade é a ama-de-leite da arrogância; a adversidade é a escola da sabedoria.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 143,
+          "frase": "Suportar e abster-se.",
+          "autor": "Epicteto"
+        },
+        {
+          "id": 144,
+          "frase": "Não há vento favorável para quem não sabe onde vai, mas todo vento é instrutivo para quem sabe pilotar.",
+          "autor": "Autor Não Identificado (Adaptação de Sêneca)"
+        },
+        {
+          "id": 145,
+          "frase": "O destino guia quem consente, mas arrasta quem resiste.",
+          "autor": "Sêneca (Citando Cleanto)"
+        },
+        {
+          "id": 146,
+          "frase": "Eu treino para a vida, não para os jogos olímpicos.",
+          "autor": "Filósofo Cínico Anônimo"
         }
       ]
     },
@@ -503,6 +618,379 @@
           "id": 94,
           "frase": "Se queres algo de bom, pega-o dentro de ti mesmo.",
           "autor": "Epicteto"
+        },
+        {
+          "id": 147,
+          "frase": "A pobreza, quando vivida com alegria, é uma riqueza honesta.",
+          "autor": "Epicuro"
+        },
+        {
+          "id": 148,
+          "frase": "Tenho tudo o que preciso, pois carrego tudo o que é meu comigo.",
+          "autor": "Bies de Priene (Um dos Sete Sábios)"
+        },
+        {
+          "id": 149,
+          "frase": "É grande riqueza contentar-se com pouco.",
+          "autor": "Lucrécio"
+        },
+        {
+          "id": 150,
+          "frase": "Nós não precisamos de muito, só precisamos uns dos outros e de nós mesmos.",
+          "autor": "Epicuro (Adaptação)"
+        },
+        {
+          "id": 151,
+          "frase": "Coma para viver, não viva para comer.",
+          "autor": "Diógenes de Sinope"
+        },
+        {
+          "id": 152,
+          "frase": "O luxo nos faz pobres de espírito e escravos da aparência.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 153,
+          "frase": "Quem vive de acordo com a natureza nunca será pobre; quem vive de acordo com a opinião nunca será rico.",
+          "autor": "Epicuro / Sêneca"
+        },
+        {
+          "id": 154,
+          "frase": "A simplicidade é o último grau de sofisticação.",
+          "autor": "Leonardo da Vinci (Ecoando o Estoicismo)"
+        }
+      ]
+    },
+    {
+      "nome": "Ataraxia e a Medida do Prazer (Epicurismo)",
+      "descricao": "Frases de Epicuro e seus seguidores focadas na busca da tranquilidade através da ausência de dor, medo e desejos artificiais.",
+      "frases": [
+        {
+          "id": 95,
+          "frase": "A quem não basta pouco, nada basta.",
+          "autor": "Epicuro"
+        },
+        {
+          "id": 96,
+          "frase": "Nada é suficiente para o homem para quem o suficiente é pouco.",
+          "autor": "Epicuro"
+        },
+        {
+          "id": 97,
+          "frase": "O prazer é o início e o fim de uma vida feliz, mas não o prazer dos libertinos, e sim a ausência de dor no corpo e de perturbação na alma.",
+          "autor": "Epicuro"
+        },
+        {
+          "id": 98,
+          "frase": "Não tenhas medo dos deuses, não te preocupes com a morte; o que é bom é fácil de obter, e o que é terrível é fácil de suportar.",
+          "autor": "Filodemo (Tetrapharmakos)"
+        },
+        {
+          "id": 99,
+          "frase": "É impossível viver prazerosamente sem viver prudente, bela e justamente.",
+          "autor": "Epicuro"
+        },
+        {
+          "id": 100,
+          "frase": "Melhor é deitar-se sobre a palha com a mente calma do que ter uma cama de ouro e uma mesa farta, mas a alma cheia de ansiedade.",
+          "autor": "Epicuro"
+        },
+        {
+          "id": 101,
+          "frase": "A riqueza exigida pela natureza é limitada e fácil de arranjar; a que é exigida pelas vãs opiniões não tem limites.",
+          "autor": "Epicuro"
+        },
+        {
+          "id": 102,
+          "frase": "Devemos nos libertar da prisão dos assuntos públicos e da política.",
+          "autor": "Epicuro"
+        },
+        {
+          "id": 103,
+          "frase": "A justiça não é algo que existe por si só, mas um pacto mútuo para não prejudicar nem ser prejudicado.",
+          "autor": "Epicuro"
+        },
+        {
+          "id": 104,
+          "frase": "Retira-te para dentro de ti mesmo, sobretudo quando fores forçado a estar na multidão.",
+          "autor": "Epicuro"
+        },
+        {
+          "id": 105,
+          "frase": "Vives o momento presente? Então és eterno.",
+          "autor": "Lucrécio"
+        },
+        {
+          "id": 106,
+          "frase": "Da mesma forma que sentimos que a doença é um mal do corpo, a perturbação é um mal da alma.",
+          "autor": "Epicuro"
+        },
+        {
+          "id": 107,
+          "frase": "Não estragues o que tens desejando o que não tens; lembra-te que o que tens agora já esteve entre as coisas que apenas esperavas.",
+          "autor": "Epicuro"
+        },
+        {
+          "id": 108,
+          "frase": "A amizade percorre o mundo anunciando a todos nós que devemos despertar para a felicidade.",
+          "autor": "Epicuro"
+        },
+        {
+          "id": 109,
+          "frase": "O sábio, mesmo que colocado na tortura, será feliz.",
+          "autor": "Epicuro"
+        }
+      ]
+    },
+    {
+      "nome": "Autarquia e Liberdade Radical (Cinismo)",
+      "descricao": "Frases da escola Cínica que pregam a autossuficiência extrema, a honestidade brutal e a vida em acordo com a natureza animal do homem.",
+      "frases": [
+        {
+          "id": 110,
+          "frase": "Tenho como pátria o mundo inteiro.",
+          "autor": "Diógenes de Sinope"
+        },
+        {
+          "id": 111,
+          "frase": "Saia da frente do meu sol.",
+          "autor": "Diógenes de Sinope (para Alexandre, o Grande)"
+        },
+        {
+          "id": 112,
+          "frase": "O homem é o mais inteligente dos animais e, no entanto, o mais tolo.",
+          "autor": "Diógenes de Sinope"
+        },
+        {
+          "id": 113,
+          "frase": "A virtude é uma arma que ninguém pode tirar de nós.",
+          "autor": "Antístenes"
+        },
+        {
+          "id": 114,
+          "frase": "É preferível enlouquecer a sentir prazer.",
+          "autor": "Antístenes"
+        },
+        {
+          "id": 115,
+          "frase": "Procuro um homem honesto.",
+          "autor": "Diógenes de Sinope"
+        },
+        {
+          "id": 116,
+          "frase": "Aos que perguntam o que ganhei com a filosofia, respondo: a capacidade de conversar comigo mesmo.",
+          "autor": "Antístenes"
+        },
+        {
+          "id": 117,
+          "frase": "O insulto desonra quem o infere, não quem o recebe.",
+          "autor": "Diógenes de Sinope"
+        },
+        {
+          "id": 118,
+          "frase": "Por que eu deveria temer a morte? Se eu sou, a morte não é. Se a morte é, eu não sou.",
+          "autor": "Diógenes de Sinope (Atribuído)"
+        },
+        {
+          "id": 119,
+          "frase": "Vi uma criança bebendo água com as mãos e joguei fora minha caneca. O menino me venceu na simplicidade.",
+          "autor": "Diógenes de Sinope"
+        },
+        {
+          "id": 120,
+          "frase": "O fundamento de qualquer Estado é a educação de seus jovens.",
+          "autor": "Diógenes de Sinope"
+        },
+        {
+          "id": 121,
+          "frase": "Treine a si mesmo para sofrer menos com a falta do que se alegrar com o excesso.",
+          "autor": "Crates de Tebas"
+        },
+        {
+          "id": 122,
+          "frase": "A liberdade de falar é a coisa mais bela que existe nos homens.",
+          "autor": "Diógenes de Sinope"
+        },
+        {
+          "id": 123,
+          "frase": "O sábio é autossuficiente, pois tudo o que é dos outros lhe é estranho.",
+          "autor": "Antístenes"
+        }
+      ]
+    },
+    {
+      "nome": "Sabedoria Prática e Ética (Estoicismo Tardio e Outros)",
+      "descricao": "Frases focadas na aplicação diária da virtude e no comportamento em sociedade.",
+      "frases": [
+        {
+          "id": 155,
+          "frase": "A filosofia não é um truque para chamar a atenção. É a arte de formar a vida.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 156,
+          "frase": "Não perca tempo discutindo sobre o que um bom homem deve ser. Seja um.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 157,
+          "frase": "Aja de tal maneira que a tua própria atitude sirva de lei para todos.",
+          "autor": "Kant (Ecoando o Imperativo Estoico)"
+        },
+        {
+          "id": 158,
+          "frase": "A teoria é inútil sem a prática, mas a prática sem teoria é cega.",
+          "autor": "Musônio Rufo"
+        },
+        {
+          "id": 159,
+          "frase": "O melhor modo de se vingar de um inimigo é não se assemelhar a ele.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 160,
+          "frase": "Seja rigoroso consigo mesmo e tolerante com os outros.",
+          "autor": "Marco Aurélio"
+        },
+        {
+          "id": 161,
+          "frase": "Onde quer que haja um ser humano, há uma oportunidade para a bondade.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 162,
+          "frase": "Associe-se a pessoas que possam torná-lo melhor.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 163,
+          "frase": "Ninguém é livre se é escravo do corpo.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 164,
+          "frase": "O sábio nunca está sozinho, pois tem a si mesmo como companhia.",
+          "autor": "Antístenes"
+        },
+        {
+          "id": 165,
+          "frase": "A educação é um ornamento na prosperidade e um refúgio na adversidade.",
+          "autor": "Aristóteles (Influência Peripatética)"
+        },
+        {
+          "id": 166,
+          "frase": "Conhece-te a ti mesmo.",
+          "autor": "Inscrição de Delfos (Base de toda filosofia antiga)"
+        },
+        {
+          "id": 167,
+          "frase": "Aquele que comete uma injustiça é mais infeliz do que aquele que a sofre.",
+          "autor": "Sócrates (Pai de todas estas escolas)"
+        },
+        {
+          "id": 168,
+          "frase": "Uma vida não examinada não vale a pena ser vivida.",
+          "autor": "Sócrates"
+        },
+        {
+          "id": 169,
+          "frase": "Não saber o que aconteceu antes de você nascer é permanecer criança para sempre.",
+          "autor": "Cícero (Estoico eclético)"
+        },
+        {
+          "id": 170,
+          "frase": "O tempo revela a verdade.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 171,
+          "frase": "A sorte é o que acontece quando a preparação encontra a oportunidade.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 172,
+          "frase": "O homem que não tem nada a perder é invencível.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 173,
+          "frase": "O silêncio é a melhor resposta para a ignorância.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 174,
+          "frase": "A coragem não é a ausência de medo, mas a capacidade de agir apesar dele.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 175,
+          "frase": "Faça o que deve, aconteça o que acontecer.",
+          "autor": "Provérbio Estoico"
+        },
+        {
+          "id": 176,
+          "frase": "A mente que está ansiosa pelo futuro é miserável.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 177,
+          "frase": "Ame a mão que o destino lhe deu e jogue com ela como se fosse sua própria escolha.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 178,
+          "frase": "Não deixe que o comportamento dos outros destrua sua paz interior.",
+          "autor": "Dalai Lama (Convergência com Estoicismo)"
+        },
+        {
+          "id": 179,
+          "frase": "A verdadeira liberdade é a liberdade da mente.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 180,
+          "frase": "A paciência é amarga, mas seu fruto é doce.",
+          "autor": "Jean-Jacques Rousseau (Influência Clássica)"
+        },
+        {
+          "id": 181,
+          "frase": "Somos o que fazemos repetidamente. A excelência, portanto, não é um ato, mas um hábito.",
+          "autor": "Aristóteles"
+        },
+        {
+          "id": 182,
+          "frase": "Aquele que tem um 'porquê' para viver pode suportar quase qualquer 'como'.",
+          "autor": "Nietzsche (Influência Estoica/Cínica)"
+        },
+        {
+          "id": 183,
+          "frase": "A gratidão não é apenas a maior das virtudes, mas a mãe de todas as outras.",
+          "autor": "Cícero"
+        },
+        {
+          "id": 184,
+          "frase": "Quanto mais conheço os homens, mais admiro o meu cão.",
+          "autor": "Diógenes de Sinope (Atribuído)"
+        },
+        {
+          "id": 185,
+          "frase": "Muitos homens lavam suas roupas, mas poucos lavam suas almas.",
+          "autor": "Autor Não Identificado"
+        },
+        {
+          "id": 186,
+          "frase": "O sábio não pune porque houve um erro, mas para que não haja erro no futuro.",
+          "autor": "Sêneca"
+        },
+        {
+          "id": 187,
+          "frase": "Não deseje ser nada além do que você é, e tente ser isso perfeitamente.",
+          "autor": "São Francisco de Sales (Influência Estoica)"
+        },
+        {
+          "id": 188,
+          "frase": "A vida é simples, mas insistimos em complicá-la.",
+          "autor": "Confúcio (Paralelo Oriental)"
         }
       ]
     }
