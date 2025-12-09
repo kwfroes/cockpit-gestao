@@ -453,6 +453,8 @@ document.addEventListener("DOMContentLoaded", () => {
           
           <div class="p-2 border-t border-gray-100 text-center text-xs text-gray-400 bg-white">
             <span id="stoic-count">0</span> frases encontradas
+            <span id="stoic-timer-info" class="font-mono tracking-tight opacity-70 flex items-center gap-2" title="Ciclo de atualização automática">
+               </span>
           </div>
         </div>
       </div>
@@ -477,6 +479,29 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     await populateList(); // Carrega lista e preenche selects
+
+    // --- LÓGICA DO TIMER I ---
+    const storedData = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    const timerEl = document.getElementById("stoic-timer-info");
+    
+    if (storedData && storedData.nextUpdate && timerEl) {
+        // Calcula as datas
+        const nextTime = new Date(storedData.nextUpdate);
+        const lastTime = new Date(storedData.nextUpdate - UPDATE_INTERVAL_MS);
+        
+        // Formata HH:MM
+        const fmt = (date) => date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+        // Exibe de forma "técnica" e limpa
+        timerEl.innerHTML = `
+            <span class="flex items-center gap-1">↻ ${fmt(lastTime)}</span>
+            <span class="text-gray-300">|</span>
+            <span class="flex items-center gap-1">⌛ Próx: ${fmt(nextTime)}</span>
+        `;
+    } else if (timerEl) {
+        timerEl.textContent = "Sincronizando...";
+    }
+
     modal.classList.remove("hidden");
     
     // Foca no campo de busca ao abrir
