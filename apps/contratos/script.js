@@ -1672,6 +1672,14 @@ function renderizarModalVisualizar(contratoId) {
     });
   }
 
+  // Atualiza o ID do botão de Pagamento no rodapé do modal
+  const btnPagamentoModal = document.querySelector(
+    "#modal-visualizar-contrato .btn-abrir-modal-pagamento"
+  );
+  if (btnPagamentoModal) {
+    btnPagamentoModal.dataset.id = contratoPai.id;
+  }
+
   // --- LISTENERS DE GRÁFICO ---
   const selectAno = document.getElementById("filtro-ano");
   const anosUnicos = new Set(
