@@ -19,6 +19,82 @@ document.addEventListener("DOMContentLoaded", () => {
   const timeEl = document.getElementById("currentTime");
   const greetingEl = document.getElementById("greeting");
 
+// --- INÍCIO: Modal de Nome Personalizado (Tailwind) ---
+  let userName = localStorage.getItem("cockpit_username");
+
+  // 1. Injeta o HTML do Modal no final do corpo da página
+  const modalHTML = `
+    <div id="nameModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-gray-900 bg-opacity-50 backdrop-blur-sm transition-opacity">
+      <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-sm transform transition-all scale-100">
+        <h3 class="text-lg font-bold text-gray-800 mb-2">Como prefere ser chamado?</h3>
+        <p class="text-sm text-gray-500 mb-4">Isso personalizará sua saudação diária.</p>
+        
+        <input type="text" id="nameInput" placeholder="Seu nome ou apelido" 
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-700 mb-4"
+          autocomplete="off">
+        
+        <div class="flex justify-end gap-2">
+          <button id="btnCancelName" class="px-4 py-2 text-sm text-gray-500 hover:bg-gray-100 rounded-lg transition-colors">Cancelar</button>
+          <button id="btnSaveName" class="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm transition-colors font-medium">Salvar</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+  // 2. Referências aos elementos do Modal
+  const modal = document.getElementById('nameModal');
+  const input = document.getElementById('nameInput');
+  const btnSave = document.getElementById('btnSaveName');
+  const btnCancel = document.getElementById('btnCancelName');
+
+  // 3. Funções de Controle
+  function openNameModal() {
+    input.value = localStorage.getItem("cockpit_username") || "";
+    modal.classList.remove('hidden');
+    setTimeout(() => input.focus(), 100); // Foca no campo automaticamente
+  }
+
+  function closeNameModal() {
+    modal.classList.add('hidden');
+  }
+
+  function saveName() {
+    const newName = input.value.trim();
+    if (newName) {
+      userName = newName;
+      localStorage.setItem("cockpit_username", userName);
+      updateTime(); // Atualiza a saudação na hora
+      closeNameModal();
+    }
+  }
+
+  // 4. Eventos
+  btnSave.onclick = saveName;
+  btnCancel.onclick = closeNameModal;
+  
+  // Salvar ao apertar ENTER
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') saveName();
+  });
+
+  // Configura o clique na saudação para abrir o modal
+  if (greetingEl) {
+    greetingEl.style.cursor = "pointer";
+    greetingEl.title = "Clique para alterar seu nome";
+    greetingEl.onclick = openNameModal;
+  }
+
+  // Se não tiver nome salvo, abre o modal automaticamente ao iniciar
+  if (!userName) {
+    // Esconde o botão cancelar na primeira vez (obrigatório)
+    btnCancel.style.display = 'none'; 
+    openNameModal();
+  } else {
+    btnCancel.style.display = 'inline-block';
+  }
+  // --- FIM: Modal de Nome ---
+
   function updateTime() {
     const now = new Date();
 
@@ -53,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (hour >= 5 && hour < 12) greeting = "Bom dia";
       else if (hour >= 12 && hour < 18) greeting = "Boa tarde";
       else greeting = "Boa noite";
-      greetingEl.textContent = greeting;
+      greetingEl.innerHTML = `${greeting}, <span class="font-bold">${userName}</span>.`;
     }
   }
 
