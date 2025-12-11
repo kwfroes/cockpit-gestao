@@ -2431,8 +2431,17 @@ ${escapeHtml(item.message)}
     const contactMadePendenteEnvioFooter = `Em contato com ${contactGender === 'M' ? 'o' : 'a'} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, foi esclarecido o motivo da pendência, tendo sido informado que as providências necessárias para o envio da solicitação já estão sendo adotadas e que será sinalizado quando o envio for realizado.`;
     const contactMadePendenteFailedFooter = `Em tentativa de contato telefônico com ${contactGender === 'M' ? 'o' : 'a'} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, não obtivemos êxito, tendo a chamada sido direcionada para a caixa postal. Reiteramos a necessidade de regularização da pendência no CAF Digital para que a solicitação possa ser analisada.`;
     let message = "";
-    const docIdentifier =
-      cnpj.replace(/\D/g, "").length > 11 ? "CNPJ sob o nº" : "CPF sob o nº";
+
+    const cleanDocLength = cnpj.replace(/\D/g, "").length;
+    let docIdentifier;
+
+    if (cleanDocLength > 11) {
+      docIdentifier = "CNPJ sob o nº";
+    } else if (cleanDocLength < 11) {
+      docIdentifier = "Código nº";
+    } else {
+      docIdentifier = "CPF sob o nº";
+    }
 
 switch (status) {
       case "Deferida":
