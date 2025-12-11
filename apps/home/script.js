@@ -416,6 +416,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 (function initStoicModule() {
   requestNotificationPermission();
+  let updateIntervalId = null;
   const ELEMENTS = {
     container: document.getElementById("stoic-container"),
     text: document.getElementById("stoic-text"),
@@ -484,6 +485,32 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   }
+
+  // --- Timer automático de 30 minutos ---
+  function startAutoUpdate() {
+    // Se já existir um timer rodando, limpa ele primeiro
+    if (updateIntervalId !== null) {
+      clearInterval(updateIntervalId);
+      updateIntervalId = null;
+    }
+
+    updateQuote(); // primeira execução imediata
+
+    // Agenda a próxima atualização (30 minutos)
+    updateIntervalId = setInterval(() => {
+      updateQuote(true); // força nova citação a cada 30 min
+    }, UPDATE_INTERVAL_MS);
+
+    // === TESTE RÁPIDO ===
+  //Gera uma nova citação + notificação em 5 segundos
+  //setTimeout(() => {
+  //  updateQuote(true);
+  //}, 5000);
+
+  }
+
+  // --- Inicia tudo ---
+  startAutoUpdate();
 
   function saveAndRender(item) {
     const payload = {
