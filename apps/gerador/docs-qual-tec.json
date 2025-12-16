@@ -1,0 +1,206 @@
+[
+    {
+        "id": 1,
+        "nome": "ADAB - Agencia Estadual de Defesa Agropecuária"
+    },
+    {
+        "id": 2,
+        "nome": "Agencia Nacional do Petróleo - ANP"
+    },
+    {
+        "id": 3,
+        "nome": "Alvará de Vigilância Sanitária"
+    },
+    {
+        "id": 4,
+        "nome": "ANAC - Agencia Nacional de Aviação Civil"
+    },
+    {
+        "id": 5,
+        "nome": "ANS - Agencia Nacional de Saúde Suplementar"
+    },
+    {
+        "id": 6,
+        "nome": "Atestado de Capacidade Técnica"
+    },
+    {
+        "id": 7,
+        "nome": "Autorização BACEN"
+    },
+    {
+        "id": 8,
+        "nome": "Autorização do Ministério da Saúde - DOU"
+    },
+    {
+        "id": 9,
+        "nome": "Carta Patente SUSEP"
+    },
+    {
+        "id": 10,
+        "nome": "CAT - Certidão de Acervo Técnico"
+    },
+    {
+        "id": 11,
+        "nome": "CAU - Conselho Regional Arquitetura e Urbanismo"
+    },
+    {
+        "id": 12,
+        "nome": "Certidão de Administradores SUSEP"
+    },
+    {
+        "id": 13,
+        "nome": "Certidão de Regularidade SUSEP"
+    },
+    {
+        "id": 14,
+        "nome": "Certidão de Acervo Operacional - CAO"
+    },
+    {
+        "id": 15,
+        "nome": "Certidão de Acervo Técnico com Atestado"
+    },
+    {
+        "id": 16,
+        "nome": "Certificado de Credenciamento CBM/BA"
+    },
+    {
+        "id": 17,
+        "nome": "Certificado de Registro Especial Brasileiro - Tribunal Marítimo"
+    },
+    {
+        "id": 18,
+        "nome": "Certificado de Segurança-Policia Federal"
+    },
+    {
+        "id": 19,
+        "nome": "Certificado Emitido pela ANTAQ"
+    },
+    {
+        "id": 20,
+        "nome": "CFT - Conselho Federal dos Técnicos Industriais"
+    },
+    {
+        "id": 21,
+        "nome": "Conselho Regional de Corretores de Imóveis"
+    },
+    {
+        "id": 22,
+        "nome": "Conselho Regional de Biologia - CRB"
+    },
+    {
+        "id": 23,
+        "nome": "Conselho Regional de Biomedicina"
+    },
+    {
+        "id": 24,
+        "nome": "Conselho Regional de Educação Física"
+    },
+    {
+        "id": 25,
+        "nome": "Conselho Regional de Enfermagem"
+    },
+    {
+        "id": 26,
+        "nome": "Conselho Regional de Fisioterapia"
+    },
+    {
+        "id": 27,
+        "nome": "Conselho Regional de Odontologia"
+    },
+    {
+        "id": 28,
+        "nome": "Conselho Regional de Psicologia - CRP"
+    },
+    {
+        "id": 29,
+        "nome": "Conselho Regional de Serviço Social"
+    },
+    {
+        "id": 30,
+        "nome": "Conselho Regional de Técnico em Radiologia"
+    },
+    {
+        "id": 31,
+        "nome": "CORECON - Conselho Regional de Economia"
+    },
+    {
+        "id": 32,
+        "nome": "CRA - Conselho Regional de Administração"
+    },
+    {
+        "id": 33,
+        "nome": "CRBio - Termo de Responsabilidade Técnica"
+    },
+    {
+        "id": 34,
+        "nome": "CRC - Conselho Regional de Contabilidade"
+    },
+    {
+        "id": 35,
+        "nome": "CRE - Conselho Regional de Estatística"
+    },
+    {
+        "id": 36,
+        "nome": "CREA - Conselho Regional de Engenharia e Agronomia"
+    },
+    {
+        "id": 37,
+        "nome": "CREMEB"
+    },
+    {
+        "id": 38,
+        "nome": "CRF - Conselho Regional de Farmácia"
+    },
+    {
+        "id": 39,
+        "nome": "CRM - Conselho Regional de Medicina"
+    },
+    {
+        "id": 40,
+        "nome": "CRMV - Conselho Regional de Medicina Veterinária"
+    },
+    {
+        "id": 41,
+        "nome": "CRN - Conselho Regional de Nutrição"
+    },
+    {
+        "id": 42,
+        "nome": "CRQ - Conselho Regional de Química"
+    },
+    {
+        "id": 43,
+        "nome": "CVM - Comissão de Valores Mobiliários"
+    },
+    {
+        "id": 44,
+        "nome": "Declaração de Dispensa de Ato Público - Baixo Risco"
+    },
+    {
+        "id": 45,
+        "nome": "INMETRO"
+    },
+    {
+        "id": 46,
+        "nome": "INMETRO - ABNT"
+    },
+    {
+        "id": 47,
+        "nome": "Ministério da Agricultura"
+    },
+    {
+        "id": 48,
+        "nome": "Ministério da Agricultura Abastecimento"
+    },
+    {
+        "id": 49,
+        "nome": "Ministério da Defesa - Exercito"
+    },
+    {
+        "id": 50,
+        "nome": "Ministério do Turismo"
+    },
+    {
+        "id": 51,
+        "nome": "OAB - Ordem dos Advogados do Brasil"
+    }
+]

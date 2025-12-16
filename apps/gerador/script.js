@@ -126,6 +126,31 @@ document.addEventListener("DOMContentLoaded", function () {
     "closeContactsModalBtn"
   );
 
+  const manualDocNameWrapper = document.getElementById("manualDocNameWrapper");
+  const manualDocNameInput = document.getElementById("manualDocName");
+  let qualTecDocs = []; // Variável para armazenar o JSON
+
+  // Carregar o arquivo JSON de documentos
+  fetch('docs-qual-tec.json')
+    .then(response => response.json())
+    .then(data => {
+        qualTecDocs = data; // Mantemos caso precise usar em outro lugar
+        
+        // Transforma o array de objetos do JSON em um array de strings simples para o menu
+        const listaDocumentos = data.map(doc => doc.nome);
+        
+        // Adiciona a opção "Outros" no final para permitir digitação manual
+        //listaDocumentos.push("Outros");
+
+        // Atualiza a lista de documentos da categoria "Qualificação Técnica"
+        // Certifique-se de que a chave aqui é EXATAMENTE igual a que está no value do <option> do HTML
+        docsByCat["Qualificação Técnica"] = listaDocumentos;
+        
+        console.log("Lista de Qualificação Técnica atualizada com sucesso.");
+    })
+    .catch(error => console.error('Erro ao carregar lista de documentos:', error));
+
+
   // --- FUNÇÕES GERAIS E DE UTILIDADE ---
 
   /**
@@ -2058,8 +2083,8 @@ ${escapeHtml(item.message)}
   const registrationDateInput = document.getElementById("registrationDate");
   const docCategoryInput = document.getElementById("docCategory");
   const docNameSelect = document.getElementById("docName");
-  const customDocNameWrapper = document.getElementById("customDocNameWrapper");
-  const customDocNameInput = document.getElementById("customDocName");
+  //const customDocNameWrapper = document.getElementById("customDocNameWrapper");
+  //const customDocNameInput = document.getElementById("customDocName");
   const socioNameWrapper = document.getElementById("socioNameWrapper");
   const socioNameInput = document.getElementById("socioName");
   const rejectionReasonInput = document.getElementById("rejectionReason");
@@ -2120,7 +2145,7 @@ ${escapeHtml(item.message)}
 
     familyAutocompleteWrapper.classList.add("hidden");
     docNameWrapper.classList.remove("hidden");
-    customDocNameWrapper.classList.add("hidden");
+    //customDocNameWrapper.classList.add("hidden");
     socioNameWrapper.classList.add("hidden");
     familySearchInput.value = "";
     selectedFamilyId = null;
@@ -2152,6 +2177,45 @@ ${escapeHtml(item.message)}
     handleDocNameChange();
   };
 
+
+//    /**
+//   * @functionality 313
+//   * @category 3xx: Geração de Mensagens e Formulários
+//   * @name População de Lista de Documentos Personalizados
+//   * @description Preenche o select customDocName com os itens carregados do JSON qualTecDocs e adiciona a opção "Outros" para permitir a inserção manual de novos nomes.
+//   */
+//  function populateCustomDocNameSelect() {
+//    // Evita repopular se já tiver itens (além do placeholder e "Outros")
+//    if (customDocNameInput.options.length > 2) return; 
+
+//    customDocNameInput.innerHTML = '<option value="">Selecione um documento...</option>';
+
+    // Adiciona os itens do JSON
+//    qualTecDocs.forEach(doc => {
+//        const option = document.createElement("option");
+//        option.value = doc.nome;
+//        option.textContent = doc.nome;
+//        customDocNameInput.appendChild(option);
+//    });
+
+    // Adiciona a opção "Outros" no final
+//    const otherOption = document.createElement("option");
+//    otherOption.value = "Outros";
+//    otherOption.textContent = "Outros";
+//    customDocNameInput.appendChild(otherOption);
+//  }
+
+  // Listener para quando selecionar algo na lista "Especifique o nome do documento"
+//  customDocNameInput.addEventListener("change", function() {
+//      if (this.value === "Outros") {
+//          manualDocNameWrapper.classList.remove("hidden");
+//          manualDocNameInput.focus();
+//      } else {
+//          manualDocNameWrapper.classList.add("hidden");
+//          manualDocNameInput.value = ""; // Limpa o campo manual se trocar
+//      }
+//  });
+
   /**
    * @functionality 310
    * @category 3xx: Geração de Mensagens e Formulários
@@ -2159,17 +2223,22 @@ ${escapeHtml(item.message)}
    * @description Mostra/oculta inputs para nome custom ou sócio baseado em select.
    */
   function handleDocNameChange() {
-    const selectedDoc = docNameSelect.value;
-    customDocNameWrapper.classList.add("hidden");
-    socioNameWrapper.classList.add("hidden");
-
-    if (selectedDoc === "outro") {
-      customDocNameWrapper.classList.remove("hidden");
-      customDocNameInput.focus();
-    } else if (selectedDoc === "Sócio") {
-      socioNameWrapper.classList.remove("hidden");
-      socioNameInput.focus();
-    }
+      const selectedDoc = docNameSelect.value;
+      
+      // Reseta visibilidade dos campos extras
+      manualDocNameWrapper.classList.add("hidden");
+      socioNameWrapper.classList.add("hidden");
+      
+      // Verifica se é "Outros" (vindo da nossa lista JSON ou das listas padrão)
+      if (selectedDoc === "Outros" || selectedDoc === "outro") {
+          manualDocNameWrapper.classList.remove("hidden");
+          manualDocNameInput.focus();
+      } 
+      // Caso específico para Sócios
+      else if (selectedDoc === "Sócio") {
+          socioNameWrapper.classList.remove("hidden");
+          socioNameInput.focus();
+      }
   }
 
   /**
@@ -2278,46 +2347,62 @@ ${escapeHtml(item.message)}
    * @name Manipulação Dinâmica de Seção de Documentos Indeferidos
    * @description Adiciona/remove itens em array e atualiza a UI.
    */
-  const addRejectedDoc = () => {
-    const category = docCategoryInput.value;
-    let name;
-    const reason = rejectionReasonInput.value.trim();
-    let socioName = null;
+    const addRejectedDoc = () => {
+        const category = docCategoryInput.value;
+        let name;
+        const reason = rejectionReasonInput.value.trim();
+        let socioName = null;
 
-    if (category === "Família") {
-      name = familySearchInput.value.trim();
-      if (!selectedFamilyId || name === "") {
-        alert("Por favor, selecione uma família da lista de sugestões.");
-        return;
-      }
-    } else {
-      name = docNameSelect.value;
-      if (name === "outro") {
-        name = customDocNameInput.value.trim();
-      } else if (name === "Sócio") {
-        socioName = socioNameInput.value.trim();
-        if (!socioName) {
-          alert("Por favor, preencha o nome do sócio.");
+        if (category === "Família") {
+          name = familySearchInput.value.trim();
+          if (!selectedFamilyId || name === "") {
+            alert("Por favor, selecione uma família da lista de sugestões.");
+            return;
+          }
+        } else {
+              // Pega o valor direto do select principal
+              const rawName = docNameSelect.value;
+              
+              if (rawName === "Outros" || rawName === "outro") {
+                  // Se for "Outros", pega do campo manual
+                  name = manualDocNameInput.value.trim();
+                  if (!name) {
+                      alert("Por favor, digite o nome do documento.");
+                      return;
+                  }
+              } else if (rawName === "Sócio") {
+                  name = "Sócio"; 
+                  socioName = socioNameInput.value.trim();
+                  if (!socioName) {
+                    alert("Por favor, preencha o nome do sócio.");
+                    return;
+                  }
+              } else {
+                  // Caso contrário, é um documento da lista JSON (ou das outras listas padrão)
+                  name = rawName;
+              }
+            }
+
+        if (!name || !reason) {
+          alert("Por favor, preencha o nome do documento e o motivo.");
           return;
         }
-      }
-    }
 
-    if (!name || !reason) {
-      alert("Por favor, preencha o nome do documento e o motivo.");
-      return;
-    }
+        rejectedDocs.push({ category, name, reason, socioName });
+        renderRejectedDocs();
 
-    rejectedDocs.push({ category, name, reason, socioName });
-    renderRejectedDocs();
-
-    showToast("Documento adicionado!", "success");
-    rejectionReasonInput.value = "";
-    customDocNameInput.value = "";
-    socioNameInput.value = "";
-    populateDocNames();
-    rejectionReasonInput.focus();
-  };
+        showToast("Documento adicionado!", "success");
+        rejectionReasonInput.value = "";
+        //customDocNameInput.value = ""; // Reseta o select
+        manualDocNameInput.value = ""; // Reseta o input manual
+        socioNameInput.value = "";
+        
+        // Reset visual
+        manualDocNameWrapper.classList.add("hidden"); 
+        
+        populateDocNames(); // Isso vai resetar o fluxo para o estado inicial da categoria
+        rejectionReasonInput.focus();
+    };
 
   const removeRejectedDoc = (index) => {
     rejectedDocs.splice(index, 1);
