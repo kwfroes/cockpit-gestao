@@ -13,6 +13,41 @@ function requestNotificationPermission() {
     }
 }
 
+// --- CONFIGURAÇÃO DAS IMAGENS DE FUNDO ---
+const BG_IMAGES = {
+  manha: 'img/manha.png', 
+  tarde: 'img/tarde.png',
+  noite: 'img/noite.png'
+};
+
+/**
+ * Atualiza o background dinâmico com base na hora e na flag em localStorage.
+ * @param {number} hour - hora atual (0-23)
+ */
+function updateDynamicBackground(hour) {
+  const bgEl = document.getElementById("dynamic-bg");
+  if (!bgEl) return;
+
+  const isBgEnabled = localStorage.getItem("cockpit_bg_enabled") === "true";
+  if (!isBgEnabled) {
+    bgEl.style.backgroundImage = 'none';
+    bgEl.classList.remove('opacity-20');
+    bgEl.classList.add('opacity-0');
+    return;
+  }
+
+  let bgImage = '';
+  if (hour >= 5 && hour < 12) bgImage = BG_IMAGES.manha;
+  else if (hour >= 12 && hour < 18) bgImage = BG_IMAGES.tarde;
+  else bgImage = BG_IMAGES.noite;
+
+  // aplica imagem e opacidade esmaecida
+  bgEl.style.backgroundImage = `url('${bgImage}')`;
+  bgEl.classList.remove('opacity-0');
+  bgEl.classList.add('opacity-20');
+}
+
+
 document.addEventListener("DOMContentLoaded", () => {
   // --- 1. Lógica do Relógio ---
   const dateEl = document.getElementById("currentDate");
@@ -97,6 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateTime() {
     const now = new Date();
+    const hour = now.getHours();
 
     // Data por extenso
     const optionsDate = {
@@ -124,13 +160,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Saudação baseada na hora
     if (greetingEl) {
-      const hour = now.getHours();
       let greeting = "Olá";
       if (hour >= 5 && hour < 12) greeting = "Bom dia";
       else if (hour >= 12 && hour < 18) greeting = "Boa tarde";
       else greeting = "Boa noite";
       greetingEl.innerHTML = `${greeting}, <span class="font-bold">${userName}</span>.`;
     }
+
+    updateDynamicBackground(hour);
+
   }
 
   // Atualiza a cada segundo e roda imediatamente
@@ -526,7 +564,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- 3. Funcionalidade de "Easter Egg" (Lista com Filtros) ---
 
   function createModal() {
-    // HTML atualizado com Grid para os filtros
+    // 1. IMPORTANTE: Defina a variável antes de usar no HTML
+    const isBgEnabled = localStorage.getItem("cockpit_bg_enabled") === "true" ? "checked" : "";
+
+    // HTML atualizado
     const modalHTML = `
       <div id="stoic-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50 backdrop-blur-sm transition-opacity">
         <div class="bg-white w-full max-w-3xl h-[85vh] rounded-xl shadow-2xl flex flex-col overflow-hidden m-4 animate-fade-in-down">
@@ -538,7 +579,8 @@ document.addEventListener("DOMContentLoaded", () => {
             <button id="stoic-close-btn" class="text-gray-400 hover:text-red-500 text-2xl px-2">&times;</button>
           </div>
 
-          <div class="p-4 border-b border-gray-100 bg-white grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div class="p-4 border-b border-gray-100 bg-white grid grid-cols-1 md:grid-cols-4 gap-3 items-center">
+            
             <input type="text" id="stoic-search" placeholder="🔍 Buscar texto..." 
               class="w-full p-2 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-400 text-sm">
             
@@ -549,14 +591,21 @@ document.addEventListener("DOMContentLoaded", () => {
             <select id="stoic-filter-category" class="w-full p-2 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-400 text-sm bg-white">
               <option value="">Todas as Categorias</option>
             </select>
-          </div>
 
-          <div id="stoic-list" class="flex-1 overflow-y-auto p-4 space-y-2 bg-gray-50/50">
+            <div class="flex items-center justify-center md:justify-end gap-2 text-xs font-medium text-gray-600 bg-gray-50 p-2 rounded-lg border border-gray-100">
+              <span>Wallpaper</span>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="stoic-bg-toggle" class="sr-only peer" ${isBgEnabled}>
+                <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
+
+          </div> <div id="stoic-list" class="flex-1 overflow-y-auto p-4 space-y-2 bg-gray-50/50">
             </div>
           
           <div class="p-2 border-t border-gray-100 text-center text-xs text-gray-400 bg-white">
             <span id="stoic-count">0</span> frases encontradas
-            <span id="stoic-timer-info" class="font-mono tracking-tight opacity-70 flex items-center gap-2" title="Ciclo de atualização automática">
+            <span id="stoic-timer-info" class="font-mono tracking-tight opacity-70 flex items-center gap-2 inline-flex ml-2" title="Ciclo de atualização automática">
                </span>
           </div>
         </div>
@@ -566,50 +615,56 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function openModal() {
-    let modal = document.getElementById("stoic-modal");
-    if (!modal) {
-      createModal();
-      modal = document.getElementById("stoic-modal");
-
-      // Event Listeners
-      document.getElementById("stoic-close-btn").onclick = () => modal.classList.add("hidden");
+      let modal = document.getElementById("stoic-modal");
       
-      // Eventos de Input para filtrar em tempo real
-      const inputs = ['stoic-search', 'stoic-filter-author', 'stoic-filter-category'];
-      inputs.forEach(id => {
-        document.getElementById(id).addEventListener('input', applyFilters);
-      });
-    }
+      // SÓ ENTRA AQUI NA PRIMEIRA VEZ (Criação)
+      if (!modal) {
+        createModal();
+        modal = document.getElementById("stoic-modal");
 
-    await populateList(); // Carrega lista e preenche selects
-
-    // --- LÓGICA DO TIMER I ---
-    const storedData = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    const timerEl = document.getElementById("stoic-timer-info");
-    
-    if (storedData && storedData.nextUpdate && timerEl) {
-        // Calcula as datas
-        const nextTime = new Date(storedData.nextUpdate);
-        const lastTime = new Date(storedData.nextUpdate - UPDATE_INTERVAL_MS);
+        // Event Listeners (Fechar)
+        document.getElementById("stoic-close-btn").onclick = () => modal.classList.add("hidden");
         
-        // Formata HH:MM
-        const fmt = (date) => date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        // Eventos de Input para filtrar
+        const inputs = ['stoic-search', 'stoic-filter-author', 'stoic-filter-category'];
+        inputs.forEach(id => {
+          document.getElementById(id).addEventListener('input', applyFilters);
+        });
 
-        // Exibe de forma "técnica" e limpa
-        timerEl.innerHTML = `
-            <span class="flex items-center gap-1">↻ ${fmt(lastTime)}</span>
-            <span class="text-gray-300">|</span>
-            <span class="flex items-center gap-1">⌛ Próx: ${fmt(nextTime)}</span>
-        `;
-    } else if (timerEl) {
-        timerEl.textContent = "Sincronizando...";
+        // --- CORREÇÃO: O LISTENER DO WALLPAPER FICA AQUI DENTRO ---
+        const bgToggle = document.getElementById("stoic-bg-toggle");
+        if(bgToggle) {
+          bgToggle.addEventListener('change', (e) => {
+              localStorage.setItem("cockpit_bg_enabled", e.target.checked);
+              location.reload(); 
+          });
+        }
+      }
+
+      // AQUI PARA BAIXO É O QUE RODA TODA VEZ QUE ABRE
+      await populateList(); 
+
+      // --- LÓGICA DO TIMER I ---
+      const storedData = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      const timerEl = document.getElementById("stoic-timer-info");
+      
+      if (storedData && storedData.nextUpdate && timerEl) {
+          const nextTime = new Date(storedData.nextUpdate);
+          const lastTime = new Date(storedData.nextUpdate - UPDATE_INTERVAL_MS);
+          const fmt = (date) => date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+          timerEl.innerHTML = `
+              <span class="flex items-center gap-1">↻ ${fmt(lastTime)}</span>
+              <span class="text-gray-300">|</span>
+              <span class="flex items-center gap-1">⌛ Próx: ${fmt(nextTime)}</span>
+          `;
+      } else if (timerEl) {
+          timerEl.textContent = "Sincronizando...";
+      }
+
+      modal.classList.remove("hidden");
+      setTimeout(() => document.getElementById("stoic-search").focus(), 100);
     }
-
-    modal.classList.remove("hidden");
-    
-    // Foca no campo de busca ao abrir
-    setTimeout(() => document.getElementById("stoic-search").focus(), 100);
-  }
 
   async function populateList() {
     await loadData();
