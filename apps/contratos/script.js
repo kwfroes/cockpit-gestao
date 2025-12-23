@@ -2122,6 +2122,21 @@ function validateStep(step) {
         input.focus();
         return false;
       }
+
+    // 2. Validação Específica do SEI
+    if (input.id.includes('processo-sei')) {
+          const resultado = verificarProcessoSEI(input.value);
+          if (!resultado.valido) {
+              mostrarToast(`Erro no Processo SEI: ${resultado.mensagem}`, true);
+              input.focus();
+              input.classList.add('border-red-500');
+              return false;
+          }
+      }
+      
+      // Se passou, remove erro visual
+      input.classList.remove('border-red-500');
+
     }
   }
   return true;
@@ -2434,25 +2449,34 @@ function salvarPagamento(e) {
     return;
   }
 
+  // 1. Captura os dados do formulário
   const pagamentoData = {
     data: document.getElementById("pagamento-data").value,
     valorPago: parseBRL(document.getElementById("pagamento-valor").value),
     notaFiscal: document.getElementById("pagamento-nf").value,
-    processoPagamentoSei: document.getElementById("pagamento-processo-sei")
-      .value,
-    linkPagamentoSei:
-      document.getElementById("pagamento-link-sei").value.trim() || null,
+    processoPagamentoSei: document.getElementById("pagamento-processo-sei").value,
+    linkPagamentoSei: document.getElementById("pagamento-link-sei").value.trim() || null,
     periodoDe: document.getElementById("pagamento-periodo-de").value,
     periodoAte: document.getElementById("pagamento-periodo-ate").value,
     isTRD: document.getElementById("pagamento-is-trd").checked,
   };
 
+  // 2. VALIDAÇÃO SEI (MOVIDA PARA CÁ - Antes de salvar)
+  const validacaoSEI = verificarProcessoSEI(pagamentoData.processoPagamentoSei);
+  
+  if (!validacaoSEI.valido) {
+      mostrarToast(`Processo de Pagamento: ${validacaoSEI.mensagem}`, true);
+      document.getElementById('pagamento-processo-sei').focus();
+      return; // Interrompe a função aqui, sem salvar nada
+  }
+
+  // 3. Salva os dados (Só chega aqui se for válido)
   if (pagamentoId) {
     // Editar pagamento existente
     const index = contrato.pagamentos.findIndex((p) => p.id === pagamentoId);
     if (index > -1) {
       contrato.pagamentos[index] = {
-        ...contrato.pagamentos[index], // Preserva ID e detalhes
+        ...contrato.pagamentos[index], // Preserva ID e detalhes antigos
         ...pagamentoData, // Sobrescreve com novos dados
       };
       mostrarToast("Pagamento atualizado!");
@@ -3406,6 +3430,35 @@ document.addEventListener("DOMContentLoaded", () => {
     .getElementById("form-detalhe-item")
     .addEventListener("submit", salvarDetalheItem);
 
+  // Listener para validação visual imediata nos campos SEI
+  const camposSEI = [
+      'contrato-processo-sei', 
+      'aditivo-processo-sei', 
+      'pagamento-processo-sei'
+  ];
+
+  camposSEI.forEach(id => {
+      const input = document.getElementById(id);
+      if (input) {
+          input.addEventListener('blur', function() {
+              const resultado = verificarProcessoSEI(this.value);
+              
+              // Remove classes anteriores
+              this.classList.remove('border-red-500', 'border-green-500', 'bg-red-50', 'bg-green-50');
+              
+              if (this.value) { // Só valida se tiver texto
+                  if (resultado.valido) {
+                      this.classList.add('border-green-500', 'bg-green-50');
+                      // Opcional: mostrarToast("Processo Válido", false);
+                  } else {
+                      this.classList.add('border-red-500', 'bg-red-50');
+                      mostrarToast(resultado.mensagem, true);
+                  }
+              }
+          });
+      }
+  });
+
   // --- Lógica do Modal de Confirmação ---
   document
     .getElementById("btn-confirmacao-sim")
@@ -3753,4 +3806,78 @@ window.addEventListener("message", (event) => {
 function atualizarStatsExternos() {
   const stats = gerarEstatisticasContratos();
   localStorage.setItem("stats_contratos", JSON.stringify(stats));
+}
+
+// ==========================================
+// VALIDAÇÃO SEI (Algoritmo Módulo 11)
+// ==========================================
+
+function extrairDigitos(input) {
+    return input.replace(/[^0-9]/g, '');
+}
+
+function calcularMod11(soma) {
+    const resto = soma % 11;
+    const dv = (11 - resto) % 10;
+    return dv;
+}
+
+function calcularDVBase(base) {
+    // 1º DV
+    let soma = 0;
+    let peso = 2;
+    for (let i = base.length - 1; i >= 0; i--) {
+        soma += parseInt(base[i]) * peso;
+        peso++;
+    }
+    const d1 = calcularMod11(soma);
+
+    // 2º DV (adiciona d1 à base temporária)
+    const base2 = base + d1;
+    soma = 0;
+    peso = 2;
+    for (let i = base2.length - 1; i >= 0; i--) {
+        soma += parseInt(base2[i]) * peso;
+        peso++;
+    }
+    const d2 = calcularMod11(soma);
+
+    return '' + d1 + d2;
+}
+
+/**
+ * Valida um número de processo SEI (Formato: NNNNN.NNNNN/AAAA-DV)
+ * Retorna { valido: boolean, mensagem: string }
+ */
+function verificarProcessoSEI(valor) {
+    if (!valor) return { valido: true, mensagem: '' }; // Campo vazio não valida aqui (deixa pro required)
+
+    // Verifica se tem o hífen separador do DV
+    if (!valor.includes('-')) {
+        return { valido: false, mensagem: 'Formato inválido. Use o padrão "Número-DV" (ex: ...2025-12).' };
+    }
+
+    const partes = valor.split('-');
+    // Pega o DV (parte depois do último hífen)
+    const dvInformado = partes[partes.length - 1]; 
+    
+    // Pega a Base (tudo antes do último hífen)
+    const baseBruta = valor.substring(0, valor.lastIndexOf('-'));
+    const baseNumerica = extrairDigitos(baseBruta);
+
+    if (dvInformado.length !== 2) {
+        return { valido: false, mensagem: 'O Dígito Verificador (DV) deve ter 2 números.' };
+    }
+
+    if (baseNumerica.length === 0) {
+        return { valido: false, mensagem: 'O número do processo não contém dígitos válidos.' };
+    }
+
+    const dvCalculado = calcularDVBase(baseNumerica);
+
+    if (dvCalculado === dvInformado) {
+        return { valido: true, mensagem: 'Número Válido' };
+    } else {
+        return { valido: false, mensagem: `Dígito Verificador inválido. Esperado: -${dvCalculado}` };
+    }
 }

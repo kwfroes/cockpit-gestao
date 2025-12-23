@@ -84,6 +84,37 @@
               "valorUnitario": 0.339
             }
           ]
+        },
+        {
+          "data": "2026-01-19",
+          "valorPago": 1186.76,
+          "notaFiscal": "000000",
+          "processoPagamentoSei": "009.0242.2025.0066058-12",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=140881005",
+          "periodoDe": "2025-11-21",
+          "periodoAte": "2025-12-20",
+          "isTRD": false,
+          "id": "pag_1766431436155",
+          "detalhes": [
+            {
+              "id": "item_1766431451850",
+              "descricao": "Emissão CND",
+              "quantidade": 997,
+              "valorUnitario": 0.593
+            },
+            {
+              "id": "item_1766431461930",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 574.864
+            },
+            {
+              "id": "item_1766431473418",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 61,
+              "valorUnitario": 0.339
+            }
+          ]
         }
       ],
       "numeroContrato": "055/2025",
@@ -1700,6 +1731,14 @@
         "Mauricio Santana Moreau"
       ],
       "isPadrao": false
+    },
+    {
+      "cnpj": "15.257.819/0001-06",
+      "nome": "Companhia de Empresa Gráfica da Bahia",
+      "endereco": "Rua Mello Moraes Filho, 189, Fazenda Grande do Retiro, CEP: 40.350-900 Salvador - Bahia",
+      "representantes": [],
+      "isPadrao": false,
+      "id": "emp_1766431708022"
     }
   ]
 }
