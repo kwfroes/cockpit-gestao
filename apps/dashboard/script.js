@@ -50,6 +50,73 @@ window.onload = function () {
     return null; // Retorna nulo se tudo falhar
   }
 
+  // --- HELPER: Verifica Status do Dia (Reutilizável) ---
+  function getDayStatus(dateObj) {
+      if (!dateObj) return { isWeekend: false, isFixed: false, isMovable: false };
+      
+      const dayOfWeek = dateObj.getDay(); // 0=Dom, 6=Sab
+      const dd_mm = _native_formatDate(dateObj, "yyyy-MM-dd").substring(5); // MM-DD
+      const yyyy_mm_dd = _native_formatDate(dateObj, "yyyy-MM-dd");
+
+      return {
+          isWeekend: dayOfWeek === 0 || dayOfWeek === 6,
+          isFixed: FIXED_HOLIDAYS.has(dd_mm),
+          isMovable: movableHolidays.has(yyyy_mm_dd)
+      };
+  }
+
+  /**
+   * Calcula o tempo útil em milissegundos entre duas datas,
+   * descontando Sábados, Domingos e Feriados (Fixos e Móveis).
+   */
+  function _calcBusinessTimeDiff(start, end) {
+    if (!start || !end) return 0;
+    if (end < start) return 0;
+
+    const MS_PER_DAY = 24 * 60 * 60 * 1000;
+    let totalDuration = end.getTime() - start.getTime();
+
+    // Normaliza datas para iterar dia a dia (zera horas para verificação)
+    let current = new Date(start);
+    current.setHours(0, 0, 0, 0);
+
+    const endDateZero = new Date(end);
+    endDateZero.setHours(0, 0, 0, 0);
+
+    // Loop dia a dia
+    while (current <= endDateZero) {
+        const dayOfWeek = current.getDay(); // 0 = Dom, 6 = Sab
+        const dd_mm = _native_formatDate(current, "yyyy-MM-dd").substring(5); // Pega MM-DD
+        const yyyy_mm_dd = _native_formatDate(current, "yyyy-MM-dd");
+
+        const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+        const isFixedHoliday = FIXED_HOLIDAYS.has(dd_mm);
+        const isMovableHoliday = movableHolidays.has(yyyy_mm_dd);
+
+        // Se for dia não-útil
+        if (isWeekend || isFixedHoliday || isMovableHoliday) {
+            // Calcula quanto desse dia "ruim" está dentro do intervalo
+            // Início da sobreposição: O maior valor entre (InicioSolicitacao e InicioDoDia)
+            const overlapStart = new Date(Math.max(start.getTime(), current.getTime()));
+            
+            // Fim da sobreposição: O menor valor entre (FimAnalise e FimDoDia)
+            const endOfDay = new Date(current);
+            endOfDay.setHours(23, 59, 59, 999);
+            const overlapEnd = new Date(Math.min(end.getTime(), endOfDay.getTime()));
+
+            if (overlapEnd > overlapStart) {
+                const deduction = overlapEnd.getTime() - overlapStart.getTime();
+                totalDuration -= deduction;
+            }
+        }
+
+        // Avança um dia
+        current.setDate(current.getDate() + 1);
+    }
+
+    return Math.max(0, totalDuration);
+  }
+
   /**
    * Retorna o início do dia para um objeto Date.
    * @param {Date} date O objeto Date.
@@ -112,6 +179,48 @@ window.onload = function () {
   let allData = [];
   let filteredData = [];
   const chartInstances = {}; // Armazena instâncias de gráficos para destruí-las
+
+  //Reorganiza tabela 
+  let currentSort = { col: null, direction: 'asc' };
+
+
+  // --- LÓGICA DE FERIADOS E DIAS ÚTEIS ---
+
+  // 1. Feriados Fixos (Dia-Mês) - Salvador/BA/Nacional
+  const FIXED_HOLIDAYS = new Set([
+    "01-01", // Confraternização Universal
+    "04-21", // Tiradentes
+    "05-01", // Dia do Trabalhador
+    "06-24", // São João (Salvador/BA)
+    "07-02", // Independência da Bahia
+    "09-07", // Independência do Brasil
+    "10-12", // N. Sra. Aparecida
+    "11-02", // Finados
+    "11-15", // Proclamação da República
+    "11-20", // Consciência Negra
+    "12-08", // Conceição da Praia (Salvador)
+    "12-25"  // Natal
+  ]);
+
+  // 2. Feriados Móveis (Carregados do JSON)
+  let movableHolidays = new Set(); // Formato YYYY-MM-DD
+
+  async function loadHolidayJson() {
+    try {
+      const response = await fetch("./feriados.json");
+      if (response.ok) {
+        const data = await response.json();
+        // Assume que o JSON é um array de strings ["2025-03-04", ...]
+        if (Array.isArray(data)) {
+            movableHolidays = new Set(data);
+            console.log(`Carregados ${data.length} feriados móveis.`);
+        }
+      }
+    } catch (e) {
+      console.log("Arquivo feriados.json não encontrado. Usando apenas fixos.");
+    }
+  }
+  loadHolidayJson(); // Chama ao iniciar
 
   // --- FUNÇÃO AUXILIAR DE VISIBILIDADE (NOVO) ---
   function toggleHeaderButtons(show) {
@@ -1635,6 +1744,11 @@ window.onload = function () {
     // 1. Carrega e Prepara os Dados
     // Filtra de allData para ter todo o histórico (ou filteredData se quiser respeitar os filtros de data)
     currentAnalystData = [...filteredData];
+
+    // RESETAR ORDENAÇÃO VISUAL E LÓGICA
+    currentSort = { col: 'dataAnalise', direction: 'desc' }; // Padrão: Mais recentes primeiro
+    updateSortIcons(); // Atualiza as setinhas para refletir o reset
+
     // Ordena: Mais recentes primeiro
     currentAnalystData.sort((a, b) => {
       const dateA = a._dataAnalise ? a._dataAnalise.getTime() : 0;
@@ -1647,7 +1761,7 @@ window.onload = function () {
     renderAnalystTable();
   }
 
-  function renderAnalystTable() {
+function renderAnalystTable() {
     // Verifica se há dados
     if (currentAnalystData.length === 0) {
       analystTableContainer.classList.add("hidden");
@@ -1674,12 +1788,75 @@ window.onload = function () {
     const endIndex = startIndex + itemsPerPage;
     const pageData = currentAnalystData.slice(startIndex, endIndex);
 
+    // --- HELPER LOCAL: Formata Texto (agora recebe ms direto) ---
+    function formatDurationText(diffMs) {
+        if (diffMs < 0) return "0m";
+
+        const minutesTotal = Math.floor(diffMs / 60000);
+        const hoursTotal = Math.floor(minutesTotal / 60);
+        const days = Math.floor(hoursTotal / 24);
+        const hours = hoursTotal % 24;
+        const minutes = minutesTotal % 60;
+
+        if (days > 0) return `${days}d ${hours}h`; // Removi o "(útil)" pois o badge já indica status
+        if (hours > 0) return `${hours}h ${minutes}m`;
+        return `${minutes}m`;
+    }
+    // ------------------------------------------------------------
+
     // Renderiza Linhas
     analystTableBody.innerHTML = "";
+    
     pageData.forEach((row) => {
       const dataFormatada = row._dataAnalise
         ? _native_formatDate(row._dataAnalise, "dd/MM/yy")
         : "N/A";
+
+    // --- NOVA LÓGICA DE COR DA DATA ---
+    const statusDia = getDayStatus(row._dataAnalise);
+    
+    // Cor padrão: cinza. Se for FDS ou Feriado: #380000 (Vermelho Escuro/Preto)
+    let dateColorClass = "text-gray-500";
+    let dateTitle = ""; // Tooltip nativo
+
+      if (statusDia.isWeekend || statusDia.isFixed || statusDia.isMovable) {
+          dateColorClass = "text-[#380000]"; // Tailwind Arbitrary Value
+          
+          if (statusDia.isWeekend) dateTitle = "Fim de Semana";
+          else if (statusDia.isFixed) dateTitle = "Feriado Fixo";
+          else if (statusDia.isMovable) dateTitle = "Feriado Cadastrado";
+      }
+
+      // 1. CALCULA O TEMPO ÚTIL (Em milissegundos) usando a função que criamos no passo anterior
+      const rawDiff = _calcBusinessTimeDiff(row._dataSolicitacao, row._dataAnalise);
+      
+      // 2. FORMATA O TEXTO PARA EXIBIÇÃO
+      const tempoTexto = formatDurationText(rawDiff);
+
+      // 3. LÓGICA DO TERMÔMETRO (Cores)
+      const oneDayMs = 24 * 60 * 60 * 1000;
+      
+      let badgeClass = "";
+      
+      // Regra:
+      // <= 2 dias: Verde
+      // > 2 e <= 4 dias: Amarelo
+      // > 4 e <= 5 dias: Laranja
+      // > 5 dias: Vermelho
+      
+      if (rawDiff <= 2 * oneDayMs) {
+          // Até 2 dias: Verde (Ideal)
+          badgeClass = "bg-green-100 text-green-800 border border-green-200";
+      } else if (rawDiff <= 4 * oneDayMs) {
+          // De 2d até 4d: Amarelo (Atenção)
+          badgeClass = "bg-yellow-100 text-yellow-800 border border-yellow-200";
+      } else if (rawDiff <= 5 * oneDayMs) {
+          // De 4d até 5d: Laranja (Alerta)
+          badgeClass = "bg-orange-100 text-orange-800 border border-orange-200";
+      } else {
+          // Acima de 5 dias: Vermelho (Crítico)
+          badgeClass = "bg-red-100 text-red-800 border border-red-200";
+      }
 
       let statusClass = "text-gray-600";
       if (row["Situação Solicitação"] === "Deferida")
@@ -1693,7 +1870,16 @@ window.onload = function () {
 
       const tr = `
             <tr class="hover:bg-gray-50 transition-colors">
-                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${dataFormatada}</td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm ${dateColorClass}" title="${dateTitle}">
+                    ${dataFormatada}
+                </td>
+                
+                <td class="px-4 py-2 whitespace-nowrap">
+                    <span class="px-2 py-1 rounded-full text-xs font-semibold ${badgeClass}">
+                        ${tempoTexto}
+                    </span>
+                </td>
+
                 <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">${
                   row["CNPJ/CPF"] || ""
                 }</td>
@@ -1701,8 +1887,8 @@ window.onload = function () {
                   row["Razão Social/Nome"]
                 }">${row["Razão Social/Nome"] || ""}</td>
                 <td class="px-4 py-2 whitespace-nowrap text-sm ${statusClass}">${
-        row["Situação Solicitação"] || ""
-      }</td>
+                  row["Situação Solicitação"] || ""
+                }</td>
                 <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${
                   row["Tipo Solicitacão"] || ""
                 }</td>
@@ -1711,7 +1897,7 @@ window.onload = function () {
       analystTableBody.innerHTML += tr;
     });
 
-    // --- NOVA LÓGICA DE ATUALIZAÇÃO DE CONTROLES E CONTAGEM ---
+    // --- LÓGICA DE ATUALIZAÇÃO DE CONTROLES E CONTAGEM ---
 
     // 1. Atualiza Controles da Paginação
     pageInfo.textContent = `Pág ${currentPage} de ${totalPages}`;
@@ -1801,4 +1987,348 @@ window.onload = function () {
       );
     }
   });
+
+// --- GERENCIADOR DE FERIADOS E CALENDÁRIO VISUAL (Atualizado) ---
+  
+  const modalHolidays = document.getElementById("holidayModal");
+  const btnOpenHolidays = document.getElementById("btnOpenHolidays");
+  const btnCloseHolidays = document.getElementById("btnCloseHolidays");
+  const btnDownloadHolidays = document.getElementById("btnDownloadHolidays");
+  const holidayListDisplay = document.getElementById("holidayListDisplay");
+  const countHolidaysSpan = document.getElementById("countHolidays");
+
+  // Elementos do Calendário
+  const calGrid = document.getElementById("calGrid");
+  const calMonthYear = document.getElementById("calMonthYear");
+  const btnCalPrev = document.getElementById("calPrevMonth");
+  const btnCalNext = document.getElementById("calNextMonth");
+  const btnAddSelected = document.getElementById("btnAddSelected");
+
+  // Estado do Calendário
+  let calDate = new Date(); // Data visível no calendário
+  let tempHolidaysList = new Set(); // Lista salva (vermelha)
+  let pendingSelection = new Set(); // Seleção atual (azul)
+
+  // 1. Abertura do Modal
+  if(btnOpenHolidays) {
+      btnOpenHolidays.addEventListener("click", () => {
+          tempHolidaysList = new Set([...movableHolidays]); 
+          pendingSelection.clear(); // Limpa seleção pendente ao abrir
+          
+          // Tenta abrir o calendário no ano dos dados, se houver
+          if(allData.length > 0 && allData[0]._dataAnalise) {
+              calDate = new Date(allData[0]._dataAnalise);
+          } else {
+              calDate = new Date();
+          }
+          calDate.setDate(1); // Sempre dia 1 para evitar bugs de virada de mês
+
+          renderHolidayList();
+          renderCalendar();
+          modalHolidays.classList.remove("hidden");
+      });
+  }
+
+  if(btnCloseHolidays) {
+      btnCloseHolidays.addEventListener("click", () => modalHolidays.classList.add("hidden"));
+  }
+
+  // 2. Navegação do Calendário
+  if(btnCalPrev) btnCalPrev.addEventListener("click", () => changeMonth(-1));
+  if(btnCalNext) btnCalNext.addEventListener("click", () => changeMonth(1));
+
+  function changeMonth(delta) {
+      calDate.setMonth(calDate.getMonth() + delta);
+      renderCalendar();
+  }
+
+  // 3. Renderização do Calendário (Lógica Principal)
+  function renderCalendar() {
+      if(!calGrid) return;
+      calGrid.innerHTML = "";
+      
+      const year = calDate.getFullYear();
+      const month = calDate.getMonth();
+      
+      // Atualiza Título
+      const monthNames = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+      calMonthYear.textContent = `${monthNames[month]} ${year}`;
+
+      // Cálculos de dias
+      const firstDayOfMonth = new Date(year, month, 1).getDay(); // 0-6
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      // Espaços vazios antes do dia 1
+      for(let i=0; i<firstDayOfMonth; i++) {
+          const emptyCell = document.createElement("div");
+          calGrid.appendChild(emptyCell);
+      }
+
+      // Renderiza os dias
+      for(let d=1; d<=daysInMonth; d++) {
+          const currentDate = new Date(year, month, d);
+          const yyyy_mm_dd = _native_formatDate(currentDate, "yyyy-MM-dd");
+          
+          // Reutiliza a função getDayStatus que já existe no seu código
+          // Precisamos criar um objeto temporário simulando movableHolidays para a visualização correta
+          // ou verificar manualmente aqui
+          const isWeekend = currentDate.getDay() === 0 || currentDate.getDay() === 6;
+          const dd_mm = _native_formatDate(currentDate, "yyyy-MM-dd").substring(5);
+          const isFixed = FIXED_HOLIDAYS.has(dd_mm);
+          
+          const isSaved = tempHolidaysList.has(yyyy_mm_dd);
+          const isSelected = pendingSelection.has(yyyy_mm_dd);
+
+          const btn = document.createElement("button");
+          btn.textContent = d;
+          
+          // Base style
+          let classes = ["h-10", "w-full", "rounded-lg", "text-sm", "flex", "items-center", "justify-center", "transition-all", "relative"];
+
+          if (isSelected) {
+              // AZUL (Novo Selecionado)
+              classes.push("bg-blue-600", "text-white", "font-bold", "shadow-md", "scale-105");
+          } else if (isSaved) {
+              // VERMELHO (Já Salvo no JSON)
+              classes.push("bg-red-500", "text-white", "hover:bg-red-600", "font-medium");
+          } else if (isFixed) {
+              // LARANJA (Feriado Fixo)
+              classes.push("bg-orange-200", "text-orange-900", "font-bold", "border", "border-orange-300");
+              btn.title = "Feriado Fixo (Nacional/Local)";
+          } else if (isWeekend) {
+              // CINZA (Fim de Semana)
+              classes.push("bg-gray-100", "text-gray-400");
+          } else {
+              // BRANCO (Dia Útil)
+              classes.push("bg-white", "text-gray-700", "border", "hover:bg-gray-50", "hover:border-blue-300");
+          }
+
+          btn.className = classes.join(" ");
+
+          // Evento de Clique
+          btn.addEventListener("click", () => toggleDateSelection(yyyy_mm_dd));
+          
+          calGrid.appendChild(btn);
+      }
+      
+      // Atualiza botão de adicionar
+      if(btnAddSelected) {
+          btnAddSelected.textContent = pendingSelection.size > 0 
+            ? `Adicionar ${pendingSelection.size} dia(s) à lista` 
+            : "Selecione dias no calendário";
+          btnAddSelected.disabled = pendingSelection.size === 0;
+          
+          if(pendingSelection.size > 0) {
+              btnAddSelected.classList.remove("bg-gray-400");
+              btnAddSelected.classList.add("bg-blue-600");
+          } else {
+              btnAddSelected.classList.add("bg-gray-400");
+              btnAddSelected.classList.remove("bg-blue-600");
+          }
+      }
+  }
+
+  function toggleDateSelection(dateStr) {
+      // Se clicar em um dia que JÁ é salvo (Vermelho), pergunta se quer remover
+      if (tempHolidaysList.has(dateStr)) {
+          if(confirm(`Remover o feriado de ${dateStr}?`)) {
+              tempHolidaysList.delete(dateStr);
+              renderHolidayList();
+              renderCalendar();
+          }
+          return;
+      }
+
+      // Toggle seleção (Azul)
+      if (pendingSelection.has(dateStr)) {
+          pendingSelection.delete(dateStr);
+      } else {
+          pendingSelection.add(dateStr);
+      }
+      renderCalendar();
+  }
+
+  // 4. Botão "Adicionar Selecionados"
+  if(btnAddSelected) {
+      btnAddSelected.addEventListener("click", () => {
+          pendingSelection.forEach(date => tempHolidaysList.add(date));
+          pendingSelection.clear();
+          renderHolidayList();
+          renderCalendar();
+      });
+  }
+
+  // 5. Lista Lateral
+  function renderHolidayList() {
+      if(!holidayListDisplay) return;
+      holidayListDisplay.innerHTML = "";
+      
+      if(countHolidaysSpan) countHolidaysSpan.textContent = tempHolidaysList.size;
+
+      const sorted = [...tempHolidaysList].sort();
+      
+      if(sorted.length === 0) {
+          holidayListDisplay.innerHTML = `
+            <div class="text-center p-4 text-gray-400 flex flex-col items-center">
+                <span class="text-2xl mb-2">📅</span>
+                <p>Nenhum feriado extra cadastrado.</p>
+            </div>`;
+          return;
+      }
+
+      sorted.forEach(date => {
+          const li = document.createElement("li");
+          li.className = "flex justify-between items-center bg-white p-3 rounded shadow-sm border-l-4 border-red-500 hover:bg-gray-50 transition-colors";
+          
+          // Formata data amigável
+          const dt = _native_safeParseDate(date);
+          const diaSemana = dt ? dt.toLocaleDateString('pt-BR', { weekday: 'short' }) : '';
+          const dataFormatada = _native_formatDate(dt, "dd/MM/yy");
+
+          li.innerHTML = `
+            <div class="flex flex-col">
+                <span class="font-bold text-gray-800">${dataFormatada}</span>
+                <span class="text-xs text-gray-500 uppercase">${diaSemana}</span>
+            </div>
+            <button class="text-gray-400 hover:text-red-600 transition-colors p-2" title="Remover" data-val="${date}">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+            </button>
+          `;
+          
+          li.querySelector("button").addEventListener("click", (e) => {
+              const val = e.currentTarget.dataset.val;
+              tempHolidaysList.delete(val);
+              renderHolidayList();
+              renderCalendar(); // Atualiza grid para remover o vermelho
+          });
+          holidayListDisplay.appendChild(li);
+      });
+  }
+
+  // 6. Botão Salvar e Baixar
+  if(btnDownloadHolidays) {
+      btnDownloadHolidays.addEventListener("click", () => {
+          const dataToExport = [...tempHolidaysList].sort();
+          const jsonString = JSON.stringify(dataToExport, null, 2);
+          const blob = new Blob([jsonString], { type: "application/json" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "feriados.json";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          
+          // Atualiza a memória global
+          movableHolidays = tempHolidaysList;
+          modalHolidays.classList.add("hidden");
+          
+          // Feedback e Atualização
+          alert("Lista de feriados atualizada! O Dashboard será recalculado agora.");
+          updateDashboard(); // Recalcula a tabela imediatamente
+      });
+  }
+
+  //----------------------------------------------------------------------------------------//
+  //----------------------------------------------------------------------------------------//
+
+  // --- LÓGICA DE ORDENAÇÃO DA TABELA DE ANALISTAS ---
+
+  // Adiciona eventos de clique aos cabeçalhos
+  const headers = document.querySelectorAll('#analyst-detail-section th[data-col]');
+  headers.forEach(th => {
+      th.addEventListener('click', () => {
+          const col = th.getAttribute('data-col');
+          handleSort(col);
+      });
+  });
+
+  function handleSort(column) {
+      // 1. Define a direção (inverte se clicar na mesma coluna)
+      if (currentSort.col === column) {
+          currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+      } else {
+          currentSort.col = column;
+          currentSort.direction = 'asc'; // Padrão ao clicar em nova coluna
+      }
+
+      // 2. Atualiza Ícones Visuais
+      updateSortIcons();
+
+      // 3. Executa a Ordenação no Array de Dados (currentAnalystData)
+      currentAnalystData.sort((a, b) => {
+          let valA, valB;
+
+          // Extrai os valores baseado na coluna
+          switch (column) {
+              case 'dataAnalise':
+                  valA = a._dataAnalise ? a._dataAnalise.getTime() : 0;
+                  valB = b._dataAnalise ? b._dataAnalise.getTime() : 0;
+                  break;
+              
+              case 'tempo':
+                  // Usa a mesma função de cálculo de dias úteis para ordenar
+                  valA = _calcBusinessTimeDiff(a._dataSolicitacao, a._dataAnalise);
+                  valB = _calcBusinessTimeDiff(b._dataSolicitacao, b._dataAnalise);
+                  break;
+
+              case 'cnpj':
+                  // Remove pontuação para ordenar como número puro
+                  const cleanA = (a["CNPJ/CPF"] || "").replace(/\D/g, '');
+                  const cleanB = (b["CNPJ/CPF"] || "").replace(/\D/g, '');
+                  // Compara como números se possível, senão string
+                  valA = cleanA ? Number(cleanA) : 0;
+                  valB = cleanB ? Number(cleanB) : 0;
+                  break;
+
+              case 'razao':
+                  valA = (a["Razão Social/Nome"] || "").toLowerCase();
+                  valB = (b["Razão Social/Nome"] || "").toLowerCase();
+                  break;
+
+              case 'situacao':
+                  valA = (a["Situação Solicitação"] || "").toLowerCase();
+                  valB = (b["Situação Solicitação"] || "").toLowerCase();
+                  break;
+
+              case 'tipo':
+                  valA = (a["Tipo Solicitacão"] || "").toLowerCase();
+                  valB = (b["Tipo Solicitacão"] || "").toLowerCase();
+                  break;
+
+              default:
+                  return 0;
+          }
+
+          // Comparação Genérica
+          if (valA < valB) return currentSort.direction === 'asc' ? -1 : 1;
+          if (valA > valB) return currentSort.direction === 'asc' ? 1 : -1;
+          return 0;
+      });
+
+      // 4. Volta para a página 1 e renderiza
+      currentPage = 1;
+      renderAnalystTable();
+  }
+
+  function updateSortIcons() {
+      headers.forEach(th => {
+          const col = th.getAttribute('data-col');
+          const iconSpan = th.querySelector('.sort-icon');
+          
+          if (col === currentSort.col) {
+              // Coluna ativa: mostra seta correta
+              iconSpan.textContent = currentSort.direction === 'asc' ? '↑' : '↓';
+              iconSpan.classList.add('text-blue-600', 'font-bold');
+              iconSpan.classList.remove('text-gray-400');
+          } else {
+              // Coluna inativa: mostra neutro
+              iconSpan.textContent = '⇅';
+              iconSpan.classList.remove('text-blue-600', 'font-bold');
+              iconSpan.classList.add('text-gray-400');
+          }
+      });
+  }
 }; // FECHA O window.onload
