@@ -59,7 +59,7 @@
       class="max-w-5xl mx-auto w-full mb-8 animate-fade-in-down"
       style="animation-delay: 100ms"
     >
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div
           class="bg-white h-24 rounded-xl shadow-sm border border-gray-100 animate-pulse"
         ></div>
@@ -307,6 +307,41 @@
         </a>
       </div>
     </footer>
+
+    <div id="family-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50 backdrop-blur-sm transition-opacity">
+    <div class="bg-white w-full max-w-5xl h-[90vh] rounded-xl shadow-2xl flex flex-col overflow-hidden m-4 animate-fade-in-down">
+      <div class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+        <h3 class="font-bold text-gray-700 flex items-center gap-2 text-lg">📂 Qualificação Técnica</h3>
+        <div class="flex items-center gap-2">
+            <button id="btn-import-family" class="text-gray-400 hover:text-blue-600 p-2 rounded hover:bg-blue-50 transition-colors" title="Importar arquivo"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg></button>
+            <input type="file" id="family-file-input" class="hidden" accept=".csv, .json">
+            <button id="btn-close-family" class="text-gray-400 hover:text-red-500 text-2xl px-2">&times;</button>
+        </div>
+      </div>
+      <div class="p-4 border-b border-gray-100 bg-white flex flex-col md:flex-row gap-3 items-center">
+        <div class="relative w-full">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">🔍</span>
+            <input type="text" id="family-search" placeholder="Pesquisar família ou descrição..." 
+              class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-400 text-sm">
+        </div>
+        
+        <select id="family-filter-type" class="w-full md:w-48 px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-400 text-sm bg-white text-gray-700 cursor-pointer">
+            <option value="">Todos os Tipos</option>
+            <option value="M">📦 Materiais</option>
+            <option value="S">🛠️ Serviços</option>
+        </select>
+      </div>
+      <div id="family-grid" class="flex-1 overflow-y-auto p-4 bg-gray-50/50 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 content-start"></div>
+      <div class="p-3 border-t border-gray-100 bg-white flex justify-between items-center">
+         <span id="family-info" class="text-xs text-gray-500 font-medium">Carregando...</span>
+         <div class="flex gap-2">
+             <button id="btn-prev-page" class="px-3 py-1 text-sm border rounded hover:bg-gray-100 disabled:opacity-50">Ant.</button>
+             <span id="page-indicator" class="px-2 py-1 text-sm font-mono text-gray-600 self-center">1</span>
+             <button id="btn-next-page" class="px-3 py-1 text-sm border rounded hover:bg-gray-100 disabled:opacity-50">Próx.</button>
+         </div>
+      </div>
+    </div>
+    </div>
 
     <script src="script.js"></script>
   </body>
