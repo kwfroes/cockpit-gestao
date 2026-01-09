@@ -199,17 +199,31 @@ const STATS_CONFIG = {
   dashboard: {
     titulo: "Operacional",
     cor: "text-blue-600 bg-blue-50 border-blue-100",
+    hoverBorder: "hover:border-blue-400",
     icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>`,
   },
   gerador: {
     titulo: "Mensagens",
     cor: "text-indigo-600 bg-indigo-50 border-indigo-100",
+    hoverBorder: "hover:border-indigo-400",
     icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>`,
   },
   contratos: {
     titulo: "Contratos",
     cor: "text-emerald-600 bg-emerald-50 border-emerald-100",
+    hoverBorder: "hover:border-emerald-400",
     icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>`,
+  },
+  familias: {
+    titulo: "Qualificação",
+    cor: "text-amber-600 bg-amber-50 border-amber-100",
+    hoverBorder: "hover:border-amber-400",
+    icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4z" />
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M9 12l2 2 4-4" />
+    </svg>`
   },
   //conversor: {
   //  titulo: "Arquivos",
@@ -239,7 +253,8 @@ function renderStats() {
     contratos: JSON.parse(localStorage.getItem("stats_contratos") || "{}"),
     gerador: JSON.parse(localStorage.getItem("stats_gerador") || "{}"),
     dashboard: JSON.parse(localStorage.getItem("stats_dashboard") || "{}"),
-    conversor: JSON.parse(localStorage.getItem("stats_conversor") || "{}"),
+    familias: JSON.parse(localStorage.getItem("stats_familias") || "{}"),
+    //conversor: JSON.parse(localStorage.getItem("stats_conversor") || "{}"),
   };
 
   // Definição dos Dados dos Cards
@@ -277,6 +292,13 @@ function renderStats() {
              ${stats.contratos.qtdPagamentos || 0} pagamentos
            </span>`,
     },
+    {
+      id: "stats-card-familias", // ID para o clique
+      ...STATS_CONFIG.familias,
+      principal: (stats.familias.total || 0).toLocaleString("pt-BR"),
+      label: "Famílias",
+      sub: `${stats.familias.docsUnicos || 0} documentos únicos`,
+    },
     //{
     //  ...STATS_CONFIG.conversor,
     //  principal: stats.conversor.merges || 0,
@@ -286,28 +308,31 @@ function renderStats() {
   ];
 
   // Construção do HTML
-  let html = `<div class="grid grid-cols-1 md:grid-cols-3 gap-6">`;
+  let html = `<div class="grid grid-cols-1 md:grid-cols-4 gap-6">`;
 
-  cardsData.forEach((card) => {
+cardsData.forEach((card) => {
+
+    // 1. Define o cursor (apenas Famílias é clicável)
+    const cursorClass = card.id ? "cursor-pointer" : "cursor-default";
+    
+    // 2. Define a borda hover (agora todos têm a sua cor específica)
+    const hoverBorderClass = card.hoverBorder || "hover:border-gray-300";
+    
+    const idAttr = card.id ? `id="${card.id}"` : "";
+
     html += `
-      <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition-shadow duration-200">
+      <div ${idAttr} class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition-all duration-200 hover:scale-[1.10] hover:z-10 ${cursorClass} ${hoverBorderClass}">
         <div class="flex items-start justify-between mb-2">
-           <div class="p-2 rounded-lg ${card.cor} bg-opacity-20">
+           <div class="p-2 rounded-lg border ${card.cor}">
              ${card.icone}
            </div>
-           <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">${
-             card.titulo
-           }</span>
+           <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">${card.titulo}</span>
         </div>
         
         <div>
           <div class="flex items-baseline gap-1">
-             <span class="text-2xl font-bold text-gray-800">${
-               card.principal
-             }</span>
-             <span class="text-xs text-gray-500 font-medium">${
-               card.label
-             }</span>
+             <span class="text-2xl font-bold text-gray-800">${card.principal}</span>
+             <span class="text-xs text-gray-500 font-medium">${card.label}</span>
           </div>
           <div class="mt-1 text-xs text-gray-400 truncate">
              ${card.subHtml ? card.subHtml : card.sub}
@@ -779,4 +804,202 @@ document.addEventListener("DOMContentLoaded", () => {
 
   ELEMENTS.container.style.cursor = "help";
   updateQuote();
+})();
+
+// ==========================================================
+// MÓDULO FAMÍLIAS & ESTATÍSTICAS
+// ==========================================================
+(function initFamilyModule() {
+    let familyData = [];
+    let currentPage = 1;
+    const itemsPerPage = 9;
+
+    // Elementos do Modal
+    const modal = document.getElementById("family-modal");
+    const grid = document.getElementById("family-grid");
+    
+    // 1. Função para Calcular Stats (Total Famílias e Docs Únicos)
+    function calculateAndSaveStats(data) {
+        if (!data || data.length === 0) return;
+        
+        const allDocs = new Set();
+        data.forEach(item => {
+            // Lógica simplificada para extrair documentos das strings
+            const docStrings = [
+                ...(item["DOCUMENTOS EXIGIDOS"] || item["Documentos Exigidos"] || []),
+                ...(item["DOCUMENTOS ELEGÍVEIS"] || item["Documentos Elegíveis"] || [])
+            ];
+            docStrings.forEach(doc => allDocs.add(doc.trim()));
+        });
+
+        const stats = {
+            total: data.length,
+            docsUnicos: allDocs.size
+        };
+        
+        localStorage.setItem("stats_familias", JSON.stringify(stats));
+        // Chama o renderStats global para atualizar a tela
+        if (typeof renderStats === 'function') renderStats();
+    }
+
+    // 2. Carregamento Inicial (Para pegar os números do card)
+    function loadData() {
+        fetch('qualificacao_tecnica.json')
+            .then(res => res.ok ? res.json() : [])
+            .then(data => {
+                familyData = data;
+                calculateAndSaveStats(data);
+            })
+            .catch(err => console.error("Erro ao carregar qualificacao.json", err));
+    }
+    
+    // Inicia carregamento ao abrir o app
+    loadData();
+
+    // 3. Configuração do Evento de Clique no Card (Delegated Event)
+    // Usamos delegated event porque o card é recriado pelo renderStats
+    document.addEventListener('click', function(e) {
+        const card = e.target.closest('#stats-card-familias');
+        if (card) {
+            openModal();
+        }
+    });
+
+    // 4. Funções do Modal (Simplificadas para o contexto)
+    function openModal() {
+        modal.classList.remove("hidden");
+        renderGrid(familyData); // Renderiza com os dados já carregados
+        
+        // Setup dos botões internos do modal
+        document.getElementById("btn-close-family").onclick = () => modal.classList.add("hidden");
+        
+    // 1. Pegamos as referências dos dois campos
+    const searchInput = document.getElementById("family-search");
+    const typeFilter = document.getElementById("family-filter-type");
+
+    // 2. Criamos uma função única que aplica OS DOIS filtros ao mesmo tempo
+function applyFilters() {
+        // Se os elementos não existirem, aborta
+        if (!searchInput || !typeFilter) return;
+
+        const term = searchInput.value.toLowerCase();
+        const type = typeFilter.value; 
+
+        const filtered = familyData.filter(item => {
+            // --- 1. Preparação dos Documentos (ISTO ESTAVA FALTANDO AQUI) ---
+            const rawExigidos = item["DOCUMENTOS EXIGIDOS"] || item["Documentos Exigidos"] || [];
+            const rawElegiveis = item["DOCUMENTOS ELEGÍVEIS"] || item["Documentos Elegíveis"] || [];
+
+            // Transforma arrays em texto corrido para busca
+            const strExigidos = Array.isArray(rawExigidos) ? rawExigidos.join(" ") : String(rawExigidos);
+            const strElegiveis = Array.isArray(rawElegiveis) ? rawElegiveis.join(" ") : String(rawElegiveis);
+
+            // --- 2. Filtro de Texto Expandido ---
+            const textMatch = 
+                String(item["Família"] || item["Familia"] || "").toLowerCase().includes(term) ||
+                String(item["Descrição"] || item["Descricao"] || "").toLowerCase().includes(term) ||
+                strExigidos.toLowerCase().includes(term) ||  // Busca nos exigidos
+                strElegiveis.toLowerCase().includes(term);   // Busca nos elegíveis
+            
+            // --- 3. Filtro de Tipo ---
+            const itemTipo = item["Tipo"] || ""; 
+            const typeMatch = type === "" || itemTipo === type;
+
+            return textMatch && typeMatch;
+        });
+
+        currentPage = 1;
+        renderGrid(filtered);
+    }
+
+    // 3. Ligamos a função aos eventos
+    if (searchInput) searchInput.oninput = applyFilters; // Ao digitar
+    if (typeFilter) typeFilter.onchange = applyFilters;  // Ao mudar o select
+        
+        // Paginação
+        document.getElementById("btn-prev-page").onclick = () => { if(currentPage > 1) { currentPage--; renderGrid(familyData); }};
+        document.getElementById("btn-next-page").onclick = () => { currentPage++; renderGrid(familyData); };
+    }
+
+function renderGrid(data) {
+        grid.innerHTML = "";
+        
+        // Paginação
+        const start = (currentPage - 1) * itemsPerPage;
+        const pageItems = data.slice(start, start + itemsPerPage);
+        
+        const infoEl = document.getElementById("family-info");
+        if(infoEl) infoEl.textContent = `${data.length} registros • Pág ${currentPage}`;
+
+        if (data.length === 0) {
+            grid.innerHTML = `<div class="col-span-full text-center py-8 text-gray-400 italic">Nenhum registro encontrado para os filtros.</div>`;
+            return;
+        }
+
+        pageItems.forEach(item => {
+            const familia = item["Família"] || item["Familia"] || "?";
+            const descricao = item["Descrição"] || item["Descricao"] || "Sem descrição";
+            let exigidos = item["DOCUMENTOS EXIGIDOS"] || item["Documentos Exigidos"] || [];
+            let elegiveis = item["DOCUMENTOS ELEGÍVEIS"] || item["Documentos Elegíveis"] || [];
+            
+            // Tratamento de fallback
+            if (typeof exigidos === 'string') exigidos = [exigidos];
+            if (typeof elegiveis === 'string') elegiveis = [elegiveis];
+
+            // --- LÓGICA DO TIPO (NOVO) ---
+            const tipo = item["Tipo"]; // "M" ou "S"
+            let badgeHtml = "";
+            let borderClass = "border-gray-200 hover:border-blue-300"; // Padrão
+
+            if (tipo === "M") {
+                badgeHtml = `<span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded bg-orange-100 text-orange-700 border border-orange-200 uppercase tracking-wider">📦 Material</span>`;
+                borderClass = "border-gray-200 hover:border-orange-400"; // Hover laranja
+            } else if (tipo === "S") {
+                badgeHtml = `<span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 border border-indigo-200 uppercase tracking-wider">🛠️ Serviço</span>`;
+                borderClass = "border-gray-200 hover:border-indigo-400"; // Hover roxo
+            }
+
+            // Criação do Card
+            const card = document.createElement("div");
+            card.className = `bg-white border ${borderClass} rounded-lg p-4 shadow-sm hover:shadow-md transition-all flex flex-col h-full`;
+            
+            const renderList = (list, colorClass, emptyText) => {
+                if (!list || list.length === 0) return `<span class="text-gray-400 italic text-xs ml-4 opacity-70">${emptyText}</span>`;
+                return `<ul class="space-y-1 mt-1 ml-1">${list.map(i => `<li class="text-xs text-gray-600 flex items-start gap-1.5"><span class="${colorClass} font-bold mt-0.5 text-[10px]">•</span> <span>${i}</span></li>`).join('')}</ul>`;
+            };
+
+            card.innerHTML = `
+                <div class="mb-3 pb-2 border-b border-gray-100">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-xs font-bold text-gray-500 uppercase tracking-wide">Família ${familia}</span>
+                        ${badgeHtml}
+                    </div>
+                    <h4 class="text-sm font-bold text-gray-800 leading-snug">${descricao}</h4>
+                </div>
+                <div class="flex-grow space-y-3">
+                    <div>
+                        <span class="text-[10px] font-bold text-red-600 uppercase flex items-center gap-1 mb-1">
+                           ⚠️ Obrigatórios
+                        </span>
+                        ${renderList(exigidos, "text-red-500", "Nenhum exigido")}
+                    </div>
+                    <div>
+                        <span class="text-[10px] font-bold text-green-600 uppercase flex items-center gap-1 mb-1">
+                           ✅ Elegíveis
+                        </span>
+                        ${renderList(elegiveis, "text-green-500", "Nenhum elegível")}
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // Input file logic (opcional, mantido simples)
+    const btnImport = document.getElementById("btn-import-family");
+    const fileInput = document.getElementById("family-file-input");
+    if(btnImport) {
+        btnImport.onclick = () => fileInput.click();
+        fileInput.onchange = (e) => { /* Lógica de parse igual ao anterior */ };
+    }
 })();
