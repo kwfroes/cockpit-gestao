@@ -371,6 +371,12 @@
                     <button id="btnAddSelected" class="mt-4 w-full bg-blue-600 text-white py-3 rounded-lg shadow font-bold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
                         Adicionar Dias Selecionados
                     </button>
+
+                    <div id="calFooter" class="mt-4 border-t border-gray-100 pt-3">
+                        <h5 class="text-xs font-bold text-gray-500 uppercase mb-2">Feriados neste mês:</h5>
+                        <ul id="calFooterList" class="space-y-1 text-sm text-gray-700">
+                            </ul>
+                    </div>
                 </div>
 
                 <div class="flex flex-col h-full bg-gray-50 rounded-lg p-4 border border-gray-100">
@@ -393,6 +399,22 @@
                         </p>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="nameModal" class="fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center z-[60] hidden">
+        <div class="bg-white rounded-lg shadow-2xl p-6 w-full max-w-md transform transition-all scale-100">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">Nome do Feriado</h3>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
+                <input type="text" id="inputHolidayName" class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" placeholder="Ex: Carnaval, Ponto Facultativo...">
+            </div>
+
+            <div class="flex justify-end gap-3">
+                <button id="btnCancelName" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-medium">Cancelar</button>
+                <button id="btnConfirmName" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-bold">Salvar</button>
             </div>
         </div>
     </div>
