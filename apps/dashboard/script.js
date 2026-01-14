@@ -69,7 +69,7 @@ window.onload = function () {
    * Calcula o tempo útil em milissegundos entre duas datas,
    * descontando Sábados, Domingos e Feriados (Fixos e Móveis).
    */
-  function _calcBusinessTimeDiff(start, end) {
+function _calcBusinessTimeDiff(start, end) {
     if (!start || !end) return 0;
     if (end < start) return 0;
 
@@ -91,15 +91,28 @@ window.onload = function () {
 
         const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
         const isFixedHoliday = FIXED_HOLIDAYS.has(dd_mm);
-        const isMovableHoliday = movableHolidays.has(yyyy_mm_dd);
+        
+        // --- INÍCIO DA ALTERAÇÃO SOLICITADA ---
+        
+        // 1. Verifica Feriado Manual (Salvo no JSON)
+        let isMovableHoliday = movableHolidays.has(yyyy_mm_dd);
+        
+        // 2. Verifica Feriado Calculado (Novo)
+        // Se ainda não achou, calcula os feriados daquele ano específico
+        if (!isMovableHoliday) {
+            const calculatedMap = getCalculatedHolidays(current.getFullYear());
+            if (calculatedMap.has(yyyy_mm_dd)) {
+                isMovableHoliday = true;
+            }
+        }
+
+        // --- FIM DA ALTERAÇÃO SOLICITADA ---
 
         // Se for dia não-útil
         if (isWeekend || isFixedHoliday || isMovableHoliday) {
             // Calcula quanto desse dia "ruim" está dentro do intervalo
-            // Início da sobreposição: O maior valor entre (InicioSolicitacao e InicioDoDia)
             const overlapStart = new Date(Math.max(start.getTime(), current.getTime()));
             
-            // Fim da sobreposição: O menor valor entre (FimAnalise e FimDoDia)
             const endOfDay = new Date(current);
             endOfDay.setHours(23, 59, 59, 999);
             const overlapEnd = new Date(Math.min(end.getTime(), endOfDay.getTime()));
@@ -115,7 +128,7 @@ window.onload = function () {
     }
 
     return Math.max(0, totalDuration);
-  }
+}
 
   /**
    * Retorna o início do dia para um objeto Date.
@@ -187,40 +200,94 @@ window.onload = function () {
   // --- LÓGICA DE FERIADOS E DIAS ÚTEIS ---
 
   // 1. Feriados Fixos (Dia-Mês) - Salvador/BA/Nacional
-  const FIXED_HOLIDAYS = new Set([
-    "01-01", // Confraternização Universal
-    "04-21", // Tiradentes
-    "05-01", // Dia do Trabalhador
-    "06-24", // São João (Salvador/BA)
-    "07-02", // Independência da Bahia
-    "09-07", // Independência do Brasil
-    "10-12", // N. Sra. Aparecida
-    "11-02", // Finados
-    "11-15", // Proclamação da República
-    "11-20", // Consciência Negra
-    "12-08", // Conceição da Praia (Salvador)
-    "12-25"  // Natal
+  const FIXED_HOLIDAYS = new Map([
+    ["01-01", "Confraternização Universal"],
+    ["04-21", "Tiradentes"],
+    ["05-01", "Dia do Trabalhador"],
+    ["06-24", "São João"],
+    ["07-02", "Independência da Bahia"],
+    ["09-07", "Independência do Brasil"],
+    ["10-12", "N. Sra. Aparecida"],
+    ["10-28", "Servidor Público"],
+    ["11-02", "Finados"],
+    ["11-15", "Proclamação da República"],
+    ["11-20", "Consciência Negra"],
+    ["12-08", "Conceição da Praia"],
+    ["12-25", "Natal"]
   ]);
 
   // 2. Feriados Móveis (Carregados do JSON)
-  let movableHolidays = new Set(); // Formato YYYY-MM-DD
+  let movableHolidays = new Map(); 
 
-  async function loadHolidayJson() {
-    try {
-      const response = await fetch("./feriados.json");
-      if (response.ok) {
-        const data = await response.json();
-        // Assume que o JSON é um array de strings ["2025-03-04", ...]
-        if (Array.isArray(data)) {
-            movableHolidays = new Set(data);
-            console.log(`Carregados ${data.length} feriados móveis.`);
+    async function loadHolidayJson() {
+      try {
+        const response = await fetch("./feriados.json");
+        if (response.ok) {
+          const data = await response.json();
+          
+          movableHolidays.clear();
+
+          if (Array.isArray(data)) {
+              // Suporte legado: Array de strings ["2025-01-01"]
+              data.forEach(dateStr => movableHolidays.set(dateStr, "Feriado Importado"));
+              console.log(`Carregados ${data.length} feriados (formato antigo).`);
+          } else {
+              // Novo formato: Objeto { "2025-01-01": "Carnaval" }
+              Object.entries(data).forEach(([k, v]) => movableHolidays.set(k, v));
+              console.log(`Carregados ${movableHolidays.size} feriados nomeados.`);
+          }
         }
+      } catch (e) {
+        console.log("Arquivo feriados.json não encontrado. Usando apenas fixos.");
       }
-    } catch (e) {
-      console.log("Arquivo feriados.json não encontrado. Usando apenas fixos.");
     }
+    loadHolidayJson(); // Chama ao iniciar
+
+
+    // --- 2.1 CALCULAR FERIADOS MÓVEIS (Meeus/Jones/Butcher) ---
+  function getCalculatedHolidays(ano) {
+      const holidaysMap = new Map();
+
+      // Algoritmo de Páscoa
+      const a = ano % 19;
+      const b = Math.floor(ano / 100);
+      const c = ano % 100;
+      const d = Math.floor(b / 4);
+      const e = b % 4;
+      const f = Math.floor((b + 8) / 25);
+      const g = Math.floor((b - f + 1) / 3);
+      const h = (19 * a + b - d - g + 15) % 30;
+      const i = Math.floor(c / 4);
+      const k = c % 4;
+      const l = (32 + 2 * e + 2 * i - h - k) % 7;
+      const m = Math.floor((a + 11 * h + 22 * l) / 451);
+      const mes = Math.floor((h + l - 7 * m + 114) / 31);
+      const dia = ((h + l - 7 * m + 114) % 31) + 1;
+
+      const pascoa = new Date(ano, mes - 1, dia);
+
+      // Helper para formatar YYYY-MM-DD
+      const addDays = (date, days) => {
+          const result = new Date(date);
+          result.setDate(result.getDate() + days);
+          // Formatação manual segura para evitar problemas de fuso horário UTC
+          const y = result.getFullYear();
+          const m = (result.getMonth() + 1).toString().padStart(2, '0');
+          const d = result.getDate().toString().padStart(2, '0');
+          return `${y}-${m}-${d}`;
+      };
+
+      // Adiciona ao Map
+      holidaysMap.set(addDays(pascoa, -51), "Carnaval (Sexta) - Facultativo"); // Nova linha
+      holidaysMap.set(addDays(pascoa, -48), "Carnaval (Segunda) - Facultativo"); // Nova linha
+      holidaysMap.set(addDays(pascoa, -47), "Carnaval (Terça)");
+      holidaysMap.set(addDays(pascoa, -46), "Quarta de Cinzas");
+      holidaysMap.set(addDays(pascoa, -2), "Sexta-feira Santa");
+      holidaysMap.set(addDays(pascoa, 0), "Páscoa");
+      holidaysMap.set(addDays(pascoa, 60), "Corpus Christi");
+
+      return holidaysMap;
   }
-  loadHolidayJson(); // Chama ao iniciar
 
   // --- FUNÇÃO AUXILIAR DE VISIBILIDADE (NOVO) ---
   function toggleHeaderButtons(show) {
@@ -1988,248 +2055,345 @@ function renderAnalystTable() {
     }
   });
 
-// --- GERENCIADOR DE FERIADOS E CALENDÁRIO VISUAL (Atualizado) ---
-  
-  const modalHolidays = document.getElementById("holidayModal");
-  const btnOpenHolidays = document.getElementById("btnOpenHolidays");
-  const btnCloseHolidays = document.getElementById("btnCloseHolidays");
-  const btnDownloadHolidays = document.getElementById("btnDownloadHolidays");
-  const holidayListDisplay = document.getElementById("holidayListDisplay");
-  const countHolidaysSpan = document.getElementById("countHolidays");
+// --- GERENCIADOR DE FERIADOS E CALENDÁRIO VISUAL (Atualizado com Modal de Nome) ---
 
-  // Elementos do Calendário
-  const calGrid = document.getElementById("calGrid");
-  const calMonthYear = document.getElementById("calMonthYear");
-  const btnCalPrev = document.getElementById("calPrevMonth");
-  const btnCalNext = document.getElementById("calNextMonth");
-  const btnAddSelected = document.getElementById("btnAddSelected");
+const modalHolidays = document.getElementById("holidayModal");
+const btnOpenHolidays = document.getElementById("btnOpenHolidays");
+const btnCloseHolidays = document.getElementById("btnCloseHolidays");
+const btnDownloadHolidays = document.getElementById("btnDownloadHolidays");
+const holidayListDisplay = document.getElementById("holidayListDisplay");
+const countHolidaysSpan = document.getElementById("countHolidays");
 
-  // Estado do Calendário
-  let calDate = new Date(); // Data visível no calendário
-  let tempHolidaysList = new Set(); // Lista salva (vermelha)
-  let pendingSelection = new Set(); // Seleção atual (azul)
+// Elementos do Calendário
+const calGrid = document.getElementById("calGrid");
+const calMonthYear = document.getElementById("calMonthYear");
+const btnCalPrev = document.getElementById("calPrevMonth");
+const btnCalNext = document.getElementById("calNextMonth");
+const btnAddSelected = document.getElementById("btnAddSelected");
 
-  // 1. Abertura do Modal
-  if(btnOpenHolidays) {
-      btnOpenHolidays.addEventListener("click", () => {
-          tempHolidaysList = new Set([...movableHolidays]); 
-          pendingSelection.clear(); // Limpa seleção pendente ao abrir
-          
-          // Tenta abrir o calendário no ano dos dados, se houver
-          if(allData.length > 0 && allData[0]._dataAnalise) {
-              calDate = new Date(allData[0]._dataAnalise);
-          } else {
-              calDate = new Date();
-          }
-          calDate.setDate(1); // Sempre dia 1 para evitar bugs de virada de mês
+// --- NOVOS ELEMENTOS DO MODAL DE NOME ---
+const nameModal = document.getElementById("nameModal");
+const inputHolidayName = document.getElementById("inputHolidayName");
+const btnCancelName = document.getElementById("btnCancelName");
+const btnConfirmName = document.getElementById("btnConfirmName");
 
-          renderHolidayList();
-          renderCalendar();
-          modalHolidays.classList.remove("hidden");
-      });
-  }
+// Estado do Calendário
+let calDate = new Date(); 
+let tempHolidaysMap = new Map(); 
+let pendingSelection = new Set(); 
+let onNameConfirmAction = null; // Variável para o callback do modal
 
-  if(btnCloseHolidays) {
-      btnCloseHolidays.addEventListener("click", () => modalHolidays.classList.add("hidden"));
-  }
+// --- LÓGICA DO MODAL DE NOME ---
+function openNameModal(initialValue, callback) {
+    inputHolidayName.value = initialValue || "";
+    onNameConfirmAction = callback;
+    nameModal.classList.remove("hidden");
+    setTimeout(() => inputHolidayName.focus(), 100);
+}
 
-  // 2. Navegação do Calendário
-  if(btnCalPrev) btnCalPrev.addEventListener("click", () => changeMonth(-1));
-  if(btnCalNext) btnCalNext.addEventListener("click", () => changeMonth(1));
+function closeNameModal() {
+    nameModal.classList.add("hidden");
+    onNameConfirmAction = null;
+}
 
-  function changeMonth(delta) {
-      calDate.setMonth(calDate.getMonth() + delta);
-      renderCalendar();
-  }
+if(btnCancelName) btnCancelName.addEventListener("click", closeNameModal);
 
-  // 3. Renderização do Calendário (Lógica Principal)
-  function renderCalendar() {
-      if(!calGrid) return;
-      calGrid.innerHTML = "";
-      
-      const year = calDate.getFullYear();
-      const month = calDate.getMonth();
-      
-      // Atualiza Título
-      const monthNames = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
-      calMonthYear.textContent = `${monthNames[month]} ${year}`;
+if(btnConfirmName) {
+    btnConfirmName.addEventListener("click", () => {
+        const name = inputHolidayName.value.trim();
+        if (name && onNameConfirmAction) {
+            onNameConfirmAction(name);
+            closeNameModal();
+        } else if (!name) {
+            alert("Por favor, digite um nome.");
+            inputHolidayName.focus();
+        }
+    });
+}
 
-      // Cálculos de dias
-      const firstDayOfMonth = new Date(year, month, 1).getDay(); // 0-6
-      const daysInMonth = new Date(year, month + 1, 0).getDate();
+if(inputHolidayName) {
+    inputHolidayName.addEventListener("keyup", (e) => {
+        if(e.key === "Enter") btnConfirmName.click();
+    });
+}
 
-      // Espaços vazios antes do dia 1
-      for(let i=0; i<firstDayOfMonth; i++) {
-          const emptyCell = document.createElement("div");
-          calGrid.appendChild(emptyCell);
-      }
+// 1. Abertura do Modal Principal
+if(btnOpenHolidays) {
+    btnOpenHolidays.addEventListener("click", () => {
+        tempHolidaysMap = new Map(movableHolidays);
+        pendingSelection.clear(); 
+        calDate = new Date(); 
+        calDate.setDate(1); 
 
-      // Renderiza os dias
-      for(let d=1; d<=daysInMonth; d++) {
-          const currentDate = new Date(year, month, d);
-          const yyyy_mm_dd = _native_formatDate(currentDate, "yyyy-MM-dd");
-          
-          // Reutiliza a função getDayStatus que já existe no seu código
-          // Precisamos criar um objeto temporário simulando movableHolidays para a visualização correta
-          // ou verificar manualmente aqui
-          const isWeekend = currentDate.getDay() === 0 || currentDate.getDay() === 6;
-          const dd_mm = _native_formatDate(currentDate, "yyyy-MM-dd").substring(5);
-          const isFixed = FIXED_HOLIDAYS.has(dd_mm);
-          
-          const isSaved = tempHolidaysList.has(yyyy_mm_dd);
-          const isSelected = pendingSelection.has(yyyy_mm_dd);
+        renderHolidayList();
+        renderCalendar();
+        modalHolidays.classList.remove("hidden");
+    });
+}
 
-          const btn = document.createElement("button");
-          btn.textContent = d;
-          
-          // Base style
-          let classes = ["h-10", "w-full", "rounded-lg", "text-sm", "flex", "items-center", "justify-center", "transition-all", "relative"];
+if(btnCloseHolidays) {
+    btnCloseHolidays.addEventListener("click", () => modalHolidays.classList.add("hidden"));
+}
 
-          if (isSelected) {
-              // AZUL (Novo Selecionado)
-              classes.push("bg-blue-600", "text-white", "font-bold", "shadow-md", "scale-105");
-          } else if (isSaved) {
-              // VERMELHO (Já Salvo no JSON)
-              classes.push("bg-red-500", "text-white", "hover:bg-red-600", "font-medium");
-          } else if (isFixed) {
-              // LARANJA (Feriado Fixo)
-              classes.push("bg-orange-200", "text-orange-900", "font-bold", "border", "border-orange-300");
-              btn.title = "Feriado Fixo (Nacional/Local)";
-          } else if (isWeekend) {
-              // CINZA (Fim de Semana)
-              classes.push("bg-gray-100", "text-gray-400");
-          } else {
-              // BRANCO (Dia Útil)
-              classes.push("bg-white", "text-gray-700", "border", "hover:bg-gray-50", "hover:border-blue-300");
-          }
+// 2. Navegação do Calendário
+if(btnCalPrev) btnCalPrev.addEventListener("click", () => changeMonth(-1));
+if(btnCalNext) btnCalNext.addEventListener("click", () => changeMonth(1));
 
-          btn.className = classes.join(" ");
+function changeMonth(delta) {
+    calDate.setMonth(calDate.getMonth() + delta);
+    renderCalendar();
+}
 
-          // Evento de Clique
-          btn.addEventListener("click", () => toggleDateSelection(yyyy_mm_dd));
-          
-          calGrid.appendChild(btn);
-      }
-      
-      // Atualiza botão de adicionar
-      if(btnAddSelected) {
-          btnAddSelected.textContent = pendingSelection.size > 0 
-            ? `Adicionar ${pendingSelection.size} dia(s) à lista` 
-            : "Selecione dias no calendário";
-          btnAddSelected.disabled = pendingSelection.size === 0;
-          
-          if(pendingSelection.size > 0) {
-              btnAddSelected.classList.remove("bg-gray-400");
-              btnAddSelected.classList.add("bg-blue-600");
-          } else {
-              btnAddSelected.classList.add("bg-gray-400");
-              btnAddSelected.classList.remove("bg-blue-600");
-          }
-      }
-  }
+// 3. Renderização do Calendário
+function renderCalendar() {
+    if (!calGrid) return;
+    calGrid.innerHTML = "";
 
-  function toggleDateSelection(dateStr) {
-      // Se clicar em um dia que JÁ é salvo (Vermelho), pergunta se quer remover
-      if (tempHolidaysList.has(dateStr)) {
-          if(confirm(`Remover o feriado de ${dateStr}?`)) {
-              tempHolidaysList.delete(dateStr);
-              renderHolidayList();
-              renderCalendar();
-          }
-          return;
-      }
+    const calFooterList = document.getElementById("calFooterList");
+    if (calFooterList) calFooterList.innerHTML = "";
 
-      // Toggle seleção (Azul)
-      if (pendingSelection.has(dateStr)) {
-          pendingSelection.delete(dateStr);
-      } else {
-          pendingSelection.add(dateStr);
-      }
-      renderCalendar();
-  }
+    const year = calDate.getFullYear();
+    const month = calDate.getMonth();
 
-  // 4. Botão "Adicionar Selecionados"
-  if(btnAddSelected) {
-      btnAddSelected.addEventListener("click", () => {
-          pendingSelection.forEach(date => tempHolidaysList.add(date));
-          pendingSelection.clear();
-          renderHolidayList();
-          renderCalendar();
-      });
-  }
+    // 1. Gera os feriados matemáticos para ESTE ano (Ex: Páscoa, Carnaval...)
+    const calculatedHolidays = getCalculatedHolidays(year);
 
-  // 5. Lista Lateral
-  function renderHolidayList() {
-      if(!holidayListDisplay) return;
-      holidayListDisplay.innerHTML = "";
-      
-      if(countHolidaysSpan) countHolidaysSpan.textContent = tempHolidaysList.size;
+    const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+    calMonthYear.textContent = `${monthNames[month]} ${year}`;
 
-      const sorted = [...tempHolidaysList].sort();
-      
-      if(sorted.length === 0) {
-          holidayListDisplay.innerHTML = `
-            <div class="text-center p-4 text-gray-400 flex flex-col items-center">
-                <span class="text-2xl mb-2">📅</span>
-                <p>Nenhum feriado extra cadastrado.</p>
-            </div>`;
-          return;
-      }
+    const firstDayOfMonth = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-      sorted.forEach(date => {
-          const li = document.createElement("li");
-          li.className = "flex justify-between items-center bg-white p-3 rounded shadow-sm border-l-4 border-red-500 hover:bg-gray-50 transition-colors";
-          
-          // Formata data amigável
-          const dt = _native_safeParseDate(date);
-          const diaSemana = dt ? dt.toLocaleDateString('pt-BR', { weekday: 'short' }) : '';
-          const dataFormatada = _native_formatDate(dt, "dd/MM/yy");
+    // Array para o rodapé
+    let holidaysInThisMonth = [];
 
-          li.innerHTML = `
-            <div class="flex flex-col">
-                <span class="font-bold text-gray-800">${dataFormatada}</span>
-                <span class="text-xs text-gray-500 uppercase">${diaSemana}</span>
-            </div>
-            <button class="text-gray-400 hover:text-red-600 transition-colors p-2" title="Remover" data-val="${date}">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-            </button>
-          `;
-          
-          li.querySelector("button").addEventListener("click", (e) => {
-              const val = e.currentTarget.dataset.val;
-              tempHolidaysList.delete(val);
-              renderHolidayList();
-              renderCalendar(); // Atualiza grid para remover o vermelho
-          });
-          holidayListDisplay.appendChild(li);
-      });
-  }
+    // Espaços vazios para o alinhamento da semana
+    for (let i = 0; i < firstDayOfMonth; i++) {
+        const emptyCell = document.createElement("div");
+        calGrid.appendChild(emptyCell);
+    }
 
-  // 6. Botão Salvar e Baixar
-  if(btnDownloadHolidays) {
-      btnDownloadHolidays.addEventListener("click", () => {
-          const dataToExport = [...tempHolidaysList].sort();
-          const jsonString = JSON.stringify(dataToExport, null, 2);
-          const blob = new Blob([jsonString], { type: "application/json" });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = "feriados.json";
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          
-          // Atualiza a memória global
-          movableHolidays = tempHolidaysList;
-          modalHolidays.classList.add("hidden");
-          
-          // Feedback e Atualização
-          alert("Lista de feriados atualizada! O Dashboard será recalculado agora.");
-          updateDashboard(); // Recalcula a tabela imediatamente
-      });
-  }
+    // Loop pelos dias do mês
+    for (let d = 1; d <= daysInMonth; d++) {
+        const currentDate = new Date(year, month, d);
+        const yyyy_mm_dd = _native_formatDate(currentDate, "yyyy-MM-dd");
+        const dd_mm = yyyy_mm_dd.substring(5);
+
+        const isWeekend = currentDate.getDay() === 0 || currentDate.getDay() === 6;
+
+        // Verifica Fixo (Laranja)
+        const isFixed = FIXED_HOLIDAYS.has(dd_mm);
+        const fixedName = isFixed ? FIXED_HOLIDAYS.get(dd_mm) : null;
+
+        // Verifica Manual (Vermelho)
+        const isSaved = tempHolidaysMap.has(yyyy_mm_dd);
+        const savedName = isSaved ? tempHolidaysMap.get(yyyy_mm_dd) : null;
+
+        // Verifica Calculado/Automático (Roxo)
+        const isCalculated = calculatedHolidays.has(yyyy_mm_dd);
+        const calculatedName = isCalculated ? calculatedHolidays.get(yyyy_mm_dd) : null;
+
+        const isSelected = pendingSelection.has(yyyy_mm_dd);
+
+        const btn = document.createElement("button");
+        btn.textContent = d;
+
+        let classes = ["h-10", "w-full", "rounded-lg", "text-sm", "flex", "items-center", "justify-center", "transition-all", "relative"];
+
+        // --- LÓGICA DE PRIORIDADE VISUAL ---
+        if (isSelected) {
+            classes.push("bg-blue-600", "text-white", "font-bold", "shadow-md", "scale-105");
+        } else if (isSaved) {
+            classes.push("bg-red-500", "text-white", "hover:bg-red-600", "font-medium");
+            btn.title = savedName + " (Manual)";
+        } else if (isCalculated) {
+            // Estilo ROXO para feriados automáticos (Páscoa, etc)
+            classes.push("bg-purple-200", "text-purple-900", "font-bold", "border", "border-purple-300");
+            btn.title = calculatedName + " (Calculado)";
+        } else if (isFixed) {
+            classes.push("bg-orange-200", "text-orange-900", "font-bold", "border", "border-orange-300");
+            btn.title = fixedName + " (Fixo)";
+        } else if (isWeekend) {
+            classes.push("bg-gray-100", "text-gray-400");
+        } else {
+            classes.push("bg-white", "text-gray-700", "border", "hover:bg-gray-50", "hover:border-blue-300");
+        }
+
+        btn.className = classes.join(" ");
+
+        // Evento de Clique
+        btn.addEventListener("click", () => {
+            if (isCalculated || isFixed) {
+                alert(`Este é um feriado automático (${calculatedName || fixedName}). Você não precisa adicioná-lo manualmente.`);
+            } else {
+                toggleDateSelection(yyyy_mm_dd);
+            }
+        });
+
+        calGrid.appendChild(btn);
+
+        // Coleta para o rodapé conforme o tipo detectado
+        if (isSaved) holidaysInThisMonth.push({ day: d, name: savedName, type: 'manual' });
+        else if (isCalculated) holidaysInThisMonth.push({ day: d, name: calculatedName, type: 'calculado' });
+        else if (isFixed) holidaysInThisMonth.push({ day: d, name: fixedName, type: 'fixo' });
+    }
+
+    // --- RENDERIZAÇÃO DO RODAPÉ ---
+    if (calFooterList) {
+        if (holidaysInThisMonth.length === 0) {
+            calFooterList.innerHTML = `<li class="text-gray-400 italic text-xs pl-2">Nenhum feriado registrado.</li>`;
+        } else {
+            // Ordena os feriados por dia do mês
+            holidaysInThisMonth.sort((a, b) => a.day - b.day);
+
+            holidaysInThisMonth.forEach(h => {
+                const li = document.createElement("li");
+                li.className = "flex items-center gap-2";
+
+                let colorClass = "bg-gray-400";
+                if (h.type === 'manual') colorClass = "bg-red-500";
+                if (h.type === 'fixo') colorClass = "bg-orange-400";
+                if (h.type === 'calculado') colorClass = "bg-purple-500";
+
+                li.innerHTML = `
+                    <span class="w-2 h-2 rounded-full ${colorClass}"></span>
+                    <span class="font-bold w-6 text-right">${h.day}:</span>
+                    <span class="truncate text-xs text-gray-700" title="${h.name}">${h.name}</span>
+                `;
+                calFooterList.appendChild(li);
+            });
+        }
+    }
+
+    // Atualiza o botão de ação (Adicionar Selecionados)
+    if (btnAddSelected) {
+        const count = pendingSelection.size;
+        btnAddSelected.textContent = count > 0 ? `Adicionar ${count} dia(s)...` : "Selecione dias no calendário";
+        btnAddSelected.disabled = count === 0;
+
+        if (count > 0) {
+            btnAddSelected.classList.replace("bg-gray-400", "bg-blue-600");
+        } else {
+            btnAddSelected.classList.replace("bg-blue-600", "bg-gray-400");
+        }
+    }
+}
+
+function toggleDateSelection(dateStr) {
+    if (tempHolidaysMap.has(dateStr)) {
+        const currentName = tempHolidaysMap.get(dateStr);
+        if(confirm(`"${currentName}" (${dateStr})\n\nDeseja remover este feriado?`)) {
+            tempHolidaysMap.delete(dateStr);
+            renderHolidayList();
+            renderCalendar();
+        }
+        return;
+    }
+
+    if (pendingSelection.has(dateStr)) {
+        pendingSelection.delete(dateStr);
+    } else {
+        pendingSelection.add(dateStr);
+    }
+    renderCalendar();
+}
+
+// 4. Botão "Adicionar Selecionados" (ATUALIZADO COM MODAL)
+if(btnAddSelected) {
+    btnAddSelected.addEventListener("click", () => {
+        openNameModal("Feriado/Facultativo", (typedName) => {
+            pendingSelection.forEach(date => {
+                tempHolidaysMap.set(date, typedName);
+            });
+            pendingSelection.clear();
+            renderHolidayList();
+            renderCalendar();
+        });
+    });
+}
+
+// 5. Lista Lateral (ATUALIZADO COM MODAL DE EDIÇÃO)
+function renderHolidayList() {
+    if(!holidayListDisplay) return;
+    holidayListDisplay.innerHTML = "";
+    
+    if(countHolidaysSpan) countHolidaysSpan.textContent = tempHolidaysMap.size;
+
+    const sortedKeys = [...tempHolidaysMap.keys()].sort();
+    
+    if(sortedKeys.length === 0) {
+        holidayListDisplay.innerHTML = `
+          <div class="text-center p-4 text-gray-400 flex flex-col items-center">
+              <span class="text-2xl mb-2">📅</span>
+              <p>Nenhum feriado extra cadastrado.</p>
+          </div>`;
+        return;
+    }
+
+    sortedKeys.forEach(date => {
+        const name = tempHolidaysMap.get(date);
+        const li = document.createElement("li");
+        li.className = "flex justify-between items-center bg-white p-3 rounded shadow-sm border-l-4 border-red-500 hover:bg-gray-50 transition-colors group";
+        
+        const dt = _native_safeParseDate(date);
+        const diaSemana = dt ? dt.toLocaleDateString('pt-BR', { weekday: 'short' }) : '';
+        const dataFormatada = _native_formatDate(dt, "dd/MM/yy");
+
+        li.innerHTML = `
+          <div class="flex flex-col cursor-pointer flex-grow" title="Clique para editar nome">
+              <div class="flex items-center gap-2">
+                  <span class="font-bold text-gray-800">${dataFormatada}</span>
+                  <span class="text-xs text-blue-600 font-semibold uppercase tracking-wide px-1 bg-blue-50 rounded border border-blue-100">${name}</span>
+              </div>
+              <span class="text-xs text-gray-500 uppercase">${diaSemana}</span>
+          </div>
+          <button class="text-gray-300 hover:text-red-600 transition-colors p-2" title="Remover">
+              ✕
+          </button>
+        `;
+        
+        li.querySelector("div").addEventListener("click", () => {
+            openNameModal(name, (newName) => {
+                tempHolidaysMap.set(date, newName);
+                renderHolidayList();
+                renderCalendar();
+            });
+        });
+
+        li.querySelector("button").addEventListener("click", (e) => {
+            e.stopPropagation();
+            if(confirm(`Remover "${name}"?`)) { 
+                tempHolidaysMap.delete(date);
+                renderHolidayList();
+                renderCalendar();
+            }
+        });
+        
+        holidayListDisplay.appendChild(li);
+    });
+}
+
+// 6. Botão Salvar e Baixar
+if(btnDownloadHolidays) {
+    btnDownloadHolidays.addEventListener("click", () => {
+        const objToExport = Object.fromEntries(tempHolidaysMap);
+        const jsonString = JSON.stringify(objToExport, null, 2);
+        const blob = new Blob([jsonString], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "feriados.json";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        movableHolidays = tempHolidaysMap;
+        modalHolidays.classList.add("hidden");
+        
+        alert("Lista atualizada! O Dashboard será recalculado agora.");
+        updateDashboard(); 
+    });
+}
 
   //----------------------------------------------------------------------------------------//
   //----------------------------------------------------------------------------------------//
