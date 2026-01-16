@@ -941,7 +941,8 @@
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "Tipo": "S",
+    "Terceirizado": "Sim"
   },
   {
     "Família": "01.99",
@@ -1973,7 +1974,8 @@
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "Tipo": "S",
+    "Terceirizado": "Sim"
   },
   {
     "Família": "03.17",
@@ -2068,7 +2070,8 @@
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "Tipo": "S",
+    "Terceirizado": "Sim"
   },
   {
     "Família": "03.26",
@@ -2105,7 +2108,8 @@
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "Tipo": "S",
+    "Terceirizado": "Sim"
   },
   {
     "Família": "03.30",
@@ -2114,7 +2118,8 @@
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+     "Tipo": "S",
+    "Terceirizado": "Sim"
   },
   {
     "Família": "03.31",
@@ -2766,7 +2771,8 @@
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "Tipo": "S",
+    "Terceirizado": "Sim"
   },
   {
     "Família": "04.57",
