@@ -330,6 +330,12 @@
             <option value="M">📦 Materiais</option>
             <option value="S">🛠️ Serviços</option>
         </select>
+
+        <label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 bg-white cursor-pointer hover:border-purple-300 transition-colors select-none" title="Exibir apenas terceirizados">
+          <input type="checkbox" id="family-filter-terceirizado" class="w-4 h-4 text-purple-600 rounded focus:ring-purple-500 accent-purple-600">
+          <span class="text-sm text-gray-700 font-medium">Terceirizados</span>
+      </label>
+      
       </div>
       <div id="family-grid" class="flex-1 overflow-y-auto p-4 bg-gray-50/50 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 content-start"></div>
       <div class="p-3 border-t border-gray-100 bg-white flex justify-between items-center">
