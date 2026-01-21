@@ -2,6 +2,10 @@
  * apps/home/script.js
  */
 
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js');
+}
+
 /**
  * @name requestNotificationPermission
  * @description Pede permissão ao usuário para mostrar notificações no desktop.
