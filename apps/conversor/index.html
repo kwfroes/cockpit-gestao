@@ -4,6 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema CAF Digital</title>
+    <script>
+    // VERIFICAÇÃO DE SEGURANÇA (COCKPIT)
+    (function() {
+        // 1. Verifica se tem o token válido no navegador
+        const isAuthenticated = sessionStorage.getItem("cockpit_auth_token") === "valid";
+        
+        // 2. Se NÃO estiver autenticado, manda de volta para o login (index.html principal)
+        if (!isAuthenticated) {
+        // Ajuste o "../.." conforme a profundidade da pasta. 
+        // Se estiver em apps/gerador/index.html, precisa voltar 2 níveis.
+        window.top.location.href = "../../index.html";
+        }
+    })();
+    </script>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
