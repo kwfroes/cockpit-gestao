@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legislação e Normas - Cockpit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        (function() {
+            const isAuthenticated = sessionStorage.getItem("cockpit_auth_token") === "valid";
+            if (!isAuthenticated) window.top.location.href = "../../index.html";
+        })();
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="../../theme.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-gray-50 text-gray-800 h-screen flex flex-col overflow-hidden">
+
+    <header class="bg-white border-b px-6 py-4 flex justify-between items-center shrink-0">
+        <div class="flex items-center gap-3">
+            <button onclick="window.parent.location.href='../../index.html'" class="text-gray-400 hover:text-blue-600 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            </button>
+            <h1 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                <span class="text-blue-600">⚖️</span> Legislação & Normas
+            </h1>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="app.exportJson()" class="px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50 text-gray-600 flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                Backup
+            </button>
+            <button onclick="app.openEditor()" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm font-medium shadow-sm flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                Nova Norma
+            </button>
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden">
+        <aside class="w-full md:w-80 bg-white border-r flex flex-col z-10">
+            <div class="p-4 border-b bg-gray-50">
+                <input type="text" id="searchInput" placeholder="Buscar norma..." 
+                    class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+                <div class="flex gap-2 mt-2 overflow-x-auto pb-1 scrollbar-hide">
+                    <button onclick="app.filter('todos')" class="filter-chip px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-700 font-medium whitespace-nowrap border border-blue-200">Todos</button>
+                    <button onclick="app.filter('Decreto')" class="filter-chip px-2 py-1 text-xs rounded-full bg-white text-gray-600 border hover:bg-gray-50 whitespace-nowrap">Decretos</button>
+                    <button onclick="app.filter('Lei')" class="filter-chip px-2 py-1 text-xs rounded-full bg-white text-gray-600 border hover:bg-gray-50 whitespace-nowrap">Leis</button>
+                    <button onclick="app.filter('DOE')" class="filter-chip px-2 py-1 text-xs rounded-full bg-white text-gray-600 border hover:bg-gray-50 whitespace-nowrap">DOE</button>
+                    <button onclick="app.filter('Instrução')" class="filter-chip px-2 py-1 text-xs rounded-full bg-white text-gray-600 border hover:bg-gray-50 whitespace-nowrap">Instruções</button>
+                </div>
+            </div>
+            <div id="lawList" class="flex-1 overflow-y-auto">
+                </div>
+        </aside>
+
+        <main class="flex-1 bg-gray-50 overflow-y-auto p-4 md:p-8 relative" id="viewerContainer">
+            <div id="emptyState" class="flex flex-col items-center justify-center h-full text-gray-400">
+                <svg class="w-20 h-20 mb-4 opacity-20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 2H5C3.89543 2 3 2.89543 3 4V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V4C21 2.89543 20.1046 2 19 2ZM19 20H5V4H19V20Z"/></svg>
+                <p>Selecione uma norma para leitura.</p>
+            </div>
+
+            <article id="lawViewer" class="hidden max-w-4xl mx-auto bg-white shadow-sm border rounded-xl min-h-[50vh]">
+                <div class="p-8 border-b">
+                    <div class="flex justify-between items-start mb-4">
+                        <span id="viewTag" class="px-2 py-1 text-xs font-bold uppercase tracking-wider bg-gray-100 rounded text-gray-600">--</span>
+                        <div class="flex gap-2">
+                             <button onclick="app.editCurrent()" class="text-gray-400 hover:text-blue-600" title="Editar"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg></button>
+                             <button onclick="app.deleteCurrent()" class="text-gray-400 hover:text-red-600" title="Excluir"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
+                        </div>
+                    </div>
+                    <h1 id="viewTitle" class="text-3xl font-bold text-gray-900 mb-2 leading-tight">Título</h1>
+                    <p id="viewDate" class="text-sm text-gray-500 font-mono">Publicado em: --/--/----</p>
+                </div>
+                <div id="viewContent" class="p-8 law-content text-lg">
+                    </div>
+            </article>
+        </main>
+    </div>
+
+    <div id="editorModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-5xl h-[95vh] flex flex-col">
+            <div class="p-4 border-b flex justify-between items-center bg-gray-50 rounded-t-xl">
+                <h3 class="font-bold text-gray-700" id="modalTitle">Editor</h3>
+                <button onclick="app.closeEditor()" class="text-gray-400 hover:text-red-500 text-2xl">&times;</button>
+            </div>
+            
+            <div class="p-6 flex-1 overflow-y-auto space-y-4">
+                <input type="hidden" id="editId">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Título</label>
+                        <input type="text" id="editTitle" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Data</label>
+                         <input type="date" id="editDate" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Tipo</label>
+                    <div class="flex gap-4">
+                        <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="editType" value="Decreto" checked class="text-blue-600 focus:ring-blue-500"> <span class="text-sm">Decreto</span></label>
+                        <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="editType" value="Lei" class="text-blue-600 focus:ring-blue-500"> <span class="text-sm">Lei</span></label>
+                        <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="editType" value="Portaria" class="text-blue-600 focus:ring-blue-500"> <span class="text-sm">Portaria</span></label>
+                        <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="editType" value="DOE" class="text-blue-600 focus:ring-blue-500"> <span class="text-sm">Recorte DOE</span></label>
+                        <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="editType" value="Instrução" class="text-blue-600 focus:ring-blue-500"><span class="text-sm">Instrução</span></label>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Palavras-Chave / Apelido (Para Busca)</label>
+                    <input type="text" id="editKeywords" 
+                        class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-blue-50 placeholder-blue-300 text-gray-700" 
+                        placeholder="Ex: Lei da Compensação, Tabela de Salários, Regra do CAF...">
+                    <p class="text-[10px] text-gray-400 mt-1">Estes termos não aparecem na lista lateral, mas serão usados na pesquisa.</p>
+                </div>
+
+                <div class="flex-1 flex flex-col min-h-[400px]">
+                    <div class="border border-b-0 border-gray-300 bg-gray-50 p-2 flex gap-1 rounded-t items-center flex-wrap">
+                        <button onclick="app.format('bold')" class="toolbar-btn p-1.5 rounded hover:bg-gray-200 text-gray-600 font-bold" title="Negrito">B</button>
+                        <button onclick="app.format('italic')" class="toolbar-btn p-1.5 rounded hover:bg-gray-200 text-gray-600 italic" title="Itálico">I</button>
+                        <button onclick="app.format('underline')" class="toolbar-btn p-1.5 rounded hover:bg-gray-200 text-gray-600 underline" title="Sublinhado">U</button>
+                        <div class="h-4 w-px bg-gray-300 mx-1"></div>
+                        <button onclick="app.format('formatBlock', 'H2')" class="toolbar-btn p-1.5 rounded hover:bg-gray-200 text-gray-600 text-sm font-bold" title="Título Grande">H1</button>
+                        <button onclick="app.format('formatBlock', 'H3')" class="toolbar-btn p-1.5 rounded hover:bg-gray-200 text-gray-600 text-xs font-bold" title="Título Médio">H2</button>
+                        <button onclick="app.format('formatBlock', 'P')" class="toolbar-btn p-1.5 rounded hover:bg-gray-200 text-gray-600 text-xs" title="Parágrafo Normal">TXT</button>
+                        <div class="h-4 w-px bg-gray-300 mx-1"></div>
+                        <input type="file" id="txtImportInput" accept=".txt" class="hidden" onchange="app.importTxtContent(this)">
+
+                        <button onclick="document.getElementById('txtImportInput').click()" 
+                                class="toolbar-btn p-1.5 rounded hover:bg-blue-100 text-blue-600 text-xs font-bold flex items-center gap-1" 
+                                title="Importar texto de arquivo .txt">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Importar TXT
+                        </button>
+
+                        <button onclick="app.autoFormat()" 
+                                class="toolbar-btn p-1.5 rounded hover:bg-yellow-100 text-yellow-600 text-xs font-bold flex items-center gap-1" 
+                                title="Aplicar negrito automático em Artigos e Parágrafos">
+                            <span class="text-base">✨</span> Auto
+                        </button>
+
+                        <div class="h-4 w-px bg-gray-300 mx-1"></div>
+
+                        <button onclick="app.format('removeFormat')" class="toolbar-btn p-1.5 rounded hover:bg-red-100 text-red-500 text-xs" title="Limpar Formatação">Limpar</button>
+                        <span class="ml-auto text-[10px] text-gray-400 uppercase tracking-wider">Editor Rico</span>
+                    </div>
+
+                    <div id="editContent" contenteditable="true" 
+                         class="flex-1 w-full p-4 border border-t-0 border-gray-300 rounded-b focus:ring-0 outline-none overflow-y-auto law-content bg-white h-64">
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 border-t bg-gray-50 rounded-b-xl flex justify-end gap-2">
+                <button onclick="app.closeEditor()" class="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded">Cancelar</button>
+                <button onclick="app.save()" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded shadow-sm">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
