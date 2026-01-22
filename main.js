@@ -159,6 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "#gerador": "apps/gerador/index.html",
     "#contratos": "apps/contratos/index.html",
     "#conversor": "apps/conversor/index.html",
+    "#legislacao": "apps/legislacao/index.html",
   };
   const defaultHash = "#home";
 

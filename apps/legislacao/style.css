@@ -1,0 +1,74 @@
+/* apps/legislacao/style.css */
+
+/* --- ESTILOS DE LEITURA E TABELAS --- */
+.law-content {
+    font-family: 'Merriweather', serif;
+    line-height: 1.8;
+    color: #374151;
+}
+
+.law-content h1, .law-content h2, .law-content h3 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    color: #111827;
+}
+
+.law-content p {
+    margin-bottom: 1em;
+}
+
+/* SOLUÇÃO DO BUG DA TABELA: Wrapper Scrollável */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto; /* Cria scroll horizontal se necessário */
+    margin: 1.5rem 0;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+}
+
+/* Estilo da Tabela em si */
+.law-content table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap; /* Evita quebra de linha forçada em células pequenas */
+}
+
+.law-content th, .law-content td {
+    border: 1px solid #e5e7eb;
+    padding: 0.75rem;
+    text-align: left;
+    min-width: 100px; /* Garante que colunas não fiquem minusculas */
+}
+
+.law-content th {
+    background-color: #f9fafb;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.law-content tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+/* --- EDITOR --- */
+[contenteditable]:empty:before {
+    content: attr(placeholder);
+    color: #9ca3af;
+    cursor: text;
+}
+
+/* Botões da Toolbar */
+.toolbar-btn:hover {
+    background-color: #f3f4f6;
+    color: #000;
+}
+
+/* Botão Ativo (Mudado para Azul) */
+.toolbar-btn.active {
+    background-color: #dbeafe; /* Blue-100 */
+    color: #1e40af; /* Blue-800 */
+}

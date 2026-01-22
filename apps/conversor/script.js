@@ -103,30 +103,17 @@ function processarCSV() {
     });
 }
 
-// ==========================================
-// FERRAMENTA 2: MERGE EXCEL + CSV
-// ==========================================
+    // ==========================================
+    // FERRAMENTA 2: MERGE EXCEL + BASE ESTÁTICA (JSON)
+    // ==========================================
 
-// Função auxiliar para ler o CSV Extra
-function lerCSVExtra(file) {
-    return new Promise((resolve, reject) => {
-        Papa.parse(file, {
-            header: true, delimiter: ";", skipEmptyLines: true,
-            complete: function(results) { resolve(results.data); },
-            error: function(err) { reject(err); }
-        });
-    });
-}
-
-async function converterExcelEMerge() {
+    async function converterExcelEMerge() {
     const excelInput = document.getElementById('xlsxFile');
-    const csvExtraInput = document.getElementById('csvExtraFile');
+    // Nota: O input 'csvExtraFile' não é mais necessário no HTML, pode ocultá-lo.
     
     if (!excelInput.files.length) return alert("Falta selecionar o arquivo Excel.");
-    if (!csvExtraInput.files.length) return alert("Falta selecionar o arquivo CSV Complementar.");
     
     const excelFile = excelInput.files[0];
-    const csvFile = csvExtraInput.files[0];
     
     document.getElementById('btnConvert').disabled = true;
     document.getElementById('loaderConvert').classList.remove('hidden');
@@ -135,28 +122,8 @@ async function converterExcelEMerge() {
 
     setTimeout(async () => {
         try {
-            // --- PASSO 1: Ler o CSV Complementar ---
-            document.getElementById('convertStatus').innerText = "Lendo CSV Complementar...";
-            const dadosCSVBrutos = await lerCSVExtra(csvFile);
-            
-            const listaCSVProcessada = dadosCSVBrutos.map(linha => {
-                let cnpjBruto = linha["CNPJ"] ? String(linha["CNPJ"]) : "";
-                
-                // REGEX PERMISSIVA: Mantém Letras (estrangeiros) e Números. Remove apenas símbolos (. - /)
-                let cnpjLimpo = cnpjBruto.replace(/[^a-zA-Z0-9]/g, ''); 
-
-                let razaoLimpa = linha["RAZÃO SOCIAL"] ? String(linha["RAZÃO SOCIAL"]).trim() : "";
-
-                return { 
-                    "CPF_CNPJ": cnpjLimpo, 
-                    "NOME_FORNECEDOR": razaoLimpa, 
-                    "DATA_CADASTRO": "0",    // Regra Fixa
-                    "TIPO_DE_CADASTRO": "null" // Regra Fixa
-                };
-            });
-
-            // --- PASSO 2: Ler o Excel Principal ---
-            document.getElementById('convertStatus').innerText = "Lendo Excel Principal...";
+            // --- PASSO 1: Ler o Excel Principal (Prioritário) ---
+            document.getElementById('convertStatus').innerText = "Processando Excel...";
             const arrayBuffer = await excelFile.arrayBuffer();
             const workbook = XLSX.read(arrayBuffer, { type: 'array', cellDates: true });
             const firstSheetName = workbook.SheetNames[0];
@@ -166,45 +133,57 @@ async function converterExcelEMerge() {
                 raw: false, dateNF: 'dd/mm/yyyy', defval: "" 
             });
 
+            // Processa e Limpa o Excel
             const listaExcelProcessada = jsonDataExcel.map(linha => {
                 let cpfBruto = linha["CPF_CNPJ"] ? String(linha["CPF_CNPJ"]) : "";
-                
-                // REGEX PERMISSIVA: Mantém Letras e Números
+                // Limpeza segura: remove tudo que não é letra ou número
                 let cpfLimpo = cpfBruto.replace(/[^a-zA-Z0-9]/g, '');
 
                 let nomeLimpo = linha["NOME_FORNECEDOR"] ? String(linha["NOME_FORNECEDOR"]).trim() : "";
-                
-                // Regra DATA_CADASTRO: Se vazio -> "0"
                 let dataRaw = linha["DATA_CADASTRO"] ? String(linha["DATA_CADASTRO"]).trim() : "";
-                let dataFinal = dataRaw === "" ? "0" : dataRaw;
-
-                // Regra TIPO_DE_CADASTRO: Se vazio -> "null"
                 let tipoRaw = linha["TIPO_DE_CADASTRO"] ? String(linha["TIPO_DE_CADASTRO"]).trim() : "";
-                let tipoFinal = tipoRaw === "" ? "null" : tipoRaw;
 
                 return { 
                     "CPF_CNPJ": cpfLimpo, 
                     "NOME_FORNECEDOR": nomeLimpo, 
-                    "DATA_CADASTRO": dataFinal, 
-                    "TIPO_DE_CADASTRO": tipoFinal 
+                    "DATA_CADASTRO": dataRaw === "" ? "0" : dataRaw, 
+                    "TIPO_DE_CADASTRO": tipoRaw === "" ? "null" : tipoRaw 
                 };
             });
 
-            // --- PASSO 3: Merge (Unificação) ---
-            document.getElementById('convertStatus').innerText = "Unificando listas...";
+            // --- PASSO 2: Carregar Base Estática (JSON) ---
+            document.getElementById('convertStatus').innerText = "Buscando base de dados...";
             
-            // Une os dois arrays
-            const listaFinal = [...listaExcelProcessada, ...listaCSVProcessada];
+            // Busca o arquivo JSON que você salvou na pasta
+            const response = await fetch('./arquives/banco_dados_estatico.json');
+            if (!response.ok) throw new Error("Não foi possível carregar o banco_dados_estatico.json");
+            const listaEstatica = await response.json();
 
-            // --- PASSO 4: Gerar CSV ---
+            // --- PASSO 3: Deduplicação Inteligente ---
+            document.getElementById('convertStatus').innerText = "Cruzando dados...";
+
+            // Cria um "Conjunto" (Set) com todos os CNPJs do Excel para busca instantânea
+            const cnpjsNoExcel = new Set(listaExcelProcessada.map(item => item.CPF_CNPJ));
+
+            // Filtra a base estática: Mantém apenas quem NÃO está no Excel
+            const listaEstaticaFiltrada = listaEstatica.filter(item => {
+                // Se o CNPJ não existe no Excel, mantemos este item
+                return !cnpjsNoExcel.has(item.CPF_CNPJ);
+            });
+
+            // --- PASSO 4: Merge (Unificação) ---
+            const listaFinal = [...listaExcelProcessada, ...listaEstaticaFiltrada];
+
+            // --- PASSO 5: Gerar CSV ---
+            document.getElementById('convertStatus').innerText = "Gerando arquivo final...";
             const csvOutput = Papa.unparse(listaFinal, { 
                 delimiter: ";;", 
                 quotes: false 
             });
 
-            // Stats
+            // Stats atualizados
             document.getElementById('countExcel').innerText = listaExcelProcessada.length.toLocaleString();
-            document.getElementById('countCsv').innerText = listaCSVProcessada.length.toLocaleString();
+            document.getElementById('countCsv').innerText = listaEstaticaFiltrada.length.toLocaleString() + " (novos)";
             document.getElementById('countTotal').innerText = listaFinal.length.toLocaleString();
 
             // Link de Download
@@ -215,7 +194,7 @@ async function converterExcelEMerge() {
             link.download = fileName;
 
             document.getElementById('resultConvert').classList.remove('hidden');
-            showToast("Sucesso! Merge concluído.");
+            showToast(`Sucesso! ${listaEstatica.length - listaEstaticaFiltrada.length} duplicados removidos.`);
 
         } catch (error) {
             console.error(error);
