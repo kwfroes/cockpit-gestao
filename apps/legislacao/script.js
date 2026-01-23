@@ -6,11 +6,14 @@ const app = {
     data: [],
     currentId: null,
     filterType: 'todos',
+    isMobileListVisible: true,
     
     async init() {
         await this.loadData();
         this.renderList();
         document.getElementById('searchInput').addEventListener('input', (e) => this.renderList(e.target.value));
+        this.checkMobileState();
+        window.addEventListener('resize', () => this.checkMobileState());
     },
 
     // --- 1. CARREGAMENTO COM FETCH ---
@@ -70,11 +73,17 @@ const app = {
             const radios = document.getElementsByName('editType');
             for(let r of radios) if(r.value === item.type) r.checked = true;
             document.getElementById('modalTitle').textContent = "Editar Norma";
+            const radiosSphere = document.getElementsByName('editSphere');
+            // Se o item for antigo e não tiver esfera, define 'Federal' por padrão
+            const itemSphere = item.sphere || "Federal"; 
+            for (let r of radiosSphere) {
+                if (r.value === itemSphere) r.checked = true;}
         } else {
             // Reset
             document.getElementById('editId').value = "";
             document.getElementById('editTitle').value = "";
             document.getElementById('editDate').value = new Date().toISOString().split('T')[0];
+            document.getElementsByName('editSphere')[0].checked = true;
             
             // NOVO: Limpa as keywords
             document.getElementById('editKeywords').value = ""; 
@@ -92,39 +101,28 @@ const app = {
 
     // --- FUNÇÃO AJUDANTE DE PROCESSAMENTO (Centraliza a Lógica) ---
     processText(rawText) {
-        // 1. Limpeza Prévia: Remove excesso de Enters no texto original
-        // Troca sequências de 3 ou mais enters por apenas 2, para garantir
+        // Limpeza Prévia
         let cleanedText = rawText.replace(/\r\n/g, '\n').replace(/\n{3,}/g, '\n\n');
-        
         const lines = cleanedText.split('\n');
         let htmlOutput = "";
 
-        // Regex para Títulos (CAPÍTULO, SEÇÃO, etc)
-        const headerPattern = /^\s*(LIVRO|TÍTULO|CAPÍTULO|SEÇÃO|SUBSEÇÃO)\s+([IVXLCDM\d\.]+)\.?\s*$/i;
+        // Regex Atualizado: Adicionei INSTRUÇÃO, PORTARIA, RESOLUÇÃO e suporte a barras (ex: Nº 12/2023)
+        const headerPattern = /^\s*(LIVRO|TÍTULO|CAPÍTULO|SEÇÃO|SUBSEÇÃO|INSTRUÇÃO|PORTARIA|RESOLUÇÃO)\s+(Nº\s*)?([IVXLCDM\d\.\/-]+)\.?\s*$/i;
 
         for (let i = 0; i < lines.length; i++) {
             let line = lines[i].trim();
-            
-            // --- CORREÇÃO DO ESPAÇAMENTO ---
-            // Se a linha estiver vazia, NÓS A IGNORAMOS.
-            // Não adicionamos <br>. O próprio <p> da próxima linha já dará o espaço necessário.
-            if (!line) {
-                continue; 
-            }
+            if (!line) continue; 
 
-            // --- TACHADO (VETADO) ---
+            // Tachado (Vetado)
             if (line.toLowerCase().includes('(vetado)') || line.toLowerCase() === 'vetado') {
                 htmlOutput += `<p style="text-decoration: line-through; color: #9ca3af; margin-bottom: 0.5em;">${line}</p>`;
                 continue;
             }
 
-            // --- FUSÃO DE TÍTULOS ---
+            // Fusão de Títulos (Agora pega INSTRUÇÃO também)
             if (headerPattern.test(line)) {
-                // Procura a próxima linha que NÃO seja vazia
                 let nextLineIndex = i + 1;
                 let nextLine = "";
-                
-                // Avança no array até achar texto ou acabar (pula os vazios)
                 while (nextLineIndex < lines.length) {
                     if (lines[nextLineIndex].trim()) {
                         nextLine = lines[nextLineIndex].trim();
@@ -133,41 +131,38 @@ const app = {
                     nextLineIndex++;
                 }
 
-                // Verifica se essa próxima linha é uma descrição válida
-                if (nextLine && !headerPattern.test(nextLine) && !nextLine.startsWith('Art.') && !nextLine.includes('(Vetado)')) {
-                    // ACHAMOS O PAR!
-                    // Reduzi o margin para 1.5em (era 2em) para ficar mais compacto
+                if (nextLine && !headerPattern.test(nextLine) && !nextLine.startsWith('Art.') && !nextLine.match(/^\d/) && !nextLine.includes('(Vetado)')) {
                     htmlOutput += `
                         <div style="margin: 1.5em 0 1em 0; text-align: center; font-weight: bold; color: #1e3a8a; line-height: 1.2;">
-                            ${line}<br>
-                            ${nextLine}
+                            ${line}<br>${nextLine}
                         </div>
                     `;
-                    // Avança o índice principal para onde achamos a próxima linha, para não repeti-la
                     i = nextLineIndex; 
                     continue; 
                 } else {
-                    // Título sozinho
                     htmlOutput += `
-                        <div style="margin: 1.5em 0 1em 0; text-align: center; font-weight: bold; color: #1e3a8a;">
-                            ${line}
-                        </div>
+                        <div style="margin: 1.5em 0 1em 0; text-align: center; font-weight: bold; color: #1e3a8a;">${line}</div>
                     `;
                     continue;
                 }
             }
 
             // --- NEGRITOS PADRÃO ---
+            
+            // 1. Regras de Leis (Art., §, Incisos)
             line = line.replace(/^(Art\.\s*\d+\s*º)/i, '<b>$1</b>');
             line = line.replace(/^(Art\.\s*\d+)(?!\d|º)/i, '<b>$1</b>');
             line = line.replace(/^(§\s*\d+\s*º?)/i, '<b>$1</b>');
             line = line.replace(/^(Parágrafo único)/i, '<b>$1</b>');
             line = line.replace(/^([IVXLCDM]+\s-\s)/, '<b>$1</b>');
 
-            // Adiciona parágrafo com margem controlada (margin-bottom padrão do navegador é ok, mas podemos forçar algo sutil)
+            // 2. NOVA REGRA: Itens Numéricos (comum em Instruções)
+            // Ex: "1. Texto", "1.1 Texto", "1.1.2. Texto"
+            // Regex: Início da linha + Números e pontos + Espaço ou ponto final
+            line = line.replace(/^(\d+(\.\d+)*\.?)\s/, '<b>$1 </b>');
+
             htmlOutput += `<p style="margin-bottom: 0.8em;">${line}</p>`;
         }
-        
         return htmlOutput;
     },
 
@@ -206,9 +201,10 @@ const app = {
     // --- 3. AJUSTE DE TABELAS AO SALVAR ---
     save() {
         const id = document.getElementById('editId').value;
-        const title = document.getElementById('editTitle').value.trim();
+        const title = document.getElementById('editTitle').value.trim().toUpperCase();
         const date = document.getElementById('editDate').value;
         const type = document.querySelector('input[name="editType"]:checked').value;
+        const sphere = document.querySelector('input[name="editSphere"]:checked')?.value || "Federal";
         
         // NOVO: Pega o valor das keywords
         const keywords = document.getElementById('editKeywords').value.trim();
@@ -232,7 +228,7 @@ const app = {
         if (!title) return alert("O título é obrigatório.");
 
         // Objeto a ser salvo (com keywords adicionado)
-        const newItemData = { title, date, type, keywords, content, updatedAt: Date.now() };
+        const newItemData = { title, date, type, sphere, keywords, content, updatedAt: Date.now() };
 
         if (id) {
             const index = this.data.findIndex(x => x.id == id);
@@ -268,6 +264,10 @@ const app = {
             document.getElementById('lawViewer').classList.add('hidden');
             document.getElementById('emptyState').classList.remove('hidden');
             this.currentId = null;
+            if(window.innerWidth < 768) { 
+            this.isMobileListVisible = true; // Volta para a lista
+            this.updateMobileView(); 
+        }
         }
     },
 
@@ -299,39 +299,52 @@ const app = {
         listEl.innerHTML = "";
         const term = searchTerm.toLowerCase();
         
-        const filtered = this.data.filter(item => {
+        // 1. FILTRO (Mantendo sua lógica de pesquisar no CONTEÚDO)
+        let filtered = this.data.filter(item => {
             const matchesType = this.filterType === 'todos' || item.type === this.filterType;
             
-            // NOVO: Agora busca também no campo keywords
+            // Concatena tudo para buscar (Título + Conteúdo + Keywords)
             const textToSearch = (
                 item.title + " " + 
-                item.content + " " + 
-                (item.keywords || "") // Garante que não quebre se for undefined
+                (item.content || "") + " " + // Adicionei verificação de null/undefined
+                (item.keywords || "")
             ).toLowerCase();
 
             const matchesSearch = textToSearch.includes(term);
             return matchesType && matchesSearch;
         });
 
+        // 2. ORDENAÇÃO (O que faltava no seu: Mais recente primeiro)
+        filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        // 3. RENDERIZAÇÃO
         if (filtered.length === 0) {
-            listEl.innerHTML = `<div class="p-4 text-center text-sm text-gray-400">Nenhum documento.</div>`;
+            listEl.innerHTML = `<div class="p-4 text-center text-sm text-gray-400">Nenhum documento encontrado.</div>`;
             return;
         }
 
         filtered.forEach(item => {
-            // (Renderização visual mantida igual, sem mostrar keywords na lista, conforme pedido)
             const dateStr = new Date(item.date).toLocaleDateString('pt-BR');
-            const div = document.createElement('div');
+            // Verifica se este é o item aberto no momento para pintar de azul
             const isActive = item.id === this.currentId ? "bg-blue-50 border-blue-200" : "hover:bg-gray-50 border-transparent";
+            // Define cor e sigla baseado na esfera
+            let sphereBadge = "";
+            if (item.sphere === 'Municipal') sphereBadge = '<span class="text-[10px] font-bold text-orange-600 bg-orange-100 px-1.5 py-0.5 rounded ml-1">MUN</span>';
+            else if (item.sphere === 'Estadual') sphereBadge = '<span class="text-[10px] font-bold text-blue-600 bg-blue-100 px-1.5 py-0.5 rounded ml-1">EST</span>';
+            else sphereBadge = '<span class="text-[10px] font-bold text-green-600 bg-green-100 px-1.5 py-0.5 rounded ml-1">FED</span>';
+            
+            const div = document.createElement('div');
             div.className = `p-4 border-b cursor-pointer transition-colors ${isActive}`;
             div.onclick = () => this.openViewer(item.id);
             div.innerHTML = `
-                <div class="flex justify-between items-start mb-1">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-100 px-1.5 py-0.5 rounded">${item.type}</span>
-                    <span class="text-xs text-gray-400 font-mono">${dateStr}</span>
-                </div>
-                <h4 class="text-sm font-semibold text-gray-800 leading-snug line-clamp-2">${item.title}</h4>
-            `;
+                    <div class="flex justify-between items-start mb-1">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-100 px-1.5 py-0.5 rounded">${item.type}</span>
+                            ${sphereBadge} </div>
+                        <span class="text-xs text-gray-400 font-mono">${dateStr}</span>
+                    </div>
+                    <h4 class="text-sm font-semibold text-gray-800 leading-snug line-clamp-2 uppercase" title="${item.title}">${item.title}</h4>
+                `;
             listEl.appendChild(div);
         });
     },
@@ -340,22 +353,51 @@ const app = {
         this.currentId = id;
         const item = this.data.find(x => x.id === id);
         if (!item) return;
-        this.renderList(document.getElementById('searchInput').value);
-        
+        const searchTerm = document.getElementById('searchInput').value.trim();
+
+        this.renderList(searchTerm); 
+
+        // Cria HTML da Esfera
+        let sphereTagHtml = "";
+        const sphere = item.sphere || "Federal"; // Compatibilidade com antigos
+
+        if (sphere === 'Municipal') sphereTagHtml = '<span class="px-2 py-1 text-xs font-bold uppercase tracking-wider bg-orange-100 text-orange-700 rounded ml-2">Municipal</span>';
+        else if (sphere === 'Estadual') sphereTagHtml = '<span class="px-2 py-1 text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-700 rounded ml-2">Estadual</span>';
+        else sphereTagHtml = '<span class="px-2 py-1 text-xs font-bold uppercase tracking-wider bg-green-100 text-green-700 rounded ml-2">Federal</span>';
+
         // Estrutura do Título + Keywords na visualização
         const titleHtml = `
-            ${item.title}
+            <span class="uppercase">${item.title}</span>
             ${item.keywords ? `<div class="mt-2 text-sm font-normal text-blue-500 font-mono bg-blue-50 inline-block px-2 py-1 rounded">🏷️ ${item.keywords}</div>` : ''}
         `;
         
         document.getElementById('viewTitle').innerHTML = titleHtml;
+
+        // LÓGICA DE DESTAQUE
+        let contentHtml = item.content;
+        
+        if (searchTerm && searchTerm.length > 2) {
+            // Cria uma Regex que ignora maiúsculas/minúsculas
+            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            // Envolve a palavra encontrada em um span amarelo
+            contentHtml = contentHtml.replace(regex, '<span class="bg-yellow-200 text-black font-bold">$1</span>');
+        }
+
         document.getElementById('viewDate').textContent = `Publicado em: ${new Date(item.date).toLocaleDateString('pt-BR', { dateStyle: 'long' })}`;
-        document.getElementById('viewTag').textContent = item.type;
-        document.getElementById('viewContent').innerHTML = item.content;
+        document.getElementById('viewTag').innerHTML = item.type + sphereTagHtml;
+        document.getElementById('viewContent').innerHTML = contentHtml;
 
         document.getElementById('emptyState').classList.add('hidden');
         document.getElementById('lawViewer').classList.remove('hidden');
-        if(window.innerWidth < 768) document.getElementById('viewerContainer').scrollIntoView({ behavior: 'smooth' });
+        
+        // Responsividade ativa
+        if(window.innerWidth < 768) {
+             this.isMobileListVisible = false; // Define que agora queremos ver o leitor
+             this.updateMobileView(); // Aplica a mudança
+             window.scrollTo(0,0); // Rola para o topo
+        } else {
+             document.getElementById('viewerContainer').scrollIntoView({ behavior: 'smooth' });
+        }
     },
 
     editCurrent() { if (this.currentId) this.openEditor(this.currentId); },
@@ -367,7 +409,183 @@ const app = {
         a.href = url;
         a.download = `legislacao.json`;
         a.click();
-    }
+    },
+
+    // --- FUNÇÕES DE EXPORTAÇÃO ---
+
+    // 1. Exportar para TXT (Remove HTML e limpa)
+    exportToTxt() {
+        if (!this.currentId) return;
+        
+        // CORREÇÃO: Busca em 'this.data' pois você ainda não migrou para o índice separado
+        const item = this.data.find(x => x.id === this.currentId);
+        
+        if (!item) return;
+
+        // CORREÇÃO: Pega o conteúdo direto do item
+        const htmlContent = item.content; 
+        
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = htmlContent;
+        tempDiv.querySelectorAll('p, div, tr').forEach(el => el.after('\n'));
+        
+        let text = tempDiv.innerText;
+        const header = `${item.type.toUpperCase()}: ${item.title}\nDATA: ${item.date}\n\n-----------------------\n\n`;
+        
+        this.downloadFile(`${item.title}.txt`, header + text, 'text/plain');
+    },
+
+    // 2. Exportar para CSV (Excel - Parágrafo por linha)
+    exportToCsv() {
+        if (!this.currentId) return;
+        
+        // CORREÇÃO: Busca em 'this.data'
+        const item = this.data.find(x => x.id === this.currentId);
+        
+        if (!item) return;
+
+        // CORREÇÃO: Pega o conteúdo direto do item
+        const htmlContent = item.content;
+        
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = htmlContent;
+
+        let csvContent = "ID;TIPO;DATA;TITULO;CONTEUDO_LINHA\n";
+        const blocks = tempDiv.querySelectorAll('p, div, li, th, td');
+        
+        blocks.forEach(block => {
+            let text = block.innerText.trim();
+            if (text) {
+                text = text.replace(/"/g, "'").replace(/\n/g, " ");
+                const row = `${item.id};"${item.type}";"${item.date}";"${item.title}";"${text}"`;
+                csvContent += row + "\n";
+            }
+        });
+
+        const universalBOM = "\uFEFF"; 
+        this.downloadFile(`${item.title}.csv`, universalBOM + csvContent, 'text/csv;charset=utf-8');
+    },
+
+    // --- 3. EXPORTAR PDF (JANELA LIMPA) ---
+    exportToPdf() {
+        if (!this.currentId) return;
+        
+        const item = this.data.find(x => x.id === this.currentId);
+        if (!item) return;
+
+        // Recupera a esfera (com fallback para Federal se for antigo)
+        const sphere = item.sphere || "Federal";
+
+        const w = window.open('', '_blank', 'width=900,height=800');
+        if (!w) return alert("Popups bloqueados.");
+
+        w.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>${item.title}</title>
+                <style>
+                    @page { margin: 2cm; size: A4; }
+                    body { 
+                        font-family: 'Times New Roman', serif; 
+                        font-size: 12pt; 
+                        line-height: 1.5; 
+                        color: #000;
+                        margin: 0;
+                        padding: 20px;
+                    }
+                    h1 { 
+                        font-family: Arial, sans-serif; 
+                        font-size: 16pt; 
+                        text-align: center; 
+                        margin-bottom: 5px; 
+                    }
+                    .meta { 
+                        text-align: center; 
+                        font-size: 10pt; 
+                        color: #666; 
+                        margin-bottom: 30px; 
+                        border-bottom: 1px solid #ccc; 
+                        padding-bottom: 10px;
+                    }
+                    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                    th, td { border: 1px solid #000; padding: 5px; text-align: left; font-size: 10pt; }
+                    p { margin-bottom: 10px; text-align: justify; }
+                    div[style*="text-align: center"] { margin: 20px 0; }
+                    
+                    /* Destaque para marcas de texto impressas */
+                    .bg-yellow-200 { background-color: #fef08a !important; padding: 0 2px; }
+                </style>
+            </head>
+            <body>
+                <h1>${item.title}</h1>
+                
+                <div class="meta">
+                    <strong>Esfera:</strong> ${sphere} &nbsp;|&nbsp; 
+                    <strong>Tipo:</strong> ${item.type} &nbsp;|&nbsp; 
+                    <strong>Data:</strong> ${new Date(item.date).toLocaleDateString('pt-BR')}
+                    ${item.keywords ? `<br><strong>Tags:</strong> ${item.keywords}` : ''}
+                </div>
+
+                <div class="content">
+                    ${item.content}
+                </div>
+
+                <script>
+                    window.onload = function() {
+                        setTimeout(function() {
+                            window.print();
+                        }, 500);
+                    };
+                </script>
+            </body>
+            </html>
+        `);
+        w.document.close();
+    },
+
+    // Função auxiliar de download
+    downloadFile(filename, content, mimeType) {
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+    },
+
+    // --- FUNÇÕES DE RESPONSIVIDADE ---
+    
+    checkMobileState() {
+        // Se for Desktop (> 768px), garante que ambos apareçam
+        if (window.innerWidth >= 768) {
+            document.getElementById('sidebar').classList.remove('hidden');
+            document.getElementById('viewerContainer').classList.remove('hidden');
+        } else {
+            this.updateMobileView();
+        }
+    },
+
+    toggleMobileMenu() {
+        this.isMobileListVisible = !this.isMobileListVisible;
+        this.updateMobileView();
+    },
+
+    updateMobileView() {
+        if (window.innerWidth < 768) {
+            const sidebar = document.getElementById('sidebar');
+            const viewer = document.getElementById('viewerContainer');
+            
+            if (this.isMobileListVisible) {
+                sidebar.classList.remove('hidden');
+                viewer.classList.add('hidden');
+            } else {
+                sidebar.classList.add('hidden');
+                viewer.classList.remove('hidden');
+            }
+        }
+    },
 };
 
 app.init();

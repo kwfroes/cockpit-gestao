@@ -22,7 +22,7 @@
 /* SOLUÇÃO DO BUG DA TABELA: Wrapper Scrollável */
 .table-wrapper {
     width: 100%;
-    overflow-x: auto; /* Cria scroll horizontal se necessário */
+    overflow-x: auto;
     margin: 1.5rem 0;
     border: 1px solid #e5e7eb;
     border-radius: 6px;
@@ -34,14 +34,14 @@
     border-collapse: collapse;
     font-size: 0.875rem;
     font-family: 'Inter', sans-serif;
-    white-space: nowrap; /* Evita quebra de linha forçada em células pequenas */
+    white-space: nowrap;
 }
 
 .law-content th, .law-content td {
     border: 1px solid #e5e7eb;
     padding: 0.75rem;
     text-align: left;
-    min-width: 100px; /* Garante que colunas não fiquem minusculas */
+    min-width: 100px;
 }
 
 .law-content th {
@@ -67,8 +67,62 @@
     color: #000;
 }
 
-/* Botão Ativo (Mudado para Azul) */
 .toolbar-btn.active {
-    background-color: #dbeafe; /* Blue-100 */
-    color: #1e40af; /* Blue-800 */
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+/* --- ESTILOS DE IMPRESSÃO (PDF) - CORREÇÃO DEFINITIVA --- */
+@media print {
+    /* 1. Reseta o layout de "App" (tela cheia sem scroll) para "Documento" (scroll natural) */
+    html, body {
+        height: auto !important;
+        overflow: visible !important;
+        background: white !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* 2. Esconde menus, laterais e botões */
+    header, aside, .no-print, #emptyState, #editorModal {
+        display: none !important;
+    }
+
+    /* 3. Desfaz o layout Flexbox que trava a altura */
+    .flex, main, #viewerContainer {
+        display: block !important;
+        height: auto !important;
+        overflow: visible !important;
+        position: static !important;
+        flex: none !important;
+    }
+
+    /* 4. Configura o visualizador da lei para impressão */
+    #lawViewer {
+        display: block !important;
+        visibility: visible !important;
+        position: static !important;
+        width: 100% !important;
+        max-width: none !important;
+        box-shadow: none !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* 5. Garante legibilidade */
+    .law-content {
+        color: black !important;
+        font-size: 11pt !important;
+        line-height: 1.5 !important;
+    }
+    
+    /* Quebra de página inteligente */
+    h1, h2, h3 { 
+        page-break-after: avoid; 
+    }
+    p, div { 
+        page-break-inside: avoid; 
+    }
 }
