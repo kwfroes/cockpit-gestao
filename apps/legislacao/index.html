@@ -19,8 +19,21 @@
 
     <header class="bg-white border-b px-6 py-4 flex justify-between items-center shrink-0">
         <div class="flex items-center gap-3">
-            <button onclick="app.toggleMobileMenu()" class="md:hidden text-gray-500 hover:text-blue-600 p-1 rounded-md border border-gray-200">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        <button id="mobileMenuBtn" onclick="app.toggleMobileMenu()" 
+                class="md:hidden text-gray-500 hover:text-blue-600 p-1 rounded-md border border-gray-200 transition-colors duration-200">
+            
+            <svg id="iconOpen" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
+                <g>
+                    <path d="M489.86,269.259L291.814,5.181c-3.828-5.078-10.766-6.656-16.391-3.688L45.798,122.431l213.813,285.063l225.921-119.016c3.359-1.766,5.781-4.906,6.594-8.609C492.97,276.166,492.142,272.291,489.86,269.259z"/>
+                    <polygon points="481.767,313.228 257.908,430.587 261.298,437.071 485.157,319.697"/>
+                    <polygon points="254.908,469.806 486.048,348.603 482.657,342.119 251.501,463.337"/>
+                    <path d="M486.173,364.541L239.205,493.962c-7.5,1.906-5.781-3.953-5.797-13.125c0.703-24.656,6.719-46.203,13.406-53.25L33.017,142.525c-9.547,11.453-17.766,47.094-10.969,85.891l211.141,281.515c1.531,2.031,4.328,2.656,6.563,1.469l247.875-131.312c2.203-1.172,3.719-3.328,4.078-5.797c0.328-2.469-0.516-4.953-2.328-6.688L486.173,364.541z"/>
+                </g>
+            </svg>
+            
+            <svg id="iconClosed" class="w-6 h-6 hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor">
+                <path d="M15 25.875v-19.625c0 0-2.688-2.25-6.5-2.25s-6.5 2-6.5 2v19.875c0 0 2.688-1.938 6.5-1.938s6.5 1.938 6.5 1.938zM29 25.875v-19.625c0 0-2.688-2.25-6.5-2.25s-6.5 2-6.5 2v19.875c0 0 2.688-1.938 6.5-1.938s6.5 1.938 6.5 1.938zM31 8h-1v19h-12v1h-5v-1h-12v-19h-1v20h12v1h7.062l-0.062-1h12v-20z"/>
+            </svg>
         </button>
 
         <h1 class="text-lg md:text-xl font-bold text-gray-800 flex items-center gap-2 truncate">
@@ -28,19 +41,28 @@
             <span class="hidden md:inline">Atos Normativos</span> <span class="md:hidden">Normativos</span> </h1>
         </div>
         <div class="flex gap-2">
-            <button onclick="app.exportJson()" class="px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50 text-gray-600 flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                Backup
+            <button onclick="app.exportJson()" 
+                    class="p-2 md:px-3 md:py-1.5 border border-gray-300 rounded hover:bg-gray-50 text-gray-600 flex items-center gap-2 transition-colors" 
+                    title="Fazer Backup">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                <span class="hidden md:inline text-sm">Backup</span>
             </button>
-            <button onclick="app.openEditor()" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm font-medium shadow-sm flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                Nova Norma
+
+            <button onclick="app.openEditor()" 
+                    class="p-2 md:px-4 md:py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium shadow-sm flex items-center gap-2 transition-colors" 
+                    title="Nova Norma">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                <span class="hidden md:inline text-sm">Nova Norma</span>
             </button>
         </div>
     </header>
 
-    <div class="flex flex-1 overflow-hidden">
-        <aside id="sidebar" class="w-full md:w-80 bg-white border-r flex flex-col z-10 transition-transform duration-300 absolute md:relative h-full">            <div class="p-4 border-b bg-gray-50">
+    <div class="flex flex-1 overflow-hidden relative">
+        <div id="sidebarOverlay" onclick="app.toggleMobileMenu()" 
+            class="absolute inset-0 bg-black/50 z-20 hidden transition-opacity opacity-0 md:hidden">
+        </div>
+        <aside id="sidebar" class="absolute inset-y-0 left-0 z-30 w-80 bg-white border-r flex flex-col transform -translate-x-full md:translate-x-0 md:relative transition-transform duration-300 ease-in-out shadow-xl md:shadow-none h-full">
+            <div class="p-4 border-b bg-gray-50">
                 <input type="text" id="searchInput" placeholder="Buscar norma..." 
                     class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm">
                 <div class="flex gap-2 mt-2 overflow-x-auto pb-1 scrollbar-hide">
@@ -55,7 +77,7 @@
                 </div>
         </aside>
 
-        <main id="viewerContainer" class="hidden md:block flex-1 bg-gray-50 overflow-y-auto p-4 md:p-8 relative w-full h-full">
+        <main id="viewerContainer" class="flex-1 bg-gray-50 overflow-y-auto p-4 md:p-8 relative w-full h-full">
         <!--    <button onclick="app.toggleMobileMenu()" class="md:hidden mb-4 flex items-center gap-2 text-blue-600 font-medium text-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                 Voltar à Lista
