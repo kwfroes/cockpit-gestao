@@ -349,52 +349,57 @@ const app = {
         });
     },
 
-    openViewer(id) {
+openViewer(id) {
         this.currentId = id;
         const item = this.data.find(x => x.id === id);
         if (!item) return;
+        
         const searchTerm = document.getElementById('searchInput').value.trim();
 
+        // 1. Atualiza a lista lateral (para pintar o item selecionado)
         this.renderList(searchTerm); 
 
-        // Cria HTML da Esfera
+        // 2. Prepara HTML da Esfera
         let sphereTagHtml = "";
-        const sphere = item.sphere || "Federal"; // Compatibilidade com antigos
+        const sphere = item.sphere || "Federal"; 
 
         if (sphere === 'Municipal') sphereTagHtml = '<span class="px-2 py-1 text-xs font-bold uppercase tracking-wider bg-orange-100 text-orange-700 rounded ml-2">Municipal</span>';
         else if (sphere === 'Estadual') sphereTagHtml = '<span class="px-2 py-1 text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-700 rounded ml-2">Estadual</span>';
         else sphereTagHtml = '<span class="px-2 py-1 text-xs font-bold uppercase tracking-wider bg-green-100 text-green-700 rounded ml-2">Federal</span>';
 
-        // Estrutura do Título + Keywords na visualização
+        // 3. Prepara Título
         const titleHtml = `
             <span class="uppercase">${item.title}</span>
             ${item.keywords ? `<div class="mt-2 text-sm font-normal text-blue-500 font-mono bg-blue-50 inline-block px-2 py-1 rounded">🏷️ ${item.keywords}</div>` : ''}
         `;
         
+        // 4. Injeta os dados na tela (IMPORTANTE: Isso faz o texto aparecer)
         document.getElementById('viewTitle').innerHTML = titleHtml;
-
-        // LÓGICA DE DESTAQUE
-        let contentHtml = item.content;
-        
-        if (searchTerm && searchTerm.length > 2) {
-            // Cria uma Regex que ignora maiúsculas/minúsculas
-            const regex = new RegExp(`(${searchTerm})`, 'gi');
-            // Envolve a palavra encontrada em um span amarelo
-            contentHtml = contentHtml.replace(regex, '<span class="bg-yellow-200 text-black font-bold">$1</span>');
-        }
-
-        document.getElementById('viewDate').textContent = `Publicado em: ${new Date(item.date).toLocaleDateString('pt-BR', { dateStyle: 'long' })}`;
         document.getElementById('viewTag').innerHTML = item.type + sphereTagHtml;
+        document.getElementById('viewDate').textContent = `Publicado em: ${new Date(item.date).toLocaleDateString('pt-BR', { dateStyle: 'long' })}`;
+
+        // 5. Lógica de Destaque (Highlight)
+        let contentHtml = item.content;
+        if (searchTerm && searchTerm.length > 2) {
+            try {
+                const regex = new RegExp(`(${searchTerm})`, 'gi');
+                contentHtml = contentHtml.replace(regex, '<span class="bg-yellow-200 text-black font-bold">$1</span>');
+            } catch(e) { console.warn(e); }
+        }
         document.getElementById('viewContent').innerHTML = contentHtml;
 
+        // 6. Mostra o visualizador
         document.getElementById('emptyState').classList.add('hidden');
         document.getElementById('lawViewer').classList.remove('hidden');
         
-        // Responsividade ativa
-        if(window.innerWidth < 768) {
-             this.isMobileListVisible = false; // Define que agora queremos ver o leitor
-             this.updateMobileView(); // Aplica a mudança
-             window.scrollTo(0,0); // Rola para o topo
+        // 7. Lógica Responsiva (Mobile)
+        if (window.innerWidth < 768) {
+             const sidebar = document.getElementById('sidebar');
+             // Se a sidebar estiver aberta, fecha ela suavemente
+             if (sidebar.classList.contains('translate-x-0')) {
+                 this.toggleMobileMenu();
+             }
+             window.scrollTo(0, 0);
         } else {
              document.getElementById('viewerContainer').scrollIntoView({ behavior: 'smooth' });
         }
@@ -556,36 +561,70 @@ const app = {
     },
 
     // --- FUNÇÕES DE RESPONSIVIDADE ---
-    
-    checkMobileState() {
-        // Se for Desktop (> 768px), garante que ambos apareçam
-        if (window.innerWidth >= 768) {
-            document.getElementById('sidebar').classList.remove('hidden');
-            document.getElementById('viewerContainer').classList.remove('hidden');
-        } else {
-            this.updateMobileView();
-        }
-    },
-
-    toggleMobileMenu() {
-        this.isMobileListVisible = !this.isMobileListVisible;
-        this.updateMobileView();
-    },
-
-    updateMobileView() {
-        if (window.innerWidth < 768) {
-            const sidebar = document.getElementById('sidebar');
-            const viewer = document.getElementById('viewerContainer');
             
-            if (this.isMobileListVisible) {
-                sidebar.classList.remove('hidden');
-                viewer.classList.add('hidden');
-            } else {
-                sidebar.classList.add('hidden');
-                viewer.classList.remove('hidden');
+        checkMobileState() {
+            // Apenas garante que o overlay suma se redimensionar para desktop
+            if (window.innerWidth >= 768) {
+                const overlay = document.getElementById('sidebarOverlay');
+                if(overlay) overlay.classList.add('hidden');
+            }
+        },
+
+        toggleMobileMenu() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        
+        // Ícones do Livro
+        const iconClosed = document.getElementById('iconClosed');
+        const iconOpen = document.getElementById('iconOpen');
+        
+        const isOpen = sidebar.classList.contains('translate-x-0');
+
+        if (isOpen) {
+            // --- FECHAR MENU ---
+            sidebar.classList.remove('translate-x-0');
+            sidebar.classList.add('-translate-x-full');
+            
+            // Esconde overlay
+            if(overlay) {
+                overlay.classList.remove('opacity-100');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+            }
+            
+            // TROCA DE ÍCONE: Mostra Livro Fechado
+            if(iconClosed && iconOpen) {
+                iconClosed.classList.remove('hidden');
+                iconOpen.classList.add('hidden');
+            }
+            
+        } else {
+            // --- ABRIR MENU ---
+            sidebar.classList.remove('-translate-x-full');
+            sidebar.classList.add('translate-x-0');
+            
+            // Mostra overlay
+            if(overlay) {
+                overlay.classList.remove('hidden');
+                setTimeout(() => {
+                    overlay.classList.remove('opacity-0');
+                    overlay.classList.add('opacity-100');
+                }, 10);
+            }
+            
+            // TROCA DE ÍCONE: Mostra Livro Aberto
+            if(iconClosed && iconOpen) {
+                iconClosed.classList.add('hidden');
+                iconOpen.classList.remove('hidden');
             }
         }
     },
+
+        // A função updateMobileView NÃO É MAIS NECESSÁRIA com essa lógica de slide.
+        // Pode remover ela ou deixá-la vazia:
+        updateMobileView() {
+            // Função desativada - controle feito via CSS classes (translate)
+        },
 };
 
 app.init();
