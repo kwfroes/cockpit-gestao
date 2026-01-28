@@ -6,6 +6,18 @@
     <title>Atos Normativos - Cockpit</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              serif: ['Merriweather', 'serif'],
+            }
+          }
+        }
+      }
+    </script>
+    <script>
         (function() {
             const isAuthenticated = sessionStorage.getItem("cockpit_auth_token") === "valid";
             if (!isAuthenticated) window.top.location.href = "../../index.html";
@@ -93,6 +105,41 @@
                     <div class="flex justify-between items-start mb-4">
                         <span id="viewTag" class="px-2 py-1 text-xs font-bold uppercase tracking-wider bg-gray-100 rounded text-gray-600">--</span>
                         <div class="flex gap-2 no-print">
+                            
+                            <div class="relative group">
+                                <button class="text-gray-400 hover:text-blue-600 flex items-center gap-1" title="Aparência">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                    <span class="text-xs font-semibold">Visual</span>
+                                </button>
+                                <div class="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-xl opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all z-20 overflow-hidden">
+                                    <div class="p-2 border-b bg-gray-50 text-[10px] font-bold text-gray-500 uppercase tracking-wider">Modo de Leitura</div>
+                                    
+                                    <button onclick="app.setTheme('default')" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2">
+                                        <span class="w-4 h-4 rounded-full border bg-white"></span> Padrão
+                                    </button>
+                                    <button onclick="app.setTheme('sepia')" class="w-full text-left px-4 py-2 text-sm text-amber-900 hover:bg-[#fdf6e3] flex items-center gap-2 bg-[#fdf6e3]">
+                                        <span class="w-4 h-4 rounded-full border border-amber-800 bg-[#eee8d5]"></span> Papel Velho
+                                    </button>
+                                    <button onclick="app.setTheme('dark')" class="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-gray-800 flex items-center gap-2 bg-gray-900">
+                                        <span class="w-4 h-4 rounded-full border border-gray-600 bg-gray-800"></span> Escuro
+                                    </button>
+
+                                    <div class="p-2 border-b border-t bg-gray-50 text-[10px] font-bold text-gray-500 uppercase tracking-wider mt-1">Tipografia</div>
+
+                                    <button onclick="app.setFont('sans')" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-sans">
+                                        Aa Moderna
+                                    </button>
+                                    <button onclick="app.setFont('serif')" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-serif">
+                                        Aa Livro
+                                    </button>
+                                    <button onclick="app.setFont('mono')" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-mono">
+                                        Aa Máquina
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="w-px h-5 bg-gray-300 mx-1"></div>
+
                             <div class="relative group">
                                 <button class="text-gray-400 hover:text-blue-600 flex items-center gap-1" title="Exportar">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
@@ -114,10 +161,10 @@
                             <div class="w-px h-5 bg-gray-300 mx-1"></div>
 
                             <button onclick="app.editCurrent()" class="text-gray-400 hover:text-blue-600" title="Editar">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                             </button>
                             <button onclick="app.deleteCurrent()" class="text-gray-400 hover:text-red-600" title="Excluir">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                             </button>
                         </div>
                     </div>
