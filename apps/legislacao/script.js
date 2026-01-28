@@ -10,10 +10,21 @@ const app = {
     
     async init() {
         await this.loadData();
+
+        const savedPrefs = localStorage.getItem('viewer_prefs');
+        if (savedPrefs) {
+            this.preferences = JSON.parse(savedPrefs);
+        }
+
         this.renderList();
         document.getElementById('searchInput').addEventListener('input', (e) => this.renderList(e.target.value));
         this.checkMobileState();
         window.addEventListener('resize', () => this.checkMobileState());
+    },
+
+    preferences: {
+        theme: 'default', // default, sepia, dark
+        font: 'sans'      // sans, serif, mono
     },
 
     // --- 1. CARREGAMENTO COM FETCH ---
@@ -359,6 +370,9 @@ openViewer(id) {
         // 1. Atualiza a lista lateral (para pintar o item selecionado)
         this.renderList(searchTerm); 
 
+        // Isso garante que o texto comece sempre do topo
+        document.getElementById('viewerContainer').scrollTop = 0;
+
         // 2. Prepara HTML da Esfera
         let sphereTagHtml = "";
         const sphere = item.sphere || "Federal"; 
@@ -390,6 +404,7 @@ openViewer(id) {
 
         // 6. Mostra o visualizador
         document.getElementById('emptyState').classList.add('hidden');
+        this.applyAppearance();
         document.getElementById('lawViewer').classList.remove('hidden');
         
         // 7. Lógica Responsiva (Mobile)
@@ -625,6 +640,113 @@ openViewer(id) {
         updateMobileView() {
             // Função desativada - controle feito via CSS classes (translate)
         },
+
+    // --- FUNÇÕES DE APARÊNCIA ---
+
+    setTheme(themeName) {
+        this.preferences.theme = themeName;
+        localStorage.setItem('viewer_prefs', JSON.stringify(this.preferences));
+        this.applyAppearance();
+    },
+
+    setFont(fontName) {
+        this.preferences.font = fontName;
+        localStorage.setItem('viewer_prefs', JSON.stringify(this.preferences));
+        this.applyAppearance();
+    },
+
+    applyAppearance() {
+        const viewer = document.getElementById('lawViewer');
+        const content = document.getElementById('viewContent');
+        const title = document.getElementById('viewTitle');
+
+        // --- 1. TEMA GERAL (Container Principal) ---
+        viewer.classList.remove(
+            'bg-white', 'border-gray-200', 
+            'bg-[#fdf6e3]', 'border-[#eee8d5]', 
+            'bg-gray-900', 'border-gray-700'
+        );
+        content.classList.remove('text-gray-800', 'text-[#433422]', 'text-gray-300');
+        title.classList.remove('text-gray-900', 'text-[#5b4636]', 'text-gray-100');
+
+        // Variáveis para as cores da Tabela
+        let tableStripe = "";  // Cor da linha "par" e do cabeçalho
+        let tableBorder = "";  // Cor da borda da tabela
+
+        if (this.preferences.theme === 'sepia') {
+            // Modo Sépia
+            viewer.classList.add('bg-[#fdf6e3]', 'border-[#eee8d5]');
+            content.classList.add('text-[#433422]'); 
+            title.classList.add('text-[#5b4636]');
+            
+            // Cores da Tabela Sépia
+            tableStripe = "#eee8d5"; // Bege um pouco mais escuro
+            tableBorder = "#d3cbb7"; // Bege escuro para borda
+            
+        } else if (this.preferences.theme === 'dark') {
+            // Modo Escuro
+            viewer.classList.add('bg-gray-900', 'border-gray-700');
+            content.classList.add('text-gray-300');
+            title.classList.add('text-gray-100');
+            
+            // Cores da Tabela Escura
+            tableStripe = "#374151"; // Cinza escuro (gray-700)
+            tableBorder = "#4b5563"; // Cinza médio (gray-600)
+            
+        } else {
+            // Modo Padrão
+            viewer.classList.add('bg-white', 'border-gray-200');
+            content.classList.add('text-gray-800');
+            title.classList.add('text-gray-900');
+            
+            // Cores da Tabela Padrão
+            tableStripe = "#f9fafb"; // Cinza clarinho
+            tableBorder = "#e5e7eb"; // Cinza padrão
+        }
+
+        // --- 2. REGRA SUPREMA (Fonte + Tabela) ---
+        
+        let styleTag = document.getElementById('dynamic-font-style');
+        if (!styleTag) {
+            styleTag = document.createElement('style');
+            styleTag.id = 'dynamic-font-style';
+            document.head.appendChild(styleTag);
+        }
+
+        let fontStack = "";
+        if (this.preferences.font === 'serif') {
+            fontStack = "'Merriweather', serif";
+        } else if (this.preferences.font === 'mono') {
+            fontStack = "'Courier New', Courier, monospace";
+        } else {
+            fontStack = "'Inter', sans-serif";
+        }
+
+        // AQUI ESTÁ A MÁGICA DA TABELA
+        // Adicionei regras para TH, TR e TD usarem as variáveis que definimos acima
+        styleTag.innerHTML = `
+            #viewContent, #viewContent * {
+                font-family: ${fontStack} !important;
+            }
+            
+            /* Cabeçalho da Tabela */
+            .law-content th {
+                background-color: ${tableStripe} !important;
+                border-color: ${tableBorder} !important;
+                color: inherit !important; /* Herda a cor do texto do tema */
+            }
+            
+            /* Linhas Zebradas (Pares) */
+            .law-content tr:nth-child(even) {
+                background-color: ${tableStripe} !important;
+            }
+            
+            /* Bordas das células */
+            .law-content td, .law-content th {
+                border-color: ${tableBorder} !important;
+            }
+        `;
+    },
 };
 
 app.init();
