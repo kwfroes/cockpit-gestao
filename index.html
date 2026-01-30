@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR" class="h-full">
   <head>
     <meta charset="UTF-8" />
@@ -34,71 +34,126 @@
     <link rel="stylesheet" href="theme.css" />
   </head>
   <body class="h-full bg-gray-100 overflow-hidden relative">
+    <div
+      id="loginOverlay"
+      class="fixed inset-0 bg-slate-900 z-[100] flex flex-col items-center justify-center transition-opacity duration-500"
+    >
+      <div
+        class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-sm text-center"
+      >
+        <img
+          src="icons/android-chrome-192x192.png"
+          alt="Logo"
+          class="w-16 h-16 mx-auto mb-4 rounded-lg shadow-md"
+        />
 
-    <div id="loginOverlay" class="fixed inset-0 bg-slate-900 z-[100] flex flex-col items-center justify-center transition-opacity duration-500">
-      <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-sm text-center">
-        <img src="icons/android-chrome-192x192.png" alt="Logo" class="w-16 h-16 mx-auto mb-4 rounded-lg shadow-md">
-        
         <h2 class="text-2xl font-bold text-slate-800 mb-1">Cockpit Gestão</h2>
-        <p class="text-gray-500 mb-6 text-xs uppercase tracking-wide">Acesso Restrito</p>
-        
+        <p class="text-gray-500 mb-6 text-xs uppercase tracking-wide">
+          Acesso Restrito
+        </p>
+
         <form id="loginForm" class="space-y-4 text-left">
-          
           <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1 ml-1">USUÁRIO</label>
-            <input 
-              type="text" 
-              id="userInput" 
+            <label class="block text-xs font-bold text-gray-700 mb-1 ml-1"
+              >USUÁRIO</label
+            >
+            <input
+              type="text"
+              id="userInput"
               class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
               placeholder="Digite seu usuário"
               autocomplete="username"
-            >
+            />
           </div>
 
           <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1 ml-1">SENHA</label>
-            <input 
-              type="password" 
-              id="passwordInput" 
+            <label class="block text-xs font-bold text-gray-700 mb-1 ml-1"
+              >SENHA</label
+            >
+            <input
+              type="password"
+              id="passwordInput"
               class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
               placeholder="Digite sua senha"
               autocomplete="current-password"
+            />
+            <p
+              id="loginError"
+              class="text-red-500 text-xs mt-2 hidden font-bold text-center"
             >
-            <p id="loginError" class="text-red-500 text-xs mt-2 hidden font-bold text-center">Credenciais inválidas.</p>
+              Credenciais inválidas.
+            </p>
           </div>
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors shadow-lg shadow-blue-500/30 mt-2"
           >
             Entrar no Sistema
           </button>
+          <div
+            class="mt-6 flex justify-between text-xs font-medium text-gray-500 pt-4 border-t border-gray-100"
+          >
+            <button
+              type="button"
+              onclick="openRegisterModal()"
+              class="hover:text-blue-600 transition underline"
+            >
+              Não tenho cadastro
+            </button>
+            <button
+              type="button"
+              onclick="openResetModal()"
+              class="hover:text-blue-600 transition underline"
+            >
+              Alterar senha
+            </button>
+          </div>
         </form>
       </div>
     </div>
 
-    <div id="logoutModal" class="fixed inset-0 z-[110] bg-slate-900/80 hidden flex items-center justify-center transition-opacity opacity-0 backdrop-blur-sm">
-      <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 transform transition-all scale-95 opacity-0" id="logoutModalContent">
-        
+    <div
+      id="logoutModal"
+      class="fixed inset-0 z-[110] bg-slate-900/80 hidden flex items-center justify-center transition-opacity opacity-0 backdrop-blur-sm"
+    >
+      <div
+        class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 transform transition-all scale-95 opacity-0"
+        id="logoutModalContent"
+      >
         <div class="text-center mb-6">
-          <div class="w-14 h-14 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+          <div
+            class="w-14 h-14 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4"
+          >
+            <svg
+              class="w-8 h-8"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              ></path>
             </svg>
           </div>
           <h3 class="text-xl font-bold text-gray-800">Sair do Sistema?</h3>
-          <p class="text-sm text-gray-500 mt-2">Você precisará fazer login novamente para acessar os aplicativos.</p>
+          <p class="text-sm text-gray-500 mt-2">
+            Você precisará fazer login novamente para acessar os aplicativos.
+          </p>
         </div>
 
         <div class="flex gap-3">
-          <button 
-            id="btnCancelLogout" 
+          <button
+            id="btnCancelLogout"
             class="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors"
           >
             Cancelar
           </button>
-          <button 
-            id="btnConfirmLogout" 
+          <button
+            id="btnConfirmLogout"
             class="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg shadow-md shadow-red-500/30 transition-colors"
           >
             Sim, Sair
@@ -106,14 +161,55 @@
         </div>
       </div>
     </div>
-    
+
+    <div
+      id="errorModal"
+      class="fixed inset-0 z-[120] bg-slate-900/80 hidden flex items-center justify-center transition-opacity opacity-0 backdrop-blur-sm"
+    >
+      <div
+        class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 transform transition-all scale-95 opacity-0 text-center"
+        id="errorModalContent"
+      >
+        <div
+          class="w-14 h-14 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce"
+        >
+          <svg
+            class="w-8 h-8"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            ></path>
+          </svg>
+        </div>
+
+        <h3 class="text-xl font-bold text-gray-800 mb-2">Acesso Negado</h3>
+
+        <p id="errorMessageText" class="text-sm text-gray-500 mb-6 font-medium">
+          Credenciais inválidas.
+        </p>
+
+        <button
+          id="btnCloseError"
+          class="w-full px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg shadow-lg shadow-red-500/30 transition-all active:scale-95"
+        >
+          Tentar Novamente
+        </button>
+      </div>
+    </div>
+
     <div
       id="sidebarOverlay"
       class="fixed inset-0 bg-black/50 z-30 hidden transition-opacity opacity-0 md:hidden"
       onclick="toggleSidebar()"
     ></div>
 
-<header
+    <header
       class="fixed top-0 left-0 right-0 h-16 bg-white shadow-md z-50 flex items-center justify-between px-4 md:px-6"
     >
       <div class="flex items-center gap-3">
@@ -123,33 +219,68 @@
           class="p-2 mr-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors transition-transform duration-300"
           title="Alternar Menu"
         >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            ></path>
           </svg>
         </button>
 
-        <a href="#home" class="flex items-center gap-3 hover:opacity-80 transition-opacity select-none" title="Ir para o Início">
-          <img src="icons/android-chrome-192x192.png" alt="Logo Cockpit" class="w-10 h-10 md:w-12 md:h-12 rounded-xl" />
-          <h1 class="text-xl md:text-2xl font-bold text-[var(--primary)] tracking-tight truncate">
+        <a
+          href="#home"
+          class="flex items-center gap-3 hover:opacity-80 transition-opacity select-none"
+          title="Ir para o Início"
+        >
+          <img
+            src="icons/android-chrome-192x192.png"
+            alt="Logo Cockpit"
+            class="w-10 h-10 md:w-12 md:h-12 rounded-xl"
+          />
+          <h1
+            class="text-xl md:text-2xl font-bold text-[var(--primary)] tracking-tight truncate"
+          >
             Cockpit <span class="font-normal text-gray-600">Gestão</span>
           </h1>
         </a>
       </div>
 
       <div class="flex items-center gap-4">
-        <div class="text-xs md:text-sm text-gray-600 text-right min-w-[100px] hidden sm:block">
-          <span id="infoText" class="block transition-opacity duration-500 opacity-100 cursor-default">
+        <div
+          class="text-xs md:text-sm text-gray-600 text-right min-w-[100px] hidden sm:block"
+        >
+          <span
+            id="infoText"
+            class="block transition-opacity duration-500 opacity-100 cursor-default"
+          >
             Kevin Fróes • <span id="currentYearHeader">2026</span>
           </span>
         </div>
 
-        <button 
+        <button
           id="logoutButton"
           class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-all duration-300"
           title="Sair do Sistema"
         >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+            ></path>
           </svg>
         </button>
       </div>
@@ -194,7 +325,7 @@
           </svg>
           Contratos Públicos
         </a>
-        
+
         <a
           href="#legislacao"
           class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400 group"
@@ -207,7 +338,8 @@
             aria-hidden="true"
           >
             <g>
-              <path d="M161.913,165.442h-41.357V37.333h52.499c-6.2,10.32-21.994,38.5-21.994,58.008
+              <path
+                d="M161.913,165.442h-41.357V37.333h52.499c-6.2,10.32-21.994,38.5-21.994,58.008
                 c0,15.853,12.685,28.75,28.26,28.75c15.581,0,28.26-12.897,28.26-28.75
                 c0-18.37-15.983-47.543-22.071-58.008h18.778V25.216h-83.731V0H92.308v25.216H8.582v12.117
                 h18.689c-6.203,10.32-21.994,38.5-21.994,58.008c0,15.853,12.678,28.75,28.259,28.75
@@ -216,13 +348,13 @@
                 M198.087,90.802h-37.533c1.938-15.416,12.749-35.831,18.713-46.092
                 C185.172,55.184,196.03,76.045,198.087,90.802z
                 M52.301,90.802H14.768c1.941-15.416,12.752-35.843,18.716-46.092
-                C39.4,55.184,50.256,76.039,52.301,90.802z"/>
+                C39.4,55.184,50.256,76.039,52.301,90.802z"
+              />
             </g>
           </svg>
 
           Atos Normativos
         </a>
-      
 
         <a
           href="#conversor"
@@ -263,11 +395,7 @@
       id="mainContent"
       class="pt-16 h-full transition-all duration-300 md:ml-64"
     >
-      <iframe
-        id="appFrame"
-        src="about:blank"
-        allowfullscreen
-      ></iframe>
+      <iframe id="appFrame" src="about:blank" allowfullscreen></iframe>
     </main>
 
     <div
@@ -300,6 +428,158 @@
           class="w-40 rounded-md shadow-sm"
         />
       </a>
+    </div>
+
+    <div
+      id="registerModal"
+      class="fixed inset-0 z-[130] bg-slate-900/90 hidden flex items-center justify-center backdrop-blur-sm transition-opacity"
+    >
+      <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-sm relative">
+        <button
+          onclick="
+            document.getElementById('registerModal').classList.add('hidden')
+          "
+          class="absolute top-4 right-4 text-gray-400 hover:text-red-500"
+        >
+          ✕
+        </button>
+        <h3 class="text-lg font-bold text-gray-800 mb-1">Solicitar Cadastro</h3>
+        <p class="text-xs text-gray-500 mb-4">
+          Gere o arquivo e envie para o administrador.
+        </p>
+
+        <form id="registerForm" class="space-y-3">
+          <input
+            type="text"
+            id="regName"
+            placeholder="Nome Completo"
+            class="w-full px-3 py-2 border rounded text-sm outline-none focus:border-blue-500"
+            required
+          />
+          <input
+            type="text"
+            id="regUser"
+            placeholder="Usuário Desejado"
+            class="w-full px-3 py-2 border rounded text-sm outline-none focus:border-blue-500"
+            required
+          />
+          <input
+            type="email"
+            id="regEmail"
+            placeholder="Seu E-mail"
+            class="w-full px-3 py-2 border rounded text-sm outline-none focus:border-blue-500"
+            required
+          />
+          <input
+            type="password"
+            id="regPass"
+            placeholder="Senha Desejada"
+            class="w-full px-3 py-2 border rounded text-sm outline-none focus:border-blue-500"
+            required
+          />
+          <button
+            type="submit"
+            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded transition shadow"
+          >
+            📄 Gerar Arquivo de Solicitação
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div
+      id="resetModal"
+      class="fixed inset-0 z-[130] bg-slate-900/90 hidden flex items-center justify-center backdrop-blur-sm transition-opacity"
+    >
+      <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-sm relative">
+        <button
+          onclick="
+            document.getElementById('resetModal').classList.add('hidden')
+          "
+          class="absolute top-4 right-4 text-gray-400 hover:text-red-500"
+        >
+          ✕
+        </button>
+        <h3 class="text-lg font-bold text-gray-800 mb-1">
+          Solicitar Nova Senha
+        </h3>
+        <p class="text-xs text-gray-500 mb-4">O admin validará seu e-mail.</p>
+
+        <form id="resetForm" class="space-y-3">
+          <input
+            type="text"
+            id="resUser"
+            placeholder="Seu Usuário"
+            class="w-full px-3 py-2 border rounded text-sm outline-none focus:border-blue-500"
+            required
+          />
+          <input
+            type="email"
+            id="resEmail"
+            placeholder="Seu E-mail Cadastrado"
+            class="w-full px-3 py-2 border rounded text-sm outline-none focus:border-blue-500"
+            required
+          />
+          <input
+            type="password"
+            id="resNewPass"
+            placeholder="Nova Senha"
+            class="w-full px-3 py-2 border rounded text-sm outline-none focus:border-blue-500"
+            required
+          />
+          <button
+            type="submit"
+            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded transition shadow"
+          >
+            📄 Gerar Arquivo de Troca
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div
+      id="successModal"
+      class="fixed inset-0 z-[140] bg-slate-900/80 hidden flex items-center justify-center transition-opacity opacity-0 backdrop-blur-sm"
+    >
+      <div
+        class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 transform transition-all scale-95 opacity-0 text-center"
+        id="successModalContent"
+      >
+        <div
+          class="w-14 h-14 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 animate-[bounce_1s_ease-in-out_1]"
+        >
+          <svg
+            class="w-8 h-8"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            ></path>
+          </svg>
+        </div>
+
+        <h3 id="successTitle" class="text-xl font-bold text-gray-800 mb-2">
+          Sucesso!
+        </h3>
+        <p
+          id="successMessage"
+          class="text-sm text-gray-500 mb-6 font-medium whitespace-pre-line"
+        >
+          Operação realizada com sucesso.
+        </p>
+
+        <button
+          id="btnCloseSuccess"
+          class="w-full px-4 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow-lg shadow-green-500/30 transition-all active:scale-95"
+        >
+          OK, Entendi
+        </button>
+      </div>
     </div>
 
     <script src="main.js"></script>
