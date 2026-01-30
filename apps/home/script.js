@@ -2,8 +2,8 @@
  * apps/home/script.js
  */
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js');
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./sw.js");
 }
 
 /**
@@ -11,17 +11,21 @@ if ('serviceWorker' in navigator) {
  * @description Pede permissão ao usuário para mostrar notificações no desktop.
  */
 function requestNotificationPermission() {
-    // Verifica se o navegador suporta a API e se a permissão ainda não foi concedida/negada.
-    if ("Notification" in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-        Notification.requestPermission();
-    }
+  // Verifica se o navegador suporta a API e se a permissão ainda não foi concedida/negada.
+  if (
+    "Notification" in window &&
+    Notification.permission !== "granted" &&
+    Notification.permission !== "denied"
+  ) {
+    Notification.requestPermission();
+  }
 }
 
 // --- CONFIGURAÇÃO DAS IMAGENS DE FUNDO ---
 const BG_IMAGES = {
-  manha: 'img/manha.png', 
-  tarde: 'img/tarde.png',
-  noite: 'img/noite.png'
+  manha: "img/manha.png",
+  tarde: "img/tarde.png",
+  noite: "img/noite.png",
 };
 
 /**
@@ -34,23 +38,22 @@ function updateDynamicBackground(hour) {
 
   const isBgEnabled = localStorage.getItem("cockpit_bg_enabled") === "true";
   if (!isBgEnabled) {
-    bgEl.style.backgroundImage = 'none';
-    bgEl.classList.remove('opacity-20');
-    bgEl.classList.add('opacity-0');
+    bgEl.style.backgroundImage = "none";
+    bgEl.classList.remove("opacity-20");
+    bgEl.classList.add("opacity-0");
     return;
   }
 
-  let bgImage = '';
+  let bgImage = "";
   if (hour >= 5 && hour < 12) bgImage = BG_IMAGES.manha;
   else if (hour >= 12 && hour < 18) bgImage = BG_IMAGES.tarde;
   else bgImage = BG_IMAGES.noite;
 
   // aplica imagem e opacidade esmaecida
   bgEl.style.backgroundImage = `url('${bgImage}')`;
-  bgEl.classList.remove('opacity-0');
-  bgEl.classList.add('opacity-20');
+  bgEl.classList.remove("opacity-0");
+  bgEl.classList.add("opacity-20");
 }
-
 
 document.addEventListener("DOMContentLoaded", () => {
   // --- 1. Lógica do Relógio ---
@@ -58,8 +61,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const timeEl = document.getElementById("currentTime");
   const greetingEl = document.getElementById("greeting");
 
-// --- INÍCIO: Modal de Nome Personalizado (Tailwind) ---
-  let userName = localStorage.getItem("cockpit_username");
+  // --- INÍCIO: Modal de Nome Personalizado (Tailwind) ---
+  // 1. Tenta pegar apelido salvo OU nome do login (SessionStorage)
+  let savedNick = localStorage.getItem("cockpit_username");
+  let sessionName = sessionStorage.getItem("cockpit_user_realname");
+
+  // Se não tiver apelido, usa o primeiro nome do cadastro
+  let userName = savedNick || (sessionName ? sessionName.split(" ")[0] : "");
 
   // 1. Injeta o HTML do Modal no final do corpo da página
   const modalHTML = `
@@ -79,23 +87,23 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     </div>
   `;
-  document.body.insertAdjacentHTML('beforeend', modalHTML);
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
 
   // 2. Referências aos elementos do Modal
-  const modal = document.getElementById('nameModal');
-  const input = document.getElementById('nameInput');
-  const btnSave = document.getElementById('btnSaveName');
-  const btnCancel = document.getElementById('btnCancelName');
+  const modal = document.getElementById("nameModal");
+  const input = document.getElementById("nameInput");
+  const btnSave = document.getElementById("btnSaveName");
+  const btnCancel = document.getElementById("btnCancelName");
 
   // 3. Funções de Controle
   function openNameModal() {
     input.value = localStorage.getItem("cockpit_username") || "";
-    modal.classList.remove('hidden');
+    modal.classList.remove("hidden");
     setTimeout(() => input.focus(), 100); // Foca no campo automaticamente
   }
 
   function closeNameModal() {
-    modal.classList.add('hidden');
+    modal.classList.add("hidden");
   }
 
   function saveName() {
@@ -111,10 +119,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // 4. Eventos
   btnSave.onclick = saveName;
   btnCancel.onclick = closeNameModal;
-  
+
   // Salvar ao apertar ENTER
-  input.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') saveName();
+  input.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") saveName();
   });
 
   // Configura o clique na saudação para abrir o modal
@@ -127,10 +135,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // Se não tiver nome salvo, abre o modal automaticamente ao iniciar
   if (!userName) {
     // Esconde o botão cancelar na primeira vez (obrigatório)
-    btnCancel.style.display = 'none'; 
+    btnCancel.style.display = "none";
     openNameModal();
   } else {
-    btnCancel.style.display = 'inline-block';
+    btnCancel.style.display = "inline-block";
   }
   // --- FIM: Modal de Nome ---
 
@@ -172,7 +180,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     updateDynamicBackground(hour);
-
   }
 
   // Atualiza a cada segundo e roda imediatamente
@@ -227,7 +234,7 @@ const STATS_CONFIG = {
         d="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4z" />
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
         d="M9 12l2 2 4-4" />
-    </svg>`
+    </svg>`,
   },
   //conversor: {
   //  titulo: "Arquivos",
@@ -268,7 +275,7 @@ function renderStats() {
       principal: (stats.dashboard.solicitacoes || 0).toLocaleString("pt-BR"),
       label: "Análises",
       sub: `${(stats.dashboard.indeferidas || 0).toLocaleString(
-        "pt-BR"
+        "pt-BR",
       )} indeferidas`,
     },
     {
@@ -314,14 +321,13 @@ function renderStats() {
   // Construção do HTML
   let html = `<div class="grid grid-cols-1 md:grid-cols-4 gap-6">`;
 
-cardsData.forEach((card) => {
-
+  cardsData.forEach((card) => {
     // 1. Define o cursor (apenas Famílias é clicável)
     const cursorClass = card.id ? "cursor-pointer" : "cursor-default";
-    
+
     // 2. Define a borda hover (agora todos têm a sua cor específica)
     const hoverBorderClass = card.hoverBorder || "hover:border-gray-300";
-    
+
     const idAttr = card.id ? `id="${card.id}"` : "";
 
     html += `
@@ -401,7 +407,7 @@ function forceUpdateContratos() {
 
       // Conta pagamentos (Pai + Filhos)
       const familia = (db.contratos || []).filter(
-        (item) => item.id === c.id || item.parentId === c.id
+        (item) => item.id === c.id || item.parentId === c.id,
       );
       familia.forEach((f) => {
         if (f.pagamentos) qtdPagamentos += f.pagamentos.length;
@@ -513,13 +519,13 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const response = await fetch("frases.json");
       const data = await response.json();
-      
+
       // Achata o array, mas INJETA o nome da categoria em cada frase
-      allQuotesCache = data.categorias.flatMap((cat) => 
-        cat.frases.map(f => ({
+      allQuotesCache = data.categorias.flatMap((cat) =>
+        cat.frases.map((f) => ({
           ...f,
-          categoria: cat.nome // Importante para o filtro
-        }))
+          categoria: cat.nome, // Importante para o filtro
+        })),
       );
     } catch (error) {
       console.error("Erro ao carregar frases:", error);
@@ -538,17 +544,18 @@ document.addEventListener("DOMContentLoaded", () => {
     await loadData(); // Garante que temos dados
     if (allQuotesCache.length === 0) return;
 
-    const randomItem = allQuotesCache[Math.floor(Math.random() * allQuotesCache.length)];
+    const randomItem =
+      allQuotesCache[Math.floor(Math.random() * allQuotesCache.length)];
     saveAndRender(randomItem);
   }
 
   function notifyNewQuote(frase, autor) {
-    if (Notification.permission === 'granted') {
+    if (Notification.permission === "granted") {
       new Notification(`📖 Reflexão do Dia`, {
         body: `"${frase}"\n— ${autor || "Desconhecido"}`,
-        icon: 'favicon-96x96.png',
-        tag: 'stoic-quote-update',
-        silent: true
+        icon: "favicon-96x96.png",
+        tag: "stoic-quote-update",
+        silent: true,
       });
     }
   }
@@ -569,11 +576,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }, UPDATE_INTERVAL_MS);
 
     // === TESTE RÁPIDO ===
-  //Gera uma nova citação + notificação em 5 segundos
-  //setTimeout(() => {
-  //  updateQuote(true);
-  //}, 5000);
-
+    //Gera uma nova citação + notificação em 5 segundos
+    //setTimeout(() => {
+    //  updateQuote(true);
+    //}, 5000);
   }
 
   // --- Inicia tudo ---
@@ -594,7 +600,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function createModal() {
     // 1. IMPORTANTE: Defina a variável antes de usar no HTML
-    const isBgEnabled = localStorage.getItem("cockpit_bg_enabled") === "true" ? "checked" : "";
+    const isBgEnabled =
+      localStorage.getItem("cockpit_bg_enabled") === "true" ? "checked" : "";
 
     // HTML atualizado
     const modalHTML = `
@@ -644,56 +651,65 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function openModal() {
-      let modal = document.getElementById("stoic-modal");
-      
-      // SÓ ENTRA AQUI NA PRIMEIRA VEZ (Criação)
-      if (!modal) {
-        createModal();
-        modal = document.getElementById("stoic-modal");
+    let modal = document.getElementById("stoic-modal");
 
-        // Event Listeners (Fechar)
-        document.getElementById("stoic-close-btn").onclick = () => modal.classList.add("hidden");
-        
-        // Eventos de Input para filtrar
-        const inputs = ['stoic-search', 'stoic-filter-author', 'stoic-filter-category'];
-        inputs.forEach(id => {
-          document.getElementById(id).addEventListener('input', applyFilters);
+    // SÓ ENTRA AQUI NA PRIMEIRA VEZ (Criação)
+    if (!modal) {
+      createModal();
+      modal = document.getElementById("stoic-modal");
+
+      // Event Listeners (Fechar)
+      document.getElementById("stoic-close-btn").onclick = () =>
+        modal.classList.add("hidden");
+
+      // Eventos de Input para filtrar
+      const inputs = [
+        "stoic-search",
+        "stoic-filter-author",
+        "stoic-filter-category",
+      ];
+      inputs.forEach((id) => {
+        document.getElementById(id).addEventListener("input", applyFilters);
+      });
+
+      // --- CORREÇÃO: O LISTENER DO WALLPAPER FICA AQUI DENTRO ---
+      const bgToggle = document.getElementById("stoic-bg-toggle");
+      if (bgToggle) {
+        bgToggle.addEventListener("change", (e) => {
+          localStorage.setItem("cockpit_bg_enabled", e.target.checked);
+          location.reload();
+        });
+      }
+    }
+
+    // AQUI PARA BAIXO É O QUE RODA TODA VEZ QUE ABRE
+    await populateList();
+
+    // --- LÓGICA DO TIMER I ---
+    const storedData = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    const timerEl = document.getElementById("stoic-timer-info");
+
+    if (storedData && storedData.nextUpdate && timerEl) {
+      const nextTime = new Date(storedData.nextUpdate);
+      const lastTime = new Date(storedData.nextUpdate - UPDATE_INTERVAL_MS);
+      const fmt = (date) =>
+        date.toLocaleTimeString("pt-BR", {
+          hour: "2-digit",
+          minute: "2-digit",
         });
 
-        // --- CORREÇÃO: O LISTENER DO WALLPAPER FICA AQUI DENTRO ---
-        const bgToggle = document.getElementById("stoic-bg-toggle");
-        if(bgToggle) {
-          bgToggle.addEventListener('change', (e) => {
-              localStorage.setItem("cockpit_bg_enabled", e.target.checked);
-              location.reload(); 
-          });
-        }
-      }
-
-      // AQUI PARA BAIXO É O QUE RODA TODA VEZ QUE ABRE
-      await populateList(); 
-
-      // --- LÓGICA DO TIMER I ---
-      const storedData = JSON.parse(localStorage.getItem(STORAGE_KEY));
-      const timerEl = document.getElementById("stoic-timer-info");
-      
-      if (storedData && storedData.nextUpdate && timerEl) {
-          const nextTime = new Date(storedData.nextUpdate);
-          const lastTime = new Date(storedData.nextUpdate - UPDATE_INTERVAL_MS);
-          const fmt = (date) => date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-
-          timerEl.innerHTML = `
+      timerEl.innerHTML = `
               <span class="flex items-center gap-1">↻ ${fmt(lastTime)}</span>
               <span class="text-gray-300">|</span>
               <span class="flex items-center gap-1">⌛ Próx: ${fmt(nextTime)}</span>
           `;
-      } else if (timerEl) {
-          timerEl.textContent = "Sincronizando...";
-      }
-
-      modal.classList.remove("hidden");
-      setTimeout(() => document.getElementById("stoic-search").focus(), 100);
+    } else if (timerEl) {
+      timerEl.textContent = "Sincronizando...";
     }
+
+    modal.classList.remove("hidden");
+    setTimeout(() => document.getElementById("stoic-search").focus(), 100);
+  }
 
   async function populateList() {
     await loadData();
@@ -701,16 +717,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const listContainer = document.getElementById("stoic-list");
     const authorSelect = document.getElementById("stoic-filter-author");
     const categorySelect = document.getElementById("stoic-filter-category");
-    
+
     listContainer.innerHTML = "";
 
     // 1. Extrair Autores e Categorias Únicos para os Selects
-    const uniqueAuthors = [...new Set(allQuotesCache.map(i => i.autor || "Desconhecido"))].sort();
-    const uniqueCategories = [...new Set(allQuotesCache.map(i => i.categoria))].sort();
+    const uniqueAuthors = [
+      ...new Set(allQuotesCache.map((i) => i.autor || "Desconhecido")),
+    ].sort();
+    const uniqueCategories = [
+      ...new Set(allQuotesCache.map((i) => i.categoria)),
+    ].sort();
 
     // 2. Preencher Selects (apenas se estiverem vazios para não resetar seleção se reabrir)
     if (authorSelect.options.length <= 1) {
-      uniqueAuthors.forEach(autor => {
+      uniqueAuthors.forEach((autor) => {
         const opt = document.createElement("option");
         opt.value = autor;
         opt.textContent = autor;
@@ -719,7 +739,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (categorySelect.options.length <= 1) {
-      uniqueCategories.forEach(cat => {
+      uniqueCategories.forEach((cat) => {
         const opt = document.createElement("option");
         opt.value = cat;
         opt.textContent = cat;
@@ -731,12 +751,16 @@ document.addEventListener("DOMContentLoaded", () => {
     allQuotesCache.forEach((item) => {
       const div = document.createElement("div");
       // Adiciona data-attributes para facilitar a filtragem
-      div.setAttribute("data-autor", (item.autor || "Desconhecido").toLowerCase());
+      div.setAttribute(
+        "data-autor",
+        (item.autor || "Desconhecido").toLowerCase(),
+      );
       div.setAttribute("data-categoria", (item.categoria || "").toLowerCase());
       div.setAttribute("data-texto", item.frase.toLowerCase());
-      
-      div.className = "stoic-item bg-white p-4 rounded-lg border border-gray-100 hover:border-blue-300 hover:shadow-md cursor-pointer transition-all group relative overflow-hidden";
-      
+
+      div.className =
+        "stoic-item bg-white p-4 rounded-lg border border-gray-100 hover:border-blue-300 hover:shadow-md cursor-pointer transition-all group relative overflow-hidden";
+
       div.innerHTML = `
         <div class="absolute top-0 left-0 w-1 h-full bg-gray-200 group-hover:bg-blue-500 transition-colors"></div>
         <div class="pl-2">
@@ -763,14 +787,20 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function applyFilters() {
-    const textTerm = document.getElementById("stoic-search").value.toLowerCase();
-    const authorTerm = document.getElementById("stoic-filter-author").value.toLowerCase();
-    const categoryTerm = document.getElementById("stoic-filter-category").value.toLowerCase();
-    
+    const textTerm = document
+      .getElementById("stoic-search")
+      .value.toLowerCase();
+    const authorTerm = document
+      .getElementById("stoic-filter-author")
+      .value.toLowerCase();
+    const categoryTerm = document
+      .getElementById("stoic-filter-category")
+      .value.toLowerCase();
+
     const items = document.querySelectorAll(".stoic-item");
     let visibleCount = 0;
 
-    items.forEach(item => {
+    items.forEach((item) => {
       const itemText = item.getAttribute("data-texto");
       const itemAutor = item.getAttribute("data-autor");
       const itemCat = item.getAttribute("data-categoria");
@@ -802,7 +832,9 @@ document.addEventListener("DOMContentLoaded", () => {
       openModal();
       clickCount = 0;
     } else {
-      clickTimer = setTimeout(() => { clickCount = 0; }, 500);
+      clickTimer = setTimeout(() => {
+        clickCount = 0;
+      }, 500);
     }
   });
 
@@ -814,189 +846,215 @@ document.addEventListener("DOMContentLoaded", () => {
 // MÓDULO FAMÍLIAS & ESTATÍSTICAS
 // ==========================================================
 (function initFamilyModule() {
-    let familyData = [];
-    let currentPage = 1;
-    const itemsPerPage = 9;
+  let familyData = [];
+  let currentPage = 1;
+  const itemsPerPage = 9;
 
-    // Elementos do Modal
-    const modal = document.getElementById("family-modal");
-    const grid = document.getElementById("family-grid");
-    
-    // 1. Função para Calcular Stats (Total Famílias e Docs Únicos)
-    function calculateAndSaveStats(data) {
-        if (!data || data.length === 0) return;
-        
-        const allDocs = new Set();
-        data.forEach(item => {
-            // Lógica simplificada para extrair documentos das strings
-            const docStrings = [
-                ...(item["DOCUMENTOS EXIGIDOS"] || item["Documentos Exigidos"] || []),
-                ...(item["DOCUMENTOS ELEGÍVEIS"] || item["Documentos Elegíveis"] || [])
-            ];
-            docStrings.forEach(doc => allDocs.add(doc.trim()));
-        });
+  // Elementos do Modal
+  const modal = document.getElementById("family-modal");
+  const grid = document.getElementById("family-grid");
 
-        const stats = {
-            total: data.length,
-            docsUnicos: allDocs.size
-        };
-        
-        localStorage.setItem("stats_familias", JSON.stringify(stats));
-        // Chama o renderStats global para atualizar a tela
-        if (typeof renderStats === 'function') renderStats();
-    }
+  // 1. Função para Calcular Stats (Total Famílias e Docs Únicos)
+  function calculateAndSaveStats(data) {
+    if (!data || data.length === 0) return;
 
-    // 2. Carregamento Inicial (Para pegar os números do card)
-    function loadData() {
-        fetch('qualificacao_tecnica.json')
-            .then(res => res.ok ? res.json() : [])
-            .then(data => {
-                familyData = data;
-                calculateAndSaveStats(data);
-            })
-            .catch(err => console.error("Erro ao carregar qualificacao.json", err));
-    }
-    
-    // Inicia carregamento ao abrir o app
-    loadData();
-
-    // 3. Configuração do Evento de Clique no Card (Delegated Event)
-    // Usamos delegated event porque o card é recriado pelo renderStats
-    document.addEventListener('click', function(e) {
-        const card = e.target.closest('#stats-card-familias');
-        if (card) {
-            openModal();
-        }
+    const allDocs = new Set();
+    data.forEach((item) => {
+      // Lógica simplificada para extrair documentos das strings
+      const docStrings = [
+        ...(item["DOCUMENTOS EXIGIDOS"] || item["Documentos Exigidos"] || []),
+        ...(item["DOCUMENTOS ELEGÍVEIS"] || item["Documentos Elegíveis"] || []),
+      ];
+      docStrings.forEach((doc) => allDocs.add(doc.trim()));
     });
 
-    // 4. Funções do Modal (Simplificadas para o contexto)
-function openModal() {
-        modal.classList.remove("hidden");
-        // Renderiza usando a lista completa inicial
-        renderGrid(familyData); 
-        
-        // Setup dos botões internos
-        document.getElementById("btn-close-family").onclick = () => modal.classList.add("hidden");
-        
-        // 1. Pegamos as referências dos 3 campos (Texto, Select e Checkbox)
-        const searchInput = document.getElementById("family-search");
-        const typeFilter = document.getElementById("family-filter-type");
-        const terceirizadoFilter = document.getElementById("family-filter-terceirizado");
+    const stats = {
+      total: data.length,
+      docsUnicos: allDocs.size,
+    };
 
-        // 2. Função de Filtro UNIFICADA
-        function applyFilters() {
-            // Se algum elemento não existir, para a execução
-            if (!searchInput || !typeFilter || !terceirizadoFilter) return;
+    localStorage.setItem("stats_familias", JSON.stringify(stats));
+    // Chama o renderStats global para atualizar a tela
+    if (typeof renderStats === "function") renderStats();
+  }
 
-            const term = searchInput.value.toLowerCase();
-            const type = typeFilter.value; 
-            const onlyTerceirizado = terceirizadoFilter.checked; // Verifica se está marcado
+  // 2. Carregamento Inicial (Para pegar os números do card)
+  function loadData() {
+    fetch("qualificacao_tecnica.json")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => {
+        familyData = data;
+        calculateAndSaveStats(data);
+      })
+      .catch((err) => console.error("Erro ao carregar qualificacao.json", err));
+  }
 
-            const filtered = familyData.filter(item => {
-                // A) Preparação dos Documentos
-                const rawExigidos = item["DOCUMENTOS EXIGIDOS"] || item["Documentos Exigidos"] || [];
-                const rawElegiveis = item["DOCUMENTOS ELEGÍVEIS"] || item["Documentos Elegíveis"] || [];
-                const strExigidos = Array.isArray(rawExigidos) ? rawExigidos.join(" ") : String(rawExigidos);
-                const strElegiveis = Array.isArray(rawElegiveis) ? rawElegiveis.join(" ") : String(rawElegiveis);
+  // Inicia carregamento ao abrir o app
+  loadData();
 
-                // B) Filtro de Texto
-                const textMatch = 
-                    String(item["Família"] || item["Familia"] || "").toLowerCase().includes(term) ||
-                    String(item["Descrição"] || item["Descricao"] || "").toLowerCase().includes(term) ||
-                    strExigidos.toLowerCase().includes(term) ||
-                    strElegiveis.toLowerCase().includes(term);
-                
-                // C) Filtro de Tipo
-                const itemTipo = item["Tipo"] || ""; 
-                const typeMatch = type === "" || itemTipo === type;
+  // 3. Configuração do Evento de Clique no Card (Delegated Event)
+  // Usamos delegated event porque o card é recriado pelo renderStats
+  document.addEventListener("click", function (e) {
+    const card = e.target.closest("#stats-card-familias");
+    if (card) {
+      openModal();
+    }
+  });
 
-                // D) Filtro Terceirizado
-                const isItemTerceirizado = item["Terceirizado"] === "Sim";
-                // Lógica: Se o checkbox estiver marcado, SÓ mostra se for terceirizado.
-                // Se não estiver marcado, mostra tudo (!false = true).
-                const terceirizadoMatch = !onlyTerceirizado || isItemTerceirizado;
+  // 4. Funções do Modal (Simplificadas para o contexto)
+  function openModal() {
+    modal.classList.remove("hidden");
+    // Renderiza usando a lista completa inicial
+    renderGrid(familyData);
 
-                return textMatch && typeMatch && terceirizadoMatch;
-            });
+    // Setup dos botões internos
+    document.getElementById("btn-close-family").onclick = () =>
+      modal.classList.add("hidden");
 
-            currentPage = 1;
-            renderGrid(filtered);
-        }
+    // 1. Pegamos as referências dos 3 campos (Texto, Select e Checkbox)
+    const searchInput = document.getElementById("family-search");
+    const typeFilter = document.getElementById("family-filter-type");
+    const terceirizadoFilter = document.getElementById(
+      "family-filter-terceirizado",
+    );
 
-        // 3. Ligamos a função aos eventos
-        if (searchInput) searchInput.oninput = applyFilters;
-        if (typeFilter) typeFilter.onchange = applyFilters;
-        if (terceirizadoFilter) terceirizadoFilter.onchange = applyFilters;
-            
-        // Paginação
-        document.getElementById("btn-prev-page").onclick = () => { if(currentPage > 1) { currentPage--; renderGrid(familyData); }};
-        document.getElementById("btn-next-page").onclick = () => { currentPage++; renderGrid(familyData); };
+    // 2. Função de Filtro UNIFICADA
+    function applyFilters() {
+      // Se algum elemento não existir, para a execução
+      if (!searchInput || !typeFilter || !terceirizadoFilter) return;
+
+      const term = searchInput.value.toLowerCase();
+      const type = typeFilter.value;
+      const onlyTerceirizado = terceirizadoFilter.checked; // Verifica se está marcado
+
+      const filtered = familyData.filter((item) => {
+        // A) Preparação dos Documentos
+        const rawExigidos =
+          item["DOCUMENTOS EXIGIDOS"] || item["Documentos Exigidos"] || [];
+        const rawElegiveis =
+          item["DOCUMENTOS ELEGÍVEIS"] || item["Documentos Elegíveis"] || [];
+        const strExigidos = Array.isArray(rawExigidos)
+          ? rawExigidos.join(" ")
+          : String(rawExigidos);
+        const strElegiveis = Array.isArray(rawElegiveis)
+          ? rawElegiveis.join(" ")
+          : String(rawElegiveis);
+
+        // B) Filtro de Texto
+        const textMatch =
+          String(item["Família"] || item["Familia"] || "")
+            .toLowerCase()
+            .includes(term) ||
+          String(item["Descrição"] || item["Descricao"] || "")
+            .toLowerCase()
+            .includes(term) ||
+          strExigidos.toLowerCase().includes(term) ||
+          strElegiveis.toLowerCase().includes(term);
+
+        // C) Filtro de Tipo
+        const itemTipo = item["Tipo"] || "";
+        const typeMatch = type === "" || itemTipo === type;
+
+        // D) Filtro Terceirizado
+        const isItemTerceirizado = item["Terceirizado"] === "Sim";
+        // Lógica: Se o checkbox estiver marcado, SÓ mostra se for terceirizado.
+        // Se não estiver marcado, mostra tudo (!false = true).
+        const terceirizadoMatch = !onlyTerceirizado || isItemTerceirizado;
+
+        return textMatch && typeMatch && terceirizadoMatch;
+      });
+
+      currentPage = 1;
+      renderGrid(filtered);
     }
 
-function renderGrid(data) {
-        grid.innerHTML = "";
-        
-        // Paginação
-        const start = (currentPage - 1) * itemsPerPage;
-        const pageItems = data.slice(start, start + itemsPerPage);
-        
-        const infoEl = document.getElementById("family-info");
-        if(infoEl) infoEl.textContent = `${data.length} registros • Pág ${currentPage}`;
+    // 3. Ligamos a função aos eventos
+    if (searchInput) searchInput.oninput = applyFilters;
+    if (typeFilter) typeFilter.onchange = applyFilters;
+    if (terceirizadoFilter) terceirizadoFilter.onchange = applyFilters;
 
-        if (data.length === 0) {
-            grid.innerHTML = `<div class="col-span-full text-center py-8 text-gray-400 italic">Nenhum registro encontrado para os filtros.</div>`;
-            return;
-        }
+    // Paginação
+    document.getElementById("btn-prev-page").onclick = () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderGrid(familyData);
+      }
+    };
+    document.getElementById("btn-next-page").onclick = () => {
+      currentPage++;
+      renderGrid(familyData);
+    };
+  }
 
-        pageItems.forEach(item => {
-            const familia = item["Família"] || item["Familia"] || "?";
-            const descricao = item["Descrição"] || item["Descricao"] || "Sem descrição";
-            let exigidos = item["DOCUMENTOS EXIGIDOS"] || item["Documentos Exigidos"] || [];
-            let elegiveis = item["DOCUMENTOS ELEGÍVEIS"] || item["Documentos Elegíveis"] || [];
-            
-            if (typeof exigidos === 'string') exigidos = [exigidos];
-            if (typeof elegiveis === 'string') elegiveis = [elegiveis];
+  function renderGrid(data) {
+    grid.innerHTML = "";
 
-            const tipo = item["Tipo"]; 
-            const isTerceirizado = item["Terceirizado"] === "Sim"; 
+    // Paginação
+    const start = (currentPage - 1) * itemsPerPage;
+    const pageItems = data.slice(start, start + itemsPerPage);
 
-            let borderClass = "border-gray-200 hover:border-blue-300"; 
+    const infoEl = document.getElementById("family-info");
+    if (infoEl)
+      infoEl.textContent = `${data.length} registros • Pág ${currentPage}`;
 
-            // --- 1. BADGE DO TOPO (TIPO) ---
-            let tipoBadgeHtml = "";
-            if (tipo === "M") {
-                tipoBadgeHtml = `<span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded bg-orange-100 text-orange-700 border border-orange-200 uppercase tracking-wider whitespace-nowrap">📦 Material</span>`;
-                borderClass = "border-gray-200 hover:border-orange-400";
-            } else if (tipo === "S") {
-                tipoBadgeHtml = `<span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 border border-indigo-200 uppercase tracking-wider whitespace-nowrap">🛠️ Serviço</span>`;
-                borderClass = "border-gray-200 hover:border-indigo-400";
-            }
+    if (data.length === 0) {
+      grid.innerHTML = `<div class="col-span-full text-center py-8 text-gray-400 italic">Nenhum registro encontrado para os filtros.</div>`;
+      return;
+    }
 
-            // --- 2. BADGE DO RODAPÉ (TERCEIRIZADO) ---
-            let terceirizadoFooterHtml = "";
-            if (isTerceirizado) {
-                // Cria um container no rodapé com uma borda sutil acima para separar
-                terceirizadoFooterHtml = `
+    pageItems.forEach((item) => {
+      const familia = item["Família"] || item["Familia"] || "?";
+      const descricao =
+        item["Descrição"] || item["Descricao"] || "Sem descrição";
+      let exigidos =
+        item["DOCUMENTOS EXIGIDOS"] || item["Documentos Exigidos"] || [];
+      let elegiveis =
+        item["DOCUMENTOS ELEGÍVEIS"] || item["Documentos Elegíveis"] || [];
+
+      if (typeof exigidos === "string") exigidos = [exigidos];
+      if (typeof elegiveis === "string") elegiveis = [elegiveis];
+
+      const tipo = item["Tipo"];
+      const isTerceirizado = item["Terceirizado"] === "Sim";
+
+      let borderClass = "border-gray-200 hover:border-blue-300";
+
+      // --- 1. BADGE DO TOPO (TIPO) ---
+      let tipoBadgeHtml = "";
+      if (tipo === "M") {
+        tipoBadgeHtml = `<span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded bg-orange-100 text-orange-700 border border-orange-200 uppercase tracking-wider whitespace-nowrap">📦 Material</span>`;
+        borderClass = "border-gray-200 hover:border-orange-400";
+      } else if (tipo === "S") {
+        tipoBadgeHtml = `<span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 border border-indigo-200 uppercase tracking-wider whitespace-nowrap">🛠️ Serviço</span>`;
+        borderClass = "border-gray-200 hover:border-indigo-400";
+      }
+
+      // --- 2. BADGE DO RODAPÉ (TERCEIRIZADO) ---
+      let terceirizadoFooterHtml = "";
+      if (isTerceirizado) {
+        // Cria um container no rodapé com uma borda sutil acima para separar
+        terceirizadoFooterHtml = `
                     <div class="mt-auto pt-3 border-t border-gray-50 flex justify-start">
                          <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-100 text-purple-700 border border-purple-200 uppercase tracking-wider whitespace-nowrap inline-flex items-center gap-1">
                             👥 Terceirizado
                          </span>
                     </div>`;
-                // Se for terceirizado, a borda do card fica roxa no hover
-                borderClass = "border-gray-200 hover:border-purple-400";
-            }
+        // Se for terceirizado, a borda do card fica roxa no hover
+        borderClass = "border-gray-200 hover:border-purple-400";
+      }
 
-            // Criação do Card
-            const card = document.createElement("div");
-            // Adicionado 'flex flex-col' para o rodapé (mt-auto) funcionar
-            card.className = `bg-white border ${borderClass} rounded-lg p-4 shadow-sm hover:shadow-md transition-all flex flex-col h-full`;
-            
-            const renderList = (list, colorClass, emptyText) => {
-                if (!list || list.length === 0) return `<span class="text-gray-400 italic text-xs ml-4 opacity-70">${emptyText}</span>`;
-                return `<ul class="space-y-1 mt-1 ml-1">${list.map(i => `<li class="text-xs text-gray-600 flex items-start gap-1.5"><span class="${colorClass} font-bold mt-0.5 text-[10px]">•</span> <span>${i}</span></li>`).join('')}</ul>`;
-            };
+      // Criação do Card
+      const card = document.createElement("div");
+      // Adicionado 'flex flex-col' para o rodapé (mt-auto) funcionar
+      card.className = `bg-white border ${borderClass} rounded-lg p-4 shadow-sm hover:shadow-md transition-all flex flex-col h-full`;
 
-            card.innerHTML = `
+      const renderList = (list, colorClass, emptyText) => {
+        if (!list || list.length === 0)
+          return `<span class="text-gray-400 italic text-xs ml-4 opacity-70">${emptyText}</span>`;
+        return `<ul class="space-y-1 mt-1 ml-1">${list.map((i) => `<li class="text-xs text-gray-600 flex items-start gap-1.5"><span class="${colorClass} font-bold mt-0.5 text-[10px]">•</span> <span>${i}</span></li>`).join("")}</ul>`;
+      };
+
+      card.innerHTML = `
                 <div class="mb-3 pb-2 border-b border-gray-100">
                     <div class="flex items-start justify-between mb-2 gap-2">
                         <span class="text-xs font-bold text-gray-500 uppercase tracking-wide whitespace-nowrap mt-1">Família ${familia}</span>
@@ -1016,15 +1074,17 @@ function renderGrid(data) {
                 
                 ${terceirizadoFooterHtml}
             `;
-            grid.appendChild(card);
-        });
-    }
+      grid.appendChild(card);
+    });
+  }
 
-    // Input file logic (opcional, mantido simples)
-    const btnImport = document.getElementById("btn-import-family");
-    const fileInput = document.getElementById("family-file-input");
-    if(btnImport) {
-        btnImport.onclick = () => fileInput.click();
-        fileInput.onchange = (e) => { /* Lógica de parse igual ao anterior */ };
-    }
+  // Input file logic (opcional, mantido simples)
+  const btnImport = document.getElementById("btn-import-family");
+  const fileInput = document.getElementById("family-file-input");
+  if (btnImport) {
+    btnImport.onclick = () => fileInput.click();
+    fileInput.onchange = (e) => {
+      /* Lógica de parse igual ao anterior */
+    };
+  }
 })();
