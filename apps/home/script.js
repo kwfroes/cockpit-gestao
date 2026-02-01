@@ -6,6 +6,31 @@ if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("./sw.js");
 }
 
+// --- LISTENERS DE TEMA (DARK MODE) ---
+function applyTheme(theme) {
+  if (theme === "dark") {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
+}
+
+// 1. Verifica localStorage ao carregar (Pega a preferência do pai)
+const savedTheme = localStorage.getItem("cockpit_theme");
+if (
+  savedTheme === "dark" ||
+  (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+) {
+  applyTheme("dark");
+}
+
+// 2. Ouve o comando do pai em tempo real
+window.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "THEME_CHANGE") {
+    applyTheme(event.data.theme);
+  }
+});
+
 /**
  * @name requestNotificationPermission
  * @description Pede permissão ao usuário para mostrar notificações no desktop.
@@ -72,17 +97,17 @@ document.addEventListener("DOMContentLoaded", () => {
   // 1. Injeta o HTML do Modal no final do corpo da página
   const modalHTML = `
     <div id="nameModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-gray-900 bg-opacity-50 backdrop-blur-sm transition-opacity">
-      <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-sm transform transition-all scale-100">
-        <h3 class="text-lg font-bold text-gray-800 mb-2">Como prefere ser chamado?</h3>
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl p-6 w-full max-w-sm transform transition-all scale-100">
+        <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Como prefere ser chamado?</h3>
         <p class="text-sm text-gray-500 mb-4">Isso personalizará sua saudação diária.</p>
         
         <input type="text" id="nameInput" placeholder="Seu nome ou apelido" 
-          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-700 mb-4"
+          class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-700 dark:text-white bg-white dark:bg-slate-900 mb-4"
           autocomplete="off">
         
         <div class="flex justify-end gap-2">
-          <button id="btnCancelName" class="px-4 py-2 text-sm text-gray-500 hover:bg-gray-100 rounded-lg transition-colors">Cancelar</button>
-          <button id="btnSaveName" class="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm transition-colors font-medium">Salvar</button>
+          <button id="btnCancelName" class="px-4 py-2 text-sm text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors">Cancelar</button>
+          <button id="btnSaveName" class="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 dark:hover:bg-slate-700 text-white rounded-lg shadow-sm transition-colors font-medium">Salvar</button>
         </div>
       </div>
     </div>
@@ -209,25 +234,25 @@ document.addEventListener("DOMContentLoaded", () => {
 const STATS_CONFIG = {
   dashboard: {
     titulo: "Operacional",
-    cor: "text-blue-600 bg-blue-50 border-blue-100",
+    cor: "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 border-blue-100 dark:border-blue-800",
     hoverBorder: "hover:border-blue-400",
     icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>`,
   },
   gerador: {
     titulo: "Mensagens",
-    cor: "text-indigo-600 bg-indigo-50 border-indigo-100",
+    cor: "text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 border-indigo-100 dark:border-indigo-800",
     hoverBorder: "hover:border-indigo-400",
     icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>`,
   },
   contratos: {
     titulo: "Contratos",
-    cor: "text-emerald-600 bg-emerald-50 border-emerald-100",
+    cor: "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border-emerald-100 dark:border-emerald-800",
     hoverBorder: "hover:border-emerald-400",
     icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>`,
   },
   familias: {
     titulo: "Qualificação",
-    cor: "text-amber-600 bg-amber-50 border-amber-100",
+    cor: "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 border-amber-100 dark:border-amber-800",
     hoverBorder: "hover:border-amber-400",
     icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -331,7 +356,7 @@ function renderStats() {
     const idAttr = card.id ? `id="${card.id}"` : "";
 
     html += `
-      <div ${idAttr} class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition-all duration-200 hover:scale-[1.10] hover:z-10 ${cursorClass} ${hoverBorderClass}">
+      <div ${idAttr} class="bg-white dark:bg-slate-800 dark:border-slate-700 p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition-all duration-200 hover:scale-[1.10] hover:z-10 ${cursorClass} ${hoverBorderClass}">
         <div class="flex items-start justify-between mb-2">
            <div class="p-2 rounded-lg border ${card.cor}">
              ${card.icone}
@@ -341,8 +366,8 @@ function renderStats() {
         
         <div>
           <div class="flex items-baseline gap-1">
-             <span class="text-2xl font-bold text-gray-800">${card.principal}</span>
-             <span class="text-xs text-gray-500 font-medium">${card.label}</span>
+             <span class="text-2xl font-bold text-gray-800 dark:text-white">${card.principal}</span>
+             <span class="text-xs text-gray-500 dark:text-gray-400 font-medium">${card.label}</span>
           </div>
           <div class="mt-1 text-xs text-gray-400 truncate">
              ${card.subHtml ? card.subHtml : card.sub}
@@ -606,40 +631,40 @@ document.addEventListener("DOMContentLoaded", () => {
     // HTML atualizado
     const modalHTML = `
       <div id="stoic-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50 backdrop-blur-sm transition-opacity">
-        <div class="bg-white w-full max-w-3xl h-[85vh] rounded-xl shadow-2xl flex flex-col overflow-hidden m-4 animate-fade-in-down">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-3xl h-[85vh] rounded-xl shadow-2xl flex flex-col overflow-hidden m-4 animate-fade-in-down">
           
-          <div class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-            <h3 class="font-bold text-gray-700 flex items-center gap-2">
+          <div class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700">
+            <h3 class="font-bold text-gray-700 dark:text-white flex items-center gap-2">
               <span>🏛️</span> Biblioteca de Sabedoria
             </h3>
             <button id="stoic-close-btn" class="text-gray-400 hover:text-red-500 text-2xl px-2">&times;</button>
           </div>
 
-          <div class="p-4 border-b border-gray-100 bg-white grid grid-cols-1 md:grid-cols-4 gap-3 items-center">
+          <div class="p-4 border-b border-gray-100 bg-white dark:bg-slate-800 grid grid-cols-1 md:grid-cols-4 gap-3 items-center">
             
             <input type="text" id="stoic-search" placeholder="🔍 Buscar texto..." 
-              class="w-full p-2 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-400 text-sm">
+              class="w-full p-2 rounded-lg border border-gray-200 dark:border-slate-600 dark:bg-slate-900 dark:text-white focus:outline-none focus:border-blue-400 text-sm">
             
-            <select id="stoic-filter-author" class="w-full p-2 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-400 text-sm bg-white">
+            <select id="stoic-filter-author" class="w-full p-2 rounded-lg border border-gray-200 dark:border-slate-600 dark:bg-slate-900 dark:text-white focus:outline-none focus:border-blue-400 text-sm bg-white dark:bg-slate-800">
               <option value="">Todas os Autores</option>
             </select>
 
-            <select id="stoic-filter-category" class="w-full p-2 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-400 text-sm bg-white">
+            <select id="stoic-filter-category" class="w-full p-2 rounded-lg border border-gray-200 dark:border-slate-600 dark:bg-slate-900 dark:text-white focus:outline-none focus:border-blue-400 text-sm bg-white dark:bg-slate-800">
               <option value="">Todas as Categorias</option>
             </select>
 
-            <div class="flex items-center justify-center md:justify-end gap-2 text-xs font-medium text-gray-600 bg-gray-50 p-2 rounded-lg border border-gray-100">
+            <div class="flex items-center justify-center md:justify-end gap-2 text-xs font-medium text-gray-600 dark:text-gray-200 bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 p-2 rounded-lg border border-gray-100">
               <span>Wallpaper</span>
               <label class="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" id="stoic-bg-toggle" class="sr-only peer" ${isBgEnabled}>
-                <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white dark:bg-slate-800 after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
               </label>
             </div>
 
-          </div> <div id="stoic-list" class="flex-1 overflow-y-auto p-4 space-y-2 bg-gray-50/50">
+          </div> <div id="stoic-list" class="flex-1 overflow-y-auto p-4 space-y-2 bg-gray-50/50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700">
             </div>
           
-          <div class="p-2 border-t border-gray-100 text-center text-xs text-gray-400 bg-white">
+          <div class="p-2 border-t border-gray-100 text-center text-xs text-gray-400 bg-white dark:bg-slate-800">
             <span id="stoic-count">0</span> frases encontradas
             <span id="stoic-timer-info" class="font-mono tracking-tight opacity-70 flex items-center gap-2 inline-flex ml-2" title="Ciclo de atualização automática">
                </span>
@@ -759,16 +784,16 @@ document.addEventListener("DOMContentLoaded", () => {
       div.setAttribute("data-texto", item.frase.toLowerCase());
 
       div.className =
-        "stoic-item bg-white p-4 rounded-lg border border-gray-100 hover:border-blue-300 hover:shadow-md cursor-pointer transition-all group relative overflow-hidden";
+        "stoic-item bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-100 hover:border-blue-300 hover:shadow-md cursor-pointer transition-all group relative overflow-hidden";
 
       div.innerHTML = `
-        <div class="absolute top-0 left-0 w-1 h-full bg-gray-200 group-hover:bg-blue-500 transition-colors"></div>
+        <div class="absolute top-0 left-0 w-1 h-full bg-gray-200 dark:bg-slate-700 group-hover:bg-blue-500 dark:hover:bg-slate-700 transition-colors"></div>
         <div class="pl-2">
-            <span class="text-[10px] inline-block px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 mb-2 font-bold uppercase tracking-wider group-hover:bg-blue-50 group-hover:text-blue-600">
+            <span class="text-[10px] inline-block px-2 py-0.5 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-300 mb-2 font-bold uppercase tracking-wider group-hover:bg-blue-50 dark:group-hover:bg-blue-900/40 group-hover:text-blue-600 dark:group-hover:text-blue-300 transition-colors">
                 ${item.categoria}
             </span>
-            <p class="text-gray-700 font-serif text-lg leading-relaxed group-hover:text-gray-900">"${item.frase}"</p>
-            <span class="text-xs text-blue-600 font-bold uppercase mt-2 block tracking-widest flex items-center gap-1">
+            <p class="text-gray-700 dark:text-gray-200 font-serif text-lg leading-relaxed group-hover:text-gray-900 dark:group-hover:text-white transition-colors">"${item.frase}"</p>
+            <span class="text-xs text-blue-600 dark:text-blue-400 font-bold uppercase mt-2 block tracking-widest flex items-center gap-1">
                 — ${item.autor || "Desconhecido"}
             </span>
         </div>
@@ -1017,16 +1042,19 @@ document.addEventListener("DOMContentLoaded", () => {
       const tipo = item["Tipo"];
       const isTerceirizado = item["Terceirizado"] === "Sim";
 
-      let borderClass = "border-gray-200 hover:border-blue-300";
+      let borderClass =
+        "border-gray-200 dark:border-slate-600 dark:bg-slate-900 dark:text-white hover:border-blue-300";
 
       // --- 1. BADGE DO TOPO (TIPO) ---
       let tipoBadgeHtml = "";
       if (tipo === "M") {
-        tipoBadgeHtml = `<span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded bg-orange-100 text-orange-700 border border-orange-200 uppercase tracking-wider whitespace-nowrap">📦 Material</span>`;
-        borderClass = "border-gray-200 hover:border-orange-400";
+        tipoBadgeHtml = `<span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded bg-orange-100 text-orange-700 border border-orange-200 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-800 uppercase tracking-wider whitespace-nowrap">📦 Material</span>`;
+        borderClass =
+          "border-gray-200 dark:border-slate-600 dark:bg-slate-900 dark:text-white hover:border-orange-400";
       } else if (tipo === "S") {
-        tipoBadgeHtml = `<span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 border border-indigo-200 uppercase tracking-wider whitespace-nowrap">🛠️ Serviço</span>`;
-        borderClass = "border-gray-200 hover:border-indigo-400";
+        tipoBadgeHtml = `<span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 border border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800 uppercase tracking-wider whitespace-nowrap">🛠️ Serviço</span>`;
+        borderClass =
+          "border-gray-200 dark:border-slate-600 dark:bg-slate-900 dark:text-white hover:border-indigo-400";
       }
 
       // --- 2. BADGE DO RODAPÉ (TERCEIRIZADO) ---
@@ -1035,23 +1063,24 @@ document.addEventListener("DOMContentLoaded", () => {
         // Cria um container no rodapé com uma borda sutil acima para separar
         terceirizadoFooterHtml = `
                     <div class="mt-auto pt-3 border-t border-gray-50 flex justify-start">
-                         <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-100 text-purple-700 border border-purple-200 uppercase tracking-wider whitespace-nowrap inline-flex items-center gap-1">
+                         <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-100 text-purple-700 border border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-800 uppercase tracking-wider whitespace-nowrap inline-flex items-center gap-1">
                             👥 Terceirizado
                          </span>
                     </div>`;
         // Se for terceirizado, a borda do card fica roxa no hover
-        borderClass = "border-gray-200 hover:border-purple-400";
+        borderClass =
+          "border-gray-200 dark:border-slate-600 dark:bg-slate-900 dark:text-white hover:border-purple-400";
       }
 
       // Criação do Card
       const card = document.createElement("div");
       // Adicionado 'flex flex-col' para o rodapé (mt-auto) funcionar
-      card.className = `bg-white border ${borderClass} rounded-lg p-4 shadow-sm hover:shadow-md transition-all flex flex-col h-full`;
+      card.className = `bg-white dark:bg-slate-800 border ${borderClass.replace("border-gray-200", "border-gray-200 dark:border-slate-700")} rounded-lg p-4 shadow-sm hover:shadow-md transition-all flex flex-col h-full`;
 
       const renderList = (list, colorClass, emptyText) => {
         if (!list || list.length === 0)
           return `<span class="text-gray-400 italic text-xs ml-4 opacity-70">${emptyText}</span>`;
-        return `<ul class="space-y-1 mt-1 ml-1">${list.map((i) => `<li class="text-xs text-gray-600 flex items-start gap-1.5"><span class="${colorClass} font-bold mt-0.5 text-[10px]">•</span> <span>${i}</span></li>`).join("")}</ul>`;
+        return `<ul class="space-y-1 mt-1 ml-1">${list.map((i) => `<li class="text-xs text-gray-600 dark:text-gray-400 flex items-start gap-1.5"><span class="${colorClass} font-bold mt-0.5 text-[10px]">•</span> <span>${i}</span></li>`).join("")}</ul>`;
       };
 
       card.innerHTML = `
@@ -1059,7 +1088,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="flex items-start justify-between mb-2 gap-2">
                         <span class="text-xs font-bold text-gray-500 uppercase tracking-wide whitespace-nowrap mt-1">Família ${familia}</span>
                         ${tipoBadgeHtml} </div>
-                    <h4 class="text-sm font-bold text-gray-800 leading-snug">${descricao}</h4>
+                    <h4 class="text-sm font-bold text-gray-800 dark:text-white leading-snug">${descricao}</h4>
                 </div>
                 
                 <div class="space-y-3 mb-2"> <div>
