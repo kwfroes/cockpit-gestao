@@ -26,20 +26,49 @@
     <link rel="manifest" href="icons/site.webmanifest" />
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class", // IMPORTANTE: Permite ativar via classe 'dark'
+        theme: {
+          extend: {
+            colors: {
+              sidebar: "#0f172a",
+            },
+          },
+        },
+      };
+    </script>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
 
     <link rel="stylesheet" href="theme.css" />
+    <style>
+      /* Scrollbar Dark Mode Suave */
+      .dark ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      .dark ::-webkit-scrollbar-track {
+        background: #0f172a; /* Cor do fundo escuro */
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background-color: #334155; /* Cor da barra */
+        border-radius: 4px;
+      }
+      .dark ::-webkit-scrollbar-thumb:hover {
+        background-color: #475569;
+      }
+    </style>
   </head>
-  <body class="h-full bg-gray-100 overflow-hidden relative">
+  <body class="h-full bg-gray-100 dark:bg-slate-900 overflow-hidden relative">
     <div
       id="loginOverlay"
       class="fixed inset-0 bg-slate-900 z-[100] flex flex-col items-center justify-center transition-opacity duration-500"
     >
       <div
-        class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-sm text-center"
+        class="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-2xl w-full max-w-sm text-center"
       >
         <img
           src="icons/android-chrome-192x192.png"
@@ -47,33 +76,37 @@
           class="w-16 h-16 mx-auto mb-4 rounded-lg shadow-md"
         />
 
-        <h2 class="text-2xl font-bold text-slate-800 mb-1">Cockpit Gestão</h2>
+        <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-1">
+          Cockpit Gestão
+        </h2>
         <p class="text-gray-500 mb-6 text-xs uppercase tracking-wide">
           Acesso Restrito
         </p>
 
         <form id="loginForm" class="space-y-4 text-left">
           <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1 ml-1"
+            <label
+              class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1 ml-1"
               >USUÁRIO</label
             >
             <input
               type="text"
               id="userInput"
-              class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+              class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:bg-slate-900 dark:text-white dark:border-slate-600 dark:placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
               placeholder="Digite seu usuário"
               autocomplete="username"
             />
           </div>
 
           <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1 ml-1"
+            <label
+              class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1 ml-1"
               >SENHA</label
             >
             <input
               type="password"
               id="passwordInput"
-              class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+              class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:bg-slate-900 dark:text-white dark:border-slate-600 dark:placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
               placeholder="Digite sua senha"
               autocomplete="current-password"
             />
@@ -87,12 +120,12 @@
 
           <button
             type="submit"
-            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors shadow-lg shadow-blue-500/30 mt-2"
+            class="w-full bg-blue-600 hover:bg-blue-700 dark:hover:bg-slate-700 text-white font-bold py-3 rounded-lg transition-colors shadow-lg shadow-blue-500/30 mt-2"
           >
             Entrar no Sistema
           </button>
           <div
-            class="mt-6 flex justify-between text-xs font-medium text-gray-500 pt-4 border-t border-gray-100"
+            class="mt-6 flex justify-between text-xs font-medium text-gray-500 pt-4 border-t border-gray-100 dark:border-slate-700"
           >
             <button
               type="button"
@@ -118,7 +151,7 @@
       class="fixed inset-0 z-[110] bg-slate-900/80 hidden flex items-center justify-center transition-opacity opacity-0 backdrop-blur-sm"
     >
       <div
-        class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 transform transition-all scale-95 opacity-0"
+        class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-sm p-6 transform transition-all scale-95 opacity-0"
         id="logoutModalContent"
       >
         <div class="text-center mb-6">
@@ -139,7 +172,9 @@
               ></path>
             </svg>
           </div>
-          <h3 class="text-xl font-bold text-gray-800">Sair do Sistema?</h3>
+          <h3 class="text-xl font-bold text-gray-800 dark:text-white">
+            Sair do Sistema?
+          </h3>
           <p class="text-sm text-gray-500 mt-2">
             Você precisará fazer login novamente para acessar os aplicativos.
           </p>
@@ -148,7 +183,7 @@
         <div class="flex gap-3">
           <button
             id="btnCancelLogout"
-            class="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors"
+            class="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:hover:bg-slate-800 text-gray-700 dark:text-gray-300 font-medium rounded-lg transition-colors"
           >
             Cancelar
           </button>
@@ -164,10 +199,10 @@
 
     <div
       id="errorModal"
-      class="fixed inset-0 z-[120] bg-slate-900/80 hidden flex items-center justify-center transition-opacity opacity-0 backdrop-blur-sm"
+      class="fixed inset-0 z-[150] bg-slate-900/80 hidden flex items-center justify-center transition-opacity opacity-0 backdrop-blur-sm"
     >
       <div
-        class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 transform transition-all scale-95 opacity-0 text-center"
+        class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-sm p-6 transform transition-all scale-95 opacity-0 text-center"
         id="errorModalContent"
       >
         <div
@@ -188,7 +223,9 @@
           </svg>
         </div>
 
-        <h3 class="text-xl font-bold text-gray-800 mb-2">Acesso Negado</h3>
+        <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">
+          Acesso Negado
+        </h3>
 
         <p id="errorMessageText" class="text-sm text-gray-500 mb-6 font-medium">
           Credenciais inválidas.
@@ -210,13 +247,13 @@
     ></div>
 
     <header
-      class="fixed top-0 left-0 right-0 h-16 bg-white shadow-md z-50 flex items-center justify-between px-4 md:px-6"
+      class="fixed top-0 left-0 right-0 h-16 bg-white dark:bg-slate-800 dark:border-b dark:border-slate-700 shadow-md z-50 flex items-center justify-between px-4 md:px-6"
     >
       <div class="flex items-center gap-3">
         <button
           id="menuButton"
           onclick="toggleSidebar()"
-          class="p-2 mr-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors transition-transform duration-300"
+          class="p-2 mr-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors transition-transform duration-300"
           title="Alternar Menu"
         >
           <svg
@@ -245,55 +282,152 @@
             class="w-10 h-10 md:w-12 md:h-12 rounded-xl"
           />
           <h1
-            class="text-xl md:text-2xl font-bold text-[var(--primary)] tracking-tight truncate"
+            class="text-xl md:text-2xl font-bold text-[var(--primary)] dark:text-blue-400 tracking-tight truncate"
           >
-            Cockpit <span class="font-normal text-gray-600">Gestão</span>
+            Cockpit
+            <span class="font-normal text-gray-600 dark:text-gray-300"
+              >Gestão</span
+            >
           </h1>
         </a>
       </div>
 
       <div class="flex items-center gap-4">
-        <div
-          class="text-xs md:text-sm text-gray-600 text-right min-w-[100px] hidden sm:block"
-        >
-          <span
-            id="infoText"
-            class="block transition-opacity duration-500 opacity-100 cursor-default"
+        <div class="relative hidden sm:block">
+          <button
+            id="weatherTrigger"
+            onclick="toggleWeatherModal()"
+            class="text-xs md:text-sm text-gray-600 dark:text-gray-300 text-right min-w-[140px] hover:bg-gray-100 dark:hover:bg-slate-700 px-3 py-1.5 rounded-lg transition-colors flex flex-col items-end group"
+            title="Clique para ver detalhes"
           >
-            Kevin Fróes • <span id="currentYearHeader">2026</span>
-          </span>
-        </div>
+            <span
+              id="infoText"
+              class="block transition-opacity duration-500 opacity-100 font-medium group-hover:text-blue-600"
+            >
+              Carregando...
+            </span>
+          </button>
 
-        <button
-          id="logoutButton"
-          class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-all duration-300"
-          title="Sair do Sistema"
-        >
-          <svg
-            class="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+          <div
+            id="weatherModal"
+            class="hidden absolute top-full right-0 mt-2 w-64 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 p-4 z-50 transform origin-top-right transition-all duration-200 opacity-0 scale-95"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-            ></path>
-          </svg>
-        </button>
+            <div
+              class="flex items-center justify-between border-b border-gray-100 dark:border-slate-700 pb-2 mb-2"
+            >
+              <span
+                class="text-xs font-bold text-gray-400 uppercase tracking-wider"
+                >Previsão Agora</span
+              >
+              <span class="text-[10px] text-gray-400">Salvador, BA</span>
+            </div>
+
+            <div class="flex items-center gap-3 mb-4">
+              <div id="wm-icon" class="text-4xl">☀️</div>
+              <div>
+                <div
+                  id="wm-temp"
+                  class="text-2xl font-bold text-slate-800 dark:text-white"
+                >
+                  --°C
+                </div>
+                <div id="wm-desc" class="text-xs text-gray-500 capitalize">
+                  Céu Limpo
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-y-3 gap-x-2 text-xs">
+              <div
+                class="flex items-center gap-2 text-gray-600 dark:text-gray-300"
+              >
+                <span class="text-lg">🌡️</span>
+                <div>
+                  <p
+                    class="font-bold text-slate-800 dark:text-white"
+                    id="wm-sensacao"
+                  >
+                    --°
+                  </p>
+                  <p class="text-[10px] text-gray-400">Sensação</p>
+                </div>
+              </div>
+
+              <div
+                class="flex items-center gap-2 text-gray-600 dark:text-gray-300"
+              >
+                <span class="text-lg">☂️</span>
+                <div>
+                  <p
+                    class="font-bold text-slate-800 dark:text-white"
+                    id="wm-uv"
+                  >
+                    --
+                  </p>
+                  <p class="text-[10px] text-gray-400">Índice UV</p>
+                </div>
+              </div>
+
+              <div
+                class="flex items-center gap-2 text-gray-600 dark:text-gray-300"
+              >
+                <span class="text-lg">💧</span>
+                <div>
+                  <p
+                    class="font-bold text-slate-800 dark:text-white"
+                    id="wm-umidade"
+                  >
+                    --%
+                  </p>
+                  <p class="text-[10px] text-gray-400">Umidade</p>
+                </div>
+              </div>
+
+              <div
+                class="flex items-center gap-2 text-gray-600 dark:text-gray-300"
+              >
+                <span class="text-lg">💨</span>
+                <div>
+                  <p
+                    class="font-bold text-slate-800 dark:text-white"
+                    id="wm-vento"
+                  >
+                    -- km/h
+                  </p>
+                  <p class="text-[10px] text-gray-400">Vento</p>
+                </div>
+              </div>
+
+              <div
+                class="flex items-center gap-2 text-gray-600 dark:text-gray-300 col-span-2 mt-1 bg-blue-50 dark:bg-blue-900/30 dark:border-blue-800 p-2 rounded-lg border border-blue-100"
+              >
+                <span class="text-lg">🌧️</span>
+                <div>
+                  <p
+                    class="font-bold text-blue-800 dark:text-blue-200"
+                    id="wm-chuva"
+                  >
+                    --%
+                  </p>
+                  <p class="text-[10px] text-blue-600">
+                    Probabilidade de Chuva
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </header>
 
     <aside
       id="sidebar"
-      class="fixed left-0 top-16 bottom-0 w-65 bg-sidebar overflow-y-auto z-40 shadow-xl transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out"
+      class="fixed left-0 top-16 bottom-0 w-65 bg-sidebar dark:bg-[#020617] flex flex-col z-40 shadow-xl transform -translate-x-full md:translate-x-0 transition-transform transition-colors duration-300 ease-in-out"
     >
-      <nav class="mt-6 flex flex-col gap-1 pb-20">
+      <nav class="mt-6 flex flex-col gap-1 pb-20 flex-1 overflow-y-auto">
         <a
           href="#dashboard"
-          class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400 active-link group"
+          class="py-4 px-6 hover:bg-[#1e293b] dark:hover:bg-slate-700 hover:text-white transition flex items-center gap-3 text-gray-400 active-link group"
         >
           <svg class="w-5 h-5" viewBox="0 0 16 16" fill="currentColor">
             <path
@@ -307,7 +441,7 @@
         </a>
         <a
           href="#gerador"
-          class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400 group"
+          class="py-4 px-6 hover:bg-[#1e293b] dark:hover:bg-slate-700 hover:text-white transition flex items-center gap-3 text-gray-400 group"
         >
           <svg class="w-5 h-5" viewBox="0 0 16 16" fill="currentColor">
             <path d="M0 5.3585V14H16V5.35849L8 10.3585L0 5.3585Z" />
@@ -317,7 +451,7 @@
         </a>
         <a
           href="#contratos"
-          class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400 group"
+          class="py-4 px-6 hover:bg-[#1e293b] dark:hover:bg-slate-700 hover:text-white transition flex items-center gap-3 text-gray-400 group"
         >
           <svg class="w-5 h-5" viewBox="0 0 16 16" fill="currentColor">
             <path d="M7 0H2V16H14V7H7V0Z" />
@@ -328,7 +462,7 @@
 
         <a
           href="#legislacao"
-          class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400 group"
+          class="py-4 px-6 hover:bg-[#1e293b] dark:hover:bg-slate-700 hover:text-white transition flex items-center gap-3 text-gray-400 group"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -358,7 +492,7 @@
 
         <a
           href="#conversor"
-          class="py-4 px-6 hover:bg-[#1e293b] hover:text-white transition flex items-center gap-3 text-gray-400 group"
+          class="py-4 px-6 hover:bg-[#1e293b] dark:hover:bg-slate-700 hover:text-white transition flex items-center gap-3 text-gray-400 group"
         >
           <svg class="w-5 h-5" viewBox="0 0 16 16" fill="currentColor">
             <path
@@ -389,6 +523,204 @@
           >
         </div>
       </nav>
+
+      <div
+        class="mt-auto border-t border-slate-700 p-4 bg-[#1e293b] sticky bottom-0"
+      >
+        <div
+          id="userMenuDropdown"
+          class="hidden absolute bottom-full left-0 w-full px-2 mb-2 z-50 transition-all duration-200 transform origin-bottom scale-95 opacity-0"
+        >
+          <div
+            class="bg-slate-800 dark:bg-slate-800 dark:border-slate-600 rounded-xl shadow-2xl border border-slate-600 overflow-hidden"
+          >
+            <div class="p-4 border-b border-slate-700 bg-slate-900/50">
+              <p
+                id="menuUserName"
+                class="text-white font-bold text-sm truncate"
+              >
+                Carregando...
+              </p>
+              <p
+                id="menuUserEmail"
+                class="text-xs text-slate-400 truncate mb-2"
+              >
+                ...
+              </p>
+              <span
+                id="menuUserRole"
+                class="text-[10px] font-bold bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded border border-indigo-500/30 uppercase tracking-wider"
+                >USER</span
+              >
+            </div>
+
+            <div class="p-1 space-y-1">
+              <button
+                onclick="toggleTheme()"
+                class="w-full text-left px-3 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white rounded-lg flex items-center gap-2 transition-colors group"
+              >
+                <svg
+                  class="w-4 h-4 block dark:hidden group-hover:text-blue-400 transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                  ></path>
+                </svg>
+
+                <svg
+                  class="w-4 h-4 hidden dark:block text-yellow-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                  ></path>
+                </svg>
+
+                <span class="block dark:hidden">Modo Escuro</span>
+                <span class="hidden dark:block text-white font-medium"
+                  >Modo Claro</span
+                >
+              </button>
+
+              <button
+                onclick="openResetModal()"
+                class="w-full text-left px-3 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white rounded-lg flex items-center gap-2 transition-colors"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 7a2 2 0 012 2m4 0a2 2 0 01-2 2M15 7l-9 9m9-9l9 9m-9-9l-9 9m9-9V4m0 0H11m4 0h4m-4 0v3"
+                  ></path>
+                </svg>
+                Alterar Senha
+              </button>
+              <button
+                onclick="showLogoutModal()"
+                class="w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-red-900/30 hover:text-red-300 rounded-lg flex items-center gap-2 transition-colors"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  ></path>
+                </svg>
+                Sair
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative group">
+          <input
+            type="file"
+            id="avatarUpload"
+            accept="image/*"
+            class="hidden"
+          />
+
+          <button
+            id="userMenuBtn"
+            class="flex items-center gap-3 w-full p-2 rounded-xl hover:bg-slate-800 transition-colors focus:outline-none relative z-10"
+          >
+            <div class="relative w-10 h-10">
+              <img
+                id="userAvatarImg"
+                src=""
+                class="w-10 h-10 rounded-full object-cover border-2 border-slate-900 group-hover:border-slate-700 hidden"
+              />
+
+              <div
+                id="userAvatarFallback"
+                class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg border-2 border-slate-900 group-hover:border-slate-700 transition-colors"
+              >
+                U
+              </div>
+
+              <div
+                onclick="
+                  document.getElementById('avatarUpload').click();
+                  event.stopPropagation();
+                "
+                class="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                title="Alterar Foto"
+              >
+                <svg
+                  class="w-4 h-4 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                  ></path>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+
+            <div class="flex-1 text-left overflow-hidden">
+              <p
+                id="sidebarUserName"
+                class="text-sm font-bold text-slate-200 truncate group-hover:text-white"
+              >
+                Usuário
+              </p>
+              <p
+                class="text-[10px] text-slate-500 truncate group-hover:text-slate-400"
+              >
+                Ver perfil
+              </p>
+            </div>
+
+            <svg
+              class="w-4 h-4 text-slate-500 group-hover:text-white transition-colors"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </div>
     </aside>
 
     <main
@@ -400,41 +732,74 @@
 
     <div
       id="floatingLinks"
-      class="hidden md:flex flex-col space-y-4 p-3 bg-white shadow-lg border rounded-l-xl fixed top-1/4 right-0 transform -translate-y-1/2 z-40"
+      class="hidden md:flex fixed top-1/4 right-0 z-40 transition-transform duration-500 ease-in-out translate-x-full items-start"
     >
-      <a
-        href="https://www.cadastrodefornecedores.saeb.ba.gov.br/loginrestrito"
-        target="_blank"
-        rel="noopener noreferrer"
-        title="Acessar CAF Digital"
-        class="transition transform hover:scale-105"
+      <button
+        id="btnFloatToggle"
+        onclick="toggleFloatingMenu()"
+        class="bg-white hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-400 hover:text-gray-600 w-6 h-10 flex items-center justify-center rounded-l-lg shadow-md border-y border-l border-gray-200 absolute -left-6 top-0 focus:outline-none transition-colors"
+        title="Links Úteis"
       >
-        <img
-          src="https://comprasnet.ba.gov.br/sites/default/files/banner-caf-digital_comprasnet.jpg"
-          alt="Acesso ao CAF Digital"
-          class="w-40 rounded-md shadow-sm"
-        />
-      </a>
-      <a
-        href="https://www.comprasnetadm.ba.gov.br/Home/Login"
-        target="_blank"
-        rel="noopener noreferrer"
-        title="Acessar Comprasnet"
-        class="transition transform hover:scale-105"
+        <svg
+          id="iconFloatArrow"
+          class="w-4 h-4 transition-transform duration-500 transform"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"
+          ></path>
+        </svg>
+      </button>
+
+      <div
+        class="bg-white dark:bg-slate-800 p-3 shadow-2xl border-y border-l border-gray-200 rounded-bl-xl flex flex-col space-y-4 w-48"
       >
-        <img
-          src="https://comprasnet.ba.gov.br/sites/all/modules/secom_bar/images/logomarca.png"
-          alt="Acesso ao Comprasnet"
-          class="w-40 rounded-md shadow-sm"
-        />
-      </a>
+        <p
+          class="text-[10px] font-bold text-gray-400 uppercase text-center mb-1"
+        >
+          Acesso Rápido
+        </p>
+
+        <a
+          href="https://www.cadastrodefornecedores.saeb.ba.gov.br/loginrestrito"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="transition transform hover:scale-105 opacity-90 hover:opacity-100"
+        >
+          <img
+            src="https://comprasnet.ba.gov.br/sites/default/files/banner-caf-digital_comprasnet.jpg"
+            alt="CAF Digital"
+            class="w-full rounded-md shadow-sm border border-gray-100 dark:border-slate-700"
+          />
+        </a>
+
+        <a
+          href="https://www.comprasnetadm.ba.gov.br/Home/Login"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="transition transform hover:scale-105 opacity-90 hover:opacity-100"
+        >
+          <img
+            src="https://comprasnet.ba.gov.br/sites/all/modules/secom_bar/images/logomarca.png"
+            alt="Comprasnet"
+            class="w-full rounded-md shadow-sm border border-gray-100 dark:border-slate-700 bg-gray-50 p-1"
+          />
+        </a>
+      </div>
     </div>
 
     <div
       id="registerModal"
       class="fixed inset-0 z-[130] bg-slate-900/90 hidden flex items-center justify-center backdrop-blur-sm transition-opacity"
     >
-      <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-sm relative">
+      <div
+        class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-2xl w-full max-w-sm relative"
+      >
         <button
           onclick="
             document.getElementById('registerModal').classList.add('hidden')
@@ -443,40 +808,122 @@
         >
           ✕
         </button>
-        <h3 class="text-lg font-bold text-gray-800 mb-1">Solicitar Cadastro</h3>
+        <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-1">
+          Solicitar Cadastro
+        </h3>
         <p class="text-xs text-gray-500 mb-4">
           Gere o arquivo e envie para o administrador.
         </p>
 
         <form id="registerForm" class="space-y-3">
+          <div class="flex flex-col items-center mb-4">
+            <div
+              class="relative group cursor-pointer"
+              onclick="document.getElementById('regAvatarInput').click()"
+            >
+              <img
+                id="regAvatarPreview"
+                src=""
+                class="w-20 h-20 rounded-full object-cover border-2 border-indigo-100 hidden"
+              />
+              <div
+                id="regAvatarPlaceholder"
+                class="w-20 h-20 rounded-full bg-indigo-50 dark:bg-slate-700 dark:border-slate-500 flex items-center justify-center border-2 border-dashed border-indigo-200 text-indigo-300 group-hover:border-indigo-400 group-hover:text-indigo-500 transition-colors"
+              >
+                <svg
+                  class="w-8 h-8"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  ></path>
+                </svg>
+              </div>
+              <div
+                class="absolute bottom-0 right-0 bg-indigo-600 text-white rounded-full p-1 shadow-md border-2 border-white"
+              >
+                <svg
+                  class="w-3 h-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 4v16m8-8H4"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+            <p class="text-[10px] text-gray-400 mt-2">
+              Toque para adicionar foto
+            </p>
+            <input
+              type="file"
+              id="regAvatarInput"
+              accept="image/*"
+              class="hidden"
+            />
+          </div>
+
           <input
             type="text"
             id="regName"
             placeholder="Nome Completo"
-            class="w-full px-3 py-2 border rounded text-sm outline-none focus:border-blue-500"
+            class="w-full px-3 py-2 border rounded text-sm outline-none dark:bg-slate-900 dark:text-white dark:border-slate-600 dark:placeholder-gray-500 focus:border-blue-500"
             required
           />
           <input
             type="text"
             id="regUser"
             placeholder="Usuário Desejado"
-            class="w-full px-3 py-2 border rounded text-sm outline-none focus:border-blue-500"
+            class="w-full px-3 py-2 border rounded text-sm outline-none dark:bg-slate-900 dark:text-white dark:border-slate-600 dark:placeholder-gray-500 focus:border-blue-500"
             required
           />
           <input
             type="email"
             id="regEmail"
             placeholder="Seu E-mail"
-            class="w-full px-3 py-2 border rounded text-sm outline-none focus:border-blue-500"
+            class="w-full px-3 py-2 border rounded text-sm outline-none dark:bg-slate-900 dark:text-white dark:border-slate-600 dark:placeholder-gray-500 focus:border-blue-500"
             required
           />
-          <input
-            type="password"
-            id="regPass"
-            placeholder="Senha Desejada"
-            class="w-full px-3 py-2 border rounded text-sm outline-none focus:border-blue-500"
-            required
-          />
+          <div>
+            <input
+              type="password"
+              id="regPass"
+              placeholder="Senha Desejada"
+              class="w-full px-3 py-2 border rounded text-sm outline-none dark:bg-slate-900 dark:text-white dark:border-slate-600 dark:placeholder-gray-500 focus:border-blue-500 transition-colors"
+              required
+            />
+            <input
+              type="password"
+              id="regConfirm"
+              placeholder="Confirme a Senha"
+              class="w-full px-3 py-2 border rounded text-sm outline-none dark:bg-slate-900 dark:text-white dark:border-slate-600 dark:placeholder-gray-500 focus:border-blue-500"
+              required
+            />
+            <div
+              class="h-1.5 w-full bg-gray-200 rounded-full mt-2 overflow-hidden"
+            >
+              <div
+                id="regStrengthBar"
+                class="h-full w-0 bg-red-500 transition-all duration-300"
+              ></div>
+            </div>
+            <p
+              id="regStrengthText"
+              class="text-[10px] text-gray-400 mt-1 text-right"
+            >
+              Digite a senha...
+            </p>
+          </div>
           <button
             type="submit"
             class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded transition shadow"
@@ -491,7 +938,9 @@
       id="resetModal"
       class="fixed inset-0 z-[130] bg-slate-900/90 hidden flex items-center justify-center backdrop-blur-sm transition-opacity"
     >
-      <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-sm relative">
+      <div
+        class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-2xl w-full max-w-sm relative"
+      >
         <button
           onclick="
             document.getElementById('resetModal').classList.add('hidden')
@@ -500,33 +949,113 @@
         >
           ✕
         </button>
-        <h3 class="text-lg font-bold text-gray-800 mb-1">
+        <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-1">
           Solicitar Nova Senha
         </h3>
         <p class="text-xs text-gray-500 mb-4">O admin validará seu e-mail.</p>
 
         <form id="resetForm" class="space-y-3">
+          <div class="flex flex-col items-center mb-4">
+            <div
+              class="relative group cursor-pointer"
+              onclick="document.getElementById('resAvatarInput').click()"
+            >
+              <img
+                id="resAvatarPreview"
+                src=""
+                class="w-20 h-20 rounded-full object-cover border-2 border-indigo-100 hidden"
+              />
+              <div
+                id="resAvatarPlaceholder"
+                class="w-20 h-20 rounded-full bg-indigo-50 dark:bg-slate-700 dark:border-slate-500 flex items-center justify-center border-2 border-dashed border-indigo-200 text-indigo-300 group-hover:border-indigo-400 group-hover:text-indigo-500 transition-colors"
+              >
+                <svg
+                  class="w-8 h-8"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  ></path>
+                </svg>
+              </div>
+              <div
+                class="absolute bottom-0 right-0 bg-indigo-600 text-white rounded-full p-1 shadow-md border-2 border-white"
+              >
+                <svg
+                  class="w-3 h-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 4v16m8-8H4"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+            <p class="text-[10px] text-gray-400 mt-2">
+              Atualizar foto (Opcional)
+            </p>
+            <input
+              type="file"
+              id="resAvatarInput"
+              accept="image/*"
+              class="hidden"
+            />
+          </div>
+
           <input
             type="text"
             id="resUser"
             placeholder="Seu Usuário"
-            class="w-full px-3 py-2 border rounded text-sm outline-none focus:border-blue-500"
+            class="w-full px-3 py-2 border rounded text-sm outline-none dark:bg-slate-900 dark:text-white dark:border-slate-600 dark:placeholder-gray-500 focus:border-blue-500"
             required
           />
           <input
             type="email"
             id="resEmail"
             placeholder="Seu E-mail Cadastrado"
-            class="w-full px-3 py-2 border rounded text-sm outline-none focus:border-blue-500"
+            class="w-full px-3 py-2 border rounded text-sm outline-none dark:bg-slate-900 dark:text-white dark:border-slate-600 dark:placeholder-gray-500 focus:border-blue-500"
             required
           />
-          <input
-            type="password"
-            id="resNewPass"
-            placeholder="Nova Senha"
-            class="w-full px-3 py-2 border rounded text-sm outline-none focus:border-blue-500"
-            required
-          />
+          <div>
+            <input
+              type="password"
+              id="resNewPass"
+              placeholder="Nova Senha"
+              class="w-full px-3 py-2 border rounded text-sm outline-none dark:bg-slate-900 dark:text-white dark:border-slate-600 dark:placeholder-gray-500 focus:border-blue-500 transition-colors"
+              required
+            />
+            <input
+              type="password"
+              id="resConfirm"
+              placeholder="Confirme a Nova Senha"
+              class="w-full px-3 py-2 border rounded text-sm outline-none dark:bg-slate-900 dark:text-white dark:border-slate-600 dark:placeholder-gray-500 focus:border-blue-500"
+              required
+            />
+            <div
+              class="h-1.5 w-full bg-gray-200 rounded-full mt-2 overflow-hidden"
+            >
+              <div
+                id="resStrengthBar"
+                class="h-full w-0 bg-red-500 transition-all duration-300"
+              ></div>
+            </div>
+            <p
+              id="resStrengthText"
+              class="text-[10px] text-gray-400 mt-1 text-right"
+            >
+              Digite a senha...
+            </p>
+          </div>
           <button
             type="submit"
             class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded transition shadow"
@@ -542,7 +1071,7 @@
       class="fixed inset-0 z-[140] bg-slate-900/80 hidden flex items-center justify-center transition-opacity opacity-0 backdrop-blur-sm"
     >
       <div
-        class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 transform transition-all scale-95 opacity-0 text-center"
+        class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-sm p-6 transform transition-all scale-95 opacity-0 text-center"
         id="successModalContent"
       >
         <div
@@ -563,7 +1092,10 @@
           </svg>
         </div>
 
-        <h3 id="successTitle" class="text-xl font-bold text-gray-800 mb-2">
+        <h3
+          id="successTitle"
+          class="text-xl font-bold text-gray-800 dark:text-white mb-2"
+        >
           Sucesso!
         </h3>
         <p
@@ -581,6 +1113,12 @@
         </button>
       </div>
     </div>
+
+    <div
+      id="weatherBackdrop"
+      class="fixed inset-0 z-[45] hidden cursor-default"
+      onclick="toggleWeatherModal()"
+    ></div>
 
     <script src="main.js"></script>
   </body>

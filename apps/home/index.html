@@ -7,6 +7,35 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
+      tailwind.config = {
+        darkMode: "class", // Ativa o modo manual
+        theme: {
+          extend: {
+            colors: {
+              slate: { 850: "#1e293b" }, // Um tom extra para contrastes
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      /* Scrollbar Dark Mode */
+      .dark ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      .dark ::-webkit-scrollbar-track {
+        background: #0f172a;
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background-color: #334155;
+        border-radius: 4px;
+      }
+      .dark ::-webkit-scrollbar-thumb:hover {
+        background-color: #475569;
+      }
+    </style>
+    <script>
       // VERIFICAÇÃO DE SEGURANÇA (COCKPIT)
       (function () {
         // 1. Verifica se tem o token válido no navegador
@@ -31,24 +60,28 @@
 
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body class="bg-gray-50 text-gray-800 p-6 md:p-10 min-h-screen flex flex-col">
+  <body
+    class="bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-gray-100 p-6 md:p-10 min-h-screen flex flex-col transition-colors duration-300"
+  >
     <div
       id="dynamic-bg"
       class="fixed inset-0 z-[-1] bg-cover bg-center transition-all duration-1000 opacity-0 pointer-events-none"
     ></div>
 
     <header class="mb-10 text-center md:text-left animate-fade-in-down">
-      <h1 class="text-3xl md:text-4xl font-bold text-[var(--primary-600)] mb-2">
+      <h1
+        class="text-3xl md:text-4xl font-bold text-[var(--primary-600)] dark:text-blue-400 mb-2 transition-colors"
+      >
         <span id="greeting">Olá</span>
       </h1>
       <p
-        class="text-gray-500 text-lg flex flex-col md:flex-row gap-2 md:items-center justify-center md:justify-start"
+        class="text-gray-500 dark:text-gray-400 text-lg flex flex-col md:flex-row gap-2 md:items-center justify-center md:justify-start transition-colors"
       >
         <span id="currentDate">Carregando data...</span>
-        <span class="hidden md:inline text-gray-300">•</span>
+        <span class="hidden md:inline text-gray-300 dark:text-gray-600">•</span>
         <span
           id="currentTime"
-          class="font-mono font-medium text-[var(--primary-500)] text-xl"
+          class="font-mono font-medium text-[var(--primary-500)] dark:text-blue-300 text-xl transition-colors"
           >--:--:--</span
         >
       </p>
@@ -58,14 +91,14 @@
         class="mt-6 max-w-2xl text-left opacity-0 transition-opacity duration-1000"
       >
         <blockquote
-          class="border-l-4 border-[var(--primary-300)] pl-4 italic text-gray-600"
+          class="border-l-4 border-[var(--primary-300)] dark:border-blue-500 pl-4 italic text-gray-600 dark:text-gray-300 transition-colors"
         >
           <p id="stoic-text" class="text-sm font-medium">
             Carregando reflexão...
           </p>
           <footer
             id="stoic-author"
-            class="text-xs text-[var(--primary-600)] font-bold mt-1 uppercase tracking-wider"
+            class="text-xs text-[var(--primary-600)] dark:text-blue-400 font-bold mt-1 uppercase tracking-wider transition-colors"
           ></footer>
         </blockquote>
       </div>
@@ -78,13 +111,13 @@
     >
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div
-          class="bg-white h-24 rounded-xl shadow-sm border border-gray-100 animate-pulse"
+          class="bg-white h-24 rounded-xl shadow-sm border border-gray-100 dark:border-slate-600 dark:bg-slate-900 dark:text-white animate-pulse"
         ></div>
         <div
-          class="bg-white h-24 rounded-xl shadow-sm border border-gray-100 animate-pulse"
+          class="bg-white h-24 rounded-xl shadow-sm border border-gray-100 dark:border-slate-600 dark:bg-slate-900 dark:text-white animate-pulse"
         ></div>
         <div
-          class="bg-white h-24 rounded-xl shadow-sm border border-gray-100 animate-pulse"
+          class="bg-white h-24 rounded-xl shadow-sm border border-gray-100 dark:border-slate-600 dark:bg-slate-900 dark:text-white animate-pulse"
         ></div>
       </div>
     </section>
@@ -94,7 +127,7 @@
     >
       <div
         data-route="#dashboard"
-        class="nav-card card group hover:border-[var(--primary-500)] border border-transparent relative overflow-hidden"
+        class="nav-card card group bg-white dark:bg-slate-800 dark:border-slate-700 hover:border-[var(--primary-500)] border border-transparent relative overflow-hidden transition-colors"
       >
         <div
           class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
@@ -109,7 +142,9 @@
           </svg>
         </div>
         <div class="flex items-center gap-4 mb-3">
-          <div class="p-3 bg-blue-100 rounded-lg text-[var(--primary-600)]">
+          <div
+            class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-[var(--primary-600)] dark:text-blue-400"
+          >
             <svg
               class="w-8 h-8"
               fill="none"
@@ -124,9 +159,11 @@
               ></path>
             </svg>
           </div>
-          <h2 class="text-xl font-bold text-gray-800">Dashboard Operacional</h2>
+          <h2 class="text-xl font-bold text-gray-800 dark:text-white">
+            Dashboard Operacional
+          </h2>
         </div>
-        <p class="text-gray-600 text-sm leading-relaxed">
+        <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
           Transforme montanhas de CSVs em um painel vivo. Acompanhe KPIs, tempos
           de análise e produtividade da equipe em tempo real.
         </p>
@@ -134,7 +171,7 @@
 
       <div
         data-route="#gerador"
-        class="nav-card card group hover:border-indigo-600 border border-transparent relative overflow-hidden"
+        class="nav-card card group bg-white dark:bg-slate-800 dark:border-slate-700 hover:border-indigo-600 border border-transparent relative overflow-hidden transition-colors"
       >
         <div
           class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
@@ -145,7 +182,9 @@
           </svg>
         </div>
         <div class="flex items-center gap-4 mb-3">
-          <div class="p-3 bg-indigo-100 rounded-lg text-indigo-600">
+          <div
+            class="p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg text-indigo-600 dark:text-indigo-400 transition-colors"
+          >
             <svg
               class="w-8 h-8"
               fill="none"
@@ -160,9 +199,11 @@
               ></path>
             </svg>
           </div>
-          <h2 class="text-xl font-bold text-gray-800">Gerador de Mensagens</h2>
+          <h2 class="text-xl font-bold text-gray-800 dark:text-white">
+            Gerador de Mensagens
+          </h2>
         </div>
-        <p class="text-gray-600 text-sm leading-relaxed">
+        <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
           Atalho para geração de textos padronizados. Crie mensagens
           profissionais com autocompletar e mantenha o histórico organizado.
         </p>
@@ -170,7 +211,7 @@
 
       <div
         data-route="#contratos"
-        class="nav-card card group hover:border-emerald-600 border border-transparent relative overflow-hidden"
+        class="nav-card card group bg-white dark:bg-slate-800 dark:border-slate-700 hover:border-emerald-600 border border-transparent relative overflow-hidden transition-colors"
       >
         <div
           class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
@@ -181,7 +222,9 @@
           </svg>
         </div>
         <div class="flex items-center gap-4 mb-3">
-          <div class="p-3 bg-emerald-100 rounded-lg text-emerald-600">
+          <div
+            class="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg text-emerald-600 dark:text-emerald-400 transition-colors"
+          >
             <svg
               class="w-8 h-8"
               fill="none"
@@ -196,9 +239,11 @@
               ></path>
             </svg>
           </div>
-          <h2 class="text-xl font-bold text-gray-800">Contratos Públicos</h2>
+          <h2 class="text-xl font-bold text-gray-800 dark:text-white">
+            Contratos Públicos
+          </h2>
         </div>
-        <p class="text-gray-600 text-sm leading-relaxed">
+        <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
           Hub central para contratos, aditivos e pagamentos. Controle financeiro
           visual e alertas de prazos sem planilhas complexas.
         </p>
@@ -206,7 +251,7 @@
 
       <div
         data-route="#conversor"
-        class="nav-card card group hover:border-amber-600 border border-transparent relative overflow-hidden"
+        class="nav-card card group bg-white dark:bg-slate-800 dark:border-slate-700 hover:border-amber-600 border border-transparent relative overflow-hidden transition-colors"
       >
         <div
           class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
@@ -221,7 +266,9 @@
           </svg>
         </div>
         <div class="flex items-center gap-4 mb-3">
-          <div class="p-3 bg-amber-100 rounded-lg text-amber-600">
+          <div
+            class="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-lg text-amber-600 dark:text-amber-400 transition-colors"
+          >
             <svg
               class="w-8 h-8"
               fill="none"
@@ -286,9 +333,11 @@
               />
             </svg>
           </div>
-          <h2 class="text-xl font-bold text-gray-800">Conversor & Filtro</h2>
+          <h2 class="text-xl font-bold text-gray-800 dark:text-white">
+            Conversor & Filtro
+          </h2>
         </div>
-        <p class="text-gray-600 text-sm leading-relaxed">
+        <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
           Prepare seus dados: mescle Excels com CSVs e filtre arquivos por
           período para preparar o uso para as ferramentas.
         </p>
@@ -296,14 +345,16 @@
     </main>
 
     <footer class="mt-10 border-t pt-6 text-center">
-      <p class="text-sm text-gray-400 mb-4 uppercase font-bold tracking-wider">
+      <p
+        class="text-sm text-gray-400 dark:text-white mb-4 uppercase font-bold tracking-wider"
+      >
         Acesso Externo Rápido
       </p>
       <div class="flex justify-center gap-4">
         <a
           href="https://www.cadastrodefornecedores.saeb.ba.gov.br/loginrestrito"
           target="_blank"
-          class="px-4 py-2 bg-white border rounded-lg text-sm text-gray-600 hover:text-[var(--primary-600)] hover:border-[var(--primary-600)] transition shadow-sm flex items-center gap-2"
+          class="px-4 py-2 bg-white dark:bg-slate-800 dark:border-slate-600 border rounded-lg text-sm text-gray-600 dark:text-gray-300 hover:text-[var(--primary-600)] hover:border-[var(--primary-600)] transition shadow-sm flex items-center gap-2"
         >
           <img
             src="https://comprasnet.ba.gov.br/sites/default/files/banner-caf-digital_comprasnet.jpg"
@@ -314,7 +365,7 @@
         <a
           href="https://www.comprasnetadm.ba.gov.br/Home/Login"
           target="_blank"
-          class="px-4 py-2 bg-white border rounded-lg text-sm text-gray-600 hover:text-blue-600 hover:border-blue-600 transition shadow-sm flex items-center gap-2"
+          class="px-4 py-2 bg-white dark:bg-slate-800 dark:border-slate-600 border rounded-lg text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 hover:border-blue-600 transition shadow-sm flex items-center gap-2"
         >
           <img
             src="https://comprasnet.ba.gov.br/sites/all/modules/secom_bar/images/logomarca.png"
@@ -327,21 +378,23 @@
 
     <div
       id="family-modal"
-      class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50 backdrop-blur-sm transition-opacity"
+      class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900 dark:bg-slate-800 bg-opacity-50 backdrop-blur-sm transition-opacity"
     >
       <div
-        class="bg-white w-full max-w-5xl h-[90vh] rounded-xl shadow-2xl flex flex-col overflow-hidden m-4 animate-fade-in-down"
+        class="bg-white dark:bg-slate-800 w-full max-w-5xl h-[90vh] rounded-xl shadow-2xl flex flex-col overflow-hidden m-4 animate-fade-in-down"
       >
         <div
-          class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50"
+          class="p-4 border-b border-gray-100 dark:border-slate-600 dark:bg-slate-900 dark:text-white flex justify-between items-center bg-gray-50 dark:bg-slate-900"
         >
-          <h3 class="font-bold text-gray-700 flex items-center gap-2 text-lg">
+          <h3
+            class="font-bold text-gray-700 dark:text-white flex items-center gap-2 text-lg"
+          >
             📂 Qualificação Técnica
           </h3>
           <div class="flex items-center gap-2">
             <button
               id="btn-import-family"
-              class="text-gray-400 hover:text-blue-600 p-2 rounded hover:bg-blue-50 transition-colors"
+              class="text-gray-400 dark:text-white hover:text-blue-600 p-2 rounded hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"
               title="Importar arquivo"
             >
               <svg
@@ -366,31 +419,31 @@
             />
             <button
               id="btn-close-family"
-              class="text-gray-400 hover:text-red-500 text-2xl px-2"
+              class="text-gray-400 dark:text-white hover:text-red-500 text-2xl px-2"
             >
               &times;
             </button>
           </div>
         </div>
         <div
-          class="p-4 border-b border-gray-100 bg-white flex flex-col md:flex-row gap-3 items-center"
+          class="p-4 border-b border-gray-100 dark:border-slate-600 dark:bg-slate-900 dark:text-white bg-white flex flex-col md:flex-row gap-3 items-center"
         >
           <div class="relative w-full">
             <span
-              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400"
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 dark:text-white"
               >🔍</span
             >
             <input
               type="text"
               id="family-search"
               placeholder="Pesquisar família ou descrição..."
-              class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-400 text-sm"
+              class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 dark:border-slate-600 dark:bg-slate-900 dark:text-white focus:outline-none focus:border-blue-400 text-sm"
             />
           </div>
 
           <select
             id="family-filter-type"
-            class="w-full md:w-48 px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-400 text-sm bg-white text-gray-700 cursor-pointer"
+            class="w-full md:w-48 px-3 py-2 rounded-lg border border-gray-200 dark:border-slate-600 dark:bg-slate-900 dark:text-white focus:outline-none focus:border-blue-400 text-sm bg-white text-gray-700 dark:text-white cursor-pointer"
           >
             <option value="">Todos os Tipos</option>
             <option value="M">📦 Materiais</option>
@@ -398,7 +451,7 @@
           </select>
 
           <label
-            class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 bg-white cursor-pointer hover:border-purple-300 transition-colors select-none"
+            class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 dark:border-slate-600 dark:bg-slate-900 dark:text-white bg-white cursor-pointer hover:border-purple-300 transition-colors select-none"
             title="Exibir apenas terceirizados"
           >
             <input
@@ -406,34 +459,38 @@
               id="family-filter-terceirizado"
               class="w-4 h-4 text-purple-600 rounded focus:ring-purple-500 accent-purple-600"
             />
-            <span class="text-sm text-gray-700 font-medium">Terceirizados</span>
+            <span class="text-sm text-gray-700 dark:text-white font-medium"
+              >Terceirizados</span
+            >
           </label>
         </div>
         <div
           id="family-grid"
-          class="flex-1 overflow-y-auto p-4 bg-gray-50/50 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 content-start"
+          class="flex-1 overflow-y-auto p-4 bg-gray-50/50 dark:bg-slate-900 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 content-start"
         ></div>
         <div
-          class="p-3 border-t border-gray-100 bg-white flex justify-between items-center"
+          class="p-3 border-t border-gray-100 dark:border-slate-600 dark:bg-slate-900 dark:text-white bg-white flex justify-between items-center"
         >
-          <span id="family-info" class="text-xs text-gray-500 font-medium"
+          <span
+            id="family-info"
+            class="text-xs text-gray-500 dark:text-white font-medium"
             >Carregando...</span
           >
           <div class="flex gap-2">
             <button
               id="btn-prev-page"
-              class="px-3 py-1 text-sm border rounded hover:bg-gray-100 disabled:opacity-50"
+              class="px-3 py-1 text-sm border rounded hover:bg-gray-100 dark:hover:bg-slate-700 disabled:opacity-50"
             >
               Ant.
             </button>
             <span
               id="page-indicator"
-              class="px-2 py-1 text-sm font-mono text-gray-600 self-center"
+              class="px-2 py-1 text-sm font-mono text-gray-600 dark:text-white self-center"
               >1</span
             >
             <button
               id="btn-next-page"
-              class="px-3 py-1 text-sm border rounded hover:bg-gray-100 disabled:opacity-50"
+              class="px-3 py-1 text-sm border rounded hover:bg-gray-100 dark:hover:bg-slate-700 disabled:opacity-50"
             >
               Próx.
             </button>

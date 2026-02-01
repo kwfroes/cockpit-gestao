@@ -1,143 +1,356 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sistema CAF Digital</title>
+
     <script>
-    // VERIFICAÇÃO DE SEGURANÇA (COCKPIT)
-    (function() {
-        // 1. Verifica se tem o token válido no navegador
-        const isAuthenticated = sessionStorage.getItem("cockpit_auth_token") === "valid";
-        
-        // 2. Se NÃO estiver autenticado, manda de volta para o login (index.html principal)
+      // VERIFICAÇÃO DE SEGURANÇA (COCKPIT)
+      (function () {
+        const isAuthenticated =
+          sessionStorage.getItem("cockpit_auth_token") === "valid";
         if (!isAuthenticated) {
-        // Ajuste o "../.." conforme a profundidade da pasta. 
-        // Se estiver em apps/gerador/index.html, precisa voltar 2 níveis.
-        window.top.location.href = "../../index.html";
+          window.top.location.href = "../../index.html";
         }
-    })();
+      })();
     </script>
-    
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              slate: { 850: "#1e293b" },
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      /* Scrollbar Personalizada para Dark Mode */
+      .dark ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      .dark ::-webkit-scrollbar-track {
+        background: #0f172a;
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background-color: #334155;
+        border-radius: 4px;
+      }
+      .dark ::-webkit-scrollbar-thumb:hover {
+        background-color: #475569;
+      }
+
+      .input-padrao {
+        transition: all 0.2s;
+      }
+
+      /* Estilos base vindos do seu style.css que o Tailwind não cobre diretamente */
+      .section-label {
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
+        color: #6b7280;
+      }
+      .dark .section-label {
+        color: #9ca3af;
+      }
+    </style>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
-</head>
-<body class="p-4 pb-12">
+  </head>
 
-<div class="section-label">Dashboard</div>
-    <div class="app-card border-blue">
-        <h1 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">Filtro de CSV por Período</h1>
-        
-        <div class="grid grid-cols-1 gap-6 mb-6">
-            <div>
-                <label class="block text-sm font-medium text-gray-700">1. Arquivo CSV Original (.csv)</label>
-                <input type="file" id="csvFile" accept=".csv" class="input-padrao text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                <p class="text-xs text-gray-500 mt-1">O arquivo deve usar separador ";" e ter a coluna "Data Análise" (dd/mm/yyyy).</p>
-            </div>
+  <body
+    class="p-4 pb-12 bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-gray-100 transition-colors duration-300"
+  >
+    <div class="section-label">Dashboard</div>
+    <div
+      class="app-card border-blue bg-white dark:bg-slate-800 shadow-sm rounded-xl p-6 mb-8 border border-gray-100 dark:border-slate-700"
+    >
+      <h1
+        class="text-2xl font-bold text-gray-800 dark:text-white mb-6 border-b dark:border-slate-700 pb-2"
+      >
+        Filtro de CSV por Período
+      </h1>
 
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">De (Mês/Ano)</label>
-                    <input type="month" id="filterStart" class="input-padrao">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Até (Mês/Ano)</label>
-                    <input type="month" id="filterEnd" class="input-padrao">
-                </div>
-            </div>
+      <div class="grid grid-cols-1 gap-6 mb-6">
+        <div>
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >1. Arquivo CSV Original (.csv)</label
+          >
+          <input
+            type="file"
+            id="csvFile"
+            accept=".csv"
+            class="input-padrao w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900/30 dark:file:text-blue-300 dark:hover:file:bg-blue-800/50 dark:bg-slate-900 dark:border-slate-600 rounded-lg border border-gray-200 p-2"
+          />
+          <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">
+            O arquivo deve usar separador ";" e ter a coluna "Data Análise"
+            (dd/mm/yyyy).
+          </p>
         </div>
 
-        <div class="flex flex-col gap-4">
-            <button id="btnProcess" onclick="processarCSV()" class="btn-primary">
-                Processar Período
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >De (Mês/Ano)</label
+            >
+            <input
+              type="month"
+              id="filterStart"
+              class="input-padrao w-full p-2 rounded-lg border border-gray-200 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+            />
+          </div>
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >Até (Mês/Ano)</label
+            >
+            <input
+              type="month"
+              id="filterEnd"
+              class="input-padrao w-full p-2 rounded-lg border border-gray-200 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        <button
+          id="btnProcess"
+          onclick="processarCSV()"
+          class="btn-primary px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-md font-medium"
+        >
+          Processar Período
+        </button>
+
+        <div
+          id="progressContainer"
+          class="hidden w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2.5 mt-2"
+        >
+          <div
+            id="progressBar"
+            class="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
+            style="width: 0%"
+          ></div>
+        </div>
+        <p
+          id="statusText"
+          class="text-center text-sm text-gray-600 dark:text-gray-400 mt-2 hidden"
+        >
+          Aguardando...
+        </p>
+
+        <div
+          id="resultArea"
+          class="hidden border dark:border-slate-700 rounded-lg p-4 bg-gray-50 dark:bg-slate-900 mt-4"
+        >
+          <h3 class="font-bold text-gray-700 dark:text-gray-200">
+            Resumo do Filtro:
+          </h3>
+          <ul class="text-sm text-gray-600 dark:text-gray-400 mt-2 space-y-1">
+            <li>
+              Total processado:
+              <span
+                id="totalLines"
+                class="font-mono font-bold text-gray-800 dark:text-white"
+                >0</span
+              >
+            </li>
+            <li>
+              Linhas no período:
+              <span
+                id="foundLines"
+                class="font-mono font-bold text-blue-600 dark:text-blue-400"
+                >0</span
+              >
+            </li>
+          </ul>
+          <div class="mt-4">
+            <button
+              id="btnDownload"
+              class="btn-success px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-sm transition"
+            >
+              Baixar CSV Filtrado
             </button>
-            
-            <div id="progressContainer" class="hidden w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
-            </div>
-            <p id="statusText" class="text-center text-sm text-gray-600 mt-2 hidden">Aguardando...</p>
-
-            <div id="resultArea" class="hidden border rounded-lg p-4 bg-gray-50 mt-4">
-                <h3 class="font-bold text-gray-700">Resumo do Filtro:</h3>
-                <ul class="text-sm text-gray-600 mt-2 space-y-1">
-                    <li>Total processado: <span id="totalLines" class="font-mono font-bold">0</span></li>
-                    <li>Linhas no período: <span id="foundLines" class="font-mono font-bold text-blue-600">0</span></li>
-                </ul>
-                <div class="mt-4">
-                    <button id="btnDownload" class="btn-success">Baixar CSV Filtrado</button>
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
     </div>
 
     <div class="section-label">Gerador</div>
-    <div class="app-card border-green">
-        <h1 class="text-2xl font-bold text-gray-800 mb-2 border-b pb-2" alt="Unifica Excel + CSV complementar. Mantém letras (estrangeiros).">Conversor Excel + Merge CSV</h1>
-        <p class="text-sm text-gray-600 mb-4">
-            Separador de saída: <b>(;;)</b>
+    <div
+      class="app-card border-green bg-white dark:bg-slate-800 shadow-sm rounded-xl p-6 mb-8 border border-gray-100 dark:border-slate-700"
+    >
+      <h1
+        class="text-2xl font-bold text-gray-800 dark:text-white mb-2 border-b dark:border-slate-700 pb-2"
+      >
+        Conversor Excel + Merge CSV
+      </h1>
+      <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        Separador de saída: <b class="text-gray-800 dark:text-gray-200">(;;)</b>
+      </p>
+
+      <div class="mb-4">
+        <label
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          >1. Arquivo Excel Principal (.xlsx)</label
+        >
+        <input
+          type="file"
+          id="xlsxFile"
+          accept=".xlsx, .xls"
+          class="input-padrao w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 dark:file:bg-green-900/30 dark:file:text-green-300 dark:hover:file:bg-green-800/50 dark:bg-slate-900 dark:border-slate-600 rounded-lg border border-gray-200 p-2"
+        />
+      </div>
+
+      <div class="mb-6">
+        <label
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          >2. Arquivo CSV Complementar (Fixo)</label
+        >
+        <input
+          type="file"
+          id="csvExtraFile"
+          accept=".csv"
+          class="input-padrao w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100 dark:file:bg-slate-700 dark:file:text-gray-300 dark:hover:file:bg-slate-600 dark:bg-slate-900 dark:border-slate-600 rounded-lg border border-gray-200 p-2"
+        />
+        <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">
+          Colunas esperadas: CNPJ; RAZÃO SOCIAL; EMAIL
         </p>
+      </div>
 
-        <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700">1. Arquivo Excel Principal (.xlsx)</label>
-            <input type="file" id="xlsxFile" accept=".xlsx, .xls" class="input-padrao text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
-        </div>
+      <button
+        id="btnConvert"
+        onclick="converterExcelEMerge()"
+        class="btn-success px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-md transition font-medium"
+      >
+        Processar e Unificar
+      </button>
 
-        <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700">2. Arquivo CSV Complementar (Fixo)</label>
-            <input type="file" id="csvExtraFile" accept=".csv" class="input-padrao text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100">
-            <p class="text-xs text-gray-500 mt-1">Colunas esperadas: CNPJ; RAZÃO SOCIAL; EMAIL</p>
-        </div>
+      <div id="loaderConvert" class="hidden text-center mt-4">
+        <div
+          class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-green-600 dark:border-green-400"
+        ></div>
+        <p
+          id="convertStatus"
+          class="text-sm text-gray-600 dark:text-gray-400 mt-2"
+        >
+          Iniciando...
+        </p>
+      </div>
 
-        <button id="btnConvert" onclick="converterExcelEMerge()" class="btn-success">
-            Processar e Unificar
-        </button>
-
-        <div id="loaderConvert" class="hidden text-center mt-4">
-            <div class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-green-600"></div>
-            <p id="convertStatus" class="text-sm text-gray-600 mt-2">Iniciando...</p>
-        </div>
-
-        <div id="resultConvert" class="hidden border rounded-lg p-4 bg-gray-50 mt-4">
-            <p class="text-sm text-green-700 font-bold mb-2">Sucesso! Arquivos unificados.</p>
-            <ul class="text-sm text-gray-600 mb-4 space-y-1">
-                <li>Linhas do Excel: <span id="countExcel" class="font-bold">0</span></li>
-                <li>Linhas do CSV Extra: <span id="countCsv" class="font-bold">0</span></li>
-                <li>Total Final: <span id="countTotal" class="font-bold text-blue-600">0</span></li>
-            </ul>
-            <a id="downloadLinkConvert" href="#" class="block w-full bg-blue-600 text-white text-center py-2 rounded hover:bg-blue-700 transition">
-                Baixar CSV para Gerador de Mensagens
-            </a>
-        </div>
+      <div
+        id="resultConvert"
+        class="hidden border dark:border-slate-700 rounded-lg p-4 bg-gray-50 dark:bg-slate-900 mt-4"
+      >
+        <p class="text-sm text-green-700 dark:text-green-400 font-bold mb-2">
+          Sucesso! Arquivos unificados.
+        </p>
+        <ul class="text-sm text-gray-600 dark:text-gray-400 mb-4 space-y-1">
+          <li>
+            Linhas do Excel:
+            <span
+              id="countExcel"
+              class="font-bold text-gray-800 dark:text-white"
+              >0</span
+            >
+          </li>
+          <li>
+            Linhas do CSV Extra:
+            <span id="countCsv" class="font-bold text-gray-800 dark:text-white"
+              >0</span
+            >
+          </li>
+          <li>
+            Total Final:
+            <span
+              id="countTotal"
+              class="font-bold text-blue-600 dark:text-blue-400"
+              >0</span
+            >
+          </li>
+        </ul>
+        <a
+          id="downloadLinkConvert"
+          href="#"
+          class="block w-full bg-blue-600 text-white text-center py-2 rounded hover:bg-blue-700 transition shadow-sm font-medium"
+        >
+          Baixar CSV para Gerador de Mensagens
+        </a>
+      </div>
     </div>
 
     <div class="section-label">Utilidades</div>
-    <div class="app-card border-purple">
-        <h1 class="text-2xl font-bold text-gray-800 mb-2 border-b pb-2">Conversor Excel p/ CSV (Alta Capacidade)</h1>
-        <p class="text-sm text-gray-600 mb-4">
-            Converte arquivos grandes (300k+ linhas). Gera um CSV separado por ponto e vírgula <b>(;)</b> pronto para a Ferramenta 1.
+    <div
+      class="app-card border-purple bg-white dark:bg-slate-800 shadow-sm rounded-xl p-6 mb-8 border border-gray-100 dark:border-slate-700"
+    >
+      <h1
+        class="text-2xl font-bold text-gray-800 dark:text-white mb-2 border-b dark:border-slate-700 pb-2"
+      >
+        Conversor Excel p/ CSV (Alta Capacidade)
+      </h1>
+      <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        Converte arquivos grandes (300k+ linhas). Gera um CSV separado por ponto
+        e vírgula <b class="text-gray-800 dark:text-gray-200">(;)</b> pronto
+        para a Ferramenta 1.
+      </p>
+
+      <div class="mb-6">
+        <label
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          >Arquivo Excel (.xlsx)</label
+        >
+        <input
+          type="file"
+          id="xlsxGenFile"
+          accept=".xlsx, .xls"
+          class="input-padrao w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 dark:file:bg-purple-900/30 dark:file:text-purple-300 dark:hover:file:bg-purple-800/50 dark:bg-slate-900 dark:border-slate-600 rounded-lg border border-gray-200 p-2"
+        />
+      </div>
+
+      <button
+        id="btnGenConvert"
+        onclick="converterExcelGenerico()"
+        class="btn-primary px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg shadow-md transition font-medium"
+      >
+        Converter Agora
+      </button>
+
+      <div id="loaderGen" class="hidden text-center mt-4">
+        <div
+          class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-purple-600 dark:border-purple-400"
+        ></div>
+        <p id="statusGen" class="text-sm text-gray-600 dark:text-gray-400 mt-2">
+          Lendo arquivo gigante...
         </p>
-
-        <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700">Arquivo Excel (.xlsx)</label>
-            <input type="file" id="xlsxGenFile" accept=".xlsx, .xls" class="input-padrao text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
-        </div>
-
-        <button id="btnGenConvert" onclick="converterExcelGenerico()" class="btn-primary bg-purple-600 hover:bg-purple-700">
-            Converter Agora
-        </button>
-
-        <div id="loaderGen" class="hidden text-center mt-4">
-            <div class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-purple-600"></div>
-            <p id="statusGen" class="text-sm text-gray-600 mt-2">Lendo arquivo gigante...</p>
-        </div>
+      </div>
     </div>
 
-    <div id="toast">Operação concluída com sucesso!</div>
+    <div
+      id="toast"
+      class="fixed bottom-4 right-4 bg-gray-800 dark:bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50"
+    >
+      Operação concluída com sucesso!
+    </div>
 
     <script src="script.js"></script>
-</body>
+  </body>
 </html>

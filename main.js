@@ -115,6 +115,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (sessionStorage.getItem("cockpit_auth_token") === "valid") {
       unlockInterface();
       applyPermissions();
+
+      updateUserMenu();
+      updateUserAvatarVisuals();
+
       // Carrega o app correto (Home, Dashboard, etc)
       navigate(window.location.hash || "#home");
     } else {
@@ -157,8 +161,24 @@ document.addEventListener("DOMContentLoaded", () => {
             sessionStorage.setItem("cockpit_auth_token", "valid");
             sessionStorage.setItem("cockpit_user_realname", foundUser.name);
             sessionStorage.setItem("cockpit_user_role", foundUser.role);
+            sessionStorage.setItem(
+              "cockpit_user_email",
+              foundUser.email || "Sem e-mail",
+            );
+            sessionStorage.setItem("cockpit_user_login", foundUser.username);
+
+            // Se o usuário tiver avatar no banco, salva na sessão
+            if (foundUser.avatar) {
+              sessionStorage.setItem("cockpit_user_avatar", foundUser.avatar);
+            } else {
+              sessionStorage.removeItem("cockpit_user_avatar");
+            }
 
             loginError.classList.add("hidden");
+
+            updateUserMenu(); // Atualiza o nome e cargo no rodapé/menu
+            updateUserAvatarVisuals(); // Atualiza a foto (avatar) imediatamente
+
             unlockInterface();
 
             // Agora sim, carregamos o app!
@@ -284,6 +304,58 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   const defaultHash = "#home";
 
+  // --- CONTROLE DA GAVETA FLUTUANTE ---
+  const iconFloatArrow = document.getElementById("iconFloatArrow");
+  let floatingTimer = null;
+
+  // Função para ABRIR a gaveta
+  window.openFloating = function () {
+    if (!floatingLinks) return;
+
+    // Remove o translate (traz para a tela)
+    floatingLinks.classList.remove("translate-x-full");
+
+    // Gira a seta para apontar para a direita
+    if (iconFloatArrow) iconFloatArrow.classList.add("rotate-180");
+
+    // Reinicia o timer de 10 segundos
+    resetFloatingTimer();
+  };
+
+  // Função para FECHAR a gaveta
+  window.closeFloating = function () {
+    if (!floatingLinks) return;
+
+    // Adiciona o translate (joga para fora)
+    floatingLinks.classList.add("translate-x-full");
+
+    // Gira a seta para apontar para a esquerda
+    if (iconFloatArrow) iconFloatArrow.classList.remove("rotate-180");
+
+    // Limpa o timer para não gastar memória
+    if (floatingTimer) clearTimeout(floatingTimer);
+  };
+
+  // Função de Toggle (para o botão)
+  window.toggleFloatingMenu = function () {
+    if (!floatingLinks) return;
+    const isClosed = floatingLinks.classList.contains("translate-x-full");
+
+    if (isClosed) {
+      openFloating();
+    } else {
+      closeFloating();
+    }
+  };
+
+  // Lógica do Timer de 10 segundos
+  function resetFloatingTimer() {
+    if (floatingTimer) clearTimeout(floatingTimer);
+    floatingTimer = setTimeout(() => {
+      closeFloating();
+    }, 10000); // 10000ms = 10 segundos
+  }
+
   // Sidebar Toggle
   window.toggleSidebar = function () {
     const isMobile = window.innerWidth < 768;
@@ -351,6 +423,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
     updateActiveLink(hash);
 
+    // --- NOVA LÓGICA DO FLOATING LINKS ---
+    if (window.innerWidth >= 768) {
+      // Ajustes de layout existentes...
+      if (hash === "#home") {
+        sidebar.classList.remove("md:translate-x-0");
+        mainContent.classList.remove("md:ml-64");
+        if (menuButton) menuButton.classList.remove("rotate-90");
+
+        // NA HOME: Esconde totalmente o elemento (nem a seta aparece)
+        if (floatingLinks) floatingLinks.classList.add("hidden");
+      } else {
+        sidebar.classList.add("md:translate-x-0");
+        mainContent.classList.add("md:ml-64");
+        if (menuButton) menuButton.classList.add("rotate-90");
+
+        // NOS APPS:
+        if (floatingLinks) {
+          // 1. Garante que o elemento existe no DOM (remove display:none)
+          floatingLinks.classList.remove("hidden");
+
+          // 2. Garante que começa fechado visualmente
+          floatingLinks.classList.add("translate-x-full");
+
+          // 3. Pequeno delay para animar a entrada automática
+          setTimeout(() => {
+            openFloating(); // Abre a gaveta
+          }, 800);
+        }
+      }
+    }
+
     // Ajuste de Layout (Full width na Home)
     if (window.innerWidth >= 768) {
       if (hash === "#home") {
@@ -391,33 +494,70 @@ document.addEventListener("DOMContentLoaded", () => {
   checkSession();
 
   // =========================================================
-  // 3. PREVISÃO DO TEMPO
+  // 3. MONITORAMENTO CLIMÁTICO AVANÇADO (CORRIGIDO)
   // =========================================================
   const infoText = document.getElementById("infoText");
-  let weatherText = "Salvador: ...";
-  let weatherIcon = "sunny";
-  let detailsText = "...";
+  const weatherModal = document.getElementById("weatherModal");
+  const weatherBackdrop = document.getElementById("weatherBackdrop"); // Nova referência
 
-  const infoItems = [`Kevin Fróes • ${currentYear}`, weatherText, detailsText];
+  // Cache de dados
+  let currentWeatherData = {};
+
+  // Array de rotação
+  let infoItems = ["Iniciando...", "Carregando Clima..."];
   let currentIndex = 0;
 
   async function updateWeather() {
     try {
       const response = await fetch(
-        "https://api.open-meteo.com/v1/forecast?latitude=-12.9756&longitude=-38.491&hourly=temperature_2m,precipitation_probability,uv_index,wind_speed_10m&timezone=America%2FSao_Paulo&forecast_days=1",
+        "https://api.open-meteo.com/v1/forecast?latitude=-12.9756&longitude=-38.491&hourly=temperature_2m,weathercode,uv_index,wind_speed_10m,apparent_temperature,relative_humidity_2m,precipitation_probability&timezone=America%2FSao_Paulo&forecast_days=1",
       );
       const data = await response.json();
-      const hourIndex = new Date().getHours();
+      const h = new Date().getHours();
 
-      const temp = Math.round(data.hourly.temperature_2m[hourIndex]);
-      const uv = data.hourly.uv_index[hourIndex];
+      // Extraindo dados
+      const weather = {
+        temp: Math.round(data.hourly.temperature_2m[h]),
+        sensacao: Math.round(data.hourly.apparent_temperature[h]),
+        uv: Math.round(data.hourly.uv_index[h]),
+        vento: Math.round(data.hourly.wind_speed_10m[h]),
+        umidade: Math.round(data.hourly.relative_humidity_2m[h]),
+        chuvaProb: Math.round(data.hourly.precipitation_probability[h]),
+        code: data.hourly.weathercode[h],
+      };
 
-      infoItems[1] = `Salvador: ${temp}°C`;
-      infoItems[2] = `☀️ UV ${Math.round(uv)}`;
+      // Ícone
+      let icon = "☀️";
+      let desc = "Céu Limpo";
+      if (weather.code >= 1 && weather.code <= 3) {
+        icon = "⛅";
+        desc = "Parcialmente Nublado";
+      } else if (weather.code >= 45 && weather.code <= 48) {
+        icon = "🌫️";
+        desc = "Nevoeiro";
+      } else if (weather.code >= 51 && weather.code <= 67) {
+        icon = "🌧️";
+        desc = "Chuva Leve";
+      } else if (weather.code >= 80 && weather.code <= 99) {
+        icon = "⛈️";
+        desc = "Tempestade";
+      }
 
-      if (infoText) renderInfo();
+      weather.icon = icon;
+      weather.desc = desc;
+      currentWeatherData = weather;
+
+      // Texto rotativo
+      const currentYear = new Date().getFullYear();
+      infoItems = [
+        `Kevin Fróes • ${currentYear}`,
+        `${icon} Salvador: ${weather.temp}°C`,
+        weather.uv >= 8 ? `🟣 UV ${weather.uv} (Alto)` : `🟢 UV ${weather.uv}`,
+      ];
+
+      if (currentIndex === 0) renderInfo();
     } catch (e) {
-      console.warn(e);
+      console.warn("Erro clima:", e);
     }
   }
 
@@ -425,23 +565,65 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!infoText) return;
     infoText.classList.remove("opacity-100");
     infoText.classList.add("opacity-0");
-    setTimeout(() => {
-      if (currentIndex === 0) infoText.innerHTML = infoItems[0];
-      else if (currentIndex === 1) infoText.innerHTML = infoItems[1];
-      else infoText.innerHTML = infoItems[2];
 
+    setTimeout(() => {
+      if (currentIndex >= infoItems.length) currentIndex = 0;
+      infoText.innerHTML = infoItems[currentIndex];
       infoText.classList.remove("opacity-0");
       infoText.classList.add("opacity-100");
       currentIndex = (currentIndex + 1) % infoItems.length;
     }, 500);
   }
 
+  // --- Abrir/Fechar Modal (Agora controla o Backdrop também) ---
+  window.toggleWeatherModal = function () {
+    if (!weatherModal) return;
+    const isHidden = weatherModal.classList.contains("hidden");
+
+    if (isHidden) {
+      // 1. Preenche dados
+      if (currentWeatherData.temp !== undefined) {
+        document.getElementById("wm-icon").textContent =
+          currentWeatherData.icon;
+        document.getElementById("wm-temp").textContent =
+          `${currentWeatherData.temp}°C`;
+        document.getElementById("wm-desc").textContent =
+          currentWeatherData.desc;
+        document.getElementById("wm-sensacao").textContent =
+          `${currentWeatherData.sensacao}°`;
+        document.getElementById("wm-uv").textContent = currentWeatherData.uv;
+        document.getElementById("wm-umidade").textContent =
+          `${currentWeatherData.umidade}%`;
+        document.getElementById("wm-vento").textContent =
+          `${currentWeatherData.vento} km/h`;
+        document.getElementById("wm-chuva").textContent =
+          `${currentWeatherData.chuvaProb}%`;
+      }
+
+      // 2. Mostra Modal e Cortina
+      weatherModal.classList.remove("hidden");
+      if (weatherBackdrop) weatherBackdrop.classList.remove("hidden");
+
+      setTimeout(() => {
+        weatherModal.classList.remove("opacity-0", "scale-95");
+        weatherModal.classList.add("opacity-100", "scale-100");
+      }, 10);
+    } else {
+      // 3. Esconde
+      weatherModal.classList.remove("opacity-100", "scale-100");
+      weatherModal.classList.add("opacity-0", "scale-95");
+
+      // Esconde a cortina imediatamente para liberar o clique
+      if (weatherBackdrop) weatherBackdrop.classList.add("hidden");
+
+      setTimeout(() => weatherModal.classList.add("hidden"), 200);
+    }
+  };
+
+  // Inicia
   updateWeather();
   setInterval(updateWeather, 1800000);
-  setTimeout(() => {
-    renderInfo();
-    setInterval(renderInfo, 8000);
-  }, 1000);
+  setTimeout(() => setInterval(renderInfo, 5000), 1000);
 
   // =========================================================
   // LOGOUT COM MODAL PERSONALIZADO
@@ -463,6 +645,7 @@ document.addEventListener("DOMContentLoaded", () => {
       modalContent.classList.add("scale-100", "opacity-100");
     }, 10);
   }
+  window.showLogoutModal = showLogoutModal;
 
   // Função para fechar o modal
   function hideLogoutModal() {
@@ -610,8 +793,25 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- Funções de Solicitação ---
   window.openRegisterModal = () =>
     document.getElementById("registerModal").classList.remove("hidden");
-  window.openResetModal = () =>
-    document.getElementById("resetModal").classList.remove("hidden");
+
+  // Função para Abrir Modal de Senha
+  window.openResetModal = () => {
+    const modal = document.getElementById("resetModal");
+    const userField = document.getElementById("resUser");
+    const emailField = document.getElementById("resEmail");
+
+    // Tenta pegar os dados salvos na sessão
+    const savedLogin = sessionStorage.getItem("cockpit_user_login");
+    const savedEmail = sessionStorage.getItem("cockpit_user_email");
+
+    // Se existirem (usuário logado), preenche os campos
+    if (savedLogin && userField) userField.value = savedLogin;
+    if (savedEmail && savedEmail !== "Sem e-mail" && emailField)
+      emailField.value = savedEmail;
+
+    // Abre o modal
+    modal.classList.remove("hidden");
+  };
 
   function closeRequestModals() {
     document.getElementById("registerModal").classList.add("hidden");
@@ -636,6 +836,15 @@ document.addEventListener("DOMContentLoaded", () => {
     regForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const rawPass = document.getElementById("regPass").value;
+
+      const confirmPass = document.getElementById("regConfirm").value;
+
+      // --- VALIDAÇÃO DE IGUALDADE ---
+      if (rawPass !== confirmPass) {
+        showError("As senhas não coincidem!"); // Usa seu modal de erro existente
+        return; // Para tudo aqui
+      }
+
       const securePass = await encryptLight(rawPass);
 
       const payload = {
@@ -647,6 +856,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .getElementById("regUser")
             .value.trim()
             .toLowerCase(),
+          avatar: tempRegisterAvatar,
           email: document.getElementById("regEmail").value.trim().toLowerCase(),
           secure_data: securePass,
         },
@@ -673,6 +883,15 @@ document.addEventListener("DOMContentLoaded", () => {
     resForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const rawPass = document.getElementById("resNewPass").value;
+
+      const confirmPass = document.getElementById("resConfirm").value;
+
+      // --- VALIDAÇÃO DE IGUALDADE ---
+      if (rawPass !== confirmPass) {
+        showError("A confirmação de senha está incorreta.");
+        return;
+      }
+
       const securePass = await encryptLight(rawPass);
 
       const payload = {
@@ -684,6 +903,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .value.trim()
             .toLowerCase(),
           email: document.getElementById("resEmail").value.trim().toLowerCase(),
+          avatar: tempResetAvatar,
           secure_data: securePass,
         },
       };
@@ -700,6 +920,328 @@ document.addEventListener("DOMContentLoaded", () => {
         "O arquivo de troca de senha foi salvo.\n\nEnvie-o para o administrador para processamento.",
       );
       resForm.reset();
+    });
+  }
+
+  // =========================================================
+  // LOGICA DO MENU DE PERFIL (SIDEBAR)
+  // =========================================================
+  const userMenuBtn = document.getElementById("userMenuBtn");
+  const userMenuDropdown = document.getElementById("userMenuDropdown");
+
+  // 1. Função para atualizar os dados do menu
+  function updateUserMenu() {
+    const realName =
+      sessionStorage.getItem("cockpit_user_realname") || "Usuário";
+    const email = sessionStorage.getItem("cockpit_user_email") || "Sem e-mail";
+    const role = sessionStorage.getItem("cockpit_user_role") || "USER";
+
+    // Preenche textos
+    const sbName = document.getElementById("sidebarUserName");
+    const mName = document.getElementById("menuUserName");
+    const mEmail = document.getElementById("menuUserEmail");
+    const mRole = document.getElementById("menuUserRole");
+    const avatar = document.getElementById("userAvatar");
+
+    if (sbName) sbName.textContent = realName.split(" ")[0]; // Só o primeiro nome na barra
+    if (mName) mName.textContent = realName;
+    if (mEmail) mEmail.textContent = email;
+
+    if (mRole) {
+      mRole.textContent = role.toUpperCase();
+      // Muda a cor da badge se for Admin
+      if (role === "admin") {
+        mRole.className =
+          "text-[10px] font-bold bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded border border-purple-500/30 uppercase tracking-wider";
+      }
+    }
+
+    // Gera inicial do Avatar
+    if (avatar) {
+      avatar.textContent = realName.charAt(0).toUpperCase();
+    }
+  }
+
+  // 2. Toggle do Menu (Abrir/Fechar)
+  if (userMenuBtn && userMenuDropdown) {
+    userMenuBtn.addEventListener("click", (e) => {
+      e.stopPropagation(); // Impede fechar imediato
+      const isHidden = userMenuDropdown.classList.contains("hidden");
+
+      if (isHidden) {
+        // Abrir
+        updateUserMenu(); // Garante dados frescos
+        userMenuDropdown.classList.remove("hidden");
+        setTimeout(() => {
+          userMenuDropdown.classList.remove("scale-95", "opacity-0");
+          userMenuDropdown.classList.add("scale-100", "opacity-100");
+        }, 10);
+      } else {
+        // Fechar
+        userMenuDropdown.classList.remove("scale-100", "opacity-100");
+        userMenuDropdown.classList.add("scale-95", "opacity-0");
+        setTimeout(() => userMenuDropdown.classList.add("hidden"), 200);
+      }
+    });
+
+    // Fechar ao clicar fora
+    document.addEventListener("click", (e) => {
+      if (
+        !userMenuDropdown.classList.contains("hidden") &&
+        !userMenuBtn.contains(e.target) &&
+        !userMenuDropdown.contains(e.target)
+      ) {
+        userMenuDropdown.classList.remove("scale-100", "opacity-100");
+        userMenuDropdown.classList.add("scale-95", "opacity-0");
+        setTimeout(() => userMenuDropdown.classList.add("hidden"), 200);
+      }
+    });
+  }
+
+  // Chama ao iniciar para já deixar bonito
+  updateUserMenu();
+
+  // =========================================================
+  // MEDIDOR DE FORÇA DE SENHA
+  // =========================================================
+
+  function attachPasswordStrength(inputId, barId, textId) {
+    const input = document.getElementById(inputId);
+    const bar = document.getElementById(barId);
+    const text = document.getElementById(textId);
+
+    if (!input || !bar || !text) return;
+
+    input.addEventListener("input", () => {
+      const val = input.value;
+      let score = 0;
+
+      // Critérios de Pontuação
+      if (val.length >= 6) score++; // Tamanho mínimo
+      if (val.length >= 10) score++; // Tamanho bom
+      if (/[A-Z]/.test(val)) score++; // Tem Maiúscula
+      if (/[0-9]/.test(val)) score++; // Tem Número
+      if (/[^A-Za-z0-9]/.test(val)) score++; // Tem Símbolo (!@#)
+
+      // Limita score máximo a 4 (para facilitar a UI)
+      if (score > 4) score = 4;
+      if (val.length === 0) score = 0;
+
+      // Atualiza a Barra (Cores e Tamanho)
+      let width = "0%";
+      let color = "bg-red-500";
+      let label = "Muito fraca";
+
+      switch (score) {
+        case 0:
+          width = "0%";
+          label = "";
+          break;
+        case 1:
+          width = "25%";
+          color = "bg-red-500";
+          label = "Fraca 😟";
+          break;
+        case 2:
+          width = "50%";
+          color = "bg-yellow-500";
+          label = "Média 😐";
+          break;
+        case 3:
+          width = "75%";
+          color = "bg-blue-500";
+          label = "Boa 🙂";
+          break;
+        case 4:
+          width = "100%";
+          color = "bg-green-500";
+          label = "Forte! 🚀";
+          break;
+      }
+
+      // Aplica estilos
+      bar.style.width = width;
+      bar.className = `h-full transition-all duration-300 ${color}`;
+      text.textContent = label;
+    });
+  }
+
+  // Ativa nos dois campos (Cadastro e Reset)
+  attachPasswordStrength("regPass", "regStrengthBar", "regStrengthText");
+  attachPasswordStrength("resNewPass", "resStrengthBar", "resStrengthText");
+
+  // =========================================================
+  // SISTEMA DE AVATAR (COMPRESSÃO, MODAIS E SIDEBAR)
+  // =========================================================
+
+  // Variáveis para guardar o Base64 temporariamente (serão usadas no JSON)
+  let tempRegisterAvatar = "";
+  let tempResetAvatar = "";
+
+  // 1. Função Reutilizável: Processa a imagem nos Modais
+  function handleAvatarSelection(
+    inputId,
+    previewId,
+    placeholderId,
+    storageCallback,
+  ) {
+    const input = document.getElementById(inputId);
+    const preview = document.getElementById(previewId);
+    const placeholder = document.getElementById(placeholderId);
+
+    if (!input) return;
+
+    input.addEventListener("change", function (e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const img = new Image();
+        img.onload = function () {
+          // --- COMPRESSÃO (Canvas) ---
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+
+          // Define tamanho máximo (Thumbnail 150x150)
+          const maxSize = 150;
+          let width = img.width;
+          let height = img.height;
+
+          // Redimensionamento Proporcional
+          if (width > height) {
+            if (width > maxSize) {
+              height *= maxSize / width;
+              width = maxSize;
+            }
+          } else {
+            if (height > maxSize) {
+              width *= maxSize / height;
+              height = maxSize;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Converte para Base64 leve
+          const dataUrl = canvas.toDataURL("image/jpeg", 0.7);
+
+          // 1. Atualiza Visual do Modal (Preview)
+          if (preview) {
+            preview.src = dataUrl;
+            preview.classList.remove("hidden");
+          }
+          if (placeholder) placeholder.classList.add("hidden");
+
+          // 2. Salva na variável para enviar no JSON depois
+          storageCallback(dataUrl);
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // 2. Ativa a lógica nos dois modais (Cadastro e Reset)
+  // Quando o usuário escolhe foto no cadastro, salva em tempRegisterAvatar
+  handleAvatarSelection(
+    "regAvatarInput",
+    "regAvatarPreview",
+    "regAvatarPlaceholder",
+    (val) => {
+      tempRegisterAvatar = val;
+    },
+  );
+
+  // Quando o usuário escolhe foto no reset, salva em tempResetAvatar
+  handleAvatarSelection(
+    "resAvatarInput",
+    "resAvatarPreview",
+    "resAvatarPlaceholder",
+    (val) => {
+      tempResetAvatar = val;
+    },
+  );
+
+  // 3. Função Visual da Sidebar (Apenas exibe o que está na sessão)
+  function updateUserAvatarVisuals() {
+    const avatarImg = document.getElementById("userAvatarImg");
+    const avatarFallback = document.getElementById("userAvatarFallback");
+    const savedAvatar = sessionStorage.getItem("cockpit_user_avatar");
+
+    if (savedAvatar) {
+      // Tem foto na sessão: Mostra IMG, Esconde Letra
+      if (avatarImg) {
+        avatarImg.src = savedAvatar;
+        avatarImg.classList.remove("hidden");
+      }
+      if (avatarFallback) avatarFallback.classList.add("hidden");
+    } else {
+      // Não tem foto: Esconde IMG, Mostra Letra
+      if (avatarImg) avatarImg.classList.add("hidden");
+      if (avatarFallback) avatarFallback.classList.remove("hidden");
+    }
+  }
+
+  // Chama ao iniciar (para carregar se o usuário já fez login com foto)
+  updateUserAvatarVisuals();
+
+  // =========================================================
+  // GESTÃO DE TEMA (DARK MODE)
+  // =========================================================
+
+  // 1. Carregar tema salvo ao iniciar
+  const savedTheme = localStorage.getItem("cockpit_theme");
+  // Se estiver salvo 'dark' OU o sistema do usuário for dark, ativa
+  if (
+    savedTheme === "dark" ||
+    (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+  ) {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
+
+  // 2. Função de Alternância (Chamada pelo botão do menu)
+  window.toggleTheme = function () {
+    const html = document.documentElement;
+
+    if (html.classList.contains("dark")) {
+      // Mudar para Claro
+      html.classList.remove("dark");
+      localStorage.setItem("cockpit_theme", "light");
+      broadcastTheme("light");
+    } else {
+      // Mudar para Escuro
+      html.classList.add("dark");
+      localStorage.setItem("cockpit_theme", "dark");
+      broadcastTheme("dark");
+    }
+  };
+
+  // 3. A "PORTA ABERTA": Avisa o iframe sobre a mudança
+  function broadcastTheme(theme) {
+    const frame = document.getElementById("appFrame");
+    // Verifica se o iframe existe e tem conteúdo
+    if (frame && frame.contentWindow) {
+      // Envia mensagem segura. Se o app filho não tiver o script receptor, nada acontece (sem erro).
+      frame.contentWindow.postMessage(
+        { type: "THEME_CHANGE", theme: theme },
+        "*",
+      );
+    }
+  }
+
+  // 4. Garantir que o iframe receba o tema assim que carregar a página
+  const frameEl = document.getElementById("appFrame");
+  if (frameEl) {
+    frameEl.addEventListener("load", () => {
+      const currentTheme = document.documentElement.classList.contains("dark")
+        ? "dark"
+        : "light";
+      broadcastTheme(currentTheme);
     });
   }
 });
