@@ -1,3 +1,20 @@
+// --- GESTÃO DE TEMA (DARK MODE) ---
+function applyTheme(theme) {
+  if (theme === "dark") document.documentElement.classList.add("dark");
+  else document.documentElement.classList.remove("dark");
+}
+const savedTheme = localStorage.getItem("cockpit_theme");
+if (
+  savedTheme === "dark" ||
+  (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+) {
+  applyTheme("dark");
+}
+window.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "THEME_CHANGE")
+    applyTheme(event.data.theme);
+});
+
 // Estado global da aplicação
 let db = {
   contratos: [],
@@ -202,20 +219,23 @@ function resetarFormularioContrato() {
 
 // --- NOVA FUNÇÃO PARA RENDERIZAR GRÁFICO DETALHADO ---
 function atualizarGraficoDetalhado(pagamentos) {
+  const isDark = document.documentElement.classList.contains("dark");
+  const gridColor = isDark ? "#374151" : "#e5e7eb"; // slate-700 vs gray-200
+  const textColor = isDark ? "#9ca3af" : "#6b7280"; // gray-400 vs gray-500
   const container = document.getElementById("container-grafico-detalhado");
   const filtroAnoVal = document.getElementById("filtro-ano").value;
   const filtroMesVal = document.getElementById("filtro-mes").value;
 
   if (!container) return;
 
-  // --- LÓGICA DE DADOS (Semelhante à anterior) ---
+  // --- LÓGICA DE DADOS ---
 
   // 1. Encontra todos os itens únicos primeiro
   const itensMasterSet = new Set();
   pagamentos.forEach((p) => {
     if (p.detalhes) {
       p.detalhes.forEach((item) =>
-        itensMasterSet.add(item.descricao || "Item não descrito")
+        itensMasterSet.add(item.descricao || "Item não descrito"),
       );
     }
   });
@@ -277,12 +297,12 @@ function atualizarGraficoDetalhado(pagamentos) {
     // (Esta parte não muda)
     html = '<div class="space-y-2 p-2">';
     const itensOrdenados = Object.keys(dadosItens).sort(
-      (a, b) => dadosItens[b] - dadosItens[a]
+      (a, b) => dadosItens[b] - dadosItens[a],
     );
 
     if (itensOrdenados.length === 0) {
       html =
-        '<div class="text-gray-500 text-center p-4">Sem dados detalhados para este mês.</div>';
+        '<div class="text-gray-500 dark:text-gray-400 text-center p-4">Sem dados detalhados para este mês.</div>';
     } else {
       itensOrdenados.forEach((desc) => {
         const valor = dadosItens[desc];
@@ -292,13 +312,13 @@ function atualizarGraficoDetalhado(pagamentos) {
 
         html += `
                     <div class="flex items-center" title="${desc}: ${formatCurrency(
-          valor
-        )}">
-                        <span class="text-xs text-gray-700 w-24 truncate" style="color: ${cor}">${desc}</span>
+                      valor,
+                    )}">
+                        <span class="text-xs text-gray-700 dark:text-gray-300 w-24 truncate" style="color: ${cor}">${desc}</span>
                         <div class="flex-1 bg-gray-200 rounded-full h-5 ml-2">
                             <div class="h-5 rounded-full flex items-center px-2" style="width: ${perc}%; background-color: ${cor}">
                                 <span class="text-xs font-bold text-white">${formatCurrency(
-                                  valor
+                                  valor,
                                 )}</span>
                             </div>
                         </div>
@@ -314,15 +334,15 @@ function atualizarGraficoDetalhado(pagamentos) {
     itensMasterList.forEach((desc) => {
       // Só mostra na legenda se o item tiver algum valor no ano
       const temValorNoAno = Object.keys(dadosMensais).some(
-        (mes) => dadosMensais[mes][desc] > 0
+        (mes) => dadosMensais[mes][desc] > 0,
       );
       if (temValorNoAno) {
         html += `
                     <div class="flex items-center">
                         <div class="w-3 h-3 rounded-full mr-1" style="background-color: ${getItemColor(
-                          desc
+                          desc,
                         )}"></div>
-                        <span class="text-xs text-gray-700">${desc}</span>
+                        <span class="text-xs text-gray-700 dark:text-gray-300">${desc}</span>
                     </div>
                 `;
       }
@@ -390,7 +410,7 @@ function atualizarGraficoDetalhado(pagamentos) {
       // y = altura do SVG + 15px de margem
       monthLabels += `<text x="${x}" y="${
         svgHeight + 15
-      }" text-anchor="middle" font-size="12" fill="#6b7280">${
+      }" text-anchor="middle" font-size="12" fill="${textColor}">${
         nomesMeses[i]
       }</text>`;
     }
@@ -402,15 +422,15 @@ function atualizarGraficoDetalhado(pagamentos) {
       const y = pY + i * (chartHeight / 2);
       gridLines += `<line x1="${pX}" y1="${y}" x2="${
         pX + chartWidth
-      }" y2="${y}" stroke="#e5e7eb" stroke-width="1" />`;
+      }" y2="${y}" stroke="${gridColor}" stroke-width="1" />`;
       // Adiciona o label do eixo Y
       const valorLabel = maxValorItemIndividual * (1 - i / 2);
       if (i < 2) {
         // Não mostra o label do 0
         gridLines += `<text x="${pX - 5}" y="${
           y + 3
-        }" text-anchor="end" font-size="10" fill="#9ca3af">${formatCurrency(
-          valorLabel
+        }" text-anchor="end" font-size="10" fill="${textColor}">${formatCurrency(
+          valorLabel,
         )}</text>`;
       }
     }
@@ -555,7 +575,7 @@ function abrirModalContratoForm(modo, contratoId) {
   document.getElementById("contrato-gestor-nome").value = "";
   document.getElementById("contrato-gestor-matricula").value = "";
   const containerFiscaisStep4 = document.getElementById(
-    "fiscais-container-step4"
+    "fiscais-container-step4",
   );
   if (containerFiscaisStep4) {
     containerFiscaisStep4.innerHTML = "";
@@ -682,7 +702,7 @@ function abrirModalContratoForm(modo, contratoId) {
 
       // Estimativa mensal (só aparece em alguns tipos)
       const estimativaInput = document.getElementById(
-        "contrato-estimativa-mensal"
+        "contrato-estimativa-mensal",
       );
       if (estimativaInput) {
         estimativaInput.value = isEdicao
@@ -708,7 +728,7 @@ function abrirModalContratoForm(modo, contratoId) {
       // Campos obrigatórios comuns do aditivo
       fieldsetAditivo
         .querySelectorAll(
-          "#aditivo-tipo, #aditivo-numero, #aditivo-processo-sei, #aditivo-data-assinatura, #aditivo-justificativa"
+          "#aditivo-tipo, #aditivo-numero, #aditivo-processo-sei, #aditivo-data-assinatura, #aditivo-justificativa",
         )
         .forEach((el) => el.setAttribute("required", "required"));
 
@@ -810,10 +830,10 @@ function atualizarCamposAditivo() {
 
   // Reseta tudo (exceto o container de fiscais se já estiver preenchido no modo Edição)
   [valorFields, prazoFields, gestorFields].forEach(
-    (f) => (f.style.display = "none")
+    (f) => (f.style.display = "none"),
   );
   [valorInput, prazoInput, gestorNomeInput].forEach((i) =>
-    i.removeAttribute("required")
+    i.removeAttribute("required"),
   );
   // Limpa fiscais SOMENTE se não for tipo Gestor (para preservar na edição)
   if (tipo !== "GestorFiscal") {
@@ -871,7 +891,7 @@ function atualizarCamposPorTipoContrato() {
   const valorTotalContainer = document.getElementById("aditivo-valor-fields"); // O campo de valor total
 
   const estimativaMensalInput = document.getElementById(
-    "contrato-estimativa-mensal"
+    "contrato-estimativa-mensal",
   );
   const valorTotalInput = document.getElementById("contrato-valor-total");
 
@@ -955,17 +975,25 @@ function calcularResumoContrato(contratoPai) {
 
   // Definição do Status do Contrato
   let statusContrato = "Vigente";
-  let statusCor = "text-green-600 bg-green-50";
+  // Verde Pastel (Claro) vs Verde Neon Transparente (Escuro)
+  let statusCor =
+    "text-green-600 bg-green-50 dark:bg-green-900/40 dark:text-green-400 dark:border dark:border-green-800";
 
   if (dataAssinatura > hoje) {
     statusContrato = "Em Formalização";
-    statusCor = "text-purple-600 bg-purple-50";
+    // Roxo Pastel vs Roxo Neon
+    statusCor =
+      "text-purple-600 bg-purple-50 dark:bg-purple-900/40 dark:text-purple-400 dark:border dark:border-purple-800";
   } else if (dataInicio > hoje) {
     statusContrato = "A Iniciar";
-    statusCor = "text-yellow-600 bg-yellow-50";
+    // Amarelo Pastel vs Amarelo Neon
+    statusCor =
+      "text-yellow-600 bg-yellow-50 dark:bg-yellow-900/40 dark:text-yellow-400 dark:border dark:border-yellow-800";
   } else if (dataFimAgregada < hoje) {
     statusContrato = "Vencido/Encerrado";
-    statusCor = "text-red-600 bg-red-100";
+    // Vermelho Pastel vs Vermelho Neon
+    statusCor =
+      "text-red-600 bg-red-100 dark:bg-red-900/40 dark:text-red-400 dark:border dark:border-red-800";
   }
 
   // Cálculos de Dias
@@ -1044,7 +1072,7 @@ function renderizarContratos() {
     const divTopo = card.querySelector(".mb-2");
     divTopo.innerHTML = `
             <div class="flex justify-between items-start">
-                <span class="text-sm text-gray-500">${contrato.processoSei}</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400">${contrato.processoSei}</span>
                 <span class="text-xs font-bold px-2 py-1 rounded-full ${resumo.statusCor}">${resumo.status}</span>
             </div>
         `;
@@ -1057,22 +1085,20 @@ function renderizarContratos() {
     let htmlValores = formatCurrency(resumo.totalPago);
     if (resumo.totalProgramado > 0) {
       htmlValores += ` <span class="text-xs text-yellow-600 font-semibold" title="Programado">(+${formatCurrency(
-        resumo.totalProgramado
+        resumo.totalProgramado,
       )} prog.)</span>`;
     }
 
     card.querySelector('[data-field="totalPago"]').innerHTML = htmlValores;
     card.querySelector('[data-field="valorTotal"]').textContent =
       formatCurrency(resumo.valorTotal);
-    card.querySelector(
-      '[data-field="progressoValor"]'
-    ).style.width = `${resumo.percValor}%`;
+    card.querySelector('[data-field="progressoValor"]').style.width =
+      `${resumo.percValor}%`;
 
     card.querySelector('[data-field="diasRestantes"]').textContent =
       resumo.diasRestantes;
-    card.querySelector(
-      '[data-field="progressoTempo"]'
-    ).style.width = `${resumo.percTempo}%`;
+    card.querySelector('[data-field="progressoTempo"]').style.width =
+      `${resumo.percTempo}%`;
 
     card.querySelector(".btn-visualizar-contrato").dataset.id = contrato.id;
     card.querySelector(".btn-abrir-modal-pagamento").dataset.id = contrato.id;
@@ -1146,7 +1172,7 @@ function renderizarModalVisualizar(contratoId) {
 
   if (pagamentosComData.length > 0) {
     const datas = pagamentosComData.map(
-      (p) => new Date(p.periodoAte + "T00:00:00")
+      (p) => new Date(p.periodoAte + "T00:00:00"),
     );
     const minData = new Date(Math.min.apply(null, datas));
     const maxData = new Date(Math.max.apply(null, datas));
@@ -1229,14 +1255,14 @@ function renderizarModalVisualizar(contratoId) {
   // Helpers
   const renderField = (label, value, extraClass = "") => `
         <div class="grid grid-cols-3 gap-2 ${extraClass}">
-            <span class="text-sm font-semibold text-gray-700 col-span-1">${label}:</span>
-            <span class="text-sm text-gray-900 col-span-2">${
+            <span class="text-sm font-semibold text-gray-700 dark:text-gray-400 col-span-1">${label}:</span>
+            <span class="text-sm text-gray-900 dark:text-gray-100 col-span-2">${
               value || "N/D"
             }</span>
         </div>`;
 
   const renderSection = (title, content, actions = "") => `
-        <fieldset class="border border-gray-300 p-4 rounded-lg">
+        <fieldset class="border border-gray-300 dark:border-slate-600 p-4 rounded-lg">
             <legend class="text-lg font-semibold px-2 flex justify-between items-center w-full">
                 <span>${title}</span>
                 <div>${actions}</div>
@@ -1261,14 +1287,14 @@ function renderizarModalVisualizar(contratoId) {
   const contratoContent = [
     renderField(
       "Status",
-      `<span class="px-2 py-0.5 rounded text-xs font-bold ${resumo.statusCor}">${resumo.status}</span>`
+      `<span class="px-2 py-0.5 rounded text-xs font-bold ${resumo.statusCor}">${resumo.status}</span>`,
     ),
     renderField("Nº do Contrato", contratoPai.numeroContrato) +
       renderField(
         "Nº Processo SEI",
         contratoPai.linkSei
           ? `<a href="${contratoPai.linkSei}" target="_blank" class="text-blue-600 hover:underline">${contratoPai.processoSei}</a>`
-          : contratoPai.processoSei || "N/D"
+          : contratoPai.processoSei || "N/D",
       ) +
       renderField("Tipo de Contrato", contratoPai.tipoContrato) +
       renderField("Objeto", contratoPai.objeto),
@@ -1281,7 +1307,7 @@ function renderizarModalVisualizar(contratoId) {
       ? renderField(
           "Total Programado",
           formatCurrency(resumo.totalProgramado),
-          "text-yellow-600 font-bold"
+          "text-yellow-600 font-bold",
         )
       : null,
 
@@ -1293,7 +1319,7 @@ function renderizarModalVisualizar(contratoId) {
       `${gestorAtual.nome} ${
         gestorAtual.matricula ? `(Mat. ${gestorAtual.matricula})` : ""
       }`,
-      "font-bold bg-yellow-50 p-1 rounded-md"
+      "font-bold bg-yellow-50 dark:bg-yellow-900/30 dark:text-yellow-200 p-1 rounded-md",
     ),
 
     renderField(
@@ -1301,11 +1327,11 @@ function renderizarModalVisualizar(contratoId) {
       fiscaisAtuais.length > 0
         ? fiscaisAtuais
             .map(
-              (f) => `${f.nome} ${f.matricula ? `(Mat. ${f.matricula})` : ""}`
+              (f) => `${f.nome} ${f.matricula ? `(Mat. ${f.matricula})` : ""}`,
             )
             .join("<br>") // <--- Use <br> para HTML
         : "N/D",
-      "font-bold bg-yellow-50 p-1 rounded-md"
+      "font-bold bg-yellow-50 dark:bg-yellow-900/30 dark:text-yellow-100 p-1 rounded-md",
     ),
   ]
     .filter(Boolean)
@@ -1316,21 +1342,21 @@ function renderizarModalVisualizar(contratoId) {
     '<h4 class="font-semibold mb-2">Histórico de Aditivos</h4>';
   if (aditivos.length === 0) {
     aditivosContent +=
-      '<p class="text-gray-500 text-sm">Nenhum aditivo registrado.</p>';
+      '<p class="text-gray-500 dark:text-gray-400 text-sm">Nenhum aditivo registrado.</p>';
   } else {
     aditivosContent += `<div class="overflow-x-auto border rounded-lg"><table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+            <thead class="bg-gray-50 dark:bg-slate-700">
                 <tr>
-                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Número</th>
-                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tipo</th>
-                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Data Assin.</th>
-                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Processo</th>
-                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Justificativa</th>
-                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Valor/Prazo/Gestor</th>
-                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Ações</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Número</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Tipo</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Data Assin.</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Processo</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Justificativa</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Valor/Prazo/Gestor</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Ações</th>
                 </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">`;
+            <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">`;
 
     aditivos.forEach((ad) => {
       const dataAssin = new Date(ad.aditivo.dataAssinatura + "T00:00:00");
@@ -1365,7 +1391,7 @@ function renderizarModalVisualizar(contratoId) {
                 <td class="px-4 py-3 text-sm">${ad.aditivo.numero || "N/D"}</td>
                 <td class="px-4 py-3 text-sm">${ad.aditivo.tipo}</td>
                 <td class="px-4 py-3 text-sm">${formatDate(
-                  ad.aditivo.dataAssinatura
+                  ad.aditivo.dataAssinatura,
                 )} ${badgeFuturo}</td>
                 <td class="px-4 py-3 text-sm">
                     ${
@@ -1379,7 +1405,7 @@ function renderizarModalVisualizar(contratoId) {
                 }</td>
                 <td class="px-4 py-3 text-sm">${infoExtra}</td>
                 <td class="px-4 py-3 text-sm">
-                    <button class="btn-detalhar-aditivo text-blue-600 hover:text-blue-800" data-aditivo-id="${
+                    <button class="btn-detalhar-aditivo text-blue-600 hover:text-blue-800 dark:text-blue-300" data-aditivo-id="${
                       ad.id
                     }" data-pai-id="${contratoPai.id}">Detalhar</button>
                     <button class="btn-editar-aditivo text-yellow-600 hover:text-yellow-800 ml-2" data-aditivo-id="${
@@ -1396,19 +1422,19 @@ function renderizarModalVisualizar(contratoId) {
         <h4 class="font-semibold mb-2">Histórico de Pagamentos</h4>
         <div class="overflow-x-auto border rounded-lg">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+                <thead class="bg-gray-50 dark:bg-slate-700">
                     <tr>
-                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Data</th>
-                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Período</th>
-                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Valor</th>
-                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">NF</th>
-                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Proc. Pag. SEI</th> <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Ações</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Data</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Período</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Valor</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">NF</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Proc. Pag. SEI</th> <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Ações</th>
                      </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200 border border-gray-200">
+                <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700 border border-gray-200">
                     ${
                       pagamentos.length === 0
-                        ? `<tr><td colspan="6" class="px-4 py-4 text-center text-gray-500">Nenhum pagamento.</td></tr>`
+                        ? `<tr><td colspan="6" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Nenhum pagamento.</td></tr>`
                         : pagamentos
                             .map((p) => {
                               const dataPagto = new Date(p.data + "T00:00:00");
@@ -1416,8 +1442,8 @@ function renderizarModalVisualizar(contratoId) {
                               const rowClass = isProgramado
                                 ? "bg-yellow-50"
                                 : p.origemContratoId !== contratoPai.id
-                                ? "bg-blue-50"
-                                : "";
+                                  ? "bg-blue-50"
+                                  : "";
                               const statusLabel = isProgramado
                                 ? '<span class="ml-2 text-[10px] bg-yellow-200 text-yellow-800 px-1.5 py-0.5 rounded font-bold uppercase border border-yellow-300">Programado</span>'
                                 : "";
@@ -1435,7 +1461,7 @@ function renderizarModalVisualizar(contratoId) {
                                 <td class="px-4 py-3 text-sm">${
                                   p.periodoDe
                                     ? `${formatDate(
-                                        p.periodoDe
+                                        p.periodoDe,
                                       )} a ${formatDate(p.periodoAte)}`
                                     : "N/D"
                                 }</td>
@@ -1443,7 +1469,7 @@ function renderizarModalVisualizar(contratoId) {
                                     ${formatCurrency(p.valorPago)}
                                     ${
                                       p.isTRD
-                                        ? '<span class="ml-1 px-2 py-0.5 bg-red-100 text-red-800 text-xs font-semibold rounded-full">TRD</span>'
+                                        ? '<span class="ml-1 px-2 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800 border border-red-200 dark:bg-red-900/40 dark:text-red-400 dark:border-red-800">TRD</span>'
                                         : ""
                                     }
                                 </td>
@@ -1463,24 +1489,24 @@ function renderizarModalVisualizar(contratoId) {
                                     <button class="btn-editar-pagamento text-yellow-600 hover:text-yellow-800" data-contrato-id="${
                                       p.origemContratoId
                                     }" data-pagamento-id="${
-                                p.id
-                              }" data-contrato-pai-id="${
-                                contratoPai.id
-                              }">Editar</button>
-                                    <button class="btn-detalhar-pagamento text-blue-600 hover:text-blue-800 ml-2" data-contrato-id="${
+                                      p.id
+                                    }" data-contrato-pai-id="${
+                                      contratoPai.id
+                                    }">Editar</button>
+                                    <button class="btn-detalhar-pagamento text-blue-600 hover:text-blue-800 dark:text-blue-300 ml-2" data-contrato-id="${
                                       p.origemContratoId
                                     }" data-pagamento-id="${
-                                p.id
-                              }" data-contrato-pai-id="${
-                                contratoPai.id
-                              }">Detalhar</button>
+                                      p.id
+                                    }" data-contrato-pai-id="${
+                                      contratoPai.id
+                                    }">Detalhar</button>
                                     <button class="btn-excluir-pagamento text-red-600 hover:text-red-800 ml-2" data-contrato-id="${
                                       p.origemContratoId
                                     }" data-pagamento-id="${
-                                p.id
-                              }" data-contrato-pai-id="${
-                                contratoPai.id
-                              }">Excluir</button>
+                                      p.id
+                                    }" data-contrato-pai-id="${
+                                      contratoPai.id
+                                    }">Excluir</button>
                                 </td>
                             </tr>`;
                             })
@@ -1497,10 +1523,10 @@ function renderizarModalVisualizar(contratoId) {
 
   // Tabela Consumo Item (Com fix de 2 casas decimais)
   let htmlConsumoItens =
-    '<div class="overflow-y-auto max-h-48 border rounded-lg"><table class="min-w-full divide-y divide-gray-200"><thead class="bg-gray-50 sticky top-0 z-10"><tr><th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Item</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Valor Total</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">% do Total</th></tr></thead><tbody class="bg-white divide-y divide-gray-200">';
+    '<div class="overflow-y-auto max-h-48 border rounded-lg"><table class="min-w-full divide-y divide-gray-200"><thead class="bg-gray-50 dark:bg-slate-700 sticky top-0 z-10"><tr><th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Item</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Valor Total</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">% do Total</th></tr></thead><tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">';
   if (dadosConsumo.length === 0) {
     htmlConsumoItens +=
-      '<tr><td colspan="3" class="px-4 py-3 text-center text-gray-500">Nenhum item processado nos pagamentos realizados.</td></tr>';
+      '<tr><td colspan="3" class="px-4 py-3 text-center text-gray-500 dark:text-gray-400">Nenhum item processado nos pagamentos realizados.</td></tr>';
   } else {
     dadosConsumo.forEach((d) => {
       const valorFormatado2Casas = d.total.toLocaleString("pt-BR", {
@@ -1510,14 +1536,14 @@ function renderizarModalVisualizar(contratoId) {
         maximumFractionDigits: 2,
       });
       htmlConsumoItens += `<tr>
-                <td class="px-4 py-2 text-sm text-gray-900">${d.descricao}</td>
-                <td class="px-4 py-2 text-sm text-gray-700">${valorFormatado2Casas}</td>
-                <td class="px-4 py-2 text-sm text-gray-700">
+                <td class="px-4 py-2 text-sm text-gray-900 dark:text-gray-100">${d.descricao}</td>
+                <td class="px-4 py-2 text-sm text-gray-700 dark:text-gray-300">${valorFormatado2Casas}</td>
+                <td class="px-4 py-2 text-sm text-gray-700 dark:text-gray-300">
                     <div class="flex items-center"><span class="w-16">${d.percentual.toFixed(
-                      1
+                      1,
                     )}%</span>
                     <div class="w-full bg-gray-200 rounded-full h-2.5 ml-2"><div class="bg-green-600 h-2.5 rounded-full" style="width: ${d.percentual.toFixed(
-                      1
+                      1,
                     )}%"></div></div></div>
                 </td>
             </tr>`;
@@ -1526,43 +1552,43 @@ function renderizarModalVisualizar(contratoId) {
   htmlConsumoItens += "</tbody></table></div>";
 
   const kpiBoxClass =
-    "flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg border";
-  const kpiLabelClass = "text-sm font-medium text-gray-600";
-  const kpiValueClass = "text-2xl font-bold text-gray-900";
+    "flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-slate-700 rounded-lg border";
+  const kpiLabelClass = "text-sm font-medium text-gray-600 dark:text-gray-400";
+  const kpiValueClass = "text-2xl font-bold text-gray-900 dark:text-gray-100";
 
   // Montagem do bloco de Gráficos
   const graficosHTML = `
-        <fieldset class="border border-gray-300 p-4 rounded-lg">
+        <fieldset class="border border-gray-300 dark:border-slate-600 p-4 rounded-lg">
             <legend class="text-lg font-semibold px-2">Resumo Visual (Agregado)</legend>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
                 <div class="flex flex-col items-center">
-                    <h4 class="font-semibold text-gray-700 mb-3">Progresso do Valor</h4>
+                    <h4 class="font-semibold text-gray-700 dark:text-gray-300 mb-3">Progresso do Valor</h4>
                     <div class="donut-chart-container relative">
                         <div class="donut-chart" style="background: conic-gradient(${corValor} 0% ${
-    resumo.percValor
-  }%, ${corFundo} ${resumo.percValor}% 100%);">
+                          resumo.percValor
+                        }%, ${corFundo} ${resumo.percValor}% 100%);">
                             <div class="donut-chart-center"><span>${resumo.percValor.toFixed(
-                              0
+                              0,
                             )}%</span></div>
                         </div>
                     </div>
                     <div class="mt-3 text-center space-y-1">
                         <div class="text-sm">Total Pago: ${formatCurrency(
-                          resumo.totalPago
+                          resumo.totalPago,
                         )}</div>
                         <div class="text-sm">Restante: ${formatCurrency(
-                          resumo.valorRestante
+                          resumo.valorRestante,
                         )}</div>
                     </div>
                 </div>
                 <div class="flex flex-col items-center">
-                    <h4 class="font-semibold text-gray-700 mb-3">Progresso do Tempo</h4>
+                    <h4 class="font-semibold text-gray-700 dark:text-gray-300 mb-3">Progresso do Tempo</h4>
                     <div class="donut-chart-container relative">
                         <div class="donut-chart" style="background: conic-gradient(${corTempo} 0% ${
-    resumo.percTempo
-  }%, ${corFundo} ${resumo.percTempo}% 100%);">
+                          resumo.percTempo
+                        }%, ${corFundo} ${resumo.percTempo}% 100%);">
                             <div class="donut-chart-center"><span>${resumo.percTempo.toFixed(
-                              0
+                              0,
                             )}%</span></div>
                         </div>
                     </div>
@@ -1578,53 +1604,53 @@ function renderizarModalVisualizar(contratoId) {
             </div>
         </fieldset>
 
-        <fieldset class="border border-gray-300 p-4 rounded-lg mt-6">
+        <fieldset class="border border-gray-300 dark:border-slate-600 p-4 rounded-lg mt-6">
             <legend class="text-lg font-semibold px-2">Análise Financeira (KPIs)</legend>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
                 <div class="${kpiBoxClass}">
                     <span class="${kpiLabelClass}">Gasto Médio Mensal (Real)</span>
                     <span class="${kpiValueClass}">${formatCurrency(
-    gastoMedioMensalReal
-  )}</span>
+                      gastoMedioMensalReal,
+                    )}</span>
                     <span class="${kpiLabelClass} mt-1">(Estimativa: ${formatCurrency(
-    contratoPai.estimativaMensal
-  )})</span>
+                      contratoPai.estimativaMensal,
+                    )})</span>
                 </div>
                 <div class="${kpiBoxClass} ${
-    percentDesvio > 10
-      ? "bg-red-50 border-red-300"
-      : "bg-green-50 border-green-300"
-  }">
+                  percentDesvio > 10
+                    ? "bg-red-50 border-red-300"
+                    : "bg-green-50 border-green-300"
+                }">
                     <span class="${kpiLabelClass}">Desvio da Estimativa</span>
                     <span class="${kpiValueClass} ${
-    percentDesvio > 10 ? "text-red-700" : "text-green-700"
-  }">${percentDesvio >= 0 ? "+" : ""}${percentDesvio.toFixed(1)}%</span>
+                      percentDesvio > 10 ? "text-red-700" : "text-green-700"
+                    }">${percentDesvio >= 0 ? "+" : ""}${percentDesvio.toFixed(1)}%</span>
                 </div>
                 <div class="${kpiBoxClass} ${
-    alertaBurnRate ? "bg-red-50 border-red-300" : "bg-gray-50"
-  }">
+                  alertaBurnRate ? "bg-red-50 border-red-300" : "bg-gray-50"
+                }">
                     <span class="${kpiLabelClass}">Previsão (Dias Restantes)</span>
                     <div class="flex items-baseline space-x-2">
                         <span class="${kpiValueClass} ${
-    alertaBurnRate ? "text-red-700" : ""
-  }">${diasRestantesValor.toFixed(0)} dias</span>
+                          alertaBurnRate ? "text-red-700" : ""
+                        }">${diasRestantesValor.toFixed(0)} dias</span>
                         <span class="${kpiLabelClass}">vs</span>
                         <span class="${kpiValueClass}">${
-    resumo.diasRestantesNum
-  } dias</span>
+                          resumo.diasRestantesNum
+                        } dias</span>
                     </div>
                 </div>
             </div>
         </fieldset>
 
-        <fieldset class="border border-gray-300 p-4 rounded-lg mt-6">
+        <fieldset class="border border-gray-300 dark:border-slate-600 p-4 rounded-lg mt-6">
             <legend class="text-lg font-semibold px-2">Análises Detalhadas</legend>
             <div class="grid grid-cols-1 lg:grid-cols-1 gap-6 pt-2">
                 <div>
-                    <h4 class="font-semibold text-gray-700 mb-3 text-center">Consumo por Competência</h4>
+                    <h4 class="font-semibold text-gray-700 dark:text-gray-300 mb-3 text-center">Consumo por Competência</h4>
                     <div class="grid grid-cols-2 gap-2 mb-3">
-                        <select id="filtro-ano" class="p-2 border rounded-md w-full bg-white"></select>
-                        <select id="filtro-mes" class="p-2 border rounded-md w-full bg-white">
+                        <select id="filtro-ano" class="p-2 border rounded-md w-full bg-white dark:bg-slate-700 dark:text-white dark:border-slate-600"></select>
+                        <select id="filtro-mes" class="p-2 border rounded-md w-full bg-white dark:bg-slate-700 dark:text-white dark:border-slate-600">
                             <option value="todos">Todos os Meses</option>
                             <option value="0">Janeiro</option>
                             <option value="1">Fevereiro</option>
@@ -1643,7 +1669,7 @@ function renderizarModalVisualizar(contratoId) {
                     <div id="container-grafico-detalhado" class="min-h-[200px]"></div>
                 </div>
                 <div>
-                    <h4 class="font-semibold text-gray-700 mb-3 text-center">Consumo por Item (Período Total)</h4>
+                    <h4 class="font-semibold text-gray-700 dark:text-gray-300 mb-3 text-center">Consumo por Item (Período Total)</h4>
                     ${htmlConsumoItens}
                 </div>
             </div>
@@ -1662,7 +1688,7 @@ function renderizarModalVisualizar(contratoId) {
 
   // Atualiza botão PDF
   const btnExportarPDF = document.querySelector(
-    "#modal-visualizar-contrato #btn-exportar-pdf"
+    "#modal-visualizar-contrato #btn-exportar-pdf",
   );
   if (btnExportarPDF) {
     const newBtn = btnExportarPDF.cloneNode(true);
@@ -1674,7 +1700,7 @@ function renderizarModalVisualizar(contratoId) {
 
   // Atualiza o ID do botão de Pagamento no rodapé do modal
   const btnPagamentoModal = document.querySelector(
-    "#modal-visualizar-contrato .btn-abrir-modal-pagamento"
+    "#modal-visualizar-contrato .btn-abrir-modal-pagamento",
   );
   if (btnPagamentoModal) {
     btnPagamentoModal.dataset.id = contratoPai.id;
@@ -1685,9 +1711,11 @@ function renderizarModalVisualizar(contratoId) {
   const anosUnicos = new Set(
     pagamentosRealizados
       .map((p) =>
-        p.periodoAte ? new Date(p.periodoAte + "T00:00:00").getFullYear() : null
+        p.periodoAte
+          ? new Date(p.periodoAte + "T00:00:00").getFullYear()
+          : null,
       )
-      .filter((ano) => ano)
+      .filter((ano) => ano),
   );
 
   [...anosUnicos]
@@ -1704,12 +1732,12 @@ function renderizarModalVisualizar(contratoId) {
   document
     .getElementById("filtro-ano")
     .addEventListener("change", () =>
-      atualizarGraficoDetalhado(pagamentosRealizados)
+      atualizarGraficoDetalhado(pagamentosRealizados),
     );
   document
     .getElementById("filtro-mes")
     .addEventListener("change", () =>
-      atualizarGraficoDetalhado(pagamentosRealizados)
+      atualizarGraficoDetalhado(pagamentosRealizados),
     );
 
   atualizarGraficoDetalhado(pagamentosRealizados);
@@ -1725,9 +1753,8 @@ function renderizarModalDetalharAditivo(aditivoId, contratoPaiId) {
     return;
   }
 
-  document.getElementById(
-    "detalhe-aditivo-titulo"
-  ).textContent = `Detalhes do ${aditivo.aditivo.numero} Termo Aditivo`;
+  document.getElementById("detalhe-aditivo-titulo").textContent =
+    `Detalhes do ${aditivo.aditivo.numero} Termo Aditivo`;
 
   // 1. Renderiza os Detalhes do Aditivo
   const infoContainer = document.getElementById("detalhe-aditivo-info");
@@ -1740,38 +1767,38 @@ function renderizarModalDetalharAditivo(aditivoId, contratoPaiId) {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="space-y-2">
                 <div class="grid grid-cols-3 gap-2">
-                    <span class="text-sm font-semibold text-gray-700 col-span-1">Tipo:</span>
-                    <span class="text-sm text-gray-900 col-span-2">${
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300 col-span-1">Tipo:</span>
+                    <span class="text-sm text-gray-900 dark:text-gray-100 col-span-2">${
                       aditivo.aditivo.tipo
                     }</span>
                 </div>
                 <div class="grid grid-cols-3 gap-2">
-                    <span class="text-sm font-semibold text-gray-700 col-span-1">Processo SEI:</span>
-                    <span class="text-sm text-gray-900 col-span-2">${
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300 col-span-1">Processo SEI:</span>
+                    <span class="text-sm text-gray-900 dark:text-gray-100 col-span-2">${
                       aditivo.aditivo.processoSei
                     }</span>
                 </div>
                 <div class="grid grid-cols-3 gap-2">
-                    <span class="text-sm font-semibold text-gray-700 col-span-1">Data Assinatura:</span>
-                    <span class="text-sm text-gray-900 col-span-2">${formatDate(
-                      aditivo.aditivo.dataAssinatura
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300 col-span-1">Data Assinatura:</span>
+                    <span class="text-sm text-gray-900 dark:text-gray-100 col-span-2">${formatDate(
+                      aditivo.aditivo.dataAssinatura,
                     )}</span>
                 </div>
             </div>
             <div class="space-y-2">
-                <div class="grid grid-cols-3 gap-2 bg-blue-50 p-1 rounded">
-                    <span class="text-sm font-bold text-blue-800 col-span-1">Valor Aditado:</span>
-                    <span class="text-sm font-bold text-blue-800 col-span-2">${formatCurrency(
-                      valorAditado
+                <div class="grid grid-cols-3 gap-2 bg-blue-50 dark:bg-blue-900/30 p-1 rounded">
+                    <span class="text-sm font-bold text-blue-800 dark:text-blue-300 col-span-1">Valor Aditado:</span>
+                    <span class="text-sm font-bold text-blue-800 dark:text-blue-300 col-span-2">${formatCurrency(
+                      valorAditado,
                     )}</span>
                 </div>
-                <div class="grid grid-cols-3 gap-2 bg-green-50 p-1 rounded">
-                    <span class="text-sm font-bold text-green-800 col-span-1">Nova Data Fim:</span>
-                    <span class="text-sm font-bold text-green-800 col-span-2">${novaDataFim}</span>
+                <div class="grid grid-cols-3 gap-2 bg-green-50 dark:bg-green-900/30 p-1 rounded">
+                    <span class="text-sm font-bold text-green-800 dark:text-green-300 col-span-1">Nova Data Fim:</span>
+                    <span class="text-sm font-bold text-green-800 dark:text-green-300 col-span-2">${novaDataFim}</span>
                 </div>
                 <div class="grid grid-cols-3 gap-2">
-                    <span class="text-sm font-semibold text-gray-700 col-span-1">Justificativa:</span>
-                    <span class="text-sm text-gray-900 col-span-2">${
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300 col-span-1">Justificativa:</span>
+                    <span class="text-sm text-gray-900 dark:text-gray-100 col-span-2">${
                       aditivo.aditivo.justificativa
                     }</span>
                 </div>
@@ -1781,7 +1808,7 @@ function renderizarModalDetalharAditivo(aditivoId, contratoPaiId) {
 
   // 2. Lógica de Pagamentos e Consumo
   const pagamentosContainer = document.getElementById(
-    "detalhe-aditivo-pagamentos"
+    "detalhe-aditivo-pagamentos",
   );
 
   let pagamentosFiltrados = [];
@@ -1798,18 +1825,18 @@ function renderizarModalDetalharAditivo(aditivoId, contratoPaiId) {
     aditivo.aditivo.tipo === "Outro"
   ) {
     mensagemErro = `Não é possível filtrar pagamentos por data automaticamente para aditivos puramente de Valor/Outros.<br>Valor do Aditivo: <b>${formatCurrency(
-      valorAditado
+      valorAditado,
     )}</b>`;
   } else {
     // Aditivo de Prazo (Lógica de Datas)
     const todosInstrumentos = [
       contratoPai,
       ...db.contratos.filter(
-        (c) => c.parentId === contratoPaiId && c.aditivo.tipo === "Prazo"
+        (c) => c.parentId === contratoPaiId && c.aditivo.tipo === "Prazo",
       ),
     ].sort(
       (a, b) =>
-        new Date(a.dataFim + "T00:00:00") - new Date(b.dataFim + "T00:00:00")
+        new Date(a.dataFim + "T00:00:00") - new Date(b.dataFim + "T00:00:00"),
     );
 
     const indexAtual = todosInstrumentos.findIndex((c) => c.id === aditivoId);
@@ -1817,7 +1844,7 @@ function renderizarModalDetalharAditivo(aditivoId, contratoPaiId) {
     if (indexAtual > 0) {
       const instrumentoAnterior = todosInstrumentos[indexAtual - 1];
       const dataFimAnterior = new Date(
-        instrumentoAnterior.dataFim + "T00:00:00"
+        instrumentoAnterior.dataFim + "T00:00:00",
       );
       const dataInicioAditivo = new Date(dataFimAnterior);
       dataInicioAditivo.setDate(dataInicioAditivo.getDate() + 1);
@@ -1838,7 +1865,7 @@ function renderizarModalDetalharAditivo(aditivoId, contratoPaiId) {
 
   // Renderiza HTML baseados no cálculo acima
   if (!podeFiltrar) {
-    pagamentosContainer.innerHTML = `<div class="text-gray-500 text-center p-4">${mensagemErro}</div>`;
+    pagamentosContainer.innerHTML = `<div class="text-gray-500 dark:text-gray-400 text-center p-4">${mensagemErro}</div>`;
   } else {
     // Calcula totais separando TRD
     pagamentosFiltrados.forEach((p) => {
@@ -1875,56 +1902,40 @@ function renderizarModalDetalharAditivo(aditivoId, contratoPaiId) {
     if (totalConsumidoTRD > 0) {
       // --- VERSÃO COM TRD (DETALHADA) ---
       infoConsumoHtml = `
-            <div class="flex flex-col p-4 bg-gray-50 border border-gray-200 rounded-lg mb-4 shadow-sm">
-                <div class="text-center mb-2 border-b pb-2">
-                    <span class="text-xs uppercase tracking-wider text-gray-500 font-semibold">Total Pago no Período</span>
-                    <div class="text-2xl font-bold text-gray-800">${formatCurrency(
-                      totalGeralPeriodo
-                    )}</div>
+            <div class="flex flex-col p-4 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-lg mb-4 shadow-sm">
+                <div class="text-center mb-2 border-b dark:border-slate-600 pb-2">
+                    <span class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-semibold">Total Pago no Período</span>
+                    <div class="text-2xl font-bold text-gray-800 dark:text-white">${formatCurrency(totalGeralPeriodo)}</div>
                 </div>
                 
                 <div class="grid grid-cols-2 gap-4 text-center">
                     <div>
-                        <span class="text-xs text-gray-500 block">Consumo do Aditivo</span>
-                        <span class="text-sm font-bold text-blue-600 block">${formatCurrency(
-                          totalConsumidoAditivo
-                        )}</span>
-                        <span class="text-xs ${corTexto} block mt-1 font-medium">${porcentagem.toFixed(
-        1
-      )}% ${textoBase}</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400 block">Consumo do Aditivo</span>
+                        <span class="text-sm font-bold text-blue-600 dark:text-blue-400 block">${formatCurrency(totalConsumidoAditivo)}</span>
+                        <span class="text-xs ${corTexto} dark:text-gray-300 block mt-1 font-medium">${porcentagem.toFixed(1)}% ${textoBase}</span>
                     </div>
-                    <div class="border-l pl-4">
-                        <span class="text-xs text-gray-500 block">Pagamentos via TRD</span>
-                        <span class="text-sm font-bold text-red-600 block">${formatCurrency(
-                          totalConsumidoTRD
-                        )}</span>
+                    <div class="border-l dark:border-slate-600 pl-4">
+                        <span class="text-xs text-gray-500 dark:text-gray-400 block">Pagamentos via TRD</span>
+                        <span class="text-sm font-bold text-red-600 dark:text-red-400 block">${formatCurrency(totalConsumidoTRD)}</span>
                         <span class="text-xs text-gray-400 block mt-1">(Não consome saldo)</span>
                     </div>
                 </div>
 
-                <div class="w-full bg-gray-200 rounded-full h-1.5 mt-3">
-                    <div class="bg-blue-600 h-1.5 rounded-full" style="width: ${Math.min(
-                      porcentagem,
-                      100
-                    )}%"></div>
+                <div class="w-full bg-gray-200 dark:bg-slate-600 rounded-full h-1.5 mt-3">
+                    <div class="bg-blue-600 dark:bg-blue-500 h-1.5 rounded-full" style="width: ${Math.min(porcentagem, 100)}%"></div>
                 </div>
             </div>`;
     } else {
       // --- VERSÃO PADRÃO (SEM TRD) ---
       infoConsumoHtml = `
-            <div class="flex flex-col items-center justify-center p-3 bg-gray-50 border border-gray-200 rounded-lg mb-4">
-                <span class="text-xs uppercase tracking-wider text-gray-500 font-semibold">Consumido no Período</span>
-                <div class="text-2xl font-bold text-gray-800 mt-1">${formatCurrency(
-                  totalConsumidoAditivo
-                )}</div>
-                <div class="text-sm font-medium ${corTexto} mt-1">
+            <div class="flex flex-col items-center justify-center p-3 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-lg mb-4">
+                <span class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-semibold">Consumido no Período</span>
+                <div class="text-2xl font-bold text-gray-800 dark:text-white mt-1">${formatCurrency(totalConsumidoAditivo)}</div>
+                <div class="text-sm font-medium ${corTexto} dark:text-gray-300 mt-1">
                     ${porcentagem.toFixed(1)}% ${textoBase}
                 </div>
-                <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2 max-w-xs">
-                    <div class="bg-blue-600 h-1.5 rounded-full" style="width: ${Math.min(
-                      porcentagem,
-                      100
-                    )}%"></div>
+                <div class="w-full bg-gray-200 dark:bg-slate-600 rounded-full h-1.5 mt-2 max-w-xs">
+                    <div class="bg-blue-600 dark:bg-blue-500 h-1.5 rounded-full" style="width: ${Math.min(porcentagem, 100)}%"></div>
                 </div>
             </div>`;
     }
@@ -1932,19 +1943,19 @@ function renderizarModalDetalharAditivo(aditivoId, contratoPaiId) {
     // Tabela
     let htmlTabela = "";
     if (pagamentosFiltrados.length === 0) {
-      htmlTabela = `<p class="text-gray-500 text-center">Nenhum pagamento encontrado no período.</p>`;
+      htmlTabela = `<p class="text-gray-500 dark:text-gray-400 text-center">Nenhum pagamento encontrado no período.</p>`;
     } else {
       htmlTabela = `
                 <div class="overflow-x-auto border rounded-lg">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Período (Ref)</th>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Valor Pago</th>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">NF</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Período (Ref)</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Valor Pago</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">NF</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
                         ${pagamentosFiltrados
                           .map(
                             (p) => `
@@ -1952,7 +1963,7 @@ function renderizarModalDetalharAditivo(aditivoId, contratoPaiId) {
                                 <td class="px-4 py-3 text-sm font-semibold text-gray-800">${
                                   p.periodoDe
                                     ? `${formatDate(
-                                        p.periodoDe
+                                        p.periodoDe,
                                       )} a ${formatDate(p.periodoAte)}`
                                     : "N/D"
                                 }</td>
@@ -1960,7 +1971,7 @@ function renderizarModalDetalharAditivo(aditivoId, contratoPaiId) {
                                     ${formatCurrency(p.valorPago)}
                                     ${
                                       p.isTRD
-                                        ? '<span class="ml-2 px-2 py-0.5 bg-red-100 text-red-800 text-[10px] uppercase font-bold rounded-full">TRD</span>'
+                                        ? '<span class="ml-2 px-2 py-0.5 rounded-full text-[10px] uppercase font-bold bg-red-100 text-red-800 border border-red-200 dark:bg-red-900/40 dark:text-red-400 dark:border-red-800">TRD</span>'
                                         : ""
                                     }
                                 </td>
@@ -1968,7 +1979,7 @@ function renderizarModalDetalharAditivo(aditivoId, contratoPaiId) {
                                   p.notaFiscal
                                 }</td>
                             </tr>
-                        `
+                        `,
                           )
                           .join("")}
                     </tbody>
@@ -1980,7 +1991,7 @@ function renderizarModalDetalharAditivo(aditivoId, contratoPaiId) {
 
   // --- 3. INJEÇÃO DO BOTÃO PDF ---
   const modalFooter = document.querySelector(
-    "#modal-detalhes-aditivo .flex.justify-end"
+    "#modal-detalhes-aditivo .flex.justify-end",
   );
   const btnExistente = document.getElementById("btn-pdf-aditivo");
   if (btnExistente) btnExistente.remove();
@@ -2019,7 +2030,7 @@ function renderizarModalDetalhesPagamento(contratoId, pagamentoId) {
   let totalItens = 0;
 
   if (!pagamento.detalhes || pagamento.detalhes.length === 0) {
-    listaItens.innerHTML = `<tr><td colspan="5" class="px-4 py-4 text-center text-gray-500">Nenhum item detalhado.</td></tr>`;
+    listaItens.innerHTML = `<tr><td colspan="5" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Nenhum item detalhado.</td></tr>`;
   } else {
     pagamento.detalhes.forEach((item) => {
       const valorTotalItem =
@@ -2032,10 +2043,10 @@ function renderizarModalDetalhesPagamento(contratoId, pagamentoId) {
                     <td class="px-4 py-3 text-sm">${item.descricao}</td>
                     <td class="px-4 py-3 text-sm">${item.quantidade}</td>
                     <td class="px-4 py-3 text-sm">${formatCurrency(
-                      item.valorUnitario
+                      item.valorUnitario,
                     )}</td>
                     <td class="px-4 py-3 text-sm">${formatCurrency(
-                      valorTotalItem
+                      valorTotalItem,
                     )}</td>
                     <td class="px-4 py-3 text-sm">
                         <button class="btn-excluir-item-detalhe text-red-600 hover:text-red-800" data-item-id="${
@@ -2079,7 +2090,7 @@ function showFormStep(step) {
       "bg-green-600",
       "bg-gray-300",
       "text-white",
-      "text-gray-600"
+      "text-gray-600",
     );
 
     if (i < step) {
@@ -2110,7 +2121,7 @@ function validateStep(step) {
 
   // Procura por inputs requeridos que estão visíveis
   const inputs = stepElement.querySelectorAll(
-    "input[required], select[required], textarea[required]"
+    "input[required], select[required], textarea[required]",
   );
   for (const input of inputs) {
     // Verifica se o input (ou seu fieldset pai) está visível
@@ -2123,20 +2134,19 @@ function validateStep(step) {
         return false;
       }
 
-    // 2. Validação Específica do SEI
-    if (input.id.includes('processo-sei')) {
-          const resultado = verificarProcessoSEI(input.value);
-          if (!resultado.valido) {
-              mostrarToast(`Erro no Processo SEI: ${resultado.mensagem}`, true);
-              input.focus();
-              input.classList.add('border-red-500');
-              return false;
-          }
+      // 2. Validação Específica do SEI
+      if (input.id.includes("processo-sei")) {
+        const resultado = verificarProcessoSEI(input.value);
+        if (!resultado.valido) {
+          mostrarToast(`Erro no Processo SEI: ${resultado.mensagem}`, true);
+          input.focus();
+          input.classList.add("border-red-500");
+          return false;
+        }
       }
-      
-      // Se passou, remove erro visual
-      input.classList.remove('border-red-500');
 
+      // Se passou, remove erro visual
+      input.classList.remove("border-red-500");
     }
   }
   return true;
@@ -2159,7 +2169,7 @@ function saveStepData(step) {
     };
   } else if (step === 3) {
     tempContratoData.processoSei = document.getElementById(
-      "contrato-processo-sei"
+      "contrato-processo-sei",
     ).value;
     tempContratoData.numeroContrato =
       document.getElementById("contrato-numero").value;
@@ -2167,15 +2177,15 @@ function saveStepData(step) {
       document.getElementById("contrato-tipo").value;
     tempContratoData.objeto = document.getElementById("contrato-objeto").value;
     tempContratoData.estimativaMensal = parseBRL(
-      document.getElementById("contrato-estimativa-mensal").value
+      document.getElementById("contrato-estimativa-mensal").value,
     );
     tempContratoData.tempoContrato =
       document.getElementById("contrato-tempo").value;
     tempContratoData.dataAssinatura = document.getElementById(
-      "contrato-data-assinatura"
+      "contrato-data-assinatura",
     ).value;
     tempContratoData.dataInicio = document.getElementById(
-      "contrato-data-inicio"
+      "contrato-data-inicio",
     ).value;
     tempContratoData.linkSei =
       document.getElementById("contrato-link-sei").value.trim() || null;
@@ -2194,7 +2204,7 @@ function saveStepData(step) {
 
     tempContratoData.fiscaisIniciais = [];
     const fiscalRows = document.querySelectorAll(
-      "#fiscais-container-step4 .fiscal-row"
+      "#fiscais-container-step4 .fiscal-row",
     );
     fiscalRows.forEach((row) => {
       const nome = row.querySelector(".fiscal-nome").value;
@@ -2296,7 +2306,7 @@ function renderizarTagsRepresentantes() {
   tempRepresentantes.forEach((rep, index) => {
     const tag = document.createElement("li");
     tag.className =
-      "bg-blue-100 text-blue-800 px-2 py-1 rounded flex items-center text-sm";
+      "bg-blue-100 text-blue-800 dark:text-blue-300 px-2 py-1 rounded flex items-center text-sm";
     tag.innerHTML = `
             ${rep}
             <button type="button" class="ml-2 text-red-600 font-bold hover:text-red-800" onclick="removerRepTemp(${index})">&times;</button>
@@ -2454,8 +2464,10 @@ function salvarPagamento(e) {
     data: document.getElementById("pagamento-data").value,
     valorPago: parseBRL(document.getElementById("pagamento-valor").value),
     notaFiscal: document.getElementById("pagamento-nf").value,
-    processoPagamentoSei: document.getElementById("pagamento-processo-sei").value,
-    linkPagamentoSei: document.getElementById("pagamento-link-sei").value.trim() || null,
+    processoPagamentoSei: document.getElementById("pagamento-processo-sei")
+      .value,
+    linkPagamentoSei:
+      document.getElementById("pagamento-link-sei").value.trim() || null,
     periodoDe: document.getElementById("pagamento-periodo-de").value,
     periodoAte: document.getElementById("pagamento-periodo-ate").value,
     isTRD: document.getElementById("pagamento-is-trd").checked,
@@ -2463,11 +2475,11 @@ function salvarPagamento(e) {
 
   // 2. VALIDAÇÃO SEI (MOVIDA PARA CÁ - Antes de salvar)
   const validacaoSEI = verificarProcessoSEI(pagamentoData.processoPagamentoSei);
-  
+
   if (!validacaoSEI.valido) {
-      mostrarToast(`Processo de Pagamento: ${validacaoSEI.mensagem}`, true);
-      document.getElementById('pagamento-processo-sei').focus();
-      return; // Interrompe a função aqui, sem salvar nada
+    mostrarToast(`Processo de Pagamento: ${validacaoSEI.mensagem}`, true);
+    document.getElementById("pagamento-processo-sei").focus();
+    return; // Interrompe a função aqui, sem salvar nada
   }
 
   // 3. Salva os dados (Só chega aqui se for válido)
@@ -2529,7 +2541,7 @@ function salvarDetalheItem(e) {
     descricao: document.getElementById("detalhe-item-desc").value,
     quantidade: parseFloat(document.getElementById("detalhe-item-qtd").value),
     valorUnitario: parseBRL(
-      document.getElementById("detalhe-item-valor").value
+      document.getElementById("detalhe-item-valor").value,
     ),
   };
 
@@ -2646,7 +2658,7 @@ function exportarDetalhesPDF(contratoPaiId) {
           ...p,
           origemContratoId: ad.id,
           origemAditivo: ad.aditivo.processoSei,
-        }))
+        })),
       );
     }
   });
@@ -2718,7 +2730,7 @@ function exportarDetalhesPDF(contratoPaiId) {
       "Fiscais Atuais",
       fiscaisAtuais
         .map(
-          (f) => `${f.nome} ${f.matricula ? "(Mat. " + f.matricula + ")" : ""}`
+          (f) => `${f.nome} ${f.matricula ? "(Mat. " + f.matricula + ")" : ""}`,
         )
         .join(", ") || "N/D",
     ],
@@ -2941,7 +2953,7 @@ function exportarDetalhesPDF(contratoPaiId) {
   doc.save(
     `Relatorio_${contratoPai.objeto.substring(0, 20).replace(/\s+/g, "_")}_${
       contratoPai.processoSei
-    }.pdf`
+    }.pdf`,
   );
   mostrarToast("Relatório PDF gerado!");
 }
@@ -3037,11 +3049,11 @@ function exportarAditivoPDF(aditivoId, contratoPaiId) {
     const todosInstrumentos = [
       contratoPai,
       ...db.contratos.filter(
-        (c) => c.parentId === contratoPaiId && c.aditivo.tipo === "Prazo"
+        (c) => c.parentId === contratoPaiId && c.aditivo.tipo === "Prazo",
       ),
     ].sort(
       (a, b) =>
-        new Date(a.dataFim + "T00:00:00") - new Date(b.dataFim + "T00:00:00")
+        new Date(a.dataFim + "T00:00:00") - new Date(b.dataFim + "T00:00:00"),
     );
 
     const indexAtual = todosInstrumentos.findIndex((c) => c.id === aditivoId);
@@ -3052,14 +3064,14 @@ function exportarAditivoPDF(aditivoId, contratoPaiId) {
     ) {
       const instrumentoAnterior = todosInstrumentos[indexAtual - 1];
       const dataFimAnterior = new Date(
-        instrumentoAnterior.dataFim + "T00:00:00"
+        instrumentoAnterior.dataFim + "T00:00:00",
       );
       const dataInicioAditivo = new Date(dataFimAnterior);
       dataInicioAditivo.setDate(dataInicioAditivo.getDate() + 1);
       const dataFimAditivo = new Date(aditivo.dataFim + "T00:00:00");
 
       textoPeriodo = `${formatDate(
-        dataInicioAditivo.toISOString().split("T")[0]
+        dataInicioAditivo.toISOString().split("T")[0],
       )} a ${formatDate(aditivo.dataFim)}`;
 
       pagamentosFiltrados = contratoPai.pagamentos.filter((p) => {
@@ -3175,7 +3187,7 @@ function exportarAditivoPDF(aditivoId, contratoPaiId) {
       doc.text(
         "Nenhum pagamento registrado neste período de vigência.",
         14,
-        doc.autoTable.previous.finalY + 15
+        doc.autoTable.previous.finalY + 15,
       );
     }
   }
@@ -3352,14 +3364,14 @@ document.addEventListener("DOMContentLoaded", () => {
       // Pega o ID do contrato que "possui" o pagamento (pode ser o PAI ou um Aditivo)
       // Este ID foi salvo no modal quando ele foi aberto
       const contratoDonoId = document.getElementById(
-        "detalhe-contrato-id"
+        "detalhe-contrato-id",
       ).value;
       const contratoDono = db.contratos.find((c) => c.id === contratoDonoId);
 
       if (!contratoDono) {
         mostrarToast(
           "Erro: Não foi possível identificar o contrato de origem.",
-          true
+          true,
         );
         return;
       }
@@ -3382,9 +3394,8 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("form-pagamento").reset();
       document.getElementById("pagamento-contrato-id").value = contratoPai.id; // O ID do PAI
       document.getElementById("pagamento-id").value = ""; // Limpa ID do pagamento (é um NOVO pagto)
-      document.getElementById(
-        "pagamento-contrato-objeto"
-      ).textContent = `Contrato: ${contratoPai.objeto}`;
+      document.getElementById("pagamento-contrato-objeto").textContent =
+        `Contrato: ${contratoPai.objeto}`;
 
       document.getElementById("modal-pagamento-titulo").textContent =
         "Adicionar Pagamento";
@@ -3432,31 +3443,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Listener para validação visual imediata nos campos SEI
   const camposSEI = [
-      'contrato-processo-sei', 
-      'aditivo-processo-sei', 
-      'pagamento-processo-sei'
+    "contrato-processo-sei",
+    "aditivo-processo-sei",
+    "pagamento-processo-sei",
   ];
 
-  camposSEI.forEach(id => {
-      const input = document.getElementById(id);
-      if (input) {
-          input.addEventListener('blur', function() {
-              const resultado = verificarProcessoSEI(this.value);
-              
-              // Remove classes anteriores
-              this.classList.remove('border-red-500', 'border-green-500', 'bg-red-50', 'bg-green-50');
-              
-              if (this.value) { // Só valida se tiver texto
-                  if (resultado.valido) {
-                      this.classList.add('border-green-500', 'bg-green-50');
-                      // Opcional: mostrarToast("Processo Válido", false);
-                  } else {
-                      this.classList.add('border-red-500', 'bg-red-50');
-                      mostrarToast(resultado.mensagem, true);
-                  }
-              }
-          });
-      }
+  camposSEI.forEach((id) => {
+    const input = document.getElementById(id);
+    if (input) {
+      input.addEventListener("blur", function () {
+        const resultado = verificarProcessoSEI(this.value);
+
+        // Remove classes anteriores
+        this.classList.remove(
+          "border-red-500",
+          "border-green-500",
+          "bg-red-50",
+          "bg-green-50",
+        );
+
+        if (this.value) {
+          // Só valida se tiver texto
+          if (resultado.valido) {
+            this.classList.add("border-green-500", "bg-green-50");
+            // Opcional: mostrarToast("Processo Válido", false);
+          } else {
+            this.classList.add("border-red-500", "bg-red-50");
+            mostrarToast(resultado.mensagem, true);
+          }
+        }
+      });
+    }
   });
 
   // --- Lógica do Modal de Confirmação ---
@@ -3589,9 +3606,8 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("pagamento-contrato-id").value = contrato.id;
         //document.getElementById('pagamento-link-sei').value = pagamento.linkPagamentoSei || '';
         document.getElementById("pagamento-id").value = "";
-        document.getElementById(
-          "pagamento-contrato-objeto"
-        ).textContent = `Contrato: ${contrato.objeto}`;
+        document.getElementById("pagamento-contrato-objeto").textContent =
+          `Contrato: ${contrato.objeto}`;
 
         document.getElementById("modal-pagamento-titulo").textContent =
           "Adicionar Pagamento";
@@ -3701,7 +3717,7 @@ document.addEventListener("DOMContentLoaded", () => {
           // Esta é a função (callback) que será executada se o usuário clicar "Excluir"
           excluirPagamento(contratoId, pagamentoId);
           renderizarModalVisualizar(contratoPaiId);
-        }
+        },
       );
     }
 
@@ -3728,7 +3744,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const contratoPaiId = contratoDono.parentId || contratoDono.id;
             renderizarModalVisualizar(contratoPaiId);
           }
-        }
+        },
       );
     }
   });
@@ -3797,7 +3813,7 @@ window.addEventListener("message", (event) => {
         app: "contratos",
         data: stats,
       },
-      event.origin
+      event.origin,
     );
   }
 });
@@ -3813,36 +3829,36 @@ function atualizarStatsExternos() {
 // ==========================================
 
 function extrairDigitos(input) {
-    return input.replace(/[^0-9]/g, '');
+  return input.replace(/[^0-9]/g, "");
 }
 
 function calcularMod11(soma) {
-    const resto = soma % 11;
-    const dv = (11 - resto) % 10;
-    return dv;
+  const resto = soma % 11;
+  const dv = (11 - resto) % 10;
+  return dv;
 }
 
 function calcularDVBase(base) {
-    // 1º DV
-    let soma = 0;
-    let peso = 2;
-    for (let i = base.length - 1; i >= 0; i--) {
-        soma += parseInt(base[i]) * peso;
-        peso++;
-    }
-    const d1 = calcularMod11(soma);
+  // 1º DV
+  let soma = 0;
+  let peso = 2;
+  for (let i = base.length - 1; i >= 0; i--) {
+    soma += parseInt(base[i]) * peso;
+    peso++;
+  }
+  const d1 = calcularMod11(soma);
 
-    // 2º DV (adiciona d1 à base temporária)
-    const base2 = base + d1;
-    soma = 0;
-    peso = 2;
-    for (let i = base2.length - 1; i >= 0; i--) {
-        soma += parseInt(base2[i]) * peso;
-        peso++;
-    }
-    const d2 = calcularMod11(soma);
+  // 2º DV (adiciona d1 à base temporária)
+  const base2 = base + d1;
+  soma = 0;
+  peso = 2;
+  for (let i = base2.length - 1; i >= 0; i--) {
+    soma += parseInt(base2[i]) * peso;
+    peso++;
+  }
+  const d2 = calcularMod11(soma);
 
-    return '' + d1 + d2;
+  return "" + d1 + d2;
 }
 
 /**
@@ -3850,34 +3866,46 @@ function calcularDVBase(base) {
  * Retorna { valido: boolean, mensagem: string }
  */
 function verificarProcessoSEI(valor) {
-    if (!valor) return { valido: true, mensagem: '' }; // Campo vazio não valida aqui (deixa pro required)
+  if (!valor) return { valido: true, mensagem: "" }; // Campo vazio não valida aqui (deixa pro required)
 
-    // Verifica se tem o hífen separador do DV
-    if (!valor.includes('-')) {
-        return { valido: false, mensagem: 'Formato inválido. Use o padrão "Número-DV" (ex: ...2025-12).' };
-    }
+  // Verifica se tem o hífen separador do DV
+  if (!valor.includes("-")) {
+    return {
+      valido: false,
+      mensagem: 'Formato inválido. Use o padrão "Número-DV" (ex: ...2025-12).',
+    };
+  }
 
-    const partes = valor.split('-');
-    // Pega o DV (parte depois do último hífen)
-    const dvInformado = partes[partes.length - 1]; 
-    
-    // Pega a Base (tudo antes do último hífen)
-    const baseBruta = valor.substring(0, valor.lastIndexOf('-'));
-    const baseNumerica = extrairDigitos(baseBruta);
+  const partes = valor.split("-");
+  // Pega o DV (parte depois do último hífen)
+  const dvInformado = partes[partes.length - 1];
 
-    if (dvInformado.length !== 2) {
-        return { valido: false, mensagem: 'O Dígito Verificador (DV) deve ter 2 números.' };
-    }
+  // Pega a Base (tudo antes do último hífen)
+  const baseBruta = valor.substring(0, valor.lastIndexOf("-"));
+  const baseNumerica = extrairDigitos(baseBruta);
 
-    if (baseNumerica.length === 0) {
-        return { valido: false, mensagem: 'O número do processo não contém dígitos válidos.' };
-    }
+  if (dvInformado.length !== 2) {
+    return {
+      valido: false,
+      mensagem: "O Dígito Verificador (DV) deve ter 2 números.",
+    };
+  }
 
-    const dvCalculado = calcularDVBase(baseNumerica);
+  if (baseNumerica.length === 0) {
+    return {
+      valido: false,
+      mensagem: "O número do processo não contém dígitos válidos.",
+    };
+  }
 
-    if (dvCalculado === dvInformado) {
-        return { valido: true, mensagem: 'Número Válido' };
-    } else {
-        return { valido: false, mensagem: `Dígito Verificador inválido. Esperado: -${dvCalculado}` };
-    }
+  const dvCalculado = calcularDVBase(baseNumerica);
+
+  if (dvCalculado === dvInformado) {
+    return { valido: true, mensagem: "Número Válido" };
+  } else {
+    return {
+      valido: false,
+      mensagem: `Dígito Verificador inválido. Esperado: -${dvCalculado}`,
+    };
+  }
 }

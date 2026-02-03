@@ -3,6 +3,16 @@ let db;
 let encryptionKey = null;
 let titleClickCount = 0;
 
+// --- GESTÃO DE TEMA ---
+function applyTheme(theme) {
+  if (theme === "dark") document.documentElement.classList.add("dark");
+  else document.documentElement.classList.remove("dark");
+}
+window.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "THEME_CHANGE")
+    applyTheme(event.data.theme);
+});
+
 document.addEventListener("DOMContentLoaded", function () {
   // --- INFORMAÇÕES DA APLICAÇÃO ---
   /**
@@ -46,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const masterPasswordInput = document.getElementById("masterPassword");
   const keepLoggedInCheckbox = document.getElementById("keepLoggedIn");
   const passwordPromptMessage = document.getElementById(
-    "passwordPromptMessage"
+    "passwordPromptMessage",
   );
   const logoutBtn = document.getElementById("logoutBtn");
   const csvFileInput = document.getElementById("csvFileInput");
@@ -56,26 +66,26 @@ document.addEventListener("DOMContentLoaded", function () {
   const familyCsvFileInput = document.getElementById("familyCsvFileInput");
   const loadFamilyCsvBtn = document.getElementById("loadFamilyCsvBtn");
   const familyCsvFileInputLabel = document.getElementById(
-    "familyCsvFileInputLabel"
+    "familyCsvFileInputLabel",
   );
   const historySearchCnpj = document.getElementById("historySearchCnpj");
   const historyStartDate = document.getElementById("historyStartDate");
   const historyEndDate = document.getElementById("historyEndDate");
   const filterHistoryBtn = document.getElementById("filterHistoryBtn");
   const clearHistoryFilterBtn = document.getElementById(
-    "clearHistoryFilterBtn"
+    "clearHistoryFilterBtn",
   );
 
   // --- ELEMENTOS DO DASHBOARD ---
   const dashboardModal = document.getElementById("dashboardModal");
   const openDashboardModalBtn = document.getElementById(
-    "openDashboardModalBtn"
+    "openDashboardModalBtn",
   );
   const closeDashboardModalBtn = document.getElementById(
-    "closeDashboardModalBtn"
+    "closeDashboardModalBtn",
   );
   const dashboardPeriodFilter = document.getElementById(
-    "dashboardPeriodFilter"
+    "dashboardPeriodFilter",
   );
   const refreshDashboardBtn = document.getElementById("refreshDashboardBtn");
   const statusChartCanvas = document.getElementById("statusChart");
@@ -87,16 +97,16 @@ document.addEventListener("DOMContentLoaded", function () {
   // --- MODAL DE BACKUP ---
   const backupReminderModal = document.getElementById("backupReminderModal");
   const backupReminderPeriodSelect = document.getElementById(
-    "backupReminderPeriod"
+    "backupReminderPeriod",
   );
   const confirmBackupReminderBtn = document.getElementById(
-    "confirmBackupReminderBtn"
+    "confirmBackupReminderBtn",
   );
   const cancelBackupReminderBtn = document.getElementById(
-    "cancelBackupReminderBtn"
+    "cancelBackupReminderBtn",
   );
   const closeBackupReminderBtn = document.getElementById(
-    "closeBackupReminderBtn"
+    "closeBackupReminderBtn",
   );
 
   // --- MODAL WPP ---
@@ -104,13 +114,13 @@ document.addEventListener("DOMContentLoaded", function () {
   const wppModal = document.getElementById("wppModal");
   const closeWppModalBtn = document.getElementById("closeWppModalBtn");
   const wppContactListContainer = document.getElementById(
-    "wppContactListContainer"
+    "wppContactListContainer",
   );
 
   // Elementos do Modal de DB para Contatos
   const addContactBtn = document.getElementById("addContactBtn");
   const contactsListContainer = document.getElementById(
-    "contactsListContainer"
+    "contactsListContainer",
   );
   const loadContactsCsvBtn = document.getElementById("loadContactsCsvBtn");
   const exportContactsCsvBtn = document.getElementById("exportContactsCsvBtn");
@@ -123,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const contactsModal = document.getElementById("contactsModal");
   const openContactsModalBtn = document.getElementById("openContactsModalBtn");
   const closeContactsModalBtn = document.getElementById(
-    "closeContactsModalBtn"
+    "closeContactsModalBtn",
   );
 
   const manualDocNameWrapper = document.getElementById("manualDocNameWrapper");
@@ -131,33 +141,34 @@ document.addEventListener("DOMContentLoaded", function () {
   let qualTecDocs = []; // Variável para armazenar o JSON
 
   // Carregar o arquivo JSON de documentos
-  fetch('docs-qual-tec.json')
-    .then(response => response.json())
-    .then(data => {
-        qualTecDocs = data; // Mantemos caso precise usar em outro lugar
-        
-        // Transforma o array de objetos do JSON em um array de strings simples para o menu
-        const listaDocumentos = data.map(doc => doc.nome);
-        
-        // Adiciona a opção "Outros" no final para permitir digitação manual
-        //listaDocumentos.push("Outros");
+  fetch("docs-qual-tec.json")
+    .then((response) => response.json())
+    .then((data) => {
+      qualTecDocs = data; // Mantemos caso precise usar em outro lugar
 
-        // Atualiza a lista de documentos da categoria "Qualificação Técnica"
-        // Certifique-se de que a chave aqui é EXATAMENTE igual a que está no value do <option> do HTML
-        docsByCat["Qualificação Técnica"] = listaDocumentos;
-        
-        console.log("Lista de Qualificação Técnica atualizada com sucesso.");
+      // Transforma o array de objetos do JSON em um array de strings simples para o menu
+      const listaDocumentos = data.map((doc) => doc.nome);
+
+      // Adiciona a opção "Outros" no final para permitir digitação manual
+      //listaDocumentos.push("Outros");
+
+      // Atualiza a lista de documentos da categoria "Qualificação Técnica"
+      // Certifique-se de que a chave aqui é EXATAMENTE igual a que está no value do <option> do HTML
+      docsByCat["Qualificação Técnica"] = listaDocumentos;
+
+      console.log("Lista de Qualificação Técnica atualizada com sucesso.");
     })
-    .catch(error => console.error('Erro ao carregar lista de documentos:', error));
-
+    .catch((error) =>
+      console.error("Erro ao carregar lista de documentos:", error),
+    );
 
   // --- FUNÇÕES GERAIS E DE UTILIDADE ---
 
   /**
-   * @functionality 401 (Atualizada v2)
+   * @functionality 401 (Atualizada v3 - Neon Dark)
    * @category 4xx: UI/UX e Interações
-   * @name Sistema de Notificações Toast Empilhadas com Animações e Close Manual
-   * @description Cria toasts dinâmicos em pilha. Duration=0 torna persistente com botão close; senão, auto-esconde.
+   * @name Sistema de Notificações Toast "Neon Dark"
+   * @description Toasts com fundo escuro, bordas brilhantes e texto colorido para alto contraste.
    */
   function showToast(message, type = "info", duration = 3000) {
     // Cria o container se não existir
@@ -166,47 +177,56 @@ document.addEventListener("DOMContentLoaded", function () {
       container = document.createElement("div");
       container.id = "toast-container";
       container.className =
-        "fixed bottom-5 right-5 z-50 flex flex-col items-end space-y-2 pointer-events-none";
+        "fixed bottom-5 right-5 z-50 flex flex-col items-end space-y-3 pointer-events-none";
       document.body.appendChild(container);
     }
 
-    // Limite de pilha (opcional: remove o mais antigo se >5)
+    // Limite de pilha
     if (container.children.length >= 5) {
       hideToast(container.lastElementChild);
     }
 
     // Cria o elemento toast
     const toast = document.createElement("div");
-    toast.className = `
-        relative bg-black text-white py-2 px-5 rounded-lg shadow-xl 
+
+    // --- ESTILO BASE (Comum a todos) ---
+    // Fundo escuro profundo, sombra forte, transições suaves
+    let baseClass = `
+        relative py-3 px-5 rounded-lg shadow-2xl border font-medium
+        flex items-center justify-between max-w-sm text-sm z-[9999]
         opacity-0 transition-all duration-300 ease-in-out transform translate-y-4
-        max-w-sm text-sm flex items-center justify-between
+        bg-gray-900 dark:bg-slate-950 backdrop-blur-sm
     `;
 
-    // Cor por tipo
-    let bgClass = "bg-black"; // info
-    if (type === "success") bgClass = "bg-green-600";
-    else if (type === "error") bgClass = "bg-red-600";
-    toast.classList.add(bgClass);
+    // --- ESTILOS NEON POR TIPO ---
+    if (type === "success") {
+      // VERDE NEON: Borda Verde, Texto Verde Claro
+      baseClass +=
+        " border-green-500 text-green-400 dark:text-green-300 shadow-green-900/20";
+    } else if (type === "error") {
+      // VERMELHO NEON: Borda Vermelha, Texto Vermelho Claro
+      baseClass +=
+        " border-red-500 text-red-400 dark:text-red-300 shadow-red-900/20";
+    } else {
+      // INFO (Default): Borda Cinza/Azul, Texto Branco
+      baseClass += " border-gray-600 text-gray-200 dark:text-gray-300";
+    }
 
-    // Conteúdo principal + close button (só se duration=0 para persistente)
+    toast.className = baseClass;
+
+    // Botão de Fechar (Estilizado para combinar)
     let closeBtn = "";
     if (duration === 0) {
       closeBtn = `
             <button onclick="hideToast(this.parentElement); event.stopPropagation();" 
-                    class="ml-3 text-white hover:text-gray-300 text-sm font-bold absolute right-1 top-1/2 -translate-y-1/2">
-                ×
+                    class="ml-4 hover:text-white transition-colors text-lg leading-none opacity-70 hover:opacity-100">
+                &times;
             </button>
         `;
-      // Ajusta padding para o botão
-      toast.classList.add("pr-6"); // Espaço para o ×
+      toast.classList.add("pr-2");
     }
 
-    // Escape e innerHTML
-    toast.innerHTML = `
-        <span>${escapeHtml(message)}</span>
-        ${closeBtn}
-    `;
+    toast.innerHTML = `<span>${escapeHtml(message)}</span>${closeBtn}`;
 
     // Insere no topo
     container.insertBefore(toast, container.firstChild);
@@ -217,7 +237,7 @@ document.addEventListener("DOMContentLoaded", function () {
       toast.classList.add("opacity-100", "translate-y-0");
     });
 
-    // Auto-remoção: Se duration=0, não auto-esconde (usa close manual). Senão, esconde após duration (mínimo 2000ms)
+    // Auto-remoção
     const effectiveDuration = duration === 0 ? 0 : Math.max(duration, 2000);
     if (effectiveDuration > 0) {
       setTimeout(() => {
@@ -278,7 +298,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const div = document.createElement("div");
     div.textContent = text;
     return div.innerHTML;
-  }
+  };
 
   /**
    * @functionality 503
@@ -332,14 +352,14 @@ document.addEventListener("DOMContentLoaded", function () {
       encoder.encode(password),
       { name: "PBKDF2" },
       false,
-      ["deriveKey"]
+      ["deriveKey"],
     );
     return crypto.subtle.deriveKey(
       { name: "PBKDF2", salt: salt, iterations: 100000, hash: "SHA-256" },
       keyMaterial,
       { name: "AES-GCM", length: 256 },
       true,
-      ["encrypt", "decrypt"]
+      ["encrypt", "decrypt"],
     );
   }
 
@@ -355,7 +375,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const encryptedContent = await crypto.subtle.encrypt(
       { name: "AES-GCM", iv: iv },
       key,
-      encoder.encode(text)
+      encoder.encode(text),
     );
     const encryptedBytes = new Uint8Array(encryptedContent);
     const finalData = new Uint8Array(iv.length + encryptedBytes.length);
@@ -389,7 +409,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const decryptedContent = await crypto.subtle.decrypt(
       { name: "AES-GCM", iv: iv },
       key,
-      encryptedContent
+      encryptedContent,
     );
     const decoder = new TextDecoder();
     return decoder.decode(decryptedContent);
@@ -466,7 +486,7 @@ document.addEventListener("DOMContentLoaded", function () {
         jwk,
         { name: "AES-GCM" },
         true,
-        ["encrypt", "decrypt"]
+        ["encrypt", "decrypt"],
       );
     } catch (e) {
       return null;
@@ -618,7 +638,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const response = await fetch("backup.json");
       if (!response.ok) {
         console.warn(
-          "Arquivo de backup central não encontrado. Pulando verificação automática."
+          "Arquivo de backup central não encontrado. Pulando verificação automática.",
         );
         const localHash = await getLocalHash();
         if (!localHash) {
@@ -639,13 +659,13 @@ document.addEventListener("DOMContentLoaded", function () {
           showToast(
             "Base de dados inicial encontrada. Carregando...",
             "info",
-            8000
+            8000,
           );
         } else {
           showToast(
             "Nova base de dados encontrada. Atualizando...",
             "info",
-            8000
+            8000,
           );
         }
         const data = JSON.parse(jsonText);
@@ -714,11 +734,11 @@ document.addEventListener("DOMContentLoaded", function () {
       control.btn.disabled = !isAdmin;
       if (isAdmin) {
         [control.input, control.btn, control.label].forEach((el) =>
-          el.classList.remove("opacity-50", "cursor-not-allowed")
+          el.classList.remove("opacity-50", "cursor-not-allowed"),
         );
       } else {
         [control.input, control.btn, control.label].forEach((el) =>
-          el.classList.add("opacity-50", "cursor-not-allowed")
+          el.classList.add("opacity-50", "cursor-not-allowed"),
         );
       }
     });
@@ -874,14 +894,14 @@ document.addEventListener("DOMContentLoaded", function () {
             passwordPromptMessage.textContent =
               "Por favor, insira a senha mestra para descriptografar e carregar os dados."; // Mensagem padrão
             console.log(
-              "Nenhum backup central encontrado. Iniciando em modo de bootstrapping."
+              "Nenhum backup central encontrado. Iniciando em modo de bootstrapping.",
             );
           }
         } catch (error) {
           passwordPromptMessage.textContent =
             "Por favor, insira a senha mestra para descriptografar e carregar os dados."; // Mensagem padrão
           console.log(
-            "Não foi possível acessar o backup central. Iniciando em modo offline/bootstrapping."
+            "Não foi possível acessar o backup central. Iniciando em modo offline/bootstrapping.",
           );
         }
 
@@ -980,7 +1000,7 @@ document.addEventListener("DOMContentLoaded", function () {
           checkDbStatus(
             storeName,
             statusElement,
-            storeName === "companies" ? "registros" : "famílias"
+            storeName === "companies" ? "registros" : "famílias",
           );
           showToast(`Base de ${storeName} carregada com sucesso!`, "success");
         };
@@ -1020,10 +1040,10 @@ document.addEventListener("DOMContentLoaded", function () {
         () => {
           showToast(
             "Senha criada! Por favor, clique em Exportar novamente para gerar o arquivo.",
-            "info"
+            "info",
           );
         },
-        { once: true }
+        { once: true },
       );
 
       return;
@@ -1210,26 +1230,32 @@ document.addEventListener("DOMContentLoaded", function () {
         <path d="M7.41 18.59L8.83 20 12 16.83 15.17 20l1.41-1.41L12 14l-4.59 4.59zm9.18-13.18L15.17 4 12 7.17 8.83 4 7.41 5.41 12 10l4.59-4.59z"/>
     </svg>`;
 
-async function renderHistory(cnpjFilter = "", startDateFilter = "", endDateFilter = "") {
-  const container = document.getElementById("historyListContainer");
-  container.innerHTML = '<p class="text-gray-500 text-center">Carregando histórico...</p>';
+  async function renderHistory(
+    cnpjFilter = "",
+    startDateFilter = "",
+    endDateFilter = "",
+  ) {
+    const container = document.getElementById("historyListContainer");
+    container.innerHTML =
+      '<p class="text-gray-500 text-center">Carregando histórico...</p>';
 
-  if (!db) {
-    container.innerHTML = '<p class="text-red-500 text-center">Banco de dados não disponível.</p>';
-    return;
-  }
+    if (!db) {
+      container.innerHTML =
+        '<p class="text-red-500 text-center">Banco de dados não disponível.</p>';
+      return;
+    }
 
-  // --- MAPEAMENTO DE CORES PARA OS STATUS ---
-  const statusColorMap = {
-    'Deferida': 'text-green-600',
-    'Deferida Parcial': 'text-yellow-600',
-    'Indeferida': 'text-red-600',
-    'Pendente de Envio': 'text-blue-600',
-    'Pendente do Termo': 'text-indigo-600'
-  };
+    // --- MAPEAMENTO DE CORES PARA OS STATUS ---
+    const statusColorMap = {
+      Deferida: "text-green-600",
+      "Deferida Parcial": "text-yellow-600",
+      Indeferida: "text-red-600",
+      "Pendente de Envio": "text-blue-600",
+      "Pendente do Termo": "text-indigo-600",
+    };
 
-  // --- SVG DO ÍCONE DE TELEFONE ---
-  const phoneIcon = `
+    // --- SVG DO ÍCONE DE TELEFONE ---
+    const phoneIcon = `
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 text-green-500 inline-block align-middle ml-2" title="Contato telefônico registrado">
           <path fill-rule="evenodd" d="M5.847.533A2.21 2.21 0 004.391 0H2.206a2.21 2.21 0 00-2.09 1.501c-.098.29-.135.598-.107.903l.001.012a15.13 15.13 0 002.355 6.637c1.29 1.987 2.615 3.304 4.596 4.587a15.197 15.197 0 006.618 2.35h.014a2.21 2.21 0 002.406-2.204v-.075c-.002-.383-.008-1.771 0-2.087A2.204 2.204 0 0014.1 9.386h-.007a8.626 8.626 0 01-1.884-.47 2.21 2.21 0 00-2.327.497l-.515.513a10.903 10.903 0 01-3.313-3.305l.51-.509.003-.003a2.204 2.204 0 00.498-2.326 8.577 8.577 0 01-.47-1.88v-.007A2.204 2.204 0 005.847.533zM4.401 1.5a.71.71 0 01.708.604c.1.753.285 1.493.55 2.205l.001.001a.703.703 0 01-.157.742l-.924.923a.75.75 0 00-.122.902 12.403 12.403 0 004.655 4.646.75.75 0 00.9-.121l.923-.921.002-.002a.71.71 0 01.746-.157h.002c.713.266 1.454.45 2.209.55a.709.709 0 01.606.715 148.67 148.67 0 000 2.134v.07a.702.702 0 01-.481.671.71.71 0 01-.286.035 13.696 13.696 0 01-5.957-2.117c-1.805-1.168-2.979-2.335-4.153-4.144a13.63 13.63 0 01-2.12-5.972.702.702 0 01.419-.704c.09-.04.187-.06.286-.06H4.4zm2.664 2.283v-.001l-.703.264.703-.263z" clip-rule="evenodd"/>
           <path d="M10.333.005a.75.75 0 10-.166 1.49 4.91 4.91 0 014.338 4.332.75.75 0 001.49-.167A6.41 6.41 0 0010.333.005z"/>
@@ -1237,71 +1263,76 @@ async function renderHistory(cnpjFilter = "", startDateFilter = "", endDateFilte
       </svg>
   `;
 
-
-  // Busca todos os registros de uma única vez
-  const transaction = db.transaction(["history"], "readonly");
-  const store = transaction.objectStore("history");
-  const allRecords = await new Promise((resolve, reject) => {
-    const request = store.getAll();
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
-  });
-
-  // --- FILTRAGEM ---
-  let filteredRecords = allRecords;
-
-  // Filtro por CNPJ/CPF
-  if (cnpjFilter) {
-    const cleanedFilter = cnpjFilter.replace(/\D/g, "");
-    filteredRecords = filteredRecords.filter(item => {
-      const cleanedCnpj = item.cnpj.replace(/\D/g, "");
-      return cleanedCnpj.includes(cleanedFilter);
+    // Busca todos os registros de uma única vez
+    const transaction = db.transaction(["history"], "readonly");
+    const store = transaction.objectStore("history");
+    const allRecords = await new Promise((resolve, reject) => {
+      const request = store.getAll();
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
     });
-  }
 
-  // Filtro por data inicial
-  if (startDateFilter) {
-    const [y, m, d] = startDateFilter.split("-");
-    const startDate = new Date(y, m - 1, d);
-    startDate.setHours(0, 0, 0, 0);
-    filteredRecords = filteredRecords.filter(item => new Date(item.timestamp) >= startDate);
-  }
+    // --- FILTRAGEM ---
+    let filteredRecords = allRecords;
 
-  // Filtro por data final
-  if (endDateFilter) {
-    const [y, m, d] = endDateFilter.split("-");
-    const endDate = new Date(y, m - 1, d);
-    endDate.setHours(23, 59, 59, 999);
-    filteredRecords = filteredRecords.filter(item => new Date(item.timestamp) <= endDate);
-  }
+    // Filtro por CNPJ/CPF
+    if (cnpjFilter) {
+      const cleanedFilter = cnpjFilter.replace(/\D/g, "");
+      filteredRecords = filteredRecords.filter((item) => {
+        const cleanedCnpj = item.cnpj.replace(/\D/g, "");
+        return cleanedCnpj.includes(cleanedFilter);
+      });
+    }
 
-  // --- RESULTADO VAZIO ---
-  if (filteredRecords.length === 0) {
-    container.innerHTML = '<p class="text-gray-500 text-center">Nenhum registro encontrado para os filtros aplicados.</p>';
-    return;
-  }
+    // Filtro por data inicial
+    if (startDateFilter) {
+      const [y, m, d] = startDateFilter.split("-");
+      const startDate = new Date(y, m - 1, d);
+      startDate.setHours(0, 0, 0, 0);
+      filteredRecords = filteredRecords.filter(
+        (item) => new Date(item.timestamp) >= startDate,
+      );
+    }
 
-  // Limpa e começa a renderizar
-  container.innerHTML = "";
+    // Filtro por data final
+    if (endDateFilter) {
+      const [y, m, d] = endDateFilter.split("-");
+      const endDate = new Date(y, m - 1, d);
+      endDate.setHours(23, 59, 59, 999);
+      filteredRecords = filteredRecords.filter(
+        (item) => new Date(item.timestamp) <= endDate,
+      );
+    }
 
-  // Ordena do mais recente para o mais antigo
-  filteredRecords.reverse().forEach(item => {
-    const date = new Date(item.timestamp);
-    const formattedDate = date.toLocaleString("pt-BR");
+    // --- RESULTADO VAZIO ---
+    if (filteredRecords.length === 0) {
+      container.innerHTML =
+        '<p class="text-gray-500 text-center">Nenhum registro encontrado para os filtros aplicados.</p>';
+      return;
+    }
 
-    const status = item.status || "Status Desconhecido";
-    const statusColor = statusColorMap[status] || "text-gray-500";
-    const contactMadeHtml = item.contactMade ? phoneIcon : '';
+    // Limpa e começa a renderizar
+    container.innerHTML = "";
 
-    const div = document.createElement("div");
-    div.className = "border rounded-lg bg-white shadow-sm overflow-hidden mb-4";
+    // Ordena do mais recente para o mais antigo
+    filteredRecords.reverse().forEach((item) => {
+      const date = new Date(item.timestamp);
+      const formattedDate = date.toLocaleString("pt-BR");
 
-    div.innerHTML = `
-      <div class="p-3 flex justify-between items-center bg-gray-50 border-b">
+      const status = item.status || "Status Desconhecido";
+      const statusColor = statusColorMap[status] || "text-gray-500";
+      const contactMadeHtml = item.contactMade ? phoneIcon : "";
+
+      const div = document.createElement("div");
+      div.className =
+        "border rounded-lg bg-white dark:bg-slate-800 shadow-sm border dark:border-slate-700 overflow-hidden mb-4";
+
+      div.innerHTML = `
+      <div class="p-3 flex justify-between items-center bg-gray-50 dark:bg-slate-700 border-b dark:border-slate-600">
         <div class="flex-grow">
-          <p class="font-bold text-blue-700">${escapeHtml(item.companyName)}</p>
-          <p class="text-sm text-gray-600">${escapeHtml(item.cnpj)}</p>
-          <p class="text-xs text-gray-400 mt-1">
+          <p class="font-bold text-blue-700 dark:text-blue-400">${escapeHtml(item.companyName)}</p>
+          <p class="text-sm text-gray-600 dark:text-gray-300">${escapeHtml(item.cnpj)}</p>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
             <span class="font-bold mr-1 ${statusColor}">${escapeHtml(status)}</span> 
             | Gerado em: ${formattedDate}
             ${contactMadeHtml}
@@ -1309,28 +1340,28 @@ async function renderHistory(cnpjFilter = "", startDateFilter = "", endDateFilte
         </div>
 
         <div class="flex items-center space-x-2">
-          <button data-id="${item.id}" class="delete-history-btn text-red-500 hover:text-red-700 font-bold text-2xl leading-none">&times;</button>
+          <button data-id="${item.id}" class="delete-history-btn text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 font-bold text-2xl leading-none">&times;</button>
           <button data-message="${encodeURIComponent(item.message)}" title="Copiar" 
-                  class="copy-history-btn bg-gray-200 text-gray-700 p-2 rounded hover:bg-gray-300 transition">
+                  class="copy-history-btn bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-slate-600 dark:text-white dark:hover:bg-slate-500 p-2 rounded transition">
             ${svgIconCopy}
           </button>
           <button title="Expandir" 
-                  class="expand-history-btn text-blue-600 hover:bg-blue-100 rounded p-2 transition">
+                  class="expand-history-btn text-blue-600 hover:bg-blue-100 dark:text-blue-400 dark:hover:bg-slate-600 rounded p-2 transition">
             ${svgIconExpand}
           </button>
         </div>
       </div>
 
       <div class="history-message-content overflow-hidden" style="max-height:0; transition:max-height 0.3s ease-out;">
-        <pre class="p-4 text-xs text-gray-800 whitespace-pre-wrap font-sans break-words">
+        <pre class="p-4 text-xs text-gray-800 dark:text-gray-200 whitespace-pre-wrap font-sans break-words">
 ${escapeHtml(item.message)}
         </pre>
       </div>
     `;
 
-    container.appendChild(div);
-  });
-}
+      container.appendChild(div);
+    });
+  }
 
   /**
    * @functionality 211
@@ -1341,7 +1372,7 @@ ${escapeHtml(item.message)}
   function clearHistory() {
     if (
       !confirm(
-        "Tem certeza que deseja apagar TODO o histórico de mensagens? Esta ação não pode ser desfeita."
+        "Tem certeza que deseja apagar TODO o histórico de mensagens? Esta ação não pode ser desfeita.",
       )
     ) {
       return;
@@ -1420,12 +1451,12 @@ ${escapeHtml(item.message)}
       renderTopList(
         topDocsList,
         stats.docCounts,
-        "Nenhum documento indeferido registrado."
+        "Nenhum documento indeferido registrado.",
       );
       renderTopList(
         topReasonsList,
         stats.reasonCounts,
-        "Nenhum motivo de indeferimento registrado."
+        "Nenhum motivo de indeferimento registrado.",
       );
     } catch (error) {
       console.error("Erro ao renderizar dashboard:", error);
@@ -1509,7 +1540,7 @@ ${escapeHtml(item.message)}
           if (doc.reason) {
             reasonCounts.set(
               doc.reason,
-              (reasonCounts.get(doc.reason) || 0) + 1
+              (reasonCounts.get(doc.reason) || 0) + 1,
             );
           }
         });
@@ -1525,7 +1556,7 @@ ${escapeHtml(item.message)}
 
     return {
       statusCounts: new Map(
-        [...statusCounts.entries()].sort((a, b) => b[1] - a[1])
+        [...statusCounts.entries()].sort((a, b) => b[1] - a[1]),
       ),
       docCounts: sortMap(docCounts),
       reasonCounts: sortMap(reasonCounts),
@@ -1558,7 +1589,7 @@ ${escapeHtml(item.message)}
     const labels = [...statusData.keys()];
     const data = [...statusData.values()];
     const backgroundColors = labels.map(
-      (label) => statusColors[label] || statusColors.default
+      (label) => statusColors[label] || statusColors.default,
     );
 
     statusChartInstance = new Chart(ctx, {
@@ -1616,11 +1647,11 @@ ${escapeHtml(item.message)}
     data.forEach(([name, count]) => {
       const li = document.createElement("li");
       li.className =
-        "text-sm text-gray-800 bg-white p-2 border-l-4 border-blue-500 rounded-r-md";
+        "text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-slate-800 p-2 border-l-4 border-blue-500 rounded-r-md";
       li.innerHTML = `
-                <span class="font-semibold text-blue-700">${count}x</span> - ${escapeHtml(
-        name
-      )}
+                <span class="font-semibold text-blue-700 dark:text-blue-400">${count}x</span> - ${escapeHtml(
+                  name,
+                )}
             `;
       ol.appendChild(li);
     });
@@ -1659,14 +1690,14 @@ ${escapeHtml(item.message)}
     allContacts.forEach((contact) => {
       const div = document.createElement("div");
       div.className =
-        "flex justify-between items-center bg-white p-2 rounded border text-sm";
+        "flex justify-between items-center bg-white dark:bg-slate-700 p-2 rounded border dark:border-slate-600 text-sm";
       div.innerHTML = `
                 <div>
-                    <p class="font-semibold text-gray-800">${escapeHtml(
-                      contact.name
+                    <p class="font-semibold text-gray-800 dark:text-white">${escapeHtml(
+                      contact.name,
                     )}</p>
-                    <p class="text-xs text-gray-600">${escapeHtml(
-                      contact.role
+                    <p class="text-xs text-gray-600 dark:text-white">${escapeHtml(
+                      contact.role,
                     )} (${escapeHtml(contact.phone)})</p>
                 </div>
                 <button data-id="${
@@ -1798,14 +1829,14 @@ ${escapeHtml(item.message)}
       allContacts.forEach((contact) => {
         const button = document.createElement("button");
         button.className =
-          "w-full text-left p-3 bg-gray-50 hover:bg-blue-100 rounded-lg transition";
+          "w-full text-left p-3 bg-gray-50 dark:bg-slate-700 hover:bg-blue-100 dark:hover:bg-slate-600 rounded-lg transition";
         button.dataset.phone = contact.phone;
         button.innerHTML = `
-                    <p class="font-semibold text-blue-700">${escapeHtml(
-                      contact.name
+                    <p class="font-semibold text-blue-700 dark:text-blue-400">${escapeHtml(
+                      contact.name,
                     )}</p>
-                    <p class="text-sm text-gray-600">${escapeHtml(
-                      contact.role
+                    <p class="text-sm text-gray-600 dark:text-gray-300">${escapeHtml(
+                      contact.role,
                     )}</p>
                 `;
         wppContactListContainer.appendChild(button);
@@ -2014,7 +2045,8 @@ ${escapeHtml(item.message)}
     results.forEach((company) => {
       const div = document.createElement("div");
       // Estilização idêntica à de famílias (via CSS em index/style.css)
-      div.className = "p-3 hover:bg-gray-100 cursor-pointer text-sm";
+      div.className =
+        "p-3 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-sm bg-white dark:bg-slate-800 dark:text-white border-b dark:border-slate-700";
       div.textContent = company.razaoSocial;
       div.dataset.cnpj = company.cnpj;
       div.dataset.razaoSocial = company.razaoSocial;
@@ -2090,13 +2122,13 @@ ${escapeHtml(item.message)}
   const rejectionReasonInput = document.getElementById("rejectionReason");
   const docNameWrapper = document.getElementById("docNameWrapper");
   const familyAutocompleteWrapper = document.getElementById(
-    "familyAutocompleteWrapper"
+    "familyAutocompleteWrapper",
   );
   const familySearchInput = document.getElementById("familySearchInput");
   const familyResults = document.getElementById("familyResults");
   const contactMadeCheckbox = document.getElementById("contactMade");
   const contactDetailsWrapper = document.getElementById(
-    "contactDetailsWrapper"
+    "contactDetailsWrapper",
   );
   const contactNameInput = document.getElementById("contactName");
   const contactRoleInput = document.getElementById("contactRole");
@@ -2131,7 +2163,6 @@ ${escapeHtml(item.message)}
     if (contactSuccessSelect) contactSuccessSelect.value = "S";
     const contactGenderM = document.getElementById("contactGenderM");
     if (contactGenderM) contactGenderM.checked = true; // Volta para Masculino
-
   }
 
   /**
@@ -2177,44 +2208,43 @@ ${escapeHtml(item.message)}
     handleDocNameChange();
   };
 
+  //    /**
+  //   * @functionality 313
+  //   * @category 3xx: Geração de Mensagens e Formulários
+  //   * @name População de Lista de Documentos Personalizados
+  //   * @description Preenche o select customDocName com os itens carregados do JSON qualTecDocs e adiciona a opção "Outros" para permitir a inserção manual de novos nomes.
+  //   */
+  //  function populateCustomDocNameSelect() {
+  //    // Evita repopular se já tiver itens (além do placeholder e "Outros")
+  //    if (customDocNameInput.options.length > 2) return;
 
-//    /**
-//   * @functionality 313
-//   * @category 3xx: Geração de Mensagens e Formulários
-//   * @name População de Lista de Documentos Personalizados
-//   * @description Preenche o select customDocName com os itens carregados do JSON qualTecDocs e adiciona a opção "Outros" para permitir a inserção manual de novos nomes.
-//   */
-//  function populateCustomDocNameSelect() {
-//    // Evita repopular se já tiver itens (além do placeholder e "Outros")
-//    if (customDocNameInput.options.length > 2) return; 
+  //    customDocNameInput.innerHTML = '<option value="">Selecione um documento...</option>';
 
-//    customDocNameInput.innerHTML = '<option value="">Selecione um documento...</option>';
+  // Adiciona os itens do JSON
+  //    qualTecDocs.forEach(doc => {
+  //        const option = document.createElement("option");
+  //        option.value = doc.nome;
+  //        option.textContent = doc.nome;
+  //        customDocNameInput.appendChild(option);
+  //    });
 
-    // Adiciona os itens do JSON
-//    qualTecDocs.forEach(doc => {
-//        const option = document.createElement("option");
-//        option.value = doc.nome;
-//        option.textContent = doc.nome;
-//        customDocNameInput.appendChild(option);
-//    });
-
-    // Adiciona a opção "Outros" no final
-//    const otherOption = document.createElement("option");
-//    otherOption.value = "Outros";
-//    otherOption.textContent = "Outros";
-//    customDocNameInput.appendChild(otherOption);
-//  }
+  // Adiciona a opção "Outros" no final
+  //    const otherOption = document.createElement("option");
+  //    otherOption.value = "Outros";
+  //    otherOption.textContent = "Outros";
+  //    customDocNameInput.appendChild(otherOption);
+  //  }
 
   // Listener para quando selecionar algo na lista "Especifique o nome do documento"
-//  customDocNameInput.addEventListener("change", function() {
-//      if (this.value === "Outros") {
-//          manualDocNameWrapper.classList.remove("hidden");
-//          manualDocNameInput.focus();
-//      } else {
-//          manualDocNameWrapper.classList.add("hidden");
-//          manualDocNameInput.value = ""; // Limpa o campo manual se trocar
-//      }
-//  });
+  //  customDocNameInput.addEventListener("change", function() {
+  //      if (this.value === "Outros") {
+  //          manualDocNameWrapper.classList.remove("hidden");
+  //          manualDocNameInput.focus();
+  //      } else {
+  //          manualDocNameWrapper.classList.add("hidden");
+  //          manualDocNameInput.value = ""; // Limpa o campo manual se trocar
+  //      }
+  //  });
 
   /**
    * @functionality 310
@@ -2223,22 +2253,22 @@ ${escapeHtml(item.message)}
    * @description Mostra/oculta inputs para nome custom ou sócio baseado em select.
    */
   function handleDocNameChange() {
-      const selectedDoc = docNameSelect.value;
-      
-      // Reseta visibilidade dos campos extras
-      manualDocNameWrapper.classList.add("hidden");
-      socioNameWrapper.classList.add("hidden");
-      
-      // Verifica se é "Outros" (vindo da nossa lista JSON ou das listas padrão)
-      if (selectedDoc === "Outros" || selectedDoc === "outro") {
-          manualDocNameWrapper.classList.remove("hidden");
-          manualDocNameInput.focus();
-      } 
-      // Caso específico para Sócios
-      else if (selectedDoc === "Sócio") {
-          socioNameWrapper.classList.remove("hidden");
-          socioNameInput.focus();
-      }
+    const selectedDoc = docNameSelect.value;
+
+    // Reseta visibilidade dos campos extras
+    manualDocNameWrapper.classList.add("hidden");
+    socioNameWrapper.classList.add("hidden");
+
+    // Verifica se é "Outros" (vindo da nossa lista JSON ou das listas padrão)
+    if (selectedDoc === "Outros" || selectedDoc === "outro") {
+      manualDocNameWrapper.classList.remove("hidden");
+      manualDocNameInput.focus();
+    }
+    // Caso específico para Sócios
+    else if (selectedDoc === "Sócio") {
+      socioNameWrapper.classList.remove("hidden");
+      socioNameInput.focus();
+    }
   }
 
   /**
@@ -2252,7 +2282,7 @@ ${escapeHtml(item.message)}
    */
   const toggleRejectedDocsSection = () => {
     const selectedStatus = document.querySelector(
-      'input[name="status"]:checked'
+      'input[name="status"]:checked',
     ).value;
     const analysisFields = document
       .getElementById("company-data")
@@ -2311,14 +2341,15 @@ ${escapeHtml(item.message)}
     if (rejectedDocs.length === 0) return;
 
     const heading = document.createElement("h3");
-    heading.className = "text-md font-semibold text-gray-600";
+    heading.className =
+      "text-md font-semibold text-gray-600 dark:text-gray-300";
     heading.textContent = "Documentos Adicionados:";
     rejectedDocsListContainer.appendChild(heading);
 
     rejectedDocs.forEach((doc, index) => {
       const docElement = document.createElement("div");
       docElement.className =
-        "flex justify-between items-center bg-white p-3 rounded-lg border";
+        "flex justify-between items-center bg-white dark:bg-slate-700 p-3 rounded-lg border dark:border-slate-600";
 
       let docDisplayName = doc.name;
       if (doc.name === "Sócio" && doc.socioName) {
@@ -2327,12 +2358,12 @@ ${escapeHtml(item.message)}
 
       docElement.innerHTML = `
                 <div class="text-sm">
-                    <p class="font-bold text-blue-700">${escapeHtml(
-                      doc.category
+                    <p class="font-bold text-blue-700 dark:text-blue-400">${escapeHtml(
+                      doc.category,
                     )}</p>
-                    <p class="text-gray-800">${escapeHtml(docDisplayName)}</p>
+                    <p class="text-gray-800 dark:text-gray-200">${escapeHtml(docDisplayName)}</p>
                     <p class="text-gray-500 italic">Motivo: ${escapeHtml(
-                      doc.reason
+                      doc.reason,
                     )}</p>
                 </div>
                 <button data-index="${index}" class="remove-doc-btn text-red-500 hover:text-red-700 font-bold p-1">&times;</button>
@@ -2347,62 +2378,62 @@ ${escapeHtml(item.message)}
    * @name Manipulação Dinâmica de Seção de Documentos Indeferidos
    * @description Adiciona/remove itens em array e atualiza a UI.
    */
-    const addRejectedDoc = () => {
-        const category = docCategoryInput.value;
-        let name;
-        const reason = rejectionReasonInput.value.trim();
-        let socioName = null;
+  const addRejectedDoc = () => {
+    const category = docCategoryInput.value;
+    let name;
+    const reason = rejectionReasonInput.value.trim();
+    let socioName = null;
 
-        if (category === "Família") {
-          name = familySearchInput.value.trim();
-          if (!selectedFamilyId || name === "") {
-            alert("Por favor, selecione uma família da lista de sugestões.");
-            return;
-          }
-        } else {
-              // Pega o valor direto do select principal
-              const rawName = docNameSelect.value;
-              
-              if (rawName === "Outros" || rawName === "outro") {
-                  // Se for "Outros", pega do campo manual
-                  name = manualDocNameInput.value.trim();
-                  if (!name) {
-                      alert("Por favor, digite o nome do documento.");
-                      return;
-                  }
-              } else if (rawName === "Sócio") {
-                  name = "Sócio"; 
-                  socioName = socioNameInput.value.trim();
-                  if (!socioName) {
-                    alert("Por favor, preencha o nome do sócio.");
-                    return;
-                  }
-              } else {
-                  // Caso contrário, é um documento da lista JSON (ou das outras listas padrão)
-                  name = rawName;
-              }
-            }
+    if (category === "Família") {
+      name = familySearchInput.value.trim();
+      if (!selectedFamilyId || name === "") {
+        alert("Por favor, selecione uma família da lista de sugestões.");
+        return;
+      }
+    } else {
+      // Pega o valor direto do select principal
+      const rawName = docNameSelect.value;
 
-        if (!name || !reason) {
-          alert("Por favor, preencha o nome do documento e o motivo.");
+      if (rawName === "Outros" || rawName === "outro") {
+        // Se for "Outros", pega do campo manual
+        name = manualDocNameInput.value.trim();
+        if (!name) {
+          alert("Por favor, digite o nome do documento.");
           return;
         }
+      } else if (rawName === "Sócio") {
+        name = "Sócio";
+        socioName = socioNameInput.value.trim();
+        if (!socioName) {
+          alert("Por favor, preencha o nome do sócio.");
+          return;
+        }
+      } else {
+        // Caso contrário, é um documento da lista JSON (ou das outras listas padrão)
+        name = rawName;
+      }
+    }
 
-        rejectedDocs.push({ category, name, reason, socioName });
-        renderRejectedDocs();
+    if (!name || !reason) {
+      alert("Por favor, preencha o nome do documento e o motivo.");
+      return;
+    }
 
-        showToast("Documento adicionado!", "success");
-        rejectionReasonInput.value = "";
-        //customDocNameInput.value = ""; // Reseta o select
-        manualDocNameInput.value = ""; // Reseta o input manual
-        socioNameInput.value = "";
-        
-        // Reset visual
-        manualDocNameWrapper.classList.add("hidden"); 
-        
-        populateDocNames(); // Isso vai resetar o fluxo para o estado inicial da categoria
-        rejectionReasonInput.focus();
-    };
+    rejectedDocs.push({ category, name, reason, socioName });
+    renderRejectedDocs();
+
+    showToast("Documento adicionado!", "success");
+    rejectionReasonInput.value = "";
+    //customDocNameInput.value = ""; // Reseta o select
+    manualDocNameInput.value = ""; // Reseta o input manual
+    socioNameInput.value = "";
+
+    // Reset visual
+    manualDocNameWrapper.classList.add("hidden");
+
+    populateDocNames(); // Isso vai resetar o fluxo para o estado inicial da categoria
+    rejectionReasonInput.focus();
+  };
 
   const removeRejectedDoc = (index) => {
     rejectedDocs.splice(index, 1);
@@ -2480,7 +2511,9 @@ ${escapeHtml(item.message)}
     const contactRole = contactRoleInput.value;
     const contactPhone = contactPhoneInput.value.trim();
     const contactSuccess = contactSuccessSelect.value;
-    const contactGender = document.querySelector('input[name="contactGender"]:checked').value;
+    const contactGender = document.querySelector(
+      'input[name="contactGender"]:checked',
+    ).value;
     const omitLegal = omitLegalFlagCheckbox.checked;
 
     if (!companyName || !cnpj) {
@@ -2504,17 +2537,18 @@ ${escapeHtml(item.message)}
 
     //const legalFooter = `Importante salientar que as documentações necessárias para registro no Cadastro de Fornecedores do estado da Bahia – CAF obedecem ao quanto previsto nos art. 62 a 70 e 87 e 88, da Lei Federal nº 14.133/2021 c/c o art. 76 da Lei Estadual nº 14.634/2023.`;
     const legalParagraph = `Importante salientar que as documentações necessárias para registro no Cadastro de Fornecedores do estado da Bahia – CAF obedecem ao quanto previsto nos art. 62 a 70 e 87 e 88, da Lei Federal nº 14.133/2021 c/c o art. 76 da Lei Estadual nº 14.634/2023.`;
-    const finalLegalFooter = omitLegal ? '' : `${legalParagraph}\n\n`; // Se omitir, é vazio, senão, inclui o parágrafo e 2 quebras de linha.
+    const finalLegalFooter = omitLegal ? "" : `${legalParagraph}\n\n`; // Se omitir, é vazio, senão, inclui o parágrafo e 2 quebras de linha.
     const defaultEmailFooter = `O fornecedor é notificado automaticamente por e-mail.`;
-    const noEmailFooter = '';
-    const honorific = contactGender === 'M' ? 'Sr.' : 'Sra.';
-    const roleString = contactGender === 'M' ? contactRole : contactRole.replace('o', 'a');
+    const noEmailFooter = "";
+    const honorific = contactGender === "M" ? "Sr." : "Sra.";
+    const roleString =
+      contactGender === "M" ? contactRole : contactRole.replace("o", "a");
     //const contactMadeFooter = `O fornecedor é notificado automaticamente por e-mail. Contudo, em contato com o(a) Sr.(a) *${contactName}*, *${contactRole}* da Empresa, foram esclarecidos os motivos do indeferimento, tendo sido informado que estão sendo adotadas as providências necessárias para correção e que será sinalizado quando houver nova solicitação.`;
-    const contactMadeSuccessFooter = `O fornecedor é notificado automaticamente por e-mail. Contudo, em contato com ${contactGender === 'M' ? 'o' : 'a'} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, foram esclarecidos os motivos do indeferimento, tendo sido informado que as providências necessárias para regularização já estão sendo adotadas e que será sinalizado quando houver nova solicitação.`;
-    const contactMadeFailedFooter = `O fornecedor é notificado automaticamente por e-mail. Contudo, em tentativa de contato telefônico com ${contactGender === 'M' ? 'o' : 'a'} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, não obtivemos êxito, tendo a chamada sido direcionada para a caixa postal.`;
-    const contactMadePendenteTermoFooter = `Em contato com ${contactGender === 'M' ? 'o' : 'a'} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, foi esclarecido o motivo da pendência, tendo sido informado que as providências necessárias para o envio do Termo de Concordância já estão sendo adotadas e que será sinalizado quando o envio for realizado.`;
-    const contactMadePendenteEnvioFooter = `Em contato com ${contactGender === 'M' ? 'o' : 'a'} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, foi esclarecido o motivo da pendência, tendo sido informado que as providências necessárias para o envio da solicitação já estão sendo adotadas e que será sinalizado quando o envio for realizado.`;
-    const contactMadePendenteFailedFooter = `Em tentativa de contato telefônico com ${contactGender === 'M' ? 'o' : 'a'} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, não obtivemos êxito, tendo a chamada sido direcionada para a caixa postal. Reiteramos a necessidade de regularização da pendência no CAF Digital para que a solicitação possa ser analisada.`;
+    const contactMadeSuccessFooter = `O fornecedor é notificado automaticamente por e-mail. Contudo, em contato com ${contactGender === "M" ? "o" : "a"} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, foram esclarecidos os motivos do indeferimento, tendo sido informado que as providências necessárias para regularização já estão sendo adotadas e que será sinalizado quando houver nova solicitação.`;
+    const contactMadeFailedFooter = `O fornecedor é notificado automaticamente por e-mail. Contudo, em tentativa de contato telefônico com ${contactGender === "M" ? "o" : "a"} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, não obtivemos êxito, tendo a chamada sido direcionada para a caixa postal.`;
+    const contactMadePendenteTermoFooter = `Em contato com ${contactGender === "M" ? "o" : "a"} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, foi esclarecido o motivo da pendência, tendo sido informado que as providências necessárias para o envio do Termo de Concordância já estão sendo adotadas e que será sinalizado quando o envio for realizado.`;
+    const contactMadePendenteEnvioFooter = `Em contato com ${contactGender === "M" ? "o" : "a"} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, foi esclarecido o motivo da pendência, tendo sido informado que as providências necessárias para o envio da solicitação já estão sendo adotadas e que será sinalizado quando o envio for realizado.`;
+    const contactMadePendenteFailedFooter = `Em tentativa de contato telefônico com ${contactGender === "M" ? "o" : "a"} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, não obtivemos êxito, tendo a chamada sido direcionada para a caixa postal. Reiteramos a necessidade de regularização da pendência no CAF Digital para que a solicitação possa ser analisada.`;
     let message = "";
 
     const cleanDocLength = cnpj.replace(/\D/g, "").length;
@@ -2528,7 +2562,7 @@ ${escapeHtml(item.message)}
       docIdentifier = "CPF sob o nº";
     }
 
-switch (status) {
+    switch (status) {
       case "Deferida":
         //message = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, foi analisada e *${status}* em *${analysisDate}* para o tipo de cadastro *${registrationType}*.\n\n${legalFooter}\n\n${defaultEmailFooter}`;
         message = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, foi analisada e *${status}* em *${analysisDate}* para o tipo de cadastro *${registrationType}*.\n\n${finalLegalFooter}${defaultEmailFooter}`;
@@ -2537,7 +2571,7 @@ switch (status) {
       case "Indeferida":
         if (rejectedDocs.length === 0) {
           alert(
-            `Para o status "${status}", é necessário adicionar pelo menos um documento indeferido.`
+            `Para o status "${status}", é necessário adicionar pelo menos um documento indeferido.`,
           );
           return;
         }
@@ -2560,49 +2594,52 @@ switch (status) {
           });
         }
 
-    let finalEmailFooter = defaultEmailFooter;
+        let finalEmailFooter = defaultEmailFooter;
 
-          if (contactMade) {
-              // Verifica o sucesso (S) ou falha (N) do contato
-              finalEmailFooter = contactSuccess === 'S' 
-                  ? contactMadeSuccessFooter 
-                  : contactMadeFailedFooter;
-          }
-          
-          //message = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, foi analisada e *${status}* em *${analysisDate}* para o tipo de cadastro *${registrationType}*, conforme análise abaixo:\n\n${docsText}${legalFooter}\n\n${finalEmailFooter}`;
-          message = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, foi analisada e *${status}* em *${analysisDate}* para o tipo de cadastro *${registrationType}*, conforme análise abaixo:\n\n${docsText}${finalLegalFooter}${finalEmailFooter}`;
-          break; // Fim do bloco Deferida Parcial/Indeferida
-        case "Pendente de Envio":
-          let baseMessageEnvio = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, encontra-se *Pendente de Envio*.\n\nÉ necessário que o fornecedor acesse o CAF Digital, atualize os dados necessários e realize o envio da solicitação para análise pela Comissão de Inscrição e Registro Cadastral.`;
-          
-          let finalFooterEnvio = noEmailFooter; // << INICIA VAZIO (SEM NOTIFICAÇÃO DE E-MAIL)
+        if (contactMade) {
+          // Verifica o sucesso (S) ou falha (N) do contato
+          finalEmailFooter =
+            contactSuccess === "S"
+              ? contactMadeSuccessFooter
+              : contactMadeFailedFooter;
+        }
 
-          if (contactMade) {
-            // Se houve contato, verificamos o sucesso/falha
-            finalFooterEnvio = contactSuccess === 'S' 
-                ? contactMadePendenteEnvioFooter
-                : contactMadePendenteFailedFooter;
-          }
-          
-          // Concatena a mensagem base + footer legal (se não omitido) + footer final
-          message = `${baseMessageEnvio}\n\n${finalFooterEnvio}`;
-          break;
-        case "Pendente do Termo":
-          let baseMessageTermo = `A solicitação enviada pelo fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, encontra-se *Pendente do envio do Termo de Concordância e Veracidade*.\n\nO fornecedor poderá realizar o envio do referido Termo por meio do *CAF Digital*, assinando-o eletronicamente com Certificado ICP-Brasil (por exemplo, utilizando o Assinador gov.br), ou optar pela entrega presencial, conforme orientações contidas no próprio Termo.`;
-          
-          let finalFooterTermo = noEmailFooter; // << INICIA VAZIO (SEM NOTIFICAÇÃO DE E-MAIL)
+        //message = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, foi analisada e *${status}* em *${analysisDate}* para o tipo de cadastro *${registrationType}*, conforme análise abaixo:\n\n${docsText}${legalFooter}\n\n${finalEmailFooter}`;
+        message = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, foi analisada e *${status}* em *${analysisDate}* para o tipo de cadastro *${registrationType}*, conforme análise abaixo:\n\n${docsText}${finalLegalFooter}${finalEmailFooter}`;
+        break; // Fim do bloco Deferida Parcial/Indeferida
+      case "Pendente de Envio":
+        let baseMessageEnvio = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, encontra-se *Pendente de Envio*.\n\nÉ necessário que o fornecedor acesse o CAF Digital, atualize os dados necessários e realize o envio da solicitação para análise pela Comissão de Inscrição e Registro Cadastral.`;
 
-          if (contactMade) {
-            // Se houve contato, verificamos o sucesso/falha
-            finalFooterTermo = contactSuccess === 'S' 
-                ? contactMadePendenteTermoFooter
-                : contactMadePendenteFailedFooter;
-          }
+        let finalFooterEnvio = noEmailFooter; // << INICIA VAZIO (SEM NOTIFICAÇÃO DE E-MAIL)
 
-          // Concatena a mensagem base + footer legal (se não omitido) + footer final
-          message = `${baseMessageTermo}\n\n${finalFooterTermo}`;
-          break;
-  }
+        if (contactMade) {
+          // Se houve contato, verificamos o sucesso/falha
+          finalFooterEnvio =
+            contactSuccess === "S"
+              ? contactMadePendenteEnvioFooter
+              : contactMadePendenteFailedFooter;
+        }
+
+        // Concatena a mensagem base + footer legal (se não omitido) + footer final
+        message = `${baseMessageEnvio}\n\n${finalFooterEnvio}`;
+        break;
+      case "Pendente do Termo":
+        let baseMessageTermo = `A solicitação enviada pelo fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, encontra-se *Pendente do envio do Termo de Concordância e Veracidade*.\n\nO fornecedor poderá realizar o envio do referido Termo por meio do *CAF Digital*, assinando-o eletronicamente com Certificado ICP-Brasil (por exemplo, utilizando o Assinador gov.br), ou optar pela entrega presencial, conforme orientações contidas no próprio Termo.`;
+
+        let finalFooterTermo = noEmailFooter; // << INICIA VAZIO (SEM NOTIFICAÇÃO DE E-MAIL)
+
+        if (contactMade) {
+          // Se houve contato, verificamos o sucesso/falha
+          finalFooterTermo =
+            contactSuccess === "S"
+              ? contactMadePendenteTermoFooter
+              : contactMadePendenteFailedFooter;
+        }
+
+        // Concatena a mensagem base + footer legal (se não omitido) + footer final
+        message = `${baseMessageTermo}\n\n${finalFooterTermo}`;
+        break;
+    }
 
     resultText.value = message;
     resultSection.classList.remove("hidden");
@@ -2673,7 +2710,7 @@ switch (status) {
   });
 
   closeDbModalBtn.addEventListener("click", () =>
-    dbModal.classList.add("hidden")
+    dbModal.classList.add("hidden"),
   );
   dbModal.addEventListener("click", (e) => {
     if (e.target.id === "dbModal") dbModal.classList.add("hidden");
@@ -2724,7 +2761,7 @@ switch (status) {
   });
 
   closeHistoryModalBtn.addEventListener("click", () =>
-    historyModal.classList.add("hidden")
+    historyModal.classList.add("hidden"),
   );
   historyModal.addEventListener("click", (e) => {
     if (e.target.id === "historyModal") historyModal.classList.add("hidden");
@@ -2837,7 +2874,7 @@ switch (status) {
 
   // Formulário principal
   statusRadios.forEach((radio) =>
-    radio.addEventListener("change", toggleRejectedDocsSection)
+    radio.addEventListener("change", toggleRejectedDocsSection),
   );
   addDocBtn.addEventListener("click", addRejectedDoc);
   generateBtn.addEventListener("click", generateMessage);
@@ -2846,10 +2883,10 @@ switch (status) {
   docNameSelect.addEventListener("change", handleDocNameChange);
 
   if (contactPhoneInput) {
-  contactPhoneInput.addEventListener("input", (e) => {
-    e.target.value = formatPhone(e.target.value);
-  });
-}
+    contactPhoneInput.addEventListener("input", (e) => {
+      e.target.value = formatPhone(e.target.value);
+    });
+  }
 
   /**
    * @functionality 311
@@ -2858,7 +2895,7 @@ switch (status) {
    * @description Armazena ID e descrição em data-attributes para uso posterior.
    */
   familySearchInput.addEventListener("input", (e) =>
-    searchFamilies(e.target.value)
+    searchFamilies(e.target.value),
   );
   familyResults.addEventListener("click", (e) => {
     if (e.target.tagName === "DIV") {
@@ -2990,7 +3027,7 @@ switch (status) {
   contactMadeCheckbox.addEventListener("change", () => {
     contactDetailsWrapper.classList.toggle(
       "hidden",
-      !contactMadeCheckbox.checked
+      !contactMadeCheckbox.checked,
     );
   });
 
@@ -3005,7 +3042,7 @@ switch (status) {
   // Listeners do Modal de WhatsApp
   sendWppBtn.addEventListener("click", openWppModal);
   closeWppModalBtn.addEventListener("click", () =>
-    wppModal.classList.add("hidden")
+    wppModal.classList.add("hidden"),
   );
   wppModal.addEventListener("click", (e) => {
     if (e.target.id === "wppModal") wppModal.classList.add("hidden");
@@ -3014,10 +3051,10 @@ switch (status) {
 
   // Listeners do Modal de Gerenciamento de Contatos (Abre/Fecha)
   openContactsModalBtn.addEventListener("click", () =>
-    contactsModal.classList.remove("hidden")
+    contactsModal.classList.remove("hidden"),
   );
   closeContactsModalBtn.addEventListener("click", () =>
-    contactsModal.classList.add("hidden")
+    contactsModal.classList.add("hidden"),
   );
   contactsModal.addEventListener("click", (e) => {
     if (e.target.id === "contactsModal") contactsModal.classList.add("hidden");
@@ -3150,7 +3187,7 @@ window.addEventListener("message", async (event) => {
         app: "gerador",
         data: stats,
       },
-      event.origin
+      event.origin,
     );
   }
 });

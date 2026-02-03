@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cockpit Gestão - 2015</title>
+    <title>Cockpit Gestão - 1997</title>
 
     <link
       rel="apple-touch-icon"
@@ -28,7 +28,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
-        darkMode: "class", // IMPORTANTE: Permite ativar via classe 'dark'
+        darkMode: "class",
         theme: {
           extend: {
             colors: {
@@ -38,6 +38,22 @@
         },
       };
     </script>
+
+    <script>
+      (function () {
+        var savedTheme = localStorage.getItem("cockpit_theme");
+        var systemDark = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches;
+
+        if (savedTheme === "dark" || (!savedTheme && systemDark)) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      })();
+    </script>
+
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
@@ -45,17 +61,33 @@
 
     <link rel="stylesheet" href="theme.css" />
     <style>
+      /* CONFIGURAÇÃO GLOBAL DO MODO ESCURO */
+      html.dark {
+        color-scheme: dark; /* Avisa ao navegador para pintar scrollbars e inputs nativos */
+      }
+
       /* Scrollbar Dark Mode Suave */
-      .dark ::-webkit-scrollbar {
+      ::-webkit-scrollbar {
         width: 8px;
         height: 8px;
       }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background-color: #555;
+      }
+
+      /* Scrollbar Dark Específico */
       .dark ::-webkit-scrollbar-track {
-        background: #0f172a; /* Cor do fundo escuro */
+        background: #0f172a;
       }
       .dark ::-webkit-scrollbar-thumb {
-        background-color: #334155; /* Cor da barra */
-        border-radius: 4px;
+        background-color: #334155;
       }
       .dark ::-webkit-scrollbar-thumb:hover {
         background-color: #475569;
@@ -525,7 +557,7 @@
       </nav>
 
       <div
-        class="mt-auto border-t border-slate-700 p-4 bg-[#1e293b] sticky bottom-0"
+        class="mt-auto border-t border-slate-700 p-2 bg-[#1e293b] sticky bottom-0"
       >
         <div
           id="userMenuDropdown"
@@ -645,7 +677,7 @@
 
           <button
             id="userMenuBtn"
-            class="flex items-center gap-3 w-full p-2 rounded-xl hover:bg-slate-800 transition-colors focus:outline-none relative z-10"
+            class="flex items-center gap-3 w-full p-1.5 rounded-xl hover:bg-slate-800 transition-colors focus:outline-none relative z-10"
           >
             <div class="relative w-10 h-10">
               <img
@@ -727,7 +759,14 @@
       id="mainContent"
       class="pt-16 h-full transition-all duration-300 md:ml-64"
     >
-      <iframe id="appFrame" src="about:blank" allowfullscreen></iframe>
+      <iframe
+        id="appFrame"
+        src="about:blank"
+        style="background-color: transparent"
+        allowtransparency="true"
+        allowfullscreen
+      >
+      </iframe>
     </main>
 
     <div

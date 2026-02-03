@@ -1195,14 +1195,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // 1. Carregar tema salvo ao iniciar
   const savedTheme = localStorage.getItem("cockpit_theme");
   // Se estiver salvo 'dark' OU o sistema do usuário for dark, ativa
-  if (
-    savedTheme === "dark" ||
-    (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)
-  ) {
-    document.documentElement.classList.add("dark");
-  } else {
-    document.documentElement.classList.remove("dark");
-  }
+  // if (
+  //    savedTheme === "dark" ||
+  //   (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+  // ) {
+  //   document.documentElement.classList.add("dark");
+  // } else {
+  //   document.documentElement.classList.remove("dark");
+  // }
 
   // 2. Função de Alternância (Chamada pelo botão do menu)
   window.toggleTheme = function () {
