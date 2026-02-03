@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home - Cockpit Gestão</title>
 
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <script>
       tailwind.config = {
         darkMode: "class", // Ativa o modo manual
@@ -17,7 +19,7 @@
         },
       };
     </script>
-    <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
       /* Scrollbar Dark Mode */
       .dark ::-webkit-scrollbar {
@@ -360,7 +362,7 @@
             src="https://comprasnet.ba.gov.br/sites/default/files/banner-caf-digital_comprasnet.jpg"
             class="w-30 h-6 rounded-sm object-cover"
           />
-          CAF Digital
+          <span class="hidden md:inline">CAF Digital</span>
         </a>
         <a
           href="https://www.comprasnetadm.ba.gov.br/Home/Login"
@@ -371,7 +373,7 @@
             src="https://comprasnet.ba.gov.br/sites/all/modules/secom_bar/images/logomarca.png"
             class="w-30 h-6 object-contain"
           />
-          Comprasnet
+          <span class="hidden md:inline">Comprasnet</span>
         </a>
       </div>
     </footer>
