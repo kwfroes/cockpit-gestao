@@ -1,55 +1,87 @@
 body {
-    font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 /* Estilo para a barra de rolagem */
 ::-webkit-scrollbar {
-    width: 8px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+  background: #f1f1f1;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
+  background: #888;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #555;
+  background: #555;
 }
 
-#familyResults, #familyAutocompleteWrapper {
-    position: relative;
+#familyResults,
+#familyAutocompleteWrapper {
+  position: relative;
 }
 
 #familyResults div {
-    padding: 8px;
-    cursor: pointer;
-    background-color: white;
+  padding: 8px;
+  cursor: pointer;
+  background-color: white;
 }
 
 #familyResults div:hover {
-    background-color: #f0f0f0;
+  background-color: #f0f0f0;
 }
 
 #familyResults {
-    border: 1px solid #ddd;
-    border-top: none;
-    max-height: 150px;
-    overflow-y: auto;
-    position: absolute;
-    width: 100%;
-    background: white;
-    z-index: 10;
+  border: 1px solid #ddd;
+  border-top: none;
+  max-height: 150px;
+  overflow-y: auto;
+  position: absolute;
+  width: 100%;
+  background: white;
+  z-index: 10;
 }
 
 /* NOVAS CLASSES PARA O HISTÓRICO EXPANSÍVEL */
 .history-message-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
-    background-color: #f9fafb; /* bg-gray-50 */
-    border-radius: 0.25rem;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  background-color: #f9fafb; /* bg-gray-50 */
+  border-radius: 0.25rem;
+}
+
+/* Dark Mode Scrollbar */
+.dark ::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background-color: #334155;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: #475569;
+}
+
+/* Autocomplete Dark Mode */
+.dark #familyResults {
+  background: #1e293b; /* Slate-800 */
+  border-color: #334155;
+  color: #fff;
+}
+.dark #familyResults div {
+  background-color: #1e293b;
+  border-bottom: 1px solid #334155;
+}
+.dark #familyResults div:hover {
+  background-color: #334155; /* Slate-700 */
+}
+
+/* Histórico Expansível no Dark */
+.dark .history-message-content {
+  background-color: #0f172a; /* Slate-900 */
+  color: #e2e8f0;
 }

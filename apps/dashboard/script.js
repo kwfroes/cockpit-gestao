@@ -2,6 +2,43 @@
 window.onload = function () {
   // --- Funções Nativas de Data (para substituir date-fns) ---
 
+  // --- GESTÃO DE TEMA E CHART.JS ---
+  function applyTheme(theme) {
+    const isDark = theme === "dark";
+
+    if (isDark) document.documentElement.classList.add("dark");
+    else document.documentElement.classList.remove("dark");
+
+    // Configura cores globais do Chart.js
+    if (window.Chart) {
+      Chart.defaults.color = isDark ? "#cbd5e1" : "#374151"; // Texto (slate-300 vs gray-700)
+      Chart.defaults.borderColor = isDark ? "#334155" : "#e5e7eb"; // Grades (slate-700 vs gray-200)
+    }
+  }
+
+  // Ouve mensagem do Cockpit
+  window.addEventListener("message", (event) => {
+    if (event.data && event.data.type === "THEME_CHANGE") {
+      applyTheme(event.data.theme);
+      // Força re-renderização dos gráficos se houver dados
+      if (
+        typeof updateDashboard === "function" &&
+        typeof allData !== "undefined" &&
+        allData.length > 0
+      ) {
+        updateDashboard();
+      }
+    }
+  });
+
+  // Aplica tema inicial baseado no localStorage ou sistema (sem piscar, pois o head já tratou)
+  const initialTheme =
+    localStorage.getItem("cockpit_theme") ||
+    (window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light");
+  applyTheme(initialTheme);
+
   /**
    * Converte uma string de data (dd/MM/yyyy HH:mm:ss ou yyyy-MM-dd) para um objeto Date.
    * @param {string} dateString A string da data.
@@ -37,7 +74,7 @@ window.onload = function () {
           dateParts[0],
           timeParts[0] || 0,
           timeParts[1] || 0,
-          timeParts[2] || 0
+          timeParts[2] || 0,
         );
         if (!isNaN(dt.getTime())) return dt;
       }
@@ -52,24 +89,24 @@ window.onload = function () {
 
   // --- HELPER: Verifica Status do Dia (Reutilizável) ---
   function getDayStatus(dateObj) {
-      if (!dateObj) return { isWeekend: false, isFixed: false, isMovable: false };
-      
-      const dayOfWeek = dateObj.getDay(); // 0=Dom, 6=Sab
-      const dd_mm = _native_formatDate(dateObj, "yyyy-MM-dd").substring(5); // MM-DD
-      const yyyy_mm_dd = _native_formatDate(dateObj, "yyyy-MM-dd");
+    if (!dateObj) return { isWeekend: false, isFixed: false, isMovable: false };
 
-      return {
-          isWeekend: dayOfWeek === 0 || dayOfWeek === 6,
-          isFixed: FIXED_HOLIDAYS.has(dd_mm),
-          isMovable: movableHolidays.has(yyyy_mm_dd)
-      };
+    const dayOfWeek = dateObj.getDay(); // 0=Dom, 6=Sab
+    const dd_mm = _native_formatDate(dateObj, "yyyy-MM-dd").substring(5); // MM-DD
+    const yyyy_mm_dd = _native_formatDate(dateObj, "yyyy-MM-dd");
+
+    return {
+      isWeekend: dayOfWeek === 0 || dayOfWeek === 6,
+      isFixed: FIXED_HOLIDAYS.has(dd_mm),
+      isMovable: movableHolidays.has(yyyy_mm_dd),
+    };
   }
 
   /**
    * Calcula o tempo útil em milissegundos entre duas datas,
    * descontando Sábados, Domingos e Feriados (Fixos e Móveis).
    */
-function _calcBusinessTimeDiff(start, end) {
+  function _calcBusinessTimeDiff(start, end) {
     if (!start || !end) return 0;
     if (end < start) return 0;
 
@@ -85,50 +122,54 @@ function _calcBusinessTimeDiff(start, end) {
 
     // Loop dia a dia
     while (current <= endDateZero) {
-        const dayOfWeek = current.getDay(); // 0 = Dom, 6 = Sab
-        const dd_mm = _native_formatDate(current, "yyyy-MM-dd").substring(5); // Pega MM-DD
-        const yyyy_mm_dd = _native_formatDate(current, "yyyy-MM-dd");
+      const dayOfWeek = current.getDay(); // 0 = Dom, 6 = Sab
+      const dd_mm = _native_formatDate(current, "yyyy-MM-dd").substring(5); // Pega MM-DD
+      const yyyy_mm_dd = _native_formatDate(current, "yyyy-MM-dd");
 
-        const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-        const isFixedHoliday = FIXED_HOLIDAYS.has(dd_mm);
-        
-        // --- INÍCIO DA ALTERAÇÃO SOLICITADA ---
-        
-        // 1. Verifica Feriado Manual (Salvo no JSON)
-        let isMovableHoliday = movableHolidays.has(yyyy_mm_dd);
-        
-        // 2. Verifica Feriado Calculado (Novo)
-        // Se ainda não achou, calcula os feriados daquele ano específico
-        if (!isMovableHoliday) {
-            const calculatedMap = getCalculatedHolidays(current.getFullYear());
-            if (calculatedMap.has(yyyy_mm_dd)) {
-                isMovableHoliday = true;
-            }
+      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+      const isFixedHoliday = FIXED_HOLIDAYS.has(dd_mm);
+
+      // --- INÍCIO DA ALTERAÇÃO SOLICITADA ---
+
+      // 1. Verifica Feriado Manual (Salvo no JSON)
+      let isMovableHoliday = movableHolidays.has(yyyy_mm_dd);
+
+      // 2. Verifica Feriado Calculado (Novo)
+      // Se ainda não achou, calcula os feriados daquele ano específico
+      if (!isMovableHoliday) {
+        const calculatedMap = getCalculatedHolidays(current.getFullYear());
+        if (calculatedMap.has(yyyy_mm_dd)) {
+          isMovableHoliday = true;
         }
+      }
 
-        // --- FIM DA ALTERAÇÃO SOLICITADA ---
+      // --- FIM DA ALTERAÇÃO SOLICITADA ---
 
-        // Se for dia não-útil
-        if (isWeekend || isFixedHoliday || isMovableHoliday) {
-            // Calcula quanto desse dia "ruim" está dentro do intervalo
-            const overlapStart = new Date(Math.max(start.getTime(), current.getTime()));
-            
-            const endOfDay = new Date(current);
-            endOfDay.setHours(23, 59, 59, 999);
-            const overlapEnd = new Date(Math.min(end.getTime(), endOfDay.getTime()));
+      // Se for dia não-útil
+      if (isWeekend || isFixedHoliday || isMovableHoliday) {
+        // Calcula quanto desse dia "ruim" está dentro do intervalo
+        const overlapStart = new Date(
+          Math.max(start.getTime(), current.getTime()),
+        );
 
-            if (overlapEnd > overlapStart) {
-                const deduction = overlapEnd.getTime() - overlapStart.getTime();
-                totalDuration -= deduction;
-            }
+        const endOfDay = new Date(current);
+        endOfDay.setHours(23, 59, 59, 999);
+        const overlapEnd = new Date(
+          Math.min(end.getTime(), endOfDay.getTime()),
+        );
+
+        if (overlapEnd > overlapStart) {
+          const deduction = overlapEnd.getTime() - overlapStart.getTime();
+          totalDuration -= deduction;
         }
+      }
 
-        // Avança um dia
-        current.setDate(current.getDate() + 1);
+      // Avança um dia
+      current.setDate(current.getDate() + 1);
     }
 
     return Math.max(0, totalDuration);
-}
+  }
 
   /**
    * Retorna o início do dia para um objeto Date.
@@ -155,12 +196,12 @@ function _calcBusinessTimeDiff(start, end) {
     const utc1 = Date.UTC(
       dateLeft.getFullYear(),
       dateLeft.getMonth(),
-      dateLeft.getDate()
+      dateLeft.getDate(),
     );
     const utc2 = Date.UTC(
       dateRight.getFullYear(),
       dateRight.getMonth(),
-      dateRight.getDate()
+      dateRight.getDate(),
     );
     return Math.floor((utc1 - utc2) / msPerDay);
   }
@@ -193,9 +234,8 @@ function _calcBusinessTimeDiff(start, end) {
   let filteredData = [];
   const chartInstances = {}; // Armazena instâncias de gráficos para destruí-las
 
-  //Reorganiza tabela 
-  let currentSort = { col: null, direction: 'asc' };
-
+  //Reorganiza tabela
+  let currentSort = { col: null, direction: "asc" };
 
   // --- LÓGICA DE FERIADOS E DIAS ÚTEIS ---
 
@@ -213,80 +253,81 @@ function _calcBusinessTimeDiff(start, end) {
     ["11-15", "Proclamação da República"],
     ["11-20", "Consciência Negra"],
     ["12-08", "Conceição da Praia"],
-    ["12-25", "Natal"]
+    ["12-25", "Natal"],
   ]);
 
   // 2. Feriados Móveis (Carregados do JSON)
-  let movableHolidays = new Map(); 
+  let movableHolidays = new Map();
 
-    async function loadHolidayJson() {
-      try {
-        const response = await fetch("./feriados.json");
-        if (response.ok) {
-          const data = await response.json();
-          
-          movableHolidays.clear();
+  async function loadHolidayJson() {
+    try {
+      const response = await fetch("./feriados.json");
+      if (response.ok) {
+        const data = await response.json();
 
-          if (Array.isArray(data)) {
-              // Suporte legado: Array de strings ["2025-01-01"]
-              data.forEach(dateStr => movableHolidays.set(dateStr, "Feriado Importado"));
-              console.log(`Carregados ${data.length} feriados (formato antigo).`);
-          } else {
-              // Novo formato: Objeto { "2025-01-01": "Carnaval" }
-              Object.entries(data).forEach(([k, v]) => movableHolidays.set(k, v));
-              console.log(`Carregados ${movableHolidays.size} feriados nomeados.`);
-          }
+        movableHolidays.clear();
+
+        if (Array.isArray(data)) {
+          // Suporte legado: Array de strings ["2025-01-01"]
+          data.forEach((dateStr) =>
+            movableHolidays.set(dateStr, "Feriado Importado"),
+          );
+          console.log(`Carregados ${data.length} feriados (formato antigo).`);
+        } else {
+          // Novo formato: Objeto { "2025-01-01": "Carnaval" }
+          Object.entries(data).forEach(([k, v]) => movableHolidays.set(k, v));
+          console.log(`Carregados ${movableHolidays.size} feriados nomeados.`);
         }
-      } catch (e) {
-        console.log("Arquivo feriados.json não encontrado. Usando apenas fixos.");
       }
+    } catch (e) {
+      console.log("Arquivo feriados.json não encontrado. Usando apenas fixos.");
     }
-    loadHolidayJson(); // Chama ao iniciar
+  }
+  loadHolidayJson(); // Chama ao iniciar
 
-
-    // --- 2.1 CALCULAR FERIADOS MÓVEIS (Meeus/Jones/Butcher) ---
+  // --- 2.1 CALCULAR FERIADOS MÓVEIS (Meeus/Jones/Butcher) ---
   function getCalculatedHolidays(ano) {
-      const holidaysMap = new Map();
+    const holidaysMap = new Map();
 
-      // Algoritmo de Páscoa
-      const a = ano % 19;
-      const b = Math.floor(ano / 100);
-      const c = ano % 100;
-      const d = Math.floor(b / 4);
-      const e = b % 4;
-      const f = Math.floor((b + 8) / 25);
-      const g = Math.floor((b - f + 1) / 3);
-      const h = (19 * a + b - d - g + 15) % 30;
-      const i = Math.floor(c / 4);
-      const k = c % 4;
-      const l = (32 + 2 * e + 2 * i - h - k) % 7;
-      const m = Math.floor((a + 11 * h + 22 * l) / 451);
-      const mes = Math.floor((h + l - 7 * m + 114) / 31);
-      const dia = ((h + l - 7 * m + 114) % 31) + 1;
+    // Algoritmo de Páscoa
+    const a = ano % 19;
+    const b = Math.floor(ano / 100);
+    const c = ano % 100;
+    const d = Math.floor(b / 4);
+    const e = b % 4;
+    const f = Math.floor((b + 8) / 25);
+    const g = Math.floor((b - f + 1) / 3);
+    const h = (19 * a + b - d - g + 15) % 30;
+    const i = Math.floor(c / 4);
+    const k = c % 4;
+    const l = (32 + 2 * e + 2 * i - h - k) % 7;
+    const m = Math.floor((a + 11 * h + 22 * l) / 451);
+    const mes = Math.floor((h + l - 7 * m + 114) / 31);
+    const dia = ((h + l - 7 * m + 114) % 31) + 1;
 
-      const pascoa = new Date(ano, mes - 1, dia);
+    const pascoa = new Date(ano, mes - 1, dia);
 
-      // Helper para formatar YYYY-MM-DD
-      const addDays = (date, days) => {
-          const result = new Date(date);
-          result.setDate(result.getDate() + days);
-          // Formatação manual segura para evitar problemas de fuso horário UTC
-          const y = result.getFullYear();
-          const m = (result.getMonth() + 1).toString().padStart(2, '0');
-          const d = result.getDate().toString().padStart(2, '0');
-          return `${y}-${m}-${d}`;
-      };
+    // Helper para formatar YYYY-MM-DD
+    const addDays = (date, days) => {
+      const result = new Date(date);
+      result.setDate(result.getDate() + days);
+      // Formatação manual segura para evitar problemas de fuso horário UTC
+      const y = result.getFullYear();
+      const m = (result.getMonth() + 1).toString().padStart(2, "0");
+      const d = result.getDate().toString().padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    };
 
-      // Adiciona ao Map
-      holidaysMap.set(addDays(pascoa, -51), "Carnaval (Sexta) - Facultativo"); // Nova linha
-      holidaysMap.set(addDays(pascoa, -48), "Carnaval (Segunda) - Facultativo"); // Nova linha
-      holidaysMap.set(addDays(pascoa, -47), "Carnaval (Terça)");
-      holidaysMap.set(addDays(pascoa, -46), "Quarta de Cinzas");
-      holidaysMap.set(addDays(pascoa, -2), "Sexta-feira Santa");
-      holidaysMap.set(addDays(pascoa, 0), "Páscoa");
-      holidaysMap.set(addDays(pascoa, 60), "Corpus Christi");
+    // Adiciona ao Map
+    holidaysMap.set(addDays(pascoa, -51), "Carnaval (Sexta) - Facultativo"); // Nova linha
+    holidaysMap.set(addDays(pascoa, -48), "Carnaval (Segunda) - Facultativo"); // Nova linha
+    holidaysMap.set(addDays(pascoa, -47), "Carnaval (Terça)");
+    holidaysMap.set(addDays(pascoa, -46), "Quarta de Cinzas");
+    holidaysMap.set(addDays(pascoa, -2), "Sexta-feira Santa");
+    holidaysMap.set(addDays(pascoa, 0), "Páscoa");
+    holidaysMap.set(addDays(pascoa, 60), "Corpus Christi");
 
-      return holidaysMap;
+    return holidaysMap;
   }
 
   // --- FUNÇÃO AUXILIAR DE VISIBILIDADE (NOVO) ---
@@ -364,7 +405,7 @@ function _calcBusinessTimeDiff(start, end) {
     if (
       allData.length > 0 &&
       !confirm(
-        "Tem certeza? Isso apagará TODOS os dados da tela para começar do zero."
+        "Tem certeza? Isso apagará TODOS os dados da tela para começar do zero.",
       )
     ) {
       return;
@@ -401,7 +442,7 @@ function _calcBusinessTimeDiff(start, end) {
     dropzone.classList.add("border-blue-500", "bg-blue-50");
   });
   dropzone.addEventListener("dragleave", () =>
-    dropzone.classList.remove("border-blue-500", "bg-blue-50")
+    dropzone.classList.remove("border-blue-500", "bg-blue-50"),
   );
   dropzone.addEventListener("drop", (e) => {
     e.preventDefault();
@@ -509,12 +550,12 @@ function _calcBusinessTimeDiff(start, end) {
     // Imprime os dados rejeitados no console
     console.warn(`[DEBUG] Linhas totais recebidas do CSV: ${data.length}`);
     console.warn(
-      `[DEBUG] Linhas rejeitadas (Data Análise inválida, não-vazia): ${rejectedRows.length}`
+      `[DEBUG] Linhas rejeitadas (Data Análise inválida, não-vazia): ${rejectedRows.length}`,
     );
     if (rejectedRows.length > 0) {
       console.warn(
         "[DEBUG] Amostra de linhas rejeitadas (primeiras 20):",
-        rejectedRows.slice(0, 20)
+        rejectedRows.slice(0, 20),
       );
     }
     // ---------------------------
@@ -580,7 +621,7 @@ function _calcBusinessTimeDiff(start, end) {
     // Popula o select de Ano
     populateSelect(
       "filterYear",
-      [...years].sort((a, b) => b - a)
+      [...years].sort((a, b) => b - a),
     );
 
     // --- NOVA LÓGICA DE PADRÃO (Mês Anterior) ---
@@ -601,7 +642,7 @@ function _calcBusinessTimeDiff(start, end) {
     // Verifica se o ano alvo existe nas opções carregadas (para evitar erro se o CSV for antigo)
     // Convertemos para String pois o value do option é string
     const yearExists = [...yearSelect.options].some(
-      (opt) => opt.value === targetYear.toString()
+      (opt) => opt.value === targetYear.toString(),
     );
 
     if (yearExists) {
@@ -741,8 +782,8 @@ function _calcBusinessTimeDiff(start, end) {
     const existingSignatures = new Set(
       oldData.map(
         (item) =>
-          `${item["Data Solicitacao"]}|${item["Numero Protocolo"]}|${item["Nome Fornecedor"]}`
-      )
+          `${item["Data Solicitacao"]}|${item["Numero Protocolo"]}|${item["Nome Fornecedor"]}`,
+      ),
     );
 
     const uniqueNewData = newData.filter((item) => {
@@ -751,7 +792,7 @@ function _calcBusinessTimeDiff(start, end) {
     });
 
     console.log(
-      `Merge: ${oldData.length} antigos + ${uniqueNewData.length} novos únicos.`
+      `Merge: ${oldData.length} antigos + ${uniqueNewData.length} novos únicos.`,
     );
     return [...oldData, ...uniqueNewData];
   }
@@ -842,9 +883,9 @@ function _calcBusinessTimeDiff(start, end) {
   // Renderiza um único KPI Card
   function renderKpiCard(title, value, tooltip) {
     return `
-            <div class="bg-white p-4 rounded-lg shadow-md text-center">
+            <div class="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-md text-center">
                 <div class="flex items-center justify-center gap-2">
-                    <h4 class="text-sm font-medium text-gray-500 uppercase">${title}</h4>
+                    <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase">${title}</h4>
                     ${
                       tooltip
                         ? `
@@ -856,7 +897,7 @@ function _calcBusinessTimeDiff(start, end) {
                         : ""
                     }
                 </div>
-                <p class="text-3xl font-bold text-gray-900 mt-1">${value}</p>
+                <p class="text-3xl font-bold text-gray-900 dark:text-white mt-1">${value}</p>
             </div>
         `;
   }
@@ -866,7 +907,7 @@ function _calcBusinessTimeDiff(start, end) {
     const kpiContainer = document.getElementById("kpis");
     if (!data.length) {
       kpiContainer.innerHTML =
-        "<p class='col-span-full text-center text-gray-500'>Sem dados para exibir KPIs.</p>";
+        "<p class='col-span-full text-center text-gray-500 dark:text-gray-400'>Sem dados para exibir KPIs.</p>";
       return;
     }
 
@@ -880,13 +921,13 @@ function _calcBusinessTimeDiff(start, end) {
     const medianaTempo = stats.median(temposAnalise).toFixed(1);
 
     const deferidas = data.filter(
-      (d) => d["Situação Solicitação"] === "Deferida"
+      (d) => d["Situação Solicitação"] === "Deferida",
     ).length;
     const indeferidas = data.filter(
-      (d) => d["Situação Solicitação"] === "Indeferida"
+      (d) => d["Situação Solicitação"] === "Indeferida",
     ).length;
     const assinadas = data.filter(
-      (d) => d["Assinado Digitalmente"] === "Assinado Digitalmente"
+      (d) => d["Assinado Digitalmente"] === "Assinado Digitalmente",
     ).length;
 
     const taxaDeferimento =
@@ -899,17 +940,17 @@ function _calcBusinessTimeDiff(start, end) {
     kpiContainer.innerHTML = `
             ${renderKpiCard(
               "Total Solicitações",
-              total.toLocaleString("pt-BR")
+              total.toLocaleString("pt-BR"),
             )}
             ${renderKpiCard(
               "Tempo Médio",
               `${mediaTempo} dias`,
-              "Média de (Data Análise - Data Solicitacao)."
+              "Média de (Data Análise - Data Solicitacao).",
             )}
             ${renderKpiCard(
               "Tempo Mediano",
               `${medianaTempo} dias`,
-              "Valor central do tempo de análise. Menos sensível a outliers que a média."
+              "Valor central do tempo de análise. Menos sensível a outliers que a média.",
             )}
             ${renderKpiCard("Taxa Deferimento", `${taxaDeferimento}%`)}
             ${renderKpiCard("Taxa Indeferimento", `${taxaIndeferimento}%`)}
@@ -927,7 +968,7 @@ function _calcBusinessTimeDiff(start, end) {
 
     if (!data.length) {
       tableBody.innerHTML =
-        "<tr><td colspan='5' class='text-center py-4 text-gray-500'>Sem dados de equipe para exibir.</td></tr>";
+        "<tr><td colspan='5' class='text-center py-4 text-gray-500 dark:text-gray-400'>Sem dados de equipe para exibir.</td></tr>";
       return;
     }
 
@@ -943,7 +984,7 @@ function _calcBusinessTimeDiff(start, end) {
       // Esta lógica já filtra corretamente (só pega dias válidos)
       const dailyCounts = stats.countBy(
         rows.filter((r) => r._diaAnalise),
-        "_diaAnalise"
+        "_diaAnalise",
       );
       const dailyValues = Object.values(dailyCounts);
       const diasUnicos = dailyValues.length;
@@ -970,20 +1011,20 @@ function _calcBusinessTimeDiff(start, end) {
     performanceData.forEach((d) => {
       const row = `
                 <tr>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${
                       d.nome
                     }</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${d.totalMes.toLocaleString(
-                      "pt-BR"
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${d.totalMes.toLocaleString(
+                      "pt-BR",
                     )}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${d.mediaDiaria.toFixed(
-                      1
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${d.mediaDiaria.toFixed(
+                      1,
                     )}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${d.desvioPadrao.toFixed(
-                      2
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${d.desvioPadrao.toFixed(
+                      2,
                     )}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${d.participacao.toFixed(
-                      1
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${d.participacao.toFixed(
+                      1,
                     )}%</td>
                 </tr>
             `;
@@ -1053,17 +1094,17 @@ function _calcBusinessTimeDiff(start, end) {
     // Esta lógica já filtra corretamente (só pega dias válidos)
     const entryByDay = stats.countBy(
       data.filter((r) => r._diaAnalise),
-      "_diaAnalise"
+      "_diaAnalise",
     );
     const sortedEntries = Object.entries(entryByDay).sort(
-      ([a], [b]) => _native_safeParseDate(a) - _native_safeParseDate(b)
+      ([a], [b]) => _native_safeParseDate(a) - _native_safeParseDate(b),
     );
 
     createChart("chartEntryVolume", {
       type: "line",
       data: {
         labels: sortedEntries.map(([date]) =>
-          _native_formatDate(_native_safeParseDate(date), "dd/MM/yy")
+          _native_formatDate(_native_safeParseDate(date), "dd/MM/yy"),
         ),
         datasets: [
           {
@@ -1173,7 +1214,7 @@ function _calcBusinessTimeDiff(start, end) {
     // Esta lógica já filtra corretamente (só pega meses válidos)
     const groupedByMonth = stats.groupBy(
       data.filter((r) => r._mesAnoAnalise),
-      "_mesAnoAnalise"
+      "_mesAnoAnalise",
     );
     const months = Object.keys(groupedByMonth).sort();
 
@@ -1304,12 +1345,13 @@ function _calcBusinessTimeDiff(start, end) {
   // ==========================================================
 
   // Variável para mostrar/esconder o loading durante a geração do PDF
-  const loadingIndicator = document.createElement('div');
-  loadingIndicator.id = 'pdfLoadingIndicator';
-  loadingIndicator.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] hidden text-white text-lg font-bold';
-  loadingIndicator.innerHTML = '<div class="bg-blue-700 p-4 rounded-lg shadow-2xl">Gerando Análise e PDF... Aguarde!</div>';
+  const loadingIndicator = document.createElement("div");
+  loadingIndicator.id = "pdfLoadingIndicator";
+  loadingIndicator.className =
+    "fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] hidden text-white text-lg font-bold";
+  loadingIndicator.innerHTML =
+    '<div class="bg-blue-700 p-4 rounded-lg shadow-2xl">Gerando Análise e PDF... Aguarde!</div>';
   document.body.appendChild(loadingIndicator);
-
 
   /**
    * Função auxiliar para chamar a API Gemini com retry.
@@ -1333,37 +1375,39 @@ function _calcBusinessTimeDiff(start, end) {
     for (let i = 0; i < maxRetries; i++) {
       try {
         const response = await fetch(apiUrl, {
-          method: 'POST',
+          method: "POST",
           // Re-adicionamos o header Content-Type para chamadas fetch padrão em navegadores
-          headers: { 'Content-Type': 'application/json' }, 
-          body: JSON.stringify(payload)
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
         });
 
         const result = await response.json();
-        
+
         if (!response.ok) {
           // Se houver um erro HTTP (ex: 400, 401, 500), mostramos a resposta completa para debug
-          console.error(`Erro HTTP ${response.status}. Resposta do servidor:`, result);
+          console.error(
+            `Erro HTTP ${response.status}. Resposta do servidor:`,
+            result,
+          );
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
-        
+
         if (text) {
           return text;
         } else {
           console.warn("Resposta da IA vazia. Objeto de resposta:", result);
           throw new Error("Resposta da IA vazia ou mal formatada.");
         }
-
       } catch (error) {
         if (i === maxRetries - 1) {
           console.error("Falha final ao chamar a API Gemini:", error);
           return "Erro ao gerar a análise automática. Por favor, verifique a chave inserida e a conexão.";
         }
         // Exponential backoff
-        await new Promise(resolve => setTimeout(resolve, delay));
-        delay *= 2; 
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        delay *= 2;
       }
     }
     return "Erro desconhecido ao comunicar com o serviço de análise.";
@@ -1386,90 +1430,110 @@ function _calcBusinessTimeDiff(start, end) {
     const total = data.length;
     const mediaTempo = stats.mean(temposAnalise).toFixed(1);
     const medianaTempo = stats.median(temposAnalise).toFixed(1);
-    const deferidas = data.filter(d => d["Situação Solicitação"] === "Deferida").length;
-    const indeferidas = data.filter(d => d["Situação Solicitação"] === "Indeferida").length;
-    const taxaDeferimento = total > 0 ? ((deferidas / total) * 100).toFixed(1) : 0;
-    const taxaIndeferimento = total > 0 ? ((indeferidas / total) * 100).toFixed(1) : 0;
+    const deferidas = data.filter(
+      (d) => d["Situação Solicitação"] === "Deferida",
+    ).length;
+    const indeferidas = data.filter(
+      (d) => d["Situação Solicitação"] === "Indeferida",
+    ).length;
+    const taxaDeferimento =
+      total > 0 ? ((deferidas / total) * 100).toFixed(1) : 0;
+    const taxaIndeferimento =
+      total > 0 ? ((indeferidas / total) * 100).toFixed(1) : 0;
 
     // 2. Coleta de Dados Agrupados (Top N)
     const groupedByAnalyst = stats.groupBy(data, "Usuario Analista");
     const performanceData = [];
     for (const [analyst, rows] of Object.entries(groupedByAnalyst)) {
-        if (!analyst || analyst === "undefined") continue;
-        const dailyCounts = stats.countBy(rows.filter((r) => r._diaAnalise), "_diaAnalise");
-        performanceData.push({
-            nome: analyst,
-            totalMes: rows.length,
-            mediaDiaria: (Object.values(dailyCounts).length > 0 ? rows.length / Object.values(dailyCounts).length : 0).toFixed(1),
-            desvioPadrao: stats.stdDev(Object.values(dailyCounts)).toFixed(2),
-        });
+      if (!analyst || analyst === "undefined") continue;
+      const dailyCounts = stats.countBy(
+        rows.filter((r) => r._diaAnalise),
+        "_diaAnalise",
+      );
+      performanceData.push({
+        nome: analyst,
+        totalMes: rows.length,
+        mediaDiaria: (Object.values(dailyCounts).length > 0
+          ? rows.length / Object.values(dailyCounts).length
+          : 0
+        ).toFixed(1),
+        desvioPadrao: stats.stdDev(Object.values(dailyCounts)).toFixed(2),
+      });
     }
     performanceData.sort((a, b) => b.totalMes - a.totalMes);
-    
+
     // 3. Estrutura de Dados para a IA
     const analysisData = {
-        resumoGeral: {
-            totalSolicitacoes: total,
-            tempoMedioAnaliseDias: mediaTempo,
-            tempoMedianoAnaliseDias: medianaTempo,
-            taxaDeferimento: `${taxaDeferimento}%`,
-            taxaIndeferimento: `${taxaIndeferimento}%`,
-        },
-        top5AnalistasPorVolume: performanceData.slice(0, 5).map(a => ({
-            nome: a.nome,
-            volume: a.totalMes,
-            consistenciaDesvioPadrao: a.desvioPadrao
-        })),
-        top3SolicitacoesPorTipo: stats.getTopN(stats.countBy(data, "Tipo Solicitacão"), 3),
-        top3SituacaoPorUF: stats.getTopN(stats.countBy(data, "Codigo Uf"), 3),
-        
+      resumoGeral: {
+        totalSolicitacoes: total,
+        tempoMedioAnaliseDias: mediaTempo,
+        tempoMedianoAnaliseDias: medianaTempo,
+        taxaDeferimento: `${taxaDeferimento}%`,
+        taxaIndeferimento: `${taxaIndeferimento}%`,
+      },
+      top5AnalistasPorVolume: performanceData.slice(0, 5).map((a) => ({
+        nome: a.nome,
+        volume: a.totalMes,
+        consistenciaDesvioPadrao: a.desvioPadrao,
+      })),
+      top3SolicitacoesPorTipo: stats.getTopN(
+        stats.countBy(data, "Tipo Solicitacão"),
+        3,
+      ),
+      top3SituacaoPorUF: stats.getTopN(stats.countBy(data, "Codigo Uf"), 3),
     };
-    
+
     const userQuery = `Gere um resumo executivo em português (2 a 3 parágrafos, máximo 500 caracteres) da performance operacional baseado nestes dados JSON. Foque em destacar os principais pontos de atenção (como gargalos no tempo médio, alta taxa de indeferimento ou baixa consistência dos analistas) e pontos fortes. Dê um tom profissional e direto. Dados para análise: ${JSON.stringify(analysisData)}`;
 
-    const systemPrompt = "Você é um Analista de Performance Sênior. Sua tarefa é transformar dados operacionais brutos em um resumo executivo conciso, profissional e estratégico, focado em insights e acionabilidade.";
+    const systemPrompt =
+      "Você é um Analista de Performance Sênior. Sua tarefa é transformar dados operacionais brutos em um resumo executivo conciso, profissional e estratégico, focado em insights e acionabilidade.";
 
     const payload = {
-        contents: [{ parts: [{ text: userQuery }] }],
-        systemInstruction: { parts: [{ text: systemPrompt }] },
-        config: {
-            // Garante que o texto seja direto e não divague
-            temperature: 0.2,
-            maxOutputTokens: 200, 
-        }
+      contents: [{ parts: [{ text: userQuery }] }],
+      systemInstruction: { parts: [{ text: systemPrompt }] },
+      config: {
+        // Garante que o texto seja direto e não divague
+        temperature: 0.2,
+        maxOutputTokens: 200,
+      },
     };
 
     return callGeminiApi(payload);
   }
- 
 
-// --- 7. EXPORTAÇÃO DE PDF (RF-A02) ---
+  // --- 7. EXPORTAÇÃO DE PDF (RF-A02) ---
 
   const btnPdfHeader = document.getElementById("exportPdfButton");
   const btnPdfDash = document.getElementById("exportPdfButtonDashboard");
 
   // Adiciona o evento apenas se o botão existir (evita erros)
   // O event listener precisa ser atualizado para chamar a função assíncrona
-  if (btnPdfHeader) btnPdfHeader.addEventListener("click", () => exportPDF().catch(console.error));
-  if (btnPdfDash) btnPdfDash.addEventListener("click", () => exportPDF().catch(console.error));
+  if (btnPdfHeader)
+    btnPdfHeader.addEventListener("click", () =>
+      exportPDF().catch(console.error),
+    );
+  if (btnPdfDash)
+    btnPdfDash.addEventListener("click", () =>
+      exportPDF().catch(console.error),
+    );
 
   /**
    * Gera o Relatório em PDF. Agora é assíncrona para aguardar a análise da IA.
    */
   async function exportPDF() {
-    loadingIndicator.classList.remove('hidden');
+    loadingIndicator.classList.remove("hidden");
 
     // 1. Acessa o jsPDF e verifica a biblioteca
     const { jsPDF } = window.jspdf;
     if (!jsPDF) {
       console.error("jsPDF não carregado!");
-      loadingIndicator.classList.add('hidden');
+      loadingIndicator.classList.add("hidden");
       return;
     }
 
     // 2. GERAÇÃO DA ANÁLISE DE IA
     const analysisText = await generateAnalysisSummary(filteredData);
-    
+
     // 3. INICIALIZAÇÃO DO PDF
     const data = filteredData;
     const doc = new jsPDF();
@@ -1484,13 +1548,13 @@ function _calcBusinessTimeDiff(start, end) {
     doc.setFontSize(11);
     doc.text(`Período de Análise: ${start} a ${end}`, 14, currentY);
     currentY += 10;
-    
+
     // 4. ADICIONA O RESUMO DA ANÁLISE (IA)
     doc.setFontSize(14);
     doc.text("Resumo Executivo (Análise de IA)", 14, currentY);
     currentY += 5;
     doc.setFontSize(10);
-    
+
     // Divide o texto da IA em linhas para caber no PDF
     const splitText = doc.splitTextToSize(analysisText, 180); // 180mm de largura
     doc.text(splitText, 14, currentY);
@@ -1506,16 +1570,34 @@ function _calcBusinessTimeDiff(start, end) {
     // ... (Mantém a lógica de coleta de KPIs do HTML, pois ela é rápida)
     const kpiSection = document.getElementById("kpis");
     let kpiData = [];
-    if (kpiSection.querySelector("p.text-gray-500")) {
+    if (kpiSection.querySelector("p.text-gray-500 dark:text-gray-400")) {
       kpiData.push(["KPIs", "Sem dados para exibir"]);
     } else {
       kpiData = [
-        ["Total Solicitações:", kpiSection.querySelector("div:nth-child(1) p").textContent],
-        ["Tempo Médio Análise:", kpiSection.querySelector("div:nth-child(2) p").textContent],
-        ["Tempo Mediano Análise:", kpiSection.querySelector("div:nth-child(3) p").textContent],
-        ["Taxa Deferimento:", kpiSection.querySelector("div:nth-child(4) p").textContent],
-        ["Taxa Indeferimento:", kpiSection.querySelector("div:nth-child(5) p").textContent],
-        ["Taxa Assinatura Digital:", kpiSection.querySelector("div:nth-child(6) p").textContent],
+        [
+          "Total Solicitações:",
+          kpiSection.querySelector("div:nth-child(1) p").textContent,
+        ],
+        [
+          "Tempo Médio Análise:",
+          kpiSection.querySelector("div:nth-child(2) p").textContent,
+        ],
+        [
+          "Tempo Mediano Análise:",
+          kpiSection.querySelector("div:nth-child(3) p").textContent,
+        ],
+        [
+          "Taxa Deferimento:",
+          kpiSection.querySelector("div:nth-child(4) p").textContent,
+        ],
+        [
+          "Taxa Indeferimento:",
+          kpiSection.querySelector("div:nth-child(5) p").textContent,
+        ],
+        [
+          "Taxa Assinatura Digital:",
+          kpiSection.querySelector("div:nth-child(6) p").textContent,
+        ],
       ];
     }
 
@@ -1554,7 +1636,7 @@ function _calcBusinessTimeDiff(start, end) {
       // Cálculo da Média Diária (baseado em dias únicos de trabalho)
       const dailyCounts = stats.countBy(
         rows.filter((r) => r._diaAnalise),
-        "_diaAnalise"
+        "_diaAnalise",
       );
       const dailyValues = Object.values(dailyCounts);
       const diasUnicos = dailyValues.length;
@@ -1583,17 +1665,13 @@ function _calcBusinessTimeDiff(start, end) {
 
     if (teamBody.length === 0) {
       doc.setFontSize(11);
-      doc.text(
-        "Sem dados de equipe para exibir.",
-        14,
-        currentY + 5
-      );
+      doc.text("Sem dados de equipe para exibir.", 14, currentY + 5);
       currentY += 10;
     } else {
       doc.autoTable({
         startY: currentY + 5,
         head: [teamHead], // Usa o novo cabeçalho
-        body: teamBody,  // Usa os dados recalculados
+        body: teamBody, // Usa os dados recalculados
         theme: "grid",
       });
       currentY = doc.autoTable.previous.finalY;
@@ -1603,11 +1681,11 @@ function _calcBusinessTimeDiff(start, end) {
     try {
       // IDs dos gráficos que queremos exportar
       const chartIds = [
-        "chartWorkload",        // Carga de Trabalho
-        "chartAnalysisTime",    // Distribuição do Tempo
-        "chartEntryVolume",     // Volume de Entrada
-        "chartQuality",         // Qualidade por Analista
-        "chartMonthlyTrend"     // Tendência Mensal (se estiver visível)
+        "chartWorkload", // Carga de Trabalho
+        "chartAnalysisTime", // Distribuição do Tempo
+        "chartEntryVolume", // Volume de Entrada
+        "chartQuality", // Qualidade por Analista
+        "chartMonthlyTrend", // Tendência Mensal (se estiver visível)
       ];
 
       let yPos = 30;
@@ -1627,8 +1705,12 @@ function _calcBusinessTimeDiff(start, end) {
         const chartEl = document.getElementById(id);
 
         // Verifica se a instância existe e se o elemento está visível
-        if (chartInstance && chartEl && chartEl.closest('section') && !chartEl.closest('section').classList.contains('hidden')) {
-            
+        if (
+          chartInstance &&
+          chartEl &&
+          chartEl.closest("section") &&
+          !chartEl.closest("section").classList.contains("hidden")
+        ) {
           // 1. Converte o gráfico para Base64 (Qualidade 1.0 para nitidez)
           const chartImage = chartEl.toDataURL("image/png", 1.0);
 
@@ -1646,18 +1728,22 @@ function _calcBusinessTimeDiff(start, end) {
             doc.addPage();
             yPos = 30;
             doc.setFontSize(14);
-            doc.text("Gráficos de Performance e Eficiência (cont.)", marginX, 22);
+            doc.text(
+              "Gráficos de Performance e Eficiência (cont.)",
+              marginX,
+              22,
+            );
             xPos = marginX; // Reseta para a primeira coluna
           }
 
           // 4. Adiciona a imagem ao PDF
           doc.addImage(chartImage, "PNG", xPos, yPos, chartWidth, chartHeight);
-          
+
           // 5. Atualiza a posição Y para a próxima linha
           if (chartIndex % 2 !== 0) {
             yPos += chartHeight + marginY;
           }
-          
+
           chartIndex++;
         }
       });
@@ -1670,57 +1756,67 @@ function _calcBusinessTimeDiff(start, end) {
 
         // Gráficos de Perfil e Geo
         const profileChartIds = [
-            "chartReqType",
-            "chartCategory",
-            "chartTopCities",
-            "chartTopUf"
+          "chartReqType",
+          "chartCategory",
+          "chartTopCities",
+          "chartTopUf",
         ];
-        
+
         yPos = 30;
         xPos = marginX;
         chartIndex = 0;
-        
+
         profileChartIds.forEach((id) => {
-            const chartInstance = chartInstances[id];
-            const chartEl = document.getElementById(id);
+          const chartInstance = chartInstances[id];
+          const chartEl = document.getElementById(id);
 
-            if (chartInstance && chartEl) {
-                const chartImage = chartEl.toDataURL("image/png", 1.0);
+          if (chartInstance && chartEl) {
+            const chartImage = chartEl.toDataURL("image/png", 1.0);
 
-                if (chartIndex % 2 === 0) {
-                    xPos = marginX;
-                } else {
-                    xPos = marginX + chartWidth + marginY;
-                }
-                
-                if (yPos + chartHeight > 280) {
-                    doc.addPage();
-                    yPos = 30;
-                    doc.setFontSize(14);
-                    doc.text("Perfil das Solicitações e Geográfico (cont.)", marginX, 22);
-                    xPos = marginX;
-                }
-                
-                doc.addImage(chartImage, "PNG", xPos, yPos, chartWidth, chartHeight);
-                
-                if (chartIndex % 2 !== 0) {
-                    yPos += chartHeight + marginY;
-                }
-                
-                chartIndex++;
+            if (chartIndex % 2 === 0) {
+              xPos = marginX;
+            } else {
+              xPos = marginX + chartWidth + marginY;
             }
+
+            if (yPos + chartHeight > 280) {
+              doc.addPage();
+              yPos = 30;
+              doc.setFontSize(14);
+              doc.text(
+                "Perfil das Solicitações e Geográfico (cont.)",
+                marginX,
+                22,
+              );
+              xPos = marginX;
+            }
+
+            doc.addImage(
+              chartImage,
+              "PNG",
+              xPos,
+              yPos,
+              chartWidth,
+              chartHeight,
+            );
+
+            if (chartIndex % 2 !== 0) {
+              yPos += chartHeight + marginY;
+            }
+
+            chartIndex++;
+          }
         });
       }
-
     } catch (e) {
       console.error("Erro ao adicionar gráficos ao PDF:", e);
     }
-    
+
     // 8. Finaliza
     doc.save(`Relatorio_Operacional_${start}_a_${end}.pdf`);
-    loadingIndicator.classList.add('hidden'); // Esconde o loading
+    loadingIndicator.classList.add("hidden"); // Esconde o loading
   }
-  
+
   // --- 8. EXPORTAÇÃO JSON E ROTINAS DE DADOS (NOVO) ---
 
   // Função auxiliar: Transforma Array de Objetos em Formato Matriz (Mais leve)
@@ -1776,7 +1872,7 @@ function _calcBusinessTimeDiff(start, end) {
   // --- 9. DETALHAMENTO DO ANALISTA COM PAGINAÇÃO ---
 
   const sectionAnalystDetail = document.getElementById(
-    "analyst-detail-section"
+    "analyst-detail-section",
   );
   const analystNameDisplay = document.getElementById("analyst-name-display");
   const analystPagination = document.getElementById("analyst-pagination");
@@ -1784,7 +1880,7 @@ function _calcBusinessTimeDiff(start, end) {
   const btnPageNext = document.getElementById("btnPageNext");
   const pageInfo = document.getElementById("pageInfo");
   const analystTableContainer = document.getElementById(
-    "analyst-table-container"
+    "analyst-table-container",
   );
   const analystTableBody = document.getElementById("analyst-table-body");
   const analystMsg = document.getElementById("analyst-msg");
@@ -1813,7 +1909,7 @@ function _calcBusinessTimeDiff(start, end) {
     currentAnalystData = [...filteredData];
 
     // RESETAR ORDENAÇÃO VISUAL E LÓGICA
-    currentSort = { col: 'dataAnalise', direction: 'desc' }; // Padrão: Mais recentes primeiro
+    currentSort = { col: "dataAnalise", direction: "desc" }; // Padrão: Mais recentes primeiro
     updateSortIcons(); // Atualiza as setinhas para refletir o reset
 
     // Ordena: Mais recentes primeiro
@@ -1828,7 +1924,7 @@ function _calcBusinessTimeDiff(start, end) {
     renderAnalystTable();
   }
 
-function renderAnalystTable() {
+  function renderAnalystTable() {
     // Verifica se há dados
     if (currentAnalystData.length === 0) {
       analystTableContainer.classList.add("hidden");
@@ -1857,86 +1953,97 @@ function renderAnalystTable() {
 
     // --- HELPER LOCAL: Formata Texto (agora recebe ms direto) ---
     function formatDurationText(diffMs) {
-        if (diffMs < 0) return "0m";
+      if (diffMs < 0) return "0m";
 
-        const minutesTotal = Math.floor(diffMs / 60000);
-        const hoursTotal = Math.floor(minutesTotal / 60);
-        const days = Math.floor(hoursTotal / 24);
-        const hours = hoursTotal % 24;
-        const minutes = minutesTotal % 60;
+      const minutesTotal = Math.floor(diffMs / 60000);
+      const hoursTotal = Math.floor(minutesTotal / 60);
+      const days = Math.floor(hoursTotal / 24);
+      const hours = hoursTotal % 24;
+      const minutes = minutesTotal % 60;
 
-        if (days > 0) return `${days}d ${hours}h`; // Removi o "(útil)" pois o badge já indica status
-        if (hours > 0) return `${hours}h ${minutes}m`;
-        return `${minutes}m`;
+      if (days > 0) return `${days}d ${hours}h`; // Removi o "(útil)" pois o badge já indica status
+      if (hours > 0) return `${hours}h ${minutes}m`;
+      return `${minutes}m`;
     }
     // ------------------------------------------------------------
 
     // Renderiza Linhas
     analystTableBody.innerHTML = "";
-    
+
     pageData.forEach((row) => {
       const dataFormatada = row._dataAnalise
         ? _native_formatDate(row._dataAnalise, "dd/MM/yy")
         : "N/A";
 
-    // --- NOVA LÓGICA DE COR DA DATA ---
-    const statusDia = getDayStatus(row._dataAnalise);
-    
-    // Cor padrão: cinza. Se for FDS ou Feriado: #380000 (Vermelho Escuro/Preto)
-    let dateColorClass = "text-gray-500";
-    let dateTitle = ""; // Tooltip nativo
+      // --- NOVA LÓGICA DE COR DA DATA ---
+      const statusDia = getDayStatus(row._dataAnalise);
+
+      // Cor padrão: cinza. Se for FDS ou Feriado: #380000 (Vermelho Escuro/Preto)
+      let dateColorClass = "text-gray-500 dark:text-gray-400";
+      let dateTitle = ""; // Tooltip nativo
 
       if (statusDia.isWeekend || statusDia.isFixed || statusDia.isMovable) {
-          dateColorClass = "text-[#380000]"; // Tailwind Arbitrary Value
-          
-          if (statusDia.isWeekend) dateTitle = "Fim de Semana";
-          else if (statusDia.isFixed) dateTitle = "Feriado Fixo";
-          else if (statusDia.isMovable) dateTitle = "Feriado Cadastrado";
+        dateColorClass = "text-[#380000] dark:text-red-300 font-medium";
+
+        if (statusDia.isWeekend) dateTitle = "Fim de Semana";
+        else if (statusDia.isFixed) dateTitle = "Feriado Fixo";
+        else if (statusDia.isMovable) dateTitle = "Feriado Cadastrado";
       }
 
       // 1. CALCULA O TEMPO ÚTIL (Em milissegundos) usando a função que criamos no passo anterior
-      const rawDiff = _calcBusinessTimeDiff(row._dataSolicitacao, row._dataAnalise);
-      
+      const rawDiff = _calcBusinessTimeDiff(
+        row._dataSolicitacao,
+        row._dataAnalise,
+      );
+
       // 2. FORMATA O TEXTO PARA EXIBIÇÃO
       const tempoTexto = formatDurationText(rawDiff);
 
       // 3. LÓGICA DO TERMÔMETRO (Cores)
       const oneDayMs = 24 * 60 * 60 * 1000;
-      
+
       let badgeClass = "";
-      
+
       // Regra:
       // <= 2 dias: Verde
       // > 2 e <= 4 dias: Amarelo
       // > 4 e <= 5 dias: Laranja
       // > 5 dias: Vermelho
-      
+
       if (rawDiff <= 2 * oneDayMs) {
-          // Até 2 dias: Verde (Ideal)
-          badgeClass = "bg-green-100 text-green-800 border border-green-200";
+        // Verde (Ideal)
+        badgeClass =
+          "bg-green-100 text-green-800 border border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800";
       } else if (rawDiff <= 4 * oneDayMs) {
-          // De 2d até 4d: Amarelo (Atenção)
-          badgeClass = "bg-yellow-100 text-yellow-800 border border-yellow-200";
+        // Amarelo (Atenção)
+        badgeClass =
+          "bg-yellow-100 text-yellow-800 border border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800";
       } else if (rawDiff <= 5 * oneDayMs) {
-          // De 4d até 5d: Laranja (Alerta)
-          badgeClass = "bg-orange-100 text-orange-800 border border-orange-200";
+        // Laranja (Alerta)
+        badgeClass =
+          "bg-orange-100 text-orange-800 border border-orange-200 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-800";
       } else {
-          // Acima de 5 dias: Vermelho (Crítico)
-          badgeClass = "bg-red-100 text-red-800 border border-red-200";
+        // Vermelho (Crítico)
+        badgeClass =
+          "bg-red-100 text-red-800 border border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800";
       }
 
-      let statusClass = "text-gray-600";
+      let statusClass = "text-gray-600 dark:text-gray-400"; // Padrão mais claro no dark
+
       if (row["Situação Solicitação"] === "Deferida")
-        statusClass = "text-green-600 font-bold";
+        statusClass = "text-green-600 dark:text-green-400 font-bold";
+
       if (row["Situação Solicitação"] === "Deferida Parcial")
-        statusClass = "text-yellow-600 font-bold";
+        statusClass = "text-yellow-600 dark:text-yellow-400 font-bold";
+
       if (row["Situação Solicitação"] === "Indeferida")
-        statusClass = "text-red-600 font-bold";
+        statusClass = "text-red-600 dark:text-red-400 font-bold";
+
       if (row["Situação Solicitação"] === "Em Análise")
-        statusClass = "text-blue-600 font-bold";
+        statusClass = "text-blue-600 dark:text-blue-400 font-bold";
 
       const tr = `
-            <tr class="hover:bg-gray-50 transition-colors">
+            <tr class="hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
                 <td class="px-4 py-2 whitespace-nowrap text-sm ${dateColorClass}" title="${dateTitle}">
                     ${dataFormatada}
                 </td>
@@ -1947,16 +2054,16 @@ function renderAnalystTable() {
                     </span>
                 </td>
 
-                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">${
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-white">${
                   row["CNPJ/CPF"] || ""
                 }</td>
-                <td class="px-4 py-2 text-sm text-gray-600 truncate max-w-xs" title="${
+                <td class="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 truncate max-w-xs" title="${
                   row["Razão Social/Nome"]
                 }">${row["Razão Social/Nome"] || ""}</td>
                 <td class="px-4 py-2 whitespace-nowrap text-sm ${statusClass}">${
                   row["Situação Solicitação"] || ""
                 }</td>
-                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${
                   row["Tipo Solicitacão"] || ""
                 }</td>
             </tr>
@@ -1977,18 +2084,18 @@ function renderAnalystTable() {
     const endRecord = Math.min(endIndex, totalRecords);
 
     analystCountInfo.textContent = `Mostrando de ${startRecord.toLocaleString(
-        "pt-BR"
+      "pt-BR",
     )} até ${endRecord.toLocaleString(
-        "pt-BR"
+      "pt-BR",
     )} de ${totalRecords.toLocaleString("pt-BR")} registros.`;
   }
 
-    // Atualiza Controles
-    //pageInfo.textContent = `Pág ${currentPage} de ${totalPages}`;
+  // Atualiza Controles
+  //pageInfo.textContent = `Pág ${currentPage} de ${totalPages}`;
 
-    //btnPagePrev.disabled = currentPage === 1;
-   // btnPageNext.disabled = currentPage === totalPages;
- // }
+  //btnPagePrev.disabled = currentPage === 1;
+  // btnPageNext.disabled = currentPage === totalPages;
+  // }
 
   // Event Listeners da Paginação
   if (btnPagePrev) {
@@ -2020,7 +2127,7 @@ function renderAnalystTable() {
 
     const total = allData.length;
     const indeferidas = allData.filter(
-      (d) => d["Situação Solicitação"] === "Indeferida"
+      (d) => d["Situação Solicitação"] === "Indeferida",
     ).length;
 
     return {
@@ -2050,102 +2157,104 @@ function renderAnalystTable() {
           app: "dashboard", // Identificador para a Home saber quem respondeu
           data: stats,
         },
-        event.origin
+        event.origin,
       );
     }
   });
 
-// --- GERENCIADOR DE FERIADOS E CALENDÁRIO VISUAL (Atualizado com Modal de Nome) ---
+  // --- GERENCIADOR DE FERIADOS E CALENDÁRIO VISUAL (Atualizado com Modal de Nome) ---
 
-const modalHolidays = document.getElementById("holidayModal");
-const btnOpenHolidays = document.getElementById("btnOpenHolidays");
-const btnCloseHolidays = document.getElementById("btnCloseHolidays");
-const btnDownloadHolidays = document.getElementById("btnDownloadHolidays");
-const holidayListDisplay = document.getElementById("holidayListDisplay");
-const countHolidaysSpan = document.getElementById("countHolidays");
+  const modalHolidays = document.getElementById("holidayModal");
+  const btnOpenHolidays = document.getElementById("btnOpenHolidays");
+  const btnCloseHolidays = document.getElementById("btnCloseHolidays");
+  const btnDownloadHolidays = document.getElementById("btnDownloadHolidays");
+  const holidayListDisplay = document.getElementById("holidayListDisplay");
+  const countHolidaysSpan = document.getElementById("countHolidays");
 
-// Elementos do Calendário
-const calGrid = document.getElementById("calGrid");
-const calMonthYear = document.getElementById("calMonthYear");
-const btnCalPrev = document.getElementById("calPrevMonth");
-const btnCalNext = document.getElementById("calNextMonth");
-const btnAddSelected = document.getElementById("btnAddSelected");
+  // Elementos do Calendário
+  const calGrid = document.getElementById("calGrid");
+  const calMonthYear = document.getElementById("calMonthYear");
+  const btnCalPrev = document.getElementById("calPrevMonth");
+  const btnCalNext = document.getElementById("calNextMonth");
+  const btnAddSelected = document.getElementById("btnAddSelected");
 
-// --- NOVOS ELEMENTOS DO MODAL DE NOME ---
-const nameModal = document.getElementById("nameModal");
-const inputHolidayName = document.getElementById("inputHolidayName");
-const btnCancelName = document.getElementById("btnCancelName");
-const btnConfirmName = document.getElementById("btnConfirmName");
+  // --- NOVOS ELEMENTOS DO MODAL DE NOME ---
+  const nameModal = document.getElementById("nameModal");
+  const inputHolidayName = document.getElementById("inputHolidayName");
+  const btnCancelName = document.getElementById("btnCancelName");
+  const btnConfirmName = document.getElementById("btnConfirmName");
 
-// Estado do Calendário
-let calDate = new Date(); 
-let tempHolidaysMap = new Map(); 
-let pendingSelection = new Set(); 
-let onNameConfirmAction = null; // Variável para o callback do modal
+  // Estado do Calendário
+  let calDate = new Date();
+  let tempHolidaysMap = new Map();
+  let pendingSelection = new Set();
+  let onNameConfirmAction = null; // Variável para o callback do modal
 
-// --- LÓGICA DO MODAL DE NOME ---
-function openNameModal(initialValue, callback) {
+  // --- LÓGICA DO MODAL DE NOME ---
+  function openNameModal(initialValue, callback) {
     inputHolidayName.value = initialValue || "";
     onNameConfirmAction = callback;
     nameModal.classList.remove("hidden");
     setTimeout(() => inputHolidayName.focus(), 100);
-}
+  }
 
-function closeNameModal() {
+  function closeNameModal() {
     nameModal.classList.add("hidden");
     onNameConfirmAction = null;
-}
+  }
 
-if(btnCancelName) btnCancelName.addEventListener("click", closeNameModal);
+  if (btnCancelName) btnCancelName.addEventListener("click", closeNameModal);
 
-if(btnConfirmName) {
+  if (btnConfirmName) {
     btnConfirmName.addEventListener("click", () => {
-        const name = inputHolidayName.value.trim();
-        if (name && onNameConfirmAction) {
-            onNameConfirmAction(name);
-            closeNameModal();
-        } else if (!name) {
-            alert("Por favor, digite um nome.");
-            inputHolidayName.focus();
-        }
+      const name = inputHolidayName.value.trim();
+      if (name && onNameConfirmAction) {
+        onNameConfirmAction(name);
+        closeNameModal();
+      } else if (!name) {
+        alert("Por favor, digite um nome.");
+        inputHolidayName.focus();
+      }
     });
-}
+  }
 
-if(inputHolidayName) {
+  if (inputHolidayName) {
     inputHolidayName.addEventListener("keyup", (e) => {
-        if(e.key === "Enter") btnConfirmName.click();
+      if (e.key === "Enter") btnConfirmName.click();
     });
-}
+  }
 
-// 1. Abertura do Modal Principal
-if(btnOpenHolidays) {
+  // 1. Abertura do Modal Principal
+  if (btnOpenHolidays) {
     btnOpenHolidays.addEventListener("click", () => {
-        tempHolidaysMap = new Map(movableHolidays);
-        pendingSelection.clear(); 
-        calDate = new Date(); 
-        calDate.setDate(1); 
+      tempHolidaysMap = new Map(movableHolidays);
+      pendingSelection.clear();
+      calDate = new Date();
+      calDate.setDate(1);
 
-        renderHolidayList();
-        renderCalendar();
-        modalHolidays.classList.remove("hidden");
+      renderHolidayList();
+      renderCalendar();
+      modalHolidays.classList.remove("hidden");
     });
-}
+  }
 
-if(btnCloseHolidays) {
-    btnCloseHolidays.addEventListener("click", () => modalHolidays.classList.add("hidden"));
-}
+  if (btnCloseHolidays) {
+    btnCloseHolidays.addEventListener("click", () =>
+      modalHolidays.classList.add("hidden"),
+    );
+  }
 
-// 2. Navegação do Calendário
-if(btnCalPrev) btnCalPrev.addEventListener("click", () => changeMonth(-1));
-if(btnCalNext) btnCalNext.addEventListener("click", () => changeMonth(1));
+  // 2. Navegação do Calendário
+  if (btnCalPrev) btnCalPrev.addEventListener("click", () => changeMonth(-1));
+  if (btnCalNext) btnCalNext.addEventListener("click", () => changeMonth(1));
 
-function changeMonth(delta) {
+  function changeMonth(delta) {
     calDate.setMonth(calDate.getMonth() + delta);
     renderCalendar();
-}
+  }
 
-// 3. Renderização do Calendário
-function renderCalendar() {
+  // 3. Renderização do Calendário
+  function renderCalendar() {
     if (!calGrid) return;
     calGrid.innerHTML = "";
 
@@ -2158,7 +2267,20 @@ function renderCalendar() {
     // 1. Gera os feriados matemáticos para ESTE ano (Ex: Páscoa, Carnaval...)
     const calculatedHolidays = getCalculatedHolidays(year);
 
-    const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+    const monthNames = [
+      "Janeiro",
+      "Fevereiro",
+      "Março",
+      "Abril",
+      "Maio",
+      "Junho",
+      "Julho",
+      "Agosto",
+      "Setembro",
+      "Outubro",
+      "Novembro",
+      "Dezembro",
+    ];
     calMonthYear.textContent = `${monthNames[month]} ${year}`;
 
     const firstDayOfMonth = new Date(year, month, 1).getDay();
@@ -2169,231 +2291,312 @@ function renderCalendar() {
 
     // Espaços vazios para o alinhamento da semana
     for (let i = 0; i < firstDayOfMonth; i++) {
-        const emptyCell = document.createElement("div");
-        calGrid.appendChild(emptyCell);
+      const emptyCell = document.createElement("div");
+      calGrid.appendChild(emptyCell);
     }
 
     // Loop pelos dias do mês
     for (let d = 1; d <= daysInMonth; d++) {
-        const currentDate = new Date(year, month, d);
-        const yyyy_mm_dd = _native_formatDate(currentDate, "yyyy-MM-dd");
-        const dd_mm = yyyy_mm_dd.substring(5);
+      const currentDate = new Date(year, month, d);
+      const yyyy_mm_dd = _native_formatDate(currentDate, "yyyy-MM-dd");
+      const dd_mm = yyyy_mm_dd.substring(5);
 
-        const isWeekend = currentDate.getDay() === 0 || currentDate.getDay() === 6;
+      const isWeekend =
+        currentDate.getDay() === 0 || currentDate.getDay() === 6;
 
-        // Verifica Fixo (Laranja)
-        const isFixed = FIXED_HOLIDAYS.has(dd_mm);
-        const fixedName = isFixed ? FIXED_HOLIDAYS.get(dd_mm) : null;
+      // Verifica Fixo (Laranja)
+      const isFixed = FIXED_HOLIDAYS.has(dd_mm);
+      const fixedName = isFixed ? FIXED_HOLIDAYS.get(dd_mm) : null;
 
-        // Verifica Manual (Vermelho)
-        const isSaved = tempHolidaysMap.has(yyyy_mm_dd);
-        const savedName = isSaved ? tempHolidaysMap.get(yyyy_mm_dd) : null;
+      // Verifica Manual (Vermelho)
+      const isSaved = tempHolidaysMap.has(yyyy_mm_dd);
+      const savedName = isSaved ? tempHolidaysMap.get(yyyy_mm_dd) : null;
 
-        // Verifica Calculado/Automático (Roxo)
-        const isCalculated = calculatedHolidays.has(yyyy_mm_dd);
-        const calculatedName = isCalculated ? calculatedHolidays.get(yyyy_mm_dd) : null;
+      // Verifica Calculado/Automático (Roxo)
+      const isCalculated = calculatedHolidays.has(yyyy_mm_dd);
+      const calculatedName = isCalculated
+        ? calculatedHolidays.get(yyyy_mm_dd)
+        : null;
 
-        const isSelected = pendingSelection.has(yyyy_mm_dd);
+      const isSelected = pendingSelection.has(yyyy_mm_dd);
 
-        const btn = document.createElement("button");
-        btn.textContent = d;
+      const btn = document.createElement("button");
+      btn.textContent = d;
 
-        let classes = ["h-10", "w-full", "rounded-lg", "text-sm", "flex", "items-center", "justify-center", "transition-all", "relative"];
+      let classes = [
+        "h-10",
+        "w-full",
+        "rounded-lg",
+        "text-sm",
+        "flex",
+        "items-center",
+        "justify-center",
+        "transition-all",
+        "relative",
+      ];
 
-        // --- LÓGICA DE PRIORIDADE VISUAL ---
-        if (isSelected) {
-            classes.push("bg-blue-600", "text-white", "font-bold", "shadow-md", "scale-105");
-        } else if (isSaved) {
-            classes.push("bg-red-500", "text-white", "hover:bg-red-600", "font-medium");
-            btn.title = savedName + " (Manual)";
-        } else if (isCalculated) {
-            // Estilo ROXO para feriados automáticos (Páscoa, etc)
-            classes.push("bg-purple-200", "text-purple-900", "font-bold", "border", "border-purple-300");
-            btn.title = calculatedName + " (Calculado)";
-        } else if (isFixed) {
-            classes.push("bg-orange-200", "text-orange-900", "font-bold", "border", "border-orange-300");
-            btn.title = fixedName + " (Fixo)";
-        } else if (isWeekend) {
-            classes.push("bg-gray-100", "text-gray-400");
+      // --- LÓGICA DE PRIORIDADE VISUAL ---
+      if (isSelected) {
+        classes.push(
+          "bg-blue-600",
+          "dark:bg-blue-600", // Azul sólido funciona bem em ambos
+          "text-white",
+          "font-bold",
+          "shadow-md",
+          "scale-105",
+          "dark:shadow-blue-900/50", // Sombra colorida no dark
+        );
+      } else if (isSaved) {
+        classes.push(
+          "bg-red-500",
+          "dark:bg-red-600", // Vermelho sólido
+          "text-white",
+          "hover:bg-red-600",
+          "dark:hover:bg-red-500",
+          "font-medium",
+        );
+        btn.title = savedName + " (Manual)";
+      } else if (isCalculated) {
+        // ROXO: Pastel no Light vs Escuro/Neon no Dark
+        classes.push(
+          "bg-purple-200",
+          "dark:bg-purple-900/60",
+          "text-purple-900",
+          "dark:text-purple-200",
+          "font-bold",
+          "border",
+          "border-purple-300",
+          "dark:border-purple-700",
+        );
+        btn.title = calculatedName + " (Calculado)";
+      } else if (isFixed) {
+        // LARANJA: Pastel no Light vs Escuro/Neon no Dark
+        classes.push(
+          "bg-orange-200",
+          "dark:bg-orange-900/60",
+          "text-orange-900",
+          "dark:text-orange-200",
+          "font-bold",
+          "border",
+          "border-orange-300",
+          "dark:border-orange-700",
+        );
+        btn.title = fixedName + " (Fixo)";
+      } else if (isWeekend) {
+        classes.push(
+          "bg-gray-100",
+          "dark:bg-slate-800",
+          "text-gray-400",
+          "dark:text-slate-500",
+          "dark:border",
+          "dark:border-slate-700", // Adiciona borda no dark para separar
+        );
+      } else {
+        classes.push(
+          "bg-white",
+          "dark:bg-slate-700", // Fundo Branco (Dia) vs Slate (Noite)
+          "text-gray-700",
+          "dark:text-gray-200", // Texto Escuro (Dia) vs Claro (Noite)
+          "border",
+          "dark:border-slate-600", // Borda Padrão vs Borda Escura
+          "hover:bg-gray-50",
+          "dark:hover:bg-slate-600", // Hover claro vs Hover escuro
+          "hover:border-blue-300", // Mantém o azul no hover em ambos
+        );
+      }
+
+      btn.className = classes.join(" ");
+
+      // Evento de Clique
+      btn.addEventListener("click", () => {
+        if (isCalculated || isFixed) {
+          alert(
+            `Este é um feriado automático (${calculatedName || fixedName}). Você não precisa adicioná-lo manualmente.`,
+          );
         } else {
-            classes.push("bg-white", "text-gray-700", "border", "hover:bg-gray-50", "hover:border-blue-300");
+          toggleDateSelection(yyyy_mm_dd);
         }
+      });
 
-        btn.className = classes.join(" ");
+      calGrid.appendChild(btn);
 
-        // Evento de Clique
-        btn.addEventListener("click", () => {
-            if (isCalculated || isFixed) {
-                alert(`Este é um feriado automático (${calculatedName || fixedName}). Você não precisa adicioná-lo manualmente.`);
-            } else {
-                toggleDateSelection(yyyy_mm_dd);
-            }
+      // Coleta para o rodapé conforme o tipo detectado
+      if (isSaved)
+        holidaysInThisMonth.push({ day: d, name: savedName, type: "manual" });
+      else if (isCalculated)
+        holidaysInThisMonth.push({
+          day: d,
+          name: calculatedName,
+          type: "calculado",
         });
-
-        calGrid.appendChild(btn);
-
-        // Coleta para o rodapé conforme o tipo detectado
-        if (isSaved) holidaysInThisMonth.push({ day: d, name: savedName, type: 'manual' });
-        else if (isCalculated) holidaysInThisMonth.push({ day: d, name: calculatedName, type: 'calculado' });
-        else if (isFixed) holidaysInThisMonth.push({ day: d, name: fixedName, type: 'fixo' });
+      else if (isFixed)
+        holidaysInThisMonth.push({ day: d, name: fixedName, type: "fixo" });
     }
 
     // --- RENDERIZAÇÃO DO RODAPÉ ---
     if (calFooterList) {
-        if (holidaysInThisMonth.length === 0) {
-            calFooterList.innerHTML = `<li class="text-gray-400 italic text-xs pl-2">Nenhum feriado registrado.</li>`;
-        } else {
-            // Ordena os feriados por dia do mês
-            holidaysInThisMonth.sort((a, b) => a.day - b.day);
+      if (holidaysInThisMonth.length === 0) {
+        calFooterList.innerHTML = `<li class="text-gray-400 italic text-xs pl-2">Nenhum feriado registrado.</li>`;
+      } else {
+        // Ordena os feriados por dia do mês
+        holidaysInThisMonth.sort((a, b) => a.day - b.day);
 
-            holidaysInThisMonth.forEach(h => {
-                const li = document.createElement("li");
-                li.className = "flex items-center gap-2";
+        holidaysInThisMonth.forEach((h) => {
+          const li = document.createElement("li");
+          li.className = "flex items-center gap-2";
 
-                let colorClass = "bg-gray-400";
-                if (h.type === 'manual') colorClass = "bg-red-500";
-                if (h.type === 'fixo') colorClass = "bg-orange-400";
-                if (h.type === 'calculado') colorClass = "bg-purple-500";
+          let colorClass = "bg-gray-400";
+          if (h.type === "manual") colorClass = "bg-red-500";
+          if (h.type === "fixo") colorClass = "bg-orange-400";
+          if (h.type === "calculado") colorClass = "bg-purple-500";
 
-                li.innerHTML = `
+          li.innerHTML = `
                     <span class="w-2 h-2 rounded-full ${colorClass}"></span>
-                    <span class="font-bold w-6 text-right">${h.day}:</span>
-                    <span class="truncate text-xs text-gray-700" title="${h.name}">${h.name}</span>
+                    <span class="font-bold w-6 text-right text-gray-700 dark:text-gray-300">${h.day}:</span>
+                    <span class="truncate text-xs text-gray-700 dark:text-gray-300" title="${h.name}">${h.name}</span>
                 `;
-                calFooterList.appendChild(li);
-            });
-        }
+          calFooterList.appendChild(li);
+        });
+      }
     }
 
     // Atualiza o botão de ação (Adicionar Selecionados)
     if (btnAddSelected) {
-        const count = pendingSelection.size;
-        btnAddSelected.textContent = count > 0 ? `Adicionar ${count} dia(s)...` : "Selecione dias no calendário";
-        btnAddSelected.disabled = count === 0;
+      const count = pendingSelection.size;
+      btnAddSelected.textContent =
+        count > 0
+          ? `Adicionar ${count} dia(s)...`
+          : "Selecione dias no calendário";
+      btnAddSelected.disabled = count === 0;
 
-        if (count > 0) {
-            btnAddSelected.classList.replace("bg-gray-400", "bg-blue-600");
-        } else {
-            btnAddSelected.classList.replace("bg-blue-600", "bg-gray-400");
-        }
+      if (count > 0) {
+        btnAddSelected.classList.replace("bg-gray-400", "bg-blue-600");
+      } else {
+        btnAddSelected.classList.replace("bg-blue-600", "bg-gray-400");
+      }
     }
-}
+  }
 
-function toggleDateSelection(dateStr) {
+  function toggleDateSelection(dateStr) {
     if (tempHolidaysMap.has(dateStr)) {
-        const currentName = tempHolidaysMap.get(dateStr);
-        if(confirm(`"${currentName}" (${dateStr})\n\nDeseja remover este feriado?`)) {
-            tempHolidaysMap.delete(dateStr);
-            renderHolidayList();
-            renderCalendar();
-        }
-        return;
+      const currentName = tempHolidaysMap.get(dateStr);
+      if (
+        confirm(`"${currentName}" (${dateStr})\n\nDeseja remover este feriado?`)
+      ) {
+        tempHolidaysMap.delete(dateStr);
+        renderHolidayList();
+        renderCalendar();
+      }
+      return;
     }
 
     if (pendingSelection.has(dateStr)) {
-        pendingSelection.delete(dateStr);
+      pendingSelection.delete(dateStr);
     } else {
-        pendingSelection.add(dateStr);
+      pendingSelection.add(dateStr);
     }
     renderCalendar();
-}
+  }
 
-// 4. Botão "Adicionar Selecionados" (ATUALIZADO COM MODAL)
-if(btnAddSelected) {
+  // 4. Botão "Adicionar Selecionados" (ATUALIZADO COM MODAL)
+  if (btnAddSelected) {
     btnAddSelected.addEventListener("click", () => {
-        openNameModal("Feriado/Facultativo", (typedName) => {
-            pendingSelection.forEach(date => {
-                tempHolidaysMap.set(date, typedName);
-            });
-            pendingSelection.clear();
-            renderHolidayList();
-            renderCalendar();
+      openNameModal("Feriado/Facultativo", (typedName) => {
+        pendingSelection.forEach((date) => {
+          tempHolidaysMap.set(date, typedName);
         });
+        pendingSelection.clear();
+        renderHolidayList();
+        renderCalendar();
+      });
     });
-}
+  }
 
-// 5. Lista Lateral (ATUALIZADO COM MODAL DE EDIÇÃO)
-function renderHolidayList() {
-    if(!holidayListDisplay) return;
+  // 5. Lista Lateral (ATUALIZADO COM MODAL DE EDIÇÃO)
+  function renderHolidayList() {
+    if (!holidayListDisplay) return;
     holidayListDisplay.innerHTML = "";
-    
-    if(countHolidaysSpan) countHolidaysSpan.textContent = tempHolidaysMap.size;
+
+    if (countHolidaysSpan) countHolidaysSpan.textContent = tempHolidaysMap.size;
 
     const sortedKeys = [...tempHolidaysMap.keys()].sort();
-    
-    if(sortedKeys.length === 0) {
-        holidayListDisplay.innerHTML = `
+
+    if (sortedKeys.length === 0) {
+      holidayListDisplay.innerHTML = `
           <div class="text-center p-4 text-gray-400 flex flex-col items-center">
               <span class="text-2xl mb-2">📅</span>
               <p>Nenhum feriado extra cadastrado.</p>
           </div>`;
-        return;
+      return;
     }
 
-    sortedKeys.forEach(date => {
-        const name = tempHolidaysMap.get(date);
-        const li = document.createElement("li");
-        li.className = "flex justify-between items-center bg-white p-3 rounded shadow-sm border-l-4 border-red-500 hover:bg-gray-50 transition-colors group";
-        
-        const dt = _native_safeParseDate(date);
-        const diaSemana = dt ? dt.toLocaleDateString('pt-BR', { weekday: 'short' }) : '';
-        const dataFormatada = _native_formatDate(dt, "dd/MM/yy");
+    sortedKeys.forEach((date) => {
+      const name = tempHolidaysMap.get(date);
+      const li = document.createElement("li");
+      li.className =
+        "flex justify-between items-center bg-white dark:bg-slate-900 p-3 rounded shadow-sm border-l-4 border-red-500 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors group";
 
-        li.innerHTML = `
+      const dt = _native_safeParseDate(date);
+      const diaSemana = dt
+        ? dt.toLocaleDateString("pt-BR", { weekday: "short" })
+        : "";
+      const dataFormatada = _native_formatDate(dt, "dd/MM/yy");
+
+      li.innerHTML = `
           <div class="flex flex-col cursor-pointer flex-grow" title="Clique para editar nome">
               <div class="flex items-center gap-2">
-                  <span class="font-bold text-gray-800">${dataFormatada}</span>
-                  <span class="text-xs text-blue-600 font-semibold uppercase tracking-wide px-1 bg-blue-50 rounded border border-blue-100">${name}</span>
+                  <span class="font-bold text-gray-800 dark:text-gray-100">${dataFormatada}</span>
+                  <span class="text-xs text-blue-600 font-semibold uppercase tracking-wide px-1 bg-blue-50 dark:bg-blue-900/40 rounded border border-blue-100 dark:border-blue-800 dark:text-blue-300">${name}</span>
               </div>
-              <span class="text-xs text-gray-500 uppercase">${diaSemana}</span>
+              <span class="text-xs text-gray-500 dark:text-gray-400 uppercase">${diaSemana}</span>
           </div>
-          <button class="text-gray-300 hover:text-red-600 transition-colors p-2" title="Remover">
+          <button class="text-gray-300 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors p-2" title="Remover">
               ✕
           </button>
         `;
-        
-        li.querySelector("div").addEventListener("click", () => {
-            openNameModal(name, (newName) => {
-                tempHolidaysMap.set(date, newName);
-                renderHolidayList();
-                renderCalendar();
-            });
-        });
 
-        li.querySelector("button").addEventListener("click", (e) => {
-            e.stopPropagation();
-            if(confirm(`Remover "${name}"?`)) { 
-                tempHolidaysMap.delete(date);
-                renderHolidayList();
-                renderCalendar();
-            }
+      li.querySelector("div").addEventListener("click", () => {
+        openNameModal(name, (newName) => {
+          tempHolidaysMap.set(date, newName);
+          renderHolidayList();
+          renderCalendar();
         });
-        
-        holidayListDisplay.appendChild(li);
+      });
+
+      li.querySelector("button").addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (confirm(`Remover "${name}"?`)) {
+          tempHolidaysMap.delete(date);
+          renderHolidayList();
+          renderCalendar();
+        }
+      });
+
+      holidayListDisplay.appendChild(li);
     });
-}
+  }
 
-// 6. Botão Salvar e Baixar
-if(btnDownloadHolidays) {
+  // 6. Botão Salvar e Baixar
+  if (btnDownloadHolidays) {
     btnDownloadHolidays.addEventListener("click", () => {
-        const objToExport = Object.fromEntries(tempHolidaysMap);
-        const jsonString = JSON.stringify(objToExport, null, 2);
-        const blob = new Blob([jsonString], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "feriados.json";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        
-        movableHolidays = tempHolidaysMap;
-        modalHolidays.classList.add("hidden");
-        
-        alert("Lista atualizada! O Dashboard será recalculado agora.");
-        updateDashboard(); 
+      const objToExport = Object.fromEntries(tempHolidaysMap);
+      const jsonString = JSON.stringify(objToExport, null, 2);
+      const blob = new Blob([jsonString], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "feriados.json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      movableHolidays = tempHolidaysMap;
+      modalHolidays.classList.add("hidden");
+
+      alert("Lista atualizada! O Dashboard será recalculado agora.");
+      updateDashboard();
     });
-}
+  }
 
   //----------------------------------------------------------------------------------------//
   //----------------------------------------------------------------------------------------//
@@ -2401,98 +2604,100 @@ if(btnDownloadHolidays) {
   // --- LÓGICA DE ORDENAÇÃO DA TABELA DE ANALISTAS ---
 
   // Adiciona eventos de clique aos cabeçalhos
-  const headers = document.querySelectorAll('#analyst-detail-section th[data-col]');
-  headers.forEach(th => {
-      th.addEventListener('click', () => {
-          const col = th.getAttribute('data-col');
-          handleSort(col);
-      });
+  const headers = document.querySelectorAll(
+    "#analyst-detail-section th[data-col]",
+  );
+  headers.forEach((th) => {
+    th.addEventListener("click", () => {
+      const col = th.getAttribute("data-col");
+      handleSort(col);
+    });
   });
 
   function handleSort(column) {
-      // 1. Define a direção (inverte se clicar na mesma coluna)
-      if (currentSort.col === column) {
-          currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
-      } else {
-          currentSort.col = column;
-          currentSort.direction = 'asc'; // Padrão ao clicar em nova coluna
+    // 1. Define a direção (inverte se clicar na mesma coluna)
+    if (currentSort.col === column) {
+      currentSort.direction = currentSort.direction === "asc" ? "desc" : "asc";
+    } else {
+      currentSort.col = column;
+      currentSort.direction = "asc"; // Padrão ao clicar em nova coluna
+    }
+
+    // 2. Atualiza Ícones Visuais
+    updateSortIcons();
+
+    // 3. Executa a Ordenação no Array de Dados (currentAnalystData)
+    currentAnalystData.sort((a, b) => {
+      let valA, valB;
+
+      // Extrai os valores baseado na coluna
+      switch (column) {
+        case "dataAnalise":
+          valA = a._dataAnalise ? a._dataAnalise.getTime() : 0;
+          valB = b._dataAnalise ? b._dataAnalise.getTime() : 0;
+          break;
+
+        case "tempo":
+          // Usa a mesma função de cálculo de dias úteis para ordenar
+          valA = _calcBusinessTimeDiff(a._dataSolicitacao, a._dataAnalise);
+          valB = _calcBusinessTimeDiff(b._dataSolicitacao, b._dataAnalise);
+          break;
+
+        case "cnpj":
+          // Remove pontuação para ordenar como número puro
+          const cleanA = (a["CNPJ/CPF"] || "").replace(/\D/g, "");
+          const cleanB = (b["CNPJ/CPF"] || "").replace(/\D/g, "");
+          // Compara como números se possível, senão string
+          valA = cleanA ? Number(cleanA) : 0;
+          valB = cleanB ? Number(cleanB) : 0;
+          break;
+
+        case "razao":
+          valA = (a["Razão Social/Nome"] || "").toLowerCase();
+          valB = (b["Razão Social/Nome"] || "").toLowerCase();
+          break;
+
+        case "situacao":
+          valA = (a["Situação Solicitação"] || "").toLowerCase();
+          valB = (b["Situação Solicitação"] || "").toLowerCase();
+          break;
+
+        case "tipo":
+          valA = (a["Tipo Solicitacão"] || "").toLowerCase();
+          valB = (b["Tipo Solicitacão"] || "").toLowerCase();
+          break;
+
+        default:
+          return 0;
       }
 
-      // 2. Atualiza Ícones Visuais
-      updateSortIcons();
+      // Comparação Genérica
+      if (valA < valB) return currentSort.direction === "asc" ? -1 : 1;
+      if (valA > valB) return currentSort.direction === "asc" ? 1 : -1;
+      return 0;
+    });
 
-      // 3. Executa a Ordenação no Array de Dados (currentAnalystData)
-      currentAnalystData.sort((a, b) => {
-          let valA, valB;
-
-          // Extrai os valores baseado na coluna
-          switch (column) {
-              case 'dataAnalise':
-                  valA = a._dataAnalise ? a._dataAnalise.getTime() : 0;
-                  valB = b._dataAnalise ? b._dataAnalise.getTime() : 0;
-                  break;
-              
-              case 'tempo':
-                  // Usa a mesma função de cálculo de dias úteis para ordenar
-                  valA = _calcBusinessTimeDiff(a._dataSolicitacao, a._dataAnalise);
-                  valB = _calcBusinessTimeDiff(b._dataSolicitacao, b._dataAnalise);
-                  break;
-
-              case 'cnpj':
-                  // Remove pontuação para ordenar como número puro
-                  const cleanA = (a["CNPJ/CPF"] || "").replace(/\D/g, '');
-                  const cleanB = (b["CNPJ/CPF"] || "").replace(/\D/g, '');
-                  // Compara como números se possível, senão string
-                  valA = cleanA ? Number(cleanA) : 0;
-                  valB = cleanB ? Number(cleanB) : 0;
-                  break;
-
-              case 'razao':
-                  valA = (a["Razão Social/Nome"] || "").toLowerCase();
-                  valB = (b["Razão Social/Nome"] || "").toLowerCase();
-                  break;
-
-              case 'situacao':
-                  valA = (a["Situação Solicitação"] || "").toLowerCase();
-                  valB = (b["Situação Solicitação"] || "").toLowerCase();
-                  break;
-
-              case 'tipo':
-                  valA = (a["Tipo Solicitacão"] || "").toLowerCase();
-                  valB = (b["Tipo Solicitacão"] || "").toLowerCase();
-                  break;
-
-              default:
-                  return 0;
-          }
-
-          // Comparação Genérica
-          if (valA < valB) return currentSort.direction === 'asc' ? -1 : 1;
-          if (valA > valB) return currentSort.direction === 'asc' ? 1 : -1;
-          return 0;
-      });
-
-      // 4. Volta para a página 1 e renderiza
-      currentPage = 1;
-      renderAnalystTable();
+    // 4. Volta para a página 1 e renderiza
+    currentPage = 1;
+    renderAnalystTable();
   }
 
   function updateSortIcons() {
-      headers.forEach(th => {
-          const col = th.getAttribute('data-col');
-          const iconSpan = th.querySelector('.sort-icon');
-          
-          if (col === currentSort.col) {
-              // Coluna ativa: mostra seta correta
-              iconSpan.textContent = currentSort.direction === 'asc' ? '↑' : '↓';
-              iconSpan.classList.add('text-blue-600', 'font-bold');
-              iconSpan.classList.remove('text-gray-400');
-          } else {
-              // Coluna inativa: mostra neutro
-              iconSpan.textContent = '⇅';
-              iconSpan.classList.remove('text-blue-600', 'font-bold');
-              iconSpan.classList.add('text-gray-400');
-          }
-      });
+    headers.forEach((th) => {
+      const col = th.getAttribute("data-col");
+      const iconSpan = th.querySelector(".sort-icon");
+
+      if (col === currentSort.col) {
+        // Coluna ativa: mostra seta correta
+        iconSpan.textContent = currentSort.direction === "asc" ? "↑" : "↓";
+        iconSpan.classList.add("text-blue-600", "font-bold");
+        iconSpan.classList.remove("text-gray-400");
+      } else {
+        // Coluna inativa: mostra neutro
+        iconSpan.textContent = "⇅";
+        iconSpan.classList.remove("text-blue-600", "font-bold");
+        iconSpan.classList.add("text-gray-400");
+      }
+    });
   }
 }; // FECHA O window.onload

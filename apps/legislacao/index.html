@@ -4,10 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Atos Normativos - Cockpit</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <script>
       tailwind.config = {
-        darkMode: "class", // Ativa o modo manual
+        darkMode: "class",
         theme: {
           extend: {
             colors: {
@@ -15,14 +17,41 @@
             },
             fontFamily: {
               sans: ["Inter", "sans-serif"],
-              serif: ["Merriweather", "serif"],
+              serif: ["Merriweather", "serif"], // Adicionado para não quebrar o Legislação
             },
           },
         },
       };
     </script>
+
+    <script>
+      (function () {
+        // A. Segurança (Redireciona se não tiver token)
+        // OBS: Assume que o arquivo está em apps/NOME_DO_APP/index.html
+        const isAuthenticated =
+          sessionStorage.getItem("cockpit_auth_token") === "valid";
+        if (!isAuthenticated) window.top.location.href = "../../index.html";
+
+        // B. Tema Imediato (Evita o pisca branco)
+        var savedTheme = localStorage.getItem("cockpit_theme");
+        var systemDark = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches;
+
+        if (savedTheme === "dark" || (!savedTheme && systemDark)) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      })();
+    </script>
+
     <style>
-      /* Scrollbar Dark Mode */
+      html.dark body {
+        background-color: #0f172a;
+        color: #f3f4f6;
+      }
+      /* Scrollbar Dark Mode Global */
       .dark ::-webkit-scrollbar {
         width: 8px;
         height: 8px;
@@ -38,13 +67,9 @@
         background-color: #475569;
       }
     </style>
-    <script>
-      (function () {
-        const isAuthenticated =
-          sessionStorage.getItem("cockpit_auth_token") === "valid";
-        if (!isAuthenticated) window.top.location.href = "../../index.html";
-      })();
-    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@300;400;700&display=swap"
       rel="stylesheet"

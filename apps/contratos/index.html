@@ -1,26 +1,79 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Acompanhamento de Contratos</title>
 
-    <!-- Carrega o Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
     <script>
-      // VERIFICAÇÃO DE SEGURANÇA (COCKPIT)
-      (function() {
-        // 1. Verifica se tem o token válido no navegador
-        const isAuthenticated = sessionStorage.getItem("cockpit_auth_token") === "valid";
-        
-        // 2. Se NÃO estiver autenticado, manda de volta para o login (index.html principal)
-        if (!isAuthenticated) {
-          // Ajuste o "../.." conforme a profundidade da pasta. 
-          // Se estiver em apps/gerador/index.html, precisa voltar 2 níveis.
-          window.top.location.href = "../../index.html";
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              slate: { 850: "#1e293b" },
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              serif: ["Merriweather", "serif"], // Adicionado para não quebrar o Legislação
+            },
+          },
+        },
+      };
+    </script>
+
+    <script>
+      (function () {
+        // A. Segurança (Redireciona se não tiver token)
+        // OBS: Assume que o arquivo está em apps/NOME_DO_APP/index.html
+        const isAuthenticated =
+          sessionStorage.getItem("cockpit_auth_token") === "valid";
+        if (!isAuthenticated) window.top.location.href = "../../index.html";
+
+        // B. Tema Imediato (Evita o pisca branco)
+        var savedTheme = localStorage.getItem("cockpit_theme");
+        var systemDark = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches;
+
+        if (savedTheme === "dark" || (!savedTheme && systemDark)) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
         }
       })();
     </script>
+
+    <style>
+      html.dark body {
+        background-color: #0f172a;
+        color: #f3f4f6;
+      }
+      /* Scrollbar Dark Mode Global */
+      .dark ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      .dark ::-webkit-scrollbar-track {
+        background: #0f172a;
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background-color: #334155;
+        border-radius: 4px;
+      }
+      .dark ::-webkit-scrollbar-thumb:hover {
+        background-color: #475569;
+      }
+    </style>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- jsPDF para exportação de PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -28,27 +81,20 @@
 
     <!-- Nosso CSS (agora em arquivo separado) -->
     <link rel="stylesheet" href="style.css" />
-
-    <!-- Configuração do Tailwind (para a fonte 'Inter') -->
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ["Inter", "sans-serif"],
-            },
-          },
-        },
-      };
-    </script>
   </head>
-  <body class="bg-gray-100">
+  <body
+    class="bg-gray-100 dark:bg-slate-900 text-gray-800 dark:text-gray-100 transition-colors duration-300"
+  >
     <!-- Cabeçalho -->
-    <header class="text-center mb-8">
+    <header
+      class="text-center mb-8 border-b dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm transition-colors"
+    >
       <div
         class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center"
       >
-        <h1 class="text-3xl font-bold text-blue-700 cursor-pointer">
+        <h1
+          class="text-3xl font-bold text-blue-700 dark:text-blue-400 cursor-pointer"
+        >
           Acompanhamento de Contratos Públicos
         </h1>
         <div>
@@ -123,26 +169,28 @@
           </button>
         </div>
         <div class="overflow-x-auto max-h-96">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+          <table
+            class="min-w-full divide-y divide-gray-200 dark:divide-slate-700"
+          >
+            <thead class="bg-gray-50 dark:bg-slate-700">
               <tr>
                 <th
-                  class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase"
+                  class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
                 >
                   CNPJ
                 </th>
                 <th
-                  class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase"
+                  class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
                 >
                   Razão Social
                 </th>
                 <th
-                  class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase"
+                  class="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
                 >
                   Padrão?
                 </th>
                 <th
-                  class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase"
+                  class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase"
                 >
                   Ações
                 </th>
@@ -150,7 +198,7 @@
             </thead>
             <tbody
               id="lista-banco-empresas"
-              class="bg-white divide-y divide-gray-200"
+              class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700"
             ></tbody>
           </table>
         </div>
@@ -164,7 +212,7 @@
             Dados da Empresa
           </h2>
           <button
-            class="modal-close text-gray-500 hover:text-gray-800 text-3xl"
+            class="modal-close text-gray-500 dark:text-gray-300 hover:text-gray-800 text-3xl"
           >
             &times;
           </button>
@@ -178,14 +226,14 @@
               type="text"
               id="banco-cnpj"
               placeholder="CNPJ"
-              class="p-2 border rounded-md"
+              class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md"
               required
             />
             <input
               type="text"
               id="banco-nome"
               placeholder="Razão Social / Nome"
-              class="p-2 border rounded-md capitalize-input"
+              class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md capitalize-input"
               required
             />
           </div>
@@ -193,11 +241,11 @@
             type="text"
             id="banco-endereco"
             placeholder="Endereço Completo"
-            class="p-2 border rounded-md w-full"
+            class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full"
             required
           />
 
-          <div class="border p-3 rounded-md bg-gray-50">
+          <div class="border p-3 rounded-md bg-gray-50 dark:bg-slate-700">
             <label class="block text-sm font-medium text-gray-700 mb-2"
               >Representantes Legais</label
             >
@@ -206,7 +254,7 @@
                 type="text"
                 id="novo-representante-input"
                 placeholder="Nome do Representante"
-                class="p-2 border rounded-md w-full capitalize-input"
+                class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full capitalize-input"
               />
               <button
                 type="button"
@@ -230,7 +278,7 @@
             />
             <label
               for="banco-is-padrao"
-              class="ml-2 block text-sm text-gray-900"
+              class="ml-2 block text-sm text-gray-900 dark:text-white"
             >
               Definir como minha Unidade Padrão (Preenchimento automático)
             </label>
@@ -256,7 +304,7 @@
             Confirmar Ação
           </h2>
           <button
-            class="modal-close text-gray-500 hover:text-gray-800 text-3xl"
+            class="modal-close text-gray-500 dark:text-gray-300 hover:text-gray-800 text-3xl"
           >
             &times;
           </button>
@@ -294,24 +342,51 @@
             Novo Contrato
           </h2>
           <button
-            class="modal-close text-gray-500 hover:text-gray-800 text-3xl"
+            class="modal-close text-gray-500 dark:text-gray-300 hover:text-gray-800 text-3xl"
           >
             &times;
           </button>
         </div>
 
         <!-- Indicador de Etapas -->
-        <div id="stepper-contrato" class="flex items-center justify-center mb-6">
-            <div id="step-dot-1" onclick="tentarNavegarParaPasso(1)" class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm cursor-pointer hover:opacity-80 transition">1</div>
-            <div class="flex-auto border-t-2 border-gray-300 mx-2"></div>
-            
-            <div id="step-dot-2" onclick="tentarNavegarParaPasso(2)" class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold text-sm cursor-pointer hover:opacity-80 transition">2</div>
-            <div class="flex-auto border-t-2 border-gray-300 mx-2"></div>
-            
-            <div id="step-dot-3" onclick="tentarNavegarParaPasso(3)" class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold text-sm cursor-pointer hover:opacity-80 transition">3</div>
-            <div class="flex-auto border-t-2 border-gray-300 mx-2"></div>
-            
-            <div id="step-dot-4" onclick="tentarNavegarParaPasso(4)" class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold text-sm cursor-pointer hover:opacity-80 transition">4</div>
+        <div
+          id="stepper-contrato"
+          class="flex items-center justify-center mb-6"
+        >
+          <div
+            id="step-dot-1"
+            onclick="tentarNavegarParaPasso(1)"
+            class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm cursor-pointer hover:opacity-80 transition"
+          >
+            1
+          </div>
+          <div class="flex-auto border-t-2 border-gray-300 mx-2"></div>
+
+          <div
+            id="step-dot-2"
+            onclick="tentarNavegarParaPasso(2)"
+            class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold text-sm cursor-pointer hover:opacity-80 transition"
+          >
+            2
+          </div>
+          <div class="flex-auto border-t-2 border-gray-300 mx-2"></div>
+
+          <div
+            id="step-dot-3"
+            onclick="tentarNavegarParaPasso(3)"
+            class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold text-sm cursor-pointer hover:opacity-80 transition"
+          >
+            3
+          </div>
+          <div class="flex-auto border-t-2 border-gray-300 mx-2"></div>
+
+          <div
+            id="step-dot-4"
+            onclick="tentarNavegarParaPasso(4)"
+            class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold text-sm cursor-pointer hover:opacity-80 transition"
+          >
+            4
+          </div>
         </div>
 
         <form id="form-contrato" class="modal-body space-y-6">
@@ -331,7 +406,7 @@
                 type="text"
                 id="unidade-cnpj"
                 placeholder="CNPJ"
-                class="p-2 border rounded-md"
+                class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md"
                 list="list-cnpjs"
                 required
               />
@@ -341,21 +416,21 @@
                 type="text"
                 id="unidade-nome"
                 placeholder="Razão Social"
-                class="p-2 border rounded-md capitalize-input"
+                class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md capitalize-input"
                 required
               />
               <input
                 type="text"
                 id="unidade-endereco"
                 placeholder="Endereço Completo"
-                class="p-2 border rounded-md col-span-1 md:col-span-2"
+                class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-1 md:col-span-2"
                 required
               />
               <input
                 type="text"
                 id="unidade-rep"
                 placeholder="Representante Legal"
-                class="p-2 border rounded-md col-span-1 md:col-span-2 capitalize-input"
+                class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-1 md:col-span-2 capitalize-input"
                 list="list-reps-unidade"
                 required
               />
@@ -377,7 +452,7 @@
                 type="text"
                 id="empresa-cnpj"
                 placeholder="CNPJ"
-                class="p-2 border rounded-md"
+                class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md"
                 list="list-cnpjs"
                 required
               />
@@ -385,21 +460,21 @@
                 type="text"
                 id="empresa-nome"
                 placeholder="Razão Social"
-                class="p-2 border rounded-md capitalize-input"
+                class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md capitalize-input"
                 required
               />
               <input
                 type="text"
                 id="empresa-endereco"
                 placeholder="Endereço Completo"
-                class="p-2 border rounded-md col-span-1 md:col-span-2"
+                class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-1 md:col-span-2"
                 required
               />
               <input
                 type="text"
                 id="empresa-rep"
                 placeholder="Representante Legal"
-                class="p-2 border rounded-md col-span-1 md:col-span-2 capitalize-input"
+                class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-1 md:col-span-2 capitalize-input"
                 list="list-reps-empresa"
                 required
               />
@@ -415,10 +490,12 @@
           >
             <fieldset
               id="fieldset-aditivo"
-              class="border border-red-300 p-4 rounded-lg mb-6 bg-red-50"
+              class="border border-red-300 dark:border-red-900/50 p-4 rounded-lg mb-6 bg-red-50 dark:bg-red-900/20"
               style="display: none"
             >
-              <legend class="text-lg font-semibold px-2 text-red-700">
+              <legend
+                class="text-lg font-semibold px-2 text-red-700 dark:text-red-400"
+              >
                 Dados do Aditivo
               </legend>
 
@@ -431,7 +508,7 @@
                   >
                   <select
                     id="aditivo-tipo"
-                    class="p-2 border rounded-md w-full bg-white"
+                    class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full"
                     required
                   >
                     <option value="">Selecione...</option>
@@ -453,7 +530,7 @@
                     type="text"
                     id="aditivo-numero"
                     placeholder="Ex: 1º Termo Aditivo"
-                    class="p-2 border rounded-md w-full"
+                    class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full"
                     required
                   />
                 </div>
@@ -461,14 +538,14 @@
                   type="text"
                   id="aditivo-processo-sei"
                   placeholder="Nº Processo SEI (Aditivo)*"
-                  class="p-2 border rounded-md"
+                  class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md"
                   required
                 />
                 <input
                   type="url"
                   id="aditivo-link-sei"
                   placeholder="Link do Processo SEI (Aditivo)"
-                  class="p-2 border rounded-md col-span-1 md:col-span-2"
+                  class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-1 md:col-span-2"
                 />
                 <div>
                   <label
@@ -479,7 +556,7 @@
                   <input
                     type="date"
                     id="aditivo-data-assinatura"
-                    class="p-2 border rounded-md w-full"
+                    class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full"
                     required
                   />
                 </div>
@@ -487,7 +564,7 @@
                   type="text"
                   id="aditivo-justificativa"
                   placeholder="Justificativa / Objeto do Aditivo"
-                  class="p-2 border rounded-md col-span-1 md:col-span-3"
+                  class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-1 md:col-span-3"
                   required
                 />
               </div>
@@ -506,13 +583,13 @@
                       type="text"
                       id="aditivo-gestor-nome"
                       placeholder="Nome do Gestor"
-                      class="p-2 border rounded-md"
+                      class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md"
                     />
                     <input
                       type="text"
                       id="aditivo-gestor-matricula"
                       placeholder="Matrícula do Gestor"
-                      class="p-2 border rounded-md"
+                      class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md"
                     />
                   </div>
                 </div>
@@ -543,20 +620,20 @@
                 type="text"
                 id="contrato-processo-sei"
                 placeholder="Nº Processo SEI*"
-                class="p-2 border rounded-md col-span-1"
+                class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-1"
                 required
               />
               <input
                 type="url"
                 id="contrato-link-sei"
                 placeholder="Link do Processo SEI"
-                class="p-2 border rounded-md col-span-1 md:col-span-2"
+                class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-1 md:col-span-2"
               />
               <input
                 type="text"
                 id="contrato-numero"
                 placeholder="Nº do Contrato*"
-                class="p-2 border rounded-md col-span-1"
+                class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-1"
               />
               <div>
                 <label
@@ -566,7 +643,7 @@
                 >
                 <select
                   id="contrato-tipo"
-                  class="p-2 border rounded-md w-full bg-white"
+                  class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full"
                   required
                 >
                   <option value="">Selecione...</option>
@@ -582,7 +659,7 @@
                 type="text"
                 id="contrato-objeto"
                 placeholder="Objeto do Contrato*"
-                class="p-2 border rounded-md col-span-1 md:col-span-3"
+                class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-1 md:col-span-3"
                 required
               />
 
@@ -596,7 +673,7 @@
                   type="text"
                   id="contrato-estimativa-mensal"
                   placeholder="8.333,33"
-                  class="p-2 border rounded-md w-full currency-input"
+                  class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full currency-input"
                   required
                 />
               </div>
@@ -604,7 +681,7 @@
                 type="text"
                 id="contrato-tempo"
                 placeholder="Tempo de Contrato (ex: 12 meses)"
-                class="p-2 border rounded-md col-span-1"
+                class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-1"
                 required
               />
 
@@ -617,7 +694,7 @@
                 <input
                   type="date"
                   id="contrato-data-assinatura"
-                  class="p-2 border rounded-md w-full"
+                  class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full"
                   required
                 />
               </div>
@@ -630,7 +707,7 @@
                 <input
                   type="date"
                   id="contrato-data-inicio"
-                  class="p-2 border rounded-md w-full"
+                  class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full"
                   required
                 />
               </div>
@@ -652,7 +729,7 @@
                   type="text"
                   id="contrato-valor-total"
                   placeholder="10.000,00"
-                  class="p-2 border rounded-md w-full currency-input"
+                  class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full currency-input"
                 />
               </div>
             </div>
@@ -672,36 +749,67 @@
                 <input
                   type="date"
                   id="contrato-data-fim"
-                  class="p-2 border rounded-md w-full"
+                  class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full"
                 />
               </div>
             </div>
           </fieldset>
-            <!-- Etapa 4: Dados do Gestor/Fiscal -->
-          <fieldset id="form-step-4" class="form-step border border-gray-300 p-4 rounded-lg" style="display: none;">
-              <legend class="text-lg font-semibold px-2">Gestão e Fiscalização</legend>
-              
-              <div class="space-y-6">
-                  <div class="bg-gray-50 p-3 rounded-md border border-gray-200">
-                      <h4 class="text-md font-semibold text-gray-800 border-b pb-1 mb-3">Gestor do Contrato</h4>
-                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <input type="text" id="contrato-gestor-nome" placeholder="Nome do Gestor" class="p-2 border rounded-md capitalize-input">
-                          <input type="text" id="contrato-gestor-matricula" placeholder="Matrícula do Gestor" class="p-2 border rounded-md">
-                      </div>
-                  </div>
+          <!-- Etapa 4: Dados do Gestor/Fiscal -->
+          <fieldset
+            id="form-step-4"
+            class="form-step border border-gray-300 p-4 rounded-lg"
+            style="display: none"
+          >
+            <legend class="text-lg font-semibold px-2">
+              Gestão e Fiscalização
+            </legend>
 
-                  <div>
-                      <div class="flex justify-between items-center mb-2 border-b pb-1">
-                          <h4 class="text-md font-semibold text-gray-800">Fiscais do Contrato</h4>
-                          <button type="button" id="btn-adicionar-fiscal-step4" class="bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1 px-2 rounded-lg shadow">
-                              + Adicionar Fiscal
-                          </button>
-                      </div>
-                      <div id="fiscais-container-step4" class="space-y-2">
-                          </div>
-                      <p class="text-xs text-gray-500 mt-2">Se houver fiscais, adicione-os acima.</p>
-                  </div>
+            <div class="space-y-6">
+              <div
+                class="bg-gray-50 dark:bg-slate-700 p-3 rounded-md border border-gray-200"
+              >
+                <h4
+                  class="text-md font-semibold text-gray-800 border-b pb-1 mb-3"
+                >
+                  Gestor do Contrato
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <input
+                    type="text"
+                    id="contrato-gestor-nome"
+                    placeholder="Nome do Gestor"
+                    class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md capitalize-input"
+                  />
+                  <input
+                    type="text"
+                    id="contrato-gestor-matricula"
+                    placeholder="Matrícula do Gestor"
+                    class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md"
+                  />
+                </div>
               </div>
+
+              <div>
+                <div
+                  class="flex justify-between items-center mb-2 border-b pb-1"
+                >
+                  <h4 class="text-md font-semibold text-gray-800">
+                    Fiscais do Contrato
+                  </h4>
+                  <button
+                    type="button"
+                    id="btn-adicionar-fiscal-step4"
+                    class="bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1 px-2 rounded-lg shadow"
+                  >
+                    + Adicionar Fiscal
+                  </button>
+                </div>
+                <div id="fiscais-container-step4" class="space-y-2"></div>
+                <p class="text-xs text-gray-500 mt-2">
+                  Se houver fiscais, adicione-os acima.
+                </p>
+              </div>
+            </div>
           </fieldset>
 
           <!-- Botões de Navegação -->
@@ -748,7 +856,7 @@
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-xl font-bold">Detalhes do Contrato</h2>
           <button
-            class="modal-close text-gray-500 hover:text-gray-800 text-3xl"
+            class="modal-close text-gray-500 dark:text-gray-300 hover:text-gray-800 text-3xl"
           >
             &times;
           </button>
@@ -788,11 +896,14 @@
     <div id="modal-pagamento" class="modal">
       <div class="modal-content !max-w-md">
         <div class="flex justify-between items-center mb-4">
-          <h2 id="modal-pagamento-titulo" class="text-xl font-bold">
+          <h2
+            id="modal-pagamento-titulo"
+            class="text-xl font-bold text-gray-800 dark:text-white"
+          >
             Adicionar Pagamento
           </h2>
           <button
-            class="modal-close text-gray-500 hover:text-gray-800 text-3xl"
+            class="modal-close text-gray-500 dark:text-gray-300 hover:text-gray-800 text-3xl"
           >
             &times;
           </button>
@@ -803,18 +914,18 @@
           <input type="hidden" id="pagamento-id" />
           <h3
             id="pagamento-contrato-objeto"
-            class="text-lg font-semibold text-gray-700"
+            class="text-lg font-semibold text-gray-700 dark:text-gray-300"
           ></h3>
           <div>
             <label
               for="pagamento-data"
-              class="block text-sm font-medium text-gray-700"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
               >Data do Pagamento</label
             >
             <input
               type="date"
               id="pagamento-data"
-              class="p-2 border rounded-md w-full"
+              class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full"
               required
             />
           </div>
@@ -828,7 +939,7 @@
               <input
                 type="date"
                 id="pagamento-periodo-de"
-                class="p-2 border rounded-md w-full"
+                class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full"
               />
             </div>
             <div>
@@ -840,7 +951,7 @@
               <input
                 type="date"
                 id="pagamento-periodo-ate"
-                class="p-2 border rounded-md w-full"
+                class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full"
               />
             </div>
           </div>
@@ -854,7 +965,7 @@
               type="text"
               id="pagamento-valor"
               placeholder="5.000,00"
-              class="p-2 border rounded-md w-full currency-input"
+              class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full currency-input"
               required
             />
           </div>
@@ -868,7 +979,7 @@
               type="text"
               id="pagamento-nf"
               placeholder="12345"
-              class="p-2 border rounded-md w-full"
+              class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full"
               required
             />
           </div>
@@ -882,14 +993,14 @@
               type="text"
               id="pagamento-processo-sei"
               placeholder="12345.6789/2025-00"
-              class="p-2 border rounded-md w-full"
+              class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full"
               required
             />
             <input
               type="url"
               id="pagamento-link-sei"
               placeholder="Link do Processo SEI (Pagamento, opcional)"
-              class="p-2 border rounded-md w-full"
+              class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full"
             />
           </div>
           <div class="flex items-center pt-2">
@@ -900,7 +1011,7 @@
             />
             <label
               for="pagamento-is-trd"
-              class="ml-2 block text-sm font-medium text-gray-900"
+              class="ml-2 block text-sm font-medium text-gray-900 dark:text-white"
             >
               Pagamento via TRD (Termo de Reconhecimento de Débito)
             </label>
@@ -930,7 +1041,7 @@
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-xl font-bold">Detalhes da Nota Fiscal</h2>
           <button
-            class="modal-close text-gray-500 hover:text-gray-800 text-3xl"
+            class="modal-close text-gray-500 dark:text-gray-300 hover:text-gray-800 text-3xl"
           >
             &times;
           </button>
@@ -946,13 +1057,13 @@
 
           <form
             id="form-detalhe-item"
-            class="grid grid-cols-4 gap-3 p-3 bg-gray-100 rounded-lg"
+            class="grid grid-cols-4 gap-3 p-3 bg-gray-100 dark:bg-slate-700/50 rounded-lg"
           >
             <input
               type="text"
               id="detalhe-item-desc"
               placeholder="Descrição (ex: Emissão)"
-              class="p-2 border rounded-md col-span-4 md:col-span-2"
+              class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-4 md:col-span-2"
               required
             />
             <input
@@ -960,14 +1071,14 @@
               id="detalhe-item-qtd"
               min="0"
               placeholder="Qtd"
-              class="p-2 border rounded-md col-span-2 md:col-span-1"
+              class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-2 md:col-span-1"
               required
             />
             <input
               type="text"
               id="detalhe-item-valor"
               placeholder="Valor Unit."
-              class="p-2 border rounded-md col-span-2 md:col-span-1 currency-input-3dec"
+              class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-2 md:col-span-1 currency-input-3dec"
               required
             />
             <button
@@ -981,31 +1092,33 @@
           <div class="mt-4">
             <h4 class="font-semibold mb-2">Itens Adicionados:</h4>
             <div class="overflow-x-auto">
-              <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+              <table
+                class="min-w-full divide-y divide-gray-200 dark:divide-slate-700"
+              >
+                <thead class="bg-gray-50 dark:bg-slate-700">
                   <tr>
                     <th
-                      class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
                     >
                       Descrição
                     </th>
                     <th
-                      class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
                     >
                       Qtd
                     </th>
                     <th
-                      class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
                     >
                       Valor Unit.
                     </th>
                     <th
-                      class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
                     >
                       Total
                     </th>
                     <th
-                      class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
                     >
                       Ação
                     </th>
@@ -1013,11 +1126,13 @@
                 </thead>
                 <tbody
                   id="lista-detalhes-itens"
-                  class="bg-white divide-y divide-gray-200"
+                  class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700 text-gray-700 dark:text-gray-300"
                 >
                   <!-- Itens injetados via JS -->
                 </tbody>
-                <tfoot class="bg-gray-100">
+                <tfoot
+                  class="bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-white"
+                >
                   <tr>
                     <td colspan="3" class="px-4 py-2 text-right font-bold">
                       Total dos Itens:
@@ -1100,32 +1215,52 @@
 
     <!-- Template para Card de Contrato -->
     <template id="template-card-contrato">
-      <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col">
+      <div
+        class="bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-lg shadow-lg overflow-hidden flex flex-col transition-colors duration-300"
+      >
         <div class="p-5 flex-grow">
           <div class="mb-2">
-            <span class="text-sm text-gray-500" data-field="processoSei"></span>
+            <span
+              class="text-sm text-gray-500 dark:text-gray-400 font-medium"
+              data-field="processoSei"
+            ></span>
           </div>
           <h3
-            class="text-xl font-bold text-gray-900 mb-3"
+            class="text-xl font-bold text-gray-900 dark:text-white mb-3"
             data-field="objeto"
           ></h3>
-          <p class="text-sm text-gray-700 mb-4">
-            <span class="font-semibold">Contratada:</span>
-            <span data-field="empresaNome"></span>
+          <p class="text-sm text-gray-700 dark:text-gray-300 mb-4">
+            <span class="font-semibold text-gray-900 dark:text-white"
+              >Contratada:</span
+            >
+            <span
+              data-field="empresaNome"
+              class="text-gray-600 dark:text-gray-400"
+            ></span>
           </p>
+
           <div class="mb-4">
             <div
-              class="flex justify-between text-sm font-medium text-gray-700 mb-1"
+              class="flex justify-between text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
             >
               <span>Valor Pago</span>
               <span>
-                <span data-field="totalPago"></span> /
-                <span data-field="valorTotal"></span>
+                <span
+                  data-field="totalPago"
+                  class="text-gray-900 dark:text-white font-bold"
+                ></span>
+                /
+                <span
+                  data-field="valorTotal"
+                  class="text-gray-500 dark:text-gray-500"
+                ></span>
               </span>
             </div>
-            <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div
+              class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2.5"
+            >
               <div
-                class="bg-blue-600 h-2.5 rounded-full"
+                class="bg-blue-600 dark:bg-blue-500 h-2.5 rounded-full"
                 data-field="progressoValor"
                 style="width: 0%"
               ></div>
@@ -1133,14 +1268,19 @@
           </div>
           <div>
             <div
-              class="flex justify-between text-sm font-medium text-gray-700 mb-1"
+              class="flex justify-between text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
             >
               <span>Tempo Restante</span>
-              <span data-field="diasRestantes"></span>
+              <span
+                data-field="diasRestantes"
+                class="text-gray-900 dark:text-white font-bold"
+              ></span>
             </div>
-            <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div
+              class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2.5"
+            >
               <div
-                class="bg-green-600 h-2.5 rounded-full"
+                class="bg-green-600 dark:bg-green-500 h-2.5 rounded-full"
                 data-field="progressoTempo"
                 style="width: 0%"
               ></div>
@@ -1148,15 +1288,15 @@
           </div>
         </div>
         <div
-          class="p-4 bg-gray-50 border-t border-gray-200 grid grid-cols-2 gap-3"
+          class="p-4 bg-gray-50 dark:bg-slate-700/50 border-t border-gray-200 dark:border-slate-700 grid grid-cols-2 gap-3"
         >
           <button
-            class="btn-visualizar-contrato text-center w-full bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-300 rounded-lg shadow-sm transition duration-150"
+            class="btn-visualizar-contrato text-center w-full bg-white hover:bg-gray-100 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-white dark:border-slate-600 text-gray-800 font-semibold py-2 px-4 border border-gray-300 rounded-lg shadow-sm transition duration-150"
           >
             Ver Detalhes
           </button>
           <button
-            class="btn-abrir-modal-pagamento text-center w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-sm transition duration-150"
+            class="btn-abrir-modal-pagamento text-center w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow-sm transition duration-150"
           >
             + Pagamento
           </button>
@@ -1171,22 +1311,22 @@
           type="text"
           name="fiscal-nome"
           placeholder="Nome do Fiscal"
-          class="p-2 border rounded-md col-span-6 fiscal-nome"
+          class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-6 fiscal-nome"
           required
         />
         <input
           type="text"
           name="fiscal-matricula"
           placeholder="Matrícula do Fiscal"
-          class="p-2 border rounded-md col-span-5 fiscal-matricula"
+          class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-5 fiscal-matricula"
           required
         />
-      <button type="button"
-              class="btn-remover-fiscal bg-red-500 hover:bg-red-600 text-white 
-                    rounded-md w-6 h-6 text-xs flex items-center justify-center 
-                    transition shadow-sm">
-        ×
-      </button>
+        <button
+          type="button"
+          class="btn-remover-fiscal bg-red-500 hover:bg-red-600 text-white rounded-md w-6 h-6 text-xs flex items-center justify-center transition shadow-sm"
+        >
+          ×
+        </button>
       </div>
     </template>
 

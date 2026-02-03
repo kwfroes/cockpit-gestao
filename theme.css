@@ -22,6 +22,11 @@ body {
   transition: all 0.3s;
 }
 
+.dark body {
+  background-color: #0f172a; /* Slate-900 */
+  color: #f3f4f6;
+}
+
 .bg-primary {
   background-color: var(--primary-500);
 }
@@ -46,7 +51,7 @@ iframe {
   border: none;
   width: 100%;
   height: calc(100vh - 64px);
-  background: #f3f4f6;
+  background: transparent;
 }
 
 /* --- Componentes Padrão (Originais) --- */
@@ -124,6 +129,3 @@ iframe {
   border-color: var(--primary-500);
   box-shadow: 0 0 0 2px var(--primary-500);
 }
-
-
-

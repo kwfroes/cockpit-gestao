@@ -5,22 +5,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerador de Mensagens CAF</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
     <script>
-  // VERIFICAÇÃO DE SEGURANÇA (COCKPIT)
-  (function() {
-    // 1. Verifica se tem o token válido no navegador
-    const isAuthenticated = sessionStorage.getItem("cockpit_auth_token") === "valid";
-    
-    // 2. Se NÃO estiver autenticado, manda de volta para o login (index.html principal)
-    if (!isAuthenticated) {
-      // Ajuste o "../.." conforme a profundidade da pasta. 
-      // Se estiver em apps/gerador/index.html, precisa voltar 2 níveis.
-      window.top.location.href = "../../index.html";
+      tailwind.config = {
+        darkMode: "class", 
+        theme: {
+          extend: {
+            colors: {
+              slate: { 850: "#1e293b" },
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <script>
+    (function() {
+        // A. Segurança
+        const isAuthenticated = sessionStorage.getItem("cockpit_auth_token") === "valid";
+        if (!isAuthenticated) window.top.location.href = "../../index.html";
+
+        // B. Tema Imediato
+        var savedTheme = localStorage.getItem('cockpit_theme');
+        var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
         }
     })();
     </script>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      html.dark body { background-color: #0f172a; color: #f3f4f6; }
+    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -38,48 +61,48 @@
     <meta name="application-name" content="Gerador CAF">
 </head>
 
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-gray-100 dark:bg-slate-900 text-gray-800 dark:text-gray-100 transition-colors duration-300">
 
     <div class="w-full p-4 sm:p-6 md:p-4">
         <header class="mb-8">
             <div class="flex justify-start">
                 
-                <h1 id="appTitle" class="text-3xl font-bold text-blue-700 cursor-pointer" title="Gerador de Mensagens - CAF">
+                <h1 id="appTitle" class="text-3xl font-bold text-blue-700 dark:text-blue-400 cursor-pointer" title="Gerador de Mensagens - CAF">
                     Gerador de Mensagens - CAF
                 </h1>
             </div>
-            <p class="text-gray-600 mt-2 text-left">
+            <p class="text-gray-600 dark:text-gray-400 dark:text-gray-300 mt-2 text-left">
                 Preencha os campos abaixo para gerar a mensagem.
             </p>
         </header>
 
-        <main class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg space-y-8">
+        <main class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-lg space-y-8">
             <section id="company-data">
-                <h2 class="text-xl font-semibold mb-4 border-b pb-2 text-gray-700">1. Dados da Solicitação</h2>
+                <h2 class="text-xl font-semibold mb-4 border-b dark:border-slate-700 pb-2 text-gray-700 dark:text-white">1. Dados da Solicitação</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     <div>
-                        <label for="cnpj" class="block text-sm font-medium text-gray-700 mb-1">CNPJ / CPF</label>
+                        <label for="cnpj" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">CNPJ / CPF</label>
                         <div class="relative">
-                             <input type="text" id="cnpj" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Digite o CNPJ ou CPF" maxlength="18">
+                             <input type="text" id="cnpj" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Digite o CNPJ ou CPF" maxlength="18">
                              <span id="cnpj-status" class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold"></span>
                         </div>
                     </div>
                     <div class="relative">
-                        <label for="companyName" class="block text-sm font-medium text-gray-700 mb-1">Razão Social / Nome</label>
-                        <input type="text" id="companyName" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Digite o nome ou Razão Social">
-                        <div id="companyNameResults" class="absolute z-10 w-full bg-white border border-gray-300 rounded-b-lg shadow-lg max-h-60 overflow-y-auto"></div>
+                        <label for="companyName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Razão Social / Nome</label>
+                        <input type="text" id="companyName" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Digite o nome ou Razão Social">
+                        <div id="companyNameResults" class="absolute z-10 w-full bg-white dark:bg-slate-800 border border-gray-300 rounded-b-lg shadow-lg max-h-60 overflow-y-auto"></div>
                     </div>
                     <div>
-                        <label for="registrationDate" class="block text-sm font-medium text-gray-700 mb-1">Data de Cadastro</label>
-                        <input type="text" id="registrationDate" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100" readonly placeholder="--">
+                        <label for="registrationDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data de Cadastro</label>
+                        <input type="text" id="registrationDate" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-white bg-gray-100" readonly placeholder="--">
                     </div>
                     <div>
-                        <label for="analysisDate" class="block text-sm font-medium text-gray-700 mb-1">Data da Análise</label>
-                        <input type="date" id="analysisDate" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                        <label for="analysisDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data da Análise</label>
+                        <input type="date" id="analysisDate" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                     </div>
                     <div>
-                        <label for="registrationType" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Cadastro</label>
-                        <select id="registrationType" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                        <label for="registrationType" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipo de Cadastro</label>
+                        <select id="registrationType" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                             <option>CRC</option>
                             <option>CRS</option>
                             <option>Candidato</option>
@@ -88,47 +111,47 @@
                 </div>
             </section>
             <section id="status-selection">
-                <h2 class="text-xl font-semibold mb-4 border-b pb-2 text-gray-700">2. Status da Análise</h2>
+                <h2 class="text-xl font-semibold mb-4 border-b dark:border-slate-700 pb-2 text-gray-700 dark:text-white">2. Status da Análise</h2>
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
                     <div class="flex items-center">
                         <input type="radio" id="statusDeferida" name="status" value="Deferida" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500" checked>
-                        <label for="statusDeferida" class="ml-3 block text-sm font-medium text-gray-700">Deferida</label>
+                        <label for="statusDeferida" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">Deferida</label>
                     </div>
                     <div class="flex items-center">
                         <input type="radio" id="statusDeferidaParcial" name="status" value="Deferida Parcial" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
-                        <label for="statusDeferidaParcial" class="ml-3 block text-sm font-medium text-gray-700">Deferida Parcial</label>
+                        <label for="statusDeferidaParcial" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">Deferida Parcial</label>
                     </div>
                     <div class="flex items-center">
                         <input type="radio" id="statusIndeferida" name="status" value="Indeferida" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
-                        <label for="statusIndeferida" class="ml-3 block text-sm font-medium text-gray-700">Indeferida</label>
+                        <label for="statusIndeferida" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">Indeferida</label>
                     </div>
                     <div class="flex items-center">
                         <input type="radio" id="statusPendenteEnvio" name="status" value="Pendente de Envio" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
-                        <label for="statusPendenteEnvio" class="ml-3 block text-sm font-medium text-gray-700">Pendente de Envio</label>
+                        <label for="statusPendenteEnvio" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">Pendente de Envio</label>
                     </div>
                     <div class="flex items-center">
                         <input type="radio" id="statusPendenteTermo" name="status" value="Pendente do Termo" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
-                        <label for="statusPendenteTermo" class="ml-3 block text-sm font-medium text-gray-700">Pendente do Termo</label>
+                        <label for="statusPendenteTermo" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">Pendente do Termo</label>
                     </div>
                 </div>
             </section>
 
             <section id="contact-section">
-                <h2 class="text-xl font-semibold mb-4 border-b pb-2 text-gray-700">3. Contato com Fornecedor</h2>
+                <h2 class="text-xl font-semibold mb-4 border-b dark:border-slate-700 pb-2 text-gray-700 dark:text-white">3. Contato com Fornecedor</h2>
                 <div class="flex items-center">
                     <input type="checkbox" id="contactMade" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                    <label for="contactMade" class="ml-3 block text-sm font-medium text-gray-700">Houve contato com o fornecedor?</label>
+                    <label for="contactMade" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">Houve contato com o fornecedor?</label>
                 </div>
 
-                <div id="contactDetailsWrapper" class="hidden mt-4 grid grid-cols-1 md:grid-cols-3 gap-6 bg-gray-50 p-4 rounded-lg">
+                <div id="contactDetailsWrapper" class="hidden mt-4 grid grid-cols-1 md:grid-cols-3 gap-6 bg-gray-50 dark:bg-slate-700 border dark:border-slate-600 p-4 rounded-lg">
                     <div>
-                        <label for="contactName" class="block text-sm font-medium text-gray-700 mb-1">Nome do Contato</label>
-                        <input type="text" id="contactName" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Ex: Joelson Miranda">
+                        <label for="contactName" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">Nome do Contato</label>
+                        <input type="text" id="contactName" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Ex: Joelson Miranda">
                     </div>
 
                     <div>
-                        <label for="contactRole" class="block text-sm font-medium text-gray-700 mb-1">Cargo</label>
-                        <select id="contactRole" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                        <label for="contactRole" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cargo</label>
+                        <select id="contactRole" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                             <option>Dirigente</option>
                             <option>Diretor</option>
                             <option selected>Sócio</option>
@@ -138,27 +161,27 @@
                     
 
                     <div>
-                        <label for="contactPhone" class="block text-sm font-medium text-gray-700 mb-1">Telefone (WhatsApp)</label>
-                        <input type="text" id="contactPhone" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="(71) 9 9999-9999" maxlength="16">
+                        <label for="contactPhone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Telefone (WhatsApp)</label>
+                        <input type="text" id="contactPhone" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="(71) 9 9999-9999" maxlength="16">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Gênero</label>
-                        <div class="flex space-x-4 p-3 border border-gray-300 rounded-lg bg-white items-center">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Gênero</label>
+                        <div class="flex space-x-4 p-3 border border-gray-300 rounded-lg bg-white dark:bg-slate-800 items-center">
                             <div class="flex items-center">
                                 <input type="radio" id="contactGenderM" name="contactGender" value="M" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500" checked>
-                                <label for="contactGenderM" class="ml-2 block text-sm font-medium text-gray-700">Masculino (Sr.)</label>
+                                <label for="contactGenderM" class="ml-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Masculino (Sr.)</label>
                             </div>
                             <div class="flex items-center">
                                 <input type="radio" id="contactGenderF" name="contactGender" value="F" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
-                                <label for="contactGenderF" class="ml-2 block text-sm font-medium text-gray-700">Feminino (Sra.)</label>
+                                <label for="contactGenderF" class="ml-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Feminino (Sra.)</label>
                             </div>
                         </div>
                     </div>
                     
                     <div class="md:col-span-2">
-                        <label for="contactSuccess" class="block text-sm font-medium text-gray-700 mb-1">Status do Contato</label>
-                        <select id="contactSuccess" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                        <label for="contactSuccess" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status do Contato</label>
+                        <select id="contactSuccess" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                             <option value="S">Êxito (Fornecedor ciente e regularizando)</option>
                             <option value="N">Sem Êxito (Caixa postal, ocupado, etc.)</option>
                         </select>
@@ -169,18 +192,18 @@
             <section id="legal-flag-section" class="mt-4">
                 <div class="flex items-center">
                     <input type="checkbox" id="omitLegalFlag" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                    <label for="omitLegalFlag" class="ml-3 block text-sm font-medium text-gray-700">
+                    <label for="omitLegalFlag" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     <span class="text-red-600 font-semibold">OMITIR</span> Referência Legal
                     </label>
                 </div>
             </section>
             <section id="rejected-docs-section" class="hidden">
-                <h2 class="text-xl font-semibold mb-4 border-b pb-2 text-gray-700">4. Documentos Indeferidos</h2>
-                <div class="bg-gray-50 p-6 rounded-lg space-y-4">
+                <h2 class="text-xl font-semibold mb-4 border-b dark:border-slate-700 pb-2 text-gray-700 dark:text-white">4. Documentos Indeferidos</h2>
+                <div class="bg-gray-50 dark:bg-slate-700 p-6 rounded-lg space-y-4 border dark:border-slate-600">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label for="docCategory" class="block text-sm font-medium text-gray-700 mb-1">Categoria (Aba)</label>
-                            <select id="docCategory" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                            <label for="docCategory" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Categoria (Aba)</label>
+                            <select id="docCategory" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                                 <option>Dados do Fornecedor</option>
                                 <option>Habilitação Jurídica</option>
                                 <option>Família</option>
@@ -191,27 +214,27 @@
                             </select>
                         </div>
                         <div id="docNameWrapper">
-                            <label for="docName" class="block text-sm font-medium text-gray-700 mb-1">Nome do Documento</label>
-                            <select id="docName" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"></select>
+                            <label for="docName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome do Documento</label>
+                            <select id="docName" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"></select>
                         </div>
                         <div id="familyAutocompleteWrapper" class="hidden">
-                            <label for="familySearchInput" class="block text-sm font-medium text-gray-700 mb-1">Buscar Família</label>
-                            <input type="text" id="familySearchInput" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Digite para buscar a família...">
+                            <label for="familySearchInput" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Buscar Família</label>
+                            <input type="text" id="familySearchInput" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Digite para buscar a família...">
                             <div id="familyResults"></div>
                         </div>
                     </div>
 
                     <div id="manualDocNameWrapper" class="hidden">
-                        <label for="manualDocName" class="block text-sm font-medium text-gray-700 mb-1">Outro</label>
-                        <input type="text" id="manualDocName" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Documento de Qualificação Técnica">
+                        <label for="manualDocName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Outro</label>
+                        <input type="text" id="manualDocName" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Documento de Qualificação Técnica">
                     </div>
                     <div id="socioNameWrapper" class="hidden">
-                        <label for="socioName" class="block text-sm font-medium text-gray-700 mb-1">Nome do Sócio</label>
-                        <input type="text" id="socioName" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Digite o nome completo do sócio">
+                        <label for="socioName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome do Sócio</label>
+                        <input type="text" id="socioName" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Digite o nome completo do sócio">
                     </div>
                     <div>
-                        <label for="rejectionReason" class="block text-sm font-medium text-gray-700 mb-1">Motivo do Indeferimento</label>
-                        <textarea id="rejectionReason" rows="3" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Descreva o motivo..."></textarea>
+                        <label for="rejectionReason" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Motivo do Indeferimento</label>
+                        <textarea id="rejectionReason" rows="3" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Descreva o motivo..."></textarea>
                     </div>
                     <div class="text-right">
                         <button id="addDocBtn" class="bg-blue-600 text-white font-semibold py-2 px-5 rounded-lg hover:bg-blue-700 transition transform hover:scale-105 shadow-md">
@@ -227,10 +250,10 @@
                 </button>
             </div>
             <section id="result-section" class="hidden">
-                <h2 class="text-xl font-semibold mb-4 border-b pb-2 text-gray-700">Mensagem Gerada</h2>
+                <h2 class="text-xl font-semibold mb-4 border-b dark:border-slate-700 pb-2 text-gray-700 dark:text-white">Mensagem Gerada</h2>
                 
                 <div>
-                    <textarea id="resultText" readonly rows="15" class="w-full p-4 border bg-gray-50 border-gray-200 rounded-lg text-sm leading-relaxed whitespace-pre-wrap"></textarea>
+                    <textarea id="resultText" readonly rows="15" class="w-full p-4 border bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-slate-600 dark:text-gray-200 rounded-lg text-sm leading-relaxed whitespace-pre-wrap"></textarea>
                 </div>
                 
             <div class="flex justify-end space-x-2 mt-3">
@@ -284,22 +307,22 @@
     </div>
 
     <div id="dbModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center p-4 z-50 overflow-y-auto">
-            <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-2xl relative max-h-[90vh] flex flex-col">
-                <button id="closeDbModalBtn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-3xl font-light leading-none">&times;</button>
+            <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-2xl relative max-h-[90vh] flex flex-col">
+                <button id="closeDbModalBtn" class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 hover:text-gray-700 text-3xl font-light leading-none">&times;</button>
                 
                 <div id="dbModalContent" class="space-y-6 overflow-y-auto pr-2">
-                    <h2 class="text-xl font-semibold mb-4 border-b pb-2 text-gray-700">Base de Dados</h2>
+                    <h2 class="text-xl font-semibold mb-4 border-b dark:border-slate-700 pb-2 text-gray-700 dark:text-white">Base de Dados</h2>
                     
-                    <p class="text-sm text-gray-600 -mt-4">Gerencie sua base de dados aqui: carregue arquivos CSV para CNPJs/CPFs e Famílias (delimitador ';;'), realize backup e restauração completa ou gerencie seus contatos do WhatsApp.</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-300 -mt-4">Gerencie sua base de dados aqui: carregue arquivos CSV para CNPJs/CPFs e Famílias (delimitador ';;'), realize backup e restauração completa ou gerencie seus contatos do WhatsApp.</p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                         <section id="database-setup">
-                            <div class="bg-gray-50 p-4 rounded-lg space-y-3 h-full flex flex-col">
-                                <h3 class="text-lg font-semibold text-gray-800">CNPJs e CPFs</h3>
+                            <div class="bg-gray-50 dark:bg-slate-700 p-4 rounded-lg space-y-3 border dark:border-slate-600 h-full flex flex-col">
+                                <h3 class="text-lg font-semibold text-gray-800 dark:text-white">CNPJs e CPFs</h3>
                                 <div>
-                                    <label for="csvFileInput" id="csvFileInputLabel" class="block text-sm font-medium text-gray-700 mb-1">Arquivo CSV (CNPJs/CPFs)</label>
-                                    <input type="file" id="csvFileInput" accept=".csv" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-3 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                                    <label for="csvFileInput" id="csvFileInputLabel" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Arquivo CSV (CNPJs/CPFs)</label>
+                                    <input type="file" id="csvFileInput" accept=".csv" class="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900/30 dark:file:text-blue-400 dark:hover:file:bg-blue-900/50 transition">
                                 </div>
                                 <div class="text-right mt-auto pt-2">
                                     <button id="loadCsvBtn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition shadow-md text-sm">
@@ -311,11 +334,11 @@
                         </section>
                         
                         <section id="family-database-setup">
-                            <div class="bg-gray-50 p-4 rounded-lg space-y-3 h-full flex flex-col">
-                                <h3 class="text-lg font-semibold text-gray-800">Famílias</h3>
+                            <div class="bg-gray-50 dark:bg-slate-700 p-4 rounded-lg space-y-3 border dark:border-slate-600 h-full flex flex-col">
+                                <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Famílias</h3>
                                 <div>
-                                    <label for="familyCsvFileInput" id="familyCsvFileInputLabel" class="block text-sm font-medium text-gray-700 mb-1">Arquivo CSV (Famílias)</label>
-                                    <input type="file" id="familyCsvFileInput" accept=".csv" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-3 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                                    <label for="familyCsvFileInput" id="familyCsvFileInputLabel" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Arquivo CSV (Famílias)</label>
+                                    <input type="file" id="familyCsvFileInput" accept=".csv" class="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900/30 dark:file:text-blue-400 dark:hover:file:bg-blue-900/50 transition">
                                 </div>
                                 <div class="text-right mt-auto pt-2">
                                     <button id="loadFamilyCsvBtn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition shadow-md text-sm">
@@ -327,13 +350,13 @@
                         </section>
                         
                         <section id="backup-restore-setup">
-                            <div class="bg-gray-50 p-4 rounded-lg space-y-3 h-full flex flex-col">
-                                <h3 class="text-lg font-semibold text-gray-800">Backup e Restauração</h3>
-                                <p class="text-xs text-gray-500">Salve todos os dados em um arquivo ou restaure a partir de um backup.</p>
+                            <div class="bg-gray-50 dark:bg-slate-700 p-4 rounded-lg space-y-3 border dark:border-slate-600 h-full flex flex-col">
+                                <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Backup e Restauração</h3>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Salve todos os dados em um arquivo ou restaure a partir de um backup.</p>
                                 
                                 <div class="mt-3">
-                                    <label for="backupReminderPeriod" class="block text-sm font-medium text-gray-700 mb-1">Frequência do Lembrete</label>
-                                    <select id="backupReminderPeriod" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm">
+                                    <label for="backupReminderPeriod" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Frequência do Lembrete</label>
+                                    <select id="backupReminderPeriod" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm dark:bg-slate-900 dark:border-slate-600 dark:text-white">
                                         <option value="86400000">Diariamente</option>
                                         <option value="604800000">Semanalmente</option>
                                         <option value="1209600000">Quinzenalmente</option>
@@ -358,9 +381,9 @@
                         </section>
                         
                         <section id="open-contacts-modal-section">
-                            <div class="bg-gray-50 p-4 rounded-lg space-y-3 h-full flex flex-col">
-                                <h3 class="text-lg font-semibold text-gray-800">Contatos Pessoais (WhatsApp)</h3>
-                                <p class="text-xs text-gray-500">Gerencie sua lista de contatos para envio rápido de mensagens via WhatsApp.</p>
+                            <div class="bg-gray-50 dark:bg-slate-700 p-4 rounded-lg space-y-3 border dark:border-slate-600 h-full flex flex-col">
+                                <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Contatos Pessoais (WhatsApp)</h3>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Gerencie sua lista de contatos para envio rápido de mensagens via WhatsApp.</p>
                                 <div class="text-right mt-auto pt-2">
                                     <button id="openContactsModalBtn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition shadow-md text-sm">
                                         Gerenciar Contatos
@@ -375,32 +398,32 @@
         </div>
     </div>
     <div id="historyModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
-        <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-3xl relative max-h-[90vh] flex flex-col">
-            <button id="closeHistoryModalBtn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-3xl font-light leading-none">&times;</button>
+        <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-3xl relative max-h-[90vh] flex flex-col">
+            <button id="closeHistoryModalBtn" class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 hover:text-gray-700 text-3xl font-light leading-none">&times;</button>
             <div class="flex justify-between items-center border-b pb-2">
-                <h2 class="text-xl font-semibold text-gray-700">Histórico de Mensagens</h2>
+                <h2 class="text-xl font-semibold text-gray-700 dark:text-white">Histórico de Mensagens</h2>
                 <button id="clearHistoryBtn" title="Limpar Histórico" class="text-red-500 hover:text-red-700 hover:bg-red-100 rounded-lg transition p-2">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" class="w-5 h-5" fill="currentColor">
                         <path d="M216.001,203.833h-76l27.91015-27.90967.00684-.00635.00635-.00683,56.563-56.5625a28.03348,28.03348,0,0,0-.001-39.59766L179.23145,34.49512a28.03347,28.03347,0,0,0-39.59766,0L83.07471,91.0542l-.01026.00928-.00927.01025L26.49609,147.63281a28.03171,28.03171,0,0,0,0,39.59766L63.585,224.31836a12.00286,12.00286,0,0,0,8.48535,3.51465H216.001a12,12,0,0,0,0-24ZM156.60449,51.46582a4.00207,4.00207,0,0,1,5.65625,0L207.51562,96.7207a4.005,4.005,0,0,1,0,5.65723l-48.083,48.083L108.521,99.54932ZM106.05957,203.833H77.041L43.4668,170.25977a4.00385,4.00385,0,0,1,0-5.65625L91.55029,116.52l50.91114,50.91113Z"/>
                     </svg>
                 </button>
             </div>
-            <div id="historyFilterSection" class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-4 p-4 bg-gray-50 rounded-lg border">
+            <div id="historyFilterSection" class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-4 p-4 bg-gray-50 dark:bg-slate-700 rounded-lg border dark:border-slate-600">
             <div class="sm:col-span-3">
-                <label for="historySearchCnpj" class="block text-sm font-medium text-gray-700 mb-1">Buscar por CNPJ/CPF</label>
-                <input type="text" id="historySearchCnpj" placeholder="Digite o CNPJ/CPF" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" maxlength="18">
+                <label for="historySearchCnpj" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Buscar por CNPJ/CPF</label>
+                <input type="text" id="historySearchCnpj" placeholder="Digite o CNPJ/CPF" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-900 dark:border-slate-600 dark:text-white" maxlength="18">
             </div>
             <div>
-                <label for="historyStartDate" class="block text-sm font-medium text-gray-700 mb-1">Data Inicial</label>
-                <input type="date" id="historyStartDate" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                <label for="historyStartDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data Inicial</label>
+                <input type="date" id="historyStartDate" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-900 dark:border-slate-600 dark:text-white">
             </div>
             <div>
-                <label for="historyEndDate" class="block text-sm font-medium text-gray-700 mb-1">Data Final</label>
-                <input type="date" id="historyEndDate" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                <label for="historyEndDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data Final</label>
+                <input type="date" id="historyEndDate" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-900 dark:border-slate-600 dark:text-white">
             </div>
             <div class="flex items-end space-x-2">
                 <button id="filterHistoryBtn" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700 transition">Filtrar</button>
-                <button id="clearHistoryFilterBtn" title="Limpar Filtros" class="bg-gray-200 text-gray-700 font-semibold p-2 rounded-md hover:bg-gray-300 transition">&#x21BA;</button>
+                <button id="clearHistoryFilterBtn" title="Limpar Filtros" class="bg-gray-200 text-gray-700 dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600 font-semibold p-2 rounded-md hover:bg-gray-300 transition">&#x21BA;</button>
             </div>
             </div>
             <div id="historyListContainer" class="flex-1 overflow-y-auto space-y-3 mt-4 pr-2 min-h-0">
@@ -410,16 +433,16 @@
     </div>
 
     <div id="dashboardModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center p-4 z-50 overflow-y-auto">
-        <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-4xl relative max-h-[90vh] flex flex-col">
-            <button id="closeDashboardModalBtn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-3xl font-light leading-none">&times;</button>
+        <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-4xl relative max-h-[90vh] flex flex-col">
+            <button id="closeDashboardModalBtn" class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 hover:text-gray-700 text-3xl font-light leading-none">&times;</button>
             <div class="flex justify-between items-center border-b pb-2">
-                <h2 class="text-xl font-semibold text-gray-700">Dashboard de Análises</h2>
+                <h2 class="text-xl font-semibold text-gray-700 dark:text-white">Dashboard de Análises</h2>
             </div>
             
-            <div class="flex items-center space-x-4 my-4 p-4 bg-gray-50 rounded-lg border">
+            <div class="flex items-center space-x-4 my-4 p-4 bg-gray-50 dark:bg-slate-700 dark:border-slate-600 rounded-lg border">
                 <div>
-                    <label for="dashboardPeriodFilter" class="block text-sm font-medium text-gray-700 mb-1">Período</label>
-                    <select id="dashboardPeriodFilter" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    <label for="dashboardPeriodFilter" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Período</label>
+                    <select id="dashboardPeriodFilter" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-900 dark:border-slate-600 dark:text-white">
                         <option value="all">Geral (Últimos 1000)</option>
                         <option value="month">Último Mês</option>
                     </select>
@@ -430,34 +453,34 @@
             </div>
 
             <div class="text-center my-4">
-                <span class="text-lg text-gray-600">Total de Análises no Período:</span>
-                <span id="dashboardTotalCount" class="text-2xl font-bold text-blue-700 ml-2">-</span>
+                <span class="text-lg text-gray-600 dark:text-gray-300">Total de Análises no Período:</span>
+                <span id="dashboardTotalCount" class="text-2xl font-bold text-blue-700 dark:text-blue-400 ml-2">-</span>
             </div>
 
             <div id="dashboardContainer" class="flex-1 overflow-y-auto space-y-8 mt-4 pr-2 min-h-0">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     
                     <section>
-                        <h3 class="text-lg font-semibold text-gray-700 mb-3">Análises por Status</h3>
-                        <div class="bg-gray-50 p-4 rounded-lg border flex justify-center items-center" style="min-height: 300px;">
+                        <h3 class="text-lg font-semibold text-gray-700 dark:text-white mb-3">Análises por Status</h3>
+                        <div class="bg-gray-50 dark:bg-slate-700 dark:border-slate-600 p-4 rounded-lg border flex justify-center items-center" style="min-height: 300px;">
                             <canvas id="statusChart"></canvas>
                         </div>
                     </section>
 
                     <section class="space-y-6">
                         <div>
-                            <h3 class="text-lg font-semibold text-gray-700 mb-3">Top 5 Documentos Indeferidos</h3>
-                            <div id="topDocsList" class="bg-gray-50 p-4 rounded-lg border space-y-2">
+                            <h3 class="text-lg font-semibold text-gray-700 dark:text-white mb-3">Top 5 Documentos Indeferidos</h3>
+                            <div id="topDocsList" class="bg-gray-50 dark:bg-slate-700 dark:border-slate-600 p-4 rounded-lg border space-y-2">
                                 <p class="text-gray-500 text-center">Carregando...</p>
                             </div>
                         </div>
                         <div>
-                            <h3 class="text-lg font-semibold text-gray-700 mb-3">Top 5 Motivos de Indeferimento</h3>
-                            <div id="topReasonsList" class="bg-gray-50 p-4 rounded-lg border space-y-2">
+                            <h3 class="text-lg font-semibold text-gray-700 dark:text-white mb-3">Top 5 Motivos de Indeferimento</h3>
+                            <div id="topReasonsList" class="bg-gray-50 dark:bg-slate-700 dark:border-slate-600 p-4 rounded-lg border space-y-2">
                                 <p class="text-gray-500 text-center">Carregando...</p>
                             </div>
                         </div>
-                        <p class="hidden text-gray-400 italic text-center">
+                        <p class="hidden text-gray-400 dark:text-gray-300 italic text-center">
                             * As listas "Top 5" consideram apenas análises salvas após a versão 3.0 (que incluem dados estruturados).
                         </p>
                     </section>
@@ -467,26 +490,26 @@
     </div>
 
     <div id="exportModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-        <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-md relative">
-            <h2 class="text-xl font-semibold mb-6 border-b pb-2 text-gray-700">Opções de Exportação</h2>
+        <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-md relative">
+            <h2 class="text-xl font-semibold mb-6 border-b pb-2 text-gray-700 text-gray-700">Opções de Exportação</h2>
             <div class="space-y-1">
-                <p class="text-sm text-gray-600">Selecione quais dados você deseja incluir no arquivo de backup.</p>
-                <label class="flex items-center p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
+                <p class="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-300">Selecione quais dados você deseja incluir no arquivo de backup.</p>
+                <label class="flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 cursor-pointer">
                     <input type="checkbox" id="exportCompanies" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                    <span class="ml-3 block text-sm font-medium text-gray-700">CNPJs / CPFs</span>
+                    <span class="ml-3 block text-sm font-medium text-gray-700 text-gray-700">CNPJs / CPFs</span>
                 </label>
-                <label class="flex items-center p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
+                <label class="flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 cursor-pointer">
                     <input type="checkbox" id="exportFamilies" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                    <span class="ml-3 block text-sm font-medium text-gray-700">Famílias</span>
+                    <span class="ml-3 block text-sm font-medium text-gray-700 text-gray-700">Famílias</span>
                 </label>
 
-                <label class="flex items-center p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
+                <label class="flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 cursor-pointer">
                     <input type="checkbox" id="exportContacts" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                    <span class="ml-3 block text-sm font-medium text-gray-700">Contatos (Backup Pessoal)</span>
+                    <span class="ml-3 block text-sm font-medium text-gray-700 text-gray-700">Contatos (Backup Pessoal)</span>
                 </label>
-                <label class="flex items-center p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
+                <label class="flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 cursor-pointer">
                     <input type="checkbox" id="exportHistory" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                    <span class="ml-3 block text-sm font-medium text-gray-700">Histórico de Mensagens (Backup Pessoal)</span>
+                    <span class="ml-3 block text-sm font-medium text-gray-700 dark:text-white">Histórico de Mensagens (Backup Pessoal)</span>
                 </label>
             </div>
             <div class="mt-8 flex justify-end space-x-4">
@@ -496,18 +519,18 @@
         </div>
     </div>
     <div id="passwordModal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4 z-[100]">
-        <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-sm">
-            <h2 class="text-xl font-semibold mb-4 text-gray-700">Acesso à Base de Dados</h2>
-            <p id="passwordPromptMessage" class="text-sm text-gray-600 mb-6">Por favor, insira a senha mestra para descriptografar e carregar os dados.</p>
+        <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-sm">
+            <h2 class="text-xl font-semibold mb-4 text-gray-700 text-gray-700">Acesso à Base de Dados</h2>
+            <p id="passwordPromptMessage" class="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-300 mb-6">Por favor, insira a senha mestra para descriptografar e carregar os dados.</p>
             <form id="passwordForm">
                 <div class="space-y-4">
                     <div>
                         <label for="masterPassword" class="sr-only">Senha Mestra</label>
-                        <input type="password" id="masterPassword" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Senha Mestra" required>
+                        <input type="password" id="masterPassword" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Senha Mestra" required>
                     </div>
                     <label class="flex items-center">
                         <input type="checkbox" id="keepLoggedIn" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                        <span class="ml-3 block text-sm font-medium text-gray-700">Manter conectado neste navegador</span>
+                        <span class="ml-3 block text-sm font-medium text-gray-700 text-gray-700">Manter conectado neste navegador</span>
                     </label>
                 </div>
                 <div class="mt-6">
@@ -518,52 +541,52 @@
     </div>
 
 <div id="wppModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-        <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-md relative">
-            <button id="closeWppModalBtn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-3xl font-light leading-none">&times;</button>
-            <h2 class="text-xl font-semibold mb-6 border-b pb-2 text-gray-700">Enviar para...</h2>
+        <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-md relative">
+            <button id="closeWppModalBtn" class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 hover:text-gray-700 text-3xl font-light leading-none">&times;</button>
+            <h2 class="text-xl font-semibold mb-6 border-b pb-2 text-gray-700 text-gray-700">Enviar para...</h2>
             <div id="wppContactListContainer" class="space-y-2 max-h-60 overflow-y-auto">
                 </div>
         </div> </div>
         <div id="contactsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
-        <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-lg relative max-h-[90vh] flex flex-col">
-            <button id="closeContactsModalBtn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-3xl font-light leading-none">&times;</button>
-            <h2 class="text-xl font-semibold mb-4 border-b pb-2 text-gray-700">Gerenciar Contatos Pessoais</h2>
+        <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-lg relative max-h-[90vh] flex flex-col">
+            <button id="closeContactsModalBtn" class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 hover:text-gray-700 text-3xl font-light leading-none">&times;</button>
+            <h2 class="text-xl font-semibold mb-4 border-b dark:border-slate-700 pb-2 text-gray-700 dark:text-white">Gerenciar Contatos Pessoais</h2>
             
             <div class="flex-1 overflow-y-auto pr-2 min-h-0">
                 <section id="contacts-management-setup">
-                    <div class="bg-gray-50 p-4 rounded-lg space-y-3">
-                        <p class="text-xs text-gray-500 -mt-2 mb-3">Adicione/remova contatos para envio rápido via WhatsApp. Estes contatos são salvos no backup pessoal.</p>
+                    <div class="bg-gray-50 dark:bg-slate-700 p-4 rounded-lg space-y-3 border dark:border-slate-600">
+                        <p class="text-xs text-gray-500 dark:text-gray-400 -mt-2 mb-3">Adicione/remova contatos para envio rápido via WhatsApp. Estes contatos são salvos no backup pessoal.</p>
                         
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-2 items-end">
                             <div class="md:col-span-1">
-                                <label for="contactNameInput" class="block text-sm font-medium text-gray-700 mb-1">Nome</label>
-                                <input type="text" id="contactNameInput" placeholder="Maria Silva" class="w-full p-2 border border-gray-300 rounded-md">
+                                <label for="contactNameInput" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome</label>
+                                <input type="text" id="contactNameInput" placeholder="Maria Silva" class="w-full p-2 border border-gray-300 rounded-md dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                             </div>
                             <div class="md:col-span-1">
-                                <label for="contactRoleInput" class="block text-sm font-medium text-gray-700 mb-1">Cargo</label>
-                                <input type="text" id="contactRoleInput" placeholder="Coordenadora" class="w-full p-2 border border-gray-300 rounded-md">
+                                <label for="contactRoleInput" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cargo</label>
+                                <input type="text" id="contactRoleInput" placeholder="Coordenadora" class="w-full p-2 border border-gray-300 rounded-md dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                             </div>
                             <div class="md:col-span-1">
-                                <label for="contactPhoneInput" class="block text-sm font-medium text-gray-700 mb-1">WhatsApp</label>
-                                <input type="tel" id="contactPhoneInput" placeholder="5571998000000" class="w-full p-2 border border-gray-300 rounded-md">
+                                <label for="contactPhoneInput" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">WhatsApp</label>
+                                <input type="tel" id="contactPhoneInput" placeholder="5571998000000" class="w-full p-2 border border-gray-300 rounded-md dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                             </div>
                         </div>
                         <div class="text-right">
-                            <button id="addContactBtn" class="bg-blue-600 text-white font-semibold py-2 px-5 rounded-lg hover:bg-blue-700 transition shadow-md">Adicionar Contato</button>
+                            <button id="addContactBtn" class="bg-blue-600 text-white font-semibold py-2 px-5 rounded-lg hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 transition shadow-md">Adicionar Contato</button>
                         </div>
                         
-                        <h4 class="text-md font-semibold text-gray-700 pt-2 border-t">Contatos Salvos</h4>
+                        <h4 class="text-md font-semibold text-gray-700 dark:text-white pt-2 border-t dark:border-slate-600">Contatos Salvos</h4>
                         <div id="contactsListContainer" class="space-y-2 max-h-40 overflow-y-auto pr-2">
                             <p class="text-sm text-gray-500 text-center">Nenhum contato cadastrado.</p>
                         </div>
 
                         <div class="pt-4 border-t">
-                             <label for="contactsCsvFileInput" class="block text-sm font-medium text-gray-700 mb-1">Importar CSV de Contatos</label>
-                             <input type="file" id="contactsCsvFileInput" accept=".csv" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                             <label for="contactsCsvFileInput" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Importar CSV de Contatos</label>
+                             <input type="file" id="contactsCsvFileInput" accept=".csv" class="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900/30 dark:file:text-blue-400 dark:hover:file:bg-blue-900/50 transition">
                              <div id="contacts-db-status" class="text-sm font-medium text-center pt-2 min-h-[20px]"></div>
                              <div class="flex justify-between items-center mt-2">
-                                <button id="loadContactsCsvBtn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition shadow-md text-sm">Carregar CSV</button>
-                                <button id="exportContactsCsvBtn" class="bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition shadow-md text-sm">Exportar CSV</button>
+                                <button id="loadContactsCsvBtn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 transition shadow-md text-sm">Carregar CSV</button>
+                                <button id="exportContactsCsvBtn" class="bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 dark:bg-green-600 dark:hover:bg-green-500 transition shadow-md text-sm">Exportar CSV</button>
                              </div>
                         </div>
                     </div>
@@ -574,16 +597,16 @@
 
 
     <div id="backupReminderModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-    <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-md relative">
-        <button id="closeBackupReminderBtn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-3xl font-light leading-none">&times;</button>
-        <h2 class="text-xl font-semibold mb-4 text-gray-700">Lembrete de Backup Pessoal</h2>
-        <p class="text-sm text-gray-600 mb-6">
+    <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-md relative">
+        <button id="closeBackupReminderBtn" class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 hover:text-gray-700 text-3xl font-light leading-none">&times;</button>
+        <h2 class="text-xl font-semibold mb-4 text-gray-700 dark:text-white">Lembrete de Backup Pessoal</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-300 mb-6">
             Seu último backup pessoal (histórico e contatos) está vencido. Deseja realizar um agora?
             <br><br>
             <span class="text-xs italic text-gray-500">(Você pode alterar a frequência desta mensagem em "Gerenciar Base de Dados" -> "Backup e Restauração".)</span>
         </p>
         <div class="mt-8 flex justify-end space-x-4">
-            <button id="cancelBackupReminderBtn" class="bg-gray-200 text-gray-800 font-semibold py-2 px-5 rounded-lg hover:bg-gray-300 transition">Não</button>
+            <button id="cancelBackupReminderBtn" class="bg-gray-200 text-gray-800 dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600 font-semibold py-2 px-5 rounded-lg hover:bg-gray-300 transition">Não</button>
             <button id="confirmBackupReminderBtn" class="bg-blue-600 text-white font-semibold py-2 px-5 rounded-lg hover:bg-blue-700 transition shadow-md">Sim, fazer backup</button>
         </div>
     </div>
@@ -592,10 +615,10 @@
 
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col items-end space-y-2 pointer-events-none"></div>
     
-    <footer class="text-center text-xs text-gray-400 mt-8 pb-4">
+    <footer class="text-center text-xs text-gray-400 dark:text-gray-300 mt-8 pb-4">
         <p id="appVersionInfo" class="inline-block"></p>
         
-        <button id="logoutBtn" type="button" class="hidden inline-flex items-center justify-center ml-4 text-red-500 hover:text-red-700 font-semibold transition w-10 h-10 rounded-full bg-red-100 hover:bg-red-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500">
+        <button id="logoutBtn" type="button" class="hidden inline-flex items-center justify-center ml-4 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 font-semibold transition w-10 h-10 rounded-full bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -1.29 512 512" class="w-5 h-5">
                 <defs>
                     <style>.cls-1{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:20px;}</style>
@@ -613,7 +636,7 @@
             </svg>
         </button>
 
-        <button id="loginBtn" type="button" class="hidden inline-flex items-center justify-center ml-4 text-blue-600 hover:text-blue-800 font-semibold transition w-10 h-10 rounded-full bg-blue-100 hover:bg-blue-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <button id="loginBtn" type="button" class="hidden inline-flex items-center justify-center ml-4 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-semibold transition w-10 h-10 rounded-full bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500">
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-5 h-5">
                 <defs>
                     <style>.cls-1{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:20px;}</style>

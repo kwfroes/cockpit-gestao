@@ -1,441 +1,868 @@
-<!DOCTYPE html>
-<html lang="pt-br" class="h-full bg-gray-100">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!doctype html>
+<html lang="pt-br" class="h-full bg-gray-100 dark:bg-slate-900">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard de Análise Operacional (CAF)</title>
-    <script>
-    // VERIFICAÇÃO DE SEGURANÇA (COCKPIT)
-    (function() {
-        // 1. Verifica se tem o token válido no navegador
-        const isAuthenticated = sessionStorage.getItem("cockpit_auth_token") === "valid";
-        
-        // 2. Se NÃO estiver autenticado, manda de volta para o login (index.html principal)
-        if (!isAuthenticated) {
-        // Ajuste o "../.." conforme a profundidade da pasta. 
-        // Se estiver em apps/gerador/index.html, precisa voltar 2 níveis.
-        window.top.location.href = "../../index.html";
-            }
-    })();
-    </script>
-    
-    <!-- 1. Bibliotecas de Terceiros (CDNs) -->
-    
-    <!-- Tailwind CSS -->
+
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- PapaParse (Leitor de CSV) -->
+
+    <script>
+      window.tailwind = {
+        config: {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                slate: { 850: "#1e293b" },
+              },
+              fontFamily: {
+                sans: ["Inter", "sans-serif"],
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <script>
+      (function () {
+        // A. Segurança
+        const isAuthenticated =
+          sessionStorage.getItem("cockpit_auth_token") === "valid";
+        if (!isAuthenticated) window.top.location.href = "../../index.html";
+
+        // B. Tema Imediato
+        var savedTheme = localStorage.getItem("cockpit_theme");
+        var systemDark = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches;
+
+        if (savedTheme === "dark" || (!savedTheme && systemDark)) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      })();
+    </script>
+
+    <style>
+      /* --- CONFIGURAÇÃO GLOBAL DO MODO ESCURO --- */
+
+      /* 1. Avisa ao navegador para renderizar popups nativos (Data/Select) em Dark Mode */
+      html.dark {
+        color-scheme: dark;
+      }
+
+      html.dark body {
+        background-color: #0f172a;
+        color: #f3f4f6;
+      }
+
+      /* 2. Garante que o ícone do calendário fique branco no modo escuro */
+      .dark ::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+        opacity: 0.6; /* Deixa um pouco mais suave */
+        cursor: pointer;
+      }
+      .dark ::-webkit-calendar-picker-indicator:hover {
+        opacity: 1;
+      }
+
+      /* 3. Scrollbar Dark Mode (Mantido) */
+      .dark ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      .dark ::-webkit-scrollbar-track {
+        background: #0f172a;
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background-color: #334155;
+        border-radius: 4px;
+      }
+      .dark ::-webkit-scrollbar-thumb:hover {
+        background-color: #475569;
+      }
+    </style>
+
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-    
-    <!-- Chart.js (Gráficos) -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- jsPDF (Exportação PDF) -->
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
 
-    <!-- 2. Arquivos Locais do Projeto -->
-
-    <!-- Link para o arquivo de CSS customizado -->
-    <link rel="stylesheet" href="style.css">
-
-</head>
-<body class="h-full">
-
-        <header class="text-center mb-8">
-        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <h1 class="text-3xl font-bold text-blue-700 cursor-pointer">Dashboard de Análise Operacional</h1>
-
-
-        </div>
-        </header>
-
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body
+    class="min-h-screen bg-gray-100 dark:bg-slate-900 transition-colors duration-300"
+  >
+    <header class="text-center mb-8">
+      <div
+        class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center"
+      >
+        <h1
+          class="text-3xl font-bold text-blue-700 dark:text-blue-400 cursor-pointer"
+        >
+          Dashboard de Análise Operacional
+        </h1>
+      </div>
+    </header>
 
     <!-- Tela de Upload (RF01, RF-A01) -->
-    <div id="uploadScreen" class="fixed inset-0 bg-gray-100 bg-opacity-0 flex items-center justify-center z-50">
-        <div class="bg-white rounded-lg shadow-xl p-8 max-w-lg w-full text-center">
-            <h2 class="text-2xl font-bold mb-4 text-gray-800">Dashboard de Análise Operacional</h2>
-            <p class="text-gray-600 mb-6">Para começar, carregue um ou mais arquivos CSV (Ex: "Análises outubro.csv").</p>
-            <div id="dropzone" class="border-2 border-dashed border-gray-400 rounded-lg p-12 cursor-pointer bg-gray-50 hover:bg-gray-100">
-                <input type="file" id="fileInput" accept=".csv" multiple class="hidden">
-                <label for="fileInput" class="text-gray-700">
-                    Arraste os arquivos para cá ou <strong>clique para selecionar</strong>.
-                </label>
-            </div>
-            <p id="uploadStatus" class="mt-4 text-sm text-gray-500"></p>
+    <div
+      id="uploadScreen"
+      class="fixed inset-0 bg-gray-100 dark:bg-slate-900 bg-opacity-0 flex items-center justify-center z-50 transition-colors duration-300"
+    >
+      <div
+        class="bg-white dark:bg-slate-800 rounded-lg shadow-xl p-8 max-w-lg w-full text-center border dark:border-slate-700"
+      >
+        <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">
+          Dashboard de Análise Operacional
+        </h2>
+        <p class="text-gray-600 dark:text-gray-300 mb-6">
+          Para começar, carregue um ou mais arquivos CSV (Ex: "Análises
+          outubro.csv").
+        </p>
+        <div
+          id="dropzone"
+          class="border-2 border-dashed border-gray-400 dark:border-slate-500 rounded-lg p-12 cursor-pointer bg-gray-50 hover:bg-gray-100 dark:bg-slate-700/50 dark:hover:bg-slate-700 transition-colors"
+        >
+          <input
+            type="file"
+            id="fileInput"
+            accept=".csv"
+            multiple
+            class="hidden"
+          />
+          <label
+            for="fileInput"
+            class="text-gray-700 dark:text-gray-200 cursor-pointer"
+          >
+            Arraste os arquivos para cá ou
+            <strong>clique para selecionar</strong>.
+          </label>
         </div>
+        <p
+          id="uploadStatus"
+          class="mt-4 text-sm text-gray-500 dark:text-gray-400"
+        ></p>
+      </div>
     </div>
 
     <!-- Tela Principal do Dashboard (Oculta por padrão) -->
     <div id="dashboardScreen" class="hidden min-h-full">
-        <div class="container mx-auto p-4 md:p-8">
-            
-            <!-- Cabeçalho -->
-            <header class="mb-6 flex flex-col md:flex-row justify-between items-center">
-                <h1 class="text-3xl font-bold text-gray-900">Dashboard de Performance Operacional</h1>
-                <div class="flex gap-2 mt-4 md:mt-0">
-                    <input type="file" id="addCsvInput" accept=".csv" multiple class="hidden"> 
+      <div class="container mx-auto p-4 md:p-8">
+        <!-- Cabeçalho -->
+        <header
+          class="mb-6 flex flex-col md:flex-row justify-between items-center"
+        >
+          <h1 class="text-3xl font-bold text-gray-900">
+            Dashboard de Performance Operacional
+          </h1>
+          <div class="flex gap-2 mt-4 md:mt-0">
+            <input
+              type="file"
+              id="addCsvInput"
+              accept=".csv"
+              multiple
+              class="hidden"
+            />
 
-                    <button id="btnAddCsv" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow flex items-center gap-2">
-                        <span>+</span> Adicionar CSV
-                    </button>
-                    
-                    <button id="exportJsonButton" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg shadow">
-                        Salvar Backup (JSON)
-                    </button>
-                    
-                    <button id="exportPdfButtonDashboard" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow">
-                        Exportar Relatório PDF
-                    </button>
+            <button
+              id="btnAddCsv"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow flex items-center gap-2"
+            >
+              <span>+</span> Adicionar CSV
+            </button>
 
-                    <button id="btnOpenHolidays" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-3 rounded-lg shadow" title="Configurar Feriados">
-                        📅
-                    </button>
+            <button
+              id="exportJsonButton"
+              class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg shadow"
+            >
+              Salvar Backup (JSON)
+            </button>
 
-                    <button id="btnFullReset" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-3 rounded-lg shadow" title="Limpar tudo e começar do zero">
-                        🗑️
-                    </button>
+            <button
+              id="exportPdfButtonDashboard"
+              class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow"
+            >
+              Exportar Relatório PDF
+            </button>
+
+            <button
+              id="btnOpenHolidays"
+              class="bg-gray-50 dark:bg-slate-700 hover:bg-gray-600 text-white font-bold py-2 px-3 rounded-lg shadow"
+              title="Configurar Feriados"
+            >
+              📅
+            </button>
+
+            <button
+              id="btnFullReset"
+              class="bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-gray-200 font-bold py-2 px-3 rounded-lg shadow"
+              title="Limpar tudo e começar do zero"
+            >
+              🗑️
+            </button>
+          </div>
+        </header>
+
+        <!-- Seção de Filtros (RF07) -->
+        <section
+          id="filters"
+          class="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-md mb-6"
+        >
+          <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white">
+            Filtros Globais
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div>
+              <label
+                for="filterMonth"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >Mês</label
+              >
+              <select
+                id="filterMonth"
+                class="mt-1 block w-full rounded-md border-gray-300 dark:bg-slate-900 dark:border-slate-600 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              >
+                <option value="all">Selecione...</option>
+                <option value="0">Janeiro</option>
+                <option value="1">Fevereiro</option>
+                <option value="2">Março</option>
+                <option value="3">Abril</option>
+                <option value="4">Maio</option>
+                <option value="5">Junho</option>
+                <option value="6">Julho</option>
+                <option value="7">Agosto</option>
+                <option value="8">Setembro</option>
+                <option value="9">Outubro</option>
+                <option value="10">Novembro</option>
+                <option value="11">Dezembro</option>
+              </select>
+            </div>
+
+            <div>
+              <label
+                for="filterYear"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >Ano</label
+              >
+              <select
+                id="filterYear"
+                class="mt-1 block w-full rounded-md border-gray-300 dark:bg-slate-900 dark:border-slate-600 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              >
+                <option value="all">Selecione...</option>
+              </select>
+            </div>
+            <div>
+              <label
+                for="filterPeriodStart"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >Data Início (Análise)</label
+              >
+              <input
+                type="date"
+                id="filterPeriodStart"
+                class="mt-1 block w-full rounded-md border-gray-300 dark:bg-slate-900 dark:border-slate-600 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              />
+            </div>
+            <div>
+              <label
+                for="filterPeriodEnd"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >Data Fim (Análise)</label
+              >
+              <input
+                type="date"
+                id="filterPeriodEnd"
+                class="mt-1 block w-full rounded-md border-gray-300 dark:bg-slate-900 dark:border-slate-600 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              />
+            </div>
+            <div>
+              <label
+                for="filterAnalyst"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >Analista</label
+              >
+              <select
+                id="filterAnalyst"
+                class="mt-1 block w-full rounded-md border-gray-300 dark:bg-slate-900 dark:border-slate-600 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              >
+                <option value="all">Todos</option>
+              </select>
+            </div>
+            <div>
+              <label
+                for="filterSituation"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >Situação</label
+              >
+              <select
+                id="filterSituation"
+                class="mt-1 block w-full rounded-md border-gray-300 dark:bg-slate-900 dark:border-slate-600 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              >
+                <option value="all">Todas</option>
+              </select>
+            </div>
+            <div>
+              <label
+                for="filterUf"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >UF</label
+              >
+              <select
+                id="filterUf"
+                class="mt-1 block w-full rounded-md border-gray-300 dark:bg-slate-900 dark:border-slate-600 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              >
+                <option value="all">Todas</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <!-- Seção 1: KPIs Gerais (RF02) -->
+        <section
+          id="kpis"
+          class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6"
+        >
+          <!-- Os KPIs serão inseridos aqui via JS -->
+        </section>
+
+        <!-- Seção 2: Desempenho da Equipe (RF03) -->
+        <section id="team-performance" class="mb-6">
+          <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md mb-6">
+            <h2
+              class="text-xl font-semibold text-gray-800 dark:text-white title-with-tooltip"
+            >
+              Performance de Analistas
+              <div class="tooltip-container">
+                <span class="tooltip-icon">i</span>
+                <span class="tooltip-text">
+                  <strong>O que mede:</strong> Performance e consistência de
+                  cada analista.<br /><br />
+                  <strong>Como interpretar:</strong> Use o
+                  <strong>Desvio Padrão</strong> para ver a consistência. Um
+                  valor baixo significa um fluxo de trabalho estável. Um valor
+                  alto sugere picos de trabalho e dias ociosos.
+                </span>
+              </div>
+            </h2>
+            <div class="overflow-x-auto mt-4">
+              <table
+                class="min-w-full divide-y divide-gray-200 dark:divide-slate-700"
+              >
+                <thead class="bg-gray-50 dark:bg-slate-700">
+                  <tr>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                    >
+                      Nome
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                    >
+                      Total Mês
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                    >
+                      Média Diária
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                    >
+                      Desvio Padrão
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                    >
+                      Participação
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="teamTableBody"
+                  class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700"
+                >
+                  <!-- Linhas da tabela inseridas via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md">
+              <h3
+                class="text-lg font-semibold text-gray-800 dark:text-white title-with-tooltip"
+              >
+                Carga de Trabalho (Volume)
+                <div class="tooltip-container">
+                  <span class="tooltip-icon">i</span>
+                  <span class="tooltip-text"
+                    ><strong>O que mede:</strong> Total de solicitações
+                    analisadas por cada membro da equipe.</span
+                  >
                 </div>
-            </header>
-
-            <!-- Seção de Filtros (RF07) -->
-            <section id="filters" class="bg-white p-4 rounded-lg shadow-md mb-6">
-                <h2 class="text-xl font-semibold mb-4 text-gray-800">Filtros Globais</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                    <div>
-                        <label for="filterMonth" class="block text-sm font-medium text-gray-700">Mês</label>
-                        <select id="filterMonth" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
-                            <option value="all">Selecione...</option>
-                            <option value="0">Janeiro</option>
-                            <option value="1">Fevereiro</option>
-                            <option value="2">Março</option>
-                            <option value="3">Abril</option>
-                            <option value="4">Maio</option>
-                            <option value="5">Junho</option>
-                            <option value="6">Julho</option>
-                            <option value="7">Agosto</option>
-                            <option value="8">Setembro</option>
-                            <option value="9">Outubro</option>
-                            <option value="10">Novembro</option>
-                            <option value="11">Dezembro</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="filterYear" class="block text-sm font-medium text-gray-700">Ano</label>
-                        <select id="filterYear" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
-                            <option value="all">Selecione...</option>
-                            </select>
-                    </div>
-                    <div>
-                        <label for="filterPeriodStart" class="block text-sm font-medium text-gray-700">Data Início (Análise)</label>
-                        <input type="date" id="filterPeriodStart" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
-                    </div>
-                    <div>
-                        <label for="filterPeriodEnd" class="block text-sm font-medium text-gray-700">Data Fim (Análise)</label>
-                        <input type="date" id="filterPeriodEnd" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
-                    </div>
-                    <div>
-                        <label for="filterAnalyst" class="block text-sm font-medium text-gray-700">Analista</label>
-                        <select id="filterAnalyst" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
-                            <option value="all">Todos</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="filterSituation" class="block text-sm font-medium text-gray-700">Situação</label>
-                        <select id="filterSituation" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
-                            <option value="all">Todas</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="filterUf" class="block text-sm font-medium text-gray-700">UF</label>
-                        <select id="filterUf" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
-                            <option value="all">Todas</option>
-                        </select>
-                    </div>
+              </h3>
+              <canvas id="chartWorkload"></canvas>
+            </div>
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md">
+              <h3
+                class="text-lg font-semibold text-gray-800 dark:text-white title-with-tooltip"
+              >
+                Qualidade por Analista (Situação)
+                <div class="tooltip-container">
+                  <span class="tooltip-icon">i</span>
+                  <span class="tooltip-text"
+                    ><strong>O que mede:</strong> Volume de análises por
+                    analista, segmentado pelo resultado (Deferida, Indeferida,
+                    etc.).</span
+                  >
                 </div>
-            </section>
+              </h3>
+              <canvas id="chartQuality"></canvas>
+            </div>
+          </div>
+        </section>
 
-            <!-- Seção 1: KPIs Gerais (RF02) -->
-            <section id="kpis" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-                <!-- Os KPIs serão inseridos aqui via JS -->
-            </section>
+        <!-- Seção 3: Eficiência Operacional (RF04) -->
+        <section
+          id="efficiency"
+          class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6"
+        >
+          <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md">
+            <h3
+              class="text-lg font-semibold text-gray-800 dark:text-white title-with-tooltip"
+            >
+              Volume de Entrada por Dia
+              <div class="tooltip-container">
+                <span class="tooltip-icon">i</span>
+                <span class="tooltip-text"
+                  ><strong>O que mede:</strong> Quantidade de solicitações
+                  recebidas por dia (baseado na Data Solicitacao).</span
+                >
+              </div>
+            </h3>
+            <canvas id="chartEntryVolume"></canvas>
+          </div>
+          <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md">
+            <h3
+              class="text-lg font-semibold text-gray-800 dark:text-white title-with-tooltip"
+            >
+              Distribuição do Tempo de Análise
+              <div class="tooltip-container">
+                <span class="tooltip-icon">i</span>
+                <span class="tooltip-text"
+                  ><strong>O que mede:</strong> Histograma do tempo (em dias)
+                  entre a solicitação e a análise. Ajuda a ver gargalos.</span
+                >
+              </div>
+            </h3>
+            <canvas id="chartAnalysisTime"></canvas>
+          </div>
+        </section>
 
-            <!-- Seção 2: Desempenho da Equipe (RF03) -->
-            <section id="team-performance" class="mb-6">
-                <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-                    <h2 class="text-xl font-semibold text-gray-800 title-with-tooltip">
-                        Performance de Analistas
-                        <div class="tooltip-container">
-                            <span class="tooltip-icon">i</span>
-                            <span class="tooltip-text">
-                                <strong>O que mede:</strong> Performance e consistência de cada analista.<br><br>
-                                <strong>Como interpretar:</strong> Use o <strong>Desvio Padrão</strong> para ver a consistência. Um valor baixo significa um fluxo de trabalho estável. Um valor alto sugere picos de trabalho e dias ociosos.
-                            </span>
-                        </div>
-                    </h2>
-                    <div class="overflow-x-auto mt-4">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Mês</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Média Diária</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Desvio Padrão</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Participação</th>
-                                </tr>
-                            </thead>
-                            <tbody id="teamTableBody" class="bg-white divide-y divide-gray-200">
-                                <!-- Linhas da tabela inseridas via JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-lg font-semibold text-gray-800 title-with-tooltip">
-                            Carga de Trabalho (Volume)
-                            <div class="tooltip-container">
-                                <span class="tooltip-icon">i</span>
-                                <span class="tooltip-text"><strong>O que mede:</strong> Total de solicitações analisadas por cada membro da equipe.</span>
-                            </div>
-                        </h3>
-                        <canvas id="chartWorkload"></canvas>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-lg font-semibold text-gray-800 title-with-tooltip">
-                            Qualidade por Analista (Situação)
-                            <div class="tooltip-container">
-                                <span class="tooltip-icon">i</span>
-                                <span class="tooltip-text"><strong>O que mede:</strong> Volume de análises por analista, segmentado pelo resultado (Deferida, Indeferida, etc.).</span>
-                            </div>
-                        </h3>
-                        <canvas id="chartQuality"></canvas>
-                    </div>
-                </div>
-            </section>
+        <!-- Seção 4: Perfil das Solicitações (RF05) -->
+        <section id="profile" class="mb-6">
+          <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white">
+            Perfil das Solicitações
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
+                por Tipo
+              </h3>
+              <canvas id="chartReqType"></canvas>
+            </div>
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
+                por Categoria
+              </h3>
+              <canvas id="chartCategory"></canvas>
+            </div>
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
+                por Tipo Fornecedor
+              </h3>
+              <canvas id="chartSupplierType"></canvas>
+            </div>
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
+                por Situação Simpas
+              </h3>
+              <canvas id="chartSimpas"></canvas>
+            </div>
+          </div>
+        </section>
 
-            <!-- Seção 3: Eficiência Operacional (RF04) -->
-            <section id="efficiency" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-lg font-semibold text-gray-800 title-with-tooltip">
-                        Volume de Entrada por Dia
-                        <div class="tooltip-container">
-                            <span class="tooltip-icon">i</span>
-                            <span class="tooltip-text"><strong>O que mede:</strong> Quantidade de solicitações recebidas por dia (baseado na Data Solicitacao).</span>
-                        </div>
-                    </h3>
-                    <canvas id="chartEntryVolume"></canvas>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-lg font-semibold text-gray-800 title-with-tooltip">
-                        Distribuição do Tempo de Análise
-                        <div class="tooltip-container">
-                            <span class="tooltip-icon">i</span>
-                            <span class="tooltip-text"><strong>O que mede:</strong> Histograma do tempo (em dias) entre a solicitação e a análise. Ajuda a ver gargalos.</span>
-                        </div>
-                    </h3>
-                    <canvas id="chartAnalysisTime"></canvas>
-                </div>
-            </section>
+        <!-- Seção 5: Análise Geográfica (RF06) -->
+        <section id="geo" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
+              Top 10 Cidades
+            </h3>
+            <canvas id="chartTopCities"></canvas>
+          </div>
+          <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
+              Top 10 Estados (UF)
+            </h3>
+            <canvas id="chartTopUf"></canvas>
+          </div>
+        </section>
 
-            <!-- Seção 4: Perfil das Solicitações (RF05) -->
-            <section id="profile" class="mb-6">
-                <h2 class="text-xl font-semibold mb-4 text-gray-800">Perfil das Solicitações</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-lg font-semibold text-gray-800">por Tipo</h3>
-                        <canvas id="chartReqType"></canvas>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-lg font-semibold text-gray-800">por Categoria</h3>
-                        <canvas id="chartCategory"></canvas>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-lg font-semibold text-gray-800">por Tipo Fornecedor</h3>
-                        <canvas id="chartSupplierType"></canvas>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-lg font-semibold text-gray-800">por Situação Simpas</h3>
-                        <canvas id="chartSimpas"></canvas>
-                    </div>
-                </div>
-            </section>
+        <!-- Seção 6: Tendência Mensal (RF-A03) -->
+        <section
+          id="trend"
+          class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md mb-6 hidden"
+        >
+          <h2
+            class="text-xl font-semibold text-gray-800 dark:text-white title-with-tooltip"
+          >
+            Tendência Mensal
+            <div class="tooltip-container">
+              <span class="tooltip-icon">i</span>
+              <span class="tooltip-text">
+                <strong>O que mede:</strong> Volume de solicitações e tempo
+                médio de análise ao longo dos meses.<br /><br />
+                <strong>Como interpretar:</strong> Permite identificar a
+                sazonalidade da demanda e se a eficiência da equipe está
+                melhorando (tempo caindo) ou piorando ao longo do tempo.
+              </span>
+            </div>
+          </h2>
+          <canvas id="chartMonthlyTrend" height="100"></canvas>
+        </section>
 
-            <!-- Seção 5: Análise Geográfica (RF06) -->
-            <section id="geo" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-lg font-semibold text-gray-800">Top 10 Cidades</h3>
-                    <canvas id="chartTopCities"></canvas>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-lg font-semibold text-gray-800">Top 10 Estados (UF)</h3>
-                    <canvas id="chartTopUf"></canvas>
-                </div>
-            </section>
-            
-            <!-- Seção 6: Tendência Mensal (RF-A03) -->
-            <section id="trend" class="bg-white p-6 rounded-lg shadow-md mb-6 hidden">
-                <h2 class="text-xl font-semibold text-gray-800 title-with-tooltip">
-                    Tendência Mensal
-                    <div class="tooltip-container">
-                        <span class="tooltip-icon">i</span>
-                        <span class="tooltip-text">
-                            <strong>O que mede:</strong> Volume de solicitações e tempo médio de análise ao longo dos meses.<br><br>
-                            <strong>Como interpretar:</strong> Permite identificar a sazonalidade da demanda e se a eficiência da equipe está melhorando (tempo caindo) ou piorando ao longo do tempo.
-                        </span>
-                    </div>
-                </h2>
-                <canvas id="chartMonthlyTrend" height="100"></canvas>
-            </section>
+        <!-- Seção 7: Fornecedores analisados por analista -->
+        <section
+          id="analyst-detail-section"
+          class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md mb-6 hidden"
+        >
+          <div class="flex justify-between items-center mb-4">
+            <h2
+              class="text-xl font-semibold text-gray-800 dark:text-white flex items-center gap-2"
+            >
+              <span id="analyst-name-display" class="text-blue-600"></span>
+              <span class="text-sm font-normal text-gray-500 dark:text-gray-300"
+                >(Detalhamento)</span
+              >
+            </h2>
 
-            <!-- Seção 7: Fornecedores analisados por analista -->
-            <section id="analyst-detail-section" class="bg-white p-6 rounded-lg shadow-md mb-6 hidden">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-semibold text-gray-800 flex items-center gap-2">
-                        <span id="analyst-name-display" class="text-blue-600"></span> 
-                        <span class="text-sm font-normal text-gray-500">(Detalhamento)</span>
-                    </h2>
-                    
-                    <div id="analyst-pagination" class="flex items-center gap-2 hidden">
-                        <button id="btnPagePrev" class="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-gray-700 disabled:opacity-50">
-                            &larr; Anterior
-                        </button>
-                        <span id="pageInfo" class="text-sm text-gray-600 font-medium">
-                            Pág 1 de 5
-                        </span>
-                        <button id="btnPageNext" class="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-gray-700 disabled:opacity-50">
-                            Próxima &rarr;
-                        </button>
-                    </div>
-                </div>
+            <div id="analyst-pagination" class="flex items-center gap-2 hidden">
+              <button
+                id="btnPagePrev"
+                class="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-white disabled:opacity-50"
+              >
+                &larr; Anterior
+              </button>
+              <span
+                id="pageInfo"
+                class="text-sm text-gray-600 dark:text-gray-300 font-medium"
+              >
+                Pág 1 de 5
+              </span>
+              <button
+                id="btnPageNext"
+                class="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-white disabled:opacity-50"
+              >
+                Próxima &rarr;
+              </button>
+            </div>
+          </div>
 
-                <div id="analyst-table-container" class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-200 select-none group" data-col="dataAnalise">
-                                    Data Análise <span class="sort-icon ml-1 text-gray-400 group-hover:text-gray-600">⇅</span>
-                                </th>
-                                
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-200 select-none group" data-col="tempo">
-                                    Tempo <span class="sort-icon ml-1 text-gray-400 group-hover:text-gray-600">⇅</span>
-                                </th> 
-                                
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-200 select-none group" data-col="cnpj">
-                                    CNPJ/CPF <span class="sort-icon ml-1 text-gray-400 group-hover:text-gray-600">⇅</span>
-                                </th>
-                                
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-200 select-none group" data-col="razao">
-                                    Razão Social <span class="sort-icon ml-1 text-gray-400 group-hover:text-gray-600">⇅</span>
-                                </th>
-                                
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-200 select-none group" data-col="situacao">
-                                    Situação <span class="sort-icon ml-1 text-gray-400 group-hover:text-gray-600">⇅</span>
-                                </th>
-                                
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-200 select-none group" data-col="tipo">
-                                    Tipo <span class="sort-icon ml-1 text-gray-400 group-hover:text-gray-600">⇅</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody id="analyst-table-body" class="bg-white divide-y divide-gray-200">
-                            </tbody>
-                    </table>
-                </div>
-                <p id="analyst-count-info" class="text-gray-500 text-sm mt-2 text-left hidden font-bold"></p>
-                <p id="analyst-msg" class="text-gray-500 text-sm mt-2 text-center hidden">Nenhum dado encontrado.</p>
-            </section>
+          <div id="analyst-table-container" class="overflow-x-auto">
+            <table
+              class="min-w-full divide-y divide-gray-200 dark:divide-slate-700"
+            >
+              <thead class="bg-gray-50 dark:bg-slate-700">
+                <tr>
+                  <th
+                    class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase cursor-pointer hover:bg-gray-200 select-none group"
+                    data-col="dataAnalise"
+                  >
+                    Data Análise
+                    <span
+                      class="sort-icon ml-1 text-gray-400 group-hover:text-gray-600 dark:text-gray-300"
+                      >⇅</span
+                    >
+                  </th>
 
-        </div>
+                  <th
+                    class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase cursor-pointer hover:bg-gray-200 select-none group"
+                    data-col="tempo"
+                  >
+                    Tempo
+                    <span
+                      class="sort-icon ml-1 text-gray-400 group-hover:text-gray-600 dark:text-gray-300"
+                      >⇅</span
+                    >
+                  </th>
+
+                  <th
+                    class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase cursor-pointer hover:bg-gray-200 select-none group"
+                    data-col="cnpj"
+                  >
+                    CNPJ/CPF
+                    <span
+                      class="sort-icon ml-1 text-gray-400 group-hover:text-gray-600 dark:text-gray-300"
+                      >⇅</span
+                    >
+                  </th>
+
+                  <th
+                    class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase cursor-pointer hover:bg-gray-200 select-none group"
+                    data-col="razao"
+                  >
+                    Razão Social
+                    <span
+                      class="sort-icon ml-1 text-gray-400 group-hover:text-gray-600 dark:text-gray-300"
+                      >⇅</span
+                    >
+                  </th>
+
+                  <th
+                    class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase cursor-pointer hover:bg-gray-200 select-none group"
+                    data-col="situacao"
+                  >
+                    Situação
+                    <span
+                      class="sort-icon ml-1 text-gray-400 group-hover:text-gray-600 dark:text-gray-300"
+                      >⇅</span
+                    >
+                  </th>
+
+                  <th
+                    class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase cursor-pointer hover:bg-gray-200 select-none group"
+                    data-col="tipo"
+                  >
+                    Tipo
+                    <span
+                      class="sort-icon ml-1 text-gray-400 group-hover:text-gray-600 dark:text-gray-300"
+                      >⇅</span
+                    >
+                  </th>
+                </tr>
+              </thead>
+              <tbody
+                id="analyst-table-body"
+                class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700"
+              ></tbody>
+            </table>
+          </div>
+          <p
+            id="analyst-count-info"
+            class="text-gray-500 dark:text-gray-300 text-sm mt-2 text-left hidden font-bold"
+          ></p>
+          <p
+            id="analyst-msg"
+            class="text-gray-500 dark:text-gray-300 text-sm mt-2 text-center hidden"
+          >
+            Nenhum dado encontrado.
+          </p>
+        </section>
+      </div>
     </div>
 
-    <div id="holidayModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl p-6">
-            <div class="flex justify-between items-center mb-4 border-b pb-2">
-                <div>
-                    <h3 class="text-xl font-bold text-gray-800">Gerenciar Feriados e Facultativos</h3>
-                    <p class="text-xs text-gray-500">Selecione dias no calendário para adicionar como feriado móvel.</p>
-                </div>
-                <button id="btnCloseHolidays" class="text-gray-500 hover:text-gray-700 text-3xl font-bold">&times;</button>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                    <div class="flex justify-between items-center mb-4 bg-gray-50 p-2 rounded-lg border">
-                        <button id="calPrevMonth" class="px-3 py-1 bg-white border rounded hover:bg-gray-100 font-bold text-gray-600 shadow-sm"><</button>
-                        <span id="calMonthYear" class="font-bold text-lg text-blue-800 capitalize">Janeiro 2025</span>
-                        <button id="calNextMonth" class="px-3 py-1 bg-white border rounded hover:bg-gray-100 font-bold text-gray-600 shadow-sm">></button>
-                    </div>
-
-                    <div class="flex flex-wrap gap-3 text-[10px] mb-3 justify-center text-gray-600 uppercase font-semibold tracking-wide">
-                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-blue-500 shadow-sm"></span> Novo (Selecionado)</span>
-                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-red-500 shadow-sm"></span> Salvo (JSON)</span>
-                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-orange-300 shadow-sm"></span> Feriado Fixo</span>
-                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-gray-300 shadow-sm"></span> Fim de Semana</span>
-                    </div>
-
-                    <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold text-gray-400 mb-2">
-                        <div>DOM</div><div>SEG</div><div>TER</div><div>QUA</div><div>QUI</div><div>SEX</div><div>SÁB</div>
-                    </div>
-                    <div id="calGrid" class="grid grid-cols-7 gap-1 text-center select-none">
-                        </div>
-
-                    <button id="btnAddSelected" class="mt-4 w-full bg-blue-600 text-white py-3 rounded-lg shadow font-bold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
-                        Adicionar Dias Selecionados
-                    </button>
-
-                    <div id="calFooter" class="mt-4 border-t border-gray-100 pt-3">
-                        <h5 class="text-xs font-bold text-gray-500 uppercase mb-2">Feriados neste mês:</h5>
-                        <ul id="calFooterList" class="space-y-1 text-sm text-gray-700">
-                            </ul>
-                    </div>
-                </div>
-
-                <div class="flex flex-col h-full bg-gray-50 rounded-lg p-4 border border-gray-100">
-                    <h4 class="font-bold text-gray-700 mb-2 flex items-center gap-2">
-                        Feriados Cadastrados 
-                        <span id="countHolidays" class="bg-gray-200 text-gray-600 text-xs py-0.5 px-2 rounded-full">0</span>
-                    </h4>
-                    
-                    <div class="flex-1 overflow-y-auto pr-2 mb-4 custom-scrollbar" style="max-height: 320px;">
-                        <ul id="holidayListDisplay" class="space-y-2 text-sm">
-                            </ul>
-                    </div>
-
-                    <div class="mt-auto border-t pt-4">
-                        <button id="btnDownloadHolidays" class="w-full bg-green-600 text-white py-3 rounded-lg shadow font-bold hover:bg-green-700 flex items-center justify-center gap-2 transition-all">
-                            <span>💾</span> Salvar e Atualizar Dashboard
-                        </button>
-                        <p class="text-xs text-gray-400 mt-2 text-center">
-                            Isso baixará um novo <code>feriados.json</code> e atualizará os cálculos na tela imediatamente.
-                        </p>
-                    </div>
-                </div>
-            </div>
+    <div
+      id="holidayModal"
+      class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden"
+    >
+      <div
+        class="bg-white dark:bg-slate-800 rounded-lg shadow-xl w-full max-w-4xl p-6"
+      >
+        <div class="flex justify-between items-center mb-4 border-b pb-2">
+          <div>
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white">
+              Gerenciar Feriados e Facultativos
+            </h3>
+            <p class="text-xs text-gray-500 dark:text-gray-300">
+              Selecione dias no calendário para adicionar como feriado móvel.
+            </p>
+          </div>
+          <button
+            id="btnCloseHolidays"
+            class="text-gray-500 hover:text-gray-700 dark:text-gray-300 text-3xl font-bold"
+          >
+            &times;
+          </button>
         </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <div
+              class="flex justify-between items-center mb-4 bg-gray-50 dark:bg-slate-700 p-2 rounded-lg border"
+            >
+              <button
+                id="calPrevMonth"
+                class="px-3 py-1 bg-white dark:bg-slate-800 border rounded hover:bg-gray-100 font-bold text-gray-600 dark:text-gray-300 shadow-sm"
+              >
+                <
+              </button>
+              <span
+                id="calMonthYear"
+                class="font-bold text-lg text-blue-800 dark:text-blue-300 capitalize"
+                >Janeiro 2025</span
+              >
+              <button
+                id="calNextMonth"
+                class="px-3 py-1 bg-white dark:bg-slate-800 border rounded hover:bg-gray-100 font-bold text-gray-600 dark:text-gray-300 shadow-sm"
+              >
+                >
+              </button>
+            </div>
+
+            <div
+              class="flex flex-wrap gap-3 text-[10px] mb-3 justify-center text-gray-600 dark:text-gray-300 uppercase font-semibold tracking-wide"
+            >
+              <span class="flex items-center gap-1"
+                ><span
+                  class="w-3 h-3 rounded-full bg-blue-500 shadow-sm"
+                ></span>
+                Novo (Selecionado)</span
+              >
+              <span class="flex items-center gap-1"
+                ><span class="w-3 h-3 rounded-full bg-red-500 shadow-sm"></span>
+                Salvo (JSON)</span
+              >
+              <span class="flex items-center gap-1"
+                ><span
+                  class="w-3 h-3 rounded-full bg-orange-300 shadow-sm"
+                ></span>
+                Feriado Fixo</span
+              >
+              <span class="flex items-center gap-1"
+                ><span
+                  class="w-3 h-3 rounded-full bg-gray-300 shadow-sm"
+                ></span>
+                Fim de Semana</span
+              >
+            </div>
+
+            <div
+              class="grid grid-cols-7 gap-1 text-center text-xs font-bold text-gray-400 mb-2"
+            >
+              <div>DOM</div>
+              <div>SEG</div>
+              <div>TER</div>
+              <div>QUA</div>
+              <div>QUI</div>
+              <div>SEX</div>
+              <div>SÁB</div>
+            </div>
+            <div
+              id="calGrid"
+              class="grid grid-cols-7 gap-1 text-center select-none"
+            ></div>
+
+            <button
+              id="btnAddSelected"
+              class="mt-4 w-full bg-blue-600 text-white py-3 rounded-lg shadow font-bold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            >
+              Adicionar Dias Selecionados
+            </button>
+
+            <div id="calFooter" class="mt-4 border-t border-gray-100 pt-3">
+              <h5
+                class="text-xs font-bold text-gray-500 dark:text-gray-300 uppercase mb-2"
+              >
+                Feriados neste mês:
+              </h5>
+              <ul
+                id="calFooterList"
+                class="space-y-1 text-sm text-gray-700 dark:text-gray-200"
+              ></ul>
+            </div>
+          </div>
+
+          <div
+            class="flex flex-col h-full bg-gray-50 dark:bg-slate-700 rounded-lg p-4 border border-gray-100"
+          >
+            <h4
+              class="font-bold text-gray-700 dark:text-gray-200 mb-2 flex items-center gap-2"
+            >
+              Feriados Cadastrados
+              <span
+                id="countHolidays"
+                class="bg-gray-200 text-gray-600 dark:text-gray-300 text-xs py-0.5 px-2 rounded-full"
+                >0</span
+              >
+            </h4>
+
+            <div
+              class="flex-1 overflow-y-auto pr-2 mb-4 custom-scrollbar"
+              style="max-height: 320px"
+            >
+              <ul id="holidayListDisplay" class="space-y-2 text-sm"></ul>
+            </div>
+
+            <div class="mt-auto border-t pt-4">
+              <button
+                id="btnDownloadHolidays"
+                class="w-full bg-green-600 text-white py-3 rounded-lg shadow font-bold hover:bg-green-700 flex items-center justify-center gap-2 transition-all"
+              >
+                <span>💾</span> Salvar e Atualizar Dashboard
+              </button>
+              <p class="text-xs text-gray-400 mt-2 text-center">
+                Isso baixará um novo <code>feriados.json</code> e atualizará os
+                cálculos na tela imediatamente.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div id="nameModal" class="fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center z-[60] hidden">
-        <div class="bg-white rounded-lg shadow-2xl p-6 w-full max-w-md transform transition-all scale-100">
-            <h3 class="text-lg font-bold text-gray-800 mb-4">Nome do Feriado</h3>
-            
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
-                <input type="text" id="inputHolidayName" class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" placeholder="Ex: Carnaval, Ponto Facultativo...">
-            </div>
+    <div
+      id="nameModal"
+      class="fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center z-[60] hidden"
+    >
+      <div
+        class="bg-white dark:bg-slate-800 rounded-lg shadow-2xl p-6 w-full max-w-md transform transition-all scale-100"
+      >
+        <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4">
+          Nome do Feriado
+        </h3>
 
-            <div class="flex justify-end gap-3">
-                <button id="btnCancelName" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-medium">Cancelar</button>
-                <button id="btnConfirmName" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-bold">Salvar</button>
-            </div>
+        <div class="mb-4">
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >Descrição</label
+          >
+          <input
+            type="text"
+            id="inputHolidayName"
+            class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+            placeholder="Ex: Carnaval, Ponto Facultativo..."
+          />
         </div>
+
+        <div class="flex justify-end gap-3">
+          <button
+            id="btnCancelName"
+            class="px-4 py-2 bg-gray-200 text-gray-700 dark:text-gray-200 rounded hover:bg-gray-300 font-medium"
+          >
+            Cancelar
+          </button>
+          <button
+            id="btnConfirmName"
+            class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-bold"
+          >
+            Salvar
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- 3. Arquivo de Script Local -->
     <!-- Deve ser carregado no final, após o corpo da página ser definido -->
     <script src="script.js"></script>
-
-</body>
+  </body>
 </html>
