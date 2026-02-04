@@ -91,7 +91,7 @@
         >
           <svg
             id="iconOpen"
-            class="w-6 h-6"
+            class="w-6 h-6 hidden"
             fill="currentColor"
             viewBox="0 0 512 512"
           >
@@ -112,7 +112,7 @@
           </svg>
           <svg
             id="iconClosed"
-            class="w-6 h-6 hidden"
+            class="w-6 h-6"
             fill="currentColor"
             viewBox="0 0 32 32"
           >
@@ -255,13 +255,17 @@
           class="hidden max-w-4xl mx-auto bg-white shadow-sm border rounded-xl min-h-[50vh]"
         >
           <div class="p-8 border-b dark:border-gray-700/50">
-            <div class="flex justify-between items-start mb-4">
+            <div
+              class="flex flex-col sm:flex-col justify-between items-start sm:items-start mb-4 gap-4"
+            >
               <span
                 id="viewTag"
                 class="px-2 py-1 text-xs font-bold uppercase tracking-wider bg-gray-100 rounded text-gray-600"
-                >--</span
               >
-              <div class="flex gap-2 no-print">
+                --
+              </span>
+              <br />
+              <div class="flex gap-2 no-print self-start sm:self-auto">
                 <div class="relative group">
                   <button
                     class="text-gray-400 hover:text-blue-600 flex items-center gap-1"
@@ -421,6 +425,7 @@
                     ></path>
                   </svg>
                 </button>
+                <div class="w-px h-5 bg-gray-300 dark:bg-slate-600 mx-1"></div>
                 <button
                   onclick="app.deleteCurrent()"
                   class="text-gray-400 hover:text-red-600"
