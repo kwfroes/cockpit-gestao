@@ -351,6 +351,41 @@
       Operação concluída com sucesso!
     </div>
 
+    <div id="welcomeModalConversor" class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all border dark:border-slate-700">
+            <div class="p-6">
+                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 2v-6m-9 9h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                
+                <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Sistema CAF Digital: Conversor e Filtro</h3>
+                
+                <div class="text-sm text-gray-600 dark:text-gray-300 space-y-4 leading-relaxed">
+                    <p>Otimize o processamento de grandes volumes de dados através das ferramentas de automação.</p>
+                    
+                    <ul class="space-y-2 border-l-2 border-blue-500/30 pl-4 py-1">
+                        <li><strong class="text-blue-600 dark:text-blue-400">Filtro por Período:</strong> Extraia linhas específicas de arquivos CSV baseando-se na coluna "Data Análise".</li>
+                        <li><strong class="text-blue-600 dark:text-blue-400">Merge Inteligente:</strong> Cruza dados do Excel com a base estática, removendo duplicidades automaticamente.</li>
+                        <li><strong class="text-blue-600 dark:text-blue-400">Alta Capacidade:</strong> Converta planilhas com mais de 300 mil linhas para o padrão de sistema (;;).</li>
+                    </ul>
+                </div>
+
+                <div class="mt-8 flex flex-col gap-4">
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" id="dontShowConversorAgain" class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 transition-all">
+                        <span class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">Não mostrar novamente</span>
+                    </label>
+                    
+                    <button onclick="app.closeWelcomeModalConversor()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all shadow-lg active:scale-95">
+                        Entendi e Iniciar Processamento
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
   </body>
 </html>

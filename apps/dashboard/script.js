@@ -1,5 +1,7 @@
 // Espera a página inteira carregar
 window.onload = function () {
+
+  checkWelcomeModal();
   // --- Funções Nativas de Data (para substituir date-fns) ---
 
   // --- GESTÃO DE TEMA E CHART.JS ---
@@ -2700,4 +2702,26 @@ window.onload = function () {
       }
     });
   }
+
+
+  function closeWelcomeModal() {
+      const dontShow = document.getElementById("dontShowDashboardAgain").checked;
+      if (dontShow) {
+          localStorage.setItem("intro_dashboard_shown", "true");
+      }
+      document.getElementById("welcomeModalDashboard").style.display = "none";
+  }
+
+  // Função para verificar se deve mostrar o modal ao carregar
+  function checkWelcomeModal() {
+      const hasShown = localStorage.getItem("intro_dashboard_shown");
+      if (!hasShown) {
+          const modal = document.getElementById("welcomeModalDashboard");
+          if (modal) {
+              modal.style.display = "flex";
+              modal.classList.remove("hidden");
+          }
+      }
+  }
+
 }; // FECHA O window.onload

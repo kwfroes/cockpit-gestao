@@ -339,3 +339,26 @@ async function converterExcelGenerico() {
     statusText.innerText = "";
   }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  app.checkWelcomeModalConversor();
+});
+
+const app = {
+  checkWelcomeModalConversor: function() {
+    const hasShown = localStorage.getItem("intro_conversor_shown");
+    if (!hasShown) {
+      const modal = document.getElementById("welcomeModalConversor");
+      if (modal) modal.classList.remove("hidden");
+    }
+  },
+
+  closeWelcomeModalConversor: function() {
+    const checkbox = document.getElementById("dontShowConversorAgain");
+    if (checkbox && checkbox.checked) {
+      localStorage.setItem("intro_conversor_shown", "true");
+    }
+    const modal = document.getElementById("welcomeModalConversor");
+    if (modal) modal.classList.add("hidden");
+  }
+};
