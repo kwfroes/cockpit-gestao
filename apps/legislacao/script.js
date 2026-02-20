@@ -38,11 +38,14 @@ const app = {
   async init() {
     await this.loadData();
 
+    document.getElementById("viewerContainer").addEventListener('scroll', () => this.handleScroll());
+    this.checkMobileState();
+
     const savedPrefs = localStorage.getItem("viewer_prefs");
     if (savedPrefs) {
       this.preferences = JSON.parse(savedPrefs);
     }
-
+    this.applyAppearance();
     this.renderList();
     document
       .getElementById("searchInput")
@@ -58,28 +61,43 @@ const app = {
 
   // --- 1. CARREGAMENTO COM FETCH ---
   async loadData() {
-    const localJson = localStorage.getItem("legislacao_db");
-
-    if (localJson) {
-      this.data = JSON.parse(localJson);
-    } else {
       try {
-        const response = await fetch("legislacao.json");
+        // 1. Força o download da versão mais recente do servidor
+        const response = await fetch(`legislacao.json?t=${Date.now()}`, {
+          cache: "no-store"
+        });
+
         if (response.ok) {
-          const jsonData = await response.json();
-          this.data = jsonData;
-          this.saveData();
-          console.log("Dados carregados via fetch de legislacao.json");
+          const serverData = await response.json();
+          
+          // 2. Recupera o que está salvo no navegador (suas criações manuais)
+          const localJson = localStorage.getItem("legislacao_db");
+          const localData = localJson ? JSON.parse(localJson) : [];
+
+          // 3. Evita Duplicidade: Cria um Set com os títulos do servidor (em caixa alta)
+          const serverTitles = new Set(serverData.map(item => item.title.trim().toUpperCase()));
+
+          // 4. Filtra o local: Só mantém o que você criou que NÃO está no servidor ainda
+          const manualEntries = localData.filter(item => {
+            const titleUpper = item.title.trim().toUpperCase();
+            return !serverTitles.has(titleUpper);
+          });
+
+          // 5. Une as listas: O servidor vem primeiro (oficial)
+          this.data = [...serverData, ...manualEntries];
+          
+          // 6. Atualiza o backup local com a nova lista combinada
+          this.saveData(); 
+          console.log("Sincronização: " + serverData.length + " oficiais e " + manualEntries.length + " manuais.");
         } else {
-          console.warn("legislacao.json não encontrado ou erro no fetch.");
-          this.data = [];
+          throw new Error("Falha ao baixar legislacao.json");
         }
       } catch (error) {
-        console.error("Erro ao fazer fetch:", error);
-        this.data = [];
+        console.error("Erro no fetch, usando apenas backup local:", error);
+        const localJson = localStorage.getItem("legislacao_db");
+        this.data = localJson ? JSON.parse(localJson) : [];
       }
-    }
-  },
+    },
 
   saveData() {
     localStorage.setItem("legislacao_db", JSON.stringify(this.data));
@@ -186,7 +204,7 @@ const app = {
           !nextLine.includes("(Vetado)")
         ) {
           htmlOutput += `
-                        <div style="margin: 1.5em 0 1em 0; text-align: center; font-weight: bold; color: #1e3a8a; line-height: 1.2;">
+                        <div style="margin: 1.5em 0 1em 0; text-align: center; font-weight: bold; color: var(--title-color, #1e3a8a); line-height: 1.2;">
                             ${line}<br>${nextLine}
                         </div>
                     `;
@@ -194,7 +212,7 @@ const app = {
           continue;
         } else {
           htmlOutput += `
-                        <div style="margin: 1.5em 0 1em 0; text-align: center; font-weight: bold; color: #1e3a8a;">${line}</div>
+                        <div style="margin: 1.5em 0 1em 0; text-align: center; font-weight: bold; color: var(--title-color, #1e3a8a);">${line}</div>
                     `;
           continue;
         }
@@ -441,14 +459,25 @@ const app = {
                 `;
       listEl.appendChild(div);
     });
+
+    const countEl = document.getElementById("lawCountIndicator");
+    if (countEl) {
+        countEl.textContent = `${filtered.length} de ${this.data.length} normas`;
+    }
+
   },
 
   openViewer(id) {
+    this.closeInternalSearch();
     this.currentId = id;
     const item = this.data.find((x) => x.id === id);
     if (!item) return;
 
     const searchTerm = document.getElementById("searchInput").value.trim();
+
+    // Sincroniza o título da minibar
+    document.getElementById("minibarTitle").textContent = item.title;
+    this.applyAppearance();
 
     // 1. Atualiza a lista lateral (para pintar o item selecionado)
     this.renderList(searchTerm);
@@ -478,6 +507,15 @@ const app = {
 
     // 4. Injeta os dados na tela (IMPORTANTE: Isso faz o texto aparecer)
     document.getElementById("viewTitle").innerHTML = titleHtml;
+    // SINCRONIZA O TÍTULO DA MINIBAR AQUI TAMBÉM
+    document.getElementById("minibarTitle").textContent = item.title; 
+
+    // CHAMA A APARÊNCIA ANTES DE MOSTRAR
+    this.applyAppearance();
+
+    document.getElementById("emptyState").classList.add("hidden");
+    document.getElementById("lawViewer").classList.remove("hidden");
+
     document.getElementById("viewTag").innerHTML = item.type + sphereTagHtml;
     document.getElementById("viewDate").textContent =
       `Publicado em: ${new Date(item.date).toLocaleDateString("pt-BR", { dateStyle: "long" })}`;
@@ -798,6 +836,7 @@ const app = {
     // Variáveis para as cores da Tabela (Zebrado e Bordas)
     let tableStripe = "";
     let tableBorder = "";
+    let titleVarColor = "";
 
     if (this.preferences.theme === "sepia") {
       // TEMA SÉPIA (Dia)
@@ -807,6 +846,7 @@ const app = {
 
       tableStripe = "#eee8d5";
       tableBorder = "#d3cbb7";
+      titleVarColor = "#78350f";
     } else if (this.preferences.theme === "dark") {
       // --- MODO ESCURO "WARM" (Estilo Dark Academia / Couro Antigo) ---
 
@@ -821,6 +861,7 @@ const app = {
       // Tabelas: Mantendo a paleta quente
       tableStripe = "#292524"; // Stone-800 para linhas pares
       tableBorder = "#57534e"; // Stone-600 para as grades
+      titleVarColor = "#93c5fd";
     } else {
       // TEMA PADRÃO (Clean)
       viewer.classList.add("bg-white", "border-gray-200");
@@ -829,6 +870,7 @@ const app = {
 
       tableStripe = "#f9fafb";
       tableBorder = "#e5e7eb";
+      titleVarColor = "#1e3a8a";
     }
 
     // --- 3. INJEÇÃO DE CSS DINÂMICO (Para Fontes e Tabelas) ---
@@ -849,6 +891,9 @@ const app = {
     }
 
     styleTag.innerHTML = `
+            :root {
+                --title-color: ${titleVarColor} !important;
+            }
             #viewContent, #viewContent * {
                 font-family: ${fontStack} !important;
             }
@@ -864,6 +909,135 @@ const app = {
                 border-color: ${tableBorder} !important;
             }
         `;
+
+    const minibar = document.getElementById("fixedMinibar");
+
+    if (minibar && viewer) {
+        const style = window.getComputedStyle(viewer);
+        const contentStyle = window.getComputedStyle(content);
+        
+        // Pegamos a div interna da minibar para pintar
+        const minibarInner = minibar.querySelector('div');
+        if (minibarInner) {
+            minibarInner.style.backgroundColor = style.backgroundColor;
+            minibarInner.style.borderColor = style.borderBottomColor;
+        }
+
+        const titleEl = document.getElementById("minibarTitle");
+        if (titleEl) {
+            // Se o tema for 'default', removemos a cor do JS. 
+            // Isso faz o Título obedecer o CSS (text-gray-700 / dark:text-gray-100)
+            if (this.preferences.theme === 'default') {
+                titleEl.style.color = contentStyle.color; 
+            } else {
+                // Se for Sépia ou Dark Warm, aí sim usamos a cor do texto do leitor
+                titleEl.style.color = contentStyle.color;
+            }
+        }
+    }
+  },
+
+  // 1. Localizar termo dentro da norma aberta
+  // Abre o modal de busca em vez de usar o prompt
+  internalSearch() {
+    const modal = document.getElementById('internalSearchModal');
+    const input = document.getElementById('internalSearchInput');
+    
+    modal.classList.remove('hidden');
+    input.focus();
+
+    // Listener para buscar enquanto digita ou ao apertar Enter
+    input.onkeyup = (e) => {
+      this.executeInternalSearch(input.value);
+      if (e.key === 'Escape') this.closeInternalSearch();
+    };
+  },
+
+executeInternalSearch(term) {
+    const content = document.getElementById('viewContent');
+    const stats = document.getElementById('searchStats');
+    
+    // 1. Limpa marcações anteriores de forma segura
+    const marks = content.querySelectorAll('mark');
+    marks.forEach(m => {
+        const parent = m.parentNode;
+        parent.replaceChild(document.createTextNode(m.textContent), m);
+        parent.normalize(); // Une fragmentos de texto
+    });
+
+    if (!term || term.length < 2) {
+      stats.textContent = "";
+      return;
+    }
+
+    // 2. Localiza e destaca apenas nos nós de texto (evita quebrar o HTML)
+    const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null, false);
+    let node;
+    const nodesToReplace = [];
+    const regex = new RegExp(`(${term})`, 'gi');
+
+    while (node = walker.nextNode()) {
+        if (node.nodeValue.match(regex)) nodesToReplace.push(node);
+    }
+
+    let count = 0;
+    nodesToReplace.forEach(textNode => {
+        const matches = textNode.nodeValue.match(regex);
+        if (matches) {
+            count += matches.length;
+            const span = document.createElement('span');
+            span.innerHTML = textNode.nodeValue.replace(regex, '<mark class="bg-yellow-400 text-black">$1</mark>');
+            textNode.parentNode.replaceChild(span, textNode);
+        }
+    });
+
+    // 3. Feedback visual
+    if (count > 0) {
+        stats.textContent = `${count} ocorrência(s)`;
+        const first = content.querySelector('mark');
+        if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+        stats.textContent = "Nenhum resultado";
+    }
+  },
+
+closeInternalSearch() {
+    const modal = document.getElementById('internalSearchModal');
+    const content = document.getElementById('viewContent');
+    
+    // Limpa voltando ao estado original sem dar replace no HTML todo
+    const marks = content.querySelectorAll('mark');
+    marks.forEach(m => {
+        const parent = m.parentNode;
+        parent.replaceChild(document.createTextNode(m.textContent), m);
+        parent.normalize();
+    });
+
+    modal.classList.add('hidden');
+    document.getElementById('internalSearchInput').value = "";
+    document.getElementById('searchStats').textContent = "";
+  },
+
+  // 2. Voltar ao topo do container de leitura
+  scrollToTop() {
+    document.getElementById('viewerContainer').scrollTo({ top: 0, behavior: 'smooth' });
+  },
+
+  // 3. Controlar visibilidade do botão de topo e minibar
+  handleScroll() {
+      const container = document.getElementById('viewerContainer');
+      const minibar = document.getElementById('fixedMinibar');
+      const btnTopo = document.getElementById('scrollTopBtn');
+      
+      if (container.scrollTop > 400) {
+          minibar.classList.remove('hidden');
+          btnTopo.classList.replace('opacity-0', 'opacity-100');
+          btnTopo.classList.remove('pointer-events-none');
+      } else {
+          minibar.classList.add('hidden');
+          btnTopo.classList.replace('opacity-100', 'opacity-0');
+          btnTopo.classList.add('pointer-events-none');
+      }
   },
 };
 
