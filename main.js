@@ -301,6 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "#contratos": "apps/contratos/index.html",
     "#conversor": "apps/conversor/index.html",
     "#legislacao": "apps/legislacao/index.html",
+    "#matrix": "apps/matrix/index.html",
   };
   const defaultHash = "#home";
 
@@ -405,7 +406,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- PROTEÇÃO DE ROTA (NOVA) ---
     // Se tentar acessar o conversor sem ser admin, bloqueia e joga para Home
-    if (hash === "#conversor") {
+    if (hash === "#conversor" || hash === "#matrix") {
       const role = sessionStorage.getItem("cockpit_user_role");
       if (role !== "admin") {
         showError("Acesso Negado: Você não acesso à essa função. ");
@@ -723,24 +724,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Seleciona o link do conversor
     const conversorLink = document.querySelector('a[href="#conversor"]');
+    const matrixLink = document.querySelector('a[href="#matrix"]');
 
-    if (conversorLink) {
-      if (role === "admin") {
-        // Admin: Vida normal
-        conversorLink.classList.remove("opacity-30", "cursor-not-allowed");
-        conversorLink.title = "Conversor CSV";
-      } else {
-        // User: Fica "meio apagado" (30% opacidade) e cursor de bloqueio
-        conversorLink.classList.add("opacity-30", "cursor-not-allowed");
-        conversorLink.title = "Acesso exclusivo para Administradores";
+    // Lógica para o Conversor
+      if (conversorLink) {
+        if (role === "admin") {
+          conversorLink.classList.remove("opacity-30", "cursor-not-allowed");
+          conversorLink.title = "Conversor CSV";
+        } else {
+          conversorLink.classList.add("opacity-30", "cursor-not-allowed");
+          conversorLink.title = "Acesso exclusivo para Administradores";
+        }
+      }
 
-        // Se você quiser que o clique NÃO faça nada (nem aviso),
-        // descomente a linha abaixo:
-        // conversorLink.style.pointerEvents = 'none';
+      // Lógica para a Matriz Eisenhower
+      if (matrixLink) {
+        if (role === "admin") {
+          // Admin: Acesso liberado
+          matrixLink.classList.remove("opacity-30", "cursor-not-allowed");
+          matrixLink.title = "Matriz Eisenhower";
+        } else {
+          // User: Acesso bloqueado visualmente
+          matrixLink.classList.add("opacity-30", "cursor-not-allowed");
+          matrixLink.title = "Acesso exclusivo para Administradores";
+          
+          // Opcional: desabilitar cliques completamente
+          // matrixLink.style.pointerEvents = 'none';
+        }
       }
     }
-  }
-
   // =========================================================
   // SISTEMA DE SOLICITAÇÃO & MODAIS DE SUCESSO
   // =========================================================
