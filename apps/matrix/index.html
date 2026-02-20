@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eisenhower Matrix - Cockpit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script>
+        window.tailwind = {
+            config: {
+            darkMode: "class",
+            theme: {
+                extend: {
+                colors: {
+                    slate: { 850: "#1e293b" },
+                },
+                },
+            },
+            }
+        };
+        </script>
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        
+        <script>
+        (function () {
+            const isAuthenticated = sessionStorage.getItem("cockpit_auth_token") === "valid";
+            if (!isAuthenticated) window.top.location.href = "../../index.html";
+
+     /*  const savedTheme = localStorage.getItem("cockpit_theme");
+            // Verifica se é dark ou se o sistema prefere dark na ausência de escolha
+            if (savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+                document.documentElement.classList.add("dark");
+            } else {
+                document.documentElement.classList.remove("dark"); // Essencial para o modo claro
+            }  */
+        })();
+    </script>
+    <style>
+        .matrix-container { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 1rem; height: calc(100vh - 160px); }
+        .quadrant { overflow-y: auto; border-radius: 0.75rem; padding: 1rem; border-width: 2px; }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-gray-100 h-screen flex flex-col transition-colors duration-300 font-sans overflow-hidden">
+    
+    <header class="bg-white dark:bg-slate-800 border-b dark:border-slate-700 px-6 py-4 flex justify-between items-center shrink-0">
+        <div class="flex items-center gap-4">
+            <h1 class="text-xl font-bold flex items-center gap-2">🎯 Matriz Eisenhower</h1>
+            <div id="stats" class="hidden md:flex gap-3 text-[10px] font-bold uppercase tracking-wider">
+                <span class="text-blue-500">Q2 (Foco): <span id="q2-percent">0%</span></span>
+                <span class="text-red-500">Q1 (Incêndio): <span id="q1-percent">0%</span></span>
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="app.openHistory()" class="p-2 border dark:border-slate-600 rounded hover:bg-gray-100 dark:hover:bg-slate-700" title="Histórico">📜</button>
+            <button onclick="app.exportBackup()" class="p-2 border dark:border-slate-600 rounded hover:bg-gray-100 dark:hover:bg-slate-700" title="Exportar Backup">📥</button>
+            <button onclick="document.getElementById('importFile').click()" class="p-2 border dark:border-slate-600 rounded hover:bg-gray-100 dark:hover:bg-slate-700" title="Importar Backup">📤</button>
+            <input type="file" id="importFile" class="hidden" accept=".json" onchange="app.importBackup(event)">
+            <button onclick="app.openModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium flex items-center gap-2">
+                <span>+</span> Nova Tarefa
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 p-4 md:p-6 overflow-hidden">
+        <div class="matrix-container max-w-7xl mx-auto">
+            <section id="q1" class="quadrant border-red-500 bg-red-50/30 dark:bg-red-900/10">
+                <h2 class="text-red-600 font-bold text-xs uppercase mb-3 flex justify-between">Q1: Urgente & Importante <span>Fazer Agora</span></h2>
+                <div id="q1-list" class="space-y-2"></div>
+            </section>
+            <section id="q2" class="quadrant border-blue-500 bg-blue-50/30 dark:bg-blue-900/10">
+                <h2 class="text-blue-600 font-bold text-xs uppercase mb-3 flex justify-between">Q2: Estratégico <span>Agendar</span></h2>
+                <div id="q2-list" class="space-y-2"></div>
+            </section>
+            <section id="q3" class="quadrant border-yellow-500 bg-yellow-50/30 dark:bg-yellow-900/10">
+                <h2 class="text-yellow-600 font-bold text-xs uppercase mb-3 flex justify-between">Q3: Falso Urgente <span>Delegar</span></h2>
+                <div id="q3-list" class="space-y-2"></div>
+            </section>
+            <section id="q4" class="quadrant border-gray-400 bg-gray-50 dark:bg-slate-800/50">
+                <h2 class="text-gray-500 font-bold text-xs uppercase mb-3 flex justify-between">Q4: Distração <span>Eliminar</span></h2>
+                <div id="q4-list" class="space-y-2 opacity-60"></div>
+            </section>
+        </div>
+    </main>
+
+    <div id="taskModal" class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
+            <div class="p-4 border-b dark:border-slate-700 bg-gray-50 dark:bg-slate-900 flex justify-between items-center">
+                <h3 class="font-bold">Análise de Prioridade</h3>
+                <button onclick="app.closeModal()" class="text-2xl hover:text-red-500">&times;</button>
+            </div>
+                <div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">Atividade</label>
+                        <input type="text" id="taskTitle" class="w-full p-2 border dark:border-slate-600 rounded bg-gray-50 dark:bg-slate-900 outline-none focus:ring-2 focus:ring-blue-500 uppercase">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">Vencimento</label>
+                            <input type="date" id="taskDeadline" class="w-full p-2 border dark:border-slate-600 rounded bg-gray-50 dark:bg-slate-900 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">Tempo Estimado (Horas)</label>
+                            <input type="number" id="taskEstimate" placeholder="Ex: 2" class="w-full p-2 border dark:border-slate-600 rounded bg-gray-50 dark:bg-slate-900 text-sm">
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                        <p class="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase">Análise de Competência e Impacto</p>
+                        
+                        <label class="flex items-center gap-3 text-sm cursor-pointer">
+                            <input type="checkbox" id="impact_goal" class="w-4 h-4 rounded"> Contribui para metas da SAEB/Coordenação?
+                        </label>
+
+                        <label class="flex items-center gap-3 text-sm cursor-pointer" onchange="document.getElementById('delegateField').classList.toggle('hidden', this.checked)">
+                            <input type="checkbox" id="only_me" checked class="w-4 h-4 rounded"> Só eu posso realizar esta tarefa?
+                        </label>
+
+                        <div id="delegateField" class="hidden mt-2 animate-in fade-in duration-300">
+                            <label class="block text-[10px] font-bold text-yellow-600 uppercase mb-1">Delegar para:</label>
+                            <input type="text" id="delegateName" placeholder="Nome do servidor/setor" class="w-full p-2 border border-yellow-200 dark:border-yellow-900/50 rounded bg-white dark:bg-slate-900 text-sm">
+                        </div>
+                        <div class="mt-4">
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">Observações / Detalhes</label>
+                            <textarea id="taskNote" rows="3" placeholder="Protocolos, notas ou observações adicionais..." class="w-full p-2 border dark:border-slate-600 rounded bg-gray-50 dark:bg-slate-900 text-xs outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                        </div>
+                    </div>
+                </div>
+            <div class="p-4 bg-gray-50 dark:bg-slate-900 flex justify-end gap-2">
+                <button onclick="app.closeModal()" class="px-4 py-2 text-gray-500">Cancelar</button>
+                <button onclick="app.saveTask()" class="px-6 py-2 bg-blue-600 text-white font-bold rounded shadow-lg">Classificar Tarefa</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="historyModal" class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
+            <div class="p-4 border-b dark:border-slate-700 bg-gray-50 dark:bg-slate-900 flex justify-between items-center">
+                <h3 class="font-bold">Histórico de Atividades</h3>
+                <button onclick="app.closeHistory()" class="text-2xl hover:text-red-500">&times;</button>
+            </div>
+            <div id="history-list" class="max-h-[60vh] overflow-y-auto">
+                </div>
+            <div class="p-4 bg-gray-50 dark:bg-slate-900 flex justify-end">
+                <button onclick="app.closeHistory()" class="px-6 py-2 bg-blue-600 text-white font-bold rounded">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="welcomeModal" class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
+        <div class="p-6">
+            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center mb-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Sobre a Matriz Eisenhower</h3>
+            
+            <div class="text-sm text-gray-600 dark:text-gray-300 space-y-4 leading-relaxed">
+                <p>
+                    A Matriz Eisenhower é uma ferramenta de priorização que apoia decisões estratégicas ao distinguir tarefas urgentes daquelas que realmente geram impacto.
+                </p>
+                <p>
+                    Ao organizar atividades com base em urgência e importância, você direciona tempo e recursos para o que sustenta resultados e reduz a atuação reativa.
+                </p>
+                
+                <ul class="space-y-2 border-l-2 border-blue-500/30 pl-4 py-1">
+                    <li><strong class="text-red-500">Q1 – Crítico (Crise):</strong> Executar imediatamente.</li>
+                    <li><strong class="text-blue-500">Q2 – Estratégico:</strong> Planejar e priorizar.</li>
+                    <li><strong class="text-yellow-500">Q3 – Operacional:</strong> Delegar sempre que possível.</li>
+                    <li><strong class="text-gray-500">Q4 – Não prioritário:</strong> Eliminar ou postergar.</li>
+                </ul>
+                
+                <p class="font-bold text-blue-600 dark:text-blue-400 italic mt-4">
+                    "Foco não é fazer mais — é decidir melhor."
+                </p>
+            </div>
+
+            <div class="mt-6 flex flex-col gap-3">
+                <label class="flex items-center gap-2 cursor-pointer group">
+                    <input type="checkbox" id="dontShowAgain" class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                    <span class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-gray-700">Não mostrar esta explicação novamente</span>
+                </label>
+                
+                <button onclick="app.closeWelcomeModal()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors shadow-lg">
+                    Entendi e Quero Começar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="script.js"></script>
+</body>
+</html>

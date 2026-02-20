@@ -3248,6 +3248,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("loading");
   carregarDados();
 
+  app.checkWelcomeModalContratos();
+
   document
     .getElementById("btn-adicionar-fiscal-step4")
     .addEventListener("click", () => {
@@ -3909,3 +3911,22 @@ function verificarProcessoSEI(valor) {
     };
   }
 }
+
+const app = {
+    checkWelcomeModalContratos: function() {
+        const hasShown = localStorage.getItem("intro_contratos_shown");
+        if (!hasShown) {
+            const modal = document.getElementById("welcomeModalContratos");
+            if (modal) modal.style.display = "flex"; 
+        }
+    },
+
+    closeWelcomeModalContratos: function() {
+        const checkbox = document.getElementById("dontShowContratosAgain");
+        if (checkbox && checkbox.checked) {
+            localStorage.setItem("intro_contratos_shown", "true");
+        }
+        const modal = document.getElementById("welcomeModalContratos");
+        if (modal) modal.style.display = "none";
+    }
+};

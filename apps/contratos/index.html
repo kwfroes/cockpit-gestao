@@ -1330,6 +1330,41 @@
       </div>
     </template>
 
+    <div id="welcomeModalContratos" class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all border dark:border-slate-700">
+            <div class="p-6">
+                <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                </div>
+                
+                <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Gestão de Contratos Públicos</h3>
+                
+                <div class="text-sm text-gray-600 dark:text-gray-300 space-y-4 leading-relaxed">
+                    <p>Monitore a execução financeira e temporal dos contratos da unidade de forma centralizada.</p>
+                    
+                    <ul class="space-y-2 border-l-2 border-green-500/30 pl-4 py-1">
+                        <li><strong class="text-green-600 dark:text-green-400">Status Automático:</strong> Identifique contratos vigentes, a iniciar ou vencidos.</li>
+                        <li><strong class="text-green-600 dark:text-green-400">Fluxo de Aditivos:</strong> Registre alterações de valor, prazo ou gestão com histórico completo.</li>
+                        <li><strong class="text-green-600 dark:text-green-400">Execução Financeira:</strong> Acompanhe o saldo restante e a média de consumo mensal.</li>
+                    </ul>
+                </div>
+
+                <div class="mt-8 flex flex-col gap-4">
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" id="dontShowContratosAgain" class="w-4 h-4 rounded border-gray-300 text-green-600 focus:ring-green-500 transition-all">
+                        <span class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">Não mostrar novamente</span>
+                    </label>
+                    
+                    <button onclick="app.closeWelcomeModalContratos()" class="w-full py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition-all shadow-lg active:scale-95">
+                        Entendi e Abrir Painel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js" defer></script>
   </body>
 </html>
