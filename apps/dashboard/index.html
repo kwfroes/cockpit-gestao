@@ -861,6 +861,41 @@
       </div>
     </div>
 
+    <div id="welcomeModalDashboard" class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all">
+            <div class="p-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="id-do-seu-ícone" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-white">Análise Operacional CAF</h3>
+                </div>
+                
+                <div class="space-y-4 text-gray-600 dark:text-gray-300 text-sm">
+                    <p>Bem-vindo ao cockpit de análise. Aqui você pode:</p>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>Visualizar indicadores de produtividade em tempo real.</li>
+                        <li>Filtrar dados por analista ou período.</li>
+                        <li>Exportar relatórios consolidados para CSV.</li>
+                    </ul>
+                </div>
+
+                <div class="mt-8 flex flex-col gap-4">
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" id="dontShowDashboardAgain" class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                        <span class="text-xs text-gray-500 dark:text-gray-400">Não mostrar novamente</span>
+                    </label>
+                    
+                    <button onclick="closeWelcomeModal()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all shadow-lg active:scale-95">
+                        Entrar no Dashboard
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 3. Arquivo de Script Local -->
     <!-- Deve ser carregado no final, após o corpo da página ser definido -->
     <script src="script.js"></script>
