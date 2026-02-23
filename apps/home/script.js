@@ -86,6 +86,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const timeEl = document.getElementById("currentTime");
   const greetingEl = document.getElementById("greeting");
 
+  
+// Mostra o modal se a preferência "Não mostrar" não estiver marcada como true
+const dontShow = localStorage.getItem("dontShowWelcomeCockpit");
+
+  if (dontShow !== "true") {
+      const modal = document.getElementById("welcomeModalCockpit");
+      if (modal) {
+          setTimeout(() => {
+              modal.classList.remove("hidden");
+          }, 300);
+      }
+  }
+
   // --- INÍCIO: Modal de Nome Personalizado (Tailwind) ---
   // 1. Tenta pegar apelido salvo OU nome do login (SessionStorage)
   let savedNick = localStorage.getItem("cockpit_username");
@@ -224,7 +237,20 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+ 
 });
+
+function closeWelcomeModalCockpit() {
+    const modal = document.getElementById("welcomeModalCockpit");
+    if (modal) {
+        modal.classList.add("hidden");
+        
+        // Salva preferência de não mostrar novamente
+        if (document.getElementById("dontShowCockpitAgain").checked) {
+            localStorage.setItem("dontShowWelcomeCockpit", "true");
+        }
+    }
+}
 
 // ==========================================================
 // MÓDULO DE ESTATÍSTICAS (DASHBOARD AO VIVO)

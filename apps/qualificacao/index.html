@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qualificação Técnica - Cockpit</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: { slate: { 850: "#1e293b" } },
+            fontFamily: { sans: ["Inter", "sans-serif"], serif: ["Merriweather", "serif"] },
+          },
+        },
+      };
+    </script>
+
+    <script>
+      (function () {
+        const isAuthenticated = sessionStorage.getItem("cockpit_auth_token") === "valid";
+        if (!isAuthenticated) window.top.location.href = "../../index.html";
+
+        var savedTheme = localStorage.getItem("cockpit_theme");
+        var systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (savedTheme === "dark" || (!savedTheme && systemDark)) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      })();
+    </script>
+
+    <style>
+      html.dark body { background-color: #0f172a; color: #f3f4f6; }
+      .dark ::-webkit-scrollbar { width: 8px; }
+      .dark ::-webkit-scrollbar-track { background: #0f172a; }
+      .dark ::-webkit-scrollbar-thumb { background-color: #334155; border-radius: 4px; }
+      .animate-fade-in { animation: fadeIn 0.3s ease-out; }
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans min-h-screen">
+    
+    <header class="bg-white dark:bg-slate-900 border-b dark:border-slate-800 p-4 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-blue-600 rounded-lg text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold dark:text-white leading-none">Qualificação Técnica</h1>
+                    <p class="text-[10px] text-slate-500 uppercase font-bold tracking-wider mt-1">Gestão de Famílias e CNAEs</p>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+                <input type="text" id="search-family" placeholder="Buscar código, descrição ou documento..." 
+                    class="flex-1 md:w-64 p-2 text-xs border rounded-lg dark:bg-slate-850 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-blue-500">
+                
+                <select id="filter-type" class="p-2 text-xs border rounded-lg dark:bg-slate-850 dark:border-slate-700 dark:text-white outline-none">
+                    <option value="">Todos Tipos</option>
+                    <option value="M">📦 Material</option>
+                    <option value="S">🛠️ Serviço</option>
+                </select>
+
+                <label class="flex items-center gap-2 text-[10px] font-bold text-slate-500 cursor-pointer bg-white dark:bg-slate-850 p-2 rounded-lg border dark:border-slate-700">
+                    <input type="checkbox" id="filter-terceirizado" class="rounded text-blue-600">
+                    <span>TERCEIRIZADOS</span>
+                </label>
+
+                <button onclick="openFamilyForm()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-xs font-bold transition-all shadow-md">
+                    +
+                </button>
+                
+                <button onclick="exportFullBase()" class="bg-emerald-600 hover:bg-emerald-700 text-white p-2 rounded-lg transition-all shadow-md" title="Exportar JSON">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-6">
+        <div id="family-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[400px]">
+            </div>
+
+        <div class="mt-8 flex justify-between items-center bg-white dark:bg-slate-900 p-4 rounded-xl border dark:border-slate-800 shadow-sm">
+            <span id="page-info" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Exibindo 0 registros</span>
+            <div class="flex gap-2">
+                <button id="btn-prev" class="p-2 rounded-lg border dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 transition-colors">
+                    <svg class="w-5 h-5 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <button id="btn-next" class="p-2 rounded-lg border dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 transition-colors">
+                    <svg class="w-5 h-5 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <div id="family-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/70 backdrop-blur-sm p-4">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-2xl shadow-2xl flex flex-col max-h-[90vh] animate-fade-in border dark:border-slate-800">
+            <div class="p-4 border-b dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-850">
+                <h3 id="form-title" class="font-bold dark:text-white uppercase text-xs tracking-widest">Gerenciar Família</h3>
+                <button onclick="closeFamilyForm()" class="text-slate-400 hover:text-red-500 text-2xl">&times;</button>
+            </div>
+            
+            <form id="family-form" class="p-6 overflow-y-auto space-y-6">
+                <input type="hidden" id="edit-index">
+                
+                <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Cód. Família</label>
+                        <input type="text" id="f-codigo" class="w-full p-2.5 border rounded-lg dark:bg-slate-850 dark:border-slate-700 dark:text-white text-sm" required>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Tipo</label>
+                        <select id="f-tipo" class="w-full p-2.5 border rounded-lg dark:bg-slate-850 dark:border-slate-700 dark:text-white text-sm">
+                            <option value="M">📦 Material</option>
+                            <option value="S">🛠️ Serviço</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end pb-2">
+                        <label class="flex items-center gap-2 text-[10px] font-bold text-slate-500 cursor-pointer">
+                            <input type="checkbox" id="f-terceirizado" class="rounded text-blue-600 w-4 h-4">
+                            <span>TERCEIRIZADO?</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Descrição</label>
+                    <input type="text" id="f-desc" class="w-full p-2.5 border rounded-lg dark:bg-slate-850 dark:border-slate-700 dark:text-white text-sm" required>
+                </div>
+
+                <div class="bg-slate-50 dark:bg-slate-850 p-4 rounded-xl border dark:border-slate-800">
+                    <div class="flex justify-between items-center mb-4">
+                        <label class="text-[10px] font-bold text-blue-600 uppercase tracking-widest">CNAEs Relacionados</label>
+                        <button type="button" onclick="addCnaeRow()" class="text-[10px] bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 transition-colors">
+                            +
+                        </button>
+                    </div>
+                    <div id="cnae-rows-container" class="space-y-3"></div>
+                </div>
+
+                <div class="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 rounded-lg">
+                    <label class="flex items-center gap-2 text-[10px] font-bold text-amber-700 dark:text-amber-400 cursor-pointer mb-2">
+                        <input type="checkbox" id="f-replicate" class="rounded text-amber-600">
+                        <span>REPLICAR CNAES EM OUTRAS FAMÍLIAS?</span>
+                    </label>
+                    <div id="replicate-container" class="hidden space-y-2">
+                        <div class="flex gap-2">
+                            <input type="text" id="f-destinos" placeholder="Famílias selecionadas..." 
+                                class="flex-1 p-2 text-xs border rounded dark:bg-slate-850 dark:border-slate-700 dark:text-white outline-none">
+                            
+                            <button type="button" onclick="openSuggestionsModal()" 
+                                class="px-3 py-1 bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400 rounded-lg text-[10px] font-bold hover:bg-amber-200 transition-colors flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                                SUGESTÕES
+                            </button>
+                        </div>
+                        <p class="text-[9px] text-amber-600 mt-1 italic">*Os CNAEs serão replicados para os códigos listados acima.</p>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4 border-t dark:border-slate-800">
+                    <button type="button" onclick="closeFamilyForm()" class="px-5 py-2 text-slate-500 text-xs font-bold uppercase hover:text-slate-700">Cancelar</button>
+                    <button type="submit" class="px-8 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold uppercase shadow-lg hover:bg-blue-700 transition-all">
+                        Salvar Alterações
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="suggestions-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-xl shadow-2xl flex flex-col max-h-[80vh] border dark:border-slate-800">
+            <div class="p-4 border-b dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-850">
+                <h4 class="text-xs font-bold dark:text-white uppercase tracking-widest">Famílias do Mesmo Grupo</h4>
+                <button onclick="closeSuggestionsModal()" class="text-slate-400 hover:text-red-500 text-xl">&times;</button>
+            </div>
+            
+            <div id="suggestions-list" class="p-4 overflow-y-auto grid grid-cols-1 gap-2">
+                </div>
+
+            <div class="p-4 border-t dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-850">
+                <div class="flex gap-1">
+                    <button onclick="changeSugPage(-1)" id="sug-prev" class="p-1 border rounded dark:border-slate-700 dark:text-white disabled:opacity-30">&larr;</button>
+                    <button onclick="changeSugPage(1)" id="sug-next" class="p-1 border rounded dark:border-slate-700 dark:text-white disabled:opacity-30">&rarr;</button>
+                </div>
+                <button onclick="confirmSuggestions()" class="px-4 py-2 bg-blue-600 text-white rounded text-xs font-bold">ADICIONAR SELECIONADOS</button>
+            </div>
+        </div>
+    </div>
+
+        <div id="welcomeModalQualificacao" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all border dark:border-slate-700">
+            <div class="p-6">
+                <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                </div>
+                
+                <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Qualificação Técnica</h3>
+                
+                <div class="text-sm text-gray-600 dark:text-gray-300 space-y-4 leading-relaxed">
+                    <p>
+                        Este módulo centraliza a gestão de documentos e CNAEs compatíveis por família, facilitando a análise técnica e a conformidade nos processos de contratação.
+                    </p>
+                    
+                    <ul class="space-y-2 border-l-2 border-emerald-500/30 pl-4 py-1">
+                        <li><strong class="text-blue-500 text-[11px] uppercase">Busca Inteligente:</strong> Filtre por código, descrição ou até mesmo por nomes de documentos específicos.</li>
+                        <li><strong class="text-emerald-500 text-[11px] uppercase">Gestão de CNAEs:</strong> Vincule múltiplos CNAEs a cada família com descrição detalhada.</li>
+                        <li><strong class="text-amber-500 text-[11px] uppercase">Replicação:</strong> Adicione CNAEs em massa para famílias do mesmo grupo de forma automática.</li>
+                    </ul>
+                    
+                    <p class="font-bold text-emerald-600 dark:text-emerald-400 italic mt-4 text-xs">
+                        "A precisão documental é a base da segurança jurídica."
+                    </p>
+                </div>
+
+                <div class="mt-6 flex flex-col gap-3">
+                    <label class="flex items-center gap-2 cursor-pointer group">
+                        <input type="checkbox" id="dontShowAgainQualificacao" class="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                        <span class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-gray-700 transition-colors">Não mostrar esta explicação novamente</span>
+                    </label>
+                    
+                    <button onclick="closeWelcomeModalQualificacao()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg transition-all shadow-lg active:scale-95">
+                        Entendi e Explorar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

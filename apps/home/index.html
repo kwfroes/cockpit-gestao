@@ -450,6 +450,41 @@
       </div>
     </div>
 
+<div id="welcomeModalCockpit" class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all border dark:border-slate-700">
+        <div class="p-6">
+            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center mb-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+            </div>
+            
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Bem-vindo ao Cockpit de Gestão</h3>
+            
+            <div class="text-sm text-gray-600 dark:text-gray-300 space-y-4 leading-relaxed">
+                <p>Uma central unificada para otimizar sua gestão pública. Acesse ferramentas essenciais para análise, planejamento e conformidade normativa.</p>
+                
+                <ul class="space-y-2 border-l-2 border-blue-500/30 pl-4 py-1">
+                    <li><strong class="text-blue-600 dark:text-blue-400">Apps Integrados:</strong> Gerencie contratos, converta unidades, visualize dashboards operacionais e gere mensagens padronizadas.</li>
+                    <li><strong class="text-blue-600 dark:text-blue-400">Normativos e Planejamento:</strong> Consulte atos normativos e organize tarefas com a Matriz de Eisenhower.</li>
+                    <li><strong class="text-blue-600 dark:text-blue-400">Segurança e Produtividade:</strong> Tema escuro, sincronização em tempo real e exportações seguras para CSV/JSON.</li>
+                </ul>
+            </div>
+
+            <div class="mt-8 flex flex-col gap-4">
+                <label class="flex items-center gap-3 cursor-pointer group">
+                    <input type="checkbox" id="dontShowCockpitAgain" class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 transition-all">
+                    <span class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">Não mostrar novamente</span>
+                </label>
+                
+                <button onclick="closeWelcomeModalCockpit()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all shadow-lg active:scale-95">
+                    Entendi e Explorar o Cockpit
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
     <script src="script.js"></script>
   </body>
 </html>

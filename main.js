@@ -302,6 +302,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "#conversor": "apps/conversor/index.html",
     "#legislacao": "apps/legislacao/index.html",
     "#matrix": "apps/matrix/index.html",
+    "#qualificacao": "apps/qualificacao/index.html",
   };
   const defaultHash = "#home";
 
