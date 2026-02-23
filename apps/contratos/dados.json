@@ -115,6 +115,37 @@
               "valorUnitario": 0.339
             }
           ]
+        },
+        {
+          "data": "2026-02-10",
+          "valorPago": 1131.49,
+          "notaFiscal": "854221",
+          "processoPagamentoSei": "009.0242.2026.0004224-23",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=142523053",
+          "periodoDe": "2025-12-21",
+          "periodoAte": "2026-01-20",
+          "isTRD": false,
+          "id": "pag_1771873145832",
+          "detalhes": [
+            {
+              "id": "item_1771873163335",
+              "descricao": "Emissão CND",
+              "quantidade": 702,
+              "valorUnitario": 0.593
+            },
+            {
+              "id": "item_1771873171319",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 574.864
+            },
+            {
+              "id": "item_1771873181759",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 414,
+              "valorUnitario": 0.339
+            }
+          ]
         }
       ],
       "numeroContrato": "055/2025",

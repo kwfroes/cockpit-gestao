@@ -1354,7 +1354,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       <div class="history-message-content overflow-hidden" style="max-height:0; transition:max-height 0.3s ease-out;">
         <pre class="p-4 text-xs text-gray-800 dark:text-gray-200 whitespace-pre-wrap font-sans break-words">
-${escapeHtml(item.message)}
+  ${escapeHtml(item.message)}
         </pre>
       </div>
     `;
@@ -3125,6 +3125,32 @@ ${escapeHtml(item.message)}
   renderFooter();
   setupAdminModeToggle();
   updateAdminControlsState(); // Define o estado inicial dos controles de admin
+
+
+  // Mostra o modal de boas-vindas apenas na primeira vez
+  const dontShow = localStorage.getItem("dontShowWelcomeGerador");
+  if (!dontShow) {
+      const modal = document.getElementById("welcomeModalGerador");
+      if (modal) {
+          // Pequeno delay para garantir que a UI já esteja visível
+          setTimeout(() => {
+              modal.classList.remove("hidden");
+          }, 300); // Opcional, mas recomendado para evitar flash
+      }
+  }
+
+  // Função para fechar o modal
+  function closeWelcomeModalGerador() {
+      const modal = document.getElementById("welcomeModalGerador");
+      if (modal) {
+          modal.classList.add("hidden");
+          
+          // Salva preferência de não mostrar novamente
+          if (document.getElementById("dontShowGeradorAgain").checked) {
+              localStorage.setItem("dontShowWelcomeGerador", "true");
+          }
+      }
+  }
 });
 
 // ==========================================================

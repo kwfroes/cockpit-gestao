@@ -612,6 +612,42 @@
     </div>
     </div>
 
+    <div id="welcomeModalGerador" class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all border dark:border-slate-700">
+            <div class="p-6">
+                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                    </svg>
+                </div>
+                
+                <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Gerador de Mensagens CAF</h3>
+                
+                <div class="text-sm text-gray-600 dark:text-gray-300 space-y-4 leading-relaxed">
+                    <p>Gere mensagens padronizadas para análises de cadastros de forma rápida e segura, com criptografia de dados.</p>
+                    
+                    <ul class="space-y-2 border-l-2 border-blue-500/30 pl-4 py-1">
+                        <li><strong class="text-blue-600 dark:text-blue-400">Busca Automática:</strong> Integração com banco de dados para CNPJ, CPF e famílias de empresas.</li>
+                        <li><strong class="text-blue-600 dark:text-blue-400">Status Personalizados:</strong> Deferida, Indeferida, Pendente com lista de documentos rejeitados.</li>
+                        <li><strong class="text-blue-600 dark:text-blue-400">Histórico e Dashboard:</strong> Registre envios, filtre por data/CNPJ e visualize estatísticas em gráficos.</li>
+                        <li><strong class="text-blue-600 dark:text-blue-400">Envio Rápido:</strong> WhatsApp direto para contatos salvos ou gerenciados.</li>
+                    </ul>
+                </div>
+
+                <div class="mt-8 flex flex-col gap-4">
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" id="dontShowGeradorAgain" class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 transition-all">
+                        <span class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">Não mostrar novamente</span>
+                    </label>
+                    
+                    <button onclick="closeWelcomeModalGerador()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all shadow-lg active:scale-95">
+                        Entendi e Abrir Gerador
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col items-end space-y-2 pointer-events-none"></div>
     
@@ -664,5 +700,3 @@
 
 
 </html>
-
-

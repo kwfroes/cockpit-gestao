@@ -72,6 +72,16 @@
     color: #1e40af;
 }
 
+/* No estilo global ou dentro da tag <style> */
+.law-content a {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.law-content i {
+    display: block; /* Opcional: faz a redação dada ficar em uma linha sutil abaixo */
+    margin-top: 2px;
+}
+
 /* --- ESTILOS DE IMPRESSÃO (PDF) - CORREÇÃO DEFINITIVA --- */
 @media print {
     /* 1. Reseta o layout de "App" (tela cheia sem scroll) para "Documento" (scroll natural) */

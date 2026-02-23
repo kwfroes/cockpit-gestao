@@ -52,6 +52,14 @@ const app = {
       .addEventListener("input", (e) => this.renderList(e.target.value));
     this.checkMobileState();
     window.addEventListener("resize", () => this.checkMobileState());
+
+    const dontShow = localStorage.getItem("dontShowWelcomeLegislacao");
+    if (!dontShow) {
+        const modal = document.getElementById("welcomeModalLegislacao");
+        if (modal) {
+            modal.classList.remove("hidden");
+        }
+    }
   },
 
   preferences: {
@@ -221,18 +229,24 @@ const app = {
       // --- NEGRITOS PADRÃO ---
 
       // 1. Regras de Leis (Art., §, Incisos)
-      line = line.replace(/^(Art\.\s*\d+\s*º)/i, "<b>$1</b>");
-      line = line.replace(/^(Art\.\s*\d+)(?!\d|º)/i, "<b>$1</b>");
+      line = line.replace(/(\((Redação dada|Incluído|Vigência|Vide).*?\))/gi, '<i class="opacity-80 text-sm font-normal italic"> $1 </i>');
+      line = line.replace(/^(Art\.\s*(\d+)\s*[º\.]?)/i, '<b id="art-$2">$1</b>');
+      line = line.replace(/^(Art\.\s*\d+)(?!\d|º)/i, '<b id="art-$2">$1</b>');
       line = line.replace(/^(§\s*\d+\s*º?)/i, "<b>$1</b>");
       line = line.replace(/^(Parágrafo único)/i, "<b>$1</b>");
       line = line.replace(/^([IVXLCDM]+\s-\s)/, "<b>$1</b>");
+      
+      line = line.replace(/(\(Incluído por.*?\))/gi, '<i class="opacity-80 text-sm">$1</i>');
+      line = line.replace(/art\.\s*(\d+)/gi, (match, p1) => {
+        return `<a href="javascript:void(0)" onclick="app.scrollToArt(${p1})" class="text-blue-600 dark:text-blue-400 underline decoration-dotted hover:text-blue-800 font-medium">${match}</a>`;
+      });
 
       // 2. NOVA REGRA: Itens Numéricos (comum em Instruções)
       // Ex: "1. Texto", "1.1 Texto", "1.1.2. Texto"
       // Regex: Início da linha + Números e pontos + Espaço ou ponto final
       line = line.replace(/^(\d+(\.\d+)*\.?)\s/, "<b>$1 </b>");
 
-      htmlOutput += `<p style="margin-bottom: 0.8em;">${line}</p>`;
+      htmlOutput += `<p style="margin-bottom: 0.8em; text-align: justify;">${line}</p>`;
     }
     return htmlOutput;
   },
@@ -445,6 +459,13 @@ const app = {
         sphereBadge =
           '<span class="text-[10px] font-bold text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 px-1.5 py-0.5 rounded ml-1">FED</span>';
 
+        let keywordBadge = "";
+        if (item.keywords) {
+            const tags = item.keywords.split(',').map(t => t.trim());
+            const shortestTag = tags.reduce((a, b) => a.length <= b.length ? a : b);
+            keywordBadge = `<span class="text-[10px] font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700/50 px-1.5 py-0.5 rounded ml-1 truncate max-w-[80px]" title="${shortestTag}">${shortestTag}</span>`;
+        }
+
       const div = document.createElement("div");
       div.className = `p-4 border-b dark:border-slate-700 cursor-pointer transition-colors ${isActive}`;
       div.onclick = () => this.openViewer(item.id);
@@ -452,7 +473,9 @@ const app = {
                     <div class="flex justify-between items-start mb-1">
                         <div>
                             <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-300 bg-blue-100 dark:bg-blue-900/40 px-1.5 py-0.5 rounded">${item.type}</span>
-                            ${sphereBadge} </div>
+                            ${sphereBadge}
+                            ${keywordBadge}
+                            </div>
                         <span class="text-xs text-gray-400 dark:text-gray-500 font-mono">${dateStr}</span>
                     </div>
                     <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-200 leading-snug line-clamp-2 uppercase" title="${item.title}">${item.title}</h4>
@@ -953,7 +976,7 @@ const app = {
     };
   },
 
-executeInternalSearch(term) {
+  executeInternalSearch(term) {
     const content = document.getElementById('viewContent');
     const stats = document.getElementById('searchStats');
     
@@ -1001,7 +1024,7 @@ executeInternalSearch(term) {
     }
   },
 
-closeInternalSearch() {
+  closeInternalSearch() {
     const modal = document.getElementById('internalSearchModal');
     const content = document.getElementById('viewContent');
     
@@ -1039,6 +1062,34 @@ closeInternalSearch() {
           btnTopo.classList.add('pointer-events-none');
       }
   },
+
+  closeWelcomeModalLegislacao() {
+      const modal = document.getElementById("welcomeModalLegislacao");
+      if (modal) {
+          modal.classList.add("hidden");
+          
+          // Salva preferência de não mostrar novamente
+          if (document.getElementById("dontShowLegislacaoAgain").checked) {
+              localStorage.setItem("dontShowWelcomeLegislacao", "true");
+          }
+      }
+  },
+
+  scrollToArt(num) {
+      const element = document.getElementById(`art-${num}`);
+      if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          // Efeito visual de destaque temporário
+          element.classList.add('bg-yellow-200', 'dark:text-black');
+          setTimeout(() => {
+              element.classList.remove('bg-yellow-200', 'dark:text-black');
+          }, 2000);
+      } else {
+          console.warn("Artigo não encontrado nesta norma.");
+      }
+  },
+
+
 };
 
 app.init();

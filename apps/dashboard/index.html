@@ -861,35 +861,35 @@
       </div>
     </div>
 
-    <div id="welcomeModalDashboard" class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all">
+    <div id="welcomeModalDashboard" class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all border dark:border-slate-700">
             <div class="p-6">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="id-do-seu-ícone" />
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 dark:text-white">Análise Operacional CAF</h3>
+                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
                 </div>
                 
-                <div class="space-y-4 text-gray-600 dark:text-gray-300 text-sm">
-                    <p>Bem-vindo ao cockpit de análise. Aqui você pode:</p>
-                    <ul class="list-disc pl-5 space-y-2">
-                        <li>Visualizar indicadores de produtividade em tempo real.</li>
-                        <li>Filtrar dados por analista ou período.</li>
-                        <li>Exportar relatórios consolidados para CSV.</li>
+                <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Análise Operacional CAF</h3>
+                
+                <div class="text-sm text-gray-600 dark:text-gray-300 space-y-4 leading-relaxed">
+                    <p>Monitore a produtividade e o desempenho da equipe de forma centralizada e em tempo real.</p>
+                    
+                    <ul class="space-y-2 border-l-2 border-blue-500/30 pl-4 py-1">
+                        <li><strong class="text-blue-600 dark:text-blue-400">Indicadores em Tempo Real:</strong> Acompanhe produtividade, SLA e gargalos instantaneamente.</li>
+                        <li><strong class="text-blue-600 dark:text-blue-400">Filtros Avançados:</strong> Analise por analista, período, tipo de demanda ou status.</li>
+                        <li><strong class="text-blue-600 dark:text-blue-400">Exportação Simplificada:</strong> Gere relatórios consolidados em CSV com um clique.</li>
                     </ul>
                 </div>
 
                 <div class="mt-8 flex flex-col gap-4">
                     <label class="flex items-center gap-3 cursor-pointer group">
-                        <input type="checkbox" id="dontShowDashboardAgain" class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                        <span class="text-xs text-gray-500 dark:text-gray-400">Não mostrar novamente</span>
+                        <input type="checkbox" id="dontShowDashboardAgain" class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 transition-all">
+                        <span class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">Não mostrar novamente</span>
                     </label>
                     
                     <button onclick="closeWelcomeModal()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all shadow-lg active:scale-95">
-                        Entrar no Dashboard
+                        Entendi e Abrir Dashboard
                     </button>
                 </div>
             </div>

@@ -922,6 +922,42 @@
       </div>
     </div>
 
+    <div id="welcomeModalLegislacao" class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all border dark:border-slate-700">
+            <div class="p-6">
+                <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                </div>
+                
+                <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Atos Normativos · Legislação</h3>
+                
+                <div class="text-sm text-gray-600 dark:text-gray-300 space-y-4 leading-relaxed">
+                    <p>Consulte e gerencie atos normativos da unidade de forma centralizada e sempre atualizada.</p>
+                    
+                    <ul class="space-y-2 border-l-2 border-indigo-500/30 pl-4 py-1">
+                        <li><strong class="text-indigo-600 dark:text-indigo-400">Base Oficial + Manual:</strong> Sincroniza automaticamente com legislacao.json e preserva suas criações locais.</li>
+                        <li><strong class="text-indigo-600 dark:text-indigo-400">Busca Avançada:</strong> Pesquisa em título, conteúdo e palavras-chave personalizadas.</li>
+                        <li><strong class="text-indigo-600 dark:text-indigo-400">Exportação Completa:</strong> TXT, CSV, PDF com formatação jurídica preservada.</li>
+                        <li><strong class="text-indigo-600 dark:text-indigo-400">Modos de Leitura:</strong> Padrão, Sépia (papel antigo) e Escuro confortável.</li>
+                    </ul>
+                </div>
+
+                <div class="mt-8 flex flex-col gap-4">
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" id="dontShowLegislacaoAgain" class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 transition-all">
+                        <span class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">Não mostrar novamente</span>
+                    </label>
+                    
+                    <button onclick="app.closeWelcomeModalLegislacao()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg transition-all shadow-lg active:scale-95">
+                        Entendi e Abrir Biblioteca
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
   </body>
 </html>
