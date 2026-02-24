@@ -42,7 +42,7 @@ async function initApp() {
         checkWelcomeModal();
     } catch (err) {
         console.error("Erro ao carregar dados:", err);
-        grid.innerHTML = `<p class="col-span-full text-center py-20 text-slate-400">Erro ao carregar o arquivo JSON local. Verifique se o ficheiro existe na pasta.</p>`;
+        grid.innerHTML = `<p class="col-span-full text-center py-20 text-gray-600 dark:text-gray-400">Erro ao carregar o arquivo JSON local. Verifique se o ficheiro existe na pasta.</p>`;
     }
 }
 
@@ -92,7 +92,7 @@ function renderGrid() {
 
         const terceirizadoBadgeClasses = 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 dark:shadow-[0_0_10px_rgba(192,132,252,0.3)] dark:border dark:border-purple-500/50';
         
-        card.className = `bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border ${isTerceirizado ? 'border-purple-200 dark:border-purple-900/40' : 'border-slate-200 dark:border-slate-800'} hover:border-blue-400 transition-all cursor-pointer group flex flex-col h-full animate-fade-in`;
+        card.className = `relative bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border ${isTerceirizado ? 'border-purple-200 dark:border-purple-900/40' : 'border-slate-200 dark:border-slate-800'} hover:border-blue-400 transition-all cursor-pointer group flex flex-col h-full animate-fade-in`;
         
         card.innerHTML = `
             <div class="flex justify-between items-start mb-4">
@@ -102,15 +102,26 @@ function renderGrid() {
                     </span>
                     ${isTerceirizado ? `<span class="text-[9px] font-bold px-2 py-1 rounded ${terceirizadoBadgeClasses} uppercase tracking-tighter transition-all">Terceirizado</span>` : ''}
                 </div>
-                <button onclick="event.stopPropagation(); openFamilyForm(${indexInMain})" class="text-slate-400 hover:text-blue-500 transition-colors p-1" title="Editar Família">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M20.8477 1.87868C19.6761 0.707109 17.7766 0.707105 16.605 1.87868L2.44744 16.0363C2.02864 16.4551 1.74317 16.9885 1.62702 17.5692L1.03995 20.5046C0.760062 21.904 1.9939 23.1379 3.39334 22.858L6.32868 22.2709C6.90945 22.1548 7.44285 21.8693 7.86165 21.4505L22.0192 7.29289C23.1908 6.12132 23.1908 4.22183 22.0192 3.05025L20.8477 1.87868ZM18.0192 3.29289C18.4098 2.90237 19.0429 2.90237 19.4335 3.29289L20.605 4.46447C20.9956 4.85499 20.9956 5.48815 20.605 5.87868L17.9334 8.55027L15.3477 5.96448L18.0192 3.29289ZM13.9334 7.3787L3.86165 17.4505C3.72205 17.5901 3.6269 17.7679 3.58818 17.9615L3.00111 20.8968L5.93645 20.3097C6.13004 20.271 6.30784 20.1759 6.44744 20.0363L16.5192 9.96448L13.9334 7.3787Z" fill="currentColor"/>
-                    </svg>
-                </button>
+
+                <div class="flex gap-1">
+                    <button onclick="event.stopPropagation(); generateSummary(${indexInMain})" class="text-slate-400 hover:text-emerald-500 transition-colors p-1" title="Gerar Resumo para WhatsApp">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </button>
+                    
+                    <button onclick="event.stopPropagation(); openFamilyForm(${indexInMain})" class="text-slate-400 hover:text-blue-500 transition-colors p-1" title="Editar Família">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M20.8477 1.87868C19.6761 0.707109 17.7766 0.707105 16.605 1.87868L2.44744 16.0363C2.02864 16.4551 1.74317 16.9885 1.62702 17.5692L1.03995 20.5046C0.760062 21.904 1.9939 23.1379 3.39334 22.858L6.32868 22.2709C6.90945 22.1548 7.44285 21.8693 7.86165 21.4505L22.0192 7.29289C23.1908 6.12132 23.1908 4.22183 22.0192 3.05025L20.8477 1.87868ZM18.0192 3.29289C18.4098 2.90237 19.0429 2.90237 19.4335 3.29289L20.605 4.46447C20.9956 4.85499 20.9956 5.48815 20.605 5.87868L17.9334 8.55027L15.3477 5.96448L18.0192 3.29289ZM13.9334 7.3787L3.86165 17.4505C3.72205 17.5901 3.6269 17.7679 3.58818 17.9615L3.00111 20.8968L5.93645 20.3097C6.13004 20.271 6.30784 20.1759 6.44744 20.0363L16.5192 9.96448L13.9334 7.3787Z" fill="currentColor"/>
+                        </svg>
+                    </button>
+                </div>
+
             </div>
+
             
             <h4 class="font-bold text-slate-800 dark:text-white text-sm leading-tight mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">${item.Descrição}</h4>
-            <p class="text-[10px] text-slate-400 font-mono mb-6">FAMÍLIA: ${item.Família}</p>
+            <p class="text-[12px] text-gray-600 dark:text-gray-100 font-mono mb-6">FAMÍLIA: ${item.Família}</p>
 
             <div class="space-y-4 flex-grow">
                 ${renderDocList("Obrigatórios", item["Documentos Exigidos"] || item["DOCUMENTOS EXIGIDOS"], "text-red-500")}
@@ -124,12 +135,14 @@ function renderGrid() {
                         <div class="text-[10px] bg-slate-50 dark:bg-slate-850 p-2 rounded border dark:border-slate-800 dark:text-slate-300 font-medium">
                             <span class="text-blue-600 dark:text-blue-400 font-bold">${c.codigo}</span> <span class="mx-1 text-slate-300">|</span> ${c.descricao}
                         </div>
-                    `).join('') : '<p class="text-[10px] italic text-slate-400 text-center py-2">Nenhum CNAE cadastrado.</p>'}
+                    `).join('') : '<p class="text-[10px] italic text-gray-600 dark:text-gray-400 text-center py-2">Nenhum CNAE cadastrado.</p>'}
                 </div>
             </div>
             
             <div class="mt-6 flex justify-center border-t dark:border-slate-800 pt-3">
-                <span class="text-[8px] font-black text-gray-600 dark:text-gray-300 uppercase tracking-widest group-hover:text-blue-500 transition-colors">Detalhes / CNAE</span>
+                <span class="text-[8px] font-black uppercase tracking-widest transition-colors ${ (item.CNAEs || []).length > 0 ? 'text-blue-500 dark:text-blue-400' : 'text-gray-600 dark:text-gray-100' } group-hover:text-blue-600">
+                    Detalhes / CNAE
+                </span>
             </div>
         `;
 
@@ -142,7 +155,7 @@ function renderDocList(title, list, colorClass) {
     if (!list || list.length === 0) return "";
     return `
         <div>
-            <span class="text-[8px] font-black uppercase text-slate-400 dark:text-slate-500 block mb-1.5 tracking-widest">${title}</span>
+            <span class="text-[8px] font-black uppercase text-gray-600 dark:text-gray-400 dark:text-slate-500 block mb-1.5 tracking-widest">${title}</span>
             <ul class="text-[11px] ${colorClass} space-y-1 leading-tight font-medium">
                 ${list.map(doc => `<li class="flex items-start gap-1"><span>•</span> <span>${doc}</span></li>`).join('')}
             </ul>
@@ -327,6 +340,98 @@ document.getElementById('btn-prev').onclick = () => { if(currentPage > 1) { curr
 document.getElementById('btn-next').onclick = () => { if((currentPage * itemsPerPage) < filteredData.length) { currentPage++; renderGrid(); } };
 document.getElementById('f-replicate').onchange = (e) => {
     document.getElementById('replicate-container').classList.toggle('hidden', !e.target.checked);
+};
+
+window.generateSummary = (index) => {
+    const item = familyData[index];
+    const isServico = item.Tipo === 'S';
+    const tipo = isServico ? 'SERVIÇO' : 'MATERIAL';
+    
+    // 1. Tratamento de Listas (Padrão anterior mantido)
+    const listaExigidos = item["Documentos Exigidos"] || item["DOCUMENTOS EXIGIDOS"] || [];
+    const exigidosStr = listaExigidos.length > 0 ? listaExigidos.map(doc => `• ${doc}`).join("\n") : "• Nenhum documento específico";
+
+    const listaElegiveis = item["Documentos Elegíveis"] || item["DOCUMENTOS ELEGÍVEIS"] || [];
+    const elegiveisStr = listaElegiveis.length > 0 ? listaElegiveis.map(doc => `• ${doc}`).join("\n") : "• Nenhum documento opcional";
+
+    const listaCnaes = item.CNAEs || [];
+    const cnaesStr = listaCnaes.length > 0 ? listaCnaes.map(c => `• *${c.codigo}* - ${c.descricao}`).join("\n") : "• Nenhum CNAE específico";
+
+    // 2. Lógica Condicional de Frases (Novas Regras)
+    let infoServico = "";
+    let infoTerceirizado = "";
+
+    if (isServico) {
+        // Frase de Atestado de Capacidade Técnica
+        infoServico = `Por se tratar de família classificada como *serviço*, poderá ser exigido atestado de capacidade técnica, com a finalidade de comprovar a aptidão e a qualidade do serviço previamente prestado pelo fornecedor.\n\n`;
+
+        // Frase de Terceirização
+        if (item.Terceirizado === "Sim") {
+            infoTerceirizado = `_Esta família integra o grupo de famílias de serviço terceirizado, sendo necessária a vistoria do imóvel, além do atendimento às normas previstas no edital._`;
+        } else {
+            infoTerceirizado = `_Esta família não integra o grupo de famílias de serviço terceirizado._`;
+        }
+    }
+
+    // 3. Montagem do Texto Final para WhatsApp
+    const textoWhatsApp = 
+        `*CONSULTA DE QUALIFICAÇÃO TÉCNICA*\n\n` +
+        `Para a família *${item.Descrição.toUpperCase()}* (Código: *${item.Família}*), classificada como *${tipo}*, informamos que os documentos *OBRIGATÓRIOS* são:\n\n` +
+        `${exigidosStr}\n\n` +
+        `Como documentos *ELEGÍVEIS* (opcionais), constam:\n\n` +
+        `${elegiveisStr}\n\n` +
+        `Para fins de compatibilidade, recomenda-se o(s) *CNAE(s)*:\n\n` +
+        `${cnaesStr}\n\n` +
+        `${infoServico}` + // Aparece apenas se for serviço
+        `${infoTerceirizado}`; // Aparece apenas se for serviço (Sim ou Não)
+
+    // Injeção no Modal
+    document.getElementById('summary-subtitle').textContent = `FAMÍLIA ${item.Família} • ${tipo}`;
+    document.getElementById('summary-content').textContent = textoWhatsApp;
+    document.getElementById('summary-modal').classList.remove('hidden');
+};
+
+window.closeSummaryModal = () => {
+    document.getElementById('summary-modal').classList.add('hidden');
+};
+
+window.copySummary = () => {
+    const text = document.getElementById('summary-content').textContent;
+    const btn = document.getElementById('btn-copy-summary');
+
+    
+    navigator.clipboard.writeText(text).then(() => {
+        const originalContent = btn.innerHTML;
+
+        btn.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" class="w-4 h-4" xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.5" d="M4 12.9L7.14286 16.5L15 7.5"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"/>
+            <path d="M20.0002 7.5625L11.4286 16.5625L11.0002 16"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"/>
+            </svg>
+            Copiado
+        `;
+
+        btn.classList.replace('bg-emerald-600', 'bg-blue-600');
+
+        setTimeout(() => {
+            btn.innerHTML = originalContent;
+            btn.classList.replace('bg-blue-600', 'bg-emerald-600');
+        }, 2000);
+
+        
+        setTimeout(() => {
+            btn.innerHTML = originalContent;
+            btn.classList.replace('bg-blue-600', 'bg-emerald-600');
+        }, 2000);
+    });
 };
 
 // Inicia o App
