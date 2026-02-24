@@ -54,7 +54,7 @@
                 </div>
                 <div>
                     <h1 class="text-lg font-bold dark:text-white leading-none">Qualificação Técnica</h1>
-                    <p class="text-[10px] text-slate-500 uppercase font-bold tracking-wider mt-1">Gestão de Famílias e CNAEs</p>
+                    <p class="text-[10px] text-gray-600 dark:text-gray-100 uppercase font-bold tracking-wider mt-1">Gestão de Famílias e CNAEs</p>
                 </div>
             </div>
             
@@ -68,7 +68,7 @@
                     <option value="S">🛠️ Serviço</option>
                 </select>
 
-                <label class="flex items-center gap-2 text-[10px] font-bold text-slate-500 cursor-pointer bg-white dark:bg-slate-850 p-2 rounded-lg border dark:border-slate-700">
+                <label class="flex items-center gap-2 text-[10px] font-bold text-gray-600 dark:text-gray-100 cursor-pointer bg-white dark:bg-slate-850 p-2 rounded-lg border dark:border-slate-700">
                     <input type="checkbox" id="filter-terceirizado" class="rounded text-blue-600">
                     <span>TERCEIRIZADOS</span>
                 </label>
@@ -89,7 +89,7 @@
             </div>
 
         <div class="mt-8 flex justify-between items-center bg-white dark:bg-slate-900 p-4 rounded-xl border dark:border-slate-800 shadow-sm">
-            <span id="page-info" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Exibindo 0 registros</span>
+            <span id="page-info" class="text-[10px] font-bold text-gray-600 dark:text-gray-400 uppercase tracking-widest">Exibindo 0 registros</span>
             <div class="flex gap-2">
                 <button id="btn-prev" class="p-2 rounded-lg border dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 transition-colors">
                     <svg class="w-5 h-5 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
@@ -105,7 +105,7 @@
         <div class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-2xl shadow-2xl flex flex-col max-h-[90vh] animate-fade-in border dark:border-slate-800">
             <div class="p-4 border-b dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-850">
                 <h3 id="form-title" class="font-bold dark:text-white uppercase text-xs tracking-widest">Gerenciar Família</h3>
-                <button onclick="closeFamilyForm()" class="text-slate-400 hover:text-red-500 text-2xl">&times;</button>
+                <button onclick="closeFamilyForm()" class="text-gray-600 dark:text-gray-400 hover:text-red-500 text-2xl">&times;</button>
             </div>
             
             <form id="family-form" class="p-6 overflow-y-auto space-y-6">
@@ -113,18 +113,18 @@
                 
                 <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Cód. Família</label>
+                        <label class="block text-[10px] font-bold text-gray-600 dark:text-gray-400 uppercase mb-1">Cód. Família</label>
                         <input type="text" id="f-codigo" class="w-full p-2.5 border rounded-lg dark:bg-slate-850 dark:border-slate-700 dark:text-white text-sm" required>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Tipo</label>
+                        <label class="block text-[10px] font-bold text-gray-600 dark:text-gray-400 uppercase mb-1">Tipo</label>
                         <select id="f-tipo" class="w-full p-2.5 border rounded-lg dark:bg-slate-850 dark:border-slate-700 dark:text-white text-sm">
                             <option value="M">📦 Material</option>
                             <option value="S">🛠️ Serviço</option>
                         </select>
                     </div>
                     <div class="flex items-end pb-2">
-                        <label class="flex items-center gap-2 text-[10px] font-bold text-slate-500 cursor-pointer">
+                        <label class="flex items-center gap-2 text-[10px] font-bold text-gray-600 dark:text-gray-100 cursor-pointer">
                             <input type="checkbox" id="f-terceirizado" class="rounded text-blue-600 w-4 h-4">
                             <span>TERCEIRIZADO?</span>
                         </label>
@@ -132,7 +132,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Descrição</label>
+                    <label class="block text-[10px] font-bold text-gray-600 dark:text-gray-400 uppercase mb-1">Descrição</label>
                     <input type="text" id="f-desc" class="w-full p-2.5 border rounded-lg dark:bg-slate-850 dark:border-slate-700 dark:text-white text-sm" required>
                 </div>
 
@@ -167,7 +167,7 @@
                 </div>
 
                 <div class="flex justify-end gap-3 pt-4 border-t dark:border-slate-800">
-                    <button type="button" onclick="closeFamilyForm()" class="px-5 py-2 text-slate-500 text-xs font-bold uppercase hover:text-slate-700">Cancelar</button>
+                    <button type="button" onclick="closeFamilyForm()" class="px-5 py-2 text-gray-600 dark:text-gray-100 text-xs font-bold uppercase hover:text-slate-700">Cancelar</button>
                     <button type="submit" class="px-8 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold uppercase shadow-lg hover:bg-blue-700 transition-all">
                         Salvar Alterações
                     </button>
@@ -180,7 +180,7 @@
         <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-xl shadow-2xl flex flex-col max-h-[80vh] border dark:border-slate-800">
             <div class="p-4 border-b dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-850">
                 <h4 class="text-xs font-bold dark:text-white uppercase tracking-widest">Famílias do Mesmo Grupo</h4>
-                <button onclick="closeSuggestionsModal()" class="text-slate-400 hover:text-red-500 text-xl">&times;</button>
+                <button onclick="closeSuggestionsModal()" class="text-gray-600 dark:text-gray-400 hover:text-red-500 text-xl">&times;</button>
             </div>
             
             <div id="suggestions-list" class="p-4 overflow-y-auto grid grid-cols-1 gap-2">
@@ -233,6 +233,63 @@
                         Entendi e Explorar
                     </button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="summary-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/70 backdrop-blur-sm p-4">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-2xl shadow-2xl flex flex-col max-h-[90vh] border dark:border-slate-800 animate-fade-in">
+            <div class="p-4 border-b dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-850">
+                <div>
+                    <h3 id="summary-title" class="font-bold dark:text-white text-xs uppercase tracking-widest text-blue-600">Parecer Técnico</h3>
+                    <p id="summary-subtitle" class="text-[9px] text-gray-600 dark:text-gray-400 font-mono mt-1"></p>
+                </div>
+                <button onclick="closeSummaryModal()" class="text-gray-600 dark:text-gray-400 hover:text-red-500 text-2xl transition-colors">&times;</button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto">
+                <div id="summary-content" class="text-sm leading-relaxed text-slate-600 dark:text-slate-300 font-mono whitespace-pre-wrap bg-slate-50 dark:bg-slate-950 p-5 rounded-xl border border-dashed dark:border-slate-700">
+                </div>
+            </div>
+
+            <div class="p-4 border-t dark:border-slate-800 flex justify-end gap-3 bg-slate-50 dark:bg-slate-850">
+                <button onclick="closeSummaryModal()" class="px-5 py-2 text-gray-600 dark:text-gray-100 text-xs font-bold uppercase hover:text-slate-700">Fechar</button>
+<button onclick="copySummary()" 
+    id="btn-copy-summary" 
+    class="flex items-center gap-2 px-8 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold uppercase shadow-lg transition-all active:scale-95">
+
+    <svg viewBox="0 0 1024 1024" 
+         class="w-4 h-4" 
+         xmlns="http://www.w3.org/2000/svg" 
+         fill="currentColor">
+
+        <path d="M589.3 260.9v30H371.4v-30H268.9v513h117.2v-304l109.7-99.1h202.1V260.9z"/>
+        <path d="M516.1 371.1l-122.9 99.8v346.8h370.4V371.1z"/>
+        <path d="M752.7 370.8h21.8v435.8h-21.8z"/>
+        <path d="M495.8 370.8h277.3v21.8H495.8z"/>
+        <path d="M495.8 370.8h21.8v124.3h-21.8z"/>
+        <path d="M397.7 488.7l-15.4-15.4 113.5-102.5 15.4 15.4z"/>
+        <path d="M382.3 473.3h135.3v21.8H382.3z"/>
+        <path d="M382.3 479.7h21.8v348.6h-21.8z"/>
+        <path d="M404.1 806.6h370.4v21.8H404.1z"/>
+        <path d="M447.7 545.1h261.5v21.8H447.7z"/>
+        <path d="M447.7 610.5h261.5v21.8H447.7z"/>
+        <path d="M447.7 675.8h261.5v21.8H447.7z"/>
+        <path d="M251.6 763h130.7v21.8H251.6z"/>
+        <path d="M251.6 240.1h21.8v544.7h-21.8z"/>
+        <path d="M687.3 240.1h21.8v130.7h-21.8z"/>
+        <path d="M273.4 240.1h108.9v21.8H273.4z"/>
+        <path d="M578.4 240.1h130.7v21.8H578.4z"/>
+        <path d="M360.5 196.5h21.8v108.9h-21.8z"/>
+        <path d="M382.3 283.7h196.1v21.8H382.3z"/>
+        <path d="M534.8 196.5h65.4v21.8h-65.4z"/>
+        <path d="M360.5 196.5h65.4v21.8h-65.4z"/>
+        <path d="M404.1 174.7h152.5v21.8H404.1z"/>
+        <path d="M578.4 196.5h21.8v108.9h-21.8z"/>
+    </svg>
+
+    Copiar
+</button>
             </div>
         </div>
     </div>

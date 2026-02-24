@@ -2,17 +2,30 @@
   {
     "Família": "01.00",
     "Descrição": "CONSIGNACOES DE SEGURADORA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Regularidade SUSEP",
       "Certidão de Administradores SUSEP",
       "Carta Patente SUSEP"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "65.11-1-01",
+        "descricao": "Sociedade seguradora de seguros vida"
+      },
+      {
+        "codigo": "6622-3/00",
+        "descricao": "Corretores e agentes de seguros, de planos de previdência complementar e de saúde"
+      }
+    ]
   },
   {
     "Família": "01.01",
     "Descrição": "ADMINISTRACAO DE CARTAO DE CREDITO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
@@ -20,20 +33,34 @@
       "CORECON - Conselho Regional de Economia",
       "CRA - Conselho Regional de Administração"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6613-4/00",
+        "descricao": "Administração de cartões de crédito"
+      }
+    ]
   },
   {
     "Família": "01.02",
     "Descrição": "ADMINISTRACAO DE VALE, TIQUETE E CARTAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8299-7/02",
+        "descricao": "Emissão de vales alimentação, vales transporte e similares"
+      }
+    ]
   },
   {
     "Família": "01.03",
     "Descrição": "FORN DE ALIMENTOS E MAT DE LIMP. E HIG. PARA CREDENCIAMENTO E PALACIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
@@ -43,26 +70,65 @@
       "ADAB - Agencia Estadual de Defesa Agropecuária",
       "Declaração de Dispensa de Ato Público - Baixo Risco"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "5620-1/01",
+        "descricao": "Fornecimento de alimentos preparados preponderantemente para empresas"
+      },
+      {
+        "codigo": "5620-1/02",
+        "descricao": "Serviços de alimentação para eventos e recepções - bufê"
+      },
+      {
+        "codigo": "2062-2/00",
+        "descricao": "Fabricação de produtos de limpeza e polimento"
+      },
+      {
+        "codigo": "4649-4/08",
+        "descricao": "Comércio atacadista de produtos de higiene, limpeza e conservação domiciliar"
+      }
+    ]
   },
   {
     "Família": "01.04",
     "Descrição": "AGENCIAMENTO DE VIAGEM E HOTELARIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Ministério do Turismo",
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "79.11-2-00",
+        "descricao": "Agências de viagens"
+      }
+    ]
   },
   {
     "Família": "01.05",
     "Descrição": "ELABORACAO E REVISAO DE TEXTOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7490-1/01",
+        "descricao": "Serviços de tradução, interpretação e similares"
+      },
+      {
+        "codigo": "8219-9/99",
+        "descricao": "Preparação de documentos e serviços especializados de apoio administrativo não especificados anteriormente"
+      },
+      {
+        "codigo": "9002-7/01",
+        "descricao": "Atividades de artistas plásticos, jornalistas independentes e escritores"
+      }
+    ]
   },
   {
     "Família": "01.06",
@@ -344,6 +410,8 @@
   {
     "Família": "01.35",
     "Descrição": "SERVICO DE LOGISTICA E ENTREGA FRACIONADA DE GENEROS ALIMENTICIOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
@@ -351,7 +419,24 @@
       "Alvará de Vigilância Sanitária",
       "Declaração de Dispensa de Ato Público - Baixo Risco"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "47.12-1-00",
+        "descricao": "Comércio varejista de mercadorias em geral, com predominância de produtos alimentícios - minimercados, mercearias e armazéns"
+      },
+      {
+        "codigo": "46.17-6-00",
+        "descricao": "Representantes comerciais e agentes do comércio de produtos alimentícios, bebidas e fumo"
+      },
+      {
+        "codigo": "56.11-2-01",
+        "descricao": "Restaurantes e similares"
+      },
+      {
+        "codigo": "56.20-1-02",
+        "descricao": "Serviços de alimentação para eventos e recepções - bufê"
+      }
+    ]
   },
   {
     "Família": "01.36",
@@ -893,6 +978,8 @@
   {
     "Família": "01.94",
     "Descrição": "HOSPEDAGEM PARA FORMACAO EDUCACIONAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Ministério do Turismo",
       "Atestado de Capacidade Técnica"
@@ -901,7 +988,16 @@
       "Alvará de Vigilância Sanitária",
       "Declaração de Dispensa de Ato Público - Baixo Risco"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "5510-8/01",
+        "descricao": "Hotéis"
+      },
+      {
+        "codigo": "5510-8/02",
+        "descricao": "Apart hotéis"
+      }
+    ]
   },
   {
     "Família": "01.95",
@@ -937,12 +1033,26 @@
   {
     "Família": "01.98",
     "Descrição": "SERVICOS DE CONDUCAO E CONSERVACAO DE VEICULOS ADMINISTRATIVOS",
+    "Tipo": "S",
+    "Terceirizado": "Sim",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S",
-    "Terceirizado": "Sim"
+    "CNAEs": [
+      {
+        "codigo": "78.10-8-00",
+        "descricao": "Seleção e agenciamento de mão-de-obra"
+      },
+      {
+        "codigo": "78.20-5-00",
+        "descricao": "Locação de mão-de-obra temporária"
+      },
+      {
+        "codigo": "78.30-2-00",
+        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
+      }
+    ]
   },
   {
     "Família": "01.99",
@@ -966,6 +1076,8 @@
   {
     "Família": "02.02",
     "Descrição": "ORGAN. DE CONGRESSO,SIMPOSIO,CONFERENCIA,EXPOSICAO, FEIRA-TURISTICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
@@ -973,7 +1085,12 @@
       "CRA - Conselho Regional de Administração",
       "Ministério do Turismo"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8230-0/01",
+        "descricao": "Serviços de organização de feiras, congressos, exposições e festas"
+      }
+    ]
   },
   {
     "Família": "02.03",
@@ -1007,11 +1124,18 @@
   {
     "Família": "02.06",
     "Descrição": "CONSULTORIA E ASSESSORIA - TURISMO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "79.11-2-00",
+        "descricao": "Agências de viagens"
+      }
+    ]
   },
   {
     "Família": "02.07",
@@ -1685,11 +1809,22 @@
   {
     "Família": "02.74",
     "Descrição": "SERVICOS ESPECIALIZADOS DE TRANSITO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8299-7/99",
+        "descricao": "Outras atividades de serviços prestados principalmente às empresas não especificadas anteriormente"
+      },
+      {
+        "codigo": "8599-6/01",
+        "descricao": "Formação de condutores"
+      }
+    ]
   },
   {
     "Família": "02.75",
@@ -1975,7 +2110,21 @@
     ],
     "Documentos Elegíveis": [],
     "Tipo": "S",
-    "Terceirizado": "Sim"
+    "Terceirizado": "Sim",
+    "CNAEs": [
+      {
+        "codigo": "78.10-8-00",
+        "descricao": "Seleção e agenciamento de mão-de-obra"
+      },
+      {
+        "codigo": "78.20-5-00",
+        "descricao": "Locação de mão-de-obra temporária"
+      },
+      {
+        "codigo": "78.30-2-00",
+        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
+      }
+    ]
   },
   {
     "Família": "03.17",
@@ -2071,7 +2220,21 @@
     ],
     "Documentos Elegíveis": [],
     "Tipo": "S",
-    "Terceirizado": "Sim"
+    "Terceirizado": "Sim",
+    "CNAEs": [
+      {
+        "codigo": "78.10-8-00",
+        "descricao": "Seleção e agenciamento de mão-de-obra"
+      },
+      {
+        "codigo": "78.20-5-00",
+        "descricao": "Locação de mão-de-obra temporária"
+      },
+      {
+        "codigo": "78.30-2-00",
+        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
+      }
+    ]
   },
   {
     "Família": "03.26",
@@ -2104,22 +2267,62 @@
   {
     "Família": "03.29",
     "Descrição": "COPA E COZINHA",
+    "Tipo": "S",
+    "Terceirizado": "Sim",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S",
-    "Terceirizado": "Sim"
+    "CNAEs": [
+      {
+        "codigo": "78.10-8-00",
+        "descricao": "Seleção e agenciamento de mão-de-obra"
+      },
+      {
+        "codigo": "78.20-5-00",
+        "descricao": "Locação de mão-de-obra temporária"
+      },
+      {
+        "codigo": "78.30-2-00",
+        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
+      }
+    ]
   },
   {
     "Família": "03.30",
     "Descrição": "SUPORTE, CONTROLE E APOIO A ADMINISTRACAO DE EDIFICIOS PUBLICOS",
+    "Tipo": "S",
+    "Terceirizado": "Sim",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S",
-    "Terceirizado": "Sim"
+    "CNAEs": [
+      {
+        "codigo": "78.10-8-00",
+        "descricao": "Seleção e agenciamento de mão-de-obra"
+      },
+      {
+        "codigo": "78.20-5-00",
+        "descricao": "Locação de mão-de-obra temporária"
+      },
+      {
+        "codigo": "78.30-2-00",
+        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
+      },
+      {
+        "codigo": "81.11-7-00",
+        "descricao": "Serviços combinados para apoio a edifícios, exceto condomínios prediais"
+      },
+      {
+        "codigo": "82.19-9-99",
+        "descricao": "reparação de documentos e serviços especializados de apoio administrativo não especificados anteriormente"
+      },
+      {
+        "codigo": "82.11-3-00",
+        "descricao": "Serviços combinados de escritório e apoio administrativo"
+      }
+    ]
   },
   {
     "Família": "03.31",
@@ -2772,7 +2975,21 @@
     ],
     "Documentos Elegíveis": [],
     "Tipo": "S",
-    "Terceirizado": "Sim"
+    "Terceirizado": "Sim",
+    "CNAEs": [
+      {
+        "codigo": "78.10-8-00",
+        "descricao": "Seleção e agenciamento de mão-de-obra"
+      },
+      {
+        "codigo": "78.20-5-00",
+        "descricao": "Locação de mão-de-obra temporária"
+      },
+      {
+        "codigo": "78.30-2-00",
+        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
+      }
+    ]
   },
   {
     "Família": "04.57",

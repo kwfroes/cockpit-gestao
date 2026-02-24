@@ -3139,19 +3139,22 @@ document.addEventListener("DOMContentLoaded", function () {
       }
   }
 
-  // Função para fechar o modal
-  function closeWelcomeModalGerador() {
-      const modal = document.getElementById("welcomeModalGerador");
-      if (modal) {
-          modal.classList.add("hidden");
-          
-          // Salva preferência de não mostrar novamente
-          if (document.getElementById("dontShowGeradorAgain").checked) {
-              localStorage.setItem("dontShowWelcomeGerador", "true");
-          }
-      }
-  }
+    // Função para fechar o modal
+      window.closeWelcomeModalGerador = function () {
+            const modal = document.getElementById("welcomeModalGerador");
+            if (modal) {
+                modal.classList.add("hidden");
+
+                if (document.getElementById("dontShowGeradorAgain").checked) {
+                    localStorage.setItem("dontShowWelcomeGerador", "true");
+                }
+            }
+        }
+       
+
 });
+
+
 
 // ==========================================================
 // INTEGRAÇÃO COM HOME (DASHBOARD)
