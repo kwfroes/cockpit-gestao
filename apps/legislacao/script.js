@@ -34,6 +34,8 @@ const app = {
   currentId: null,
   filterType: "todos",
   isMobileListVisible: true,
+  currentPage: 1,
+  itemsPerPage: 6,
   searchMatches: [],      // Guarda os resultados encontrados
   currentSearchIndex: -1, // Posição atual da busca
 
@@ -49,9 +51,14 @@ const app = {
     }
     this.applyAppearance();
     this.renderList();
-    document
+
+  document
       .getElementById("searchInput")
-      .addEventListener("input", (e) => this.renderList(e.target.value));
+      .addEventListener("input", (e) => {
+          this.currentPage = 1; // Reseta a página ao buscar
+          this.renderList(e.target.value);
+      });
+
     this.checkMobileState();
     window.addEventListener("resize", () => this.checkMobileState());
 
@@ -82,53 +89,73 @@ const app = {
   },
 
   // --- 1. CARREGAMENTO COM FETCH ---
-  async loadData() {
+    async loadData() {
       try {
-        // 1. Força o download da versão mais recente do servidor
         const response = await fetch(`legislacao.json?t=${Date.now()}`, {
           cache: "no-store"
         });
 
         if (response.ok) {
           const serverData = await response.json();
-          
-          // 2. Recupera o que está salvo no navegador (suas criações manuais)
           const localJson = localStorage.getItem("legislacao_db");
           const localData = localJson ? JSON.parse(localJson) : [];
 
-          // 3. Evita Duplicidade: Cria um Set com os títulos do servidor (em caixa alta)
-          const serverTitles = new Set(serverData.map(item => item.title.trim().toUpperCase()));
+          // --- FUNÇÃO DE NORMALIZAÇÃO ---
+          const normalize = (text) => 
+            text.toString().toLowerCase()
+              .normalize("NFD").replace(/[\u0300-\u036f]/g, "") 
+              .replace(/[^a-z0-9]/g, "") 
+              .trim();
 
-          // 4. Filtra o local: Só mantém o que você criou que NÃO está no servidor ainda
+          // 3. Criar o Set de chaves do Servidor
+          const serverKeys = new Set(serverData.map(item => 
+            item.id ? item.id.toString() : normalize(item.title)
+          ));
+
+          // 4. Filtrar o local
           const manualEntries = localData.filter(item => {
-            const titleUpper = item.title.trim().toUpperCase();
-            return !serverTitles.has(titleUpper);
+            const localKey = item.id ? item.id.toString() : normalize(item.title);
+            return !serverKeys.has(localKey);
           });
 
-          // 5. Une as listas: O servidor vem primeiro (oficial)
-          this.data = [...serverData, ...manualEntries];
+          // 5. Une as listas (Servidor + Manuais)
+          const mergedList = [...serverData, ...manualEntries];
           
-          // 6. Atualiza o backup local com a nova lista combinada
-          this.saveData(); 
-          console.log("Sincronização: " + serverData.length + " oficiais e " + manualEntries.length + " manuais.");
+          // --- 6. A FAXINA (DEDUPLICAÇÃO ESTRITA) ---
+          // Varre a lista combinada e remove qualquer duplicata que tenha ficado no cache
+          const uniqueData = [];
+          const seenKeys = new Set();
+
+          for (const item of mergedList) {
+              const key = item.id ? item.id.toString() : normalize(item.title);
+              if (!seenKeys.has(key)) {
+                  seenKeys.add(key); // Marca como visto
+                  uniqueData.push(item); // Adiciona na lista limpa
+              }
+          }
+          
+          this.data = uniqueData; // Usa apenas a lista limpa
+          this.saveData(); // Subscreve o cache envenenado com a lista limpa
+          
+          console.log(`Sincronização: ${serverData.length} oficiais e ${manualEntries.length} manuais limpos.`);
         } else {
           throw new Error("Falha ao baixar legislacao.json");
         }
       } catch (error) {
-        console.error("Erro no fetch, usando apenas backup local:", error);
+        console.error("Erro no fetch:", error);
         const localJson = localStorage.getItem("legislacao_db");
         this.data = localJson ? JSON.parse(localJson) : [];
       }
     },
 
-  saveData() {
-    localStorage.setItem("legislacao_db", JSON.stringify(this.data));
-    const stats = {
-      total: this.data.length,
-      ultimaAtualizacao: new Date().toLocaleDateString("pt-BR"),
-    };
-    localStorage.setItem("stats_legislacao", JSON.stringify(stats));
-  },
+    saveData() {
+      localStorage.setItem("legislacao_db", JSON.stringify(this.data));
+      const stats = {
+        total: this.data.length,
+        ultimaAtualizacao: new Date().toLocaleDateString("pt-BR"),
+      };
+      localStorage.setItem("stats_legislacao", JSON.stringify(stats));
+    },
 
   // --- 2. FORMATAÇÃO RICA ---
   format(command, value = null) {
@@ -386,6 +413,7 @@ const app = {
 
   filter(type) {
     this.filterType = type;
+    this.currentPage = 1;
 
     // Atualiza estilo dos botões (Lógica Refatorada: Compara o argumento do onclick)
     document.querySelectorAll(".filter-chip").forEach((btn) => {
@@ -421,87 +449,131 @@ const app = {
     this.renderList(document.getElementById("searchInput").value);
   },
 
-  renderList(searchTerm = "") {
+renderList(searchTerm = "") {
     const listEl = document.getElementById("lawList");
+    const paginationEl = document.getElementById("paginationControls");
     listEl.innerHTML = "";
+    if (paginationEl) paginationEl.innerHTML = "";
+
     const term = searchTerm.toLowerCase();
 
-    // 1. FILTRO (Mantendo sua lógica de pesquisar no CONTEÚDO)
+    // 1. FILTRO
     let filtered = this.data.filter((item) => {
-      const matchesType =
-        this.filterType === "todos" || item.type === this.filterType;
-
-      // Concatena tudo para buscar (Título + Conteúdo + Keywords)
-      const textToSearch = (
-        item.title +
-        " " +
-        (item.content || "") +
-        " " + // Adicionei verificação de null/undefined
-        (item.keywords || "")
-      ).toLowerCase();
-
-      const matchesSearch = textToSearch.includes(term);
-      return matchesType && matchesSearch;
+      const matchesType = this.filterType === "todos" || item.type === this.filterType;
+      const textToSearch = (item.title + " " + (item.content || "") + " " + (item.keywords || "")).toLowerCase();
+      return matchesType && textToSearch.includes(term);
     });
 
-    // 2. ORDENAÇÃO (O que faltava no seu: Mais recente primeiro)
+    // 2. ORDENAÇÃO
     filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-    // 3. RENDERIZAÇÃO
-    if (filtered.length === 0) {
+    // --- LÓGICA DE PAGINAÇÃO ---
+    const totalItems = filtered.length;
+    const totalPages = Math.ceil(totalItems / this.itemsPerPage);
+
+    // Proteção: se a busca reduziu os resultados e a página atual não existe mais
+    if (this.currentPage > totalPages && totalPages > 0) {
+        this.currentPage = totalPages;
+    } else if (totalPages === 0) {
+        this.currentPage = 1;
+    }
+
+    // Fatia o array (Ex: do 0 ao 6, depois do 6 ao 12...)
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    const paginatedItems = filtered.slice(startIndex, endIndex);
+
+    // 3. RENDERIZAÇÃO DA LISTA
+    if (paginatedItems.length === 0) {
       listEl.innerHTML = `<div class="p-4 text-center text-sm text-gray-400 dark:text-gray-500">Nenhum documento encontrado.</div>`;
+      const countEl = document.getElementById("lawCountIndicator");
+      if (countEl) countEl.textContent = `0 de ${this.data.length} normas`;
       return;
     }
 
-    filtered.forEach((item) => {
+    paginatedItems.forEach((item) => {
       const dateStr = new Date(item.date).toLocaleDateString("pt-BR");
-      // Verifica se este é o item aberto no momento para pintar de azul
-      const isActive =
-        item.id === this.currentId
+      const isActive = item.id === this.currentId
           ? "bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800"
           : "hover:bg-gray-50 dark:hover:bg-slate-700/50 border-transparent dark:border-transparent";
 
-      // Define cor e sigla baseado na esfera (Com ajustes Dark)
       let sphereBadge = "";
-      if (item.sphere === "Municipal")
-        sphereBadge =
-          '<span class="text-[10px] font-bold text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 px-1.5 py-0.5 rounded ml-1">MUN</span>';
-      else if (item.sphere === "Estadual")
-        sphereBadge =
-          '<span class="text-[10px] font-bold text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded ml-1">EST</span>';
-      else
-        sphereBadge =
-          '<span class="text-[10px] font-bold text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 px-1.5 py-0.5 rounded ml-1">FED</span>';
+      if (item.sphere === "Municipal") sphereBadge = '<span class="text-[10px] font-bold text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 px-1.5 py-0.5 rounded ml-1">MUN</span>';
+      else if (item.sphere === "Estadual") sphereBadge = '<span class="text-[10px] font-bold text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 rounded ml-1">EST</span>';
+      else sphereBadge = '<span class="text-[10px] font-bold text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 px-1.5 py-0.5 rounded ml-1">FED</span>';
 
-        let keywordBadge = "";
-        if (item.keywords) {
-            const tags = item.keywords.split(',').map(t => t.trim());
-            const shortestTag = tags.reduce((a, b) => a.length <= b.length ? a : b);
-            keywordBadge = `<span class="text-[10px] font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700/50 px-1.5 py-0.5 rounded ml-1 truncate max-w-[80px]" title="${shortestTag}">${shortestTag}</span>`;
-        }
+      let keywordBadge = "";
+      if (item.keywords) {
+          const tags = item.keywords.split(',').map(t => t.trim());
+          const shortestTag = tags.reduce((a, b) => a.length <= b.length ? a : b);
+          keywordBadge = `<span class="text-[10px] font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700/50 px-1.5 py-0.5 rounded ml-1 truncate max-w-[80px]" title="${shortestTag}">${shortestTag}</span>`;
+      }
 
       const div = document.createElement("div");
       div.className = `p-4 border-b dark:border-slate-700 cursor-pointer transition-colors ${isActive}`;
       div.onclick = () => this.openViewer(item.id);
       div.innerHTML = `
-                    <div class="flex justify-between items-start mb-1">
-                        <div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-300 bg-blue-100 dark:bg-blue-900/40 px-1.5 py-0.5 rounded">${item.type}</span>
-                            ${sphereBadge}
-                            ${keywordBadge}
-                            </div>
-                        <span class="text-xs text-gray-400 dark:text-gray-500 font-mono">${dateStr}</span>
-                    </div>
-                    <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-200 leading-snug line-clamp-2 uppercase" title="${item.title}">${item.title}</h4>
-                `;
+          <div class="flex justify-between items-start mb-1">
+              <div>
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-300 bg-blue-100 dark:bg-blue-900/40 px-1.5 py-0.5 rounded">${item.type}</span>
+                  ${sphereBadge}
+                  ${keywordBadge}
+              </div>
+              <span class="text-xs text-gray-400 dark:text-gray-500 font-mono">${dateStr}</span>
+          </div>
+          <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-200 leading-snug line-clamp-2 uppercase" title="${item.title}">${item.title}</h4>
+      `;
       listEl.appendChild(div);
     });
 
     const countEl = document.getElementById("lawCountIndicator");
-    if (countEl) {
-        countEl.textContent = `${filtered.length} de ${this.data.length} normas`;
+    if (countEl) countEl.textContent = `${totalItems} de ${this.data.length} normas`;
+
+    // 4. RENDERIZAÇÃO DA PAGINAÇÃO
+    if (totalPages > 1 && paginationEl) {
+      this.renderPagination(totalPages);
+    }
+  },
+
+  renderPagination(totalPages) {
+    const container = document.getElementById("paginationControls");
+    let html = "";
+
+    // Botão Anterior
+    const prevDisabled = this.currentPage === 1 ? "opacity-30 cursor-not-allowed" : "hover:bg-gray-200 dark:hover:bg-slate-700 cursor-pointer text-gray-700 dark:text-gray-300";
+    html += `<button onclick="app.changePage(${this.currentPage - 1})" ${this.currentPage === 1 ? 'disabled' : ''} class="p-1.5 rounded ${prevDisabled} transition-colors" title="Página Anterior">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+             </button>`;
+
+    // Números das Páginas
+    for (let i = 1; i <= totalPages; i++) {
+        // Mostra a primeira, a última e as vizinhas da atual
+        if (i === 1 || i === totalPages || (i >= this.currentPage - 1 && i <= this.currentPage + 1)) {
+            const activeClass = i === this.currentPage 
+                ? "bg-blue-600 text-white font-bold border-blue-600" 
+                : "bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-700";
+            
+            html += `<button onclick="app.changePage(${i})" class="w-7 h-7 mx-0.5 flex items-center justify-center rounded border text-xs shadow-sm ${activeClass} transition-colors">${i}</button>`;
+        } else if (i === this.currentPage - 2 || i === this.currentPage + 2) {
+            html += `<span class="text-gray-400 dark:text-gray-500 text-xs px-1">...</span>`;
+        }
     }
 
+    // Botão Próximo
+    const nextDisabled = this.currentPage === totalPages ? "opacity-30 cursor-not-allowed" : "hover:bg-gray-200 dark:hover:bg-slate-700 cursor-pointer text-gray-700 dark:text-gray-300";
+    html += `<button onclick="app.changePage(${this.currentPage + 1})" ${this.currentPage === totalPages ? 'disabled' : ''} class="p-1.5 rounded ${nextDisabled} transition-colors" title="Próxima Página">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+             </button>`;
+
+    container.innerHTML = html;
+  },
+
+  changePage(newPage) {
+    const searchTerm = document.getElementById("searchInput").value.trim();
+    this.currentPage = newPage;
+    this.renderList(searchTerm);
+    // Rola a lista lateral de volta pro topo
+    document.getElementById('lawList').scrollTop = 0;
   },
 
   openViewer(id) {
