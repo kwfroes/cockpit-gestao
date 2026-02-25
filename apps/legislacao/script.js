@@ -34,6 +34,8 @@ const app = {
   currentId: null,
   filterType: "todos",
   isMobileListVisible: true,
+  searchMatches: [],      // Guarda os resultados encontrados
+  currentSearchIndex: -1, // Posição atual da busca
 
   async init() {
     await this.loadData();
@@ -60,6 +62,18 @@ const app = {
             modal.classList.remove("hidden");
         }
     }
+
+    // Intercepta Ctrl+F (ou Cmd+F no Mac)
+    window.addEventListener("keydown", (e) => {
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'f' || e.key === 'F')) {
+        // Só bloqueia o Ctrl+F do navegador se o Leitor estiver aberto
+        if (!document.getElementById("lawViewer").classList.contains("hidden")) {
+          e.preventDefault();
+          this.internalSearch();
+        }
+      }
+    });
+
   },
 
   preferences: {
@@ -962,17 +976,34 @@ const app = {
 
   // 1. Localizar termo dentro da norma aberta
   // Abre o modal de busca em vez de usar o prompt
+// --- BUSCA INTERNA (Avançada) ---
+
   internalSearch() {
     const modal = document.getElementById('internalSearchModal');
     const input = document.getElementById('internalSearchInput');
     
     modal.classList.remove('hidden');
     input.focus();
+    input.select(); // Seleciona o texto atual se houver
 
-    // Listener para buscar enquanto digita ou ao apertar Enter
-    input.onkeyup = (e) => {
+    // Eventos do Input
+    input.onkeydown = (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault(); // Evita reload se estiver num form
+        if (this.searchMatches.length > 0) {
+          // Shift + Enter = Volta | Enter = Avança
+          this.navigateSearch(e.shiftKey ? -1 : 1);
+        } else {
+          this.executeInternalSearch(input.value);
+        }
+      } else if (e.key === 'Escape') {
+        this.closeInternalSearch();
+      }
+    };
+
+    // Pesquisa em tempo real ao digitar
+    input.oninput = () => {
       this.executeInternalSearch(input.value);
-      if (e.key === 'Escape') this.closeInternalSearch();
     };
   },
 
@@ -980,61 +1011,100 @@ const app = {
     const content = document.getElementById('viewContent');
     const stats = document.getElementById('searchStats');
     
-    // 1. Limpa marcações anteriores de forma segura
-    const marks = content.querySelectorAll('mark');
-    marks.forEach(m => {
-        const parent = m.parentNode;
-        parent.replaceChild(document.createTextNode(m.textContent), m);
-        parent.normalize(); // Une fragmentos de texto
-    });
+    // 1. Limpa busca anterior
+    this.clearSearchMarks(content);
+    this.searchMatches = [];
+    this.currentSearchIndex = -1;
 
     if (!term || term.length < 2) {
       stats.textContent = "";
       return;
     }
 
-    // 2. Localiza e destaca apenas nos nós de texto (evita quebrar o HTML)
+    // 2. Protege o Regex contra caracteres especiais na busca
+    const safeTerm = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${safeTerm})`, 'gi');
+    
+    // 3. Busca apenas em nós de texto para não quebrar o HTML
     const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null, false);
     let node;
     const nodesToReplace = [];
-    const regex = new RegExp(`(${term})`, 'gi');
 
     while (node = walker.nextNode()) {
         if (node.nodeValue.match(regex)) nodesToReplace.push(node);
     }
 
-    let count = 0;
+    // 4. Embrulha os achados em <span> com <mark>
     nodesToReplace.forEach(textNode => {
-        const matches = textNode.nodeValue.match(regex);
-        if (matches) {
-            count += matches.length;
-            const span = document.createElement('span');
-            span.innerHTML = textNode.nodeValue.replace(regex, '<mark class="bg-yellow-400 text-black">$1</mark>');
-            textNode.parentNode.replaceChild(span, textNode);
-        }
+        const span = document.createElement('span');
+        span.className = 'search-wrapper-temp'; 
+        span.innerHTML = textNode.nodeValue.replace(regex, '<mark class="bg-yellow-300 dark:bg-yellow-500/80 text-black rounded-sm px-0.5">$1</mark>');
+        textNode.parentNode.replaceChild(span, textNode);
     });
 
-    // 3. Feedback visual
-    if (count > 0) {
-        stats.textContent = `${count} ocorrência(s)`;
-        const first = content.querySelector('mark');
-        if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // 5. Salva referências e ativa a primeira
+    this.searchMatches = Array.from(content.querySelectorAll('mark'));
+
+    if (this.searchMatches.length > 0) {
+        this.currentSearchIndex = 0;
+        this.highlightCurrentSearch();
     } else {
         stats.textContent = "Nenhum resultado";
     }
+  },
+
+  highlightCurrentSearch() {
+    const stats = document.getElementById('searchStats');
+    
+    // Reseta o estilo de todos os <mark>
+    this.searchMatches.forEach(mark => {
+        mark.className = 'bg-yellow-300 dark:bg-yellow-500/80 text-black rounded-sm px-0.5';
+    });
+
+    // Destaca o Atual (Laranja + Sombra)
+    const activeMark = this.searchMatches[this.currentSearchIndex];
+    if (activeMark) {
+        activeMark.className = 'bg-orange-500 text-white font-bold rounded-sm px-0.5 ring-2 ring-orange-400 ring-offset-2 dark:ring-offset-slate-900 transition-all';
+        activeMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Atualiza Stats (Ex: 1 de 5)
+    stats.textContent = `${this.currentSearchIndex + 1} de ${this.searchMatches.length}`;
+  },
+
+  navigateSearch(direction) {
+    if (this.searchMatches.length === 0) return;
+    
+    this.currentSearchIndex += direction;
+    
+    // Efeito de Loop (se passar do último, volta pro primeiro)
+    if (this.currentSearchIndex >= this.searchMatches.length) {
+        this.currentSearchIndex = 0;
+    } else if (this.currentSearchIndex < 0) {
+        this.currentSearchIndex = this.searchMatches.length - 1;
+    }
+
+    this.highlightCurrentSearch();
+  },
+
+  clearSearchMarks(content) {
+    // Restaura o texto original removendo os spans injetados
+    const spans = content.querySelectorAll('.search-wrapper-temp');
+    spans.forEach(span => {
+        const textNode = document.createTextNode(span.textContent);
+        span.parentNode.replaceChild(textNode, span);
+    });
+    content.normalize(); // Junta fragmentos de texto soltos
   },
 
   closeInternalSearch() {
     const modal = document.getElementById('internalSearchModal');
     const content = document.getElementById('viewContent');
     
-    // Limpa voltando ao estado original sem dar replace no HTML todo
-    const marks = content.querySelectorAll('mark');
-    marks.forEach(m => {
-        const parent = m.parentNode;
-        parent.replaceChild(document.createTextNode(m.textContent), m);
-        parent.normalize();
-    });
+    this.clearSearchMarks(content);
+    
+    this.searchMatches = [];
+    this.currentSearchIndex = -1;
 
     modal.classList.add('hidden');
     document.getElementById('internalSearchInput').value = "";
