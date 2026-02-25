@@ -2704,13 +2704,16 @@ window.onload = function () {
   }
 
 
-  function closeWelcomeModal() {
-      const dontShow = document.getElementById("dontShowDashboardAgain").checked;
-      if (dontShow) {
-          localStorage.setItem("intro_dashboard_shown", "true");
-      }
-      document.getElementById("welcomeModalDashboard").style.display = "none";
-  }
+
+      
+      window.closeWelcomeModal = function() {
+          const dontShow = document.getElementById("dontShowDashboardAgain").checked;
+          if (dontShow) {
+              localStorage.setItem("intro_dashboard_shown", "true");
+          }
+          document.getElementById("welcomeModalDashboard").style.display = "none";
+      };
+
 
   // Função para verificar se deve mostrar o modal ao carregar
   function checkWelcomeModal() {
