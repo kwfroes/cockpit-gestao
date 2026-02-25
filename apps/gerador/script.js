@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
    * @description Armazena referências a inputs, modais e botões em variáveis globais.
    */
   const dbName = "CafDatabase";
-  const dbVersion = 6;
+  const dbVersion = 7;
   const dbStatus = document.getElementById("db-status");
   const familyDbStatus = document.getElementById("family-db-status");
   const cnpjInputForDb = document.getElementById("cnpj");
