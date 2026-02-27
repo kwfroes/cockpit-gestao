@@ -156,7 +156,11 @@ function processarCSV() {
 
 async function converterExcelEMerge() {
   const excelInput = document.getElementById("xlsxFile");
-  // Nota: O input 'csvExtraFile' não é mais necessário no HTML, pode ocultá-lo.
+  
+  // Captura dos novos campos de filtro e modelo
+  const modelType = document.getElementById("exportModel").value;
+  const filterUFValue = document.getElementById("filterUF").value.trim().toUpperCase();
+  const filterCityValue = document.getElementById("filterCidade").value.trim().toLowerCase();
 
   if (!excelInput.files.length)
     return alert("Falta selecionar o arquivo Excel.");
@@ -171,8 +175,7 @@ async function converterExcelEMerge() {
   setTimeout(async () => {
     try {
       // --- PASSO 1: Ler o Excel Principal (Prioritário) ---
-      document.getElementById("convertStatus").innerText =
-        "Processando Excel...";
+      document.getElementById("convertStatus").innerText = "Processando Excel...";
       const arrayBuffer = await excelFile.arrayBuffer();
       const workbook = XLSX.read(arrayBuffer, {
         type: "array",
@@ -188,88 +191,87 @@ async function converterExcelEMerge() {
       });
 
       // Processa e Limpa o Excel
-      const listaExcelProcessada = jsonDataExcel.map((linha) => {
+      let listaExcelProcessada = jsonDataExcel.map((linha) => {
         let cpfBruto = linha["CPF_CNPJ"] ? String(linha["CPF_CNPJ"]) : "";
-        // Limpeza segura: remove tudo que não é letra ou número
         let cpfLimpo = cpfBruto.replace(/[^a-zA-Z0-9]/g, "");
 
-        let nomeLimpo = linha["NOME_FORNECEDOR"]
-          ? String(linha["NOME_FORNECEDOR"]).trim()
-          : "";
-        let dataRaw = linha["DATA_CADASTRO"]
-          ? String(linha["DATA_CADASTRO"]).trim()
-          : "";
-        let tipoRaw = linha["TIPO_DE_CADASTRO"]
-          ? String(linha["TIPO_DE_CADASTRO"]).trim()
-          : "";
+        let nomeLimpo = linha["NOME_FORNECEDOR"] ? String(linha["NOME_FORNECEDOR"]).trim().replace(/;/g, "") : "";
+        let dataRaw = linha["DATA_CADASTRO"] ? String(linha["DATA_CADASTRO"]).trim() : "";
+        let tipoRaw = linha["TIPO_DE_CADASTRO"] ? String(linha["TIPO_DE_CADASTRO"]).trim() : "";
 
-        return {
+        // Objeto base (Padrão)
+        let registro = {
           CPF_CNPJ: cpfLimpo,
           NOME_FORNECEDOR: nomeLimpo,
           DATA_CADASTRO: dataRaw === "" ? "0" : dataRaw,
           TIPO_DE_CADASTRO: tipoRaw === "" ? "null" : tipoRaw,
         };
+
+        // INCLUSÃO: Adiciona colunas extras se o modelo for geográfico
+        if (modelType === "geografico") {
+          registro["CIDADE"] = linha["CIDADE"] ? String(linha["CIDADE"]).trim() : "";
+          registro["UF"] = linha["UF"] ? String(linha["UF"]).trim().toUpperCase() : "";
+        }
+
+        return registro;
       });
 
-      // --- PASSO 2: Carregar Base Estática (JSON) ---
-      document.getElementById("convertStatus").innerText =
-        "Buscando base de dados...";
+      // INCLUSÃO: Aplica o filtro de extração (UF e Cidade)
+      if (modelType === "geografico") {
+        listaExcelProcessada = listaExcelProcessada.filter(item => {
+          const condicaoUF = filterUFValue === "" || item.UF === filterUFValue;
+          const condicaoCidade = filterCityValue === "" || (item.CIDADE && item.CIDADE.toLowerCase().includes(filterCityValue));
+          return condicaoUF && condicaoCidade;
+        });
+      }
 
-      // Busca o arquivo JSON que você salvou na pasta
+      // --- PASSO 2: Carregar Base Estática (JSON) ---
+      document.getElementById("convertStatus").innerText = "Buscando base de dados...";
       const response = await fetch("./arquives/banco_dados_estatico.json");
-      if (!response.ok)
-        throw new Error(
-          "Não foi possível carregar o banco_dados_estatico.json",
-        );
+      if (!response.ok) throw new Error("Não foi possível carregar o banco_dados_estatico.json");
       const listaEstatica = await response.json();
 
       // --- PASSO 3: Deduplicação Inteligente ---
       document.getElementById("convertStatus").innerText = "Cruzando dados...";
+      const cnpjsNoExcel = new Set(listaExcelProcessada.map((item) => item.CPF_CNPJ));
 
-      // Cria um "Conjunto" (Set) com todos os CNPJs do Excel para busca instantânea
-      const cnpjsNoExcel = new Set(
-        listaExcelProcessada.map((item) => item.CPF_CNPJ),
-      );
-
-      // Filtra a base estática: Mantém apenas quem NÃO está no Excel
       const listaEstaticaFiltrada = listaEstatica.filter((item) => {
-        // Se o CNPJ não existe no Excel, mantemos este item
         return !cnpjsNoExcel.has(item.CPF_CNPJ);
       });
 
       // --- PASSO 4: Merge (Unificação) ---
-      const listaFinal = [...listaExcelProcessada, ...listaEstaticaFiltrada];
+      // Se for geográfico, ignoramos a base estática. Se for padrão, unificamos.
+      const listaFinal = (modelType === "geografico") 
+        ? [...listaExcelProcessada] 
+        : [...listaExcelProcessada, ...listaEstaticaFiltrada];
+
+      // Atualiza a contagem do CSV Extra para exibir 0 se estiver no modo geográfico
+      document.getElementById("countCsv").innerText = (modelType === "geografico")
+        ? "0 (ignorado no modo geo)"
+        : listaEstaticaFiltrada.length.toLocaleString() + " (novos)";
 
       // --- PASSO 5: Gerar CSV ---
-      document.getElementById("convertStatus").innerText =
-        "Gerando arquivo final...";
+      document.getElementById("convertStatus").innerText = "Gerando arquivo final...";
       const csvOutput = Papa.unparse(listaFinal, {
         delimiter: ";;",
         quotes: false,
       });
 
       // Stats atualizados
-      document.getElementById("countExcel").innerText =
-        listaExcelProcessada.length.toLocaleString();
-      document.getElementById("countCsv").innerText =
-        listaEstaticaFiltrada.length.toLocaleString() + " (novos)";
-      document.getElementById("countTotal").innerText =
-        listaFinal.length.toLocaleString();
+      document.getElementById("countExcel").innerText = listaExcelProcessada.length.toLocaleString();
+      document.getElementById("countCsv").innerText = listaEstaticaFiltrada.length.toLocaleString() + " (novos)";
+      document.getElementById("countTotal").innerText = listaFinal.length.toLocaleString();
 
       // Link de Download
       const link = document.getElementById("downloadLinkConvert");
-      const fileName =
-        excelFile.name.replace(/\.[^/.]+$/, "") + "_UNIFICADO.csv";
-      const blob = new Blob(["\uFEFF" + csvOutput], {
-        type: "text/csv;charset=utf-8;",
-      });
+      const suffix = modelType === "geografico" ? "_GEO_UNIFICADO.csv" : "_UNIFICADO.csv";
+      const fileName = excelFile.name.replace(/\.[^/.]+$/, "") + suffix;
+      const blob = new Blob(["\uFEFF" + csvOutput], { type: "text/csv;charset=utf-8;" });
       link.href = URL.createObjectURL(blob);
       link.download = fileName;
 
       document.getElementById("resultConvert").classList.remove("hidden");
-      showToast(
-        `Sucesso! ${listaEstatica.length - listaEstaticaFiltrada.length} duplicados removidos.`,
-      );
+      showToast(`Sucesso! ${listaEstatica.length - listaEstaticaFiltrada.length} duplicados removidos.`);
     } catch (error) {
       console.error(error);
       alert("Erro no processo: " + error.message);
@@ -278,6 +280,20 @@ async function converterExcelEMerge() {
       document.getElementById("btnConvert").disabled = false;
     }
   }, 100);
+}
+
+function toggleGeoFilters() {
+  const model = document.getElementById("exportModel").value;
+  const ufDiv = document.getElementById("geoFilterUF");
+  const cityDiv = document.getElementById("geoFilterCidade");
+  
+  if (model === "geografico") {
+    ufDiv.classList.remove("hidden");
+    cityDiv.classList.remove("hidden");
+  } else {
+    ufDiv.classList.add("hidden");
+    cityDiv.classList.add("hidden");
+  }
 }
 
 // ==========================================

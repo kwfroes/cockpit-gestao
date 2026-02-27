@@ -933,6 +933,16 @@
               <div class="h-4 w-px bg-gray-300 dark:bg-slate-600 mx-1"></div>
 
               <button
+                onclick="app.previewLinksInEditor()"
+                class="toolbar-btn p-1.5 rounded hover:bg-blue-100 text-blue-600 text-xs font-bold flex items-center gap-1"
+                title="Testar links de leis no editor"
+              >
+                <span class="text-base">🔗</span> Links
+              </button>
+
+              <div class="h-4 w-px bg-gray-300 dark:bg-slate-600 mx-1"></div>
+
+              <button
                 onclick="app.autoFormat()"
                 class="toolbar-btn p-1.5 rounded hover:bg-yellow-100 text-yellow-600 text-xs font-bold flex items-center gap-1"
                 title="Aplicar formatação automática"
@@ -1039,6 +1049,22 @@
             </div>
         </div>
     </div>
+
+    <div id="lawPreviewPopup" class="hidden fixed z-[60] w-80 md:w-96 bg-white dark:bg-slate-800 shadow-2xl border dark:border-slate-700 rounded-xl overflow-hidden transition-all duration-200">
+        <div class="p-4 border-b dark:border-slate-700 bg-gray-50 dark:bg-slate-900 flex justify-between items-center">
+            <span id="previewPopupTag" class="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-blue-100 text-blue-700">Norma</span>
+            <button onclick="app.closeLawPreview()" class="text-gray-400 hover:text-red-500">&times;</button>
+        </div>
+        <div class="p-4">
+            <h4 id="previewPopupTitle" class="text-sm font-bold text-gray-800 dark:text-white mb-2 leading-tight uppercase"></h4>
+            <div id="previewPopupSnippet" class="text-xs text-gray-600 dark:text-gray-400 line-clamp-4 mb-4 italic"></div>
+            <button id="previewPopupGoTo" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded transition-colors">
+                Abrir Norma Completa
+            </button>
+        </div>
+    </div>
+
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
 
     <script src="script.js"></script>
   </body>
