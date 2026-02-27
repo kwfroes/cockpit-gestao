@@ -82,6 +82,8 @@
     margin-top: 2px;
 }
 
+
+
 /* --- ESTILOS DE IMPRESSÃO (PDF) - CORREÇÃO DEFINITIVA --- */
 @media print {
     /* 1. Reseta o layout de "App" (tela cheia sem scroll) para "Documento" (scroll natural) */

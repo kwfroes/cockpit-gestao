@@ -195,161 +195,181 @@
       </div>
     </div>
 
-    <div class="section-label">Gerador</div>
-    <div
-      class="app-card border-green bg-white dark:bg-slate-800 shadow-sm rounded-xl p-6 mb-8 border border-gray-100 dark:border-slate-700"
-    >
-      <h1
-        class="text-2xl font-bold text-gray-800 dark:text-white mb-2 border-b dark:border-slate-700 pb-2"
+  <div class="section-label">Gerador</div>
+      <div
+        class="app-card border-green bg-white dark:bg-slate-800 shadow-sm rounded-xl p-6 mb-8 border border-gray-100 dark:border-slate-700"
       >
-        Conversor Excel + Merge CSV
-      </h1>
-      <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-        Separador de saída: <b class="text-gray-800 dark:text-gray-200">(;;)</b>
-      </p>
-
-      <div class="mb-4">
-        <label
-          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-          >1. Arquivo Excel Principal (.xlsx)</label
+        <h1
+          class="text-2xl font-bold text-gray-800 dark:text-white mb-2 border-b dark:border-slate-700 pb-2"
         >
-        <input
-          type="file"
-          id="xlsxFile"
-          accept=".xlsx, .xls"
-          class="input-padrao w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 dark:file:bg-green-900/30 dark:file:text-green-300 dark:hover:file:bg-green-800/50 dark:bg-slate-900 dark:border-slate-600 rounded-lg border border-gray-200 p-2"
-        />
-      </div>
-
-      <div class="mb-6">
-        <label
-          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-          >2. Arquivo CSV Complementar (Fixo)</label
-        >
-        <input
-          type="file"
-          id="csvExtraFile"
-          accept=".csv"
-          class="input-padrao w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100 dark:file:bg-slate-700 dark:file:text-gray-300 dark:hover:file:bg-slate-600 dark:bg-slate-900 dark:border-slate-600 rounded-lg border border-gray-200 p-2"
-        />
-        <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">
-          Colunas esperadas: CNPJ; RAZÃO SOCIAL; EMAIL
+          Conversor Excel + Merge CSV
+        </h1>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+          Separador de saída: <b class="text-gray-800 dark:text-gray-200">(;;)</b>
         </p>
-      </div>
 
-      <button
-        id="btnConvert"
-        onclick="converterExcelEMerge()"
-        class="btn-success px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-md transition font-medium"
-      >
-        Processar e Unificar
-      </button>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 p-4 bg-gray-50 dark:bg-slate-900/50 rounded-lg border border-gray-200 dark:border-slate-700">
+          <div class="col-span-1 md:col-span-2">
+            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Modelo de Extração</label>
+            <select id="exportModel" onchange="toggleGeoFilters()" class="input-padrao w-full p-2 rounded-lg border border-gray-200 dark:border-slate-600 dark:bg-slate-900 dark:text-white">
+              <option value="padrao">Padrão (4 Colunas)</option>
+              <option value="geografico">Geográfico (Incluir Cidade/UF + Filtro)</option>
+            </select>
+          </div>
+          
+          <div id="geoFilterUF" class="hidden">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Filtrar UF (Ex: SP)</label>
+            <input type="text" id="filterUF" maxlength="2" placeholder="Todos" class="input-padrao w-full p-2 rounded-lg border border-gray-200 dark:border-slate-600 dark:bg-slate-900 dark:text-white uppercase" />
+          </div>
+          
+          <div id="geoFilterCidade" class="hidden">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Filtrar Cidade</label>
+            <input type="text" id="filterCidade" placeholder="Todas" class="input-padrao w-full p-2 rounded-lg border border-gray-200 dark:border-slate-600 dark:bg-slate-900 dark:text-white" />
+          </div>
+        </div>
 
-      <div id="loaderConvert" class="hidden text-center mt-4">
+        <div class="mb-4">
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >1. Arquivo Excel Principal (Fornec_Dados.xlsx)</label
+          >
+          <input
+            type="file"
+            id="xlsxFile"
+            accept=".xlsx, .xls"
+            class="input-padrao w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 dark:file:bg-green-900/30 dark:file:text-green-300 dark:hover:file:bg-green-800/50 dark:bg-slate-900 dark:border-slate-600 rounded-lg border border-gray-200 p-2"
+          />
+        </div>
+
+        <div class="mb-6">
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >2. Arquivo CSV Complementar (Fixo)</label
+          >
+          <input
+            type="file"
+            id="csvExtraFile"
+            accept=".csv"
+            class="input-padrao w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100 dark:file:bg-slate-700 dark:file:text-gray-300 dark:hover:file:bg-slate-600 dark:bg-slate-900 dark:border-slate-600 rounded-lg border border-gray-200 p-2"
+          />
+          <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">
+            Colunas esperadas: CNPJ; RAZÃO SOCIAL; EMAIL
+          </p>
+        </div>
+
+        <button
+          id="btnConvert"
+          onclick="converterExcelEMerge()"
+          class="btn-success px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-md transition font-medium"
+        >
+          Processar e Unificar
+        </button>
+
+        <div id="loaderConvert" class="hidden text-center mt-4">
+          <div
+            class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-green-600 dark:border-green-400"
+          ></div>
+          <p
+            id="convertStatus"
+            class="text-sm text-gray-600 dark:text-gray-400 mt-2"
+          >
+            Iniciando...
+          </p>
+        </div>
+
         <div
-          class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-green-600 dark:border-green-400"
-        ></div>
-        <p
-          id="convertStatus"
-          class="text-sm text-gray-600 dark:text-gray-400 mt-2"
+          id="resultConvert"
+          class="hidden border dark:border-slate-700 rounded-lg p-4 bg-gray-50 dark:bg-slate-900 mt-4"
         >
-          Iniciando...
+          <p class="text-sm text-green-700 dark:text-green-400 font-bold mb-2">
+            Sucesso! Arquivos unificados.
+          </p>
+          <ul class="text-sm text-gray-600 dark:text-gray-400 mb-4 space-y-1">
+            <li>
+              Linhas do Excel:
+              <span
+                id="countExcel"
+                class="font-bold text-gray-800 dark:text-white"
+                >0</span
+              >
+            </li>
+            <li>
+              Linhas do CSV Extra:
+              <span id="countCsv" class="font-bold text-gray-800 dark:text-white"
+                >0</span
+              >
+            </li>
+            <li>
+              Total Final:
+              <span
+                id="countTotal"
+                class="font-bold text-blue-600 dark:text-blue-400"
+                >0</span
+              >
+            </li>
+          </ul>
+          <a
+            id="downloadLinkConvert"
+            href="#"
+            class="block w-full bg-blue-600 text-white text-center py-2 rounded hover:bg-blue-700 transition shadow-sm font-medium"
+          >
+            Baixar CSV para Gerador de Mensagens
+          </a>
+        </div>
+      </div>
+
+      <div class="section-label">Utilidades</div>
+      <div
+        class="app-card border-purple bg-white dark:bg-slate-800 shadow-sm rounded-xl p-6 mb-8 border border-gray-100 dark:border-slate-700"
+      >
+        <h1
+          class="text-2xl font-bold text-gray-800 dark:text-white mb-2 border-b dark:border-slate-700 pb-2"
+        >
+          Conversor Excel p/ CSV (Alta Capacidade)
+        </h1>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+          Converte arquivos grandes (300k+ linhas). Gera um CSV separado por ponto
+          e vírgula <b class="text-gray-800 dark:text-gray-200">(;)</b> pronto
+          para a Ferramenta 1.
         </p>
+
+        <div class="mb-6">
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >Arquivo Excel (.xlsx)</label
+          >
+          <input
+            type="file"
+            id="xlsxGenFile"
+            accept=".xlsx, .xls"
+            class="input-padrao w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 dark:file:bg-purple-900/30 dark:file:text-purple-300 dark:hover:file:bg-purple-800/50 dark:bg-slate-900 dark:border-slate-600 rounded-lg border border-gray-200 p-2"
+          />
+        </div>
+
+        <button
+          id="btnGenConvert"
+          onclick="converterExcelGenerico()"
+          class="btn-primary px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg shadow-md transition font-medium"
+        >
+          Converter Agora
+        </button>
+
+        <div id="loaderGen" class="hidden text-center mt-4">
+          <div
+            class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-purple-600 dark:border-purple-400"
+          ></div>
+          <p id="statusGen" class="text-sm text-gray-600 dark:text-gray-400 mt-2">
+            Lendo arquivo gigante...
+          </p>
+        </div>
       </div>
 
       <div
-        id="resultConvert"
-        class="hidden border dark:border-slate-700 rounded-lg p-4 bg-gray-50 dark:bg-slate-900 mt-4"
+        id="toast"
+        class="fixed bottom-4 right-4 bg-gray-800 dark:bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50"
       >
-        <p class="text-sm text-green-700 dark:text-green-400 font-bold mb-2">
-          Sucesso! Arquivos unificados.
-        </p>
-        <ul class="text-sm text-gray-600 dark:text-gray-400 mb-4 space-y-1">
-          <li>
-            Linhas do Excel:
-            <span
-              id="countExcel"
-              class="font-bold text-gray-800 dark:text-white"
-              >0</span
-            >
-          </li>
-          <li>
-            Linhas do CSV Extra:
-            <span id="countCsv" class="font-bold text-gray-800 dark:text-white"
-              >0</span
-            >
-          </li>
-          <li>
-            Total Final:
-            <span
-              id="countTotal"
-              class="font-bold text-blue-600 dark:text-blue-400"
-              >0</span
-            >
-          </li>
-        </ul>
-        <a
-          id="downloadLinkConvert"
-          href="#"
-          class="block w-full bg-blue-600 text-white text-center py-2 rounded hover:bg-blue-700 transition shadow-sm font-medium"
-        >
-          Baixar CSV para Gerador de Mensagens
-        </a>
+        Operação concluída com sucesso!
       </div>
-    </div>
-
-    <div class="section-label">Utilidades</div>
-    <div
-      class="app-card border-purple bg-white dark:bg-slate-800 shadow-sm rounded-xl p-6 mb-8 border border-gray-100 dark:border-slate-700"
-    >
-      <h1
-        class="text-2xl font-bold text-gray-800 dark:text-white mb-2 border-b dark:border-slate-700 pb-2"
-      >
-        Conversor Excel p/ CSV (Alta Capacidade)
-      </h1>
-      <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-        Converte arquivos grandes (300k+ linhas). Gera um CSV separado por ponto
-        e vírgula <b class="text-gray-800 dark:text-gray-200">(;)</b> pronto
-        para a Ferramenta 1.
-      </p>
-
-      <div class="mb-6">
-        <label
-          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-          >Arquivo Excel (.xlsx)</label
-        >
-        <input
-          type="file"
-          id="xlsxGenFile"
-          accept=".xlsx, .xls"
-          class="input-padrao w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 dark:file:bg-purple-900/30 dark:file:text-purple-300 dark:hover:file:bg-purple-800/50 dark:bg-slate-900 dark:border-slate-600 rounded-lg border border-gray-200 p-2"
-        />
-      </div>
-
-      <button
-        id="btnGenConvert"
-        onclick="converterExcelGenerico()"
-        class="btn-primary px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg shadow-md transition font-medium"
-      >
-        Converter Agora
-      </button>
-
-      <div id="loaderGen" class="hidden text-center mt-4">
-        <div
-          class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-purple-600 dark:border-purple-400"
-        ></div>
-        <p id="statusGen" class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-          Lendo arquivo gigante...
-        </p>
-      </div>
-    </div>
-
-    <div
-      id="toast"
-      class="fixed bottom-4 right-4 bg-gray-800 dark:bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50"
-    >
-      Operação concluída com sucesso!
-    </div>
 
     <div id="welcomeModalConversor" class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all border dark:border-slate-700">

@@ -8537,7 +8537,17 @@
       "Alvará de Vigilância Sanitária"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "M"
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4789-0/05",
+        "descricao": "Comércio varejista de produtos saneantes domissanitários"
+      },
+      {
+        "codigo": "2052-5/00",
+        "descricao": "Fabricação de desinfestantes domissanitários"
+      }
+    ]
   },
   {
     "Família": "68.10",
@@ -8546,7 +8556,17 @@
       "Alvará de Vigilância Sanitária"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "M"
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4789-0/05",
+        "descricao": "Comércio varejista de produtos saneantes domissanitários"
+      },
+      {
+        "codigo": "2052-5/00",
+        "descricao": "Fabricação de desinfestantes domissanitários"
+      }
+    ]
   },
   {
     "Família": "68.15",
@@ -8582,11 +8602,22 @@
   {
     "Família": "68.40",
     "Descrição": "PESTICIDAS E DESINFETANTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Alvará de Vigilância Sanitária"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "M"
+    "CNAEs": [
+      {
+        "codigo": "4789-0/05",
+        "descricao": "Comércio varejista de produtos saneantes domissanitários"
+      },
+      {
+        "codigo": "2052-5/00",
+        "descricao": "Fabricação de desinfestantes domissanitários"
+      }
+    ]
   },
   {
     "Família": "68.50",

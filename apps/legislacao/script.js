@@ -73,10 +73,22 @@ const app = {
     // Intercepta Ctrl+F (ou Cmd+F no Mac)
     window.addEventListener("keydown", (e) => {
       if ((e.ctrlKey || e.metaKey) && (e.key === 'f' || e.key === 'F')) {
-        // Só bloqueia o Ctrl+F do navegador se o Leitor estiver aberto
-        if (!document.getElementById("lawViewer").classList.contains("hidden")) {
+        const isEditorOpen = !document.getElementById("editorModal").classList.contains("hidden");
+        const isViewerOpen = !document.getElementById("lawViewer").classList.contains("hidden");
+
+        if (isEditorOpen || isViewerOpen) {
           e.preventDefault();
+          
+          // Se for no editor, foca o campo de busca mas garante que o modal fique por cima
           this.internalSearch();
+          
+          // Ajuste de Z-Index dinâmico para o modal de busca
+          const searchModal = document.getElementById("internalSearchModal");
+          if (isEditorOpen) {
+              searchModal.style.zIndex = "100"; // Acima do modal do editor (50)
+          } else {
+              searchModal.style.zIndex = "50";
+          }
         }
       }
     });
@@ -449,7 +461,7 @@ const app = {
     this.renderList(document.getElementById("searchInput").value);
   },
 
-renderList(searchTerm = "") {
+  renderList(searchTerm = "") {
     const listEl = document.getElementById("lawList");
     const paginationEl = document.getElementById("paginationControls");
     listEl.innerHTML = "";
@@ -594,6 +606,8 @@ renderList(searchTerm = "") {
     // Isso garante que o texto comece sempre do topo
     document.getElementById("viewerContainer").scrollTop = 0;
 
+
+
     // 2. Prepara HTML da Esfera
     let sphereTagHtml = "";
     const sphere = item.sphere || "Federal";
@@ -647,8 +661,12 @@ renderList(searchTerm = "") {
     document.getElementById("viewDate").textContent =
       `Publicado em: ${new Date(item.date).toLocaleDateString("pt-BR", { dateStyle: "long" })}`;
 
-    // 5. Lógica de Destaque (Highlight)
+
     let contentHtml = item.content;
+    contentHtml = this.linkifyNormas(contentHtml);
+
+
+    // 5. Lógica de Destaque (Highlight)
     if (searchTerm && searchTerm.length > 2) {
       try {
         const regex = new RegExp(`(${searchTerm})`, "gi");
@@ -660,6 +678,7 @@ renderList(searchTerm = "") {
         console.warn(e);
       }
     }
+
     document.getElementById("viewContent").innerHTML = contentHtml;
 
     // 6. Mostra o visualizador
@@ -1066,7 +1085,7 @@ renderList(searchTerm = "") {
 
   // 1. Localizar termo dentro da norma aberta
   // Abre o modal de busca em vez de usar o prompt
-// --- BUSCA INTERNA (Avançada) ---
+  // --- BUSCA INTERNA (Avançada) ---
 
   internalSearch() {
     const modal = document.getElementById('internalSearchModal');
@@ -1248,6 +1267,155 @@ renderList(searchTerm = "") {
           console.warn("Artigo não encontrado nesta norma.");
       }
   },
+
+  // Dentro do objeto app:
+  // 1. Nova função para converter menções em links (Links em Lote)
+  linkifyNormas(htmlContent) {
+      if (!htmlContent) return "";
+
+    // Limpeza de espaços HTML especiais (&nbsp;) que quebram a Regex
+    let cleanHtml = htmlContent.replace(/&nbsp;/g, ' ');
+      
+    // Regex melhorada: lida com espaços opcionais e formatos variados de números
+    const regex = /(Lei|Decreto|Instrução|Portaria|Resolução)\s*(Federal|Estadual|Municipal|da\sBahia|do\sEstado)?\s*(?:nº\s*)?([\d\.\/-]+)/gi;
+
+        return htmlContent.replace(regex, (match, type, scope, number) => {
+            // Normalização agressiva: apenas o TIPO + NÚMEROS
+            const cleanNumber = number.replace(/[^\d]/g, ""); 
+            const typeUpper = type.toUpperCase();
+            
+            const found = this.data.find(item => {
+                if (item.id === this.currentId) return false;
+                
+                const titleUpper = item.title.toUpperCase();
+                const itemNumberOnly = item.title.replace(/[^\d]/g, "");
+                
+                // Compara apenas TIPO e a sequência numérica, ignorando o "Federal/Estadual" do texto
+                return titleUpper.includes(typeUpper) && 
+                      (titleUpper.includes(number.toUpperCase()) || (cleanNumber && itemNumberOnly.includes(cleanNumber)));
+            });
+
+            if (found) {
+                return `<a href="javascript:void(0)" 
+                          onclick="app.showLawPreview(event, ${found.id})" 
+                          class="text-blue-600 dark:text-blue-400 underline decoration-dotted font-bold hover:text-blue-800 transition-colors">
+                          ${match}
+                        </a>`;
+            }
+            return match;
+        });
+    },
+
+// 2. Mostrar o Popup
+showLawPreview(event, id) {
+    const item = this.data.find(x => x.id === id);
+    if (!item) return;
+
+    const popup = document.getElementById('lawPreviewPopup');
+    const title = document.getElementById('previewPopupTitle');
+    const snippet = document.getElementById('previewPopupSnippet');
+    const tag = document.getElementById('previewPopupTag');
+    const btnGo = document.getElementById('previewPopupGoTo');
+
+    title.textContent = item.title;
+    tag.textContent = item.type;
+    
+    // Limpa o HTML e pega os primeiros 200 caracteres para o resumo
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = item.content;
+    snippet.textContent = tempDiv.innerText.substring(0, 200) + "...";
+
+    btnGo.onclick = () => {
+        this.openViewer(item.id);
+        this.closeLawPreview();
+    };
+
+    // Posicionamento inteligente (perto do clique)
+    popup.classList.remove('hidden');
+    const x = Math.min(event.clientX, window.innerWidth - 400);
+    const y = Math.min(event.clientY, window.innerHeight - 250);
+    
+    popup.style.left = `${x}px`;
+    popup.style.top = `${y}px`;
+},
+
+// 3. Add botão para relacionar na caixa de texto
+previewLinksInEditor() {
+    const editor = document.getElementById("editContent");
+    if (!editor) return;
+
+    let content = editor.innerHTML;
+    let linkCount = 0;
+
+    // 1. Normalização do conteúdo (remove espaços HTML que quebram Regex)
+    let cleanHtml = content.replace(/&nbsp;/g, ' ');
+    
+    // 2. Regex para identificar Normas Jurídicas
+    const regex = /(Lei|Decreto|Instrução|Portaria|Resolução)\s*(Federal|Estadual|Municipal|da\sBahia|do\sEstado)?\s*(?:nº\s*)?([\d\.\/-]+)/gi;
+
+    // 3. Processamento e Cruzamento com a Biblioteca (this.data)
+    const linkedContent = cleanHtml.replace(regex, (match, type, scope, number) => {
+        const cleanNumber = number.replace(/[^\d]/g, ""); 
+        const typeUpper = type.toUpperCase();
+        
+        const found = this.data.find(item => {
+            if (item.id === this.currentId) return false;
+            const titleUpper = item.title.toUpperCase();
+            const itemNumberOnly = item.title.replace(/[^\d]/g, "");
+            
+            return titleUpper.includes(typeUpper) && 
+                   (itemNumberOnly === cleanNumber || titleUpper.includes(number.toUpperCase()));
+        });
+
+        if (found) {
+            linkCount++;
+            return `<a href="javascript:void(0)" 
+                        onclick="app.showLawPreview(event, ${found.id})" 
+                        class="text-blue-600 dark:text-blue-400 underline decoration-dotted font-bold hover:text-blue-800">
+                        ${match}
+                    </a>`;
+        }
+        return match;
+    });
+
+    // 4. Atualização da UI e Feedback via Toast
+    if (linkCount > 0) {
+        editor.innerHTML = linkedContent;
+        this.showToast(`${linkCount} link(s) gerado(s) com sucesso!`, 'success');
+    } else {
+        this.showToast("Nenhuma citação correspondente encontrada na biblioteca.", 'warning');
+    }
+},
+
+showToast(message, type = 'success') {
+    const container = document.getElementById("toast-container");
+    const toast = document.createElement("div");
+    
+    // Cores baseadas no tipo
+    const bgColor = type === 'success' ? 'bg-green-600' : 'bg-amber-500';
+
+    toast.className = `${bgColor} text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-500 translate-y-10 opacity-0 flex items-center gap-2`;
+    toast.innerHTML = `
+        <span class="font-medium">${message}</span>
+    `;
+
+    container.appendChild(toast);
+
+    // Animação de entrada
+    setTimeout(() => {
+        toast.classList.remove('translate-y-10', 'opacity-0');
+    }, 100);
+
+    // Auto-destruição
+    setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-x-full');
+        setTimeout(() => toast.remove(), 500);
+    }, 3000);
+},
+
+closeLawPreview() {
+    document.getElementById('lawPreviewPopup').classList.add('hidden');
+},
 
 
 };
