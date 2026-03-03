@@ -509,5 +509,30 @@ window.normalizeCnaeInput = (input) => {
     }
 };
 
+// --- NAVEGAÇÃO POR TECLADO ---
+document.addEventListener('keydown', (e) => {
+    // Ignora se o usuário estiver digitando em um campo de texto (busca, formulário ou jump-page)
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+        return;
+    }
+
+    const totalItems = filteredData.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+
+    if (e.key === 'ArrowRight') {
+        // Seta para Direita: Próxima Página
+        if ((currentPage * itemsPerPage) < totalItems) {
+            currentPage++;
+            renderGrid();
+        }
+    } else if (e.key === 'ArrowLeft') {
+        // Seta para Esquerda: Página Anterior
+        if (currentPage > 1) {
+            currentPage--;
+            renderGrid();
+        }
+    }
+});
+
 // Inicia o App
 initApp();
