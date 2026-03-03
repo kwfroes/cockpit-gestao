@@ -819,56 +819,126 @@
   {
     "Família": "01.36",
     "Descrição": "LOCACAO DE AERONAVES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7719-5/02",
+        "descricao": "Locação de aeronaves sem tripulação"
+      },
+      {
+        "codigo": "5112-9/01",
+        "descricao": "Serviço de táxi aéreo e locação de aeronaves com tripulação"
+      }
+    ]
   },
   {
     "Família": "01.37",
     "Descrição": "LOCACAO DE ANDAIMES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7732-2/02",
+        "descricao": "Aluguel de andaimes"
+      }
+    ]
   },
   {
     "Família": "01.38",
     "Descrição": "LOCACAO DE EMBARCACAO MARITIMA/FLUVIAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7721-7/00",
+        "descricao": "Aluguel de equipamentos recreativos e esportivos"
+      },
+      {
+        "codigo": "5091-2/01",
+        "descricao": "Transporte por navegação de travessia, municipal"
+      },
+      {
+        "codigo": "7719-5/01",
+        "descricao": "Locação de embarcações sem tripulação, exceto para fins recreativos"
+      }
+    ]
   },
   {
     "Família": "01.39",
     "Descrição": "LOCACAO DE EQUIP DE AUDIOVISUAL/ELETRODOMESTICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7739-0/03",
+        "descricao": "Aluguel de palcos, coberturas e outras estruturas de uso temporário, exceto andaimes"
+      },
+      {
+        "codigo": "7729-2/02",
+        "descricao": "Aluguel de móveis, utensílios e aparelhos de uso doméstico e pessoal; instrumentos musicais"
+      },
+      {
+        "codigo": "7739-0/99",
+        "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+      }
+    ]
   },
   {
     "Família": "01.40",
     "Descrição": "LOCACAO DE EQUIPAMENTO DE ALARME",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7739-0/99",
+        "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+      }
+    ]
   },
   {
     "Família": "01.41",
     "Descrição": "LOCACAO DE EQUIPAMENTO DE LABORATORIO E ELETRO - MEDICINAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7739-0/99",
+        "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+      },
+      {
+        "codigo": "7729-2/03",
+        "descricao": "Aluguel de material médico"
+      },
+      {
+        "codigo": "7739-0/02",
+        "descricao": "Aluguel de equipamentos científicos, médicos e hospitalares, sem operador"
+      }
+    ]
   },
   {
     "Família": "01.42",
