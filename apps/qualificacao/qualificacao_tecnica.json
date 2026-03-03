@@ -133,6 +133,8 @@
   {
     "Família": "01.06",
     "Descrição": "ARMAZENAGEM EM GERAL (FRIGORIFICA, GRAO)",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Alvará de Vigilância Sanitária",
       "Atestado de Capacidade Técnica"
@@ -140,56 +142,122 @@
     "Documentos Elegíveis": [
       "Ministério da Agricultura Abastecimento"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "5211-7/01",
+        "descricao": "Armazéns gerais - emissão de warrant"
+      },
+      {
+        "codigo": "5211-7/99",
+        "descricao": "Depósitos de mercadorias para terceiros, exceto armazéns gerais e guarda móveis"
+      }
+    ]
   },
   {
     "Família": "01.07",
     "Descrição": "ASSINATURA E DISTRIBUICAO DE JORNAIS, REVISTAS E PERIODICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4618-4/03",
+        "descricao": "Representantes comerciais e agentes do comércio de jornais, revistas e outras publicações"
+      },
+      {
+        "codigo": "4761-0/02",
+        "descricao": "Comércio varejista de jornais e revistas"
+      }
+    ]
   },
   {
     "Família": "01.08",
     "Descrição": "BUFFET, REFEICOES E LANCHES PARA EVENTOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "5611-2/01",
+        "descricao": "Restaurantes e similares"
+      },
+      {
+        "codigo": "5620-1/01",
+        "descricao": "Fornecimento de alimentos preparados preponderantemente para empresas"
+      },
+      {
+        "codigo": "5620-1/02",
+        "descricao": "Serviços de alimentação para eventos e recepções - bufê"
+      }
+    ]
   },
   {
     "Família": "01.09",
     "Descrição": "CHAVEIRO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9529-1/02",
+        "descricao": "Chaveiros"
+      }
+    ]
   },
   {
     "Família": "01.10",
     "Descrição": "CLIPPING - LEITURA E RECORTES DE DIARIOS OFICIAIS, JORNAIS E REVISTAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6399-2/00",
+        "descricao": "Outras atividades de prestação de serviços de informação não especificadas anteriormente"
+      },
+      {
+        "codigo": "7319-0/04",
+        "descricao": "Consultoria em publicidade"
+      }
+    ]
   },
   {
     "Família": "01.11",
     "Descrição": "COLETA E TRANSPORTE DE DOCUMENTOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "5320-2/01",
+        "descricao": "Serviços de malote não realizados pelo correio nacional"
+      },
+      {
+        "codigo": "5320-2/02",
+        "descricao": "Serviços de entrega rápida"
+      }
+    ]
   },
   {
     "Família": "01.12",
     "Descrição": "ADMINISTRACAO DE PLANOS, PROGRAMAS E SERVICOS DE SAUDE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
@@ -198,146 +266,376 @@
       "CRM - Conselho Regional de Medicina",
       "Conselho Regional de Odontologia"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6550-2/00",
+        "descricao": "Planos de saúde"
+      },
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      },
+      {
+        "codigo": "8690-9/01",
+        "descricao": "Atividades de práticas integrativas e complementares em saúde humana"
+      }
+    ]
   },
   {
     "Família": "01.13",
     "Descrição": "CONFECCAO DE CARIMBOS, PLACAS E DISTINTIVOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3299-0/03",
+        "descricao": "Fabricação de letras, letreiros e placas de qualquer material, exceto luminosos"
+      },
+      {
+        "codigo": "3299-0/02",
+        "descricao": "Fabricação de canetas, lápis e outros artigos para escritório"
+      }
+    ]
   },
   {
     "Família": "01.14",
     "Descrição": "CONFECCAO DE PASTAS,CRACHAS,BRINDES E ITENS DE ESCRITORIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3299-0/02",
+        "descricao": "Fabricação de canetas, lápis e outros artigos para escritório"
+      },
+      {
+        "codigo": "1813-0/99",
+        "descricao": "Impressão de material para outros usos"
+      },
+      {
+        "codigo": "1813-0/01",
+        "descricao": "Impressão de material para uso publicitário"
+      },
+      {
+        "codigo": "4647-8/01",
+        "descricao": "Comércio atacadista de artigos de escritório e de papelaria"
+      },
+      {
+        "codigo": "4761-0/03",
+        "descricao": "Comércio varejista de artigos de papelaria"
+      },
+      {
+        "codigo": "4789-0/01",
+        "descricao": "Comércio varejista de suvenires, bijuterias e artesanatos"
+      }
+    ]
   },
   {
     "Família": "01.15",
     "Descrição": "CONFECCAO DE ARTIGOS EM FIBRA DE VIDRO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "2319-2/00",
+        "descricao": "Fabricação de artigos de vidro"
+      },
+      {
+        "codigo": "1323-5/00",
+        "descricao": "Tecelagem de fios de fibras artificiais e sintéticas"
+      }
+    ]
   },
   {
     "Família": "01.16",
     "Descrição": "POSTAGEM",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "5310-5/01",
+        "descricao": "Atividades do correio nacional"
+      },
+      {
+        "codigo": "5310-5/02",
+        "descricao": "Atividades de franqueadas do correio nacional"
+      },
+      {
+        "codigo": "5320-2/01",
+        "descricao": "Serviços de malote não realizados pelo correio nacional"
+      },
+      {
+        "codigo": "5320-2/02",
+        "descricao": "Serviços de entrega rápida"
+      }
+    ]
   },
   {
     "Família": "01.17",
     "Descrição": "CONFECCAO DE MOLDURAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "1629-3/01",
+        "descricao": "Fabricação de artefatos diversos de madeira, exceto móveis"
+      },
+      {
+        "codigo": "1629-3/02",
+        "descricao": "Fabricação de artefatos diversos de cortiça, bambu, palha, vime e outros materiais trançados, exceto móveis"
+      },
+      {
+        "codigo": "2330-3/99",
+        "descricao": "Fabricação de outros artefatos e produtos de concreto, cimento, fibrocimento, gesso e materiais semelhantes"
+      },
+      {
+        "codigo": "2599-3/99",
+        "descricao": "Fabricação de outros produtos de metal não especificados anteriormente"
+      },
+      {
+        "codigo": "2229-3/99",
+        "descricao": "Fabricação de artefatos de material plástico para outros usos não especificados anteriormente"
+      }
+    ]
   },
   {
     "Família": "01.18",
     "Descrição": "DESPACHOS ADUANEIROS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "5250-8/02",
+        "descricao": "Atividades de despachantes aduaneiros"
+      },
+      {
+        "codigo": "5250-8/01",
+        "descricao": "Comissaria de despachos"
+      }
+    ]
   },
   {
     "Família": "01.19",
     "Descrição": "DIVULGACAO ESCRITA, FALADA E TELEVISADA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7311-4/00",
+        "descricao": "Agências de publicidade"
+      },
+      {
+        "codigo": "7319-0/03",
+        "descricao": "Marketing direto"
+      },
+      {
+        "codigo": "7319-0/04",
+        "descricao": "Consultoria em publicidade"
+      },
+      {
+        "codigo": "5911-1/02",
+        "descricao": "Produção de filmes para publicidade"
+      },
+      {
+        "codigo": "6319-4/00",
+        "descricao": "Portais, provedores de conteúdo e outros serviços de informação na internet"
+      }
+    ]
   },
   {
     "Família": "01.20",
     "Descrição": "ARTE GRAFICA DE SEGURANCA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "1812-1/00",
+        "descricao": "Impressão de material de segurança"
+      }
+    ]
   },
   {
     "Família": "01.21",
     "Descrição": "ARTE GRAFICA NORMAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "1813-0/99",
+        "descricao": "Impressão de material para outros usos"
+      },
+      {
+        "codigo": "1813-0/01",
+        "descricao": "Impressão de material para uso publicitário"
+      },
+      {
+        "codigo": "1821-1/00",
+        "descricao": "Serviços de pré impressão"
+      },
+      {
+        "codigo": "7410-2/99",
+        "descricao": "Atividades de design não especificadas anteriormente"
+      },
+      {
+        "codigo": "5829-8/00",
+        "descricao": "Edição integrada à impressão de cadastros, listas e de outros produtos gráficos"
+      }
+    ]
   },
   {
     "Família": "01.22",
     "Descrição": "EMBALAGEM/ETIQUETAGEM DE ENCOMENDAS E DOCUMENTOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8292-0/00",
+        "descricao": "Envasamento e empacotamento sob contrato"
+      },
+      {
+        "codigo": "1813-0/99",
+        "descricao": "Impressão de material para outros usos"
+      },
+      {
+        "codigo": "5310-5/02",
+        "descricao": "Atividades de franqueadas do correio nacional"
+      }
+    ]
   },
   {
     "Família": "01.23",
     "Descrição": "ADESTRAMENTO DE ANIMAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9609-2/07",
+        "descricao": "Alojamento de animais domésticos"
+      },
+      {
+        "codigo": "8011-1/02",
+        "descricao": "Serviços de adestramento de cães de guarda"
+      }
+    ]
   },
   {
     "Família": "01.24",
     "Descrição": "ESTACIONAMENTO DE VEICULOS AUTOMOTORES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "5223-1/00",
+        "descricao": "Estacionamento de veículos"
+      }
+    ]
   },
   {
     "Família": "01.25",
     "Descrição": "ADMINISTRACAO E GERENCIAMENTO DE ABASTECIMENTO DA FROTA DE VEICULOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8299-7/99",
+        "descricao": "Outras atividades de serviços prestados principalmente às empresas não especificadas anteriormente"
+      },
+      {
+        "codigo": "7490-1/04",
+        "descricao": "Atividades de intermediação e agenciamento de serviços e negócios em geral, exceto imobiliários"
+      },
+      {
+        "codigo": "4731-8/00",
+        "descricao": "Comércio varejista de combustíveis para veículos automotores"
+      }
+    ]
   },
   {
     "Família": "01.26",
     "Descrição": "LOCACAO DE EQUIPAMENTOS PARA SEGURANCA/VIGILANCIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7739-0/99",
+        "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+      }
+    ]
   },
   {
     "Família": "01.27",
     "Descrição": "LOCACAO DE EQUIP/MAQ P/ JOGOS, RECREACAO, ATIV. FISICAS E EDUCACIONAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7721-7/00",
+        "descricao": "Aluguel de equipamentos recreativos e esportivos"
+      }
+    ]
   },
   {
     "Família": "01.28",
-    "Descrição": "FORNECIMENTO CONTINUO DE REFEICOES.",
+    "Descrição": "FORNECIMENTO CONTINUO DE REFEICOES",
     "Documentos Exigidos": [
       "CRN - Conselho Regional de Nutrição",
       "Atestado de Capacidade Técnica"
@@ -346,29 +644,67 @@
       "Alvará de Vigilância Sanitária",
       "Declaração de Dispensa de Ato Público - Baixo Risco"
     ],
-    "Tipo": "S"
+    "Tipo": "S",
+    "CNAEs": [
+      {
+        "codigo": "5611-2/01",
+        "descricao": "Restaurantes e similares"
+      },
+      {
+        "codigo": "5620-1/01",
+        "descricao": "Fornecimento de alimentos preparados preponderantemente para empresas"
+      },
+      {
+        "codigo": "5620-1/02",
+        "descricao": "Serviços de alimentação para eventos e recepções - bufê"
+      }
+    ]
   },
   {
     "Família": "01.29",
     "Descrição": "SERVICOS FOTOGRAFICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7420-0/02",
+        "descricao": "Atividades de produção de fotografias aéreas e submarinas"
+      },
+      {
+        "codigo": "7420-0/03",
+        "descricao": "Laboratórios fotográficos"
+      },
+      {
+        "codigo": "7420-0/01",
+        "descricao": "Atividades de produção de fotografias, exceto aérea e submarina"
+      }
+    ]
   },
   {
     "Família": "01.30",
     "Descrição": "ADMINISTRACAO DE BILHETERIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7990-2/00",
+        "descricao": "Serviços de reservas e outros serviços de turismo não especificados anteriormente"
+      }
+    ]
   },
   {
     "Família": "01.31",
     "Descrição": "SERVICOS DE TRATAMENTO DE AGUA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Alvará de Vigilância Sanitária",
       "Atestado de Capacidade Técnica"
@@ -378,34 +714,76 @@
       "CRQ - Conselho Regional de Química",
       "Certidão de Acervo Técnico com Atestado"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3600-6/01",
+        "descricao": "Captação, tratamento e distribuição de água"
+      }
+    ]
   },
   {
     "Família": "01.32",
     "Descrição": "SERVICO DE IMPRESSAO CORPORATIVA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "1821-1/00",
+        "descricao": "Serviços de pré-impressão"
+      },
+      {
+        "codigo": "1813-0/99",
+        "descricao": "Impressão de material para outros usos"
+      }
+    ]
   },
   {
     "Família": "01.33",
     "Descrição": "LAVANDERIA E TINTURARIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "1340-5/02",
+        "descricao": "Alvejamento, tingimento e torção em fios, tecidos, artefatos têxteis e peças do vestuário"
+      },
+      {
+        "codigo": "9601-7/03",
+        "descricao": "Toalheiros"
+      },
+      {
+        "codigo": "9601-7/02",
+        "descricao": "Tinturarias"
+      },
+      {
+        "codigo": "9601-7/01",
+        "descricao": "Lavanderias"
+      }
+    ]
   },
   {
     "Família": "01.34",
     "Descrição": "LEILAO E ALIENACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8299-7/04",
+        "descricao": "Leiloeiros independentes"
+      }
+    ]
   },
   {
     "Família": "01.35",
@@ -1001,7 +1379,7 @@
   },
   {
     "Família": "01.95",
-    "Descrição": "GESTÃO PLENA DO SISTEMA ESTADUAL DE SAÚDE - SUS.",
+    "Descrição": "GESTÃO PLENA DO SISTEMA ESTADUAL DE SAÚDE - SUS",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
@@ -1579,7 +1957,7 @@
   },
   {
     "Família": "02.50",
-    "Descrição": "SERVIÇOS DE LABORATORIO DE ANATOMIA PATOLOGICA.",
+    "Descrição": "SERVIÇOS DE LABORATORIO DE ANATOMIA PATOLOGICA",
     "Documentos Exigidos": [
       "Alvará de Vigilância Sanitária",
       "Atestado de Capacidade Técnica"
@@ -1589,7 +1967,7 @@
   },
   {
     "Família": "02.51",
-    "Descrição": "CONSULTORIA, ASSESSORIA E ESTUDOS ARQUEOLOGICOS.",
+    "Descrição": "CONSULTORIA, ASSESSORIA E ESTUDOS ARQUEOLOGICOS",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
@@ -1626,7 +2004,7 @@
   },
   {
     "Família": "02.55",
-    "Descrição": "SERVIÇOS DE LAVANDERIA HOSPITALAR.",
+    "Descrição": "SERVIÇOS DE LAVANDERIA HOSPITALAR",
     "Documentos Exigidos": [
       "Alvará de Vigilância Sanitária",
       "Atestado de Capacidade Técnica"
@@ -1837,7 +2215,7 @@
   },
   {
     "Família": "02.76",
-    "Descrição": "PROGRAMA DE APOIO PROFISSIONAL A ALUNOS DA REDE PUBLICA.",
+    "Descrição": "PROGRAMA DE APOIO PROFISSIONAL A ALUNOS DA REDE PUBLICA",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
@@ -2461,7 +2839,7 @@
   },
   {
     "Família": "04.09",
-    "Descrição": "MANUTENCAO DE ELEVADORES, ESCADAS ROLANTES, MONTACARGAS, TALHAS,MONOV.",
+    "Descrição": "MANUTENCAO DE ELEVADORES, ESCADAS ROLANTES, MONTACARGAS, TALHAS,MONOV",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
@@ -3050,7 +3428,7 @@
   },
   {
     "Família": "04.63",
-    "Descrição": "INSPECAO DE VEICULOS AUTOMOTORES A GNV.",
+    "Descrição": "INSPECAO DE VEICULOS AUTOMOTORES A GNV",
     "Documentos Exigidos": [
       "INMETRO - ABNT",
       "Atestado de Capacidade Técnica"
@@ -9037,7 +9415,7 @@
   },
   {
     "Família": "70.48",
-    "Descrição": "CARTUCHO DE TINTA E TONER ORIGINAIS PARA IMPRESSORA OLIVETTI.",
+    "Descrição": "CARTUCHO DE TINTA E TONER ORIGINAIS PARA IMPRESSORA OLIVETTI",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
     "Tipo": "M",

@@ -6,6 +6,7 @@ let sugPage = 1;
 const sugPerPage = 8;
 let currentSugList = [];
 let selectedSug = new Set();
+let lastEditedIndex = null;
 
 const grid = document.getElementById('family-grid');
 const searchInput = document.getElementById('search-family');
@@ -47,7 +48,7 @@ async function initApp() {
 }
 
 // --- FILTROS E RENDERIZAÇÃO ---
-function applyFilters() {
+function applyFilters(resetPage = true) {
     const term = searchInput.value.toLowerCase();
     const type = typeFilter.value;
     const onlyTerceirizado = terceirizadoFilter.checked;
@@ -67,23 +68,48 @@ function applyFilters() {
         return textMatch && typeMatch && terceirizadoMatch;
     });
 
-    currentPage = 1;
+    if (resetPage) {
+        currentPage = 1;
+    }
     renderGrid();
 }
 
 function renderGrid() {
-    grid.innerHTML = '';
+grid.innerHTML = '';
+    
+    // --- NOVOS CÁLCULOS DE PAGINAÇÃO ---
+    const totalItems = filteredData.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
     const start = (currentPage - 1) * itemsPerPage;
+    const end = Math.min(start + itemsPerPage, totalItems);
     const pageItems = filteredData.slice(start, start + itemsPerPage);
 
-    document.getElementById('page-info').textContent = `${filteredData.length} registros • Pág ${currentPage} de ${Math.ceil(filteredData.length / itemsPerPage) || 1}`;
+    // --- ATUALIZAÇÃO DOS ELEMENTOS DE UI ---
+    // Atualiza o contador: "Exibindo 1-6 de 1119 registros"
+    const pageInfo = document.getElementById('page-info');
+    if (pageInfo) {
+        pageInfo.textContent = `Exibindo ${totalItems > 0 ? start + 1 : 0}-${end} de ${totalItems} registros`;
+    }
+
+    // Atualiza o input de navegação e o total de páginas
+    const totalPagesElem = document.getElementById('total-pages');
+    const jumpInput = document.getElementById('jump-page');
+    
+    if (totalPagesElem) totalPagesElem.textContent = totalPages;
+    if (jumpInput) {
+        jumpInput.value = currentPage;
+        jumpInput.max = totalPages;
+    }
+
     document.getElementById('btn-prev').disabled = currentPage === 1;
-    document.getElementById('btn-next').disabled = start + itemsPerPage >= filteredData.length;
+    document.getElementById('btn-next').disabled = end >= totalItems;
 
     pageItems.forEach((item) => {
         const indexInMain = familyData.indexOf(item);
         const card = document.createElement('div');
         const isTerceirizado = item.Terceirizado === "Sim";
+        const isHighlighted = indexInMain === lastEditedIndex;
+
 
         // Definição das classes NEON para os badges no modo escuro
         const tipoBadgeClasses = item.Tipo === 'S' 
@@ -92,7 +118,9 @@ function renderGrid() {
 
         const terceirizadoBadgeClasses = 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 dark:shadow-[0_0_10px_rgba(192,132,252,0.3)] dark:border dark:border-purple-500/50';
         
-        card.className = `relative bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border ${isTerceirizado ? 'border-purple-200 dark:border-purple-900/40' : 'border-slate-200 dark:border-slate-800'} hover:border-blue-400 transition-all cursor-pointer group flex flex-col h-full animate-fade-in`;
+        card.className = `relative bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border transition-all cursor-pointer group flex flex-col h-full animate-fade-in 
+        ${isTerceirizado ? 'border-purple-200 dark:border-purple-900/40' : 'border-slate-200 dark:border-slate-800'} 
+        ${isHighlighted ? 'highlight-new border-blue-500 z-10' : 'hover:border-blue-400'}`;        
         
         card.innerHTML = `
             <div class="flex justify-between items-start mb-4">
@@ -151,6 +179,26 @@ function renderGrid() {
     });
 }
 
+// Listener para pular página ao apertar Enter
+const jumpInput = document.getElementById('jump-page');
+if (jumpInput) {
+    jumpInput.onkeydown = (e) => {
+        if (e.key === 'Enter') {
+            let targetPage = parseInt(e.target.value);
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage) || 1;
+
+            if (isNaN(targetPage) || targetPage < 1) {
+                targetPage = 1;
+            } else if (targetPage > totalPages) {
+                targetPage = totalPages;
+            }
+            
+            currentPage = targetPage;
+            renderGrid();
+        }
+    };
+}
+
 function renderDocList(title, list, colorClass) {
     if (!list || list.length === 0) return "";
     return `
@@ -169,11 +217,11 @@ function addCnaeRow(codigo = '', descricao = '') {
     const div = document.createElement('div');
     div.className = "flex flex-col sm:flex-row gap-2 bg-white dark:bg-slate-900 p-3 rounded-lg border dark:border-slate-700 animate-fade-in";
     div.innerHTML = `
-        <input type="text" placeholder="0000-0/00" value="${codigo}" class="cnae-code w-full sm:w-32 p-2 text-xs border rounded-md dark:bg-slate-850 dark:border-slate-700 dark:text-white outline-none focus:border-blue-500">
+        <input type="text" placeholder="0000-0/00" value="${codigo}" maxlength="9" onblur="normalizeCnaeInput(this)" class="cnae-code w-full sm:w-32 p-2 text-xs border rounded-md dark:bg-slate-850 dark:border-slate-700 dark:text-white outline-none focus:border-blue-500">
         <input type="text" placeholder="Descrição" value="${descricao}" class="cnae-desc flex-1 w-full p-2 text-xs border rounded-md dark:bg-slate-850 dark:border-slate-700 dark:text-white outline-none focus:border-blue-500">
         <button type="button" onclick="this.parentElement.remove()" class="text-red-400 hover:text-red-600 p-1">✕</button>
     `;
-    container.appendChild(div);
+    container.prepend(div);
 }
 
 window.openFamilyForm = (index = null) => {
@@ -223,8 +271,19 @@ document.getElementById('family-form').onsubmit = (e) => {
         "CNAEs": cnaes
     };
 
-    if (index !== "") familyData[index] = payload;
-    else familyData.unshift(payload);
+    if (index !== "") {
+        familyData[index] = payload;
+        lastEditedIndex = parseInt(index);
+        applyFilters(false); // <--- Chame aqui para manter a página na edição
+    }
+    else {
+        familyData.unshift(payload);
+        lastEditedIndex = 0;
+        applyFilters(true); 
+    };
+
+    setTimeout(() => { lastEditedIndex = null; }, 2500);
+
 
     // Replicação em Massa
     if (document.getElementById('f-replicate').checked) {
@@ -245,7 +304,6 @@ document.getElementById('family-form').onsubmit = (e) => {
         });
     }
 
-    applyFilters();
     updateDatalist();
     closeFamilyForm();
 };
@@ -333,9 +391,9 @@ window.exportFullBase = () => {
 };
 
 // --- EVENT LISTENERS ---
-searchInput.oninput = applyFilters;
-typeFilter.onchange = applyFilters;
-terceirizadoFilter.onchange = applyFilters;
+searchInput.oninput = () => applyFilters(true);
+typeFilter.onchange = () => applyFilters(true);
+terceirizadoFilter.onchange = () => applyFilters(true);
 document.getElementById('btn-prev').onclick = () => { if(currentPage > 1) { currentPage--; renderGrid(); } };
 document.getElementById('btn-next').onclick = () => { if((currentPage * itemsPerPage) < filteredData.length) { currentPage++; renderGrid(); } };
 document.getElementById('f-replicate').onchange = (e) => {
@@ -432,6 +490,23 @@ window.copySummary = () => {
             btn.classList.replace('bg-blue-600', 'bg-emerald-600');
         }, 2000);
     });
+};
+
+window.normalizeCnaeInput = (input) => {
+    // 1. Remove tudo que não é dígito
+    let value = input.value.replace(/\D/g, ''); 
+
+    // 2. Verifica se tem o tamanho padrão de um CNAE (7 dígitos)
+    if (value.length === 7) {
+        // Aplica a máscara 0000-0/00
+        input.value = value.substring(0, 4) + '-' + value.substring(4, 5) + '/' + value.substring(5, 7);
+    } 
+    // Opcional: Alerta visual se o código estiver incompleto
+    else if (value.length > 0 && value.length !== 7) {
+        input.classList.add('border-red-500');
+    } else {
+        input.classList.remove('border-red-500');
+    }
 };
 
 // Inicia o App
