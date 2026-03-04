@@ -943,179 +943,342 @@
   {
     "Família": "01.42",
     "Descrição": "LOCACAO DE EQUIPAMENTO DE MICROFILMAGEM",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7739-0/99",
+        "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+      }
+    ]
   },
   {
     "Família": "01.43",
     "Descrição": "LOCACAO DE EQUIPAMENTO DE TOPOGRAFIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7739-0/99",
+        "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+      }
+    ]
   },
   {
     "Família": "01.44",
     "Descrição": "LOCACAO DE EQUIPAMENTO DE ELEVACAO/MOVIMENTACAO DE CARGA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4399-1/04",
+        "descricao": "Serviços de operação e fornecimento de equipamentos para transporte e elevação de cargas e pessoas para uso em obras"
+      },
+      {
+        "codigo": "7739-0/99",
+        "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+      }
+    ]
   },
   {
     "Família": "01.45",
     "Descrição": "LOCACAO DE EQUIPAMENTO DE TELECOMUNICACAO E RADIOCOMUNICAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7739-0/99",
+        "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+      }
+    ]
   },
   {
     "Família": "01.46",
     "Descrição": "LOCACAO DE IMOVEIS E ESPACO FISICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7312-2/00",
+        "descricao": "Agenciamento de espaços para publicidade, exceto em veículos de comunicação"
+      },
+      {
+        "codigo": "6821-8/02",
+        "descricao": "Corretagem no aluguel de imóveis"
+      },
+      {
+        "codigo": "6810-2/02",
+        "descricao": "Aluguel de imóveis próprios"
+      }
+    ]
   },
   {
     "Família": "01.47",
     "Descrição": "CONSIGNACOES DE INSTITUICOES FINANCEIRAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Autorização BACEN",
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6619-3/02",
+        "descricao": "Correspondentes de instituições financeiras"
+      }
+    ]
   },
   {
     "Família": "01.48",
     "Descrição": "LOCACAO DE MAQUINAS DE ESCAVACAO E TERRAPLENAGEM",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4313-4/00",
+        "descricao": "Obras de terraplenagem"
+      },
+      {
+        "codigo": "7732-2/01",
+        "descricao": "Aluguel de máquinas e equipamentos para construção sem operador, exceto andaimes"
+      }
+    ]
   },
   {
     "Família": "01.49",
     "Descrição": "LOCACAO DE MAQUINAS E EQUIPAMENTOS PARA ESCRITORIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7733-1/00",
+        "descricao": "Aluguel de máquinas e equipamentos para escritórios"
+      }
+    ]
   },
   {
     "Família": "01.50",
     "Descrição": "LOCACAO DE EQUIPAMENTOS DE PROCESSAMENTO DE DADOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7733-1/00",
+        "descricao": "Aluguel de máquinas e equipamentos para escritórios"
+      }
+    ]
   },
   {
     "Família": "01.51",
     "Descrição": "LOCACAO DE VEICULOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7719-5/99",
+        "descricao": "Locação de outros meios de transporte sem condutor"
+      },
+      {
+        "codigo": "7711-0/00",
+        "descricao": "Locação de automóveis sem condutor"
+      }
+    ]
   },
   {
     "Família": "01.52",
     "Descrição": "LOCUCAO DE TEXTO/MESTRE CERIMONIAL/LOCUTOR/APRESENTADOR",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      }
+    ]
   },
   {
     "Família": "01.53",
     "Descrição": "SERVICOS DE COLETA DE AGUA PARA ANALISE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      }
+    ]
   },
   {
     "Família": "01.54",
     "Descrição": "MICROFILMAGEM",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7420-0/05",
+        "descricao": "Serviços de microfilmagem"
+      }
+    ]
   },
   {
     "Família": "01.55",
     "Descrição": "ORGANIZACAO DE ARQUIVO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9101-5/00",
+        "descricao": "Atividades de bibliotecas e arquivos"
+      }
+    ]
   },
   {
     "Família": "01.56",
     "Descrição": "CONSIGNACOES DE PLANOS DE SAUDE E ODONTOLOGICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "ANS - Agencia Nacional de Saúde Suplementar",
       "Conselho Regional de Odontologia"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6550-2/00",
+        "descricao": "Planos de saúde"
+      },
+      {
+        "codigo": "6622-3/00",
+        "descricao": "Corretores e agentes de seguros, de planos de previdência complementar e de saúde"
+      }
+    ]
   },
   {
     "Família": "01.57",
     "Descrição": "PESQUISA DE MERCADO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7320-3/00",
+        "descricao": "Pesquisas de mercado e de opinião pública"
+      }
+    ]
   },
   {
     "Família": "01.58",
     "Descrição": "PESQUISA HISTORICA/DOCUMENTAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9101-5/00",
+        "descricao": "Atividades de bibliotecas e arquivos"
+      },
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      }
+    ]
   },
   {
     "Família": "01.59",
     "Descrição": "PINTURA E ARTES PLASTICAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9002-7/01",
+        "descricao": "Atividades de artistas plásticos, jornalistas independentes e escritores"
+      }
+    ]
   },
   {
     "Família": "01.60",
     "Descrição": "LOCACAO DE VESTUARIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7723-3/00",
+        "descricao": "Aluguel de objetos do vestuário, jóias e acessórios"
+      }
+    ]
   },
   {
     "Família": "01.61",
     "Descrição": "SERVICO DE ASSISTENCIA A SAUDE - PLANSERV",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Alvará de Vigilância Sanitária",
       "Atestado de Capacidade Técnica"
@@ -1128,65 +1291,154 @@
       "Conselho Regional de Enfermagem",
       "Conselho Regional de Biomedicina"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6622-3/00",
+        "descricao": "Corretores e agentes de seguros, de planos de previdência complementar e de saúde"
+      },
+      {
+        "codigo": "6550-2/00",
+        "descricao": "Planos de saúde"
+      }
+    ]
   },
   {
     "Família": "01.62",
     "Descrição": "PRODUCAO DE RADIO, TELEVISAO, CINEMA, VIDEO E DISCOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "5911-1/01",
+        "descricao": "Estúdios cinematográficos"
+      },
+      {
+        "codigo": "5920-1/00",
+        "descricao": "Atividades de gravação de som e de edição de música"
+      },
+      {
+        "codigo": "6010-1/00",
+        "descricao": "Atividades de rádio"
+      },
+      {
+        "codigo": "5911-1/99",
+        "descricao": "Atividades de produção cinematográfica, de vídeos e de programas de televisão não especificadas anteriormente"
+      }
+    ]
   },
   {
     "Família": "01.63",
     "Descrição": "PRODUCAO E REALIZ DE SHOWS E EVENTOS ARTISTICOS/CULTURAIS E ESPORTIVOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9319-1/01",
+        "descricao": "Produção e promoção de eventos esportivos"
+      },
+      {
+        "codigo": "9001-9/99",
+        "descricao": "Artes cênicas, espetáculos e atividades complementares não especificadas anteriormente"
+      },
+      {
+        "codigo": "9001-9/03",
+        "descricao": "Produção de espetáculos de dança"
+      },
+      {
+        "codigo": "9001-9/02",
+        "descricao": "Produção musical"
+      },
+      {
+        "codigo": "9001-9/01",
+        "descricao": "Produção teatral"
+      }
+    ]
   },
   {
     "Família": "01.64",
     "Descrição": "PROGRAMACAO E COMUNICACAO VISUAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7311-4/00",
+        "descricao": "Agências de publicidade"
+      },
+      {
+        "codigo": "7410-2/99",
+        "descricao": "Atividades de design não especificadas anteriormente"
+      }
+    ]
   },
   {
     "Família": "01.65",
     "Descrição": "CONFECCAO DE ARTIGOS EM ACRILICO/PLASTICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "2229-3/99",
+        "descricao": "Fabricação de artefatos de material plástico para outros usos não especificados anteriormente"
+      }
+    ]
   },
   {
     "Família": "01.66",
     "Descrição": "REPROGRAFIA, ENCADERNACAO E PLASTIFICACAO DE DOCUMENTOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "1822-9/01",
+        "descricao": "Serviços de encadernação e plastificação"
+      },
+      {
+        "codigo": "8219-9/01",
+        "descricao": "Fotocópias"
+      }
+    ]
   },
   {
     "Família": "01.67",
     "Descrição": "CONFECCAO DE PLACAS PARA VEICULOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3299-0/03",
+        "descricao": "Fabricação de letras, letreiros e placas de qualquer material, exceto luminosos"
+      }
+    ]
   },
   {
     "Família": "01.68",
     "Descrição": "SEGUROS/CONSIGNAÇÕES DE SEGURADORA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Regularidade SUSEP",
       "Atestado de Capacidade Técnica"
@@ -1196,142 +1448,348 @@
       "Certidão de Administradores SUSEP",
       "Carta Patente SUSEP"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6520-1/00",
+        "descricao": "Sociedade seguradora de seguros saúde"
+      },
+      {
+        "codigo": "6622-3/00",
+        "descricao": "Corretores e agentes de seguros, de planos de previdência complementar e de saúde"
+      }
+    ]
   },
   {
     "Família": "01.69",
     "Descrição": "SERIGRAFIA E SILK SCREEN",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "1813-0/99",
+        "descricao": "Impressão de material para outros usos"
+      },
+      {
+        "codigo": "1813-0/01",
+        "descricao": "Impressão de material para uso publicitário"
+      }
+    ]
   },
   {
     "Família": "01.70",
     "Descrição": "TELEMARKETING",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8220-2/00",
+        "descricao": "Atividades de teleatendimento"
+      }
+    ]
   },
   {
     "Família": "01.71",
     "Descrição": "SERVICOS DE TELEFONIA MOVEL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6120-5/99",
+        "descricao": "Serviços de telecomunicações sem fio não especificados anteriormente"
+      },
+      {
+        "codigo": "6120-5/02",
+        "descricao": "Serviço móvel especializado - sme"
+      },
+      {
+        "codigo": "6120-5/01",
+        "descricao": "Telefonia móvel celular"
+      }
+    ]
   },
   {
     "Família": "01.72",
     "Descrição": "CESSÃO ONEROSA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "5221-1/00",
+        "descricao": "Serviços auxiliares dos transportes terrestres"
+      },
+      {
+        "codigo": "5611-2/03",
+        "descricao": "Lanchonetes, casas de chá, sucos e similares"
+      },
+      {
+        "codigo": "4912-4/02",
+        "descricao": "Transporte metroferroviário de passageiros"
+      }
+    ]
   },
   {
     "Família": "01.73",
     "Descrição": "LOCACAO E MANUTENCAO DE CABINES E MODULOS MOVEIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7739-0/03",
+        "descricao": "Aluguel de palcos, coberturas e outras estruturas de uso temporário, exceto andaimes"
+      }
+    ]
   },
   {
     "Família": "01.74",
     "Descrição": "CONFECCAO DE ARTIGOS EM TECIDO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "1354-5/00",
+        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
+      },
+      {
+        "codigo": "1359-6/00",
+        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+      },
+      {
+        "codigo": "1411-8/02",
+        "descricao": "Facção de roupas íntimas"
+      },
+      {
+        "codigo": "1412-6/01",
+        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
+      }
+    ]
   },
   {
     "Família": "01.75",
     "Descrição": "LOCACAO DE EQUIPAMENTO DE REFRIGERACAO E CONDICIONAMENTO DE AR",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7729-2/02",
+        "descricao": "Aluguel de móveis, utensílios e aparelhos de uso doméstico e pessoal; instrumentos musicais"
+      },
+      {
+        "codigo": "7739-0/99",
+        "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+      }
+    ]
   },
   {
     "Família": "01.76",
     "Descrição": "EMPLACAMENTO, LICENCIAMENTO E REGULARIZACAO DE VEICULOS OFICIAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8299-7/99",
+        "descricao": "Outras atividades de serviços prestados principalmente às empresas não especificadas anteriormente"
+      }
+    ]
   },
   {
     "Família": "01.77",
     "Descrição": "LOCACAO DE EQUIPAMENTOS E MAQUINARIOS ELETRICOS E MECANICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7731-4/00",
+        "descricao": "Aluguel de máquinas e equipamentos agrícolas sem operador"
+      },
+      {
+        "codigo": "7732-2/02",
+        "descricao": "Aluguel de andaimes"
+      },
+      {
+        "codigo": "7739-0/99",
+        "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+      },
+      {
+        "codigo": "7732-2/01",
+        "descricao": "Aluguel de máquinas e equipamentos para construção sem operador, exceto andaimes"
+      }
+    ]
   },
   {
     "Família": "01.78",
     "Descrição": "ASSINATURA DE CANAIS FECHADOS DE TELEVISAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6143-4/00",
+        "descricao": "Operadoras de televisão por assinatura por satélite"
+      },
+      {
+        "codigo": "6142-6/00",
+        "descricao": "Operadoras de televisão por assinatura por microondas"
+      },
+      {
+        "codigo": "6141-8/00",
+        "descricao": "Operadoras de televisão por assinatura por cabo"
+      }
+    ]
   },
   {
     "Família": "01.79",
     "Descrição": "SERVICOS DE COMUNICACAO VIA PAGER",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6120-5/99",
+        "descricao": "Serviços de telecomunicações sem fio não especificados anteriormente"
+      }
+    ]
   },
   {
     "Família": "01.80",
     "Descrição": "SERVICOS BANCARIOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6499-9/99",
+        "descricao": "Outras atividades de serviços financeiros não especificadas anteriormente"
+      },
+      {
+        "codigo": "6422-1/00",
+        "descricao": "Bancos múltiplos, com carteira comercial"
+      },
+      {
+        "codigo": "6423-9/00",
+        "descricao": "Caixas econômicas"
+      },
+      {
+        "codigo": "6421-2/00",
+        "descricao": "Bancos comerciais"
+      }
+    ]
   },
   {
     "Família": "01.81",
     "Descrição": "SERVICOS DE FORNECIMENTO DE AGUA POTAVEL/ESGOTO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3701-1/00",
+        "descricao": "Gestão de redes de esgoto"
+      },
+      {
+        "codigo": "3702-9/00",
+        "descricao": "Atividades relacionadas a esgoto, exceto a gestão de redes"
+      },
+      {
+        "codigo": "3600-6/01",
+        "descricao": "Captação, tratamento e distribuição de água"
+      }
+    ]
   },
   {
     "Família": "01.82",
     "Descrição": "SERVICOS DE FORNECIMENTO DE ENERGIA ELETRICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3514-0/00",
+        "descricao": "Distribuição de energia elétrica"
+      },
+      {
+        "codigo": "3513-1/00",
+        "descricao": "Comércio atacadista de energia elétrica"
+      },
+      {
+        "codigo": "3512-3/00",
+        "descricao": "Transmissão de energia elétrica"
+      },
+      {
+        "codigo": "3511-5/02",
+        "descricao": "Atividades de coordenação e controle da operação da geração e transmissão de energia elétrica"
+      },
+      {
+        "codigo": "3511-5/01",
+        "descricao": "Geração de energia elétrica"
+      }
+    ]
   },
   {
     "Família": "01.83",
     "Descrição": "SERVICOS DE TELEFONIA FIXA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6110-8/01",
+        "descricao": "Serviços de telefonia fixa comutada (STFC)"
+      }
+    ]
   },
   {
     "Família": "01.84",
@@ -1489,16 +1947,16 @@
     "Documentos Elegíveis": [],
     "CNAEs": [
       {
-        "codigo": "78.10-8-00",
-        "descricao": "Seleção e agenciamento de mão-de-obra"
+        "codigo": "7830-2/00",
+        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
       },
       {
-        "codigo": "78.20-5-00",
+        "codigo": "7820-5/00",
         "descricao": "Locação de mão-de-obra temporária"
       },
       {
-        "codigo": "78.30-2-00",
-        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
+        "codigo": "7810-8/00",
+        "descricao": "Seleção e agenciamento de mão-de-obra"
       }
     ]
   },
@@ -2553,24 +3011,24 @@
   {
     "Família": "03.16",
     "Descrição": "CONSERVACAO E LIMPEZA PREDIAL",
+    "Tipo": "S",
+    "Terceirizado": "Sim",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S",
-    "Terceirizado": "Sim",
     "CNAEs": [
       {
-        "codigo": "78.10-8-00",
-        "descricao": "Seleção e agenciamento de mão-de-obra"
+        "codigo": "7830-2/00",
+        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
       },
       {
-        "codigo": "78.20-5-00",
+        "codigo": "7820-5/00",
         "descricao": "Locação de mão-de-obra temporária"
       },
       {
-        "codigo": "78.30-2-00",
-        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
+        "codigo": "7810-8/00",
+        "descricao": "Seleção e agenciamento de mão-de-obra"
       }
     ]
   },
@@ -2662,25 +3120,25 @@
   {
     "Família": "03.25",
     "Descrição": "VIGILANCIA E SEGURANCA PATRIMONIAL",
+    "Tipo": "S",
+    "Terceirizado": "Sim",
     "Documentos Exigidos": [
       "Certificado de Segurança - Polícia Federal",
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S",
-    "Terceirizado": "Sim",
     "CNAEs": [
       {
-        "codigo": "78.10-8-00",
-        "descricao": "Seleção e agenciamento de mão-de-obra"
+        "codigo": "7830-2/00",
+        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
       },
       {
-        "codigo": "78.20-5-00",
+        "codigo": "7820-5/00",
         "descricao": "Locação de mão-de-obra temporária"
       },
       {
-        "codigo": "78.30-2-00",
-        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
+        "codigo": "7810-8/00",
+        "descricao": "Seleção e agenciamento de mão-de-obra"
       }
     ]
   },
@@ -2723,16 +3181,16 @@
     "Documentos Elegíveis": [],
     "CNAEs": [
       {
-        "codigo": "78.10-8-00",
-        "descricao": "Seleção e agenciamento de mão-de-obra"
+        "codigo": "7830-2/00",
+        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
       },
       {
-        "codigo": "78.20-5-00",
+        "codigo": "7820-5/00",
         "descricao": "Locação de mão-de-obra temporária"
       },
       {
-        "codigo": "78.30-2-00",
-        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
+        "codigo": "7810-8/00",
+        "descricao": "Seleção e agenciamento de mão-de-obra"
       }
     ]
   },
@@ -2747,28 +3205,28 @@
     "Documentos Elegíveis": [],
     "CNAEs": [
       {
-        "codigo": "78.10-8-00",
-        "descricao": "Seleção e agenciamento de mão-de-obra"
+        "codigo": "8211-3/00",
+        "descricao": "Serviços combinados de escritório e apoio administrativo"
       },
       {
-        "codigo": "78.20-5-00",
-        "descricao": "Locação de mão-de-obra temporária"
+        "codigo": "8219-9/99",
+        "descricao": "Reparação de documentos e serviços especializados de apoio administrativo não especificados anteriormente"
       },
       {
-        "codigo": "78.30-2-00",
-        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
-      },
-      {
-        "codigo": "81.11-7-00",
+        "codigo": "8111-7/00",
         "descricao": "Serviços combinados para apoio a edifícios, exceto condomínios prediais"
       },
       {
-        "codigo": "82.19-9-99",
-        "descricao": "reparação de documentos e serviços especializados de apoio administrativo não especificados anteriormente"
+        "codigo": "7830-2/00",
+        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
       },
       {
-        "codigo": "82.11-3-00",
-        "descricao": "Serviços combinados de escritório e apoio administrativo"
+        "codigo": "7820-5/00",
+        "descricao": "Locação de mão-de-obra temporária"
+      },
+      {
+        "codigo": "7810-8/00",
+        "descricao": "Seleção e agenciamento de mão-de-obra"
       }
     ]
   },
@@ -3417,25 +3875,25 @@
   {
     "Família": "04.56",
     "Descrição": "MANUTENCAO EM PREDIOS E AREA PUBLICAS/POSTOS",
+    "Tipo": "S",
+    "Terceirizado": "Sim",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S",
-    "Terceirizado": "Sim",
     "CNAEs": [
       {
-        "codigo": "78.10-8-00",
-        "descricao": "Seleção e agenciamento de mão-de-obra"
+        "codigo": "7830-2/00",
+        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
       },
       {
-        "codigo": "78.20-5-00",
+        "codigo": "7820-5/00",
         "descricao": "Locação de mão-de-obra temporária"
       },
       {
-        "codigo": "78.30-2-00",
-        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
+        "codigo": "7810-8/00",
+        "descricao": "Seleção e agenciamento de mão-de-obra"
       }
     ]
   },
@@ -10005,14 +10463,50 @@
     "Descrição": "VESTUARIO EXTERNO MASCULINO",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M"
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "1354-5/00",
+        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
+      },
+      {
+        "codigo": "1359-6/00",
+        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+      },
+      {
+        "codigo": "1411-8/02",
+        "descricao": "Facção de roupas íntimas"
+      },
+      {
+        "codigo": "1412-6/01",
+        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
+      }
+    ]
   },
   {
     "Família": "84.10",
     "Descrição": "VESTUARIO EXTERNO FEMININO",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M"
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "1354-5/00",
+        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
+      },
+      {
+        "codigo": "1359-6/00",
+        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+      },
+      {
+        "codigo": "1411-8/02",
+        "descricao": "Facção de roupas íntimas"
+      },
+      {
+        "codigo": "1412-6/01",
+        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
+      }
+    ]
   },
   {
     "Família": "84.15",
@@ -10026,14 +10520,50 @@
     "Descrição": "ROUPAS INTIMAS E PARA DORMIR, MASCULINAS",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M"
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "1354-5/00",
+        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
+      },
+      {
+        "codigo": "1359-6/00",
+        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+      },
+      {
+        "codigo": "1411-8/02",
+        "descricao": "Facção de roupas íntimas"
+      },
+      {
+        "codigo": "1412-6/01",
+        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
+      }
+    ]
   },
   {
     "Família": "84.25",
     "Descrição": "ROUPAS INTIMAS E PARA DORMIR, FEMININA",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M"
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "1354-5/00",
+        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
+      },
+      {
+        "codigo": "1359-6/00",
+        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+      },
+      {
+        "codigo": "1411-8/02",
+        "descricao": "Facção de roupas íntimas"
+      },
+      {
+        "codigo": "1412-6/01",
+        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
+      }
+    ]
   },
   {
     "Família": "84.30",
@@ -10054,21 +10584,75 @@
     "Descrição": "MEIAS, LUVAS E OUTROS COMPLEMENTOS DO VESTUARIO MASCULINO",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M"
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "1354-5/00",
+        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
+      },
+      {
+        "codigo": "1359-6/00",
+        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+      },
+      {
+        "codigo": "1411-8/02",
+        "descricao": "Facção de roupas íntimas"
+      },
+      {
+        "codigo": "1412-6/01",
+        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
+      }
+    ]
   },
   {
     "Família": "84.45",
     "Descrição": "MEIAS, LUVAS E OUTROS  COMPLEMENTOS DO VESTUARIO FEMININO",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M"
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "1354-5/00",
+        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
+      },
+      {
+        "codigo": "1359-6/00",
+        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+      },
+      {
+        "codigo": "1411-8/02",
+        "descricao": "Facção de roupas íntimas"
+      },
+      {
+        "codigo": "1412-6/01",
+        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
+      }
+    ]
   },
   {
     "Família": "84.50",
     "Descrição": "VESTUARIO INFANTIL E COMPLEMENTOS",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M"
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "1354-5/00",
+        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
+      },
+      {
+        "codigo": "1359-6/00",
+        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+      },
+      {
+        "codigo": "1411-8/02",
+        "descricao": "Facção de roupas íntimas"
+      },
+      {
+        "codigo": "1412-6/01",
+        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
+      }
+    ]
   },
   {
     "Família": "84.55",
@@ -10112,7 +10696,25 @@
     "Descrição": "VESTUARIO ESPORTIVO",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M"
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "1354-5/00",
+        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
+      },
+      {
+        "codigo": "1359-6/00",
+        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+      },
+      {
+        "codigo": "1411-8/02",
+        "descricao": "Facção de roupas íntimas"
+      },
+      {
+        "codigo": "1412-6/01",
+        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
+      }
+    ]
   },
   {
     "Família": "85.10",
