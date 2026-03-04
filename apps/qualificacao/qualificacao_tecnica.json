@@ -1530,16 +1530,16 @@
     "Documentos Elegíveis": [],
     "CNAEs": [
       {
-        "codigo": "5221-1/00",
-        "descricao": "Serviços auxiliares dos transportes terrestres"
+        "codigo": "4912-4/02",
+        "descricao": "Transporte metroferroviário de passageiros"
       },
       {
         "codigo": "5611-2/03",
         "descricao": "Lanchonetes, casas de chá, sucos e similares"
       },
       {
-        "codigo": "4912-4/02",
-        "descricao": "Transporte metroferroviário de passageiros"
+        "codigo": "5221-1/00",
+        "descricao": "Serviços auxiliares dos transportes terrestres"
       }
     ]
   },
@@ -1794,56 +1794,114 @@
   {
     "Família": "01.84",
     "Descrição": "LOCACAO DE RECIPIENTE PARA FORNEC DE GASES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7739-0/99",
+        "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+      }
+    ]
   },
   {
     "Família": "01.85",
     "Descrição": "SERVICOS DE DECORACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7410-2/02",
+        "descricao": "Design de interiores"
+      }
+    ]
   },
   {
     "Família": "01.86",
     "Descrição": "CARTORIOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6912-5/00",
+        "descricao": "Cartórios"
+      }
+    ]
   },
   {
     "Família": "01.87",
     "Descrição": "INSCRIÇÃO E MANUTENÇÃO EM ENTIDADES FISCALIZADORAS E DE REPRESENTAÇÃO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9411-1/00",
+        "descricao": "Atividades de organizações associativas patronais e empresariais"
+      },
+      {
+        "codigo": "9412-0/99",
+        "descricao": "Outras atividades associativas profissionais"
+      },
+      {
+        "codigo": "9412-0/01",
+        "descricao": "Atividades de fiscalização profissional"
+      }
+    ]
   },
   {
     "Família": "01.88",
     "Descrição": "ASSINATURA DE USO DE BANCO DE DADOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6319-4/00",
+        "descricao": "Portais, provedores de conteúdo e outros serviços de informação na internet"
+      },
+      {
+        "codigo": "6203-1/00",
+        "descricao": "Desenvolvimento e licenciamento de programas de computador não customizáveis"
+      },
+      {
+        "codigo": "6311-9/00",
+        "descricao": "Tratamento de dados, provedores de serviços de aplicação e serviços de hospedagem na internet"
+      }
+    ]
   },
   {
     "Família": "01.89",
     "Descrição": "LOCACAO DE MOBILIARIOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7729-2/02",
+        "descricao": "Aluguel de móveis, utensílios e aparelhos de uso doméstico e pessoal; instrumentos musicais"
+      }
+    ]
   },
   {
     "Família": "01.90",
@@ -1852,34 +1910,93 @@
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "Tipo": "S",
+    "CNAEs": [
+      {
+        "codigo": "4912-4/02",
+        "descricao": "Transporte metroferroviário de passageiros"
+      },
+      {
+        "codigo": "5611-2/03",
+        "descricao": "Lanchonetes, casas de chá, sucos e similares"
+      },
+      {
+        "codigo": "5221-1/00",
+        "descricao": "Serviços auxiliares dos transportes terrestres"
+      }
+    ]
   },
   {
     "Família": "01.91",
     "Descrição": "SERVICOS FUNERARIOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9603-3/99",
+        "descricao": "Atividades funerárias e serviços relacionados não especificados anteriormente"
+      },
+      {
+        "codigo": "9603-3/05",
+        "descricao": "Serviços de somatoconservação"
+      },
+      {
+        "codigo": "9603-3/03",
+        "descricao": "Serviços de sepultamento"
+      },
+      {
+        "codigo": "9603-3/02",
+        "descricao": "Serviços de cremação"
+      },
+      {
+        "codigo": "9603-3/01",
+        "descricao": "Gestão e manutenção de cemitérios"
+      },
+      {
+        "codigo": "9603-3/04",
+        "descricao": "Serviços de funerárias"
+      }
+    ]
   },
   {
     "Família": "01.92",
     "Descrição": "GESTAO DE FROTA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "5250-8/04",
+        "descricao": "Organização logística do transporte de carga"
+      }
+    ]
   },
   {
     "Família": "01.93",
     "Descrição": "ABASTECIMENTO DE VEICULOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4784-9/00",
+        "descricao": "Comércio varejista de gás liqüefeito de petróleo (glp)"
+      },
+      {
+        "codigo": "4731-8/00",
+        "descricao": "Comércio varejista de combustíveis para veículos automotores"
+      }
+    ]
   },
   {
     "Família": "01.94",
@@ -1896,36 +2013,64 @@
     ],
     "CNAEs": [
       {
-        "codigo": "5510-8/01",
-        "descricao": "Hotéis"
+        "codigo": "5590-6/01",
+        "descricao": "Albergues, exceto assistenciais"
       },
       {
         "codigo": "5510-8/02",
         "descricao": "Apart hotéis"
+      },
+      {
+        "codigo": "5510-8/01",
+        "descricao": "Hotéis"
       }
     ]
   },
   {
     "Família": "01.95",
     "Descrição": "GESTÃO PLENA DO SISTEMA ESTADUAL DE SAÚDE - SUS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8660-7/00",
+        "descricao": "Atividades de apoio à gestão de saúde"
+      },
+      {
+        "codigo": "8411-6/00",
+        "descricao": "Administração pública em geral"
+      },
+      {
+        "codigo": "8412-4/00",
+        "descricao": "Regulação das atividades de saúde, educação, serviços culturais e outros serviços sociais"
+      }
+    ]
   },
   {
     "Família": "01.96",
     "Descrição": "SERVICO DE APOIO ADMINISTRATIVO E OPERACIONAL AO PLANSERV",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8211-3/00",
+        "descricao": "Serviços combinados de escritório e apoio administrativo"
+      }
+    ]
   },
   {
     "Família": "01.97",
     "Descrição": "LOCACAO DE ESPACO COM FORNECIMENTO DE REFEICAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CRN - Conselho Regional de Nutrição",
       "Atestado de Capacidade Técnica"
@@ -1934,7 +2079,20 @@
       "Alvará de Vigilância Sanitária",
       "Declaração de Dispensa de Ato Público - Baixo Risco"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "5620-1/01",
+        "descricao": "Fornecimento de alimentos preparados preponderantemente para empresas"
+      },
+      {
+        "codigo": "5620-1/02",
+        "descricao": "Serviços de alimentação para eventos e recepções - bufê"
+      },
+      {
+        "codigo": "8230-0/02",
+        "descricao": "Casas de festas e eventos"
+      }
+    ]
   },
   {
     "Família": "01.98",
@@ -1963,21 +2121,43 @@
   {
     "Família": "01.99",
     "Descrição": "ADMINISTRACAO E MANUTENCAO DE PALACIOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CRA - Conselho Regional de Administração",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6822-6/00",
+        "descricao": "Gestão e administração da propriedade imobiliaria"
+      },
+      {
+        "codigo": "8111-7/00",
+        "descricao": "Serviços combinados para apoio a edifícios, exceto condomínios prediais"
+      }
+    ]
   },
   {
     "Família": "02.01",
     "Descrição": "ADMINISTRACAO E OPERACAO EM PROCESSAMENTO DE DADOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6204-0/00",
+        "descricao": "Consultoria em tecnologia da informação"
+      },
+      {
+        "codigo": "6311-9/00",
+        "descricao": "Tratamento de dados, provedores de serviços de aplicação e serviços de hospedagem na internet"
+      }
+    ]
   },
   {
     "Família": "02.02",
