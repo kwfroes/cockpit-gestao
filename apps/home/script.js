@@ -359,8 +359,7 @@ function renderStats() {
       ...STATS_CONFIG.familias,
       principal: (stats.familias.total || 0).toLocaleString("pt-BR"),
       label: "Famílias",
-      sub: `${stats.familias.docsUnicos || 0} documentos únicos`,
-    },
+      sub: `${stats.familias.cnaesUnicos || 0} CNAEs únicos • ${stats.familias.percentualComCnae || 0}% vinculadas`,    },
     //{
     //  ...STATS_CONFIG.conversor,
     //  principal: stats.conversor.merges || 0,
@@ -525,7 +524,31 @@ function forceUpdateGerador() {
   request.onerror = (e) => e.preventDefault();
 }
 
-// 3. Executar ao carregar a página
+// 3. Forçar Leitura da Qualificação
+function forceUpdateQualificacao() {
+  // Tenta ler o que foi salvo pelo Script 1
+  const rawStats = localStorage.getItem("stats_familias");
+  if (!rawStats) return;
+
+  try {
+    // Apenas força a renderização, pois o Script 1 já calculou e salvou o JSON pronto
+    renderStats();
+    console.log("Stats de Qualificação atualizados pela Home.");
+  } catch (e) {
+    console.error("Erro ao ler stats de famílias na Home:", e);
+  }
+}
+
+// Atualize o listener de carregamento da Home para incluir a chamada:
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(() => {
+    forceUpdateContratos();
+    forceUpdateGerador();
+    forceUpdateQualificacao(); // <--- Adicione esta linha aqui
+  }, 500);
+});
+
+// 4. Executar ao carregar a página
 document.addEventListener("DOMContentLoaded", () => {
   // Tenta atualizar os dados reais assim que abre
   setTimeout(() => {
@@ -891,255 +914,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   ELEMENTS.container.style.cursor = "help";
   updateQuote();
-})();
-
-// ==========================================================
-// MÓDULO FAMÍLIAS & ESTATÍSTICAS
-// ==========================================================
-(function initFamilyModule() {
-  let familyData = [];
-  let currentPage = 1;
-  const itemsPerPage = 9;
-
-  // Elementos do Modal
-  const modal = document.getElementById("family-modal");
-  const grid = document.getElementById("family-grid");
-
-  // 1. Função para Calcular Stats (Total Famílias e Docs Únicos)
-  function calculateAndSaveStats(data) {
-    if (!data || data.length === 0) return;
-
-    const allDocs = new Set();
-    data.forEach((item) => {
-      // Lógica simplificada para extrair documentos das strings
-      const docStrings = [
-        ...(item["DOCUMENTOS EXIGIDOS"] || item["Documentos Exigidos"] || []),
-        ...(item["DOCUMENTOS ELEGÍVEIS"] || item["Documentos Elegíveis"] || []),
-      ];
-      docStrings.forEach((doc) => allDocs.add(doc.trim()));
-    });
-
-    const stats = {
-      total: data.length,
-      docsUnicos: allDocs.size,
-    };
-
-    localStorage.setItem("stats_familias", JSON.stringify(stats));
-    // Chama o renderStats global para atualizar a tela
-    if (typeof renderStats === "function") renderStats();
-  }
-
-  // 2. Carregamento Inicial (Para pegar os números do card)
-  function loadData() {
-    fetch("qualificacao_tecnica.json")
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data) => {
-        familyData = data;
-        calculateAndSaveStats(data);
-      })
-      .catch((err) => console.error("Erro ao carregar qualificacao.json", err));
-  }
-
-  // Inicia carregamento ao abrir o app
-  loadData();
-
-  // 3. Configuração do Evento de Clique no Card (Delegated Event)
-  // Usamos delegated event porque o card é recriado pelo renderStats
-  document.addEventListener("click", function (e) {
-    const card = e.target.closest("#stats-card-familias");
-    if (card) {
-      openModal();
-    }
-  });
-
-  // 4. Funções do Modal (Simplificadas para o contexto)
-  function openModal() {
-    modal.classList.remove("hidden");
-    // Renderiza usando a lista completa inicial
-    renderGrid(familyData);
-
-    // Setup dos botões internos
-    document.getElementById("btn-close-family").onclick = () =>
-      modal.classList.add("hidden");
-
-    // 1. Pegamos as referências dos 3 campos (Texto, Select e Checkbox)
-    const searchInput = document.getElementById("family-search");
-    const typeFilter = document.getElementById("family-filter-type");
-    const terceirizadoFilter = document.getElementById(
-      "family-filter-terceirizado",
-    );
-
-    // 2. Função de Filtro UNIFICADA
-    function applyFilters() {
-      // Se algum elemento não existir, para a execução
-      if (!searchInput || !typeFilter || !terceirizadoFilter) return;
-
-      const term = searchInput.value.toLowerCase();
-      const type = typeFilter.value;
-      const onlyTerceirizado = terceirizadoFilter.checked; // Verifica se está marcado
-
-      const filtered = familyData.filter((item) => {
-        // A) Preparação dos Documentos
-        const rawExigidos =
-          item["DOCUMENTOS EXIGIDOS"] || item["Documentos Exigidos"] || [];
-        const rawElegiveis =
-          item["DOCUMENTOS ELEGÍVEIS"] || item["Documentos Elegíveis"] || [];
-        const strExigidos = Array.isArray(rawExigidos)
-          ? rawExigidos.join(" ")
-          : String(rawExigidos);
-        const strElegiveis = Array.isArray(rawElegiveis)
-          ? rawElegiveis.join(" ")
-          : String(rawElegiveis);
-
-        // B) Filtro de Texto
-        const textMatch =
-          String(item["Família"] || item["Familia"] || "")
-            .toLowerCase()
-            .includes(term) ||
-          String(item["Descrição"] || item["Descricao"] || "")
-            .toLowerCase()
-            .includes(term) ||
-          strExigidos.toLowerCase().includes(term) ||
-          strElegiveis.toLowerCase().includes(term);
-
-        // C) Filtro de Tipo
-        const itemTipo = item["Tipo"] || "";
-        const typeMatch = type === "" || itemTipo === type;
-
-        // D) Filtro Terceirizado
-        const isItemTerceirizado = item["Terceirizado"] === "Sim";
-        // Lógica: Se o checkbox estiver marcado, SÓ mostra se for terceirizado.
-        // Se não estiver marcado, mostra tudo (!false = true).
-        const terceirizadoMatch = !onlyTerceirizado || isItemTerceirizado;
-
-        return textMatch && typeMatch && terceirizadoMatch;
-      });
-
-      currentPage = 1;
-      renderGrid(filtered);
-    }
-
-    // 3. Ligamos a função aos eventos
-    if (searchInput) searchInput.oninput = applyFilters;
-    if (typeFilter) typeFilter.onchange = applyFilters;
-    if (terceirizadoFilter) terceirizadoFilter.onchange = applyFilters;
-
-    // Paginação
-    document.getElementById("btn-prev-page").onclick = () => {
-      if (currentPage > 1) {
-        currentPage--;
-        renderGrid(familyData);
-      }
-    };
-    document.getElementById("btn-next-page").onclick = () => {
-      currentPage++;
-      renderGrid(familyData);
-    };
-  }
-
-  function renderGrid(data) {
-    grid.innerHTML = "";
-
-    // Paginação
-    const start = (currentPage - 1) * itemsPerPage;
-    const pageItems = data.slice(start, start + itemsPerPage);
-
-    const infoEl = document.getElementById("family-info");
-    if (infoEl)
-      infoEl.textContent = `${data.length} registros • Pág ${currentPage}`;
-
-    if (data.length === 0) {
-      grid.innerHTML = `<div class="col-span-full text-center py-8 text-gray-400 italic">Nenhum registro encontrado para os filtros.</div>`;
-      return;
-    }
-
-    pageItems.forEach((item) => {
-      const familia = item["Família"] || item["Familia"] || "?";
-      const descricao =
-        item["Descrição"] || item["Descricao"] || "Sem descrição";
-      let exigidos =
-        item["DOCUMENTOS EXIGIDOS"] || item["Documentos Exigidos"] || [];
-      let elegiveis =
-        item["DOCUMENTOS ELEGÍVEIS"] || item["Documentos Elegíveis"] || [];
-
-      if (typeof exigidos === "string") exigidos = [exigidos];
-      if (typeof elegiveis === "string") elegiveis = [elegiveis];
-
-      const tipo = item["Tipo"];
-      const isTerceirizado = item["Terceirizado"] === "Sim";
-
-      let borderClass =
-        "border-gray-200 dark:border-slate-600 dark:bg-slate-900 dark:text-white hover:border-blue-300";
-
-      // --- 1. BADGE DO TOPO (TIPO) ---
-      let tipoBadgeHtml = "";
-      if (tipo === "M") {
-        tipoBadgeHtml = `<span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded bg-orange-100 text-orange-700 border border-orange-200 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-800 uppercase tracking-wider whitespace-nowrap">📦 Material</span>`;
-        borderClass =
-          "border-gray-200 dark:border-slate-600 dark:bg-slate-900 dark:text-white hover:border-orange-400";
-      } else if (tipo === "S") {
-        tipoBadgeHtml = `<span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 border border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800 uppercase tracking-wider whitespace-nowrap">🛠️ Serviço</span>`;
-        borderClass =
-          "border-gray-200 dark:border-slate-600 dark:bg-slate-900 dark:text-white hover:border-indigo-400";
-      }
-
-      // --- 2. BADGE DO RODAPÉ (TERCEIRIZADO) ---
-      let terceirizadoFooterHtml = "";
-      if (isTerceirizado) {
-        // Cria um container no rodapé com uma borda sutil acima para separar
-        terceirizadoFooterHtml = `
-                    <div class="mt-auto pt-3 border-t border-gray-50 flex justify-start">
-                         <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-100 text-purple-700 border border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-800 uppercase tracking-wider whitespace-nowrap inline-flex items-center gap-1">
-                            👥 Terceirizado
-                         </span>
-                    </div>`;
-        // Se for terceirizado, a borda do card fica roxa no hover
-        borderClass =
-          "border-gray-200 dark:border-slate-600 dark:bg-slate-900 dark:text-white hover:border-purple-400";
-      }
-
-      // Criação do Card
-      const card = document.createElement("div");
-      // Adicionado 'flex flex-col' para o rodapé (mt-auto) funcionar
-      card.className = `bg-white dark:bg-slate-800 border ${borderClass.replace("border-gray-200", "border-gray-200 dark:border-slate-700")} rounded-lg p-4 shadow-sm hover:shadow-md transition-all flex flex-col h-full`;
-
-      const renderList = (list, colorClass, emptyText) => {
-        if (!list || list.length === 0)
-          return `<span class="text-gray-400 italic text-xs ml-4 opacity-70">${emptyText}</span>`;
-        return `<ul class="space-y-1 mt-1 ml-1">${list.map((i) => `<li class="text-xs text-gray-600 dark:text-gray-400 flex items-start gap-1.5"><span class="${colorClass} font-bold mt-0.5 text-[10px]">•</span> <span>${i}</span></li>`).join("")}</ul>`;
-      };
-
-      card.innerHTML = `
-                <div class="mb-3 pb-2 border-b border-gray-100">
-                    <div class="flex items-start justify-between mb-2 gap-2">
-                        <span class="text-xs font-bold text-gray-500 uppercase tracking-wide whitespace-nowrap mt-1">Família ${familia}</span>
-                        ${tipoBadgeHtml} </div>
-                    <h4 class="text-sm font-bold text-gray-800 dark:text-white leading-snug">${descricao}</h4>
-                </div>
-                
-                <div class="space-y-3 mb-2"> <div>
-                        <span class="text-[10px] font-bold text-red-600 uppercase flex items-center gap-1 mb-1">⚠️ Obrigatórios</span>
-                        ${renderList(exigidos, "text-red-500", "Nenhum exigido")}
-                    </div>
-                    <div>
-                        <span class="text-[10px] font-bold text-green-600 uppercase flex items-center gap-1 mb-1">✅ Elegíveis</span>
-                        ${renderList(elegiveis, "text-green-500", "Nenhum elegível")}
-                    </div>
-                </div>
-                
-                ${terceirizadoFooterHtml}
-            `;
-      grid.appendChild(card);
-    });
-  }
-
-  // Input file logic (opcional, mantido simples)
-  const btnImport = document.getElementById("btn-import-family");
-  const fileInput = document.getElementById("family-file-input");
-  if (btnImport) {
-    btnImport.onclick = () => fileInput.click();
-    fileInput.onchange = (e) => {
-      /* Lógica de parse igual ao anterior */
-    };
-  }
 })();

@@ -41,6 +41,7 @@ async function initApp() {
         applyFilters();
         updateDatalist();
         checkWelcomeModal();
+        enviarStatsParaHome();
     } catch (err) {
         console.error("Erro ao carregar dados:", err);
         grid.innerHTML = `<p class="col-span-full text-center py-20 text-gray-600 dark:text-gray-400">Erro ao carregar o arquivo JSON local. Verifique se o ficheiro existe na pasta.</p>`;
@@ -239,10 +240,12 @@ window.openFamilyForm = (index = null) => {
         document.getElementById('f-tipo').value = item.Tipo;
         document.getElementById('f-terceirizado').checked = item.Terceirizado === "Sim";
         (item.CNAEs || []).forEach(c => addCnaeRow(c.codigo, c.descricao));
+        addCnaeRow();
         document.getElementById('form-title').innerText = "Editar Família";
     } else {
         document.getElementById('family-form').reset();
         document.getElementById('edit-index').value = "";
+        addCnaeRow();
         document.getElementById('form-title').innerText = "Nova Família";
     }
     modal.classList.remove('hidden');
@@ -260,6 +263,17 @@ document.getElementById('family-form').onsubmit = (e) => {
         const d = row.querySelector('.cnae-desc').value.trim();
         if (c) cnaes.push({ codigo: c, descricao: d });
     });
+
+    // Exige a inclusão de ao menos um CNAE
+    if (cnaes.length === 0) {
+            showError("CNAE Obrigatório", "É necessário incluir ao menos um CNAE válido para salvar esta família.");
+            
+            // Se não houver nenhuma linha, adiciona uma para facilitar
+            if (document.querySelectorAll('#cnae-rows-container > div').length === 0) {
+                addCnaeRow();
+            }
+            return;
+        }
 
     const payload = {
         "Família": document.getElementById('f-codigo').value,
@@ -306,6 +320,7 @@ document.getElementById('family-form').onsubmit = (e) => {
 
     updateDatalist();
     closeFamilyForm();
+    enviarStatsParaHome();
 };
 
 // --- REPLICAÇÃO E SUGESTÕES ---
@@ -493,16 +508,27 @@ window.copySummary = () => {
 };
 
 window.normalizeCnaeInput = (input) => {
-    // 1. Remove tudo que não é dígito
     let value = input.value.replace(/\D/g, ''); 
 
-    // 2. Verifica se tem o tamanho padrão de um CNAE (7 dígitos)
     if (value.length === 7) {
-        // Aplica a máscara 0000-0/00
         input.value = value.substring(0, 4) + '-' + value.substring(4, 5) + '/' + value.substring(5, 7);
-    } 
-    // Opcional: Alerta visual se o código estiver incompleto
-    else if (value.length > 0 && value.length !== 7) {
+        input.classList.remove('border-red-500');
+
+        const descInput = input.parentElement.querySelector('.cnae-desc');
+        
+        if (descInput && descInput.value.trim() === "") {
+            // Buscando de forma funcional e moderna
+            const cnaeEncontrado = familyData
+                .flatMap(f => f.CNAEs || [])
+                .find(c => c.codigo.replace(/\D/g, '') === value);
+
+            if (cnaeEncontrado?.descricao) {
+                descInput.value = cnaeEncontrado.descricao;
+                descInput.classList.add('bg-blue-50', 'dark:bg-blue-900/20');
+                setTimeout(() => descInput.classList.remove('bg-blue-50', 'dark:bg-blue-900/20'), 1000);
+            }
+        }
+    } else if (value.length > 0 && value.length !== 7) {
         input.classList.add('border-red-500');
     } else {
         input.classList.remove('border-red-500');
@@ -533,6 +559,87 @@ document.addEventListener('keydown', (e) => {
         }
     }
 });
+
+// Função para abrir o modal de erro
+window.showError = (title, message) => {
+    const modal = document.getElementById('errorModal');
+    const content = document.getElementById('errorModalContent');
+    
+    document.getElementById('errorModalTitle').innerText = title;
+    document.getElementById('errorMessageText').innerText = message;
+
+    modal.classList.remove('hidden');
+    // Força um reflow para a animação funcionar
+    setTimeout(() => {
+        modal.classList.add('opacity-100');
+        content.classList.add('scale-100', 'opacity-100');
+    }, 10);
+};
+
+// Função para fechar o modal de erro
+window.closeErrorModal = () => {
+    const modal = document.getElementById('errorModal');
+    const content = document.getElementById('errorModalContent');
+
+    modal.classList.remove('opacity-100');
+    content.classList.remove('scale-100', 'opacity-100');
+
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 300);
+};
+
+// --- INTEGRAÇÃO COM A HOME: ENVIAR ESTATÍSTICAS ---
+
+function calcularEstatisticasQualificacao() {
+    if (!familyData || familyData.length === 0) return { total: 0, cnaesUnicos: 0, percentualComCnae: 0 };
+
+    const totalFamilias = familyData.length;
+    const familiasComCnae = familyData.filter(f => f.CNAEs && f.CNAEs.length > 0).length;
+    
+    // Extrai todos os códigos CNAE únicos
+    const todosCnaes = new Set();
+    familyData.forEach(f => {
+        if (f.CNAEs) {
+            f.CNAEs.forEach(c => todosCnaes.add(c.codigo));
+        }
+    });
+
+    return {
+        total: totalFamilias,
+        cnaesUnicos: todosCnaes.size,
+        percentualComCnae: ((familiasComCnae / totalFamilias) * 100).toFixed(0)
+    };
+}
+
+function enviarStatsParaHome() {
+    if (!familyData || familyData.length === 0) return;
+
+    const total = familyData.length;
+    // Conta quantas famílias possuem o array CNAEs com pelo menos 1 item
+    const comCnae = familyData.filter(f => f.CNAEs && f.CNAEs.length > 0).length;
+    
+    const cnaesSet = new Set();
+    familyData.forEach(f => f.CNAEs?.forEach(c => cnaesSet.add(c.codigo)));
+
+    const stats = {
+        total: total,
+        cnaesUnicos: cnaesSet.size,
+        // Garante que o nome seja 'percentualComCnae' para a Home ler
+        percentualComCnae: total > 0 ? Math.round((comCnae / total) * 100) : 0
+    };
+
+    // Salva na chave "stats_familias" que a Home monitora
+    localStorage.setItem("stats_familias", JSON.stringify(stats));
+    
+    if (window.parent) {
+        window.parent.postMessage({
+            type: "STATS_RESPONSE",
+            app: "familias",
+            data: stats
+        }, "*");
+    }
+}
 
 // Inicia o App
 initApp();
