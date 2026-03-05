@@ -1,4 +1,5 @@
 let familyData = [];
+let cnaeDictionary = [];
 let filteredData = [];
 let currentPage = 1;
 const itemsPerPage = 6;
@@ -32,19 +33,32 @@ window.addEventListener("message", (event) => {
 // --- INICIALIZAÇÃO ---
 async function initApp() {
     try {
-        const response = await fetch('qualificacao_tecnica.json');
-        if (!response.ok) throw new Error("Erro ao carregar JSON");
+        // Carrega ambos os arquivos em paralelo para ganhar velocidade
+        const [respFamilies, respCnaes] = await Promise.all([
+            fetch('qualificacao_tecnica.json'),
+            fetch('cnae.json')
+        ]);
+
+        // Validação rigorosa: se qualquer um falhar, interrompe o fluxo
+        if (!respFamilies.ok || !respCnaes.ok) {
+            throw new Error("Falha ao carregar os arquivos de dados.");
+        }
+
+        familyData = await respFamilies.json();
+        cnaeDictionary = await respCnaes.json();
         
-        familyData = await response.json();
-        
-        // Inicializa a interface
+        // Inicializa a interface com todos os dados prontos
         applyFilters();
-        updateDatalist();
+        updateDatalist(); // Importante se houver busca dinâmica
         checkWelcomeModal();
         enviarStatsParaHome();
+
     } catch (err) {
-        console.error("Erro ao carregar dados:", err);
-        grid.innerHTML = `<p class="col-span-full text-center py-20 text-gray-600 dark:text-gray-400">Erro ao carregar o arquivo JSON local. Verifique se o ficheiro existe na pasta.</p>`;
+        console.error("Erro crítico na inicialização:", err);
+        // Feedback visual para o usuário não achar que o app travou
+        grid.innerHTML = `<p class="col-span-full text-center py-20 text-gray-600">
+            Erro ao carregar dados locais. Verifique a conexão ou os arquivos JSON.
+        </p>`;
     }
 }
 
@@ -74,6 +88,7 @@ function applyFilters(resetPage = true) {
     }
     renderGrid();
 }
+
 
 function renderGrid() {
 grid.innerHTML = '';
@@ -216,14 +231,80 @@ function renderDocList(title, list, colorClass) {
 function addCnaeRow(codigo = '', descricao = '') {
     const container = document.getElementById('cnae-rows-container');
     const div = document.createElement('div');
-    div.className = "flex flex-col sm:flex-row gap-2 bg-white dark:bg-slate-900 p-3 rounded-lg border dark:border-slate-700 animate-fade-in";
+    // Adicionei 'relative' para o dropdown de sugestões flutuar corretamente
+    div.className = "cnae-row relative flex flex-col sm:flex-row gap-2 bg-white dark:bg-slate-900 p-3 rounded-lg border dark:border-slate-700 animate-fade-in";
     div.innerHTML = `
-        <input type="text" placeholder="0000-0/00" value="${codigo}" maxlength="9" onblur="normalizeCnaeInput(this)" class="cnae-code w-full sm:w-32 p-2 text-xs border rounded-md dark:bg-slate-850 dark:border-slate-700 dark:text-white outline-none focus:border-blue-500">
-        <input type="text" placeholder="Descrição" value="${descricao}" class="cnae-desc flex-1 w-full p-2 text-xs border rounded-md dark:bg-slate-850 dark:border-slate-700 dark:text-white outline-none focus:border-blue-500">
+        <input type="text" placeholder="0000-0/00" value="${codigo}" maxlength="9" 
+            onblur="normalizeCnaeInput(this)" 
+            class="cnae-code w-full sm:w-32 p-2 text-xs border rounded-md dark:bg-slate-850 dark:border-slate-700 dark:text-white outline-none focus:border-blue-500">
+        
+        <div class="flex-1 relative">
+            <input type="text" placeholder="Digite a descrição para buscar..." value="${descricao}" 
+                oninput="searchCnaeByDesc(this)"
+                onkeydown="handleCnaeKeyDown(event, this)"
+                class="cnae-desc w-full p-2 text-xs border rounded-md dark:bg-slate-850 dark:border-slate-700 dark:text-white outline-none focus:border-blue-500">
+            <div class="cnae-autocomplete-list hidden absolute left-0 right-0 top-full mt-1 bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-md shadow-xl z-[100] max-h-48 overflow-y-auto"></div>
+        </div>
+
         <button type="button" onclick="this.parentElement.remove()" class="text-red-400 hover:text-red-600 p-1">✕</button>
     `;
+ 
     container.prepend(div);
 }
+
+// Busca CNAEs no dicionário pelo texto da descrição
+window.searchCnaeByDesc = (input) => {
+    const term = input.value.toLowerCase();
+    const listContainer = input.parentElement.querySelector('.cnae-autocomplete-list');
+    
+    if (term.length < 3) {
+        listContainer.classList.add('hidden');
+        return;
+    }
+
+    const matches = cnaeDictionary
+        .filter(c => c.DESCRIÇÃO.toLowerCase().includes(term))
+        .slice(0, 10); // Limita a 10 sugestões para performance
+
+    if (matches.length > 0) {
+        listContainer.innerHTML = matches.map(c => `
+            <div class="p-2 hover:bg-blue-50 dark:hover:bg-blue-900/30 cursor-pointer border-b last:border-0 dark:border-slate-700"
+                 onclick="selectCnaeSuggestion(this, '${c.CNAE}', '${c.DESCRIÇÃO}')">
+                <span class="text-[10px] font-bold text-blue-600 font-mono">${c.CNAE}</span>
+                <p class="text-[10px] text-slate-600 dark:text-slate-300 truncate">${c.DESCRIÇÃO}</p>
+            </div>
+        `).join('');
+        listContainer.classList.remove('hidden');
+    } else {
+        listContainer.classList.add('hidden');
+    }
+};
+
+// Ao clicar em uma sugestão do dropdown
+window.selectCnaeSuggestion = (elem, cod, desc) => {
+    const row = elem.closest('.cnae-row');
+    const codeInput = row.querySelector('.cnae-code');
+    const descInput = row.querySelector('.cnae-desc');
+    const listContainer = row.querySelector('.cnae-autocomplete-list');
+
+    codeInput.value = cod;
+    descInput.value = desc;
+    listContainer.classList.add('hidden');
+    codeInput.classList.remove('border-red-500');
+
+    // Abre uma nova linha automaticamente se esta for a última linha preenchida
+    const container = document.getElementById('cnae-rows-container');
+    if (row === container.firstElementChild) { // Como você usa prepend, o novo é o primeiro
+        addCnaeRow();
+    }
+};
+
+// Fecha o autocomplete se clicar fora
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.cnae-row')) {
+        document.querySelectorAll('.cnae-autocomplete-list').forEach(l => l.classList.add('hidden'));
+    }
+});
 
 window.openFamilyForm = (index = null) => {
     const modal = document.getElementById('family-form-modal');
@@ -256,13 +337,18 @@ window.closeFamilyForm = () => document.getElementById('family-form-modal').clas
 document.getElementById('family-form').onsubmit = (e) => {
     e.preventDefault();
     const index = document.getElementById('edit-index').value;
-    
-    const cnaes = [];
-    document.querySelectorAll('#cnae-rows-container > div').forEach(row => {
+
+    const cnaeMap = new Map();
+    document.querySelectorAll('#cnae-rows-container > .cnae-row').forEach(row => {
         const c = row.querySelector('.cnae-code').value.trim();
         const d = row.querySelector('.cnae-desc').value.trim();
-        if (c) cnaes.push({ codigo: c, descricao: d });
+        
+        if (c && !cnaeMap.has(c)) {
+            cnaeMap.set(c, { codigo: c, descricao: d });
+        }
     });
+
+    const cnaes = Array.from(cnaeMap.values());
 
     // Exige a inclusão de ao menos um CNAE
     if (cnaes.length === 0) {
@@ -508,27 +594,35 @@ window.copySummary = () => {
 };
 
 window.normalizeCnaeInput = (input) => {
+    // Remove tudo que não é número
     let value = input.value.replace(/\D/g, ''); 
 
     if (value.length === 7) {
-        input.value = value.substring(0, 4) + '-' + value.substring(4, 5) + '/' + value.substring(5, 7);
+        // Aplica a máscara 0000-0/00
+        const formattedCnae = value.substring(0, 4) + '-' + value.substring(4, 5) + '/' + value.substring(5, 7);
+        input.value = formattedCnae;
         input.classList.remove('border-red-500');
 
         const descInput = input.parentElement.querySelector('.cnae-desc');
         
-        if (descInput && descInput.value.trim() === "") {
-            // Buscando de forma funcional e moderna
-            const cnaeEncontrado = familyData
-                .flatMap(f => f.CNAEs || [])
-                .find(c => c.codigo.replace(/\D/g, '') === value);
+        // Busca a descrição no dicionário completo (cnae.json)
+        const cnaeEncontrado = cnaeDictionary.find(c => c.CNAE === formattedCnae);
 
-            if (cnaeEncontrado?.descricao) {
-                descInput.value = cnaeEncontrado.descricao;
-                descInput.classList.add('bg-blue-50', 'dark:bg-blue-900/20');
-                setTimeout(() => descInput.classList.remove('bg-blue-50', 'dark:bg-blue-900/20'), 1000);
-            }
+        if (cnaeEncontrado && descInput) {
+            descInput.value = cnaeEncontrado.DESCRIÇÃO;
+            
+            // Feedback visual de sucesso (opcional)
+            descInput.classList.add('bg-emerald-50', 'dark:bg-emerald-900/20');
+            setTimeout(() => descInput.classList.remove('bg-emerald-50', 'dark:bg-emerald-900/20'), 1000);
+            
+            // Trigger para o auto-append (se você implementou a sugestão anterior)
+            handleCnaeBlur(descInput);
+        } else if (descInput && descInput.value.trim() === "") {
+            // Se não achou no dicionário e o campo está vazio, sinaliza erro
+            input.classList.add('border-red-500');
         }
-    } else if (value.length > 0 && value.length !== 7) {
+    } else if (value.length > 0) {
+        // Se tem algo digitado mas não tem 7 dígitos, sinaliza erro visual
         input.classList.add('border-red-500');
     } else {
         input.classList.remove('border-red-500');
@@ -640,6 +734,48 @@ function enviarStatsParaHome() {
         }, "*");
     }
 }
+
+// Adicione esta função para gerenciar o teclado e o Tab
+window.handleCnaeKeyDown = (event, input) => {
+    const listContainer = input.parentElement.querySelector('.cnae-autocomplete-list');
+    const items = listContainer.querySelectorAll('div');
+    let currentIndex = Array.from(items).findIndex(item => item.classList.contains('bg-blue-50'));
+
+    if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        if (currentIndex < items.length - 1) {
+            if (currentIndex !== -1) items[currentIndex].classList.remove('bg-blue-50', 'dark:bg-blue-900/30');
+            items[currentIndex + 1].classList.add('bg-blue-50', 'dark:bg-blue-900/30');
+            items[currentIndex + 1].scrollIntoView({ block: 'nearest' });
+        }
+    } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        if (currentIndex > 0) {
+            items[currentIndex].classList.remove('bg-blue-50', 'dark:bg-blue-900/30');
+            items[currentIndex - 1].classList.add('bg-blue-50', 'dark:bg-blue-900/30');
+            items[currentIndex - 1].scrollIntoView({ block: 'nearest' });
+        }
+    } else if (event.key === 'Enter' && !listContainer.classList.contains('hidden')) {
+        event.preventDefault();
+        if (currentIndex !== -1) {
+            items[currentIndex].click();
+        } else if (items.length > 0) {
+            items[0].click();
+        }
+    } else if (event.key === 'Tab' && !event.shiftKey) {
+        // Se der Tab na descrição da primeira linha (topo), adiciona nova
+        const container = document.getElementById('cnae-rows-container');
+        if (input.closest('.cnae-row') === container.firstElementChild && input.value.trim() !== "") {
+            addCnaeRow();
+        }
+    }
+};
+
+// Defina o handleCnaeBlur que é chamado na linha 445 do seu script
+window.handleCnaeBlur = (input) => {
+    // Apenas um placeholder para evitar erro de referência ou
+    // adicione lógica extra de validação aqui se desejar.
+};
 
 // Inicia o App
 initApp();
