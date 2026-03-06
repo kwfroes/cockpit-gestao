@@ -593,41 +593,62 @@ window.copySummary = () => {
     });
 };
 
+
 window.normalizeCnaeInput = (input) => {
-    // Remove tudo que não é número
+    // 1. Limpeza rigorosa: remove TUDO que não for dígito (0-9)
+    // Isso remove espaços, pontos, traços e barras ANTES de validar
     let value = input.value.replace(/\D/g, ''); 
 
-    if (value.length === 7) {
-        // Aplica a máscara 0000-0/00
-        const formattedCnae = value.substring(0, 4) + '-' + value.substring(4, 5) + '/' + value.substring(5, 7);
-        input.value = formattedCnae;
-        input.classList.remove('border-red-500');
+    const descInput = input.parentElement.querySelector('.cnae-desc');
 
-        const descInput = input.parentElement.querySelector('.cnae-desc');
+    // 2. Agora validamos apenas a STRING LIMPA (somente números)
+    if (value.length === 7) {
+        // 3. Aplica a máscara padrão 0000-0/00 em cima dos números limpos
+        const formattedCnae = value.substring(0, 4) + '-' + value.substring(4, 5) + '/' + value.substring(5, 7);
         
-        // Busca a descrição no dicionário completo (cnae.json)
+        // Atualiza o valor do input com a máscara correta
+        input.value = formattedCnae;
+
+        // 4. Busca no dicionário
         const cnaeEncontrado = cnaeDictionary.find(c => c.CNAE === formattedCnae);
 
-        if (cnaeEncontrado && descInput) {
+        if (cnaeEncontrado) {
             descInput.value = cnaeEncontrado.DESCRIÇÃO;
+            input.classList.remove('border-red-500', 'ring-2', 'ring-red-200');
+            input.classList.add('border-emerald-500'); 
             
-            // Feedback visual de sucesso (opcional)
-            descInput.classList.add('bg-emerald-50', 'dark:bg-emerald-900/20');
-            setTimeout(() => descInput.classList.remove('bg-emerald-50', 'dark:bg-emerald-900/20'), 1000);
-            
-            // Trigger para o auto-append (se você implementou a sugestão anterior)
-            handleCnaeBlur(descInput);
-        } else if (descInput && descInput.value.trim() === "") {
-            // Se não achou no dicionário e o campo está vazio, sinaliza erro
-            input.classList.add('border-red-500');
+            if (typeof handleCnaeBlur === 'function') {
+                handleCnaeBlur(descInput);
+            }
+
+            setTimeout(() => input.classList.remove('border-emerald-500'), 1500);
+        } else {
+            aplicarErroCnae(input, descInput, "CNAE não encontrado na base.");
         }
+    } else if (value.length > 7) {
+        // Caso o usuário cole algo maior, tentamos pegar apenas os primeiros 7 números
+        let extraClean = value.substring(0, 7);
+        input.value = extraClean;
+        // Chama a função novamente com o valor corrigido
+        window.normalizeCnaeInput(input);
+        
     } else if (value.length > 0) {
-        // Se tem algo digitado mas não tem 7 dígitos, sinaliza erro visual
-        input.classList.add('border-red-500');
+        aplicarErroCnae(input, descInput, "Formato inválido (mínimo 7 dígitos).");
     } else {
-        input.classList.remove('border-red-500');
+        input.classList.remove('border-red-500', 'ring-2', 'ring-red-200');
+        if (descInput) descInput.placeholder = "Descrição do CNAE";
     }
 };
+
+function aplicarErroCnae(input, descInput, mensagem) {
+    input.classList.add('border-red-500', 'ring-2', 'ring-red-200');
+    if (descInput) {
+        descInput.value = ""; 
+        descInput.placeholder = mensagem;
+    }
+}
+
+
 
 // --- NAVEGAÇÃO POR TECLADO ---
 document.addEventListener('keydown', (e) => {

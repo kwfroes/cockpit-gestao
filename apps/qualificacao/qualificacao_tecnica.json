@@ -1973,6 +1973,10 @@
     "Documentos Elegíveis": [],
     "CNAEs": [
       {
+        "codigo": "8020-0/00",
+        "descricao": "Atividades de monitoramento de sistemas de segurança"
+      },
+      {
         "codigo": "5250-8/04",
         "descricao": "Organização logística do transporte de carga"
       }
@@ -3152,160 +3156,327 @@
   {
     "Família": "02.46",
     "Descrição": "CONSULTORIA E ASSESSSORIA - ARTISTICO CULTURAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9493-6/00",
+        "descricao": "Atividades de organizações associativas ligadas à cultura e à arte"
+      },
+      {
+        "codigo": "9001-9/99",
+        "descricao": "Artes cênicas, espetáculos e atividades complementares não especificados anteriormente"
+      },
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      }
+    ]
   },
   {
     "Família": "02.47",
     "Descrição": "CONSULTORIA E ASSESSORIA EM MONITORAMENTO E AVALIAÇÃO DE PROGRAMAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      },
+      {
+        "codigo": "7020-4/00",
+        "descricao": "Atividades de consultoria em gestão empresarial, exceto consultoria técnica específica"
+      },
+      {
+        "codigo": "7490-1/04",
+        "descricao": "Atividades de intermediação e agenciamento de serviços e negócios em geral, exceto imobiliários"
+      }
+    ]
   },
   {
     "Família": "02.48",
     "Descrição": "CONSULTORIA E ASSESSORIA EM AREA DE CARTOGRAFIA E GEOPROCE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      }
+    ]
   },
   {
     "Família": "02.49",
     "Descrição": "ORGAN. DE CONGRESSO,SIMPOSIO,CONFERENCIA,EXP. FEIRA-NAO TURISTICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CRA - Conselho Regional de Administração",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8230-0/01",
+        "descricao": "Serviços de organização de feiras, congressos, exposições e festas"
+      },
+      {
+        "codigo": "7319-0/01",
+        "descricao": "Criação de estandes para feiras e exposições"
+      }
+    ]
   },
   {
     "Família": "02.50",
     "Descrição": "SERVIÇOS DE LABORATORIO DE ANATOMIA PATOLOGICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Alvará de Vigilância Sanitária",
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8640-2/01",
+        "descricao": "Laboratórios de anatomia patológica e citológica"
+      }
+    ]
   },
   {
     "Família": "02.51",
     "Descrição": "CONSULTORIA, ASSESSORIA E ESTUDOS ARQUEOLOGICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7119-7/02",
+        "descricao": "Atividades de estudos geológicos"
+      }
+    ]
   },
   {
     "Família": "02.52",
     "Descrição": "MODERNIZAÇÃO ADMINISTRATIVA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CRA - Conselho Regional de Administração",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6204-0/00",
+        "descricao": "Consultoria em tecnologia da informação"
+      },
+      {
+        "codigo": "8411-6/00",
+        "descricao": "Administração pública em geral"
+      },
+      {
+        "codigo": "7020-4/00",
+        "descricao": "Atividades de consultoria em gestão empresarial, exceto consultoria técnica específica"
+      }
+    ]
   },
   {
     "Família": "02.53",
     "Descrição": "ORGANIZACAO E ADMINISTRACAO DE ATIVIDADES AGRO-ECOLOGICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7490-1/03",
+        "descricao": "Serviços de agronomia e de consultoria às atividades agrícolas e pecuárias"
+      }
+    ]
   },
   {
     "Família": "02.54",
     "Descrição": "CONSULTORIA E ASSESSORIA EM SUSTENTABILIDADE AMBIENTAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      },
+      {
+        "codigo": "7020-4/00",
+        "descricao": "Atividades de consultoria em gestão empresarial, exceto consultoria técnica específica"
+      }
+    ]
   },
   {
     "Família": "02.55",
     "Descrição": "SERVIÇOS DE LAVANDERIA HOSPITALAR",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Alvará de Vigilância Sanitária",
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9601-7/01",
+        "descricao": "Lavanderias"
+      }
+    ]
   },
   {
     "Família": "02.56",
     "Descrição": "INSCRICAO DE LIVROS E TRABALHOS CIENTIFICOS NA BIBLIOTECA NACIONAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      }
+    ]
   },
   {
     "Família": "02.57",
     "Descrição": "ORGANIZACAO E ADMINISTACAO DE ATIVIDADES E CENTROS EDUCACIONAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      },
+      {
+        "codigo": "8550-3/02",
+        "descricao": "Atividades de apoio à educação, exceto caixas escolares"
+      }
+    ]
   },
   {
     "Família": "02.58",
     "Descrição": "CONSULTORIA E ASSESSORIA EM ATUARIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6621-5/01",
+        "descricao": "Peritos e avaliadores de seguros"
+      },
+      {
+        "codigo": "6621-5/02",
+        "descricao": "Auditoria e consultoria atuarial"
+      }
+    ]
   },
   {
     "Família": "02.59",
     "Descrição": "SERVICO TECNICO EM CIENCIAS BIOLOGICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      }
+    ]
   },
   {
     "Família": "02.60",
     "Descrição": "SERVICOS DE ANALISE DERMATOGLIFICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      }
+    ]
   },
   {
     "Família": "02.61",
     "Descrição": "INSCRICAO DE ORGAO E OU ENTIDADE EM PROGRAMA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8299-7/99",
+        "descricao": "Outras atividades de serviços prestados principalmente às empresas não especificadas anteriormente"
+      }
+    ]
   },
   {
     "Família": "02.62",
     "Descrição": "SERVICOS DE CREMACAO DE CORPOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9603-3/02",
+        "descricao": "Serviços de cremação"
+      }
+    ]
   },
   {
     "Família": "02.63",
@@ -3314,44 +3485,98 @@
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "Tipo": "S",
+    "CNAEs": [
+      {
+        "codigo": "8230-0/01",
+        "descricao": "Serviços de organização de feiras, congressos, exposições e festas"
+      },
+      {
+        "codigo": "7319-0/01",
+        "descricao": "Criação de estandes para feiras e exposições"
+      }
+    ]
   },
   {
     "Família": "02.64",
     "Descrição": "CONSULTORIA E ASSESSORIA EM ASSISTENCIA SOCIAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Conselho Regional de Serviço Social",
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8800-6/00",
+        "descricao": "Serviços de assistência social sem alojamento"
+      }
+    ]
   },
   {
     "Família": "02.65",
     "Descrição": "SUPORTE OPERACIONAL E APOIO LOGISTICO A SERVICOS EDUCACIONAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8299-7/99",
+        "descricao": "Outras atividades de serviços prestados principalmente às empresas não especificadas anteriormente"
+      }
+    ]
   },
   {
     "Família": "02.66",
     "Descrição": "GESTAO DE TECNOLOGIA APLICADA A SERVIÇOS PUBLICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "6204-0/00",
+        "descricao": "Consultoria em tecnologia da informação"
+      }
+    ]
   },
   {
     "Família": "02.67",
     "Descrição": "SERVIÇOS PUBLICIZADOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8299-7/99",
+        "descricao": "Outras atividades de serviços prestados principalmente às empresas não especificadas anteriormente"
+      },
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      },
+      {
+        "codigo": "9102-3/01",
+        "descricao": "Atividades de museus e de exploração de lugares e prédios históricos e atrações similares"
+      },
+      {
+        "codigo": "8660-7/00",
+        "descricao": "Atividades de apoio à gestão de saúde"
+      }
+    ]
   },
   {
     "Família": "02.68",
@@ -3379,6 +3604,8 @@
   {
     "Família": "02.69",
     "Descrição": "SERVIÇO TECNICO AGROPECUARIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
@@ -3387,20 +3614,38 @@
       "Ministério da Agricultura",
       "ADAB - Agencia Estadual de Defesa Agropecuária"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "7490-1/03",
+        "descricao": "Serviços de agronomia e de consultoria às atividades agrícolas e pecuárias"
+      }
+    ]
   },
   {
     "Família": "02.70",
     "Descrição": "CONSULTORIA E ASSESSORIA EM SERVICOS TERCEIRIZADOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7020-4/00",
+        "descricao": "Atividades de consultoria em gestão empresarial, exceto consultoria técnica específica"
+      }
+    ]
   },
   {
     "Família": "02.71",
     "Descrição": "SERVICOS CONTABIL, ECONOMICO E FINANCEIRO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
@@ -3410,25 +3655,76 @@
       "CRC - Conselho Regional de Contabilidade",
       "CVM - Comissão de Valores Mobiliários"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6920-6/02",
+        "descricao": "Atividades de consultoria e auditoria contábil e tributária"
+      },
+      {
+        "codigo": "7020-4/00",
+        "descricao": "Atividades de consultoria em gestão empresarial, exceto consultoria técnica específica"
+      },
+      {
+        "codigo": "6920-6/01",
+        "descricao": "Atividades de contabilidade"
+      }
+    ]
   },
   {
     "Família": "02.72",
     "Descrição": "SERVICOS DE ASSISTENCIA SOCIAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8730-1/99",
+        "descricao": "Atividades de assistência social prestadas em residências coletivas e particulares não especificadas anteriormente"
+      },
+      {
+        "codigo": "8720-4/99",
+        "descricao": "Atividades de assistência psicossocial e à saúde a portadores de distúrbios psíquicos, deficiência mental e dependência química não especificadas anteriormente"
+      },
+      {
+        "codigo": "8720-4/01",
+        "descricao": "Atividades de centros de assistência psicossocial"
+      },
+      {
+        "codigo": "8800-6/00",
+        "descricao": "Serviços de assistência social sem alojamento"
+      }
+    ]
   },
   {
     "Família": "02.73",
     "Descrição": "SERVICO DE FORNECIMENTO DE GAS NATURAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4784-9/00",
+        "descricao": "Comércio varejista de gás liqüefeito de petróleo (GLP)"
+      },
+      {
+        "codigo": "3520-4/01",
+        "descricao": "Produção de gás; processamento de gás natural"
+      },
+      {
+        "codigo": "1921-7/00",
+        "descricao": "Fabricação de produtos do refino de petróleo"
+      },
+      {
+        "codigo": "4940-0/00",
+        "descricao": "Transporte dutoviário"
+      }
+    ]
   },
   {
     "Família": "02.74",
@@ -3453,56 +3749,154 @@
   {
     "Família": "02.75",
     "Descrição": "OUTSOURCING DE EQUIPAMENTOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7739-0/01",
+        "descricao": "Aluguel de máquinas e equipamentos para extração de minérios e petróleo, sem operador"
+      },
+      {
+        "codigo": "7739-0/03",
+        "descricao": "Aluguel de palcos, coberturas e outras estruturas de uso temporário, exceto andaimes"
+      },
+      {
+        "codigo": "7739-0/02",
+        "descricao": "Aluguel de equipamentos científicos, médicos e hospitalares, sem operador"
+      },
+      {
+        "codigo": "7733-1/00",
+        "descricao": "Aluguel de máquinas e equipamentos para escritório"
+      },
+      {
+        "codigo": "7739-0/99",
+        "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+      }
+    ]
   },
   {
     "Família": "02.76",
     "Descrição": "PROGRAMA DE APOIO PROFISSIONAL A ALUNOS DA REDE PUBLICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8730-1/99",
+        "descricao": "Atividades de assistência social prestadas em residências coletivas e particulares não especificadas anteriormente"
+      },
+      {
+        "codigo": "8550-3/02",
+        "descricao": "Atividades de apoio à educação, exceto caixas escolares"
+      },
+      {
+        "codigo": "8800-6/00",
+        "descricao": "Serviços de assistência social sem alojamento"
+      }
+    ]
   },
   {
     "Família": "02.77",
     "Descrição": "FACILIDADES PREDIAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8111-7/00",
+        "descricao": "Serviços combinados para apoio a edifícios, exceto condomínios prediais"
+      },
+      {
+        "codigo": "8011-1/01",
+        "descricao": "Atividades de vigilância e segurança privada"
+      },
+      {
+        "codigo": "8121-4/00",
+        "descricao": "Limpeza em prédios e em domicílios"
+      },
+      {
+        "codigo": "8211-3/00",
+        "descricao": "Serviços combinados de escritório e apoio administrativo"
+      }
+    ]
   },
   {
     "Família": "02.78",
     "Descrição": "CONSULTORIA E ASSESSORIA EM REVISAO TARIFARIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6920-6/02",
+        "descricao": "Atividades de consultoria e auditoria contábil e tributária"
+      },
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      },
+      {
+        "codigo": "7020-4/00",
+        "descricao": "Atividades de consultoria em gestão empresarial, exceto consultoria técnica específica"
+      }
+    ]
   },
   {
     "Família": "02.79",
     "Descrição": "FORNECIMENTO DE GAS MEDICINAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4684-2/99",
+        "descricao": "Comércio atacadista de outros produtos químicos e petroquímicos não especificados anteriormente"
+      },
+      {
+        "codigo": "2014-2/00",
+        "descricao": "Fabricação de gases industriais"
+      },
+      {
+        "codigo": "3520-4/01",
+        "descricao": "Produção de gás; processamento de gás natural"
+      }
+    ]
   },
   {
     "Família": "02.80",
     "Descrição": "CONECTIVIDADE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6311-9/00",
+        "descricao": "Tratamento de dados, provedores de serviços de aplicação e serviços de hospedagem na internet"
+      },
+      {
+        "codigo": "6190-6/02",
+        "descricao": "Provedores de voz sobre protocolo internet - VOIP"
+      }
+    ]
   },
   {
     "Família": "02.81",
@@ -10170,25 +10564,34 @@
       {
         "codigo": "2052-5/00",
         "descricao": "Fabricação de desinfestantes domissanitários"
+      },
+      {
+        "codigo": "4646-0/01",
+        "descricao": "Comércio atacadista de cosméticos e produtos de perfumaria"
       }
     ]
   },
   {
     "Família": "68.10",
     "Descrição": "PRODUTOS QUIMICOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Alvará de Vigilância Sanitária"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
     "CNAEs": [
       {
-        "codigo": "4789-0/05",
-        "descricao": "Comércio varejista de produtos saneantes domissanitários"
+        "codigo": "4646-0/01",
+        "descricao": "Comércio atacadista de cosméticos e produtos de perfumaria"
       },
       {
         "codigo": "2052-5/00",
         "descricao": "Fabricação de desinfestantes domissanitários"
+      },
+      {
+        "codigo": "4789-0/05",
+        "descricao": "Comércio varejista de produtos saneantes domissanitários"
       }
     ]
   },
