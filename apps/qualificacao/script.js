@@ -1,5 +1,6 @@
 let familyData = [];
 let cnaeDictionary = [];
+let validDocs = [];
 let filteredData = [];
 let currentPage = 1;
 const itemsPerPage = 6;
@@ -34,9 +35,10 @@ window.addEventListener("message", (event) => {
 async function initApp() {
     try {
         // Carrega ambos os arquivos em paralelo para ganhar velocidade
-        const [respFamilies, respCnaes] = await Promise.all([
+        const [respFamilies, respCnaes, respDocs] = await Promise.all([
             fetch('qualificacao_tecnica.json'),
-            fetch('cnae.json')
+            fetch('cnae.json'),
+            fetch('../gerador/docs-qual-tec.json').catch(() => null) 
         ]);
 
         // Validação rigorosa: se qualquer um falhar, interrompe o fluxo
@@ -46,6 +48,26 @@ async function initApp() {
 
         familyData = await respFamilies.json();
         cnaeDictionary = await respCnaes.json();
+
+        const cnaesConhecidos = new Set(cnaeDictionary.map(c => c.CNAE));
+        familyData.forEach(familia => {
+            if (familia.CNAEs) {
+                familia.CNAEs.forEach(c => {
+                    if (!cnaesConhecidos.has(c.codigo)) {
+                        cnaeDictionary.push({
+                            "CNAE": c.codigo,
+                            "DESCRIÇÃO": c.descricao
+                        });
+                        cnaesConhecidos.add(c.codigo);
+                    }
+                });
+            }
+        });
+
+        if (respDocs && respDocs.ok) {
+            validDocs = await respDocs.json();
+            populateDocsDatalist();
+        }
         
         // Inicializa a interface com todos os dados prontos
         applyFilters();
@@ -60,6 +82,12 @@ async function initApp() {
             Erro ao carregar dados locais. Verifique a conexão ou os arquivos JSON.
         </p>`;
     }
+}
+
+function populateDocsDatalist() {
+    const datalist = document.getElementById('valid-docs-list');
+    if (!datalist) return;
+    datalist.innerHTML = validDocs.map(doc => `<option value="${doc.nome}"></option>`).join('');
 }
 
 // --- FILTROS E RENDERIZAÇÃO ---
@@ -234,7 +262,7 @@ function addCnaeRow(codigo = '', descricao = '') {
     // Adicionei 'relative' para o dropdown de sugestões flutuar corretamente
     div.className = "cnae-row relative flex flex-col sm:flex-row gap-2 bg-white dark:bg-slate-900 p-3 rounded-lg border dark:border-slate-700 animate-fade-in";
     div.innerHTML = `
-        <input type="text" placeholder="0000-0/00" value="${codigo}" maxlength="9" 
+        <input type="text" placeholder="0000-0/00" value="${codigo}" maxlength="10" 
             onblur="normalizeCnaeInput(this)" 
             class="cnae-code w-full sm:w-32 p-2 text-xs border rounded-md dark:bg-slate-850 dark:border-slate-700 dark:text-white outline-none focus:border-blue-500">
         
@@ -306,12 +334,69 @@ document.addEventListener('click', (e) => {
     }
 });
 
+window.addDocument = (type) => {
+    const inputId = type === 'exigido' ? 'input-doc-exigido' : 'input-doc-elegivel';
+    const containerId = type === 'exigido' ? 'container-docs-exigidos' : 'container-docs-elegiveis';
+    const badgeStyle = type === 'exigido' 
+        ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border-red-200 dark:border-red-800' 
+        : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800';
+    
+    const input = document.getElementById(inputId);
+    const docName = input.value.trim();
+    
+    if (!docName) return;
+
+    const container = document.getElementById(containerId);
+    
+    // Evita documentos duplicados na mesma lista
+    const existingDocs = Array.from(container.querySelectorAll('.doc-name-value')).map(span => span.textContent);
+    if (existingDocs.includes(docName)) {
+        input.value = '';
+        return;
+    }
+
+    const tag = document.createElement('div');
+    tag.className = `flex items-center gap-1 px-2 py-1 rounded text-[10px] font-bold border shadow-sm ${badgeStyle} animate-fade-in`;
+    tag.innerHTML = `
+        <span class="doc-name-value">${docName}</span>
+        <button type="button" onclick="this.parentElement.remove()" class="ml-1 text-current hover:opacity-50 text-xs leading-none">&times;</button>
+    `;
+    
+    container.appendChild(tag);
+    input.value = ''; // Limpa o input após adicionar
+};
+
+window.toggleDocsSection = () => {
+    const section = document.getElementById('docs-content-section');
+    const iconExpand = document.getElementById('icon-expand');
+    const iconCollapse = document.getElementById('icon-collapse');
+    
+    // Se está escondido, mostra (expande)
+    if (section.classList.contains('hidden')) {
+        section.classList.remove('hidden');
+        section.classList.add('animate-fade-in');
+        iconExpand.classList.add('hidden');
+        iconCollapse.classList.remove('hidden');
+    } else {
+        // Se está visível, esconde (recolhe)
+        section.classList.add('hidden');
+        section.classList.remove('animate-fade-in');
+        iconExpand.classList.remove('hidden');
+        iconCollapse.classList.add('hidden');
+    }
+};
+
 window.openFamilyForm = (index = null) => {
     const modal = document.getElementById('family-form-modal');
     document.getElementById('cnae-rows-container').innerHTML = '';
     document.getElementById('f-destinos').value = '';
     document.getElementById('f-replicate').checked = false;
     document.getElementById('replicate-container').classList.add('hidden');
+    document.getElementById('container-docs-exigidos').innerHTML = '';
+    document.getElementById('container-docs-elegiveis').innerHTML = '';
+    document.getElementById('docs-content-section').classList.add('hidden');
+    document.getElementById('icon-expand').classList.remove('hidden');
+    document.getElementById('icon-collapse').classList.add('hidden');
     
     if (index !== null) {
         const item = familyData[index];
@@ -322,6 +407,22 @@ window.openFamilyForm = (index = null) => {
         document.getElementById('f-terceirizado').checked = item.Terceirizado === "Sim";
         (item.CNAEs || []).forEach(c => addCnaeRow(c.codigo, c.descricao));
         addCnaeRow();
+
+        // Carrega Documentos Exigidos
+        const exigidos = item["Documentos Exigidos"] || item["DOCUMENTOS EXIGIDOS"] || [];
+        exigidos.forEach(doc => {
+            document.getElementById('input-doc-exigido').value = doc;
+            addDocument('exigido');
+        });
+
+        // Carrega Documentos Elegíveis
+        const elegiveis = item["Documentos Elegíveis"] || item["DOCUMENTOS ELEGÍVEIS"] || [];
+        elegiveis.forEach(doc => {
+            document.getElementById('input-doc-elegivel').value = doc;
+            addDocument('elegivel');
+        });
+
+
         document.getElementById('form-title').innerText = "Editar Família";
     } else {
         document.getElementById('family-form').reset();
@@ -361,13 +462,16 @@ document.getElementById('family-form').onsubmit = (e) => {
             return;
         }
 
+    const docsExigidos = Array.from(document.querySelectorAll('#container-docs-exigidos .doc-name-value')).map(span => span.textContent);
+    const docsElegiveis = Array.from(document.querySelectorAll('#container-docs-elegiveis .doc-name-value')).map(span => span.textContent);
+
     const payload = {
         "Família": document.getElementById('f-codigo').value,
         "Descrição": document.getElementById('f-desc').value,
         "Tipo": document.getElementById('f-tipo').value,
         "Terceirizado": document.getElementById('f-terceirizado').checked ? "Sim" : "Não",
-        "Documentos Exigidos": index !== "" ? (familyData[index]["Documentos Exigidos"] || familyData[index]["DOCUMENTOS EXIGIDOS"] || []) : [],
-        "Documentos Elegíveis": index !== "" ? (familyData[index]["Documentos Elegíveis"] || familyData[index]["DOCUMENTOS ELEGÍVEIS"] || []) : [],
+        "Documentos Exigidos": docsExigidos,
+        "Documentos Elegíveis": docsElegiveis,
         "CNAEs": cnaes
     };
 
@@ -403,6 +507,16 @@ document.getElementById('family-form').onsubmit = (e) => {
             }
         });
     }
+
+    cnaes.forEach(cnaeSalvo => {
+        const existe = cnaeDictionary.find(c => c.CNAE === cnaeSalvo.codigo);
+        if (!existe) {
+            cnaeDictionary.push({
+                "CNAE": cnaeSalvo.codigo,
+                "DESCRIÇÃO": cnaeSalvo.descricao
+            });
+        }
+    });
 
     updateDatalist();
     closeFamilyForm();

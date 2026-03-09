@@ -162,6 +162,84 @@
                     <input type="text" id="f-desc" class="w-full p-2.5 border rounded-lg dark:bg-slate-850 dark:border-slate-700 dark:text-white text-sm" required>
                 </div>
 
+
+                <div class="mt-4 mb-4">
+                    <button type="button" onclick="toggleDocsSection()" class="w-full flex justify-between items-center bg-slate-100 dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <span class="text-[10px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest flex items-center gap-2">
+                            📄 Qualificação Técnica
+                        </span>
+                        <span class="text-slate-500">
+                            <svg 
+                            id="icon-expand" 
+                            class="w-4 h-4" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                            >
+                            <path 
+                                d="M15 19H19M19 19V15M19 19L15 15M9 5H5M5 5V9M5 5L9 9" 
+                                stroke-linecap="round" 
+                                stroke-linejoin="round" 
+                                stroke-width="2"
+                            />
+                            <path 
+                                d="M15 5H19M19 5V9M19 5L15 9M9 19H5M5 19V15M5 19L9 15" 
+                                stroke-linecap="round" 
+                                stroke-linejoin="round" 
+                                stroke-width="2"
+                            />
+                            </svg>
+
+                            <svg 
+                            id="icon-collapse" 
+                            class="w-4 h-4 hidden" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                            >
+                            <path 
+                                d="M19 15H15M15 15V19M15 15L19 19M5 9H9M9 9V5M9 9L5 5" 
+                                stroke-linecap="round" 
+                                stroke-linejoin="round" 
+                                stroke-width="2"
+                            />
+                            <path 
+                                d="M19 9H15M15 9V5M15 9L19 5M5 15H9M9 15V19M9 15L5 19" 
+                                stroke-linecap="round" 
+                                stroke-linejoin="round" 
+                                stroke-width="2"
+                            />
+                            </svg>                        
+                        </span>
+                    </button>
+                    
+                    <div id="docs-content-section" class="hidden mt-3">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-red-50 dark:bg-red-900/10 p-4 rounded-xl border border-red-100 dark:border-red-900/30">
+                                <label class="block text-[10px] font-bold text-red-600 dark:text-red-400 uppercase mb-2 tracking-widest">⚠️ Documentos Exigidos</label>
+                                <div class="flex gap-2 mb-3">
+                                    <input type="text" id="input-doc-exigido" list="valid-docs-list" class="flex-1 p-2 text-xs border rounded-lg dark:bg-slate-850 dark:border-slate-700 dark:text-white outline-none focus:border-red-500" placeholder="Selecione ou digite...">
+                                    <button type="button" onclick="addDocument('exigido')" class="bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-700 transition-colors shadow-sm">+</button>
+                                </div>
+                                <div id="container-docs-exigidos" class="flex flex-wrap gap-2 min-h-[30px] content-start"></div>
+                            </div>
+
+                            <div class="bg-emerald-50 dark:bg-emerald-900/10 p-4 rounded-xl border border-emerald-100 dark:border-emerald-900/30">
+                                <label class="block text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase mb-2 tracking-widest">✅ Documentos Elegíveis</label>
+                                <div class="flex gap-2 mb-3">
+                                    <input type="text" id="input-doc-elegivel" list="valid-docs-list" class="flex-1 p-2 text-xs border rounded-lg dark:bg-slate-850 dark:border-slate-700 dark:text-white outline-none focus:border-emerald-500" placeholder="Selecione ou digite...">
+                                    <button type="button" onclick="addDocument('elegivel')" class="bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-emerald-700 transition-colors shadow-sm">+</button>
+                                </div>
+                                <div id="container-docs-elegiveis" class="flex flex-wrap gap-2 min-h-[30px] content-start"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <datalist id="valid-docs-list"></datalist>
+
+
                 <div class="bg-slate-50 dark:bg-slate-850 p-4 rounded-xl border dark:border-slate-800">
                     <div class="flex justify-between items-center mb-4">
                         <label class="text-[10px] font-bold text-blue-600 uppercase tracking-widest">CNAEs Relacionados</label>

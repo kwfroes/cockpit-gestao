@@ -202,5 +202,13 @@
     {
         "id": 51,
         "nome": "OAB - Ordem dos Advogados do Brasil"
+    },
+    {
+        "id": 52,
+        "nome": "Autorização da SEDUR - Município de Salvador"
+    },
+    {
+        "id": 53,
+        "nome": "CFTA - Conselho Federal dos Técnicos Agrícolas"
     }
 ]
