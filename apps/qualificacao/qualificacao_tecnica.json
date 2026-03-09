@@ -3901,60 +3901,136 @@
   {
     "Família": "02.81",
     "Descrição": "SEGURANÇA DA INFORMAÇÃO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "6202-3/00",
+        "descricao": "Desenvolvimento e licenciamento de programas de computador customizáveis"
+      },
+      {
+        "codigo": "6201-5/00",
+        "descricao": "Desenvolvimento de programas de computador sob encomenda"
+      },
+      {
+        "codigo": "6204-0/00",
+        "descricao": "Consultoria em tecnologia da informação"
+      }
+    ]
   },
   {
     "Família": "02.82",
     "Descrição": "PUBLICIDADE INSTITUCIONAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7319-0/99",
+        "descricao": "Outras atividades de publicidade não especificadas anteriormente"
+      },
+      {
+        "codigo": "7319-0/03",
+        "descricao": "Marketing direto"
+      },
+      {
+        "codigo": "7311-4/00",
+        "descricao": "Agências de publicidade"
+      }
+    ]
   },
   {
     "Família": "02.83",
     "Descrição": "OPERACAO E SUSTENTACAO DE SERV TECNOLOGICOS INTEGRADOS DE SEG PUBLICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6202-3/00",
+        "descricao": "Desenvolvimento e licenciamento de programas de computador customizáveis"
+      },
+      {
+        "codigo": "6201-5/00",
+        "descricao": "Desenvolvimento de programas de computador sob encomenda"
+      },
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      }
+    ]
   },
   {
     "Família": "02.84",
     "Descrição": "AVALIAÇAO DE PROP E REL VOLTADOS A CIENCIAS, TECNOLOGIA E INOVAÇAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7020-4/00",
+        "descricao": "Atividades de consultoria em gestão empresarial, exceto consultoria técnica específica"
+      },
+      {
+        "codigo": "7210-0/00",
+        "descricao": "Pesquisa e desenvolvimento experimental em ciências físicas e naturais"
+      }
+    ]
   },
   {
     "Família": "02.85",
     "Descrição": "CONSULTORIA E ASSESSORIA EM AVALIAÇÃO DE O PORTUNIDADES DE FERROVIAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7020-4/00",
+        "descricao": "Atividades de consultoria em gestão empresarial, exceto consultoria técnica específica"
+      }
+    ]
   },
   {
     "Família": "02.86",
     "Descrição": "SOLUCAO DE CONTROVERSIAS ATRAVES DE ARBITRAGEM",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6911-7/02",
+        "descricao": "Atividades auxiliares da justiça"
+      }
+    ]
   },
   {
     "Família": "02.87",
     "Descrição": "AUDITORIA EM AREA ECONOMICA E FINANCEIRA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
@@ -3963,23 +4039,41 @@
       "CRA - Conselho Regional de Administração",
       "CRC - Conselho Regional de Contabilidade"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6920-6/02",
+        "descricao": "Atividades de consultoria e auditoria contábil e tributária"
+      }
+    ]
   },
   {
     "Família": "03.01",
     "Descrição": "COLETA DE LIXO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia"
     ],
     "Documentos Elegíveis": [
       "Certidão de Acervo Técnico com Atestado",
-      "Certidão de acervo operacional - cao"
+      "Certidão de Acervo Operacional - CAO"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3812-2/00",
+        "descricao": "Coleta de resíduos perigosos"
+      },
+      {
+        "codigo": "3811-4/00",
+        "descricao": "Coleta de resíduos não-perigosos"
+      }
+    ]
   },
   {
     "Família": "03.02",
     "Descrição": "CONSERVACAO DE PARQUES, JARDINS, AREAS GRAMADAS E RURAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -3988,57 +4082,107 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CAU - Conselho Regional Arquitetura e Urbanismo"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8130-3/00",
+        "descricao": "Atividades paisagísticas"
+      }
+    ]
   },
   {
     "Família": "03.03",
     "Descrição": "CONSERVACAO DE PISCINA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8129-0/00",
+        "descricao": "Atividades de limpeza não especificadas anteriormente"
+      }
+    ]
   },
   {
     "Família": "03.04",
     "Descrição": "CONSERVACAO DE POCO ARTESIANO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4399-1/05",
+        "descricao": "Perfuração e construção de poços de água"
+      }
+    ]
   },
   {
     "Família": "03.05",
     "Descrição": "CONSERVACAO E REFORMA DE MOVEIS DE ACO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9529-1/05",
+        "descricao": "Reparação de artigos do mobiliário"
+      }
+    ]
   },
   {
     "Família": "03.06",
     "Descrição": "CONSERVACAO E REFORMA DE MOVEIS DE MADEIRA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9529-1/05",
+        "descricao": "Reparação de artigos do mobiliário"
+      }
+    ]
   },
   {
     "Família": "03.07",
     "Descrição": "SERVICOS DE SERRALHERIA/CROMAGEM",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "2539-0/02",
+        "descricao": "Serviços de tratamento e revestimento em metais"
+      },
+      {
+        "codigo": "2512-8/00",
+        "descricao": "Fabricação de esquadrias de metal"
+      },
+      {
+        "codigo": "2542-0/00",
+        "descricao": "Fabricação de artigos de serralheria, exceto esquadrias"
+      }
+    ]
   },
   {
     "Família": "03.08",
     "Descrição": "DESINSETIZACAO, DESRATIZACAO E DESCUPINIZACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Alvará de Vigilância Sanitária",
       "Certidão de Acervo Técnico com Atestado"
@@ -4049,13 +4193,21 @@
       "CRQ - Conselho Regional de Química",
       "Conselho Regional de Biologia - CRB",
       "CRMV - Conselho Regional de Medicina Veterinária",
-      "CFT - Conselho Federal dos Técnicos Industriais"
+      "CFT - Conselho Federal dos Técnicos Industriais",
+      "CFTA - Conselho Federal dos Técnicos Agrícolas"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8122-2/00",
+        "descricao": "Imunização e controle de pragas urbanas"
+      }
+    ]
   },
   {
     "Família": "03.09",
     "Descrição": "CONSERVACAO E APOIO OPERACIONAL A PARQUE ZOOBOTANICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
@@ -4063,62 +4215,133 @@
       "CRA - Conselho Regional de Administração",
       "CRMV - Conselho Regional de Medicina Veterinária"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8121-4/00",
+        "descricao": "Limpeza em prédios e em domicílios"
+      },
+      {
+        "codigo": "8129-0/00",
+        "descricao": "Atividades de limpeza não especificadas anteriormente"
+      },
+      {
+        "codigo": "8130-3/00",
+        "descricao": "Atividades paisagísticas"
+      },
+      {
+        "codigo": "9103-1/00",
+        "descricao": "Atividades de jardins botânicos, zoológicos, parques nacionais, reservas ecológicas e áreas de proteção ambiental"
+      }
+    ]
   },
   {
     "Família": "03.10",
     "Descrição": "HIDROJATEAMENTO/CONSERVACAO DE FACHADAS PREDIAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4399-1/99",
+        "descricao": "Serviços especializados para construção não especificados anteriormente"
+      }
+    ]
   },
   {
     "Família": "03.11",
     "Descrição": "INCINERACAO/DESCARTE DE RESIDUOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3821-1/00",
+        "descricao": "Tratamento e disposição de resíduos não-perigosos"
+      },
+      {
+        "codigo": "3822-0/00",
+        "descricao": "Tratamento e disposição de resíduos perigosos"
+      }
+    ]
   },
   {
     "Família": "03.12",
     "Descrição": "INSTALACAO E CONSERVACAO DE CERCAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4299-5/99",
+        "descricao": "Outras obras de engenharia civil não especificadas anteriormente"
+      },
+      {
+        "codigo": "4399-1/99",
+        "descricao": "Serviços especializados para construção não especificados anteriormente"
+      }
+    ]
   },
   {
     "Família": "03.13",
     "Descrição": "JATEAMENTO DE AREIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4399-1/99",
+        "descricao": "Serviços especializados para construção não especificados anteriormente"
+      },
+      {
+        "codigo": "2539-0/01",
+        "descricao": "Serviços de usinagem, tornearia e solda"
+      }
+    ]
   },
   {
     "Família": "03.14",
     "Descrição": "LIMPEZA DE CARPETES,ESTOFADOS, ARTIGOS EM TECIDOS,PERSIANAS E PISOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9601-7/01",
+        "descricao": "Lavanderias"
+      }
+    ]
   },
   {
     "Família": "03.15",
     "Descrição": "CONSERVACAO E LIMPEZA DE AREA INDUSTRIAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CRA - Conselho Regional de Administração",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8129-0/00",
+        "descricao": "Atividades de limpeza não especificadas anteriormente"
+      }
+    ]
   },
   {
     "Família": "03.16",
@@ -4131,22 +4354,28 @@
     "Documentos Elegíveis": [],
     "CNAEs": [
       {
-        "codigo": "7830-2/00",
-        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
+        "codigo": "8111-7/00",
+        "descricao": "Serviços combinados para apoio a edifícios, exceto condomínios prediais"
+      },
+      {
+        "codigo": "7810-8/00",
+        "descricao": "Seleção e agenciamento de mão-de-obra"
       },
       {
         "codigo": "7820-5/00",
         "descricao": "Locação de mão-de-obra temporária"
       },
       {
-        "codigo": "7810-8/00",
-        "descricao": "Seleção e agenciamento de mão-de-obra"
+        "codigo": "7830-2/00",
+        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
       }
     ]
   },
   {
     "Família": "03.17",
     "Descrição": "LIMPEZA E HIGIENIZACAO DE RESERVATORIO DE AGUA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Alvará de Vigilância Sanitária",
       "Certidão de Acervo Técnico com Atestado"
@@ -4158,76 +4387,174 @@
       "Conselho Regional de Biologia - CRB",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8129-0/00",
+        "descricao": "Atividades de limpeza não especificadas anteriormente"
+      }
+    ]
   },
   {
     "Família": "03.18",
     "Descrição": "LIMPEZA EM ESGOTO E CAIXA DE GORDURA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Alvará de Vigilância Sanitária",
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8129-0/00",
+        "descricao": "Atividades de limpeza não especificadas anteriormente"
+      },
+      {
+        "codigo": "3702-9/00",
+        "descricao": "Atividades relacionadas a esgoto, exceto a gestão de redes"
+      }
+    ]
   },
   {
     "Família": "03.19",
     "Descrição": "LIMPEZA URBANA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia"
     ],
     "Documentos Elegíveis": [
       "Certidão de Acervo Técnico com Atestado",
-      "Certidão de acervo operacional - cao"
+      "Certidão de Acervo Operacional - CAO"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8130-3/00",
+        "descricao": "Atividades paisagísticas"
+      },
+      {
+        "codigo": "3811-4/00",
+        "descricao": "Coleta de resíduos não-perigosos"
+      }
+    ]
   },
   {
     "Família": "03.20",
     "Descrição": "PINTURA INDUSTRIAL E COMERCIAL DE MEDIO E GRANDE PORTE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "2539-0/02",
+        "descricao": "Serviços de tratamento e revestimento em metais"
+      },
+      {
+        "codigo": "4330-4/04",
+        "descricao": "Serviços de pintura de edifícios em geral"
+      }
+    ]
   },
   {
     "Família": "03.21",
     "Descrição": "PODA DE ARVORES LINHAS DE DISTRIBUICAO ENERGIZADAS E DESENERGIZADAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8130-3/00",
+        "descricao": "Atividades paisagísticas"
+      }
+    ]
   },
   {
     "Família": "03.22",
     "Descrição": "SERVICOS DE ALVENARIA, CONCRETO E PINTURA DE PEQUENO PORTE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4330-4/04",
+        "descricao": "Serviços de pintura de edifícios em geral"
+      },
+      {
+        "codigo": "4399-1/99",
+        "descricao": "Serviços especializados para construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4399-1/03",
+        "descricao": "Obras de alvenaria"
+      }
+    ]
   },
   {
     "Família": "03.23",
     "Descrição": "SERVICOS DE CARPINTARIA,MARCENARIA,MARMORARIA,VIDRACARIA E FIBRA VIDRO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "2319-2/00",
+        "descricao": "Fabricação de artigos de vidro"
+      },
+      {
+        "codigo": "2040-1/00",
+        "descricao": "Fabricação de fibras artificiais e sintéticas"
+      },
+      {
+        "codigo": "4330-4/02",
+        "descricao": "Instalação de portas, janelas, tetos, divisórias e armários embutidos de qualquer material"
+      },
+      {
+        "codigo": "9529-1/05",
+        "descricao": "Reparação de artigos do mobiliário"
+      },
+      {
+        "codigo": "3101-2/00",
+        "descricao": "Fabricação de móveis com predominância de madeira"
+      },
+      {
+        "codigo": "1622-6/99",
+        "descricao": "Fabricação de outros artigos de carpintaria para construção"
+      },
+      {
+        "codigo": "1622-6/02",
+        "descricao": "Fabricação de esquadrias de madeira e de peças de madeira para instalações industriais e comerciais"
+      }
+    ]
   },
   {
     "Família": "03.24",
     "Descrição": "SERVICOS HIDROSANITARIOS DE PEQUENO PORTE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      }
+    ]
   },
   {
     "Família": "03.25",
@@ -4241,46 +4568,71 @@
     "Documentos Elegíveis": [],
     "CNAEs": [
       {
-        "codigo": "7830-2/00",
-        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
+        "codigo": "8011-1/01",
+        "descricao": "Atividades de vigilância e segurança privada"
+      },
+      {
+        "codigo": "7810-8/00",
+        "descricao": "Seleção e agenciamento de mão-de-obra"
       },
       {
         "codigo": "7820-5/00",
         "descricao": "Locação de mão-de-obra temporária"
       },
       {
-        "codigo": "7810-8/00",
-        "descricao": "Seleção e agenciamento de mão-de-obra"
+        "codigo": "7830-2/00",
+        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
       }
     ]
   },
   {
     "Família": "03.26",
     "Descrição": "INATIVA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9999-9/99",
+        "descricao": "CNAE INEXISTENTE"
+      }
+    ]
   },
   {
     "Família": "03.27",
     "Descrição": "DESCONTAMINACAO MICROBIOLOGICA DE AMBIENTES E EQUIPAMENTOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Alvará de Vigilância Sanitária",
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8129-0/00",
+        "descricao": "Atividades de limpeza não especificadas anteriormente"
+      }
+    ]
   },
   {
     "Família": "03.28",
     "Descrição": "CONSERVACAO E REFORMA DE UTENSILIOS DOMESTICOS E COMERCIAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9529-1/99",
+        "descricao": "Reparação e manutenção de outros objetos e equipamentos pessoais e domésticos não especificados anteriormente"
+      }
+    ]
   },
   {
     "Família": "03.29",
@@ -4293,16 +4645,20 @@
     "Documentos Elegíveis": [],
     "CNAEs": [
       {
-        "codigo": "7830-2/00",
-        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
+        "codigo": "8111-7/00",
+        "descricao": "Serviços combinados para apoio a edifícios, exceto condomínios prediais"
+      },
+      {
+        "codigo": "7810-8/00",
+        "descricao": "Seleção e agenciamento de mão-de-obra"
       },
       {
         "codigo": "7820-5/00",
         "descricao": "Locação de mão-de-obra temporária"
       },
       {
-        "codigo": "7810-8/00",
-        "descricao": "Seleção e agenciamento de mão-de-obra"
+        "codigo": "7830-2/00",
+        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
       }
     ]
   },
@@ -4345,53 +4701,98 @@
   {
     "Família": "03.31",
     "Descrição": "APOIO PORTUARIO E GUARDA DE EMBARCACOES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8011-1/01",
+        "descricao": "Atividades de vigilância e segurança privada"
+      },
+      {
+        "codigo": "5212-5/00",
+        "descricao": "Carga e descarga"
+      },
+      {
+        "codigo": "5021-1/02",
+        "descricao": "Transporte por navegação interior de carga, intermunicipal, interestadual e internacional, exceto travessia"
+      }
+    ]
   },
   {
     "Família": "03.32",
     "Descrição": "SUPORTE OPERACIONAL E APOIO LOGISTICO A SERVICO PUBLICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8111-7/00",
+        "descricao": "Serviços combinados para apoio a edifícios, exceto condomínios prediais"
+      }
+    ]
   },
   {
     "Família": "03.33",
     "Descrição": "SERVIÇOS DE APOIO AO ASSOCIATIVISMO E AO COOPERATIVISMO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9499-5/00",
+        "descricao": "Atividades associativas não especificadas anteriormente"
+      }
+    ]
   },
   {
     "Família": "03.34",
     "Descrição": "VIGILANCIA E SEGURANCA PATRIMONIAL ELETRONICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8020-0/01",
+        "descricao": "Atividades de monitoramento de sistemas de segurança eletrônico"
+      }
+    ]
   },
   {
     "Família": "03.35",
     "Descrição": "ADMINISTRACAO E GESTAO DE BENS PUBLICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8111-7/00",
+        "descricao": "Serviços combinados para apoio a edifícios, exceto condomínios prediais"
+      }
+    ]
   },
   {
     "Família": "04.01",
     "Descrição": "AFERICAO E/OU CALIBRAGEM DE APARELHOS, INSTRUMENTOS E MAQUINAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica",
       "Certidão de Acervo Técnico com Atestado"
@@ -4401,30 +4802,55 @@
       "INMETRO - ABNT",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      }
+    ]
   },
   {
     "Família": "04.02",
     "Descrição": "MANUTENCAO DE AERONAVES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3316-3/02",
+        "descricao": "Manutenção de aeronaves na pista"
+      },
+      {
+        "codigo": "3316-3/01",
+        "descricao": "Manutenção e reparação de aeronaves, exceto a manutenção na pista"
+      }
+    ]
   },
   {
     "Família": "04.03",
     "Descrição": "MANUTENCAO DE EQUIPAMENTO DE SEGURANCA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3319-8/00",
+        "descricao": "Manutenção e reparação de equipamentos e produtos não especificados anteriormente"
+      }
+    ]
   },
   {
     "Família": "04.04",
     "Descrição": "MANUTENCAO DE BOMBAS, MOTOBOMBAS E COMPRESSORES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -4432,11 +4858,26 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      },
+      {
+        "codigo": "3314-7/04",
+        "descricao": "Manutenção e reparação de compressores"
+      },
+      {
+        "codigo": "3314-7/02",
+        "descricao": "Manutenção e reparação de equipamentos hidráulicos e pneumáticos, exceto válvulas"
+      }
+    ]
   },
   {
     "Família": "04.05",
     "Descrição": "MANUTENCAO DE CARROS FERROVIARIOS, VAGOES E LOCOMOTIVAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -4444,30 +4885,67 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3032-6/00",
+        "descricao": "Fabricação de peças e acessórios para veículos ferroviários"
+      },
+      {
+        "codigo": "3031-8/00",
+        "descricao": "Fabricação de locomotivas, vagões e outros materiais rodantes"
+      },
+      {
+        "codigo": "3315-5/00",
+        "descricao": "Manutenção e reparação de veículos ferroviários"
+      }
+    ]
   },
   {
     "Família": "04.06",
     "Descrição": "MANUTENCAO DE ELETRODOMESTICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9529-1/99",
+        "descricao": "Reparação e manutenção de outros objetos e equipamentos pessoais e domésticos não especificados anteriormente"
+      },
+      {
+        "codigo": "3314-7/07",
+        "descricao": "Manutenção e reparação de máquinas e aparelhos de refrigeração e ventilação para uso industrial e comercial"
+      },
+      {
+        "codigo": "9521-5/00",
+        "descricao": "Reparação e manutenção de equipamentos eletroeletrônicos de uso pessoal e doméstico"
+      }
+    ]
   },
   {
     "Família": "04.07",
     "Descrição": "MANUTENCAO DE INSTALACOES PREDIAIS DE GAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      }
+    ]
   },
   {
     "Família": "04.08",
     "Descrição": "MANUTENCAO DE DRAGAS E EMBARCACOES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -4475,30 +4953,76 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3314-7/17",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos de terraplenagem, pavimentação e construção, exceto tratores"
+      },
+      {
+        "codigo": "3314-7/15",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso na extração mineral, exceto na extração de petróleo"
+      },
+      {
+        "codigo": "3317-1/02",
+        "descricao": "Manutenção e reparação de embarcações para esporte e lazer"
+      },
+      {
+        "codigo": "3317-1/01",
+        "descricao": "Manutenção e reparação de embarcações e estruturas flutuantes"
+      }
+    ]
   },
   {
     "Família": "04.09",
     "Descrição": "MANUTENCAO DE ELEVADORES, ESCADAS ROLANTES, MONTACARGAS, TALHAS,MONOV",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
-      "Certidão de Acervo Técnico com Atestado"
+      "Certidão de Acervo Técnico com Atestado",
+      "Autorização da SEDUR - Município de Salvador"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      },
+      {
+        "codigo": "4329-1/03",
+        "descricao": "Instalação, manutenção e reparação de elevadores, escadas e esteiras rolantes, exceto de fabricação própria"
+      }
+    ]
   },
   {
     "Família": "04.10",
     "Descrição": "MANUTENCAO DE EQUIPAMENTO CINE - FOTO E OTICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "3312-1/04",
+        "descricao": "Manutenção e reparação de equipamentos e instrumentos ópticos"
+      },
+      {
+        "codigo": "9512-6/00",
+        "descricao": "Reparação e manutenção de equipamentos de comunicação"
+      }
+    ]
   },
   {
     "Família": "04.11",
     "Descrição": "MANUTENCAO DE EQUIPAMENTO CIRURGICO-HOSPITALAR",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -4506,17 +5030,45 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9529-1/99",
+        "descricao": "Reparação e manutenção de outros objetos e equipamentos pessoais e domésticos não especificados anteriormente"
+      },
+      {
+        "codigo": "3312-1/04",
+        "descricao": "Manutenção e reparação de equipamentos e instrumentos ópticos"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "3312-1/03",
+        "descricao": "Manutenção e reparação de aparelhos eletromédicos e eletroterapêuticos e equipamentos de irradiação"
+      }
+    ]
   },
   {
     "Família": "04.12",
     "Descrição": "MANUTENCAO DE EQUIPAMENTO DE COMUTACAO E TRANSM TELEFONICA/TELEGRAFICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4221-9/05",
+        "descricao": "Manutenção de estações e redes de telecomunicações"
+      },
+      {
+        "codigo": "9512-6/00",
+        "descricao": "Reparação e manutenção de equipamentos de comunicação"
+      }
+    ]
   },
   {
     "Família": "04.13",
@@ -6289,7 +6841,7 @@
     "Documentos Elegíveis": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CAU - Conselho Regional Arquitetura e Urbanismo",
-      "Certidão de acervo operacional - cao"
+      "Certidão de Acervo Operacional - CAO"
     ],
     "Tipo": "S"
   },
@@ -6326,7 +6878,7 @@
     "Documentos Elegíveis": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CAU - Conselho Regional Arquitetura e Urbanismo",
-      "Certidão de acervo operacional - cao"
+      "Certidão de Acervo Operacional - CAO"
     ],
     "Tipo": "S"
   },
@@ -6361,7 +6913,7 @@
     "Documentos Elegíveis": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CAU - Conselho Regional Arquitetura e Urbanismo",
-      "Certidão de acervo operacional - cao"
+      "Certidão de Acervo Operacional - CAO"
     ],
     "Tipo": "S"
   },
@@ -6481,7 +7033,7 @@
     "Documentos Elegíveis": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CAU - Conselho Regional Arquitetura e Urbanismo",
-      "Certidão de acervo operacional - cao"
+      "Certidão de Acervo Operacional - CAO"
     ],
     "Tipo": "S"
   },
@@ -6516,7 +7068,7 @@
     "Documentos Elegíveis": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CAU - Conselho Regional Arquitetura e Urbanismo",
-      "Certidão de acervo operacional - cao"
+      "Certidão de Acervo Operacional - CAO"
     ],
     "Tipo": "S"
   },
@@ -6701,7 +7253,8 @@
     "Descrição": "INSTALACAO E MONTAGEM DE ELEVADORES",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
-      "Certidão de Acervo Técnico com Atestado"
+      "Certidão de Acervo Técnico com Atestado",
+      "Autorização da SEDUR - Município de Salvador"
     ],
     "Documentos Elegíveis": [],
     "Tipo": "S"
@@ -7216,7 +7769,7 @@
     "Família": "09.01",
     "Descrição": "ACOMPANHAMENTO PSICOLOGICO",
     "Documentos Exigidos": [
-      "Conselho regional de psicologia - crp",
+      "Conselho Regional de Psicologia - CRP",
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
