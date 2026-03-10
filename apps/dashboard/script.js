@@ -347,7 +347,7 @@ window.onload = function () {
   // Ajuste no Auto-Load para mostrar botões se der certo
   async function tryAutoLoadJson() {
     try {
-      const response = await fetch("./relatorio.json");
+      const response = await fetch("https://github.com/kwfroes/cockpit-gestao/releases/latest/download/relatorio.json");
       if (response.ok) {
         const jsonOptimized = await response.json();
         const jsonRaw = restoreDataFromImport(jsonOptimized);
