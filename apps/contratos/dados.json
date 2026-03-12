@@ -1752,7 +1752,84 @@
         }
       ],
       "id": "contrato_1764687252317",
-      "pagamentos": []
+      "pagamentos": [
+        {
+          "data": "2025-03-18",
+          "valorPago": 1423.4,
+          "notaFiscal": "00086841",
+          "processoPagamentoSei": "009.0242.2024.0055010-44",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=112375656",
+          "periodoDe": "2025-02-26",
+          "periodoAte": "2026-02-27",
+          "isTRD": false,
+          "id": "pag_1773324232503",
+          "detalhes": [
+            {
+              "id": "item_1773324263239",
+              "descricao": "EMISS.CERT.DIG.A1 E-SERV. WEE SSL -BMP. N. 09101.0006.25.000080-3",
+              "quantidade": 1,
+              "valorUnitario": 1423.4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unidade": {
+        "nome": "Secretaria da Administração do Estado da Bahia",
+        "cnpj": "13.323.274/0001-63",
+        "endereco": "2ª Avenida, 200, CAB, Salvador - Bahia",
+        "rep": "Rodrigo Pimentel de Souza Lima"
+      },
+      "empresa": {
+        "nome": "Companhia de Empresa Gráfica da Bahia",
+        "cnpj": "15.257.819/0001-06",
+        "endereco": "Rua Mello Moraes Filho, 189, Fazenda Grande do Retiro, CEP: 40.350-900 Salvador ̶̶ Bahia",
+        "rep": "Karina Brito Felix"
+      },
+      "processoSei": "009.0242.2025.0062541-65",
+      "numeroContrato": "004/2026",
+      "tipoContrato": "Dispensa",
+      "objeto": "Emissão de 01 (um) Certificado Digital, tipo A1, equipamento para servidor WEB SSL, no valor total anual de R$ 1.424,00 (um mil, quatrocentos e vinte e quatro reais), pelo prazo de 01 (um) ano.",
+      "estimativaMensal": 1424,
+      "tempoContrato": "12 meses",
+      "dataAssinatura": "2026-01-28",
+      "dataInicio": "2026-03-05",
+      "linkSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=139220825",
+      "valorTotal": 1424,
+      "dataFim": "2027-03-05",
+      "gestorInicial": {
+        "nome": "Tatiana Ferreira Almeida de Amorim",
+        "matricula": "0"
+      },
+      "fiscaisIniciais": [
+        {
+          "nome": "Cristiane Souza Nascimento",
+          "matricula": "0"
+        }
+      ],
+      "id": "contrato_1773324134626",
+      "pagamentos": [
+        {
+          "data": "2026-03-20",
+          "valorPago": 1424,
+          "notaFiscal": "00092099",
+          "processoPagamentoSei": "009.0242.2025.0062541-65",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=139220825",
+          "periodoDe": "2026-03-05",
+          "periodoAte": "2027-03-05",
+          "isTRD": false,
+          "id": "pag_1773324310994",
+          "detalhes": [
+            {
+              "id": "item_1773324328882",
+              "descricao": "EMISS.CERT.DIG.A1 E-SERVIDOR WEB SSLEMP.09101 0006.26.000087-2",
+              "quantidade": 1,
+              "valorUnitario": 1424
+            }
+          ]
+        }
+      ]
     }
   ],
   "empresas": [
