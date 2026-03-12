@@ -5073,6 +5073,8 @@
   {
     "Família": "04.13",
     "Descrição": "MANUTENCAO DE EQUIPAMENTO DE COZINHA INDUSTRIAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -5080,11 +5082,26 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      },
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      },
+      {
+        "codigo": "3314-7/07",
+        "descricao": "Manutenção e reparação de máquinas e aparelhos de refrigeração e ventilação para uso industrial e comercial"
+      }
+    ]
   },
   {
     "Família": "04.14",
     "Descrição": "MANUTENCAO DE EQUIPAMENTO DE LAVANDERIA INDUSTRIAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -5092,22 +5109,48 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      },
+      {
+        "codigo": "3314-7/03",
+        "descricao": "Manutenção e reparação de válvulas industriais"
+      },
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      }
+    ]
   },
   {
     "Família": "04.15",
     "Descrição": "MANUTENCAO DE EQUIPAMENTO DE MICROFILMAGEM",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "3312-1/04",
+        "descricao": "Manutenção e reparação de equipamentos e instrumentos ópticos"
+      }
+    ]
   },
   {
     "Família": "04.16",
     "Descrição": "MANUTENCAO DE EQUIPAMENTO DE RADIOCOMUNICACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -5115,11 +5158,26 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "4221-9/05",
+        "descricao": "Manutenção de estações e redes de telecomunicações"
+      },
+      {
+        "codigo": "9512-6/00",
+        "descricao": "Reparação e manutenção de equipamentos de comunicação"
+      }
+    ]
   },
   {
     "Família": "04.17",
     "Descrição": "MANUTENCAO DE EQUIPAMENTO DE REFRIGERACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -5127,11 +5185,22 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4322-3/02",
+        "descricao": "Instalação e manutenção de sistemas centrais de ar condicionado, de ventilação e refrigeração"
+      },
+      {
+        "codigo": "3314-7/07",
+        "descricao": "Manutenção e reparação de máquinas e aparelhos de refrigeração e ventilação para uso industrial e comercial"
+      }
+    ]
   },
   {
     "Família": "04.18",
     "Descrição": "MANUTENCAO DE ANTENAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -5139,11 +5208,26 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9512-6/00",
+        "descricao": "Reparação e manutenção de equipamentos de comunicação"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      },
+      {
+        "codigo": "4221-9/05",
+        "descricao": "Manutenção de estações e redes de telecomunicações"
+      }
+    ]
   },
   {
     "Família": "04.19",
     "Descrição": "MANUTENCAO DE EQUIPAMENTOS E MATERIAIS ELETRICOS E ELETRONICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -5151,20 +5235,58 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      },
+      {
+        "codigo": "9521-5/00",
+        "descricao": "Reparação e manutenção de equipamentos eletroeletrônicos de uso pessoal e doméstico"
+      },
+      {
+        "codigo": "3313-9/99",
+        "descricao": "Manutenção e reparação de máquinas, aparelhos e materiais elétricos não especificados anteriormente"
+      },
+      {
+        "codigo": "3313-9/01",
+        "descricao": "Manutenção e reparação de geradores, transformadores e motores elétricos"
+      }
+    ]
   },
   {
     "Família": "04.20",
     "Descrição": "MANUTENCAO DE EQUIPAMENTO E VIDRARIA DE LABORATORIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "2319-2/00",
+        "descricao": "Fabricação de artigos de vidro"
+      },
+      {
+        "codigo": "3314-7/07",
+        "descricao": "Manutenção e reparação de máquinas e aparelhos de refrigeração e ventilação para uso industrial e comercial"
+      },
+      {
+        "codigo": "3312-1/04",
+        "descricao": "Manutenção e reparação de equipamentos e instrumentos ópticos"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      }
+    ]
   },
   {
     "Família": "04.21",
     "Descrição": "MANUTENCAO DE EQUIPAMENTO GRAFICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -5172,11 +5294,26 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      },
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      },
+      {
+        "codigo": "3314-7/99",
+        "descricao": "Manutenção e reparação de outras máquinas e equipamentos para usos industriais não especificados anteriormente"
+      }
+    ]
   },
   {
     "Família": "04.22",
     "Descrição": "MANUTENCAO DE EQUIPAMENTOS INDUSTRIAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -5184,11 +5321,26 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3314-7/99",
+        "descricao": "Manutenção e reparação de outras máquinas e equipamentos para usos industriais não especificados anteriormente"
+      },
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      },
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      }
+    ]
   },
   {
     "Família": "04.23",
     "Descrição": "MANUTENCAO DE EXTINTORES  E MANGUEIRAS DE COMBATE A INCENDIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica",
       "Certificado de Credenciamento CBM/BA"
@@ -5198,29 +5350,74 @@
       "Certidão de Acervo Técnico com Atestado",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      },
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      },
+      {
+        "codigo": "4322-3/03",
+        "descricao": "Instalações de sistema de prevenção contra incêndio"
+      }
+    ]
   },
   {
     "Família": "04.24",
     "Descrição": "MANUTENCAO DE COBERTURAS E PISOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4330-4/99",
+        "descricao": "Outras obras de acabamento da construção"
+      },
+      {
+        "codigo": "4399-1/99",
+        "descricao": "Serviços especializados para construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4330-4/05",
+        "descricao": "Aplicação de revestimentos e de resinas em interiores e exteriores"
+      }
+    ]
   },
   {
     "Família": "04.25",
     "Descrição": "MANUTENCAO DE HIDROMETRO/CAVALETE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4222-7/01",
+        "descricao": "Construção de redes de abastecimento de água, coleta de esgoto e construções correlatas, exceto obras de irrigação"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      }
+    ]
   },
   {
     "Família": "04.26",
     "Descrição": "MANUTENCAO DE INSTALACOES ELETRICAS E ELETRONICAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -5228,21 +5425,55 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4329-1/04",
+        "descricao": "Montagem e instalação de sistemas e equipamentos de iluminação e sinalização em vias públicas, portos e aeroportos"
+      },
+      {
+        "codigo": "3313-9/99",
+        "descricao": "Manutenção e reparação de máquinas, aparelhos e materiais elétricos não especificados anteriormente"
+      },
+      {
+        "codigo": "8020-0/01",
+        "descricao": "Atividades de monitoramento de sistemas de segurança eletrônico"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      }
+    ]
   },
   {
     "Família": "04.27",
     "Descrição": "MANUTENCAO DE INSTRUMENTOS DE PRECISAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "3312-1/04",
+        "descricao": "Manutenção e reparação de equipamentos e instrumentos ópticos"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      }
+    ]
   },
   {
     "Família": "04.28",
     "Descrição": "MANUTENCAO DE REDE LOGICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -5250,39 +5481,111 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      },
+      {
+        "codigo": "6190-6/02",
+        "descricao": "Provedores de voz sobre protocolo internet - VOIP"
+      },
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      },
+      {
+        "codigo": "4221-9/04",
+        "descricao": "Construção de estações e redes de telecomunicações"
+      }
+    ]
   },
   {
     "Família": "04.29",
     "Descrição": "MANUTENCAO DE INSTRUMENTOS MUSICAIS E ACESSORIOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3220-5/00",
+        "descricao": "Fabricação de instrumentos musicais, peças e acessórios"
+      },
+      {
+        "codigo": "3319-8/00",
+        "descricao": "Manutenção e reparação de equipamentos e produtos não especificados anteriormente"
+      },
+      {
+        "codigo": "9521-5/00",
+        "descricao": "Reparação e manutenção de equipamentos eletroeletrônicos de uso pessoal e doméstico"
+      },
+      {
+        "codigo": "9529-1/99",
+        "descricao": "Reparação e manutenção de outros objetos e equipamentos pessoais e domésticos não especificados anteriormente"
+      }
+    ]
   },
   {
     "Família": "04.30",
     "Descrição": "MANUTENCAO DE LINHAS DE TRANSMIS E DISTRIBUICAO DE ENERGIA ELETRICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      },
+      {
+        "codigo": "3313-9/01",
+        "descricao": "Manutenção e reparação de geradores, transformadores e motores elétricos"
+      },
+      {
+        "codigo": "4221-9/01",
+        "descricao": "Construção de barragens e represas para geração de energia elétrica"
+      },
+      {
+        "codigo": "4221-9/02",
+        "descricao": "Construção de estações e redes de distribuição de energia elétrica"
+      }
+    ]
   },
   {
     "Família": "04.31",
     "Descrição": "MANUTENCAO DE MAQUINAS DE ESCRITORIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9529-1/99",
+        "descricao": "Reparação e manutenção de outros objetos e equipamentos pessoais e domésticos não especificados anteriormente"
+      },
+      {
+        "codigo": "3319-8/00",
+        "descricao": "Manutenção e reparação de equipamentos e produtos não especificados anteriormente"
+      },
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      }
+    ]
   },
   {
     "Família": "04.32",
     "Descrição": "MANUTENCAO DE MEDIDORES DE ENERGIA ELETRICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -5290,11 +5593,26 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "4221-9/02",
+        "descricao": "Construção de estações e redes de distribuição de energia elétrica"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      }
+    ]
   },
   {
     "Família": "04.33",
     "Descrição": "MANUTENCAO DE MICRO COMPUTADORES E PERIFERICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -5302,11 +5620,22 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      }
+    ]
   },
   {
     "Família": "04.34",
     "Descrição": "MANUTENCAO DE NO BREAK E ESTABILIZADORES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -5314,11 +5643,26 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3313-9/01",
+        "descricao": "Manutenção e reparação de geradores, transformadores e motores elétricos"
+      },
+      {
+        "codigo": "3313-9/99",
+        "descricao": "Manutenção e reparação de máquinas, aparelhos e materiais elétricos não especificados anteriormente"
+      },
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      }
+    ]
   },
   {
     "Família": "04.35",
     "Descrição": "MANUTENCAO DE REDES  E SISTEMAS DE TELECOMUNICACOES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -5326,11 +5670,22 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9512-6/00",
+        "descricao": "Reparação e manutenção de equipamentos de comunicação"
+      },
+      {
+        "codigo": "4221-9/05",
+        "descricao": "Manutenção de estações e redes de telecomunicações"
+      }
+    ]
   },
   {
     "Família": "04.36",
     "Descrição": "MANUTENCAO DE RELOGIOS DE PONTO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -5338,11 +5693,26 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      }
+    ]
   },
   {
     "Família": "04.37",
     "Descrição": "MANUTENCAO DE APARELHOS E SISTEMAS DE AR CONDICIONADO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -5350,11 +5720,26 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9521-5/00",
+        "descricao": "Reparação e manutenção de equipamentos eletroeletrônicos de uso pessoal e doméstico"
+      },
+      {
+        "codigo": "3314-7/07",
+        "descricao": "Manutenção e reparação de máquinas e aparelhos de refrigeração e ventilação para uso industrial e comercial"
+      },
+      {
+        "codigo": "4322-3/02",
+        "descricao": "Instalação e manutenção de sistemas centrais de ar condicionado, de ventilação e refrigeração"
+      }
+    ]
   },
   {
     "Família": "04.38",
     "Descrição": "MANUTENCAO DE SISTEMAS DE PROTECAO CONTRA INCENDIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado",
       "Certificado de Credenciamento CBM/BA"
@@ -5363,98 +5748,236 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      },
+      {
+        "codigo": "4322-3/03",
+        "descricao": "Instalações de sistema de prevenção contra incêndio"
+      }
+    ]
   },
   {
     "Família": "04.39",
     "Descrição": "MANUTENCAO DE SISTEMAS DE SINALIZACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4322-3/03",
+        "descricao": "Instalações de sistema de prevenção contra incêndio"
+      },
+      {
+        "codigo": "4329-1/04",
+        "descricao": "Montagem e instalação de sistemas e equipamentos de iluminação e sinalização em vias públicas, portos e aeroportos"
+      },
+      {
+        "codigo": "4211-1/02",
+        "descricao": "Pintura para sinalização em pistas rodoviárias e aeroportos"
+      }
+    ]
   },
   {
     "Família": "04.40",
     "Descrição": "MANUTENCAO DE SUB ESTACOES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "3313-9/01",
+        "descricao": "Manutenção e reparação de geradores, transformadores e motores elétricos"
+      },
+      {
+        "codigo": "4221-9/02",
+        "descricao": "Construção de estações e redes de distribuição de energia elétrica"
+      }
+    ]
   },
   {
     "Família": "04.41",
     "Descrição": "MANUTENCAO DE TORRES DE TRANSMISSAO DE RADIODIFUSAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "4221-9/05",
+        "descricao": "Manutenção de estações e redes de telecomunicações"
+      }
+    ]
   },
   {
     "Família": "04.42",
     "Descrição": "MANUTENCAO DE VIAS FERREAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4399-1/99",
+        "descricao": "Serviços especializados para construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4211-1/01",
+        "descricao": "Construção de rodovias e ferrovias"
+      }
+    ]
   },
   {
     "Família": "04.43",
     "Descrição": "MANUTENCAO E OPERAC DE SIST DE ABASTEC AGUA/ESGOT SANITARIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      },
+      {
+        "codigo": "3701-1/00",
+        "descricao": "Gestão de redes de esgoto"
+      }
+    ]
   },
   {
     "Família": "04.44",
     "Descrição": "MANUTENCAO DE EQUIPAMENTO AUDIOVISUAL E DE SOM",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4329-1/04",
+        "descricao": "Montagem e instalação de sistemas e equipamentos de iluminação e sinalização em vias públicas, portos e aeroportos"
+      },
+      {
+        "codigo": "3313-9/99",
+        "descricao": "Manutenção e reparação de máquinas, aparelhos e materiais elétricos não especificados anteriormente"
+      },
+      {
+        "codigo": "9521-5/00",
+        "descricao": "Reparação e manutenção de equipamentos eletroeletrônicos de uso pessoal e doméstico"
+      }
+    ]
   },
   {
     "Família": "04.45",
     "Descrição": "MANUTENCAO E REPARO DE ARMA DE FOGO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3311-2/00",
+        "descricao": "Manutenção e reparação de tanques, reservatórios metálicos e caldeiras, exceto para veículos"
+      },
+      {
+        "codigo": "2550-1/02",
+        "descricao": "Fabricação de armas de fogo e munições"
+      }
+    ]
   },
   {
     "Família": "04.46",
     "Descrição": "MANUTENCAO E REPARO DE EQUIPAMENTO DE TOPOGRAFIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "3312-1/04",
+        "descricao": "Manutenção e reparação de equipamentos e instrumentos ópticos"
+      }
+    ]
   },
   {
     "Família": "04.47",
     "Descrição": "MANUTENCAO E REPARO DE IMPLEMENTO AGRICOLA/MAQ. ESCAV. E TERRA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      },
+      {
+        "codigo": "3314-7/11",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para agricultura e pecuária"
+      },
+      {
+        "codigo": "3314-7/17",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos de terraplenagem, pavimentação e construção, exceto tratores"
+      }
+    ]
   },
   {
     "Família": "04.48",
     "Descrição": "MANUTENCAO E REPARO EM BALANCAS MECANICAS E ELETRONICAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica",
       "Certidão de Acervo Técnico com Atestado"
@@ -5464,11 +5987,22 @@
       "INMETRO - ABNT",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      }
+    ]
   },
   {
     "Família": "04.49",
     "Descrição": "MANUTENCAO E REPARO EM PARA - RAIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -5476,30 +6010,71 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4399-1/99",
+        "descricao": "Serviços especializados para construção não especificados anteriormente"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      }
+    ]
   },
   {
     "Família": "04.50",
     "Descrição": "MANUTENCAO E REPARO DE MOTOCICLETA/BICICLETA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9529-1/04",
+        "descricao": "Reparação de bicicletas, triciclos e outros veículos não-motorizados"
+      },
+      {
+        "codigo": "4543-9/00",
+        "descricao": "Manutenção e reparação de motocicletas e motonetas"
+      }
+    ]
   },
   {
     "Família": "04.51",
     "Descrição": "MANUTENCAO DE INSTALACOES HIDROSANITARIAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8129-0/00",
+        "descricao": "Atividades de limpeza não especificadas anteriormente"
+      },
+      {
+        "codigo": "3702-9/00",
+        "descricao": "Atividades relacionadas a esgoto, exceto a gestão de redes"
+      },
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      }
+    ]
   },
   {
     "Família": "04.52",
     "Descrição": "MANUTENCAO EM EQUIPAMENTO ODONTOLOGICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -5507,34 +6082,92 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "3319-8/00",
+        "descricao": "Manutenção e reparação de equipamentos e produtos não especificados anteriormente"
+      },
+      {
+        "codigo": "3312-1/03",
+        "descricao": "Manutenção e reparação de aparelhos eletromédicos e eletroterapêuticos e equipamentos de irradiação"
+      }
+    ]
   },
   {
     "Família": "04.53",
     "Descrição": "MANUTENCAO EM MAQUINA  AUTENTICADORA DE CHEQUE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      }
+    ]
   },
   {
     "Família": "04.54",
     "Descrição": "MANUTENCAO EM MAQUINA DE CONTAR NOTAS E MOEDAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      }
+    ]
   },
   {
     "Família": "04.55",
     "Descrição": "MANUTENCAO EM MAQUINA FOTOCOPIADORA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      }
+    ]
   },
   {
     "Família": "04.56",
@@ -5564,24 +6197,52 @@
   {
     "Família": "04.57",
     "Descrição": "MANUTENCAO EM MAQUINA DE PLASTIFICAR DOCUMENTOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3314-7/99",
+        "descricao": "Manutenção e reparação de outras máquinas e equipamentos para usos industriais não especificados anteriormente"
+      },
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      }
+    ]
   },
   {
     "Família": "04.58",
     "Descrição": "MANUTENCAO EM MICROSCOPIO OTICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "3312-1/04",
+        "descricao": "Manutenção e reparação de equipamentos e instrumentos ópticos"
+      }
+    ]
   },
   {
     "Família": "04.59",
     "Descrição": "MANUTENCAO EM PROJETOR DE IMAGEM",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -5589,57 +6250,143 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3313-9/99",
+        "descricao": "Manutenção e reparação de máquinas, aparelhos e materiais elétricos não especificados anteriormente"
+      },
+      {
+        "codigo": "3312-1/04",
+        "descricao": "Manutenção e reparação de equipamentos e instrumentos ópticos"
+      },
+      {
+        "codigo": "9521-5/00",
+        "descricao": "Reparação e manutenção de equipamentos eletroeletrônicos de uso pessoal e doméstico"
+      }
+    ]
   },
   {
     "Família": "04.60",
     "Descrição": "MANUTENCAO DE CORTINAS, PERSIANAS E TOLDOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4329-1/99",
+        "descricao": "Outras obras de instalações em construções não especificadas anteriormente"
+      },
+      {
+        "codigo": "9601-7/01",
+        "descricao": "Lavanderias"
+      },
+      {
+        "codigo": "1351-1/00",
+        "descricao": "Fabricação de artefatos têxteis para uso doméstico"
+      },
+      {
+        "codigo": "9529-1/05",
+        "descricao": "Reparação de artigos do mobiliário"
+      }
+    ]
   },
   {
     "Família": "04.61",
     "Descrição": "MANUTENCAO EM CARTUCHOS E RECARREGAMENTO DE TONER PARA IMPRESSORAS A L",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3839-4/99",
+        "descricao": "Recuperação de materiais não especificados anteriormente"
+      },
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      }
+    ]
   },
   {
     "Família": "04.62",
     "Descrição": "MANUTENCAO DE EQUIPAMENTOS MANUAIS P/ TRANSPORTE DE MATERIAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "2539-0/01",
+        "descricao": "Serviços de usinagem, tornearia e solda"
+      },
+      {
+        "codigo": "3314-7/17",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos de terraplenagem, pavimentação e construção, exceto tratores"
+      },
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      }
+    ]
   },
   {
     "Família": "04.63",
     "Descrição": "INSPECAO DE VEICULOS AUTOMOTORES A GNV",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "INMETRO - ABNT",
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      }
+    ]
   },
   {
     "Família": "04.64",
     "Descrição": "MANUTENCAO DE PURIFICADOR E DESTILADOR DE AGUA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8129-0/00",
+        "descricao": "Atividades de limpeza não especificadas anteriormente"
+      },
+      {
+        "codigo": "3314-7/07",
+        "descricao": "Manutenção e reparação de máquinas e aparelhos de refrigeração e ventilação para uso industrial e comercial"
+      },
+      {
+        "codigo": "9521-5/00",
+        "descricao": "Reparação e manutenção de equipamentos eletroeletrônicos de uso pessoal e doméstico"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      }
+    ]
   },
   {
     "Família": "04.65",
     "Descrição": "MANUTENCAO DE EQUIPAMENTOS MECANICOS DE PEQUENO PORTE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -5647,48 +6394,131 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      },
+      {
+        "codigo": "3314-7/17",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos de terraplenagem, pavimentação e construção, exceto tratores"
+      },
+      {
+        "codigo": "3314-7/11",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para agricultura e pecuária"
+      }
+    ]
   },
   {
     "Família": "04.66",
     "Descrição": "MANUTENCAO E REPARO DE SELARIA, ARREAMENTO, CHICOTE E ACESSORIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "2599-3/99",
+        "descricao": "Fabricação de outros produtos de metal não especificados anteriormente"
+      },
+      {
+        "codigo": "1510-6/00",
+        "descricao": "Curtimento e outras preparações de couro"
+      },
+      {
+        "codigo": "9529-1/05",
+        "descricao": "Reparação de artigos do mobiliário"
+      }
+    ]
   },
   {
     "Família": "04.67",
     "Descrição": "MANUTENCAO DE EQUIPAMENTO PARA GINASTICA E RECREACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9529-1/99",
+        "descricao": "Reparação e manutenção de outros objetos e equipamentos pessoais e domésticos não especificados anteriormente"
+      },
+      {
+        "codigo": "4399-1/99",
+        "descricao": "Serviços especializados para construção não especificados anteriormente"
+      },
+      {
+        "codigo": "3319-8/00",
+        "descricao": "Manutenção e reparação de equipamentos e produtos não especificados anteriormente"
+      }
+    ]
   },
   {
     "Família": "04.68",
     "Descrição": "MANUTENCAO DE UNIDADE DE EDUCACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      },
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      },
+      {
+        "codigo": "9529-1/05",
+        "descricao": "Reparação de artigos do mobiliário"
+      },
+      {
+        "codigo": "4330-4/99",
+        "descricao": "Outras obras de acabamento da construção"
+      }
+    ]
   },
   {
     "Família": "04.69",
     "Descrição": "MANUTENCAO E CONSTRUCAO DAS RODOVIAS ESTADUAIS POR CONSORCIO PUBLICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8130-3/00",
+        "descricao": "Atividades paisagísticas"
+      },
+      {
+        "codigo": "4213-8/00",
+        "descricao": "Obras de urbanização - ruas, praças e calçadas"
+      },
+      {
+        "codigo": "4211-1/02",
+        "descricao": "Pintura para sinalização em pistas rodoviárias e aeroportos"
+      },
+      {
+        "codigo": "4211-1/01",
+        "descricao": "Construção de rodovias e ferrovias"
+      }
+    ]
   },
   {
     "Família": "04.70",
     "Descrição": "OPERACAO E MANUTENCAO DE EQUIPAMENTOS DE PERFURACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -5696,11 +6526,26 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      },
+      {
+        "codigo": "4391-6/00",
+        "descricao": "Obras de fundações"
+      },
+      {
+        "codigo": "3314-7/15",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso na extração mineral, exceto na extração de petróleo"
+      }
+    ]
   },
   {
     "Família": "04.71",
     "Descrição": "MANUTENCAO PREVENTIVA E CORRETIVA DE PREDIOS PUBLICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -5708,132 +6553,367 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CAU - Conselho Regional Arquitetura e Urbanismo"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4399-1/03",
+        "descricao": "Obras de alvenaria"
+      },
+      {
+        "codigo": "4330-4/04",
+        "descricao": "Serviços de pintura de edifícios em geral"
+      },
+      {
+        "codigo": "4120-4/00",
+        "descricao": "Construção de edifícios"
+      },
+      {
+        "codigo": "4330-4/99",
+        "descricao": "Outras obras de acabamento da construção"
+      }
+    ]
   },
   {
     "Família": "04.72",
     "Descrição": "MANUTENCAO DE COLETOR DE DADOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      }
+    ]
   },
   {
     "Família": "04.73",
     "Descrição": "MANUTENCAO DE REDE ELETRICA EXECUTADA EXCLUSIVAMENTE PELA COELBA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3313-9/01",
+        "descricao": "Manutenção e reparação de geradores, transformadores e motores elétricos"
+      },
+      {
+        "codigo": "4221-9/02",
+        "descricao": "Construção de estações e redes de distribuição de energia elétrica"
+      },
+      {
+        "codigo": "3514-0/00",
+        "descricao": "Distribuição de energia elétrica"
+      }
+    ]
   },
   {
     "Família": "04.74",
     "Descrição": "MANUTENCAO DE SOFTWARE EMBARCADO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "6203-1/00",
+        "descricao": "Desenvolvimento e licenciamento de programas de computador não-customizáveis"
+      }
+    ]
   },
   {
     "Família": "04.99",
     "Descrição": "MANUTENCAO DE VEICULOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4520-0/04",
+        "descricao": "Serviços de alinhamento e balanceamento de veículos automotores"
+      },
+      {
+        "codigo": "4520-0/02",
+        "descricao": "Serviços de lanternagem ou funilaria e pintura de veículos automotores"
+      },
+      {
+        "codigo": "4520-0/03",
+        "descricao": "Serviços de manutenção e reparação elétrica de veículos automotores"
+      },
+      {
+        "codigo": "4520-0/01",
+        "descricao": "Serviços de manutenção e reparação mecânica de veículos automotores"
+      }
+    ]
   },
   {
     "Família": "05.01",
     "Descrição": "CARREGAMENTO DE MATERIAL BELICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "5211-7/99",
+        "descricao": "Depósitos de mercadorias para terceiros, exceto armazéns gerais e guarda-móveis"
+      },
+      {
+        "codigo": "4930-2/03",
+        "descricao": "Transporte rodoviário de produtos perigosos"
+      },
+      {
+        "codigo": "5212-5/00",
+        "descricao": "Carga e descarga"
+      }
+    ]
   },
   {
     "Família": "05.02",
     "Descrição": "TRANSPORTE AEREO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "ANAC - Agencia Nacional de Aviação Civil",
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "5240-1/99",
+        "descricao": "Atividades auxiliares dos transportes aéreos, exceto operação dos aeroportos e campos de aterrissagem"
+      },
+      {
+        "codigo": "5120-0/00",
+        "descricao": "Transporte aéreo de carga"
+      },
+      {
+        "codigo": "5112-9/01",
+        "descricao": "Serviço de táxi aéreo e locação de aeronaves com tripulação"
+      },
+      {
+        "codigo": "5111-1/00",
+        "descricao": "Transporte aéreo de passageiros regular"
+      }
+    ]
   },
   {
     "Família": "05.03",
     "Descrição": "TRANSPORTE DE MUDANCA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "5212-5/00",
+        "descricao": "Carga e descarga"
+      },
+      {
+        "codigo": "4930-2/04",
+        "descricao": "Transporte rodoviário de mudanças"
+      }
+    ]
   },
   {
     "Família": "05.04",
     "Descrição": "TRANSPORTE FERROVIARIO DE CARGA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "5250-8/03",
+        "descricao": "Agenciamento de cargas, exceto para o transporte marítimo"
+      },
+      {
+        "codigo": "5212-5/00",
+        "descricao": "Carga e descarga"
+      },
+      {
+        "codigo": "4911-6/00",
+        "descricao": "Transporte ferroviário de carga"
+      }
+    ]
   },
   {
     "Família": "05.05",
     "Descrição": "TRANSPORTE FERROVIARIO DE PESSOAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4912-4/03",
+        "descricao": "Transporte metroviário"
+      },
+      {
+        "codigo": "4912-4/02",
+        "descricao": "Transporte ferroviário de passageiros municipal e em região metropolitana"
+      },
+      {
+        "codigo": "4912-4/01",
+        "descricao": "Transporte ferroviário de passageiros intermunicipal e interestadual"
+      }
+    ]
   },
   {
     "Família": "05.06",
     "Descrição": "TRANSPORTE MARITIMO E FLUVIAL DE CARGA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "5231-1/02",
+        "descricao": "Operações de terminais"
+      },
+      {
+        "codigo": "5099-8/99",
+        "descricao": "Outros transportes aquaviários não especificados anteriormente"
+      },
+      {
+        "codigo": "5021-1/01",
+        "descricao": "Transporte por navegação interior de carga, municipal, exceto travessia"
+      },
+      {
+        "codigo": "5011-4/01",
+        "descricao": "Transporte marítimo de cabotagem - Carga"
+      }
+    ]
   },
   {
     "Família": "05.07",
     "Descrição": "TRANSPORTE MARITIMO E FLUVIAL DE PESSOAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "5099-8/99",
+        "descricao": "Outros transportes aquaviários não especificados anteriormente"
+      },
+      {
+        "codigo": "5091-2/02",
+        "descricao": "Transporte por navegação de travessia, intermunicipal"
+      },
+      {
+        "codigo": "5022-0/01",
+        "descricao": "Transporte por navegação interior de passageiros em linhas regulares, municipal, exceto travessia"
+      },
+      {
+        "codigo": "5012-2/02",
+        "descricao": "Transporte marítimo de longo curso - Passageiros"
+      }
+    ]
   },
   {
     "Família": "05.08",
     "Descrição": "TRANSPORTE RODOVIÁRIO - CARGAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "5250-8/03",
+        "descricao": "Agenciamento de cargas, exceto para o transporte marítimo"
+      },
+      {
+        "codigo": "4930-2/03",
+        "descricao": "Transporte rodoviário de produtos perigosos"
+      },
+      {
+        "codigo": "4930-2/01",
+        "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, municipal"
+      },
+      {
+        "codigo": "4930-2/02",
+        "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, intermunicipal, interestadual e internacional"
+      },
+      {
+        "codigo": "5012-2/01",
+        "descricao": "Transporte marítimo de longo curso - Carga"
+      }
+    ]
   },
   {
     "Família": "05.09",
     "Descrição": "TRANSPORTE RODOVIARIO - COMBUSTIVEL/LUBRIFICANTE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4930-2/03",
+        "descricao": "Transporte rodoviário de produtos perigosos"
+      }
+    ]
   },
   {
     "Família": "05.10",
     "Descrição": "TRANSPORTE RODOVIARIO - CONTEINERS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4930-2/03",
+        "descricao": "Transporte rodoviário de produtos perigosos"
+      },
+      {
+        "codigo": "5212-5/00",
+        "descricao": "Carga e descarga"
+      },
+      {
+        "codigo": "4930-2/02",
+        "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, intermunicipal, interestadual e internacional"
+      }
+    ]
   },
   {
     "Família": "05.11",
@@ -5842,52 +6922,133 @@
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "Tipo": "S",
+    "CNAEs": [
+      {
+        "codigo": "4930-2/02",
+        "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, intermunicipal, interestadual e internacional"
+      },
+      {
+        "codigo": "5212-5/00",
+        "descricao": "Carga e descarga"
+      },
+      {
+        "codigo": "4930-2/03",
+        "descricao": "Transporte rodoviário de produtos perigosos"
+      }
+    ]
   },
   {
     "Família": "05.12",
     "Descrição": "TRANSPORTE RODOVIARIO - PESSOAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4924-8/00",
+        "descricao": "Transporte escolar"
+      },
+      {
+        "codigo": "4921-3/01",
+        "descricao": "Transporte rodoviário coletivo de passageiros, com itinerário fixo, municipal"
+      },
+      {
+        "codigo": "4929-9/01",
+        "descricao": "Transporte rodoviário coletivo de passageiros, sob regime de fretamento, municipal"
+      },
+      {
+        "codigo": "4929-9/02",
+        "descricao": "Transporte rodoviário coletivo de passageiros, sob regime de fretamento, intermunicipal, interestadual e internacional"
+      }
+    ]
   },
   {
     "Família": "05.13",
     "Descrição": "TRANSPORTE RODOVIARIO - VALORES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "5211-7/99",
+        "descricao": "Depósitos de mercadorias para terceiros, exceto armazéns gerais e guarda-móveis"
+      },
+      {
+        "codigo": "8011-1/01",
+        "descricao": "Atividades de vigilância e segurança privada"
+      }
+    ]
   },
   {
     "Família": "05.14",
     "Descrição": "SERVIÇOS DE REMOÇÃO E GUARDA DE VEICULOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "5229-0/99",
+        "descricao": "Outras atividades auxiliares dos transportes terrestres não especificadas anteriormente"
+      },
+      {
+        "codigo": "5229-0/02",
+        "descricao": "Serviços de reboque de veículos"
+      },
+      {
+        "codigo": "5223-1/00",
+        "descricao": "Estacionamento de veículos"
+      }
+    ]
   },
   {
     "Família": "05.15",
     "Descrição": "INDENIZAÇÃO POR DANOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6621-5/02",
+        "descricao": "Auditoria e consultoria atuarial"
+      },
+      {
+        "codigo": "6621-5/01",
+        "descricao": "Peritos e avaliadores de seguros"
+      }
+    ]
   },
   {
     "Família": "05.16",
     "Descrição": "GESTAO DE TRANSPORTE DE PESSOAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7020-4/00",
+        "descricao": "Atividades de consultoria em gestão empresarial, exceto consultoria técnica específica"
+      },
+      {
+        "codigo": "5250-8/03",
+        "descricao": "Agenciamento de cargas, exceto para o transporte marítimo"
+      }
+    ]
   },
   {
     "Família": "05.17",
@@ -5916,7 +7077,21 @@
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "Tipo": "S",
+    "CNAEs": [
+      {
+        "codigo": "4930-2/02",
+        "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, intermunicipal, interestadual e internacional"
+      },
+      {
+        "codigo": "5212-5/00",
+        "descricao": "Carga e descarga"
+      },
+      {
+        "codigo": "4930-2/03",
+        "descricao": "Transporte rodoviário de produtos perigosos"
+      }
+    ]
   },
   {
     "Família": "05.20",
@@ -5937,7 +7112,21 @@
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "Tipo": "S",
+    "CNAEs": [
+      {
+        "codigo": "4930-2/02",
+        "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, intermunicipal, interestadual e internacional"
+      },
+      {
+        "codigo": "5212-5/00",
+        "descricao": "Carga e descarga"
+      },
+      {
+        "codigo": "4930-2/03",
+        "descricao": "Transporte rodoviário de produtos perigosos"
+      }
+    ]
   },
   {
     "Família": "06.01",
