@@ -9888,11 +9888,18 @@
   {
     "Família": "07.99",
     "Descrição": "INATIVA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9999-9/99",
+        "descricao": "CNAE INEXISTENTE"
+      }
+    ]
   },
   {
     "Família": "08.01",
