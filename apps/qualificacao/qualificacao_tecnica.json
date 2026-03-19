@@ -7053,49 +7053,94 @@
   {
     "Família": "05.17",
     "Descrição": "SERVICO DE REMOCAO DE PACIENTES, POR VIA TERRESTRE E POR VIA AÉREA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CRM - Conselho Regional de Medicina",
       "ANAC - Agencia Nacional de Aviação Civil",
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "8622-4/00",
+        "descricao": "Serviços de remoção de pacientes, exceto os serviços móveis de atendimento a urgências"
+      },
+      {
+        "codigo": "8621-6/02",
+        "descricao": "Serviços móveis de atendimento a urgências, exceto por UTI móvel"
+      },
+      {
+        "codigo": "8621-6/01",
+        "descricao": "UTI móvel"
+      }
+    ]
   },
   {
     "Família": "05.18",
     "Descrição": "AGENCIAMENTO DE CARGA AEREA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "5240-1/99",
+        "descricao": "Atividades auxiliares dos transportes aéreos, exceto operação dos aeroportos e campos de aterrissagem"
+      },
+      {
+        "codigo": "5250-8/04",
+        "descricao": "Organização logística do transporte de carga"
+      },
+      {
+        "codigo": "5250-8/03",
+        "descricao": "Agenciamento de cargas, exceto para o transporte marítimo"
+      }
+    ]
   },
   {
     "Família": "05.19",
     "Descrição": "LOGISTICA MULTIMODAL DE CARGA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S",
     "CNAEs": [
       {
-        "codigo": "4930-2/02",
-        "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, intermunicipal, interestadual e internacional"
+        "codigo": "5211-7/99",
+        "descricao": "Depósitos de mercadorias para terceiros, exceto armazéns gerais e guarda-móveis"
+      },
+      {
+        "codigo": "5250-8/04",
+        "descricao": "Organização logística do transporte de carga"
+      },
+      {
+        "codigo": "5250-8/05",
+        "descricao": "Operador de transporte multimodal - OTM"
+      },
+      {
+        "codigo": "4930-2/03",
+        "descricao": "Transporte rodoviário de produtos perigosos"
       },
       {
         "codigo": "5212-5/00",
         "descricao": "Carga e descarga"
       },
       {
-        "codigo": "4930-2/03",
-        "descricao": "Transporte rodoviário de produtos perigosos"
+        "codigo": "4930-2/02",
+        "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, intermunicipal, interestadual e internacional"
       }
     ]
   },
   {
     "Família": "05.20",
     "Descrição": "AGENCIAMENTO DE TRANSPORTE MARITIMO DE CARGAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
@@ -7103,74 +7148,162 @@
       "Certificado de Registro Especial Brasileiro - Tribunal Marítimo",
       "Certificado Emitido pela ANTAQ"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "5250-8/04",
+        "descricao": "Organização logística do transporte de carga"
+      },
+      {
+        "codigo": "5250-8/02",
+        "descricao": "Atividades de despachantes aduaneiros"
+      },
+      {
+        "codigo": "5250-8/01",
+        "descricao": "Comissaria de despachos"
+      },
+      {
+        "codigo": "5232-0/00",
+        "descricao": "Atividades de agenciamento marítimo"
+      }
+    ]
   },
   {
     "Família": "05.21",
     "Descrição": "AGENCIAMENTO DE TRANSPORTE MULTIMODAL DE CARGAS (EXCETO MARITIMO)",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S",
     "CNAEs": [
       {
-        "codigo": "4930-2/02",
-        "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, intermunicipal, interestadual e internacional"
+        "codigo": "5250-8/04",
+        "descricao": "Organização logística do transporte de carga"
+      },
+      {
+        "codigo": "5250-8/05",
+        "descricao": "Operador de transporte multimodal - OTM"
+      },
+      {
+        "codigo": "5250-8/03",
+        "descricao": "Agenciamento de cargas, exceto para o transporte marítimo"
+      },
+      {
+        "codigo": "4930-2/03",
+        "descricao": "Transporte rodoviário de produtos perigosos"
       },
       {
         "codigo": "5212-5/00",
         "descricao": "Carga e descarga"
       },
       {
-        "codigo": "4930-2/03",
-        "descricao": "Transporte rodoviário de produtos perigosos"
+        "codigo": "4930-2/02",
+        "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, intermunicipal, interestadual e internacional"
       }
     ]
   },
   {
     "Família": "06.01",
     "Descrição": "AEROFOTOGRAMETRIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6311-9/00",
+        "descricao": "Tratamento de dados, provedores de serviços de aplicação e serviços de hospedagem na internet"
+      },
+      {
+        "codigo": "7420-0/02",
+        "descricao": "Atividades de produção de fotografias aéreas e submarinas"
+      },
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      }
+    ]
   },
   {
     "Família": "06.02",
     "Descrição": "AGRIMENSURA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      },
+      {
+        "codigo": "7119-7/99",
+        "descricao": "Atividades técnicas relacionadas à engenharia e arquitetura não especificadas anteriormente"
+      },
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      }
+    ]
   },
   {
     "Família": "06.03",
     "Descrição": "ANALISE DINAMICA DE BASES DE EQUIPAMENTOS E ESTRUTURAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7119-7/99",
+        "descricao": "Atividades técnicas relacionadas à engenharia e arquitetura não especificadas anteriormente"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ]
   },
   {
     "Família": "06.04",
     "Descrição": "CONTROLE TECNOLOGICO DE MATERIAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7119-7/99",
+        "descricao": "Atividades técnicas relacionadas à engenharia e arquitetura não especificadas anteriormente"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      }
+    ]
   },
   {
     "Família": "06.05",
     "Descrição": "ENSAIOS ELETRICOS E ELETRONICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -7178,11 +7311,26 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7119-7/99",
+        "descricao": "Atividades técnicas relacionadas à engenharia e arquitetura não especificadas anteriormente"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      }
+    ]
   },
   {
     "Família": "06.06",
     "Descrição": "ENSAIOS GEOTECNICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -7190,11 +7338,26 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "7119-7/02",
+        "descricao": "Atividades de estudos geológicos"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      }
+    ]
   },
   {
     "Família": "06.07",
     "Descrição": "ENSAIOS MECANICOS E METALURGICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -7202,11 +7365,26 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CRQ - Conselho Regional de Química"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7119-7/99",
+        "descricao": "Atividades técnicas relacionadas à engenharia e arquitetura não especificadas anteriormente"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      }
+    ]
   },
   {
     "Família": "06.08",
     "Descrição": "ESTUDOS E PROJETOS QUIMICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica",
       "Certidão de Acervo Técnico com Atestado"
@@ -7215,21 +7393,51 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CRQ - Conselho Regional de Química"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7210-0/00",
+        "descricao": "Pesquisa e desenvolvimento experimental em ciências físicas e naturais"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ]
   },
   {
     "Família": "06.09",
     "Descrição": "ENSAIOS RADIOGRAFICOS/ULTRA-SOM/LIQ. PENET./PART. MAGNETICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7119-7/99",
+        "descricao": "Atividades técnicas relacionadas à engenharia e arquitetura não especificadas anteriormente"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      }
+    ]
   },
   {
     "Família": "06.10",
     "Descrição": "ESTUDOS E PROJETOS ACUSTICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -7237,27 +7445,62 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CAU - Conselho Regional Arquitetura e Urbanismo"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      }
+    ]
   },
   {
     "Família": "06.11",
     "Descrição": "ESTUDOS E PROJETOS DE AEROPORTOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ]
   },
   {
     "Família": "06.12",
     "Descrição": "ESTUDOS E PROJETOS DE ARQUITETURA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CAU - Conselho Regional Arquitetura e Urbanismo",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      },
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      }
+    ]
   },
   {
     "Família": "06.13",
@@ -7277,7 +7520,21 @@
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "Tipo": "S",
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "7119-7/02",
+        "descricao": "Atividades de estudos geológicos"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      }
+    ]
   },
   {
     "Família": "06.15",
@@ -7311,7 +7568,21 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CAU - Conselho Regional Arquitetura e Urbanismo"
     ],
-    "Tipo": "S"
+    "Tipo": "S",
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "7119-7/02",
+        "descricao": "Atividades de estudos geológicos"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      }
+    ]
   },
   {
     "Família": "06.18",
@@ -7377,7 +7648,21 @@
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "Tipo": "S",
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "7119-7/02",
+        "descricao": "Atividades de estudos geológicos"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      }
+    ]
   },
   {
     "Família": "06.24",
@@ -10977,9 +11262,20 @@
   {
     "Família": "51.10",
     "Descrição": "FERRAMENTAS MANUAIS DE CORTE, NAO ACIONADAS POR FORCA MOTRIZ",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M"
+    "CNAEs": [
+      {
+        "codigo": "4761-0/03",
+        "descricao": "Comércio varejista de artigos de papelaria"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      }
+    ]
   },
   {
     "Família": "51.20",
@@ -13170,9 +13466,20 @@
   {
     "Família": "80.10",
     "Descrição": "TINTAS VERNIZES E PRODUTOS CORRELATOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M"
+    "CNAEs": [
+      {
+        "codigo": "4761-0/03",
+        "descricao": "Comércio varejista de artigos de papelaria"
+      },
+      {
+        "codigo": "4679-6/01",
+        "descricao": "Comércio atacadista de tintas, vernizes e similares"
+      }
+    ]
   },
   {
     "Família": "80.20",
@@ -13191,9 +13498,24 @@
   {
     "Família": "80.40",
     "Descrição": "ADESIVOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M"
+    "CNAEs": [
+      {
+        "codigo": "1741-9/02",
+        "descricao": "Fabricação de produtos de papel, cartolina, papel-cartão e papelão ondulado para uso comercial e de escritório"
+      },
+      {
+        "codigo": "1813-0/01",
+        "descricao": "Impressão de material para uso publicitário"
+      },
+      {
+        "codigo": "4761-0/03",
+        "descricao": "Comércio varejista de artigos de papelaria"
+      }
+    ]
   },
   {
     "Família": "81.05",
