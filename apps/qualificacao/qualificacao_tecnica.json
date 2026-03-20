@@ -9904,60 +9904,160 @@
   {
     "Família": "08.01",
     "Descrição": "APLICACAO DE PAPEL EM PAREDE E REVESTIMENTO COM CORTICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      },
+      {
+        "codigo": "7410-2/02",
+        "descricao": "Decoração de interiores"
+      },
+      {
+        "codigo": "4330-4/05",
+        "descricao": "Aplicação de revestimentos e de resinas em interiores e exteriores"
+      }
+    ]
   },
   {
     "Família": "08.02",
     "Descrição": "INSTALACAO DE PISOS E FORROS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7410-2/02",
+        "descricao": "Decoração de interiores"
+      },
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      },
+      {
+        "codigo": "4330-4/03",
+        "descricao": "Obras de acabamento em gesso e estuque"
+      },
+      {
+        "codigo": "4330-4/05",
+        "descricao": "Aplicação de revestimentos e de resinas em interiores e exteriores"
+      }
+    ]
   },
   {
     "Família": "08.03",
     "Descrição": "INSTALACAO DE EQUIPAMENTOS GRAFICOS E REPROGRAFICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      },
+      {
+        "codigo": "3314-7/99",
+        "descricao": "Manutenção e reparação de outras máquinas e equipamentos para usos industriais não especificados anteriormente"
+      },
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      }
+    ]
   },
   {
     "Família": "08.04",
     "Descrição": "INSTALACAO DE FORRO E PECA DE DECORACAO EM GESSO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      },
+      {
+        "codigo": "7410-2/02",
+        "descricao": "Decoração de interiores"
+      },
+      {
+        "codigo": "4330-4/02",
+        "descricao": "Instalação de portas, janelas, tetos, divisórias e armários embutidos de qualquer material"
+      },
+      {
+        "codigo": "4330-4/03",
+        "descricao": "Obras de acabamento em gesso e estuque"
+      }
+    ]
   },
   {
     "Família": "08.05",
     "Descrição": "INSTALACAO DE MOLDURAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      },
+      {
+        "codigo": "4330-4/99",
+        "descricao": "Outras obras de acabamento da construção"
+      },
+      {
+        "codigo": "4330-4/02",
+        "descricao": "Instalação de portas, janelas, tetos, divisórias e armários embutidos de qualquer material"
+      },
+      {
+        "codigo": "4330-4/03",
+        "descricao": "Obras de acabamento em gesso e estuque"
+      }
+    ]
   },
   {
     "Família": "08.06",
     "Descrição": "INSTALACAO DE PELICULA E TELA DE PROTECAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4330-4/02",
+        "descricao": "Instalação de portas, janelas, tetos, divisórias e armários embutidos de qualquer material"
+      },
+      {
+        "codigo": "4330-4/99",
+        "descricao": "Outras obras de acabamento da construção"
+      }
+    ]
   },
   {
     "Família": "08.07",
     "Descrição": "INSTALACAO DE REDE LOCAL DE MICROCOMPUTADORES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -9965,26 +10065,81 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      }
+    ]
   },
   {
     "Família": "08.08",
     "Descrição": "INSTALACAO SISTEMA INTEGRADO SEGURANCA PESSOAL/PATRIMONIAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "6204-0/00",
+        "descricao": "Consultoria em tecnologia da informação"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      },
+      {
+        "codigo": "8020-0/01",
+        "descricao": "Atividades de monitoramento de sistemas de segurança eletrônico"
+      },
+      {
+        "codigo": "8020-0/00",
+        "descricao": "Atividades de monitoramento de sistemas de segurança"
+      }
+    ]
   },
   {
     "Família": "08.09",
     "Descrição": "INSTALACAO E MONTAGEM APAREL. MEDICOS HOSPITALARES E ODONTOLOGICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "3312-1/03",
+        "descricao": "Manutenção e reparação de aparelhos eletromédicos e eletroterapêuticos e equipamentos de irradiação"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      },
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      },
+      {
+        "codigo": "4329-1/04",
+        "descricao": "Montagem e instalação de sistemas e equipamentos de iluminação e sinalização em vias públicas, portos e aeroportos"
+      }
+    ]
   },
   {
     "Família": "08.10",
@@ -14948,116 +15103,154 @@
   {
     "Família": "84.05",
     "Descrição": "VESTUARIO EXTERNO MASCULINO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
     "CNAEs": [
       {
-        "codigo": "1354-5/00",
-        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
+        "codigo": "4781-4/00",
+        "descricao": "Comércio varejista de artigos do vestuário e acessórios"
       },
       {
-        "codigo": "1359-6/00",
-        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+        "codigo": "1412-6/01",
+        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
       },
       {
         "codigo": "1411-8/02",
         "descricao": "Facção de roupas íntimas"
       },
       {
-        "codigo": "1412-6/01",
-        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
+        "codigo": "1359-6/00",
+        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+      },
+      {
+        "codigo": "1354-5/00",
+        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
       }
     ]
   },
   {
     "Família": "84.10",
     "Descrição": "VESTUARIO EXTERNO FEMININO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
     "CNAEs": [
       {
-        "codigo": "1354-5/00",
-        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
+        "codigo": "4781-4/00",
+        "descricao": "Comércio varejista de artigos do vestuário e acessórios"
       },
       {
-        "codigo": "1359-6/00",
-        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+        "codigo": "1412-6/01",
+        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
       },
       {
         "codigo": "1411-8/02",
         "descricao": "Facção de roupas íntimas"
       },
       {
-        "codigo": "1412-6/01",
-        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
+        "codigo": "1359-6/00",
+        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+      },
+      {
+        "codigo": "1354-5/00",
+        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
       }
     ]
   },
   {
     "Família": "84.15",
     "Descrição": "VESTUARIO PARA FINS ESPECIAIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M"
+    "CNAEs": [
+      {
+        "codigo": "4642-7/02",
+        "descricao": "Comércio atacadista de roupas e acessórios para uso profissional e de segurança do trabalho"
+      },
+      {
+        "codigo": "4781-4/00",
+        "descricao": "Comércio varejista de artigos do vestuário e acessórios"
+      }
+    ]
   },
   {
     "Família": "84.20",
     "Descrição": "ROUPAS INTIMAS E PARA DORMIR, MASCULINAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
     "CNAEs": [
       {
-        "codigo": "1354-5/00",
-        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
+        "codigo": "4781-4/00",
+        "descricao": "Comércio varejista de artigos do vestuário e acessórios"
       },
       {
-        "codigo": "1359-6/00",
-        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+        "codigo": "1412-6/01",
+        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
       },
       {
         "codigo": "1411-8/02",
         "descricao": "Facção de roupas íntimas"
       },
       {
-        "codigo": "1412-6/01",
-        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
+        "codigo": "1359-6/00",
+        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+      },
+      {
+        "codigo": "1354-5/00",
+        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
       }
     ]
   },
   {
     "Família": "84.25",
     "Descrição": "ROUPAS INTIMAS E PARA DORMIR, FEMININA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
     "CNAEs": [
       {
-        "codigo": "1354-5/00",
-        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
+        "codigo": "4781-4/00",
+        "descricao": "Comércio varejista de artigos do vestuário e acessórios"
       },
       {
-        "codigo": "1359-6/00",
-        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+        "codigo": "1412-6/01",
+        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
       },
       {
         "codigo": "1411-8/02",
         "descricao": "Facção de roupas íntimas"
       },
       {
-        "codigo": "1412-6/01",
-        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
+        "codigo": "1359-6/00",
+        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+      },
+      {
+        "codigo": "1354-5/00",
+        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
       }
     ]
   },
   {
     "Família": "84.30",
     "Descrição": "CALCADOS MASCULINOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M"
+    "CNAEs": [
+      {
+        "codigo": "4782-2/01",
+        "descricao": "Comércio varejista de calçados"
+      }
+    ]
   },
   {
     "Família": "84.35",

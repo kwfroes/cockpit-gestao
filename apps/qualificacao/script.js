@@ -1,5 +1,6 @@
 let familyData = [];
 let cnaeDictionary = [];
+let relacionadosDict = [];
 let validDocs = [];
 let filteredData = [];
 let currentPage = 1;
@@ -48,6 +49,8 @@ async function initApp() {
 
         familyData = await respFamilies.json();
         cnaeDictionary = await respCnaes.json();
+        const respRelacionados = await fetch('relacionados_dictionary.json');
+        relacionadosDict = await respRelacionados.json();
 
         const cnaesConhecidos = new Set(cnaeDictionary.map(c => c.CNAE));
         familyData.forEach(familia => {
@@ -910,6 +913,64 @@ window.handleCnaeKeyDown = (event, input) => {
 window.handleCnaeBlur = (input) => {
     // Apenas um placeholder para evitar erro de referência ou
     // adicione lógica extra de validação aqui se desejar.
+};
+
+
+window.sugerirCnaesPorDescricao = () => {
+    const descInput = document.getElementById('f-desc');
+    const descOriginal = descInput.value.trim().toLowerCase();
+    if (!descOriginal) return;
+
+    const normalize = (t) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    const descNorm = normalize(descOriginal);
+
+    // --- PASSO 1: Expandir Termos usando o Dicionário ---
+    let termosParaBusca = descNorm.split(/\s+/);
+    let termosExpandidos = new Set([...termosParaBusca]);
+
+    relacionadosDict.forEach(item => {
+        const principalNorm = normalize(item.Principal);
+        const relacionadasNorm = normalize(item.Relacionadas);
+
+        // Se a descrição contém a Palavra Principal, adiciona todas as Relacionadas
+        if (descNorm.includes(principalNorm)) {
+            relacionadasNorm.split(', ').forEach(r => termosExpandidos.add(r));
+        }
+
+        // Se a descrição contém alguma palavra Relacionada, adiciona a Principal (Busca de Volta)
+        relacionadasNorm.split(', ').forEach(rel => {
+            if (descNorm.includes(rel)) {
+                termosExpandidos.add(principalNorm);
+            }
+        });
+    });
+
+    // --- PASSO 2: Scoring no cnaeDictionary ---
+    const arrayTermos = Array.from(termosExpandidos);
+    let matches = cnaeDictionary.map(cnae => {
+        let score = 0;
+        const cnaeNorm = normalize(cnae.DESCRIÇÃO);
+        
+        arrayTermos.forEach(termo => {
+            if (cnaeNorm.includes(termo)) score += 2;
+            if (cnaeNorm.startsWith(termo)) score += 3;
+        });
+        
+        return { ...cnae, score };
+    })
+    .filter(c => c.score > 2)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5);
+
+    // --- PASSO 3: Injeção de Dados ---
+    if (matches.length > 0) {
+        document.querySelectorAll('#cnae-rows-container .cnae-row').forEach(row => {
+            if (!row.querySelector('.cnae-code').value) row.remove();
+        });
+        matches.forEach(m => addCnaeRow(m.CNAE, m.DESCRIÇÃO));
+    } else {
+        showError("Sugestão Automática", "Não foi possível encontrar uma relação clara. Tente palavras mais simples.");
+    }
 };
 
 // Inicia o App
