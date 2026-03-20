@@ -4354,6 +4354,10 @@
   {
     "CNAE": "7410-2/02",
     "DESCRIÇÃO": "Decoração de interiores"
+  },  
+  {
+    "CNAE": "7410-2/03",
+    "DESCRIÇÃO": "Design de produto"
   },
   {
     "CNAE": "7420-0/01",
@@ -5202,5 +5206,9 @@
   {
     "CNAE": "9900-8/00",
     "DESCRIÇÃO": "Organismos internacionais e outras instituições extraterritoriais"
+  },
+  {
+    "CNAE": "9999-9/99",
+    "DESCRIÇÃO": "CNAE INEXISTENTE"
   }
 ]
