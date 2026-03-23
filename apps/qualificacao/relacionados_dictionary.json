@@ -1,0 +1,330 @@
+[
+  {
+    "Principal": "Seguradora",
+    "Relacionadas": "Seguros, vida, previdência complementar, saúde, corretores, agentes"
+  },
+  {
+    "Principal": "Crédito",
+    "Relacionadas": "Cartões, administração, financeiras"
+  },
+  {
+    "Principal": "Alimentos",
+    "Relacionadas": "Refeições, preparados, bufê, restaurantes, lanchonetes, minimercados, mercearias, armazéns"
+  },
+  {
+    "Principal": "Viagem",
+    "Relacionadas": "Agências, turismo, hotelaria, hotéis, albergues, passagens"
+  },
+  {
+    "Principal": "Textos",
+    "Relacionadas": "Tradução, interpretação, revisão, redação, jornalistas, escritores"
+  },
+  {
+    "Principal": "Armazenagem",
+    "Relacionadas": "Armazéns, depósitos, mercadorias, guarda-móveis, frigorífica"
+  },
+  {
+    "Principal": "Jornais",
+    "Relacionadas": "Revistas, periódicos, publicações, editores, livreiros"
+  },
+  {
+    "Principal": "Chaveiro",
+    "Relacionadas": "Chaves, fechaduras, instalação, reparação"
+  },
+  {
+    "Principal": "Documentos",
+    "Relacionadas": "Malote, entrega rápida, coleta, preparação, apoio administrativo, fotocópias, encadernação, plastificação"
+  },
+  {
+    "Principal": "Saúde",
+    "Relacionadas": "Médicos, planos, terapêutica, diagnóstica, clínica, hospitalar, anatomia patológica, citológica"
+  },
+  {
+    "Principal": "Escritório",
+    "Relacionadas": "Papelaria, artigos, suprimentos, móveis, apoio administrativo"
+  },
+  {
+    "Principal": "Vidro",
+    "Relacionadas": "Fibra de vidro, vidraçaria, cristais, espelhos"
+  },
+  {
+    "Principal": "Correio",
+    "Relacionadas": "Postagem, franqueadas, nacional, encomendas"
+  },
+  {
+    "Principal": "Publicidade",
+    "Relacionadas": "Propaganda, marketing direto, consultoria, conteúdo, internet, filmes"
+  },
+  {
+    "Principal": "Gráfica",
+    "Relacionadas": "Impressão, arte, pré-impressão, acabamentos, segurança, edição, cadastros, listas"
+  },
+  {
+    "Principal": "Animais",
+    "Relacionadas": "Adestramento, alojamento, guarda, estimação, veterinária"
+  },
+  {
+    "Principal": "Veículos",
+    "Relacionadas": "Estacionamento, frota, abastecimento, combustíveis, locação, automóveis, ônibus, caminhões, manutenção, reparação, funilaria, lanternagem"
+  },
+  {
+    "Principal": "Segurança",
+    "Relacionadas": "Vigilância, monitoramento, sistemas eletrônicos, alarmes, proteção, privada"
+  },
+  {
+    "Principal": "Jogos",
+    "Relacionadas": "Recreação, esportivos, brinquedos, lazer, parques"
+  },
+  {
+    "Principal": "Água",
+    "Relacionadas": "Tratamento, captação, distribuição, esgoto, hidrômetro, canalização, hidráulica"
+  },
+  {
+    "Principal": "Lavanderia",
+    "Relacionadas": "Tinturaria, toalheiros, higienização, limpeza"
+  },
+  {
+    "Principal": "Aeronaves",
+    "Relacionadas": "Aviões, táxi aéreo, tripulação, manutenção, reparação"
+  },
+  {
+    "Principal": "Andaimes",
+    "Relacionadas": "Aluguel, estruturas, temporário, construção"
+  },
+  {
+    "Principal": "Embarcação",
+    "Relacionadas": "Marítima, fluvial, travessia, portuário, navegação"
+  },
+  {
+    "Principal": "Audiovisual",
+    "Relacionadas": "Som, vídeo, gravação, edição, rádio, televisão, estúdios, mídias"
+  },
+  {
+    "Principal": "Laboratório",
+    "Relacionadas": "Equipamentos, científicos, médicos, análises, clínico, físico-química, biológica, dosimetria"
+  },
+  {
+    "Principal": "Topografia",
+    "Relacionadas": "Geodésia, cartografia, agrimensura, medição"
+  },
+  {
+    "Principal": "Carga",
+    "Relacionadas": "Logística, movimentação, elevação, dutoviário, transporte"
+  },
+  {
+    "Principal": "Imóveis",
+    "Relacionadas": "Aluguel, corretagem, administração, compra, venda, avaliação, condomínios"
+  },
+  {
+    "Principal": "Informática",
+    "Relacionadas": "Software, hardware, redes, dados, suporte, consultoria, manutenção, computadores, periféricos"
+  },
+  {
+    "Principal": "Capacitação",
+    "Relacionadas": "Treinamento, desenvolvimento, pessoas, ensino, cursos, apoio à educação"
+  },
+  {
+    "Principal": "Engenharia",
+    "Relacionadas": "Consultoria, projetos, civil, agronomia, arquitetura, urbanismo, acervo técnico"
+  },
+  {
+    "Principal": "Jurídica",
+    "Relacionadas": "Advocatícios, justiça, cartórios, arbitragem, solução de controvérsias"
+  },
+  {
+    "Principal": "Meio Ambiente",
+    "Relacionadas": "Sustentabilidade, agronomia, biologia, proteção ambiental, paisagística"
+  },
+  {
+    "Principal": "RH",
+    "Relacionadas": "Recursos humanos, mão-de-obra, temporária, seleção, agenciamento, treinamento"
+  },
+  {
+    "Principal": "Limpeza",
+    "Relacionadas": "Conservação, prédios, industrial, urbana, coleta de lixo, resíduos, higienização"
+  },
+  {
+    "Principal": "Pintura",
+    "Relacionadas": "Industrial, edifícios, revestimentos, resinas, artes plásticas"
+  },
+  {
+    "Principal": "Construção",
+    "Relacionadas": "Alvenaria, concreto, reparos, pequenas obras, instalações, acabamento"
+  },
+  {
+    "Principal": "Carpintaria",
+    "Relacionadas": "Marcenaria, madeira, esquadrias, móveis, reparação"
+  },
+  {
+    "Principal": "Gás",
+    "Relacionadas": "Natural, GLP, medicinal, distribuição, instalações, dutos"
+  },
+  {
+    "Principal": "Energia",
+    "Relacionadas": "Elétrica, geração, transmissão, distribuição, rede, iluminação pública"
+  },
+  {
+    "Principal": "Arqueologia",
+    "Relacionadas": "Estudos, geologia, histórico"
+  },
+  {
+    "Principal": "Associal",
+    "Relacionadas": "Assistência, psicossocial, inclusão, centros de apoio"
+  },
+  {
+    "Principal": "Tíquete",
+    "Relacionadas": "Emissão, alimentação, transporte, similares"
+  },
+  {
+    "Principal": "Vale",
+    "Relacionadas": "Emissão, alimentação, transporte, similares"
+  },
+  {
+    "Principal": "Tradução",
+    "Relacionadas": "Interpretação, simultânea, consecutiva, textos"
+  },
+  {
+    "Principal": "Armazenagem",
+    "Relacionadas": "Warrant, depósitos, mercadorias, terceiros, guarda-móveis"
+  },
+  {
+    "Principal": "Jornais",
+    "Relacionadas": "Representantes, jornais, publicações, varejista, periódicos"
+  },
+  {
+    "Principal": "Revistas",
+    "Relacionadas": "Representantes, jornais, publicações, varejista, periódicos"
+  },
+  {
+    "Principal": "Clipping",
+    "Relacionadas": "Informação, diários oficiais, publicidade, leitura, recortes"
+  },
+  {
+    "Principal": "Placas",
+    "Relacionadas": "Letras, letreiros, placas, canetas, lápis, escritório"
+  },
+  {
+    "Principal": "Carimbos",
+    "Relacionadas": "Letras, letreiros, placas, canetas, lápis, escritório"
+  },
+  {
+    "Principal": "Pastas",
+    "Relacionadas": "Papelaria, brindes, suvenires, bijuterias, artesanatos, impressão"
+  },
+  {
+    "Principal": "Crachás",
+    "Relacionadas": "Papelaria, brindes, suvenires, bijuterias, artesanatos, impressão"
+  },
+  {
+    "Principal": "Fibra de Vidro",
+    "Relacionadas": "Vidro, tecelagem, fibras, artificiais, sintéticas"
+  },
+  {
+    "Principal": "Aduaneiros",
+    "Relacionadas": "Despachantes, comissaria, despachos"
+  },
+  {
+    "Principal": "Design",
+    "Relacionadas": "Visual, artes gráficas, diagramação, design de interiores"
+  },
+  {
+    "Principal": "Embalagem",
+    "Relacionadas": "Envasamento, empacotamento, contrato, encomendas"
+  },
+  {
+    "Principal": "Estacionamento",
+    "Relacionadas": "Veículos, guarda, pátio"
+  },
+  {
+    "Principal": "Fotografia",
+    "Relacionadas": "Aéreas, submarinas, laboratórios, revelação"
+  },
+  {
+    "Principal": "Bilheteria",
+    "Relacionadas": "Reservas, turismo, ingressos, eventos"
+  },
+  {
+    "Principal": "Lavanderia",
+    "Relacionadas": "Toalheiros, tinturarias, higienização, hospitalar"
+  },
+  {
+    "Principal": "Leilão",
+    "Relacionadas": "Alienação, leiloeiros, independentes"
+  },
+  {
+    "Principal": "Andandaimes",
+    "Relacionadas": "Aluguel, construção, estruturas"
+  },
+  {
+    "Principal": "Telecomunicação",
+    "Relacionadas": "Telefonia, satélite, rádio, pager, sem fio, celular, SME, VOIP"
+  },
+  {
+    "Principal": "Educação",
+    "Relacionadas": "Ensino, cursos, formação, condutores, apoio escolar"
+  },
+  {
+    "Principal": "Agronomia",
+    "Relacionadas": "Rural, agropecuária, agrimensura, consultoria, geodésia"
+  },
+  {
+    "Principal": "Auditoria",
+    "Relacionadas": "Contábil, fiscal, tributária, atuarial, qualidade"
+  },
+  {
+    "Principal": "Software",
+    "Relacionadas": "Licenciamento, desenvolvimento, customizáveis, encomenda, manutenção"
+  },
+  {
+    "Principal": "Geologia",
+    "Relacionadas": "Mineral, estudos, petróleo, gás, prospecção"
+  },
+  {
+    "Principal": "Restauração",
+    "Relacionadas": "Monumentos, históricos, obras de arte, livros, pintura"
+  },
+  {
+    "Principal": "Shows/Eventos",
+    "Relacionadas": "Espetáculos, cênicas, dança, musical, teatral, congressos"
+  },
+  {
+    "Principal": "Imobiliária",
+    "Relacionadas": "Condomínios, aluguel, corretagem, avaliação, bens próprios"
+  },
+  {
+    "Principal": "Resíduos",
+    "Relacionadas": "Lixo, perigosos, não-perigosos, coleta, tratamento, disposição"
+  },
+  {
+    "Principal": "Paisagismo",
+    "Relacionadas": "Jardins, parques, gramadas, botânicos, zoológicos"
+  },
+  {
+    "Principal": "Piscina",
+    "Relacionadas": "Conservação, limpeza, manutenção"
+  },
+  {
+    "Principal": "Poço Artesiano",
+    "Relacionadas": "Perfuração, construção, manutenção"
+  },
+  {
+    "Principal": "Serralheria",
+    "Relacionadas": "Metais, esquadrias, tratamento, revestimento, usinagem, solda"
+  },
+  {
+    "Principal": "Pragas",
+    "Relacionadas": "Imunização, controle, urbanas, desinsetização, desratização"
+  },
+  {
+    "Principal": "Funerários",
+    "Relacionadas": "Cremação, sepultamento, somatoconservação, cemitérios"
+  },
+  {
+    "Principal": "Hospedagem",
+    "Relacionadas": "Albergues, hotéis, apart hotéis"
+  },
+  {
+    "Principal": "Transporte",
+    "Relacionadas": "Metroferroviário, passageiros, carga, dutoviário, logística"
+  }
+]
