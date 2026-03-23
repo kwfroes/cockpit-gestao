@@ -195,8 +195,15 @@ grid.innerHTML = '';
             </div>
 
             
-            <h4 class="font-bold text-slate-800 dark:text-white text-sm leading-tight mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">${item.Descrição}</h4>
-            <p class="text-[12px] text-gray-600 dark:text-gray-100 font-mono mb-6">FAMÍLIA: ${item.Família}</p>
+            <h4 onclick="copyToClipboard(event, 'Família ${item.Família} - ${item.Descrição}')" 
+                class="font-bold text-slate-800 dark:text-white text-sm leading-tight mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors cursor-copy hover:underline" 
+                title="Copiar">
+                ${item.Descrição}
+            </h4>
+            <p onclick="copyToClipboard(event, '${item.Família}')" 
+                class="text-[12px] text-gray-600 dark:text-gray-100 font-mono mb-6 cursor-copy hover:text-blue-500 transition-colors">
+                FAMÍLIA: ${item.Família}
+            </p>
 
             <div class="space-y-4 flex-grow">
                 ${renderDocList("Obrigatórios", item["Documentos Exigidos"] || item["DOCUMENTOS EXIGIDOS"], "text-red-500")}
@@ -207,9 +214,13 @@ grid.innerHTML = '';
                 <p class="text-[9px] font-bold text-blue-500 uppercase mb-2">CNAEs Relacionados</p>
                 <div class="space-y-1.5">
                     ${(item.CNAEs || []).length > 0 ? item.CNAEs.map(c => `
-                        <div class="text-[10px] bg-slate-50 dark:bg-slate-850 p-2 rounded border dark:border-slate-800 dark:text-slate-300 font-medium">
-                            <span class="text-blue-600 dark:text-blue-400 font-bold">${c.codigo}</span> <span class="mx-1 text-slate-300">|</span> ${c.descricao}
-                        </div>
+                    <div onclick="copyToClipboard(event, '${c.codigo} | ${c.descricao}')" 
+                        class="text-[10px] bg-slate-50 dark:bg-slate-850 p-2 rounded border dark:border-slate-800 dark:text-slate-300 font-medium cursor-copy hover:border-blue-400 transition-all active:scale-95"
+                        title="Copiar CNAE">
+                        <span class="text-blue-600 dark:text-blue-400 font-bold">${c.codigo}</span> 
+                        <span class="mx-1 text-slate-300">|</span> 
+                        ${c.descricao}
+                    </div>
                     `).join('') : '<p class="text-[10px] italic text-gray-600 dark:text-gray-400 text-center py-2">Nenhum CNAE cadastrado.</p>'}
                 </div>
             </div>
@@ -971,6 +982,48 @@ window.sugerirCnaesPorDescricao = () => {
     } else {
         showError("Sugestão Automática", "Não foi possível encontrar uma relação clara. Tente palavras mais simples.");
     }
+};
+
+window.showToast = (message) => {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    
+    // Estilização do Toast (Tailwind)
+    toast.className = `
+        flex items-center gap-2 px-4 py-3 rounded-lg shadow-2xl 
+        bg-white dark:bg-slate-800 border-l-4 border-emerald-500 
+        text-slate-700 dark:text-slate-200 text-xs font-bold uppercase tracking-wider
+        animate-fade-in transition-all duration-300
+    `;
+    
+    toast.innerHTML = `
+        <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        <span>${message}</span>
+    `;
+
+    container.appendChild(toast);
+
+    // Remove o toast após 3 segundos com efeito de saída
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(20px)';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+};
+
+window.copyToClipboard = (event, text) => {
+    event.stopPropagation();
+    navigator.clipboard.writeText(text).then(() => {
+        // Agora usamos o Toast em vez de apenas mudar a cor
+        showToast("Copiado para a área de transferência!");
+        
+        // Efeito visual rápido no elemento clicado para feedback imediato
+        const target = event.currentTarget;
+        target.classList.add('text-emerald-500', 'dark:text-emerald-400');
+        setTimeout(() => target.classList.remove('text-emerald-500', 'dark:text-emerald-400'), 500);
+    });
 };
 
 // Inicia o App
