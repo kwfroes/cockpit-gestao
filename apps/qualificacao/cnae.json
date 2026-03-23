@@ -880,6 +880,10 @@
     "DESCRIÇÃO": "Fabricação de adoçantes naturais e artificiais"
   },
   {
+    "CNAE": "1099-6/07",
+    "DESCRIÇÃO": "Fabricação de alimentos dietéticos e complementos alimentares"
+  },
+  {
     "CNAE": "1099-6/99",
     "DESCRIÇÃO": "Fabricação de outros produtos alimentícios não especificados anteriormente"
   },
@@ -4898,6 +4902,10 @@
   {
     "CNAE": "8690-9/02",
     "DESCRIÇÃO": "Atividades de bancos de leite humano"
+  },
+  {
+    "CNAE": "8690-9/03",
+    "DESCRIÇÃO": "Atividades de acupuntura"
   },
   {
     "CNAE": "8690-9/99",
