@@ -197,13 +197,24 @@ grid.innerHTML = '';
             
             <h4 onclick="copyToClipboard(event, 'Família ${item.Família} - ${item.Descrição}')" 
                 class="font-bold text-slate-800 dark:text-white text-sm leading-tight mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors cursor-copy hover:underline" 
-                title="Copiar">
+                title="Clique para copiar">
                 ${item.Descrição}
             </h4>
-            <p onclick="copyToClipboard(event, '${item.Família}')" 
-                class="text-[12px] text-gray-600 dark:text-gray-100 font-mono mb-6 cursor-copy hover:text-blue-500 transition-colors">
-                FAMÍLIA: ${item.Família}
-            </p>
+
+            <div onclick="copyToClipboard(event, '${item.Família}')" 
+                class="flex items-center gap-1 mb-6 cursor-copy group/info">
+                
+                <span class="opacity-50 uppercase text-[11px] font-mono whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]" 
+                    title="${item.Ramo && item.Ramo.nome ? item.Ramo.nome : 'Geral'}">
+                    ${item.Ramo && item.Ramo.nome ? item.Ramo.nome : 'Geral'}
+                </span>
+
+                <span class="opacity-30">|</span>
+
+                <p class="text-[11px] text-gray-500 dark:text-gray-400 font-mono whitespace-nowrap group-hover/info:text-blue-500 transition-colors">
+                    FAMÍLIA: ${item.Família}
+                </p>
+            </div>
 
             <div class="space-y-4 flex-grow">
                 ${renderDocList("Obrigatórios", item["Documentos Exigidos"] || item["DOCUMENTOS EXIGIDOS"], "text-red-500")}
@@ -661,8 +672,12 @@ window.generateSummary = (index) => {
     }
 
     // 3. Montagem do Texto Final para WhatsApp
+    const nomeRamo = item.Ramo && item.Ramo.nome ? item.Ramo.nome : "Geral";
+    const codRamo = item.Ramo && item.Ramo.codigo ? item.Ramo.codigo : "--";
     const textoWhatsApp = 
         `*CONSULTA DE QUALIFICAÇÃO TÉCNICA*\n\n` +
+        `Ramo de Atividade ${codRamo} - ${nomeRamo}\n` +
+        `Família ${item.Família} - ${item.Descrição.toUpperCase()}\n\n` +
         `Para a família *${item.Descrição.toUpperCase()}* (Código: *${item.Família}*), classificada como *${tipo}*, informamos que os documentos *OBRIGATÓRIOS* são:\n\n` +
         `${exigidosStr}\n\n` +
         `Como documentos *ELEGÍVEIS* (opcionais), constam:\n\n` +
