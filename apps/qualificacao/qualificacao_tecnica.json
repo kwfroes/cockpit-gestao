@@ -10144,55 +10144,120 @@
   {
     "Família": "08.10",
     "Descrição": "INSTALACAO E MONTAGEM DE CASA DE FARINHA, BENEFICIAMENTO DE GRAOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4292-8/01",
+        "descricao": "Montagem de estruturas metálicas"
+      },
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      }
+    ]
   },
   {
     "Família": "08.11",
     "Descrição": "INSTALACAO E MONTAGEM DE CORTINAS, PERSIANAS E TOLDOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4292-8/01",
+        "descricao": "Montagem de estruturas metálicas"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      },
+      {
+        "codigo": "4330-4/99",
+        "descricao": "Outras obras de acabamento da construção"
+      }
+    ]
   },
   {
     "Família": "08.12",
     "Descrição": "INSTALACAO E MONTAGEM DE COZINHAS INDUSTRIAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      },
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      }
+    ]
   },
   {
     "Família": "08.13",
     "Descrição": "INSTALACAO E MONTAGEM DE DIVISORIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Atestado de Capacidade Técnica"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4330-4/02",
+        "descricao": "Instalação de portas, janelas, tetos, divisórias e armários embutidos de qualquer material"
+      },
+      {
+        "codigo": "4330-4/99",
+        "descricao": "Outras obras de acabamento da construção"
+      },
+      {
+        "codigo": "4330-4/03",
+        "descricao": "Obras de acabamento em gesso e estuque"
+      }
+    ]
   },
   {
     "Família": "08.14",
     "Descrição": "INSTALACAO E MONTAGEM DE ELEVADORES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado",
       "Autorização da SEDUR - Município de Salvador"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4329-1/03",
+        "descricao": "Instalação, manutenção e reparação de elevadores, escadas e esteiras rolantes, exceto de fabricação própria"
+      }
+    ]
   },
   {
     "Família": "08.15",
     "Descrição": "INSTALACAO E MONTAGEM DE EQUIPAMENTO DE LUZ, IMAGEM E SOM",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Certidão de Acervo Técnico com Atestado"
     ],
@@ -10200,27 +10265,70 @@
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "CFT - Conselho Federal dos Técnicos Industriais"
     ],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "4292-8/01",
+        "descricao": "Montagem de estruturas metálicas"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      }
+    ]
   },
   {
     "Família": "08.16",
     "Descrição": "INSTALACAO E MONTAGEM DE EQUIP. DE CALDEIRARIA (TANQUES, VASOS, SILOS)",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      },
+      {
+        "codigo": "4292-8/01",
+        "descricao": "Montagem de estruturas metálicas"
+      },
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      }
+    ]
   },
   {
     "Família": "08.17",
     "Descrição": "INSTALACAO E MONTAGEM DE EQUIPAMENTOS DE PROCESSAMENTO DE DADOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "S"
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      }
+    ]
   },
   {
     "Família": "08.18",
