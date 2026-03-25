@@ -148,9 +148,9 @@
           ]
         },
         {
-          "data": "2026-03-03",
-          "valorPago": 871.96,
-          "notaFiscal": "000000",
+          "data": "2026-03-06",
+          "valorPago": 871.95,
+          "notaFiscal": "885659",
           "processoPagamentoSei": "009.0242.2026.0011624-68",
           "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=144775978",
           "periodoDe": "2026-01-21",
@@ -169,6 +169,31 @@
               "descricao": "Emissão CND",
               "quantidade": 501,
               "valorUnitario": 0.593
+            }
+          ]
+        },
+        {
+          "data": "2026-04-06",
+          "valorPago": 974.54,
+          "notaFiscal": "000000",
+          "processoPagamentoSei": "009.0242.2026.0018295-86",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=147034485",
+          "periodoDe": "2026-02-21",
+          "periodoAte": "2026-06-20",
+          "isTRD": false,
+          "id": "pag_1774446941401",
+          "detalhes": [
+            {
+              "id": "item_1774446956409",
+              "descricao": "Emissão CND",
+              "quantidade": 674,
+              "valorUnitario": 0.593
+            },
+            {
+              "id": "item_1774446969770",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 547.864
             }
           ]
         }

@@ -1,0 +1,338 @@
+[
+  {
+    "codigo": "01",
+    "nome": "Serviços Gerais e Administrativos"
+  },
+  {
+    "codigo": "02",
+    "nome": "Serviços Técnicos e Especializados"
+  },
+  {
+    "codigo": "03",
+    "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+  },
+  {
+    "codigo": "04",
+    "nome": "Serviços de Manutenção de Assistência Técnica"
+  },
+  {
+    "codigo": "05",
+    "nome": "Serviços de Transporte"
+  },
+  {
+    "codigo": "06",
+    "nome": "Estudos e Projetos"
+  },
+  {
+    "codigo": "07",
+    "nome": "Obras e Construções"
+  },
+  {
+    "codigo": "08",
+    "nome": "Instalações e Montagens"
+  },
+  {
+    "codigo": "09",
+    "nome": "Serviços Medicos e Odontológicos"
+  },
+  {
+    "codigo": "10",
+    "nome": "Armamentos"
+  },
+  {
+    "codigo": "13",
+    "nome": "Munições e Explosivos"
+  },
+  {
+    "codigo": "15",
+    "nome": "Aeronaves seus Componentes Estruturais"
+  },
+  {
+    "codigo": "16",
+    "nome": "Componentes e Acessórios de Aeronaves"
+  },
+  {
+    "codigo": "17",
+    "nome": "Equipamentos de Lançamentos, Pouso e Manobra de Aeronaves"
+  },
+  {
+    "codigo": "19",
+    "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes"
+  },
+  {
+    "codigo": "20",
+    "nome": "Equipamentos para Navios e Embarcações"
+  },
+  {
+    "codigo": "22",
+    "nome": "Equipamentos Ferroviários"
+  },
+  {
+    "codigo": "23",
+    "nome": "Veículos"
+  },
+  {
+    "codigo": "24",
+    "nome": "Tratores"
+  },
+  {
+    "codigo": "25",
+    "nome": "Componentes de Veículos"
+  },
+  {
+    "codigo": "26",
+    "nome": "Pneus e Câmaras"
+  },
+  {
+    "codigo": "28",
+    "nome": "Motores, Turbinas e seus Componentes"
+  },
+  {
+    "codigo": "29",
+    "nome": "Acessórios de Motores"
+  },
+  {
+    "codigo": "30",
+    "nome": "Equipamentos de Transmissão Mecânica de Força"
+  },
+  {
+    "codigo": "31",
+    "nome": "Rolamentos e Mancais"
+  },
+  {
+    "codigo": "32",
+    "nome": "Máquinas e Equipamentos para Trabalhar em Madeira"
+  },
+  {
+    "codigo": "34",
+    "nome": "Maquinaria para Trabalhar Metal"
+  },
+  {
+    "codigo": "35",
+    "nome": "Equipamentos para Serviços"
+  },
+  {
+    "codigo": "36",
+    "nome": "Máquinas para Indústrias Especializadas"
+  },
+  {
+    "codigo": "37",
+    "nome": "Maquinaria e Equipamentos Agrícolas"
+  },
+  {
+    "codigo": "38",
+    "nome": "Equipamentos de Construção, Mineração, Escavação e Conservação de Rodovias"
+  },
+  {
+    "codigo": "39",
+    "nome": "Equipamentos para Manuseio de Material"
+  },
+  {
+    "codigo": "40",
+    "nome": "Cordas, Cabos, Correntes e seus Acessórios"
+  },
+  {
+    "codigo": "41",
+    "nome": "Equipamentos de Refrigeração, Circulação e Condicionamento de Ar"
+  },
+  {
+    "codigo": "42",
+    "nome": "Equipamentos para Combate a Incêndio, Resgate e Segurança"
+  },
+  {
+    "codigo": "43",
+    "nome": "Bombas e Compressores"
+  },
+  {
+    "codigo": "44",
+    "nome": "Equipamentos de Forno, Central de Vapor, Secagem e Reator Nuclear"
+  },
+  {
+    "codigo": "45",
+    "nome": "Equipamentos de Instalações Hidráulicas, Sanitárias e de Calefação"
+  },
+  {
+    "codigo": "46",
+    "nome": "Equipamentos para Purificação de Água e Tratamento de Esgotos"
+  },
+  {
+    "codigo": "47",
+    "nome": "Canos, Tubos, Mangueiras e Acessórios"
+  },
+  {
+    "codigo": "48",
+    "nome": "Válvulas"
+  },
+  {
+    "codigo": "49",
+    "nome": "Equipamentos de Oficinas de Manutenção e Reparos"
+  },
+  {
+    "codigo": "51",
+    "nome": "Ferramentas Manuais"
+  },
+  {
+    "codigo": "52",
+    "nome": "Instrumentos de Medição"
+  },
+  {
+    "codigo": "53",
+    "nome": "Ferragens e Abrasivos"
+  },
+  {
+    "codigo": "54",
+    "nome": "Estruturas e Andaimes Pré-Fabricados"
+  },
+  {
+    "codigo": "55",
+    "nome": "Tábuas, Esquadrias e Compensados de Madeira"
+  },
+  {
+    "codigo": "56",
+    "nome": "Materiais para Construção"
+  },
+  {
+    "codigo": "58",
+    "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
+  },
+  {
+    "codigo": "59",
+    "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+  },
+  {
+    "codigo": "60",
+    "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+  },
+  {
+    "codigo": "61",
+    "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
+  },
+  {
+    "codigo": "62",
+    "nome": "Aparelhos de Iluminação e Lâmpadas"
+  },
+  {
+    "codigo": "63",
+    "nome": "Sistemas de Alarme, Sinalização e Detecção para Segurança"
+  },
+  {
+    "codigo": "65",
+    "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
+  },
+  {
+    "codigo": "66",
+    "nome": "Instrumentos e Equipamentos de Laboratório"
+  },
+  {
+    "codigo": "67",
+    "nome": "Equipamentos Fotográficos"
+  },
+  {
+    "codigo": "68",
+    "nome": "Substâncias e Produtos Químicos"
+  },
+  {
+    "codigo": "69",
+    "nome": "Aparelhos e Acessórios de Treinamento"
+  },
+  {
+    "codigo": "70",
+    "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte"
+  },
+  {
+    "codigo": "71",
+    "nome": "Mobiliários"
+  },
+  {
+    "codigo": "72",
+    "nome": "Utensílios e Utilidades de Uso Doméstico e Comercial"
+  },
+  {
+    "codigo": "73",
+    "nome": "Equipamentos para Preparar e Servir Alimentos"
+  },
+  {
+    "codigo": "74",
+    "nome": "Máquinas para Escritórios e Arquivos Visuais"
+  },
+  {
+    "codigo": "75",
+    "nome": "Utensílios de Escritório e Material de Expediente"
+  },
+  {
+    "codigo": "76",
+    "nome": "Livros, Mapas e Outras Publicações"
+  },
+  {
+    "codigo": "77",
+    "nome": "Instrumentos Musicais e Equipamentos de Som de Uso Doméstico"
+  },
+  {
+    "codigo": "78",
+    "nome": "Equipamentos para Recreação e Desporto"
+  },
+  {
+    "codigo": "79",
+    "nome": "Equipamnetos e Materiais para Limpeza"
+  },
+  {
+    "codigo": "80",
+    "nome": "Pincéis, tintas, Vedantes e Adesivos"
+  },
+  {
+    "codigo": "81",
+    "nome": "Recipientes e Materiais de Acondicionamento e Embalagens"
+  },
+  {
+    "codigo": "83",
+    "nome": "Tecidos, Couros, Peles, Aviamentos, Barracas e Bandeiras"
+  },
+  {
+    "codigo": "84",
+    "nome": "Vestuários e Equipamentos Individuais e Insignias"
+  },
+  {
+    "codigo": "85",
+    "nome": "Artigos para Higiene Pessoal"
+  },
+  {
+    "codigo": "87",
+    "nome": "Suprimentos Agrícolas"
+  },
+  {
+    "codigo": "88",
+    "nome": "Animais Vivos"
+  },
+  {
+    "codigo": "89",
+    "nome": "Alimentos"
+  },
+  {
+    "codigo": "90",
+    "nome": "Teste"
+  },
+  {
+    "codigo": "91",
+    "nome": "Combustíveis, Lubrificantes, Óleos e Ceras"
+  },
+  {
+    "codigo": "93",
+    "nome": "Materias Manufaturados Não Metálicos"
+  },
+  {
+    "codigo": "94",
+    "nome": "Matérias-Primas Não Metálicas"
+  },
+  {
+    "codigo": "95",
+    "nome": "Barras, Chapas e Perfilados Metálicos"
+  },
+  {
+    "codigo": "96",
+    "nome": "Minérios, Minerais e seus Produtos Primários"
+  },
+  {
+    "codigo": "99",
+    "nome": "Diversos"
+  }
+]

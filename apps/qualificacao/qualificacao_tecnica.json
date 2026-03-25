@@ -14867,6 +14867,10 @@
     "Documentos Elegíveis": [],
     "CNAEs": [
       {
+        "codigo": "4789-0/06",
+        "descricao": "Comércio varejista de fogos de artifício e artigos pirotécnicos"
+      },
+      {
         "codigo": "2092-4/02",
         "descricao": "Fabricação de artigos pirotécnicos"
       }
@@ -14897,9 +14901,20 @@
   {
     "Família": "15.10",
     "Descrição": "AERONAVES E SEUS COMPONENTES ESTRUTURAIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "3316-3/01",
+        "descricao": "Manutenção e reparação de aeronaves, exceto a manutenção na pista"
+      },
+      {
+        "codigo": "3041-5/00",
+        "descricao": "Fabricação de aeronaves"
+      }
+    ],
     "Ramo": {
       "codigo": "15",
       "nome": "Aeronaves seus Componentes Estruturais"
@@ -14908,9 +14923,20 @@
   {
     "Família": "16.10",
     "Descrição": "COMPONENTES E ACESSORIOS DE AERONAVES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "3316-3/01",
+        "descricao": "Manutenção e reparação de aeronaves, exceto a manutenção na pista"
+      },
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      }
+    ],
     "Ramo": {
       "codigo": "16",
       "nome": "Componentes e Acessórios de Aeronaves"
@@ -14919,9 +14945,20 @@
   {
     "Família": "17.10",
     "Descrição": "EQUIPAMENTOS PARA LANCAMENTOS, POUSO E MANOBRA DE AERONAVES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "17",
       "nome": "Equipamentos de Lançamentos, Pouso e Manobra de Aeronaves"
@@ -14930,9 +14967,24 @@
   {
     "Família": "19.05",
     "Descrição": "NAVIOS DE GUERRA E EMBARCACOES DE DESEMBARQUE",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      },
+      {
+        "codigo": "3011-3/01",
+        "descricao": "Construção de embarcações de grande porte"
+      },
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      }
+    ],
     "Ramo": {
       "codigo": "19",
       "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes"
@@ -14941,9 +14993,24 @@
   {
     "Família": "19.10",
     "Descrição": "NAVIOS PARA TRANSPORTE DE PASSAGEIRO E TROPA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      },
+      {
+        "codigo": "3011-3/01",
+        "descricao": "Construção de embarcações de grande porte"
+      },
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      }
+    ],
     "Ramo": {
       "codigo": "19",
       "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes"
@@ -14952,9 +15019,24 @@
   {
     "Família": "19.15",
     "Descrição": "NAVIOS TANQUES E CARGUEIROS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      },
+      {
+        "codigo": "3011-3/01",
+        "descricao": "Construção de embarcações de grande porte"
+      },
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      }
+    ],
     "Ramo": {
       "codigo": "19",
       "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes"
@@ -14963,9 +15045,24 @@
   {
     "Família": "19.20",
     "Descrição": "NAVIOS PESQUEIROS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      },
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      },
+      {
+        "codigo": "3011-3/01",
+        "descricao": "Construção de embarcações de grande porte"
+      }
+    ],
     "Ramo": {
       "codigo": "19",
       "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes"
@@ -14974,9 +15071,24 @@
   {
     "Família": "19.25",
     "Descrição": "NAVIOS DE SERVICOS ESPECIAIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      },
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      },
+      {
+        "codigo": "3011-3/01",
+        "descricao": "Construção de embarcações de grande porte"
+      }
+    ],
     "Ramo": {
       "codigo": "19",
       "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes"
@@ -14985,9 +15097,20 @@
   {
     "Família": "19.30",
     "Descrição": "BATELOES E CHATAS PARA CARGAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      },
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      }
+    ],
     "Ramo": {
       "codigo": "19",
       "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes"
@@ -15002,14 +15125,39 @@
     "Ramo": {
       "codigo": "19",
       "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      },
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      }
+    ]
   },
   {
     "Família": "19.40",
     "Descrição": "EMBARCACOES MIUDAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4763-6/05",
+        "descricao": "Comércio varejista de embarcações e outros veículos recreativos; peças e acessórios"
+      },
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      },
+      {
+        "codigo": "3012-1/00",
+        "descricao": "Construção de embarcações para esporte e lazer"
+      }
+    ],
     "Ramo": {
       "codigo": "19",
       "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes"
@@ -15018,9 +15166,20 @@
   {
     "Família": "19.45",
     "Descrição": "PONTOES E DOCAS FLUTUANTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2511-0/00",
+        "descricao": "Fabricação de estruturas metálicas"
+      },
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      }
+    ],
     "Ramo": {
       "codigo": "19",
       "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes"
@@ -15029,9 +15188,20 @@
   {
     "Família": "19.50",
     "Descrição": "DIQUES FLUTUANTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2511-0/00",
+        "descricao": "Fabricação de estruturas metálicas"
+      },
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      }
+    ],
     "Ramo": {
       "codigo": "19",
       "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes"
@@ -15040,9 +15210,20 @@
   {
     "Família": "19.55",
     "Descrição": "DRAGAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      }
+    ],
     "Ramo": {
       "codigo": "19",
       "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes"
@@ -15051,9 +15232,20 @@
   {
     "Família": "20.10",
     "Descrição": "COMPONENTES DE PROPULSAO PARA NAVIOS E EMBARCACOES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4669-9/01",
+        "descricao": "Comércio atacadista de bombas e compressores; partes e peças"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      }
+    ],
     "Ramo": {
       "codigo": "20",
       "nome": "Equipamentos parta Navios e Embarcações"
@@ -15062,9 +15254,24 @@
   {
     "Família": "20.20",
     "Descrição": "MASTREACAO E ACESSORIOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4669-9/01",
+        "descricao": "Comércio atacadista de bombas e compressores; partes e peças"
+      },
+      {
+        "codigo": "2511-0/00",
+        "descricao": "Fabricação de estruturas metálicas"
+      },
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      }
+    ],
     "Ramo": {
       "codigo": "20",
       "nome": "Equipamentos parta Navios e Embarcações"
@@ -15073,9 +15280,24 @@
   {
     "Família": "20.30",
     "Descrição": "MAQUINARIA DE CONVES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      },
+      {
+        "codigo": "4669-9/01",
+        "descricao": "Comércio atacadista de bombas e compressores; partes e peças"
+      },
+      {
+        "codigo": "2511-0/00",
+        "descricao": "Fabricação de estruturas metálicas"
+      }
+    ],
     "Ramo": {
       "codigo": "20",
       "nome": "Equipamentos parta Navios e Embarcações"
@@ -15084,9 +15306,24 @@
   {
     "Família": "20.40",
     "Descrição": "FERRAGENS DE MARINHA E ITENS DE CASCO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      },
+      {
+        "codigo": "4669-9/01",
+        "descricao": "Comércio atacadista de bombas e compressores; partes e peças"
+      },
+      {
+        "codigo": "2511-0/00",
+        "descricao": "Fabricação de estruturas metálicas"
+      }
+    ],
     "Ramo": {
       "codigo": "20",
       "nome": "Equipamentos parta Navios e Embarcações"
@@ -15095,9 +15332,28 @@
   {
     "Família": "20.50",
     "Descrição": "BOIAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "3292-2/02",
+        "descricao": "Fabricação de equipamentos e acessórios para segurança pessoal e profissional"
+      },
+      {
+        "codigo": "4669-9/01",
+        "descricao": "Comércio atacadista de bombas e compressores; partes e peças"
+      },
+      {
+        "codigo": "2511-0/00",
+        "descricao": "Fabricação de estruturas metálicas"
+      },
+      {
+        "codigo": "2229-3/99",
+        "descricao": "Fabricação de artefatos de material plástico para outros usos não especificados anteriormente"
+      }
+    ],
     "Ramo": {
       "codigo": "20",
       "nome": "Equipamentos parta Navios e Embarcações"
@@ -15106,9 +15362,28 @@
   {
     "Família": "20.60",
     "Descrição": "EQUIPAMENTO COMERCIAL DE PESCA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4669-9/01",
+        "descricao": "Comércio atacadista de bombas e compressores; partes e peças"
+      },
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "2511-0/00",
+        "descricao": "Fabricação de estruturas metálicas"
+      },
+      {
+        "codigo": "1311-1/00",
+        "descricao": "Preparação e fiação de fibras de algodão"
+      }
+    ],
     "Ramo": {
       "codigo": "20",
       "nome": "Equipamentos parta Navios e Embarcações"
@@ -15117,9 +15392,28 @@
   {
     "Família": "20.90",
     "Descrição": "EQUIPAMENTOS DIVERSOS PARA NAVIOS E MARINHARIA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "3292-2/02",
+        "descricao": "Fabricação de equipamentos e acessórios para segurança pessoal e profissional"
+      },
+      {
+        "codigo": "4669-9/01",
+        "descricao": "Comércio atacadista de bombas e compressores; partes e peças"
+      },
+      {
+        "codigo": "2229-3/99",
+        "descricao": "Fabricação de artefatos de material plástico para outros usos não especificados anteriormente"
+      },
+      {
+        "codigo": "3102-1/00",
+        "descricao": "Fabricação de móveis com predominância de metal"
+      }
+    ],
     "Ramo": {
       "codigo": "20",
       "nome": "Equipamentos parta Navios e Embarcações"
@@ -15128,9 +15422,24 @@
   {
     "Família": "22.10",
     "Descrição": "LOCOMOTIVAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      },
+      {
+        "codigo": "4669-9/01",
+        "descricao": "Comércio atacadista de bombas e compressores; partes e peças"
+      },
+      {
+        "codigo": "3031-8/00",
+        "descricao": "Fabricação de locomotivas, vagões e outros materiais rodantes"
+      }
+    ],
     "Ramo": {
       "codigo": "22",
       "nome": "Equipamentos Ferroviários"
@@ -15139,9 +15448,16 @@
   {
     "Família": "22.20",
     "Descrição": "VAGOES FERROVIARIOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "3031-8/00",
+        "descricao": "Fabricação de locomotivas, vagões e outros materiais rodantes"
+      }
+    ],
     "Ramo": {
       "codigo": "22",
       "nome": "Equipamentos Ferroviários"
@@ -15150,9 +15466,24 @@
   {
     "Família": "22.30",
     "Descrição": "EQUIPAMENTOS DE CONST. E MANUT. DE LEITOS DE FERROVIAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4662-1/00",
+        "descricao": "Comércio atacadista de máquinas, equipamentos para terraplenagem, mineração e construção; partes e peças"
+      },
+      {
+        "codigo": "2854-2/00",
+        "descricao": "Fabricação de máquinas e equipamentos para terraplenagem, pavimentação e construção, peças e acessórios, exceto tratores"
+      },
+      {
+        "codigo": "3031-8/00",
+        "descricao": "Fabricação de locomotivas, vagões e outros materiais rodantes"
+      }
+    ],
     "Ramo": {
       "codigo": "22",
       "nome": "Equipamentos Ferroviários"
@@ -15161,9 +15492,24 @@
   {
     "Família": "22.40",
     "Descrição": "ACESSORIOS E COMPONENTES DE LOCOMOTIVAS E VAGOES FERROVIARIOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2710-4/02",
+        "descricao": "Fabricação de transformadores, indutores, conversores, sincronizadores e semelhantes, peças e acessórios"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      },
+      {
+        "codigo": "3031-8/00",
+        "descricao": "Fabricação de locomotivas, vagões e outros materiais rodantes"
+      }
+    ],
     "Ramo": {
       "codigo": "22",
       "nome": "Equipamentos Ferroviários"
@@ -15172,9 +15518,28 @@
   {
     "Família": "22.50",
     "Descrição": "MATERIAIS DE FERROVIA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4679-6/04",
+        "descricao": "Comércio atacadista especializado de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "2599-3/02",
+        "descricao": "Serviço de corte e dobra de metais"
+      },
+      {
+        "codigo": "1610-2/01",
+        "descricao": "Serrarias com desdobramento de madeira"
+      },
+      {
+        "codigo": "2423-7/02",
+        "descricao": "Produção de laminados longos de aço, exceto tubos"
+      }
+    ],
     "Ramo": {
       "codigo": "22",
       "nome": "Equipamentos Ferroviários"
@@ -15183,9 +15548,16 @@
   {
     "Família": "23.05",
     "Descrição": "VEICULOS DE EFEITO SOLO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2930-1/01",
+        "descricao": "Fabricação de cabines, carrocerias e reboques para caminhões"
+      }
+    ],
     "Ramo": {
       "codigo": "23",
       "nome": "Veículos"
@@ -15194,9 +15566,28 @@
   {
     "Família": "23.10",
     "Descrição": "VEICULO MOTORIZADOS DE PASSAGEIROS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2930-1/03",
+        "descricao": "Fabricação de cabines, carrocerias e reboques para outros veículos automotores, exceto caminhões e ônibus"
+      },
+      {
+        "codigo": "4511-1/01",
+        "descricao": "Comércio a varejo de automóveis, camionetas e utilitários novos"
+      },
+      {
+        "codigo": "2920-4/01",
+        "descricao": "Fabricação de caminhões e ônibus"
+      },
+      {
+        "codigo": "2910-7/01",
+        "descricao": "Fabricação de automóveis, camionetas e utilitários"
+      }
+    ],
     "Ramo": {
       "codigo": "23",
       "nome": "Veículos"

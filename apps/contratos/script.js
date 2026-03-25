@@ -988,7 +988,7 @@ function calcularResumoContrato(contratoPai) {
     statusContrato = "A Iniciar";
     // Amarelo Pastel vs Amarelo Neon
     statusCor =
-      "text-yellow-600 bg-yellow-50 dark:bg-yellow-900/40 dark:text-yellow-400 dark:border dark:border-yellow-800";
+      "text-yellow-600 bg-yellow-10 dark:bg-yellow-900/40 dark:text-yellow-400 dark:border dark:border-yellow-800";
   } else if (dataFimAgregada < hoje) {
     statusContrato = "Vencido/Encerrado";
     // Vermelho Pastel vs Vermelho Neon
@@ -1270,7 +1270,7 @@ function renderizarModalVisualizar(contratoId) {
             <div class="space-y-2">${content}</div>
         </fieldset>`;
 
-  const contratoActions = `<button class="btn-editar-contrato-form text-sm bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded-lg shadow-sm" data-id="${contratoPai.id}">Editar Contrato</button>
+  const contratoActions = `<button class="btn-editar-contrato-form text-sm bg-yellow-100 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded-lg shadow-sm" data-id="${contratoPai.id}">Editar Contrato</button>
          <button class="btn-adicionar-aditivo text-sm bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded-lg shadow-sm ml-2" data-id="${contratoPai.id}">+ Adicionar Aditivo</button>`;
 
   const unidadeContent =
@@ -1319,7 +1319,7 @@ function renderizarModalVisualizar(contratoId) {
       `${gestorAtual.nome} ${
         gestorAtual.matricula ? `(Mat. ${gestorAtual.matricula})` : ""
       }`,
-      "font-bold bg-yellow-50 dark:bg-yellow-900/30 dark:text-yellow-200 p-1 rounded-md",
+      "font-bold bg-yellow-10 dark:bg-yellow-900/30 dark:text-yellow-200 p-1 rounded-md",
     ),
 
     renderField(
@@ -1331,7 +1331,7 @@ function renderizarModalVisualizar(contratoId) {
             )
             .join("<br>") // <--- Use <br> para HTML
         : "N/D",
-      "font-bold bg-yellow-50 dark:bg-yellow-900/30 dark:text-yellow-100 p-1 rounded-md",
+      "font-bold bg-yellow-10 dark:bg-yellow-900/30 dark:text-yellow-100 p-1 rounded-md",
     ),
   ]
     .filter(Boolean)
@@ -1440,7 +1440,7 @@ function renderizarModalVisualizar(contratoId) {
                               const dataPagto = new Date(p.data + "T00:00:00");
                               const isProgramado = dataPagto > hoje;
                               const rowClass = isProgramado
-                                ? "bg-yellow-50"
+                                ? "bg-yellow-10"
                                 : p.origemContratoId !== contratoPai.id
                                   ? "bg-blue-50"
                                   : "";
