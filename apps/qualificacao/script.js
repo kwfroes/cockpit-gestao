@@ -10,6 +10,7 @@ const sugPerPage = 8;
 let currentSugList = [];
 let selectedSug = new Set();
 let lastEditedIndex = null;
+let ramosDictionary = [];
 
 const grid = document.getElementById('family-grid');
 const searchInput = document.getElementById('search-family');
@@ -36,11 +37,16 @@ window.addEventListener("message", (event) => {
 async function initApp() {
     try {
         // Carrega ambos os arquivos em paralelo para ganhar velocidade
-        const [respFamilies, respCnaes, respDocs] = await Promise.all([
+        const [respFamilies, respCnaes, respDocs, respRamos] = await Promise.all([
             fetch('qualificacao_tecnica.json'),
             fetch('cnae.json'),
-            fetch('../gerador/docs-qual-tec.json').catch(() => null) 
+            fetch('../gerador/docs-qual-tec.json').catch(() => null),
+            fetch('ramos_classificados.json').catch(() => null) 
         ]);
+
+        if (respRamos && respRamos.ok) {
+            window.ramosDictionary = await respRamos.json();
+        }
 
         // Validação rigorosa: se qualquer um falhar, interrompe o fluxo
         if (!respFamilies.ok || !respCnaes.ok) {
@@ -201,7 +207,7 @@ grid.innerHTML = '';
                 ${item.Descrição}
             </h4>
 
-            <div onclick="copyToClipboard(event, '${item.Família}')" 
+            <div onclick="copyToClipboard(event, 'Família ${item.Família} - ${item.Descrição} | Ramo: ${item.Ramo && item.Ramo.nome ? item.Ramo.nome : 'Geral'}')" 
                 class="flex items-center gap-1 mb-6 cursor-copy group/info">
                 
                 <span class="opacity-50 uppercase text-[11px] font-mono whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]" 
@@ -422,10 +428,12 @@ window.openFamilyForm = (index = null) => {
     document.getElementById('docs-content-section').classList.add('hidden');
     document.getElementById('icon-expand').classList.remove('hidden');
     document.getElementById('icon-collapse').classList.add('hidden');
+    document.getElementById('f-ramo-data').value = '';;
     
     if (index !== null) {
         const item = familyData[index];
         document.getElementById('edit-index').value = index;
+        document.getElementById('f-ramo-data').value = item.Ramo ? JSON.stringify(item.Ramo) : "";
         document.getElementById('f-codigo').value = item.Família;
         document.getElementById('f-desc').value = item.Descrição;
         document.getElementById('f-tipo').value = item.Tipo;
@@ -490,6 +498,21 @@ document.getElementById('family-form').onsubmit = (e) => {
     const docsExigidos = Array.from(document.querySelectorAll('#container-docs-exigidos .doc-name-value')).map(span => span.textContent);
     const docsElegiveis = Array.from(document.querySelectorAll('#container-docs-elegiveis .doc-name-value')).map(span => span.textContent);
 
+    const codigoFamilia = document.getElementById('f-codigo').value;
+    let ramoData = null;
+
+    if (index !== "") {
+        // Se for EDIÇÃO, recuperamos o ramo que já existia no objeto original
+        ramoData = familyData[index].Ramo || null;
+    } else {
+        // Se for NOVA família, buscamos no dicionário pelo prefixo (ex: "01")
+        const prefixo = codigoFamilia.split('.')[0];
+        const ramoEncontrado = ramosDictionary.find(r => r.codigo.toString() === prefixo);
+        if (ramoEncontrado) {
+            ramoData = { codigo: ramoEncontrado.codigo, nome: ramoEncontrado.nome };
+        }
+    }
+
     const payload = {
         "Família": document.getElementById('f-codigo').value,
         "Descrição": document.getElementById('f-desc').value,
@@ -497,7 +520,8 @@ document.getElementById('family-form').onsubmit = (e) => {
         "Terceirizado": document.getElementById('f-terceirizado').checked ? "Sim" : "Não",
         "Documentos Exigidos": docsExigidos,
         "Documentos Elegíveis": docsElegiveis,
-        "CNAEs": cnaes
+        "CNAEs": cnaes,
+        "Ramo": ramoData
     };
 
     if (index !== "") {
