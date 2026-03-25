@@ -4,6 +4,76 @@
  */
 
 document.addEventListener("DOMContentLoaded", () => {
+
+
+  
+  let currentCaptcha = "";
+
+  function generateCaptcha() {
+      const canvas = document.getElementById('captchaCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // Evita 0, O, 1, I por clareza
+      currentCaptcha = "";
+      
+      // Gerar string de 5 caracteres
+      for (let i = 0; i < 5; i++) {
+          currentCaptcha += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+
+      // Desenhar Fundo
+      ctx.fillStyle = "#f3f4f6";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Adicionar ruído (linhas aleatórias para confundir OCRs)
+      // 1. Aumentamos para 15 linhas e adicionamos cores aleatórias sutis
+      for (let i = 0; i < 15; i++) {
+          ctx.strokeStyle = `rgba(${Math.random() * 100}, ${Math.random() * 100}, ${Math.random() * 100}, ${0.2 + Math.random() * 0.3})`;
+          ctx.lineWidth = 1 + Math.random(); // Espessura variável
+          ctx.beginPath();
+          ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+          ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+          ctx.stroke();
+      }
+
+      // 2. Adicionamos "chuviscos" (pontos espalhados)
+      for (let i = 0; i < 50; i++) {
+          ctx.fillStyle = `rgba(0,0,0,${Math.random() * 0.2})`;
+          ctx.beginPath();
+          ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 1, 0, Math.PI * 2);
+          ctx.fill();
+      }
+
+      // 3. Uma linha ondulada que atravessa o texto (opcional, mas muito eficaz)
+      ctx.strokeStyle = "rgba(0,0,0,0.3)";
+      ctx.beginPath();
+      ctx.moveTo(0, Math.random() * canvas.height);
+      ctx.bezierCurveTo(
+          canvas.width / 4, Math.random() * canvas.height,
+          (3 * canvas.width) / 4, Math.random() * canvas.height,
+          canvas.width, Math.random() * canvas.height
+      );
+      ctx.stroke();
+
+      // Desenhar Texto
+      ctx.font = "bold 24px 'Inter', sans-serif";
+      ctx.fillStyle = "#1e40af"; // Azul escuro
+      ctx.textBaseline = "middle";
+      
+      // Desenha cada letra com uma leve rotação
+      for (let i = 0; i < currentCaptcha.length; i++) {
+          const x = 15 + (i * 20);
+          const y = 20 + (Math.random() * 10 - 5);
+          ctx.save();
+          ctx.translate(x, y);
+          ctx.rotate((Math.random() * 20 - 10) * Math.PI / 180);
+          ctx.fillText(currentCaptcha[i], 0, 0);
+          ctx.restore();
+      }
+  }
+  window.generateCaptcha = generateCaptcha; // Expõe para o clique no ícone
+
+
   // =========================================================
   // 1. MÓDULO DE SEGURANÇA (SINGLE ENCRYPTED DB)
   // =========================================================
@@ -110,21 +180,26 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- Lógica de Sessão ---
 
   function checkSession() {
-    // AQUI ESTÁ A CORREÇÃO DO LOOP:
-    // Só chamamos navigate() se o token for válido.
-    if (sessionStorage.getItem("cockpit_auth_token") === "valid") {
-      unlockInterface();
-      applyPermissions();
+      const sessionAuth = sessionStorage.getItem("cockpit_auth_token");
+      const localAuth = localStorage.getItem("cockpit_persistent_auth");
 
-      updateUserMenu();
-      updateUserAvatarVisuals();
-
-      // Carrega o app correto (Home, Dashboard, etc)
-      navigate(window.location.hash || "#home");
-    } else {
-      // Se não tiver login, garante que o iframe fique vazio
-      frame.src = "about:blank";
-    }
+      if (sessionAuth === "valid" || localAuth === "valid") {
+          // Se estiver no local mas não no session, restaura os dados básicos
+          if (localAuth === "valid" && !sessionAuth) {
+              sessionStorage.setItem("cockpit_auth_token", "valid");
+              // Nota: Para segurança total, os dados do usuário (nome, cargo) 
+              // também precisariam estar no localStorage ou recarregados do DB.
+          }
+          
+          unlockInterface();
+          applyPermissions();
+          updateUserMenu();
+          updateUserAvatarVisuals();
+          navigate(window.location.hash || "#home");
+      } else {
+          frame.src = "about:blank";
+          generateCaptcha(); // Gera um captcha assim que a tela de login aparece
+      }
   }
 
   function unlockInterface() {
@@ -137,66 +212,83 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- Formulário de Login ---
-  if (loginForm) {
-    loginForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
+if (loginForm) {
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-      const inputUser = userInput.value.trim().toLowerCase();
-      const inputPass = passwordInput.value;
-      const btn = loginForm.querySelector("button");
+    // 1. Captura os novos campos
+    const captchaInput = document.getElementById("captchaInput").value.toUpperCase();
+    const rememberMe = document.getElementById("rememberMe").checked;
+    
+    const inputUser = userInput.value.trim().toLowerCase();
+    const inputPass = passwordInput.value;
+    const btn = loginForm.querySelector("button");
 
-      btn.textContent = "Autenticando...";
-      btn.disabled = true;
+    // 2. VALIDAÇÃO DO CAPTCHA (Primeira barreira)
+    if (captchaInput !== currentCaptcha) {
+      showError("Código de verificação incorreto.");
+      generateCaptcha(); // Muda o captcha em cada erro para evitar brute-force
+      return; // Interrompe o login aqui mesmo
+    }
 
-      const dbUsers = await loadDatabase();
+    btn.textContent = "Autenticando...";
+    btn.disabled = true;
 
-      if (dbUsers) {
-        const foundUser = dbUsers.find((u) => u.username === inputUser);
+    const dbUsers = await loadDatabase();
 
-        if (foundUser) {
-          const inputHash = await sha256(inputPass);
+    if (dbUsers) {
+      const foundUser = dbUsers.find((u) => u.username === inputUser);
 
-          if (inputHash === foundUser.password_hash) {
-            // LOGIN SUCESSO
-            sessionStorage.setItem("cockpit_auth_token", "valid");
-            sessionStorage.setItem("cockpit_user_realname", foundUser.name);
-            sessionStorage.setItem("cockpit_user_role", foundUser.role);
-            sessionStorage.setItem(
-              "cockpit_user_email",
-              foundUser.email || "Sem e-mail",
-            );
-            sessionStorage.setItem("cockpit_user_login", foundUser.username);
+      if (foundUser) {
+        const inputHash = await sha256(inputPass);
 
-            // Se o usuário tiver avatar no banco, salva na sessão
-            if (foundUser.avatar) {
-              sessionStorage.setItem("cockpit_user_avatar", foundUser.avatar);
-            } else {
-              sessionStorage.removeItem("cockpit_user_avatar");
-            }
-
-            loginError.classList.add("hidden");
-
-            updateUserMenu(); // Atualiza o nome e cargo no rodapé/menu
-            updateUserAvatarVisuals(); // Atualiza a foto (avatar) imediatamente
-
-            unlockInterface();
-
-            // Agora sim, carregamos o app!
-            navigate(window.location.hash || "#home");
-          } else {
-            showError("Senha incorreta");
+        if (inputHash === foundUser.password_hash) {
+          // --- LOGIN SUCESSO ---
+          
+          // 3. PERSISTÊNCIA (Lembrar-me)
+          if (rememberMe) {
+            localStorage.setItem("cockpit_persistent_auth", "valid");
+            localStorage.setItem("cockpit_saved_user", foundUser.username);
+            // Dica: Para o 'checkSession' restaurar tudo, você pode salvar o nome/cargo aqui também
+            localStorage.setItem("cockpit_saved_name", foundUser.name);
+            localStorage.setItem("cockpit_saved_role", foundUser.role);
           }
+
+          // 4. SESSÃO ATUAL
+          sessionStorage.setItem("cockpit_auth_token", "valid");
+          sessionStorage.setItem("cockpit_user_realname", foundUser.name);
+          sessionStorage.setItem("cockpit_user_role", foundUser.role);
+          sessionStorage.setItem("cockpit_user_email", foundUser.email || "Sem e-mail");
+          sessionStorage.setItem("cockpit_user_login", foundUser.username);
+
+          if (foundUser.avatar) {
+            sessionStorage.setItem("cockpit_user_avatar", foundUser.avatar);
+          } else {
+            sessionStorage.removeItem("cockpit_user_avatar");
+          }
+
+          loginError.classList.add("hidden");
+          updateUserMenu();
+          updateUserAvatarVisuals();
+          unlockInterface();
+          navigate(window.location.hash || "#home");
+
         } else {
-          showError("Usuário não encontrado");
+          showError("Senha incorreta");
+          generateCaptcha(); // Opcional: trocar captcha se errar a senha também
         }
       } else {
-        showError("Erro ao carregar banco de dados");
+        showError("Usuário não encontrado");
+        generateCaptcha();
       }
+    } else {
+      showError("Erro ao carregar banco de dados");
+    }
 
-      btn.textContent = "Entrar no Sistema";
-      btn.disabled = false;
-    });
-  }
+    btn.textContent = "Entrar no Sistema";
+    btn.disabled = false;
+  });
+}
 
   // =========================================================
   // 4. SISTEMA DE ERRO (MODAL)
@@ -667,6 +759,8 @@ document.addEventListener("DOMContentLoaded", () => {
     sessionStorage.removeItem("cockpit_auth_token");
     sessionStorage.removeItem("cockpit_user_realname");
     sessionStorage.removeItem("cockpit_user_role");
+    sessionStorage.clear();
+    localStorage.removeItem("cockpit_persistent_auth");
 
     // 2. Limpa Iframe
     frame.src = "about:blank";
@@ -1257,4 +1351,5 @@ document.addEventListener("DOMContentLoaded", () => {
       broadcastTheme(currentTheme);
     });
   }
+
 });

@@ -1270,7 +1270,7 @@ function renderizarModalVisualizar(contratoId) {
             <div class="space-y-2">${content}</div>
         </fieldset>`;
 
-  const contratoActions = `<button class="btn-editar-contrato-form text-sm bg-yellow-100 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded-lg shadow-sm" data-id="${contratoPai.id}">Editar Contrato</button>
+  const contratoActions = `<button class="btn-editar-contrato-form text-sm bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded-lg shadow-sm" data-id="${contratoPai.id}">Editar Contrato</button>
          <button class="btn-adicionar-aditivo text-sm bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded-lg shadow-sm ml-2" data-id="${contratoPai.id}">+ Adicionar Aditivo</button>`;
 
   const unidadeContent =
@@ -1404,14 +1404,26 @@ function renderizarModalVisualizar(contratoId) {
                   ad.aditivo.justificativa || "N/D"
                 }</td>
                 <td class="px-4 py-3 text-sm">${infoExtra}</td>
-                <td class="px-4 py-3 text-sm">
-                    <button class="btn-detalhar-aditivo text-blue-600 hover:text-blue-800 dark:text-blue-300" data-aditivo-id="${
-                      ad.id
-                    }" data-pai-id="${contratoPai.id}">Detalhar</button>
-                    <button class="btn-editar-aditivo text-yellow-600 hover:text-yellow-800 ml-2" data-aditivo-id="${
-                      ad.id
-                    }">Editar</button>
-                </td>
+
+<td class="px-4 py-3 text-sm flex items-center">
+    <button class="btn-detalhar-aditivo text-blue-600 hover:text-blue-800 dark:text-blue-300" 
+        title="Detalhar Aditivo"
+        data-aditivo-id="${ad.id}" 
+        data-pai-id="${contratoPai.id}">
+        <svg class="w-5 h-5 pointer-events-none" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M2 7a1 1 0 0 1 1-1h18a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1zm0 5a1 1 0 0 1 1-1h18a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1zm1 4a1 1 0 1 0 0 2h18a1 1 0 1 0 0-2H3z" fill="currentColor"/>
+        </svg>
+    </button>
+
+    <button class="btn-editar-aditivo text-yellow-600 hover:text-yellow-800 ml-3" 
+        title="Editar Aditivo"
+        data-aditivo-id="${ad.id}">
+        <svg class="w-5 h-5 pointer-events-none" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="m3.99 16.854-1.314 3.504a.75.75 0 0 0 .966.965l3.503-1.314a3 3 0 0 0 1.068-.687L18.36 9.175s-.354-1.061-1.414-2.122c-1.06-1.06-2.122-1.414-2.122-1.414L4.677 15.786a3 3 0 0 0-.687 1.068zm12.249-12.63 1.383-1.383c.248-.248.579-.406.925-.348.487.08 1.232.322 1.934 1.025.703.703.945 1.447 1.025 1.934.058.346-.1.677-.348.925L19.774 7.76s-.353-1.06-1.414-2.12c-1.06-1.062-2.121-1.415-2.121-1.415z" fill="currentColor"/>
+        </svg>
+    </button>
+</td>
+
             </tr>`;
     });
     aditivosContent += "</tbody></table></div>";
@@ -1485,29 +1497,40 @@ function renderizarModalVisualizar(contratoId) {
                                     }
                                 </td>
 
-                                <td class="px-4 py-3 text-sm">
-                                    <button class="btn-editar-pagamento text-yellow-600 hover:text-yellow-800" data-contrato-id="${
-                                      p.origemContratoId
-                                    }" data-pagamento-id="${
-                                      p.id
-                                    }" data-contrato-pai-id="${
-                                      contratoPai.id
-                                    }">Editar</button>
-                                    <button class="btn-detalhar-pagamento text-blue-600 hover:text-blue-800 dark:text-blue-300 ml-2" data-contrato-id="${
-                                      p.origemContratoId
-                                    }" data-pagamento-id="${
-                                      p.id
-                                    }" data-contrato-pai-id="${
-                                      contratoPai.id
-                                    }">Detalhar</button>
-                                    <button class="btn-excluir-pagamento text-red-600 hover:text-red-800 ml-2" data-contrato-id="${
-                                      p.origemContratoId
-                                    }" data-pagamento-id="${
-                                      p.id
-                                    }" data-contrato-pai-id="${
-                                      contratoPai.id
-                                    }">Excluir</button>
-                                </td>
+
+                                  <td class="px-4 py-3 text-sm flex items-center">
+                                      <button class="btn-editar-pagamento text-yellow-600 hover:text-yellow-800" 
+                                          title="Editar"
+                                          data-contrato-id="${p.origemContratoId}" 
+                                          data-pagamento-id="${p.id}" 
+                                          data-contrato-pai-id="${contratoPai.id}">
+                                          <svg class="w-5 h-5 pointer-events-none" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                              <path fill-rule="evenodd" clip-rule="evenodd" d="m3.99 16.854-1.314 3.504a.75.75 0 0 0 .966.965l3.503-1.314a3 3 0 0 0 1.068-.687L18.36 9.175s-.354-1.061-1.414-2.122c-1.06-1.06-2.122-1.414-2.122-1.414L4.677 15.786a3 3 0 0 0-.687 1.068zm12.249-12.63 1.383-1.383c.248-.248.579-.406.925-.348.487.08 1.232.322 1.934 1.025.703.703.945 1.447 1.025 1.934.058.346-.1.677-.348.925L19.774 7.76s-.353-1.06-1.414-2.12c-1.06-1.062-2.121-1.415-2.121-1.415z" fill="currentColor"/>
+                                          </svg>
+                                      </button>
+
+                                      <button class="btn-detalhar-pagamento text-blue-600 hover:text-blue-800 dark:text-blue-300 ml-3" 
+                                          title="Detalhar"
+                                          data-contrato-id="${p.origemContratoId}" 
+                                          data-pagamento-id="${p.id}" 
+                                          data-contrato-pai-id="${contratoPai.id}">
+                                          <svg class="w-5 h-5 pointer-events-none" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                              <path fill-rule="evenodd" clip-rule="evenodd" d="M2 7a1 1 0 0 1 1-1h18a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1zm0 5a1 1 0 0 1 1-1h18a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1zm1 4a1 1 0 1 0 0 2h18a1 1 0 1 0 0-2H3z" fill="currentColor"/>
+                                          </svg>
+                                      </button>
+
+                                      <button class="btn-excluir-pagamento text-red-600 hover:text-red-800 ml-3" 
+                                          title="Excluir"
+                                          data-contrato-id="${p.origemContratoId}" 
+                                          data-pagamento-id="${p.id}" 
+                                          data-contrato-pai-id="${contratoPai.id}">
+                                          <svg class="w-5 h-5 pointer-events-none" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                              <path fill-rule="evenodd" clip-rule="evenodd" d="M12.663 1.5h-1.326c-1.069 0-1.49.09-1.921.27-.432.181-.792.453-1.084.82-.292.365-.493.746-.784 1.774L7.368 5H5a1 1 0 0 0 0 2h.563l.703 11.25c.082 1.32.123 1.98.407 2.481a2.5 2.5 0 0 0 1.083 1.017C8.273 22 8.935 22 10.258 22h3.484c1.323 0 1.985 0 2.502-.252a2.5 2.5 0 0 0 1.083-1.017c.284-.5.325-1.16.407-2.482L18.437 7H19a1 1 0 1 0 0-2h-2.367l-.18-.636c-.292-1.028-.493-1.409-.785-1.775a2.694 2.694 0 0 0-1.084-.819c-.431-.18-.852-.27-1.92-.27zm1.89 3.5-.025-.09c-.203-.717-.29-.905-.424-1.074a.696.696 0 0 0-.292-.221c-.2-.084-.404-.115-1.149-.115h-1.326c-.745 0-.95.031-1.149.115a.696.696 0 0 0-.292.221c-.135.169-.221.357-.424 1.074L9.446 5h5.108zM9.61 8.506a.75.75 0 0 0-.724.776l.297 8.495a.75.75 0 0 0 1.499-.053l-.297-8.494a.75.75 0 0 0-.775-.724zm4.008.724a.75.75 0 0 1 1.499.052l-.297 8.495a.75.75 0 0 1-1.499-.053l.297-8.494z" fill="currentColor"/>
+                                          </svg>
+                                      </button>
+                                  </td>
+
+
                             </tr>`;
                             })
                             .join("")
@@ -1537,8 +1560,8 @@ function renderizarModalVisualizar(contratoId) {
       });
       htmlConsumoItens += `<tr>
                 <td class="px-4 py-2 text-sm text-gray-900 dark:text-gray-100">${d.descricao}</td>
-                <td class="px-4 py-2 text-sm text-gray-700 dark:text-gray-300">${valorFormatado2Casas}</td>
-                <td class="px-4 py-2 text-sm text-gray-700 dark:text-gray-300">
+                <td class="px-4 py-2 text-sm text-gray-700 dark:text-gray-100">${valorFormatado2Casas}</td>
+                <td class="px-4 py-2 text-sm text-gray-700 dark:text-gray-100">
                     <div class="flex items-center"><span class="w-16">${d.percentual.toFixed(
                       1,
                     )}%</span>
@@ -1912,7 +1935,7 @@ function renderizarModalDetalharAditivo(aditivoId, contratoPaiId) {
                     <div>
                         <span class="text-xs text-gray-500 dark:text-gray-400 block">Consumo do Aditivo</span>
                         <span class="text-sm font-bold text-blue-600 dark:text-blue-400 block">${formatCurrency(totalConsumidoAditivo)}</span>
-                        <span class="text-xs ${corTexto} dark:text-gray-300 block mt-1 font-medium">${porcentagem.toFixed(1)}% ${textoBase}</span>
+                        <span class="text-xs ${corTexto} dark:text-gray-600 block mt-1 font-medium">${porcentagem.toFixed(1)}% ${textoBase}</span>
                     </div>
                     <div class="border-l dark:border-slate-600 pl-4">
                         <span class="text-xs text-gray-500 dark:text-gray-400 block">Pagamentos via TRD</span>
@@ -1950,9 +1973,9 @@ function renderizarModalDetalharAditivo(aditivoId, contratoPaiId) {
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Período (Ref)</th>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Valor Pago</th>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">NF</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-600 uppercase">Período (Ref)</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-600 uppercase">Valor Pago</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-600 uppercase">NF</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
@@ -1960,7 +1983,7 @@ function renderizarModalDetalharAditivo(aditivoId, contratoPaiId) {
                           .map(
                             (p) => `
                             <tr>
-                                <td class="px-4 py-3 text-sm font-semibold text-gray-800">${
+                                <td class="px-4 py-3 text-sm font-semibold text-gray-800 dark:text-gray-300">${
                                   p.periodoDe
                                     ? `${formatDate(
                                         p.periodoDe,
@@ -1975,7 +1998,7 @@ function renderizarModalDetalharAditivo(aditivoId, contratoPaiId) {
                                         : ""
                                     }
                                 </td>
-                                <td class="px-4 py-3 text-sm text-gray-600">${
+                                <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">${
                                   p.notaFiscal
                                 }</td>
                             </tr>
