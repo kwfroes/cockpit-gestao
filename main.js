@@ -7,70 +7,89 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   
-  let currentCaptcha = "";
+let currentCaptcha = "";
+let isGenerating = false; // Trava para evitar cliques múltiplos seguidos
 
-  function generateCaptcha() {
-      const canvas = document.getElementById('captchaCanvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // Evita 0, O, 1, I por clareza
-      currentCaptcha = "";
-      
-      // Gerar string de 5 caracteres
-      for (let i = 0; i < 5; i++) {
-          currentCaptcha += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
+async function generateCaptcha() {
+    if (isGenerating) return;
+    isGenerating = true;
 
-      // Desenhar Fundo
-      ctx.fillStyle = "#f3f4f6";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const canvas = document.getElementById('captchaCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
 
-      // Adicionar ruído (linhas aleatórias para confundir OCRs)
-      // 1. Aumentamos para 15 linhas e adicionamos cores aleatórias sutis
-      for (let i = 0; i < 15; i++) {
-          ctx.strokeStyle = `rgba(${Math.random() * 100}, ${Math.random() * 100}, ${Math.random() * 100}, ${0.2 + Math.random() * 0.3})`;
-          ctx.lineWidth = 1 + Math.random(); // Espessura variável
-          ctx.beginPath();
-          ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
-          ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
-          ctx.stroke();
-      }
+    // 1. Efeito visual de "Carregando"
+    ctx.fillStyle = "#f3f4f6";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.font = "12px Inter";
+    ctx.fillStyle = "#94a3b8";
+    ctx.textAlign = "center";
+    ctx.fillText("Gerando...", canvas.width / 2, canvas.height / 2 + 5);
 
-      // 2. Adicionamos "chuviscos" (pontos espalhados)
-      for (let i = 0; i < 50; i++) {
-          ctx.fillStyle = `rgba(0,0,0,${Math.random() * 0.2})`;
-          ctx.beginPath();
-          ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 1, 0, Math.PI * 2);
-          ctx.fill();
-      }
+    // 2. Delay Aleatório (1 a 3 segundos)
+    const delay = Math.floor(Math.random() * (3000 - 1000 + 1)) + 1000;
+    await new Promise(resolve => setTimeout(resolve, delay));
 
-      // 3. Uma linha ondulada que atravessa o texto (opcional, mas muito eficaz)
-      ctx.strokeStyle = "rgba(0,0,0,0.3)";
-      ctx.beginPath();
-      ctx.moveTo(0, Math.random() * canvas.height);
-      ctx.bezierCurveTo(
-          canvas.width / 4, Math.random() * canvas.height,
-          (3 * canvas.width) / 4, Math.random() * canvas.height,
-          canvas.width, Math.random() * canvas.height
-      );
-      ctx.stroke();
+    // 3. Lógica de Geração do Código
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    currentCaptcha = "";
+    for (let i = 0; i < 5; i++) {
+        currentCaptcha += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
 
-      // Desenhar Texto
-      ctx.font = "bold 24px 'Inter', sans-serif";
-      ctx.fillStyle = "#1e40af"; // Azul escuro
-      ctx.textBaseline = "middle";
-      
-      // Desenha cada letra com uma leve rotação
-      for (let i = 0; i < currentCaptcha.length; i++) {
-          const x = 15 + (i * 20);
-          const y = 20 + (Math.random() * 10 - 5);
-          ctx.save();
-          ctx.translate(x, y);
-          ctx.rotate((Math.random() * 20 - 10) * Math.PI / 180);
-          ctx.fillText(currentCaptcha[i], 0, 0);
-          ctx.restore();
-      }
-  }
+    // 4. Limpar e desenhar fundo final
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#f8fafc";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // 5. RUÍDO PESADO (Antes do texto)
+    // Linhas aleatórias coloridas
+    for (let i = 0; i < 15; i++) {
+        ctx.strokeStyle = `rgba(${Math.random() * 150}, ${Math.random() * 150}, ${Math.random() * 150}, ${0.2 + Math.random() * 0.3})`;
+        ctx.lineWidth = 0.5 + Math.random() * 1.5;
+        ctx.beginPath();
+        ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+        ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+        ctx.stroke();
+    }
+
+    // Pontos de interferência (Granulação)
+    for (let i = 0; i < 60; i++) {
+        ctx.fillStyle = `rgba(0,0,0,${Math.random() * 0.2})`;
+        ctx.beginPath();
+        ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 0.8, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    // 6. Desenhar Texto
+    ctx.font = "bold 24px 'Inter', sans-serif";
+    ctx.textAlign = "start"; // Reseta o alinhamento
+    
+    for (let i = 0; i < currentCaptcha.length; i++) {
+        const x = 15 + (i * 20);
+        const y = 25 + (Math.random() * 6 - 3);
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate((Math.random() * 24 - 12) * Math.PI / 180); // Rotação mais agressiva
+        ctx.fillStyle = `rgb(${Math.random() * 50}, ${Math.random() * 50}, ${100 + Math.random() * 100})`; // Tons de azul/escuro variados
+        ctx.fillText(currentCaptcha[i], 0, 0);
+        ctx.restore();
+    }
+
+    // 7. Ruído Final (Uma linha que cruza o texto)
+    ctx.strokeStyle = "rgba(0,0,0,0.2)";
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(0, Math.random() * canvas.height);
+    ctx.bezierCurveTo(
+        canvas.width / 3, Math.random() * canvas.height,
+        (2 * canvas.width) / 3, Math.random() * canvas.height,
+        canvas.width, Math.random() * canvas.height
+    );
+    ctx.stroke();
+
+    isGenerating = false;
+}
   window.generateCaptcha = generateCaptcha; // Expõe para o clique no ícone
 
 
@@ -187,6 +206,9 @@ document.addEventListener("DOMContentLoaded", () => {
           // Se estiver no local mas não no session, restaura os dados básicos
           if (localAuth === "valid" && !sessionAuth) {
               sessionStorage.setItem("cockpit_auth_token", "valid");
+              sessionStorage.setItem("cockpit_user_login", localStorage.getItem("cockpit_saved_user"));
+              sessionStorage.setItem("cockpit_user_realname", localStorage.getItem("cockpit_saved_name"));
+              sessionStorage.setItem("cockpit_user_role", localStorage.getItem("cockpit_saved_role"));
               // Nota: Para segurança total, os dados do usuário (nome, cargo) 
               // também precisariam estar no localStorage ou recarregados do DB.
           }
