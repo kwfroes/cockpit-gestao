@@ -15596,9 +15596,28 @@
   {
     "Família": "23.20",
     "Descrição": "VEICULOS SOBRE RODAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2910-7/01",
+        "descricao": "Fabricação de automóveis, camionetas e utilitários"
+      },
+      {
+        "codigo": "2920-4/01",
+        "descricao": "Fabricação de caminhões e ônibus"
+      },
+      {
+        "codigo": "4511-1/01",
+        "descricao": "Comércio a varejo de automóveis, camionetas e utilitários novos"
+      },
+      {
+        "codigo": "2930-1/03",
+        "descricao": "Fabricação de cabines, carrocerias e reboques para outros veículos automotores, exceto caminhões e ônibus"
+      }
+    ],
     "Ramo": {
       "codigo": "23",
       "nome": "Veículos"
@@ -15607,9 +15626,24 @@
   {
     "Família": "23.30",
     "Descrição": "REBOQUES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4511-1/05",
+        "descricao": "Comércio por atacado de reboques e semi-reboques novos e usados"
+      },
+      {
+        "codigo": "2930-1/01",
+        "descricao": "Fabricação de cabines, carrocerias e reboques para caminhões"
+      },
+      {
+        "codigo": "2930-1/03",
+        "descricao": "Fabricação de cabines, carrocerias e reboques para outros veículos automotores, exceto caminhões e ônibus"
+      }
+    ],
     "Ramo": {
       "codigo": "23",
       "nome": "Veículos"
@@ -15618,9 +15652,36 @@
   {
     "Família": "23.40",
     "Descrição": "MOTOCICLETAS, MOTONETAS E BICICLETAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4542-1/02",
+        "descricao": "Comércio sob consignação de motocicletas e motonetas"
+      },
+      {
+        "codigo": "4542-1/01",
+        "descricao": "Representantes comerciais e agentes do comércio de motocicletas e motonetas, peças e acessórios"
+      },
+      {
+        "codigo": "4541-2/03",
+        "descricao": "Comércio a varejo de motocicletas e motonetas novas"
+      },
+      {
+        "codigo": "4541-2/01",
+        "descricao": "Comércio por atacado de motocicletas e motonetas"
+      },
+      {
+        "codigo": "3091-1/00",
+        "descricao": "Fabricação de motocicletas, peças e acessórios"
+      },
+      {
+        "codigo": "4541-2/04",
+        "descricao": "Comércio a varejo de motocicletas e motonetas usadas"
+      }
+    ],
     "Ramo": {
       "codigo": "23",
       "nome": "Veículos"
@@ -15629,9 +15690,16 @@
   {
     "Família": "23.50",
     "Descrição": "VEICULOS TATICOS SOBRE LAGARTAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "3099-7/00",
+        "descricao": "Fabricação de equipamentos de transporte não especificados anteriormente"
+      }
+    ],
     "Ramo": {
       "codigo": "23",
       "nome": "Veículos"
@@ -15640,9 +15708,28 @@
   {
     "Família": "24.10",
     "Descrição": "TRATORES DE BAIXA VELOCIDADE SOBRE LAGARTAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4661-3/00",
+        "descricao": "Comércio atacadista de máquinas, aparelhos e equipamentos para uso agropecuário; partes e peças"
+      },
+      {
+        "codigo": "2833-0/00",
+        "descricao": "Fabricação de máquinas e equipamentos para a agricultura e pecuária, peças e acessórios, exceto para irrigação"
+      },
+      {
+        "codigo": "2854-2/00",
+        "descricao": "Fabricação de máquinas e equipamentos para terraplenagem, pavimentação e construção, peças e acessórios, exceto tratores"
+      },
+      {
+        "codigo": "4662-1/00",
+        "descricao": "Comércio atacadista de máquinas, equipamentos para terraplenagem, mineração e construção; partes e peças"
+      }
+    ],
     "Ramo": {
       "codigo": "24",
       "nome": "Tratores"
@@ -15651,9 +15738,28 @@
   {
     "Família": "24.20",
     "Descrição": "TRATORES SOBRE RODAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2833-0/00",
+        "descricao": "Fabricação de máquinas e equipamentos para a agricultura e pecuária, peças e acessórios, exceto para irrigação"
+      },
+      {
+        "codigo": "2854-2/00",
+        "descricao": "Fabricação de máquinas e equipamentos para terraplenagem, pavimentação e construção, peças e acessórios, exceto tratores"
+      },
+      {
+        "codigo": "4661-3/00",
+        "descricao": "Comércio atacadista de máquinas, aparelhos e equipamentos para uso agropecuário; partes e peças"
+      },
+      {
+        "codigo": "4662-1/00",
+        "descricao": "Comércio atacadista de máquinas, equipamentos para terraplenagem, mineração e construção; partes e peças"
+      }
+    ],
     "Ramo": {
       "codigo": "24",
       "nome": "Tratores"
@@ -15662,9 +15768,28 @@
   {
     "Família": "24.30",
     "Descrição": "TRATORES DE ALTA VELOCIDADE SOBRE LAGARTAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2854-2/00",
+        "descricao": "Fabricação de máquinas e equipamentos para terraplenagem, pavimentação e construção, peças e acessórios, exceto tratores"
+      },
+      {
+        "codigo": "2833-0/00",
+        "descricao": "Fabricação de máquinas e equipamentos para a agricultura e pecuária, peças e acessórios, exceto para irrigação"
+      },
+      {
+        "codigo": "4661-3/00",
+        "descricao": "Comércio atacadista de máquinas, aparelhos e equipamentos para uso agropecuário; partes e peças"
+      },
+      {
+        "codigo": "4662-1/00",
+        "descricao": "Comércio atacadista de máquinas, equipamentos para terraplenagem, mineração e construção; partes e peças"
+      }
+    ],
     "Ramo": {
       "codigo": "24",
       "nome": "Tratores"
@@ -15673,9 +15798,24 @@
   {
     "Família": "25.10",
     "Descrição": "COMPONENTES DE CABINE, CARROCERIA E CHASSIS DE VEICULOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2949-2/99",
+        "descricao": "Fabricação de outras peças e acessórios para veículos automotores não especificadas anteriormente"
+      },
+      {
+        "codigo": "2930-1/01",
+        "descricao": "Fabricação de cabines, carrocerias e reboques para caminhões"
+      }
+    ],
     "Ramo": {
       "codigo": "25",
       "nome": "Comonentes de Veículos"
@@ -15684,9 +15824,20 @@
   {
     "Família": "25.20",
     "Descrição": "COMPONENTES DE TRANSMISSAO DE VEICULOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2942-5/00",
+        "descricao": "Fabricação de peças e acessórios para os sistemas de marcha e transmissão de veículos automotores"
+      }
+    ],
     "Ramo": {
       "codigo": "25",
       "nome": "Comonentes de Veículos"
@@ -15695,9 +15846,28 @@
   {
     "Família": "25.30",
     "Descrição": "COMPONENTES DE FREIO, DIRECAO, EIXO, RODA E LAGARTA DE VEICULOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2949-2/99",
+        "descricao": "Fabricação de outras peças e acessórios para veículos automotores não especificadas anteriormente"
+      },
+      {
+        "codigo": "2944-1/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema de direção e suspensão de veículos automotores"
+      },
+      {
+        "codigo": "2943-3/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema de freios de veículos automotores"
+      }
+    ],
     "Ramo": {
       "codigo": "25",
       "nome": "Comonentes de Veículos"
@@ -15706,9 +15876,28 @@
   {
     "Família": "25.40",
     "Descrição": "EQUIPAMENTOS E ACESSORIOS DE VEICULOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2229-3/99",
+        "descricao": "Fabricação de artefatos de material plástico para outros usos não especificados anteriormente"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2949-2/99",
+        "descricao": "Fabricação de outras peças e acessórios para veículos automotores não especificadas anteriormente"
+      },
+      {
+        "codigo": "2945-0/00",
+        "descricao": "Fabricação de material elétrico e eletrônico para veículos automotores, exceto baterias"
+      }
+    ],
     "Ramo": {
       "codigo": "25",
       "nome": "Comonentes de Veículos"
@@ -15717,9 +15906,40 @@
   {
     "Família": "25.90",
     "Descrição": "COMPONENTES DIVERSOS PARA VEICULOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2942-5/00",
+        "descricao": "Fabricação de peças e acessórios para os sistemas de marcha e transmissão de veículos automotores"
+      },
+      {
+        "codigo": "2943-3/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema de freios de veículos automotores"
+      },
+      {
+        "codigo": "2941-7/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema motor de veículos automotores"
+      },
+      {
+        "codigo": "2722-8/01",
+        "descricao": "Fabricação de baterias e acumuladores para veículos automotores"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2219-6/00",
+        "descricao": "Fabricação de artefatos de borracha não especificados anteriormente"
+      },
+      {
+        "codigo": "2949-2/99",
+        "descricao": "Fabricação de outras peças e acessórios para veículos automotores não especificadas anteriormente"
+      }
+    ],
     "Ramo": {
       "codigo": "25",
       "nome": "Comonentes de Veículos"
@@ -15728,9 +15948,28 @@
   {
     "Família": "26.10",
     "Descrição": "PNEUS E CAMARAS DE AR, EXCETO OS DE AERONAVES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4530-7/03",
+        "descricao": "Comércio a varejo de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2211-1/00",
+        "descricao": "Fabricação de pneumáticos e de câmaras-de-ar"
+      },
+      {
+        "codigo": "4530-7/02",
+        "descricao": "Comércio por atacado de pneumáticos e câmaras-de-ar"
+      },
+      {
+        "codigo": "4530-7/05",
+        "descricao": "Comércio a varejo de pneumáticos e câmaras-de-ar"
+      }
+    ],
     "Ramo": {
       "codigo": "26",
       "nome": "Pneus e Camaras"
@@ -15739,9 +15978,24 @@
   {
     "Família": "26.20",
     "Descrição": "PNEUS E CAMARAS DE AR DE AERONAVES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4530-7/02",
+        "descricao": "Comércio por atacado de pneumáticos e câmaras-de-ar"
+      },
+      {
+        "codigo": "4530-7/05",
+        "descricao": "Comércio a varejo de pneumáticos e câmaras-de-ar"
+      },
+      {
+        "codigo": "2211-1/00",
+        "descricao": "Fabricação de pneumáticos e de câmaras-de-ar"
+      }
+    ],
     "Ramo": {
       "codigo": "26",
       "nome": "Pneus e Camaras"
@@ -15750,9 +16004,24 @@
   {
     "Família": "26.30",
     "Descrição": "PNEUS MACICOS E DE BAIXA PRESSAO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4530-7/03",
+        "descricao": "Comércio a varejo de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "4530-7/02",
+        "descricao": "Comércio por atacado de pneumáticos e câmaras-de-ar"
+      },
+      {
+        "codigo": "2211-1/00",
+        "descricao": "Fabricação de pneumáticos e de câmaras-de-ar"
+      }
+    ],
     "Ramo": {
       "codigo": "26",
       "nome": "Pneus e Camaras"
@@ -15761,9 +16030,28 @@
   {
     "Família": "26.40",
     "Descrição": "MATERIAL PARA REFORMA E REPARO DE PNEUS E CAMARAS DE AR",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4684-2/99",
+        "descricao": "Comércio atacadista de outros produtos químicos e petroquímicos não especificados anteriormente"
+      },
+      {
+        "codigo": "2219-6/00",
+        "descricao": "Fabricação de artefatos de borracha não especificados anteriormente"
+      },
+      {
+        "codigo": "2093-2/00",
+        "descricao": "Fabricação de aditivos de uso industrial"
+      },
+      {
+        "codigo": "2212-9/00",
+        "descricao": "Reforma de pneumáticos usados"
+      }
+    ],
     "Ramo": {
       "codigo": "26",
       "nome": "Pneus e Camaras"
@@ -15772,9 +16060,20 @@
   {
     "Família": "26.50",
     "Descrição": "MATERIAL DE LIMPEZA E POLIMENTO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4684-2/99",
+        "descricao": "Comércio atacadista de outros produtos químicos e petroquímicos não especificados anteriormente"
+      },
+      {
+        "codigo": "2062-2/00",
+        "descricao": "Fabricação de produtos de limpeza e polimento"
+      }
+    ],
     "Ramo": {
       "codigo": "26",
       "nome": "Pneus e Camaras"
@@ -15783,9 +16082,28 @@
   {
     "Família": "28.05",
     "Descrição": "MOTORES A GASOLINA EXCETO OS DE AERONAVES E COMPONENTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      },
+      {
+        "codigo": "2910-7/01",
+        "descricao": "Fabricação de automóveis, camionetas e utilitários"
+      },
+      {
+        "codigo": "2941-7/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema motor de veículos automotores"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      }
+    ],
     "Ramo": {
       "codigo": "28",
       "nome": "Motores, Turbinas e seus Componentes"
@@ -15794,9 +16112,28 @@
   {
     "Família": "28.10",
     "Descrição": "MOTORES A GASOLINA PARA AERONAVES E COMPONENTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "3041-5/00",
+        "descricao": "Fabricação de aeronaves"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      },
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      }
+    ],
     "Ramo": {
       "codigo": "28",
       "nome": "Motores, Turbinas e seus Componentes"
@@ -15805,9 +16142,28 @@
   {
     "Família": "28.15",
     "Descrição": "MOTORES DIESEL E COMPONENTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4669-9/01",
+        "descricao": "Comércio atacadista de bombas e compressores; partes e peças"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2941-7/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema motor de veículos automotores"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      }
+    ],
     "Ramo": {
       "codigo": "28",
       "nome": "Motores, Turbinas e seus Componentes"
@@ -15816,9 +16172,24 @@
   {
     "Família": "28.20",
     "Descrição": "MAQUINAS ALTERNATIVAS A VAPOR E COMPONENTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2521-7/00",
+        "descricao": "Fabricação de tanques, reservatórios metálicos e caldeiras para aquecimento central"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      }
+    ],
     "Ramo": {
       "codigo": "28",
       "nome": "Motores, Turbinas e seus Componentes"
@@ -15827,9 +16198,24 @@
   {
     "Família": "28.25",
     "Descrição": "TURBINAS A VAPOR E COMPONENTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      }
+    ],
     "Ramo": {
       "codigo": "28",
       "nome": "Motores, Turbinas e seus Componentes"
@@ -15838,9 +16224,24 @@
   {
     "Família": "28.30",
     "Descrição": "TURBINAS E RODAS D'AGUA E COMPONENTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      },
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      }
+    ],
     "Ramo": {
       "codigo": "28",
       "nome": "Motores, Turbinas e seus Componentes"
@@ -15849,9 +16250,28 @@
   {
     "Família": "28.35",
     "Descrição": "TURBINAS A GAS E MOTOR A JATO EXCETO OS DE AERONAVES E COMPONENTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      }
+    ],
     "Ramo": {
       "codigo": "28",
       "nome": "Motores, Turbinas e seus Componentes"
@@ -15860,9 +16280,24 @@
   {
     "Família": "28.40",
     "Descrição": "TURBINAS A GAS E MOTORES A JATO DE AERONAVES E COMPONENTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      },
+      {
+        "codigo": "3041-5/00",
+        "descricao": "Fabricação de aeronaves"
+      },
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      }
+    ],
     "Ramo": {
       "codigo": "28",
       "nome": "Motores, Turbinas e seus Componentes"
@@ -15871,9 +16306,24 @@
   {
     "Família": "28.45",
     "Descrição": "MOTORES DE FOGUETES E COMPONENTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      },
+      {
+        "codigo": "3041-5/00",
+        "descricao": "Fabricação de aeronaves"
+      },
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      }
+    ],
     "Ramo": {
       "codigo": "28",
       "nome": "Motores, Turbinas e seus Componentes"
@@ -15882,9 +16332,24 @@
   {
     "Família": "28.50",
     "Descrição": "MOTORES ROTATIVOS A GASOLINA E COMPONENTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2941-7/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema motor de veículos automotores"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      }
+    ],
     "Ramo": {
       "codigo": "28",
       "nome": "Motores, Turbinas e seus Componentes"
@@ -15893,9 +16358,28 @@
   {
     "Família": "28.95",
     "Descrição": "MOTORES DIVERSOS E COMPONENTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2941-7/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema motor de veículos automotores"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      }
+    ],
     "Ramo": {
       "codigo": "28",
       "nome": "Motores, Turbinas e seus Componentes"
@@ -15904,9 +16388,32 @@
   {
     "Família": "29.10",
     "Descrição": "COMPONENTES DO SISTEMA DE COMBUST DE MOTORES, EXCETO OS DE AERONAVE",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2219-6/00",
+        "descricao": "Fabricação de artefatos de borracha não especificados anteriormente"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2941-7/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema motor de veículos automotores"
+      },
+      {
+        "codigo": "2910-7/01",
+        "descricao": "Fabricação de automóveis, camionetas e utilitários"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      }
+    ],
     "Ramo": {
       "codigo": "29",
       "nome": "Acessórios de Motores"
@@ -15915,9 +16422,28 @@
   {
     "Família": "29.15",
     "Descrição": "COMPONENTES DO SISTEMA DE COMBUSTIVEL DE MOTORES DE AERONAVES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      },
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "3041-5/00",
+        "descricao": "Fabricação de aeronaves"
+      }
+    ],
     "Ramo": {
       "codigo": "29",
       "nome": "Acessórios de Motores"
@@ -15926,9 +16452,28 @@
   {
     "Família": "29.20",
     "Descrição": "COMPONENTES DO SISTEMA ELETRICO DE MOTORES, EXCETO OS DE AERONAVES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      },
+      {
+        "codigo": "2790-2/01",
+        "descricao": "Fabricação de eletrodos, contatos e outros artigos de carvão e grafita para uso elétrico, eletroímãs e isoladores"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2941-7/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema motor de veículos automotores"
+      }
+    ],
     "Ramo": {
       "codigo": "29",
       "nome": "Acessórios de Motores"
@@ -15937,9 +16482,24 @@
   {
     "Família": "29.25",
     "Descrição": "COMPONENTES DE SISTEMA ELETRICO DE MOTORES DE AERONAVES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      }
+    ],
     "Ramo": {
       "codigo": "29",
       "nome": "Acessórios de Motores"
@@ -15948,9 +16508,28 @@
   {
     "Família": "29.30",
     "Descrição": "COMPONENTES DE SIST DE RESFRIAM DE MOTOR, EXCETO OS DE AERONAVE",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2941-7/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema motor de veículos automotores"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      },
+      {
+        "codigo": "2219-6/00",
+        "descricao": "Fabricação de artefatos de borracha não especificados anteriormente"
+      }
+    ],
     "Ramo": {
       "codigo": "29",
       "nome": "Acessórios de Motores"
@@ -15959,9 +16538,20 @@
   {
     "Família": "29.35",
     "Descrição": "COMPONENTES DE SISTEMA DE RESFRIAMENTO DE MOTORES DE AERONAVES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      },
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      }
+    ],
     "Ramo": {
       "codigo": "29",
       "nome": "Acessórios de Motores"
@@ -15970,9 +16560,24 @@
   {
     "Família": "29.40",
     "Descrição": "FILTROS DE AR E OLEO, PENEIRAS E PURIF. DE MOTORES, EXCETO O DE AERONA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2941-7/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema motor de veículos automotores"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      }
+    ],
     "Ramo": {
       "codigo": "29",
       "nome": "Acessórios de Motores"
@@ -15981,9 +16586,24 @@
   {
     "Família": "29.45",
     "Descrição": "FILTROS DE AR E DE OLEO, PENEIRAS E PURIFICADORES DE MOTORES DE AERONA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      }
+    ],
     "Ramo": {
       "codigo": "29",
       "nome": "Acessórios de Motores"
@@ -15992,9 +16612,28 @@
   {
     "Família": "29.50",
     "Descrição": "TURBO SUPERCOMPRESSORES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      },
+      {
+        "codigo": "2941-7/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema motor de veículos automotores"
+      }
+    ],
     "Ramo": {
       "codigo": "29",
       "nome": "Acessórios de Motores"
@@ -16009,7 +16648,25 @@
     "Ramo": {
       "codigo": "29",
       "nome": "Acessórios de Motores"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "2941-7/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema motor de veículos automotores"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      },
+      {
+        "codigo": "2219-6/00",
+        "descricao": "Fabricação de artefatos de borracha não especificados anteriormente"
+      }
+    ]
   },
   {
     "Família": "29.95",
@@ -16020,7 +16677,17 @@
     "Ramo": {
       "codigo": "29",
       "nome": "Acessórios de Motores"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      },
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      }
+    ]
   },
   {
     "Família": "30.10",
