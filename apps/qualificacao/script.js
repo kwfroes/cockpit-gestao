@@ -41,7 +41,7 @@ async function initApp() {
             fetch('qualificacao_tecnica.json'),
             fetch('cnae.json'),
             fetch('../gerador/docs-qual-tec.json').catch(() => null),
-            fetch('ramos_classificados.json').catch(() => null) 
+            fetch('./archives/ramos_classificados.json').catch(() => null) 
         ]);
 
         if (respRamos && respRamos.ok) {
@@ -1054,14 +1054,22 @@ window.showToast = (message) => {
 
 window.copyToClipboard = (event, text) => {
     event.stopPropagation();
+    
+    // Capturamos a referência exata do elemento clicado ANTES do clipboard
+    const elementoClicado = event.currentTarget; 
+
     navigator.clipboard.writeText(text).then(() => {
-        // Agora usamos o Toast em vez de apenas mudar a cor
-        showToast("Copiado para a área de transferência!");
-        
-        // Efeito visual rápido no elemento clicado para feedback imediato
-        const target = event.currentTarget;
-        target.classList.add('text-emerald-500', 'dark:text-emerald-400');
-        setTimeout(() => target.classList.remove('text-emerald-500', 'dark:text-emerald-400'), 500);
+        // Agora usamos a referência salva, garantindo que não seja nula
+        if (elementoClicado) {
+            showToast("Copiado para a área de transferência!");
+            
+            elementoClicado.classList.add('text-emerald-500', 'dark:text-emerald-400');
+            setTimeout(() => {
+                elementoClicado.classList.remove('text-emerald-500', 'dark:text-emerald-400');
+            }, 500);
+        }
+    }).catch(err => {
+        console.error("Erro ao copiar: ", err);
     });
 };
 
