@@ -486,14 +486,12 @@ document.getElementById('family-form').onsubmit = (e) => {
 
     // Exige a inclusão de ao menos um CNAE
     if (cnaes.length === 0) {
-            showError("CNAE Obrigatório", "É necessário incluir ao menos um CNAE válido para salvar esta família.");
-            
-            // Se não houver nenhuma linha, adiciona uma para facilitar
-            if (document.querySelectorAll('#cnae-rows-container > div').length === 0) {
-                addCnaeRow();
-            }
-            return;
+        showError("CNAE Obrigatório", "É necessário incluir ao menos um CNAE válido para salvar esta família.");
+        if (document.querySelectorAll('#cnae-rows-container > div').length === 0) {
+            addCnaeRow();
         }
+        return;
+    }
 
     const docsExigidos = Array.from(document.querySelectorAll('#container-docs-exigidos .doc-name-value')).map(span => span.textContent);
     const docsElegiveis = Array.from(document.querySelectorAll('#container-docs-elegiveis .doc-name-value')).map(span => span.textContent);
@@ -502,10 +500,8 @@ document.getElementById('family-form').onsubmit = (e) => {
     let ramoData = null;
 
     if (index !== "") {
-        // Se for EDIÇÃO, recuperamos o ramo que já existia no objeto original
         ramoData = familyData[index].Ramo || null;
     } else {
-        // Se for NOVA família, buscamos no dicionário pelo prefixo (ex: "01")
         const prefixo = codigoFamilia.split('.')[0];
         const ramoEncontrado = ramosDictionary.find(r => r.codigo.toString() === prefixo);
         if (ramoEncontrado) {
@@ -514,7 +510,7 @@ document.getElementById('family-form').onsubmit = (e) => {
     }
 
     const payload = {
-        "Família": document.getElementById('f-codigo').value,
+        "Família": codigoFamilia,
         "Descrição": document.getElementById('f-desc').value,
         "Tipo": document.getElementById('f-tipo').value,
         "Terceirizado": document.getElementById('f-terceirizado').checked ? "Sim" : "Não",
@@ -524,21 +520,18 @@ document.getElementById('family-form').onsubmit = (e) => {
         "Ramo": ramoData
     };
 
+    // --- SALVAMENTO DOS DADOS ---
     if (index !== "") {
         familyData[index] = payload;
         lastEditedIndex = parseInt(index);
-        applyFilters(false); // <--- Chame aqui para manter a página na edição
-    }
-    else {
+    } else {
         familyData.unshift(payload);
         lastEditedIndex = 0;
-        applyFilters(true); 
-    };
+    }
 
     setTimeout(() => { lastEditedIndex = null; }, 2500);
 
-
-    // Replicação em Massa
+    // --- 1. REPLICAÇÃO EM MASSA ---
     if (document.getElementById('f-replicate').checked) {
         const destinos = document.getElementById('f-destinos').value
             .split(/[,; ]+/)
@@ -546,7 +539,7 @@ document.getElementById('family-form').onsubmit = (e) => {
 
         destinos.forEach(cod => {
             const familiaAlvo = familyData.find(f => f.Família.toString() === cod);
-            if (familiaAlvo && familiaAlvo.Família !== document.getElementById('f-codigo').value) {
+            if (familiaAlvo && familiaAlvo.Família !== codigoFamilia) {
                 if (!familiaAlvo.CNAEs) familiaAlvo.CNAEs = [];
                 cnaes.forEach(novoCnae => {
                     if (!familiaAlvo.CNAEs.some(ex => ex.codigo === novoCnae.codigo)) {
@@ -557,6 +550,7 @@ document.getElementById('family-form').onsubmit = (e) => {
         });
     }
 
+    // --- 2. ATUALIZA DICIONÁRIO DE CNAES ---
     cnaes.forEach(cnaeSalvo => {
         const existe = cnaeDictionary.find(c => c.CNAE === cnaeSalvo.codigo);
         if (!existe) {
@@ -566,6 +560,11 @@ document.getElementById('family-form').onsubmit = (e) => {
             });
         }
     });
+
+    // --- 3. ATUALIZAÇÃO DO GRID E UI ---
+    // Se for edição (index não vazio), passa false para manter a página atual.
+    // Se for novo (index vazio), passa true para voltar à página 1.
+    applyFilters(index === ""); 
 
     updateDatalist();
     closeFamilyForm();
