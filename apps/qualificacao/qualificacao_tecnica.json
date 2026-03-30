@@ -5960,20 +5960,24 @@
     ],
     "CNAEs": [
       {
-        "codigo": "9529-1/99",
-        "descricao": "Reparação e manutenção de outros objetos e equipamentos pessoais e domésticos não especificados anteriormente"
+        "codigo": "2660-4/00",
+        "descricao": "Fabricação de aparelhos eletromédicos e eletroterapêuticos e equipamentos de irradiação"
       },
       {
-        "codigo": "3312-1/04",
-        "descricao": "Manutenção e reparação de equipamentos e instrumentos ópticos"
+        "codigo": "3312-1/03",
+        "descricao": "Manutenção e reparação de aparelhos eletromédicos e eletroterapêuticos e equipamentos de irradiação"
       },
       {
         "codigo": "3312-1/02",
         "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
       },
       {
-        "codigo": "3312-1/03",
-        "descricao": "Manutenção e reparação de aparelhos eletromédicos e eletroterapêuticos e equipamentos de irradiação"
+        "codigo": "3312-1/04",
+        "descricao": "Manutenção e reparação de equipamentos e instrumentos ópticos"
+      },
+      {
+        "codigo": "9529-1/99",
+        "descricao": "Reparação e manutenção de outros objetos e equipamentos pessoais e domésticos não especificados anteriormente"
       }
     ],
     "Ramo": {
@@ -16950,9 +16954,24 @@
   {
     "Família": "32.30",
     "Descrição": "FERRAMENTAS E ACESSORIOS DE MAQUINARIA PARA TRABALHO EM  MADEIRA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2543-8/00",
+        "descricao": "Fabricação de ferramentas"
+      }
+    ],
     "Ramo": {
       "codigo": "32",
       "nome": "Máquinas e Equipamentos para Trabalhar em Madeira"
@@ -16961,9 +16980,28 @@
   {
     "Família": "34.05",
     "Descrição": "MAQUINAS DE SERRAR E LIMAR",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -16972,9 +17010,28 @@
   {
     "Família": "34.10",
     "Descrição": "MAQUINAS DE DESBASTAR ELETRICAS E ULTRASSONICAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -16983,9 +17040,32 @@
   {
     "Família": "34.11",
     "Descrição": "MAQUINAS DE BROCAR",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2543-8/00",
+        "descricao": "Fabricação de ferramentas"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -16994,9 +17074,32 @@
   {
     "Família": "34.13",
     "Descrição": "MAQUINAS DE FURAR E ABRIR ROSCAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2543-8/00",
+        "descricao": "Fabricação de ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17005,9 +17108,32 @@
   {
     "Família": "34.14",
     "Descrição": "MAQUINAS DE CORTE E ACABAMENTO DE ENGRENAGENS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2543-8/00",
+        "descricao": "Fabricação de ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17016,9 +17142,32 @@
   {
     "Família": "34.15",
     "Descrição": "MAQUINAS RETIFICADORAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2543-8/00",
+        "descricao": "Fabricação de ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17027,9 +17176,32 @@
   {
     "Família": "34.16",
     "Descrição": "TORNOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2543-8/00",
+        "descricao": "Fabricação de ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17038,9 +17210,32 @@
   {
     "Família": "34.17",
     "Descrição": "MAQUINAS DE FRESAR",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2543-8/00",
+        "descricao": "Fabricação de ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17049,9 +17244,32 @@
   {
     "Família": "34.18",
     "Descrição": "MAQUINAS DE APLAINAR E TALHAR",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2543-8/00",
+        "descricao": "Fabricação de ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17060,9 +17278,32 @@
   {
     "Família": "34.19",
     "Descrição": "MAQUINAS-FERRAMENTA DIVERSAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2543-8/00",
+        "descricao": "Fabricação de ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17071,9 +17312,32 @@
   {
     "Família": "34.22",
     "Descrição": "MAQUINAS DE LAMINAR  E TREFILAR",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2543-8/00",
+        "descricao": "Fabricação de ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17082,9 +17346,24 @@
   {
     "Família": "34.24",
     "Descrição": "EQUIPAMENTOS DE TRATAMENTO TERMICO  E NAO TERMICO DE METAIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17093,9 +17372,24 @@
   {
     "Família": "34.26",
     "Descrição": "EQUIPAMENTOS PARA ACABAMENTO EM METAIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17104,9 +17398,40 @@
   {
     "Família": "34.31",
     "Descrição": "EQUIPAMENTOS DE SOLDA A ARCO VOLTAICO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2790-2/99",
+        "descricao": "Fabricação de outros equipamentos e aparelhos elétricos não especificados anteriormente"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      },
+      {
+        "codigo": "2449-1/03",
+        "descricao": "Produção de soldas e ânodos para galvanoplastia"
+      },
+      {
+        "codigo": "2599-3/99",
+        "descricao": "Fabricação de outros produtos de metal não especificados anteriormente"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17115,9 +17440,36 @@
   {
     "Família": "34.32",
     "Descrição": "EQUIPAMENTOS DE SOLDA A RESISTENCIA ELETRICA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2599-3/99",
+        "descricao": "Fabricação de outros produtos de metal não especificados anteriormente"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      },
+      {
+        "codigo": "2449-1/03",
+        "descricao": "Produção de soldas e ânodos para galvanoplastia"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17126,9 +17478,32 @@
   {
     "Família": "34.33",
     "Descrição": "EQUIPAMENTOS PARA SOLDA A GAS, CORTE POR AQUECIMENTO E METALIZACAO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2449-1/03",
+        "descricao": "Produção de soldas e ânodos para galvanoplastia"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17137,9 +17512,32 @@
   {
     "Família": "34.36",
     "Descrição": "POSICIONADORES E MANIPULADORES PARA SOLDAGEM",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2449-1/03",
+        "descricao": "Produção de soldas e ânodos para galvanoplastia"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17148,9 +17546,36 @@
   {
     "Família": "34.38",
     "Descrição": "EQUIPAMENTOS DIVERSOS DE SOLDA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2449-1/03",
+        "descricao": "Produção de soldas e ânodos para galvanoplastia"
+      },
+      {
+        "codigo": "2599-3/99",
+        "descricao": "Fabricação de outros produtos de metal não especificados anteriormente"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17159,9 +17584,40 @@
   {
     "Família": "34.39",
     "Descrição": "SUPRIMENTOS E ACESSORIOS P/ SOLDAS DIVERSAS, FRACAS E FORTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2790-2/99",
+        "descricao": "Fabricação de outros equipamentos e aparelhos elétricos não especificados anteriormente"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      },
+      {
+        "codigo": "2449-1/03",
+        "descricao": "Produção de soldas e ânodos para galvanoplastia"
+      },
+      {
+        "codigo": "2599-3/99",
+        "descricao": "Fabricação de outros produtos de metal não especificados anteriormente"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17170,9 +17626,32 @@
   {
     "Família": "34.41",
     "Descrição": "MAQUINAS DE DOBRAR E MODELAR",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2812-7/00",
+        "descricao": "Fabricação de equipamentos hidráulicos e pneumáticos, peças e acessórios, exceto válvulas"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17181,9 +17660,32 @@
   {
     "Família": "34.42",
     "Descrição": "PRENSAS HIDRAULICAS E PNEUMATICAS ACIONADAS A ENERGIA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2812-7/00",
+        "descricao": "Fabricação de equipamentos hidráulicos e pneumáticos, peças e acessórios, exceto válvulas"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17192,9 +17694,32 @@
   {
     "Família": "34.43",
     "Descrição": "PRENSA MECANICA ACIONADA A ENERGIA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2812-7/00",
+        "descricao": "Fabricação de equipamentos hidráulicos e pneumáticos, peças e acessórios, exceto válvulas"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17203,9 +17728,28 @@
   {
     "Família": "34.44",
     "Descrição": "PRENSAS MANUAIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17214,9 +17758,28 @@
   {
     "Família": "34.45",
     "Descrição": "MAQUINAS DE PUNCIONAR E CORTAR",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17225,9 +17788,28 @@
   {
     "Família": "34.46",
     "Descrição": "FORJAS MECANICAS E MARTELOS PARA FORJAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17236,9 +17818,28 @@
   {
     "Família": "34.47",
     "Descrição": "MAQUINA DE MODELAR FIO E FITA DE METAL",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17247,9 +17848,28 @@
   {
     "Família": "34.48",
     "Descrição": "MAQUINAS DE REBITAR",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17258,9 +17878,28 @@
   {
     "Família": "34.49",
     "Descrição": "MAQUINAS AUXILIARES PARA CORTE E PROCES.DE PECAS METALICAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17269,9 +17908,28 @@
   {
     "Família": "34.50",
     "Descrição": "MAQUINAS - FERRAMENTAS PORTATEIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17280,9 +17938,28 @@
   {
     "Família": "34.55",
     "Descrição": "FERRAMENTAS DE CORTAR PARA MAQUINAS FERRAMENTAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17291,9 +17968,28 @@
   {
     "Família": "34.56",
     "Descrição": "FERRAMENTAS  CORTE E PROC. PECAS MAQUINAS AUXIL. TRABALHO EM METAL",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17302,9 +17998,28 @@
   {
     "Família": "34.60",
     "Descrição": "ACESSORIOS DE MAQUINAS-FERRAMENTA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17313,9 +18028,28 @@
   {
     "Família": "34.61",
     "Descrição": "ACESSORIOS PARA MAQUINAS AUXILIARES DE TRABALHOS EM METAIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17324,9 +18058,32 @@
   {
     "Família": "34.65",
     "Descrição": "GABARITOS E MOLDES DE PRODUCAO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2543-8/00",
+        "descricao": "Fabricação de ferramentas"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17335,9 +18092,28 @@
   {
     "Família": "34.70",
     "Descrição": "CONJUNTOS PARA OFICINA MECANICA, ESTOJOS,FERRAMENTAS E SEUS ACESSORIOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "34",
       "nome": "Maquinaria para Trabalhar Metal"
@@ -17346,9 +18122,20 @@
   {
     "Família": "35.10",
     "Descrição": "EQUIPAMENTOS DE LAVANDERIA E LAVAGEM A SECO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "4665-6/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso comercial; partes e peças"
+      }
+    ],
     "Ramo": {
       "codigo": "35",
       "nome": "Equipamentos para Serviços"
@@ -17357,9 +18144,16 @@
   {
     "Família": "35.20",
     "Descrição": "EQUIPAMENTOS PARA CONSERTO DE CALCADOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2864-0/00",
+        "descricao": "Fabricação de máquinas e equipamentos para as indústrias do vestuário, do couro e de calçados, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "35",
       "nome": "Equipamentos para Serviços"
@@ -17367,10 +18161,21 @@
   },
   {
     "Família": "35.30",
-    "Descrição": "MAQUINAS INDUST.DE COSTURAR/OFICINAS MOVEIS DE REPARO EM TECIDOS",
+    "Descrição": "MAQUINAS INDUST. DE COSTURAR/OFICINAS MOVEIS DE REPARO EM TECIDOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4665-6/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso comercial; partes e peças"
+      },
+      {
+        "codigo": "2864-0/00",
+        "descricao": "Fabricação de máquinas e equipamentos para as indústrias do vestuário, do couro e de calçados, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "35",
       "nome": "Equipamentos para Serviços"
@@ -17379,9 +18184,24 @@
   {
     "Família": "35.40",
     "Descrição": "MAQUINAS DE ACONDICIONAR E EMBALAR",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "4665-6/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso comercial; partes e peças"
+      },
+      {
+        "codigo": "2829-1/99",
+        "descricao": "Fabricação de outras máquinas e equipamentos de uso geral não especificados anteriormente, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "35",
       "nome": "Equipamentos para Serviços"
@@ -17390,9 +18210,20 @@
   {
     "Família": "35.50",
     "Descrição": "MAQUINAS ACIONADAS COM MOEDAS (FICHAS)",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "4665-6/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso comercial; partes e peças"
+      }
+    ],
     "Ramo": {
       "codigo": "35",
       "nome": "Equipamentos para Serviços"
@@ -17401,9 +18232,32 @@
   {
     "Família": "35.90",
     "Descrição": "EQUIPAMENTOS DIVERSOS PARA SERVICOS PROFISSIONAIS E COMERCIAIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "4665-6/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso comercial; partes e peças"
+      },
+      {
+        "codigo": "2829-1/99",
+        "descricao": "Fabricação de outras máquinas e equipamentos de uso geral não especificados anteriormente, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "35",
       "nome": "Equipamentos para Serviços"
