@@ -16692,9 +16692,28 @@
   {
     "Família": "30.10",
     "Descrição": "CONVERSORES DE TORCAO E CAIXA DE MUDANCAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      },
+      {
+        "codigo": "2815-1/02",
+        "descricao": "Fabricação de equipamentos de transmissão para fins industriais, exceto rolamentos"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2942-5/00",
+        "descricao": "Fabricação de peças e acessórios para os sistemas de marcha e transmissão de veículos automotores"
+      }
+    ],
     "Ramo": {
       "codigo": "30",
       "nome": "Equipamentos de Transmissão Mecânica de Força"
@@ -16703,9 +16722,28 @@
   {
     "Família": "30.20",
     "Descrição": "ENGRENAGENS, POLIAS, CORDAS DENTADAS E CORRENTES DE TRANSMISSAO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2815-1/01",
+        "descricao": "Fabricação de rolamentos para fins industriais"
+      },
+      {
+        "codigo": "2219-6/00",
+        "descricao": "Fabricação de artefatos de borracha não especificados anteriormente"
+      },
+      {
+        "codigo": "2815-1/02",
+        "descricao": "Fabricação de equipamentos de transmissão para fins industriais, exceto rolamentos"
+      }
+    ],
     "Ramo": {
       "codigo": "30",
       "nome": "Equipamentos de Transmissão Mecânica de Força"
@@ -16714,9 +16752,24 @@
   {
     "Família": "30.30",
     "Descrição": "CORREAME, CORREIAS DE TRANSMIS, CORREIAS DOS VENTILAD E ACESSORIOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2815-1/02",
+        "descricao": "Fabricação de equipamentos de transmissão para fins industriais, exceto rolamentos"
+      },
+      {
+        "codigo": "2219-6/00",
+        "descricao": "Fabricação de artefatos de borracha não especificados anteriormente"
+      }
+    ],
     "Ramo": {
       "codigo": "30",
       "nome": "Equipamentos de Transmissão Mecânica de Força"
@@ -16725,9 +16778,28 @@
   {
     "Família": "30.40",
     "Descrição": "EQUIPAMENTOS DIVERSOS PARA TRANSMISSAO DE FORCA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2539-0/01",
+        "descricao": "Serviços de usinagem, tornearia e solda"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2942-5/00",
+        "descricao": "Fabricação de peças e acessórios para os sistemas de marcha e transmissão de veículos automotores"
+      },
+      {
+        "codigo": "2815-1/02",
+        "descricao": "Fabricação de equipamentos de transmissão para fins industriais, exceto rolamentos"
+      }
+    ],
     "Ramo": {
       "codigo": "30",
       "nome": "Equipamentos de Transmissão Mecânica de Força"
@@ -16736,9 +16808,28 @@
   {
     "Família": "31.10",
     "Descrição": "ROLAMENTOS ANTI- FRICCAO NAO MONTADOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2815-1/02",
+        "descricao": "Fabricação de equipamentos de transmissão para fins industriais, exceto rolamentos"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2815-1/01",
+        "descricao": "Fabricação de rolamentos para fins industriais"
+      }
+    ],
     "Ramo": {
       "codigo": "31",
       "nome": "Rolamentos e Mancais"
@@ -16747,9 +16838,28 @@
   {
     "Família": "31.20",
     "Descrição": "MANCAIS NAO MONTADOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2451-2/00",
+        "descricao": "Fundição de ferro e aço"
+      },
+      {
+        "codigo": "2815-1/02",
+        "descricao": "Fabricação de equipamentos de transmissão para fins industriais, exceto rolamentos"
+      },
+      {
+        "codigo": "2815-1/01",
+        "descricao": "Fabricação de rolamentos para fins industriais"
+      }
+    ],
     "Ramo": {
       "codigo": "31",
       "nome": "Rolamentos e Mancais"
@@ -16758,9 +16868,28 @@
   {
     "Família": "31.30",
     "Descrição": "ROLAMENTOS E MANCAIS MONTADOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2833-0/00",
+        "descricao": "Fabricação de máquinas e equipamentos para a agricultura e pecuária, peças e acessórios, exceto para irrigação"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2815-1/02",
+        "descricao": "Fabricação de equipamentos de transmissão para fins industriais, exceto rolamentos"
+      },
+      {
+        "codigo": "2815-1/01",
+        "descricao": "Fabricação de rolamentos para fins industriais"
+      }
+    ],
     "Ramo": {
       "codigo": "31",
       "nome": "Rolamentos e Mancais"
@@ -16769,9 +16898,24 @@
   {
     "Família": "32.10",
     "Descrição": "MAQUINAS PARA SERRARIA E PREPARO DE MADEIRA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2832-1/00",
+        "descricao": "Fabricação de equipamentos para irrigação agrícola, peças e acessórios"
+      },
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      }
+    ],
     "Ramo": {
       "codigo": "32",
       "nome": "Máquinas e Equipamentos para Trabalhar em Madeira"
@@ -16780,9 +16924,24 @@
   {
     "Família": "32.20",
     "Descrição": "MAQUINARIA PARA TRABALHOS EM MADEIRA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2866-6/00",
+        "descricao": "Fabricação de máquinas e equipamentos para a indústria do plástico, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "32",
       "nome": "Máquinas e Equipamentos para Trabalhar em Madeira"
