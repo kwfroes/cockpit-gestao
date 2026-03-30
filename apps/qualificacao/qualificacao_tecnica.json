@@ -18266,9 +18266,24 @@
   {
     "Família": "36.05",
     "Descrição": "MAQUINAS E EQUIPAMENTOS PARA PRODUTOS ALIMENTICIOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2829-1/99",
+        "descricao": "Fabricação de outras máquinas e equipamentos de uso geral não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "4665-6/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso comercial; partes e peças"
+      },
+      {
+        "codigo": "2862-3/00",
+        "descricao": "Fabricação de máquinas e equipamentos para as indústrias de alimentos, bebidas e fumo, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "36",
       "nome": "Máquinas para Industrias Especializadas"
@@ -18277,9 +18292,28 @@
   {
     "Família": "36.10",
     "Descrição": "EQUIPAMENTOS E MATERIAIS P/ IMPRESSAO, DUPLIC E ENCADERN GRAFICA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "4665-6/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso comercial; partes e peças"
+      },
+      {
+        "codigo": "2829-1/99",
+        "descricao": "Fabricação de outras máquinas e equipamentos de uso geral não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "2865-8/00",
+        "descricao": "Fabricação de máquinas e equipamentos para as indústrias de celulose, papel e papelão e artefatos, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "36",
       "nome": "Máquinas para Industrias Especializadas"
@@ -18288,9 +18322,24 @@
   {
     "Família": "36.11",
     "Descrição": "MAQUINAS INDUSTRIAIS PARA MARCACAO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "2829-1/99",
+        "descricao": "Fabricação de outras máquinas e equipamentos de uso geral não especificados anteriormente, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "36",
       "nome": "Máquinas para Industrias Especializadas"
@@ -18299,9 +18348,24 @@
   {
     "Família": "36.15",
     "Descrição": "MAQUINAS PARA INDUSTRIA DE POLPA E DE PAPEL",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2829-1/99",
+        "descricao": "Fabricação de outras máquinas e equipamentos de uso geral não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2865-8/00",
+        "descricao": "Fabricação de máquinas e equipamentos para as indústrias de celulose, papel e papelão e artefatos, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "36",
       "nome": "Máquinas para Industrias Especializadas"
@@ -18310,9 +18374,24 @@
   {
     "Família": "36.20",
     "Descrição": "MAQUINAS PARA TRABALHAR BORRACHA E PLASTICO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "2866-6/00",
+        "descricao": "Fabricação de máquinas e equipamentos para a indústria do plástico, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "36",
       "nome": "Máquinas para Industrias Especializadas"
@@ -18321,9 +18400,20 @@
   {
     "Família": "36.25",
     "Descrição": "MAQUINAS PARA INDUSTRIAS TEXTEIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2863-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para a indústria têxtil, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "36",
       "nome": "Máquinas para Industrias Especializadas"
@@ -18332,9 +18422,20 @@
   {
     "Família": "36.30",
     "Descrição": "MAQUINAS PARA INDUSTRIAS DE PRODUTOS DE CERAMICA E DE CONCRETO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "36",
       "nome": "Máquinas para Industrias Especializadas"
