@@ -6016,24 +6016,21 @@
     "Tipo": "S",
     "Terceirizado": "Não",
     "Documentos Exigidos": [
-      "Certidão de Acervo Técnico com Atestado"
+      "Atestado de Capacidade Técnica"
     ],
-    "Documentos Elegíveis": [
-      "CREA - Conselho Regional de Engenharia e Agronomia",
-      "CFT - Conselho Federal dos Técnicos Industriais"
-    ],
+    "Documentos Elegíveis": [],
     "CNAEs": [
       {
-        "codigo": "4322-3/01",
-        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+        "codigo": "3314-7/07",
+        "descricao": "Manutenção e reparação de máquinas e aparelhos de refrigeração e ventilação para uso industrial e comercial"
       },
       {
         "codigo": "3314-7/10",
         "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
       },
       {
-        "codigo": "3314-7/07",
-        "descricao": "Manutenção e reparação de máquinas e aparelhos de refrigeração e ventilação para uso industrial e comercial"
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
       }
     ],
     "Ramo": {
@@ -6135,20 +6132,17 @@
     "Tipo": "S",
     "Terceirizado": "Não",
     "Documentos Exigidos": [
-      "Certidão de Acervo Técnico com Atestado"
+      "Atestado de Capacidade Técnica"
     ],
-    "Documentos Elegíveis": [
-      "CREA - Conselho Regional de Engenharia e Agronomia",
-      "CFT - Conselho Federal dos Técnicos Industriais"
-    ],
+    "Documentos Elegíveis": [],
     "CNAEs": [
-      {
-        "codigo": "4322-3/02",
-        "descricao": "Instalação e manutenção de sistemas centrais de ar condicionado, de ventilação e refrigeração"
-      },
       {
         "codigo": "3314-7/07",
         "descricao": "Manutenção e reparação de máquinas e aparelhos de refrigeração e ventilação para uso industrial e comercial"
+      },
+      {
+        "codigo": "4322-3/02",
+        "descricao": "Instalação e manutenção de sistemas centrais de ar condicionado, de ventilação e refrigeração"
       }
     ],
     "Ramo": {
@@ -21163,9 +21157,20 @@
   {
     "Família": "66.40",
     "Descrição": "MATERIAIS E EQUIPAMENTOS DE LABORATORIO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4645-1/01",
+        "descricao": "Comércio atacadista de instrumentos e materiais para uso médico, cirúrgico, hospitalar e de laboratórios"
+      },
+      {
+        "codigo": "4664-8/00",
+        "descricao": "Comércio atacadista de máquinas, aparelhos e equipamentos para uso odonto-médico-hospitalar; partes e peças"
+      }
+    ],
     "Ramo": {
       "codigo": "66",
       "nome": "Instrumentos e Equipamentos de Laboratório"
@@ -21180,7 +21185,17 @@
     "Ramo": {
       "codigo": "66",
       "nome": "Instrumentos e Equipamentos de Laboratório"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4645-1/01",
+        "descricao": "Comércio atacadista de instrumentos e materiais para uso médico, cirúrgico, hospitalar e de laboratórios"
+      },
+      {
+        "codigo": "4664-8/00",
+        "descricao": "Comércio atacadista de máquinas, aparelhos e equipamentos para uso odonto-médico-hospitalar; partes e peças"
+      }
+    ]
   },
   {
     "Família": "66.45",
@@ -21196,9 +21211,16 @@
   {
     "Família": "66.50",
     "Descrição": "INSTRUMENTOS DE OTICA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2670-1/01",
+        "descricao": "Fabricação de equipamentos e instrumentos ópticos, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "66",
       "nome": "Instrumentos e Equipamentos de Laboratório"
@@ -21207,9 +21229,20 @@
   {
     "Família": "66.53",
     "Descrição": "INSTRUMENTO DE OPTICA PARA INVESTIGACAO PERICIAL FORENSE",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2670-1/01",
+        "descricao": "Fabricação de equipamentos e instrumentos ópticos, peças e acessórios"
+      },
+      {
+        "codigo": "4645-1/01",
+        "descricao": "Comércio atacadista de instrumentos e materiais para uso médico, cirúrgico, hospitalar e de laboratórios"
+      }
+    ],
     "Ramo": {
       "codigo": "66",
       "nome": "Instrumentos e Equipamentos de Laboratório"
