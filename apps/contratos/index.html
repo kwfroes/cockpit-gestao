@@ -1385,6 +1385,26 @@
         </div>
     </div>
 
+    <div id="modal-novo-tipo-doc" class="modal z-[70]">
+        <div class="modal-content !max-w-sm">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold text-gray-800 dark:text-white">Novo Tipo de Documento</h2>
+                <button type="button" class="modal-close text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Nome do Documento</label>
+                    <input type="text" id="input-nome-novo-doc" placeholder="Ex: Comprovante de Reserva" 
+                          class="w-full p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 rounded-md text-sm">
+                </div>
+                <div class="flex justify-end gap-2">
+                    <button type="button" class="modal-close px-4 py-2 bg-gray-200 text-gray-800 rounded-lg text-sm font-bold">Cancelar</button>
+                    <button type="button" id="btn-confirmar-novo-doc" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold">Adicionar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js" defer></script>
   </body>
 </html>

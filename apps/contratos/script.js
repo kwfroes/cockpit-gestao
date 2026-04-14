@@ -234,6 +234,7 @@ const TIPOS_DOCUMENTOS_PAGAMENTO = [
     "Documento de Arrecadação Estadual",
     "Autorização do Documento Hábil",
     "Liquidação de Empenho",
+    "Nota de Ordem Bancária",
     "Nota de Ordem Bancária"
 ];
 
@@ -3627,13 +3628,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Botão para criar documento personalizado
   document.getElementById("btn-add-doc-extra").addEventListener("click", function() {
-      const nome = prompt("Qual o nome do documento?");
-      if (nome && nome.trim() !== "") {
-          adicionarLinhaDocumento(nome);
-          // Rola para o final para mostrar o novo campo
-          const wrapper = document.getElementById("wrapper-documentos");
-          wrapper.scrollTop = wrapper.scrollHeight;
-      }
+      document.getElementById("input-nome-novo-doc").value = ""; // Limpa o campo
+      abrirModal("modal-novo-tipo-doc");
+      setTimeout(() => document.getElementById("input-nome-novo-doc").focus(), 100);
   });
 
   // Listener para o dropdown de tipo de aditivo
@@ -4225,3 +4222,22 @@ const app = {
         if (modal) modal.style.display = "none";
     }
 };
+
+document.getElementById("btn-confirmar-novo-doc").addEventListener("click", function() {
+    const input = document.getElementById("input-nome-novo-doc");
+    const nome = input.value.trim();
+
+    if (nome !== "") {
+        adicionarLinhaDocumento(nome); // Reutiliza sua função de criar linha
+        fecharModal("modal-novo-tipo-doc");
+        
+        // Rola para o final do container para mostrar o novo campo
+        const wrapper = document.getElementById("wrapper-documentos");
+        wrapper.classList.remove("hidden"); // Garante que está visível
+        wrapper.scrollTop = wrapper.scrollHeight;
+        
+        mostrarToast(`Campo para "${nome}" adicionado.`);
+    } else {
+        input.classList.add("border-red-500");
+    }
+});
