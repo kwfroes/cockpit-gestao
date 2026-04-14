@@ -2288,7 +2288,15 @@ document.addEventListener("DOMContentLoaded", function () {
       .getElementById("company-data")
       .querySelectorAll('input[type="date"], select');
 
-    if (
+    if (selectedStatus === "Apenas Contato") {
+        rejectedDocsSection.classList.add("hidden");
+        contactMadeCheckbox.checked = true; // Força o checkbox a marcar
+        contactDetailsWrapper.classList.remove("hidden"); // Abre os detalhes do contato
+        analysisDateInput.disabled = true;
+        analysisDateInput.classList.add("bg-gray-100");
+    }
+
+    else if (
       selectedStatus === "Deferida Parcial" ||
       selectedStatus === "Indeferida"
     ) {
@@ -2535,8 +2543,8 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    //const legalFooter = `Importante salientar que as documentações necessárias para registro no Cadastro de Fornecedores do estado da Bahia – CAF obedecem ao quanto previsto nos art. 62 a 70 e 87 e 88, da Lei Federal nº 14.133/2021 c/c o art. 76 da Lei Estadual nº 14.634/2023.`;
-    const legalParagraph = `Importante salientar que as documentações necessárias para registro no Cadastro de Fornecedores do estado da Bahia – CAF obedecem ao quanto previsto nos art. 62 a 70 e 87 e 88, da Lei Federal nº 14.133/2021 c/c o art. 76 da Lei Estadual nº 14.634/2023.`;
+    //const legalFooter = `Importante salientar que as documentações necessárias para registro no Cadastro de Fornecedores do Estado da Bahia – CAF obedecem ao quanto previsto nos art. 62 a 70 e 87 e 88, da Lei Federal nº 14.133/2021 c/c o art. 76 da Lei Estadual nº 14.634/2023.`;
+    const legalParagraph = `Importante salientar que as documentações necessárias para registro no Cadastro de Fornecedores do Estado da Bahia – CAF obedecem ao quanto previsto nos art. 62 a 70 e 87 e 88, da Lei Federal nº 14.133/2021 c/c o art. 76 da Lei Estadual nº 14.634/2023.`;
     const finalLegalFooter = omitLegal ? "" : `${legalParagraph}\n\n`; // Se omitir, é vazio, senão, inclui o parágrafo e 2 quebras de linha.
     const defaultEmailFooter = `O fornecedor é notificado automaticamente por e-mail.`;
     const noEmailFooter = "";
@@ -2639,6 +2647,24 @@ document.addEventListener("DOMContentLoaded", function () {
         // Concatena a mensagem base + footer legal (se não omitido) + footer final
         message = `${baseMessageTermo}\n\n${finalFooterTermo}`;
         break;
+
+      // Dentro do switch (status) no script.js
+      case "Contato":
+          if (!contactName || !contactPhone) {
+              alert("Por favor, preencha os dados do contato.");
+              return;
+          }
+
+          const artigo = contactGender === "M" ? "o" : "a";
+          const pronome = contactGender === "M" ? "Sr." : "Sra.";
+          const cargoFormatado = contactGender === "M" ? contactRole : contactRole.replace("o", "a");
+
+          if (contactSuccess === "S") {
+              message = `Em contato com ${artigo} ${pronome} *${contactName}*, *${cargoFormatado}* da empresa *${companyName}*, inscrita sob o CNPJ nº *${cnpj}*, pelo número *${contactPhone}*, foram esclarecidos os motivos do indeferimento, tendo sido informado que as providências necessárias para regularização já estão sendo adotadas e que será sinalizado quando houver nova solicitação.`;
+          } else {
+              message = `Em tentativa de contato telefônico com ${artigo} ${pronome} *${contactName}*, *${cargoFormatado}* da empresa *${companyName}*, inscrita sob o CNPJ nº *${cnpj}*, pelo número *${contactPhone}*, não obtivemos êxito, tendo a chamada sido direcionada para a caixa postal.`;
+          }
+          break;
     }
 
     resultText.value = message;
