@@ -70,6 +70,15 @@ function formatCurrency(value) {
   });
 }
 
+// Converte um número (float) para string formatada 1.000,00 (Em opções de empenho)
+function formatarNumeroParaBRL(valor) {
+    if (valor === null || valor === undefined || valor === "") return "";
+    return Number(valor).toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
 function formatDate(dateString) {
   if (!dateString) return "N/D";
   // Adiciona checagem para datas que já possam estar formatadas
@@ -217,6 +226,217 @@ function resetarFormularioContrato() {
   });
 }
 
+const TIPOS_DOCUMENTOS_PAGAMENTO = [
+    "Guia de Recolhimento",
+    "Nota de Empenho",
+    "Registro de Documento Hábil",
+    "Passivo por Competência",
+    "Documento de Arrecadação Estadual",
+    "Autorização do Documento Hábil",
+    "Liquidação de Empenho",
+    "Nota de Ordem Bancária"
+];
+
+function renderizarCamposDocumentos(dadosExistentes = []) {
+    const container = document.getElementById("container-documentos-pagamento");
+    container.innerHTML = "";
+
+    // Garante que dadosExistentes seja um array (caso venha null do banco)
+    const listaDocs = Array.isArray(dadosExistentes) ? dadosExistentes : [];
+
+    // 1. Renderiza os documentos que já estão salvos no banco
+    // Como agora é um Array, ele preserva a ordem e permite múltiplos documentos do mesmo tipo
+    listaDocs.forEach(doc => {
+        adicionarLinhaDocumento(doc.tipo, doc.numero, doc.valor);
+    });
+
+    // 2. Garante a exibição dos campos fixos padrão
+    // Se um tipo padrão não foi preenchido (não está na listaDocs), ele cria o campo vazio
+    TIPOS_DOCUMENTOS_PAGAMENTO.forEach(tipoPadrao => {
+        // Verifica se já existe um input com esse tipo no container
+        const jaExisteNaTela = container.querySelector(`input[data-doc-tipo="${tipoPadrao}"]`);
+        
+        if (!jaExisteNaTela) {
+            adicionarLinhaDocumento(tipoPadrao);
+        }
+    });
+    
+    atualizarBadgeDocs();
+}
+
+function adicionarLinhaDocumento(tipo, numero = "", valor = "") {
+    const container = document.getElementById("container-documentos-pagamento");
+    
+    // Formatação para garantir o ponto de milhar e centavos na exibição
+    const valorFinanceiroFormatado = formatarNumeroParaBRL(valor);
+    
+    const div = document.createElement("div");
+    div.className = "group relative grid grid-cols-2 gap-2 bg-gray-50 dark:bg-slate-800/50 p-2 rounded-md border border-gray-100 dark:border-slate-700";
+    
+    // MUDANÇA AQUI: O botão "Remover" agora está disponível para todos os campos 
+    // gerados, permitindo limpar duplicatas ou campos padrão indesejados.
+    div.innerHTML = `
+        <div class="col-span-2 flex justify-between items-center">
+            <span class="text-[10px] font-bold text-gray-500 uppercase">${tipo}</span>
+            <button type="button" class="text-red-500 hover:text-red-700 text-[10px] font-bold btn-remover-doc">
+                Remover
+            </button>
+        </div>
+        <input type="text" placeholder="Nº Documento" data-doc-tipo="${tipo}" data-field="numero" value="${numero}"
+               class="p-1.5 text-xs border dark:border-slate-600 bg-white dark:bg-slate-900 rounded-md">
+        <input type="text" placeholder="Valor (R$)" data-doc-tipo="${tipo}" data-field="valor" value="${valorFinanceiroFormatado}"
+               class="p-1.5 text-xs border dark:border-slate-600 bg-white dark:bg-slate-900 rounded-md currency-input">
+    `;
+
+    // Aplica a máscara de moeda em tempo real
+    div.querySelectorAll('.currency-input').forEach(i => i.addEventListener('input', formatInputAsBRL));
+    
+    // Listener de remoção atualizado para funcionar em qualquer campo
+    div.querySelector('.btn-remover-doc').addEventListener('click', () => {
+        div.remove();
+        atualizarBadgeDocs(); // Atualiza a contagem no cabeçalho do accordion
+    });
+    
+    container.appendChild(div);
+}
+
+function atualizarBadgeDocs() {
+    const badge = document.getElementById("badge-docs-count");
+    const preenchidos = Array.from(document.querySelectorAll("#container-documentos-pagamento input[data-field='numero']"))
+                        .filter(i => i.value.trim() !== "").length;
+    
+    if (preenchidos > 0) {
+        badge.textContent = preenchidos;
+        badge.classList.remove("hidden");
+    } else {
+        badge.classList.add("hidden");
+    }
+}
+
+// Função para gerar o visual de "Cupom/Nota"
+function gerarLayoutNotaPagamento(pagamento, contrato) {
+    const dataEmissaoRelatorio = new Date().toLocaleString('pt-BR');
+    
+    // Captura o nome da empresa tratando se for objeto ou string
+    const nomeEmpresa = typeof contrato.empresa === 'object' ? contrato.empresa.nome : contrato.empresa;
+    
+    // CORREÇÃO: Função interna com declaração explícita de variáveis
+    const formatarDataLocal = (data) => {
+        if (!data || data === "---") return "---";
+        // Declaração explícita da constante 'parts' para evitar o ReferenceError
+        const parts = data.split("-"); 
+        if (parts.length !== 3) return data;
+        return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    };
+
+    // Processamento dos ITENS DA NF (Detalhes)
+    let itensHtml = "";
+    if (pagamento.detalhes && pagamento.detalhes.length > 0) {
+        itensHtml = `<div class="divider">ITENS DA NOTA FISCAL</div>`;
+        pagamento.detalhes.forEach(item => {
+            const subtotal = (parseFloat(item.quantidade) || 0) * (parseFloat(item.valorUnitario) || 0);
+            itensHtml += `
+                <div class="item">
+                    <span style="display:block; font-weight:bold;">${item.descricao.toUpperCase()}</span>
+                    <span>${item.quantidade} x ${formatarNumeroParaBRL(item.valorUnitario)}</span>
+                    <span style="float:right">R$ ${formatarNumeroParaBRL(subtotal)}</span>
+                </div>`;
+        });
+    }
+
+    // Processamento dos DOCUMENTOS DE EXECUÇÃO
+    let docsHtml = "";
+    if (pagamento.documentosExecucao && pagamento.documentosExecucao.length > 0) {
+        docsHtml = `<div class="divider">DOCUMENTOS DE EXECUÇÃO</div>`;
+        pagamento.documentosExecucao.forEach(doc => {
+            const valorDoc = doc.valor ? `R$ ${formatarNumeroParaBRL(doc.valor)}` : "---";
+            docsHtml += `
+                <div class="item">
+                    <span>${doc.tipo.toUpperCase()}</span><br>
+                    <span>Nº: ${doc.numero || 'N/A'}</span>
+                    <span style="float:right">${valorDoc}</span>
+                </div>`;
+        });
+    }
+
+  return `
+    <html>
+    <head>
+        <title>Recibo - NF ${pagamento.notaFiscal}</title>
+        <style>
+            body { font-family: 'Courier New', Courier, monospace; font-size: 10pt; color: #000; padding: 10px; line-height: 1.2; }
+            .ticket { max-width: 400px; margin: 0 auto; border: 1px solid #000; padding: 15px; background: #fff; }
+            .header { text-align: center; font-weight: bold; margin-bottom: 15px; border-bottom: 2px solid #000; padding-bottom: 5px; }
+            .divider { text-align: center; margin: 10px 0; border-top: 1px dashed #000; border-bottom: 1px dashed #000; font-size: 9pt; padding: 2px 0; font-weight: bold; }
+            .item { margin-bottom: 8px; font-size: 9pt; clear: both; overflow: hidden; }
+            .total-box { margin: 15px 0; border-top: 2px solid #000; border-bottom: 2px solid #000; padding: 8px 0; text-align: right; }
+            .total-valor { font-size: 14pt; font-weight: bold; }
+            @media print { body { padding: 0; } .ticket { border: none; } }
+        </style>
+    </head>
+    <body>
+        <div class="ticket">
+            <div class="header">DETALHAMENTO DE PAGAMENTO<br>COCKPIT GESTÃO - CONTRATOS</div>
+            
+            <div class="item"><strong>CONTRATO:</strong> ${contrato.numeroContrato || 'N/A'}</div>
+            <div class="item"><strong>EMPRESA:</strong> ${nomeEmpresa || 'N/A'}</div>
+            <div class="item"><strong>PROCESSO:</strong> ${pagamento.processoPagamentoSei || 'N/A'}</div>
+            
+            <div class="divider">DADOS DA NOTA FISCAL</div>
+            <div class="item"><strong>Nº NF:</strong> ${pagamento.notaFiscal || 'N/A'}</div>
+            <div class="item"><strong>PERÍODO:</strong> ${formatarDataLocal(pagamento.periodoDe)} a ${formatarDataLocal(pagamento.periodoAte)}</div>
+            
+            ${itensHtml}
+
+            <div class="total-box">
+                <span style="font-size: 10pt; font-weight: bold;">TOTAL PAGO:</span><br>
+                <span class="total-valor">R$ ${formatarNumeroParaBRL(pagamento.valorPago)}</span>
+            </div>
+
+            ${docsHtml}
+
+            <div style="margin-top: 30px; font-size: 7pt; text-align: center; border-top: 1px dotted #ccc; padding-top: 5px;">
+                Gerado em: ${dataEmissaoRelatorio}<br>
+                ID: ${pagamento.id}
+            </div>
+        </div>
+        <script>window.onload = function() { window.print(); window.close(); }</script>
+    </body>
+    </html>`;
+}
+
+// Função de disparo (Certifique-se que p.origemContratoId está sendo passado)
+function imprimirDetalhePagamento(contratoId, pagamentoId) {
+    const contrato = db.contratos.find(c => c.id === contratoId);
+    if (!contrato) {
+        alert("Contrato não encontrado!");
+        return;
+    }
+    const pagamento = contrato.pagamentos.find(p => p.id === pagamentoId);
+    if (!pagamento) {
+        alert("Pagamento não encontrado!");
+        return;
+    }
+
+    const html = gerarLayoutNotaPagamento(pagamento, contrato);
+    const win = window.open('', '_blank', 'width=500,height=700');
+    win.document.write(html);
+    win.document.close();
+}
+
+// Função para disparar a impressão
+function imprimirDetalhePagamento(contratoId, pagamentoId) {
+    const contrato = db.contratos.find(c => c.id === contratoId);
+    if (!contrato) return;
+    const pagamento = contrato.pagamentos.find(p => p.id === pagamentoId);
+    if (!pagamento) return;
+
+    const html = gerarLayoutNotaPagamento(pagamento, contrato);
+    const win = window.open('', '_blank', 'width=600,height=800');
+    win.document.write(html);
+    win.document.close();
+}
+
 // --- NOVA FUNÇÃO PARA RENDERIZAR GRÁFICO DETALHADO ---
 function atualizarGraficoDetalhado(pagamentos) {
   const isDark = document.documentElement.classList.contains("dark");
@@ -288,6 +508,8 @@ function atualizarGraficoDetalhado(pagamentos) {
       });
     }
   });
+
+  
 
   // --- LÓGICA DE RENDERIZAÇÃO ATUALIZADA ---
   let html = "";
@@ -1509,7 +1731,7 @@ function renderizarModalVisualizar(contratoId) {
                                           </svg>
                                       </button>
 
-                                      <button class="btn-detalhar-pagamento text-blue-600 hover:text-blue-800 dark:text-blue-300 ml-3" 
+                                      <button class="btn-detalhar-pagamento text-blue-600 hover:text-blue-800 ml-3" 
                                           title="Detalhar"
                                           data-contrato-id="${p.origemContratoId}" 
                                           data-pagamento-id="${p.id}" 
@@ -1528,6 +1750,16 @@ function renderizarModalVisualizar(contratoId) {
                                               <path fill-rule="evenodd" clip-rule="evenodd" d="M12.663 1.5h-1.326c-1.069 0-1.49.09-1.921.27-.432.181-.792.453-1.084.82-.292.365-.493.746-.784 1.774L7.368 5H5a1 1 0 0 0 0 2h.563l.703 11.25c.082 1.32.123 1.98.407 2.481a2.5 2.5 0 0 0 1.083 1.017C8.273 22 8.935 22 10.258 22h3.484c1.323 0 1.985 0 2.502-.252a2.5 2.5 0 0 0 1.083-1.017c.284-.5.325-1.16.407-2.482L18.437 7H19a1 1 0 1 0 0-2h-2.367l-.18-.636c-.292-1.028-.493-1.409-.785-1.775a2.694 2.694 0 0 0-1.084-.819c-.431-.18-.852-.27-1.92-.27zm1.89 3.5-.025-.09c-.203-.717-.29-.905-.424-1.074a.696.696 0 0 0-.292-.221c-.2-.084-.404-.115-1.149-.115h-1.326c-.745 0-.95.031-1.149.115a.696.696 0 0 0-.292.221c-.135.169-.221.357-.424 1.074L9.446 5h5.108zM9.61 8.506a.75.75 0 0 0-.724.776l.297 8.495a.75.75 0 0 0 1.499-.053l-.297-8.494a.75.75 0 0 0-.775-.724zm4.008.724a.75.75 0 0 1 1.499.052l-.297 8.495a.75.75 0 0 1-1.499-.053l.297-8.494z" fill="currentColor"/>
                                           </svg>
                                       </button>
+
+                                      <button onclick="imprimirDetalhePagamento('${p.origemContratoId}', '${p.id}')" 
+                                              class="text-green-600 hover:text-green-800 ml-3" 
+                                              title="Imprimir Detalhamento">
+                                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                                          </svg>
+                                      </button>
+
+
                                   </td>
 
 
@@ -2482,10 +2714,28 @@ function salvarPagamento(e) {
     return;
   }
 
+  // --- LÓGICA DE CAPTURA DE DOCUMENTOS---
+  const docsParaSalvar = [];
+    document.querySelectorAll("#container-documentos-pagamento .group").forEach(linha => {
+        const inputNumero = linha.querySelector("input[data-field='numero']");
+        const inputValor = linha.querySelector("input[data-field='valor']");
+        const tipo = inputNumero.dataset.docTipo;
+
+        if (inputNumero.value.trim() !== "" || inputValor.value.trim() !== "") {
+            docsParaSalvar.push({
+                tipo: tipo,
+                numero: inputNumero.value.trim(),
+                valor: parseBRL(inputValor.value)
+            });
+        }
+    });
+  // ----------------------------------------------------------
+
   // 1. Captura os dados do formulário
   const pagamentoData = {
     data: document.getElementById("pagamento-data").value,
     valorPago: parseBRL(document.getElementById("pagamento-valor").value),
+    documentosExecucao: docsParaSalvar.length > 0 ? docsParaSalvar : null,
     notaFiscal: document.getElementById("pagamento-nf").value,
     processoPagamentoSei: document.getElementById("pagamento-processo-sei")
       .value,
@@ -3367,6 +3617,25 @@ document.addEventListener("DOMContentLoaded", () => {
     input.addEventListener("input", formatInputAsBRL_3dec);
   });
 
+  // Toggle do Accordion
+  document.getElementById("btn-toggle-docs").addEventListener("click", function() {
+      const wrapper = document.getElementById("wrapper-documentos");
+      const icon = document.getElementById("icon-docs-arrow");
+      const isHidden = wrapper.classList.toggle("hidden");
+      icon.style.transform = isHidden ? "rotate(0deg)" : "rotate(180deg)";
+  });
+
+  // Botão para criar documento personalizado
+  document.getElementById("btn-add-doc-extra").addEventListener("click", function() {
+      const nome = prompt("Qual o nome do documento?");
+      if (nome && nome.trim() !== "") {
+          adicionarLinhaDocumento(nome);
+          // Rola para o final para mostrar o novo campo
+          const wrapper = document.getElementById("wrapper-documentos");
+          wrapper.scrollTop = wrapper.scrollHeight;
+      }
+  });
+
   // Listener para o dropdown de tipo de aditivo
   document
     .getElementById("aditivo-tipo")
@@ -3627,6 +3896,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const contrato = db.contratos.find((c) => c.id === contratoId);
       if (contrato) {
         document.getElementById("form-pagamento").reset();
+        renderizarCamposDocumentos();
         // O pagamento é sempre associado ao contrato PAI
         document.getElementById("pagamento-contrato-id").value = contrato.id;
         //document.getElementById('pagamento-link-sei').value = pagamento.linkPagamentoSei || '';
@@ -3714,6 +3984,8 @@ document.addEventListener("DOMContentLoaded", () => {
           pagamento.periodoAte || "";
         document.getElementById("pagamento-is-trd").checked =
           pagamento.isTRD || false;
+
+        renderizarCamposDocumentos(pagamento.documentosExecucao || {});
 
         document.getElementById("modal-pagamento-titulo").textContent =
           "Editar Pagamento";
