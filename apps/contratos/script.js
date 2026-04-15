@@ -235,29 +235,28 @@ const TIPOS_DOCUMENTOS_PAGAMENTO = [
     "Autorização do Documento Hábil",
     "Liquidação de Empenho",
     "Nota de Ordem Bancária",
-    "Nota de Ordem Bancária"
+    "Nota de Ordem Bancária "
 ];
 
 function renderizarCamposDocumentos(dadosExistentes = []) {
     const container = document.getElementById("container-documentos-pagamento");
     container.innerHTML = "";
 
-    // Garante que dadosExistentes seja um array (caso venha null do banco)
     const listaDocs = Array.isArray(dadosExistentes) ? dadosExistentes : [];
 
-    // 1. Renderiza os documentos que já estão salvos no banco
-    // Como agora é um Array, ele preserva a ordem e permite múltiplos documentos do mesmo tipo
+    // 1. Renderiza o que já está salvo no banco
     listaDocs.forEach(doc => {
         adicionarLinhaDocumento(doc.tipo, doc.numero, doc.valor);
     });
 
-    // 2. Garante a exibição dos campos fixos padrão
-    // Se um tipo padrão não foi preenchido (não está na listaDocs), ele cria o campo vazio
+    // 2. Garante a exibição dos campos fixos padrão (Permitindo duplicatas da lista)
     TIPOS_DOCUMENTOS_PAGAMENTO.forEach(tipoPadrao => {
-        // Verifica se já existe um input com esse tipo no container
-        const jaExisteNaTela = container.querySelector(`input[data-doc-tipo="${tipoPadrao}"]`);
+        // Conta quantos deste tipo já foram adicionados (vindos do banco ou do loop atual)
+        const qtdNaTela = container.querySelectorAll(`input[data-doc-tipo="${tipoPadrao}"]`).length;
+        // Conta quantos deveriam existir segundo a lista padrão
+        const qtdNaListaPadrao = TIPOS_DOCUMENTOS_PAGAMENTO.filter(t => t === tipoPadrao).length;
         
-        if (!jaExisteNaTela) {
+        if (qtdNaTela < qtdNaListaPadrao) {
             adicionarLinhaDocumento(tipoPadrao);
         }
     });
@@ -267,35 +266,67 @@ function renderizarCamposDocumentos(dadosExistentes = []) {
 
 function adicionarLinhaDocumento(tipo, numero = "", valor = "") {
     const container = document.getElementById("container-documentos-pagamento");
-    
-    // Formatação para garantir o ponto de milhar e centavos na exibição
     const valorFinanceiroFormatado = formatarNumeroParaBRL(valor);
     
     const div = document.createElement("div");
     div.className = "group relative grid grid-cols-2 gap-2 bg-gray-50 dark:bg-slate-800/50 p-2 rounded-md border border-gray-100 dark:border-slate-700";
     
-    // MUDANÇA AQUI: O botão "Remover" agora está disponível para todos os campos 
-    // gerados, permitindo limpar duplicatas ou campos padrão indesejados.
     div.innerHTML = `
         <div class="col-span-2 flex justify-between items-center">
             <span class="text-[10px] font-bold text-gray-500 uppercase">${tipo}</span>
-            <button type="button" class="text-red-500 hover:text-red-700 text-[10px] font-bold btn-remover-doc">
-                Remover
-            </button>
+            <button type="button" class="text-red-500 hover:text-red-700 text-[10px] font-bold btn-remover-doc">Remover</button>
         </div>
         <input type="text" placeholder="Nº Documento" data-doc-tipo="${tipo}" data-field="numero" value="${numero}"
-               class="p-1.5 text-xs border dark:border-slate-600 bg-white dark:bg-slate-900 rounded-md">
+               class="p-1.5 text-xs border dark:border-slate-600 bg-white dark:bg-slate-900 rounded-md input-doc-numero">
         <input type="text" placeholder="Valor (R$)" data-doc-tipo="${tipo}" data-field="valor" value="${valorFinanceiroFormatado}"
-               class="p-1.5 text-xs border dark:border-slate-600 bg-white dark:bg-slate-900 rounded-md currency-input">
+               class="p-1.5 text-xs border dark:border-slate-600 bg-white dark:bg-slate-900 rounded-md currency-input input-doc-valor">
     `;
 
-    // Aplica a máscara de moeda em tempo real
+    const inputNumero = div.querySelector(".input-doc-numero");
+    const inputValor = div.querySelector(".input-doc-valor");
+
+    // --- LÓGICA DE AUTOMAÇÃO ---
+    inputNumero.addEventListener('blur', function() {
+        // Só automatiza se o campo de valor estiver vazio ou zerado (para não sobrescrever edições manuais)
+        const valorAtual = parseBRL(inputValor.value);
+        if (this.value.trim() !== "" && valorAtual === 0) {
+            
+            const valorPagoPrincipal = parseBRL(document.getElementById("pagamento-valor").value);
+            if (valorPagoPrincipal > 0) {
+                let valorCalculado = 0;
+                
+                // Base de cálculos solicitada
+                const dae = Math.round(valorPagoPrincipal * 0.048 * 100) / 100;
+                const guiaOuNob = valorPagoPrincipal - dae;
+
+                switch(tipo) {
+                    case "Documento de Arrecadação Estadual":
+                        valorCalculado = dae;
+                        break;
+                    case "Guia de Recolhimento":
+                    case "Nota de Ordem Bancária":
+                        valorCalculado = guiaOuNob;
+                        break;
+                    case "Registro de Documento Hábil":
+                    case "Autorização do Documento Hábil":
+                        valorCalculado = valorPagoPrincipal;
+                        break;
+                }
+
+                if (valorCalculado > 0) {
+                    inputValor.value = formatarNumeroParaBRL(valorCalculado);
+                    // Dispara o badge para reconhecer que o campo agora tem conteúdo
+                    atualizarBadgeDocs();
+                }
+            }
+        }
+    });
+
+    // Máscara de moeda e remoção
     div.querySelectorAll('.currency-input').forEach(i => i.addEventListener('input', formatInputAsBRL));
-    
-    // Listener de remoção atualizado para funcionar em qualquer campo
     div.querySelector('.btn-remover-doc').addEventListener('click', () => {
         div.remove();
-        atualizarBadgeDocs(); // Atualiza a contagem no cabeçalho do accordion
+        atualizarBadgeDocs();
     });
     
     container.appendChild(div);
