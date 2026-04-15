@@ -358,6 +358,53 @@
               "quantidade": 501,
               "valorUnitario": 0.593
             }
+          ],
+          "documentosExecucao": [
+            {
+              "tipo": "Guia de Recolhimento",
+              "numero": "00190.00009 03352.765006 00815.947171 1 14080000083010",
+              "valor": 830.1
+            },
+            {
+              "tipo": "Nota de Empenho",
+              "numero": "09101.0006.26.0000066-2",
+              "valor": 7457.59
+            },
+            {
+              "tipo": "Registro de Documento Hábil",
+              "numero": "09101.0006.26.0000196-2",
+              "valor": 871.95
+            },
+            {
+              "tipo": "Passivo por Competência",
+              "numero": "09101.0006.26.0000097-1",
+              "valor": 871.95
+            },
+            {
+              "tipo": "Documento de Arrecadação Estadual",
+              "numero": "85890000000 0 41850333202 8 60331192276 0 15708005193 6",
+              "valor": 41.85
+            },
+            {
+              "tipo": "Autorização do Documento Hábil",
+              "numero": "09101.0006.26.0000194-2",
+              "valor": 871.95
+            },
+            {
+              "tipo": "Liquidação de Empenho",
+              "numero": "09101.0006.26.0000430-3",
+              "valor": 5454.14
+            },
+            {
+              "tipo": "Nota de Ordem Bancária",
+              "numero": "09101.0006.26.0000623-0",
+              "valor": 830.1
+            },
+            {
+              "tipo": "Nota de Ordem Bancária",
+              "numero": "09101.0006.26.0000624-9",
+              "valor": 41.85
+            }
           ]
         },
         {
@@ -382,6 +429,43 @@
               "descricao": "Consulta Faixa 1",
               "quantidade": 1,
               "valorUnitario": 547.864
+            }
+          ],
+          "documentosExecucao": [
+            {
+              "tipo": "Guia de Recolhimento",
+              "numero": "00190.00009 03352.765006 00823.150172 7 14330000092776",
+              "valor": 927.76
+            },
+            {
+              "tipo": "Nota de Empenho",
+              "numero": "09101.0006.26.0000066-2",
+              "valor": 7457.59
+            },
+            {
+              "tipo": "Registro de Documento Hábil",
+              "numero": "09101.0006.26.0000298-5",
+              "valor": 974.54
+            },
+            {
+              "tipo": "Passivo por Competência",
+              "numero": "09101.0006.26.0000201-1",
+              "valor": 974.54
+            },
+            {
+              "tipo": "Documento de Arrecadação Estadual",
+              "numero": "85870000000 6 46780333202 1 60507192910 9 23038005193 6",
+              "valor": 46.78
+            },
+            {
+              "tipo": "Autorização do Documento Hábil",
+              "numero": "09101.0006.26.0000295-7",
+              "valor": 974.54
+            },
+            {
+              "tipo": "Liquidação de Empenho",
+              "numero": "09101.0006.26.0000665-9",
+              "valor": 974.54
             }
           ]
         }
@@ -482,7 +566,55 @@
               "quantidade": 1,
               "valorUnitario": 576.84
             }
-          ]
+          ],
+          "documentosExecucao": [
+            {
+              "tipo": "Guia de Recolhimento",
+              "numero": "00190.00009 03352.765998 00116.896176 7 88160000062190",
+              "valor": 621.9
+            },
+            {
+              "tipo": "Nota de Empenho",
+              "numero": "09101.0006.21.0002507-3",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Registro de Documento Hábil",
+              "numero": "09101.0006.21.0001296-6",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Passivo por Competência",
+              "numero": "09101.0006.21.0001151-7",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Autorização do Documento Hábil",
+              "numero": "09101.0006.21.0001198-2",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Liquidação de Empenho",
+              "numero": "09101.0006.21.0005348-0",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Nota de Ordem Bancária",
+              "numero": "09101.0006.21.0006094-6",
+              "valor": 45.06
+            },
+            {
+              "tipo": "Nota de Ordem Bancária ",
+              "numero": "09101.0006.21.0006093-8",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Liquidação de Empenho",
+              "numero": "09101.0006.21.0005349-9",
+              "valor": 45.06
+            }
+          ],
+          "isTRD": false
         },
         {
           "data": "2021-09-24",
@@ -1610,7 +1742,55 @@
               "quantidade": 1724,
               "valorUnitario": 0.34
             }
-          ]
+          ],
+          "documentosExecucao": [
+            {
+              "tipo": "Guia de Recolhimento",
+              "numero": "00190.00009 03352.765006 00754.109171 1 11940000110718",
+              "valor": 1107.18
+            },
+            {
+              "tipo": "Nota de Empenho",
+              "numero": "09101.0006.25.0001565-7",
+              "valor": 4100
+            },
+            {
+              "tipo": "Registro de Documento Hábil",
+              "numero": "09101.0006.25.0000806-7",
+              "valor": 1163
+            },
+            {
+              "tipo": "Passivo por Competência",
+              "numero": "09101.0006.25.0001565-7",
+              "valor": 1163
+            },
+            {
+              "tipo": "Documento de Arrecadação Estadual",
+              "numero": "85800000000 3 55820333202 8 50829205240 2 95418005193 4",
+              "valor": 55.82
+            },
+            {
+              "tipo": "Autorização do Documento Hábil",
+              "numero": "09101.0006.25.0000750-4",
+              "valor": 1163
+            },
+            {
+              "tipo": "Liquidação de Empenho",
+              "numero": "09101.0006.25.0002948-6",
+              "valor": 1163
+            },
+            {
+              "tipo": "Nota de Ordem Bancária",
+              "numero": "09101.0006.25.0003848-0",
+              "valor": 1107.18
+            },
+            {
+              "tipo": "Nota de Ordem Bancária ",
+              "numero": "09101.0006.25.0003849-9",
+              "valor": 55.82
+            }
+          ],
+          "isTRD": false
         },
         {
           "data": "2025-10-02",
@@ -1634,7 +1814,55 @@
               "quantidade": 3510,
               "valorUnitario": 0.34
             }
-          ]
+          ],
+          "documentosExecucao": [
+            {
+              "tipo": "Guia de Recolhimento",
+              "numero": "00190.00009 03352.765006 00763.426178 1 12300000168527",
+              "valor": 1685.27
+            },
+            {
+              "tipo": "Nota de Empenho",
+              "numero": "09101.0006.25.0002582-2",
+              "valor": 7182.24
+            },
+            {
+              "tipo": "Registro de Documento Hábil",
+              "numero": "09101.0006.25.0001100-9",
+              "valor": 1770.24
+            },
+            {
+              "tipo": "Passivo por Competência",
+              "numero": "09101.0006.25.0001004-2",
+              "valor": 1770.24
+            },
+            {
+              "tipo": "Documento de Arrecadação Estadual",
+              "numero": "85880000000 8 849703332027 51006205704 8 92678005193 0",
+              "valor": 84.97
+            },
+            {
+              "tipo": "Autorização do Documento Hábil",
+              "numero": "09101.0006.25.0001008-4",
+              "valor": 1770.24
+            },
+            {
+              "tipo": "Liquidação de Empenho",
+              "numero": "09101.0006.25.0003724-1",
+              "valor": 1770.24
+            },
+            {
+              "tipo": "Nota de Ordem Bancária",
+              "numero": "09101.0006.25.0004961-1",
+              "valor": 1685.27
+            },
+            {
+              "tipo": "Nota de Ordem Bancária ",
+              "numero": "09101.0006.25.0004962-8",
+              "valor": 84.97
+            }
+          ],
+          "isTRD": false
         },
         {
           "data": "2025-10-22",
@@ -1659,7 +1887,54 @@
               "valorUnitario": 0.34
             }
           ],
-          "isTRD": false
+          "isTRD": false,
+          "documentosExecucao": [
+            {
+              "tipo": "Guia de Recolhimento",
+              "numero": "00190.00009 03352.765006 00773.774179 1 12640000475990",
+              "valor": 4759.9
+            },
+            {
+              "tipo": "Nota de Empenho",
+              "numero": "09101.0006.25.0002582-2",
+              "valor": 7182.24
+            },
+            {
+              "tipo": "Registro de Documento Hábil",
+              "numero": "09101.0006.25.0001127-0",
+              "valor": 4999.9
+            },
+            {
+              "tipo": "Passivo por Competência",
+              "numero": "09101.0006.25.0001032-8",
+              "valor": 4999.9
+            },
+            {
+              "tipo": "Documento de Arrecadação Estadual",
+              "numero": "858500000029 400003332026 511212058565 17008005193 3",
+              "valor": 240
+            },
+            {
+              "tipo": "Autorização do Documento Hábil",
+              "numero": "09101.0006.25.0001025-4",
+              "valor": 4999.9
+            },
+            {
+              "tipo": "Liquidação de Empenho",
+              "numero": "09101.0006.25.0004087-0",
+              "valor": 4999.9
+            },
+            {
+              "tipo": "Nota de Ordem Bancária",
+              "numero": "09101.0006.25.0005331-5",
+              "valor": 4759.9
+            },
+            {
+              "tipo": "Nota de Ordem Bancária ",
+              "numero": "09101.0006.25.0005332-3",
+              "valor": 240
+            }
+          ]
         },
         {
           "data": "2025-12-28",
@@ -1677,6 +1952,53 @@
               "descricao": "Consulta Faixa 2",
               "quantidade": 22200,
               "valorUnitario": 0.34
+            }
+          ],
+          "documentosExecucao": [
+            {
+              "tipo": "Guia de Recolhimento",
+              "numero": "00190.00009 03352.765105 00573.821170 6 13100000718570",
+              "valor": 7185.7
+            },
+            {
+              "tipo": "Nota de Empenho",
+              "numero": "09101.0006.25.0003391-4",
+              "valor": 7548
+            },
+            {
+              "tipo": "Registro de Documento Hábil",
+              "numero": "09101.0006.25.0001339-7",
+              "valor": 7548
+            },
+            {
+              "tipo": "Passivo por Competência",
+              "numero": "09101.0006.25.0001247-9",
+              "valor": 7548
+            },
+            {
+              "tipo": "Documento de Arrecadação Estadual",
+              "numero": "85880000003 2 62300333202 8 60112206336 4 41318005193 5",
+              "valor": 362.3
+            },
+            {
+              "tipo": "Autorização do Documento Hábil",
+              "numero": "09101.0006.25.0001240-0",
+              "valor": 7548
+            },
+            {
+              "tipo": "Liquidação de Empenho",
+              "numero": "09101.0006.25.0004919-3",
+              "valor": 7548
+            },
+            {
+              "tipo": "Nota de Ordem Bancária",
+              "numero": "09101.0006.25.0006540-2",
+              "valor": 7185.7
+            },
+            {
+              "tipo": "Nota de Ordem Bancária ",
+              "numero": "09101.0006.25.0006541-0",
+              "valor": 362.3
             }
           ]
         }
