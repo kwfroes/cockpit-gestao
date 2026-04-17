@@ -2362,6 +2362,63 @@
               "quantidade": 1,
               "valorUnitario": 1424
             }
+          ],
+          "documentosExecucao": [
+            {
+              "tipo": "Guia de Recolhimento",
+              "numero": "00190.00009 02805.551005 00038.983177 1 14120000128445",
+              "valor": 1284.45
+            },
+            {
+              "tipo": "Nota de Empenho",
+              "numero": "09101.0006.26.0000875-2",
+              "valor": 1424
+            },
+            {
+              "tipo": "Registro de Documento Hábil",
+              "numero": "09101.0006.26.0000214-4",
+              "valor": 1424
+            },
+            {
+              "tipo": "Passivo por Competência",
+              "numero": "09101.0006.26.0000115-3",
+              "valor": 1424
+            },
+            {
+              "tipo": "Documento de Arrecadação Estadual",
+              "numero": "85800000000 3 68350333202 0 60430192534 9 76598005193 1",
+              "valor": 68.35
+            },
+            {
+              "tipo": "Autorização do Documento Hábil",
+              "numero": "09101.0006.26.0000210-8",
+              "valor": 1424
+            },
+            {
+              "tipo": "Liquidação de Empenho",
+              "numero": "09101.0006.26.0000569-5",
+              "valor": 1424
+            },
+            {
+              "tipo": "Nota de Ordem Bancária",
+              "numero": "09101.0006.26.0000807-1",
+              "valor": 1284.45
+            },
+            {
+              "tipo": "Nota de Ordem Bancária ",
+              "numero": "09101.0006.26.0000805-5",
+              "valor": 68.35
+            },
+            {
+              "tipo": "Documento de Arrecadação Municipal",
+              "numero": "81620000000-7 71203776202-8 60406020326-1 99004993353-6",
+              "valor": 71.2
+            },
+            {
+              "tipo": "Nota de Ordem Bancária",
+              "numero": "09101.0006.26.0000806-3",
+              "valor": 71.2
+            }
           ]
         }
       ]

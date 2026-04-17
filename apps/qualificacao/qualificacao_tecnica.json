@@ -18889,9 +18889,24 @@
   {
     "Família": "41.40",
     "Descrição": "VENTILADORES, CIRCULADORES DE AR E VENTOINHAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2759-7/99",
+        "descricao": "Fabricação de outros aparelhos eletrodomésticos não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "2823-2/00",
+        "descricao": "Fabricação de máquinas e aparelhos de refrigeração e ventilação para uso industrial e comercial, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "41",
       "nome": "Equipamentos de Refrigeração, Circulação e Condicionamento de Ar"
