@@ -23667,9 +23667,28 @@
   {
     "Família": "93.30",
     "Descrição": "ARTIGOS DE PLASTICOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4686-9/02",
+        "descricao": "Comércio atacadista de embalagens"
+      },
+      {
+        "codigo": "1813-0/99",
+        "descricao": "Impressão de material para outros usos"
+      },
+      {
+        "codigo": "3299-0/03",
+        "descricao": "Fabricação de letras, letreiros e placas de qualquer material, exceto luminosos"
+      },
+      {
+        "codigo": "2229-3/99",
+        "descricao": "Fabricação de artefatos de material plástico para outros usos não especificados anteriormente"
+      }
+    ],
     "Ramo": {
       "codigo": "93",
       "nome": "Materias Manufaturados Não Metálicos"
@@ -23706,7 +23725,25 @@
     "Ramo": {
       "codigo": "93",
       "nome": "Materias Manufaturados Não Metálicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4686-9/02",
+        "descricao": "Comércio atacadista de embalagens"
+      },
+      {
+        "codigo": "1813-0/99",
+        "descricao": "Impressão de material para outros usos"
+      },
+      {
+        "codigo": "3299-0/03",
+        "descricao": "Fabricação de letras, letreiros e placas de qualquer material, exceto luminosos"
+      },
+      {
+        "codigo": "2229-3/99",
+        "descricao": "Fabricação de artefatos de material plástico para outros usos não especificados anteriormente"
+      }
+    ]
   },
   {
     "Família": "94.10",

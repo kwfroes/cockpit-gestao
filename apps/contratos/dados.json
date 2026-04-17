@@ -632,7 +632,45 @@
               "quantidade": 1,
               "valorUnitario": 576.84
             }
-          ]
+          ],
+          "documentosExecucao": [
+            {
+              "tipo": "Guia de Recolhimento",
+              "numero": "00190.00009 03352.765006 00271.860173 6 87590000057684",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Nota de Empenho",
+              "numero": "09101.0006.21.0002325-9",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Registro de Documento Hábil",
+              "numero": "09101.0006.21.0001050-5",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Passivo por Competência",
+              "numero": "09101.0006.21.0000839-7",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Autorização do Documento Hábil",
+              "numero": "09101.0006.21.0000854-1",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Liquidação de Empenho",
+              "numero": "09101.0006.21.0003807-4",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Nota de Ordem Bancária",
+              "numero": "09101.0006.21.0004407-1",
+              "valor": 576.84
+            }
+          ],
+          "isTRD": false
         },
         {
           "data": "2021-10-15",
@@ -650,7 +688,45 @@
               "quantidade": 1,
               "valorUnitario": 576.84
             }
-          ]
+          ],
+          "documentosExecucao": [
+            {
+              "tipo": "Guia de Recolhimento",
+              "numero": "00190.00009 03352.765006 00294.469176 1 87880000057684",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Nota de Empenho",
+              "numero": "09101.0006.21.0002523-5",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Registro de Documento Hábil",
+              "numero": "09101.0006.21.0001108-0",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Passivo por Competência",
+              "numero": "09101.0006.21.0000904-0",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Autorização do Documento Hábil",
+              "numero": "09101.0006.21.0000932-5",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Liquidação de Empenho",
+              "numero": "09101.0006.21.0004300-0",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Nota de Ordem Bancária",
+              "numero": "09101.0006.21.0005003-7",
+              "valor": 576.84
+            }
+          ],
+          "isTRD": false
         },
         {
           "data": "2021-12-20",
@@ -692,7 +768,45 @@
               "quantidade": 1,
               "valorUnitario": 576.84
             }
-          ]
+          ],
+          "documentosExecucao": [
+            {
+              "tipo": "Guia de Recolhimento",
+              "numero": "00190.00009 03352.765006 00321.639171 1 88500000057684",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Nota de Empenho",
+              "numero": "09101.0006.21.0003176-6",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Registro de Documento Hábil",
+              "numero": "09101.0006.21.0001357-1",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Passivo por Competência",
+              "numero": "09101.0006.21.0001204-1",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Autorização do Documento Hábil",
+              "numero": "09101.0006.21.0001247-4",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Liquidação de Empenho",
+              "numero": "09101.0006.21.0005548-3",
+              "valor": 576.84
+            },
+            {
+              "tipo": "Nota de Ordem Bancária",
+              "numero": "09101.0006.21.0006447-1",
+              "valor": 576.84
+            }
+          ],
+          "isTRD": false
         },
         {
           "data": "2022-01-26",
