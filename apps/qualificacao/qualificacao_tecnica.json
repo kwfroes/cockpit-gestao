@@ -5842,10 +5842,12 @@
     "Tipo": "S",
     "Terceirizado": "Não",
     "Documentos Exigidos": [
-      "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
-    "Documentos Elegíveis": [],
+    "Documentos Elegíveis": [
+      "CFT - Conselho Federal dos Técnicos Industriais",
+      "CREA - Conselho Regional de Engenharia e Agronomia"
+    ],
     "CNAEs": [
       {
         "codigo": "4322-3/01",
@@ -12988,18 +12990,20 @@
     "Tipo": "S",
     "Terceirizado": "Não",
     "Documentos Exigidos": [
-      "CREA - Conselho Regional de Engenharia e Agronomia",
       "Certidão de Acervo Técnico com Atestado"
     ],
-    "Documentos Elegíveis": [],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
     "CNAEs": [
-      {
-        "codigo": "7112-0/00",
-        "descricao": "Serviços de engenharia"
-      },
       {
         "codigo": "4322-3/01",
         "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
       }
     ],
     "Ramo": {

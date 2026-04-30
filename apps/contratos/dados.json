@@ -408,7 +408,7 @@
           ]
         },
         {
-          "data": "2026-04-14",
+          "data": "2026-04-13",
           "valorPago": 974.54,
           "notaFiscal": "919377",
           "processoPagamentoSei": "009.0242.2026.0018295-86",
@@ -466,6 +466,16 @@
               "tipo": "Liquidação de Empenho",
               "numero": "09101.0006.26.0000665-9",
               "valor": 974.54
+            },
+            {
+              "tipo": "Nota de Ordem Bancária",
+              "numero": "09101.0006.26.0001017-3",
+              "valor": 927.76
+            },
+            {
+              "tipo": "Nota de Ordem Bancária ",
+              "numero": "09101.0006.26.0001020-3",
+              "valor": 46.78
             }
           ]
         }

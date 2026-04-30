@@ -217,7 +217,7 @@ grid.innerHTML = '';
 
                 <span class="opacity-30">|</span>
 
-                <p class="text-[11px] text-gray-500 dark:text-gray-400 font-mono whitespace-nowrap group-hover/info:text-blue-500 transition-colors">
+                <p class="text-[13px] text-gray-500 dark:text-gray-400 font-mono whitespace-nowrap group-hover/info:text-blue-500 transition-colors">
                     FAMÍLIA: ${item.Família}
                 </p>
             </div>

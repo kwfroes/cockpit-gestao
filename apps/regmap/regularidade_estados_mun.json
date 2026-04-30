@@ -1,0 +1,1066 @@
+{
+    "Estados": [
+        {
+            "Estado": "Acre (AC)",
+            "Capital": "Rio Branco",
+            "Links": {
+                "Concordata e Falência - Estado": "https://esaj.tjac.jus.br/sco/abrirCadastro.do",
+                "Regularidade Estadual - Estadual": "https://sefazonline.ac.gov.br/sefazonline/app.cndprincipal?LoitHLXNG9cdhJJy6N2j58NrcyNSQ7J28PjmNW2bmiU"
+            },
+            "Cidades": [
+                {
+                    "Nome": "Rio Branco",
+                    "Tipo": "Capital",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": "https://portalcidadao.riobranco.ac.gov.br/ServerExec/acessoBase/?idPortal=7928c2a6-fd13-42c1-9ae5-5820b46946a4"
+                    }
+                },
+                {
+                    "Nome": "Cruzeiro do Sul",
+                    "Tipo": "Polo Regional",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": "https://e-gov.betha.com.br/cdweb/03114-554/contribuinte/rel_cndcontribuinte.faces"
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Alagoas (AL)",
+            "Capital": "Maceió",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "Maceió",
+                    "Tipo": "Capital",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Arapiraca",
+                    "Tipo": "Polo Regional",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Palmeira dos Índios",
+                    "Tipo": "Polo Regional",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Amazonas (AM)",
+            "Capital": "Manaus",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "Manaus",
+                    "Tipo": "Capital / Polo Industrial",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Parintins",
+                    "Tipo": "Polo Regional",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Itacoatiara",
+                    "Tipo": "Polo Regional / Logístico",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Bahia (BA)",
+            "Capital": "Salvador",
+            "Links": {
+                "Concordata e Falência - Estado": "https://portalcertidoes.tjba.jus.br/#/primeirograu",
+                "Regularidade Estadual - Estadual": "https://servicos.sefaz.ba.gov.br/sistemas/DSCRE/Modulos/Publico/EmissaoCertidao.aspx"
+            },
+            "Cidades": [
+                {
+                    "Nome": "Salvador",
+                    "Tipo": "Capital",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "http://www2.sefaz.salvador.ba.gov.br/servico/categoria-ficha-cadastral-resumida",
+                        "Regularidade Municipal - Municipio": "https://www2.sefaz.salvador.ba.gov.br/servico/certidao-regularidade-fiscal-pj"
+                    }
+                },
+                {
+                    "Nome": "Camaçari",
+                    "Tipo": "Polo Industrial",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Feira de Santana",
+                    "Tipo": "Polo Regional / Entroncamento Logístico",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "https://www.sefaz.feiradesantana.ba.gov.br/?pg=servicosonline&comprovantedeinscricao=1",
+                        "Regularidade Municipal - Municipio": "https://www.sefaz.feiradesantana.ba.gov.br/?pg=servicosonline&Certidao-de-debitos=1"
+                    }
+                },
+                {
+                    "Nome": "Vitória da Conquista",
+                    "Tipo": "Polo Regional",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Juazeiro",
+                    "Tipo": "Polo Regional / Agronegócio",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": "https://trbpmjuazeiro.sudoesteinformatica.com.br/webrun/form.jsp?sys=TPC&dataConnection=PM_Juazeiro&action=openform&formID=%7B513A6F39-5238-4910-9E9B-FBB1DB9A95F5%7D&align=0&mode=-1&goto=-1&filter=&scrolling=no"
+                    }
+                },
+                {
+                    "Nome": "Barreiras",
+                    "Tipo": "Polo Regional / Agronegócio",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "https://gpi19.cloud.el.com.br/ServerExec/acessoBase/?idPortal=1AFF9FECC742DED8980F1F08BA1323B9",
+                        "Regularidade Municipal - Municipio": "https://gpi19.cloud.el.com.br/ServerExec/acessoBase/?idPortal=1AFF9FECC742DED8980F1F08BA1323B9"
+                    }
+                },
+                {
+                    "Nome": "Luís Eduardo Magalhães",
+                    "Tipo": "Polo do Agronegócio",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "https://luiseduardomagalhaes.saatri.com.br/Empresa/Alvara",
+                        "Regularidade Municipal - Municipio": "https://luiseduardomagalhaes.saatri.com.br/Certidao/Emitir?Pint_TipoCertidao=3&Pbol_ComMenuEsquerdo=true"
+                    }
+                },
+                {
+                    "Nome": "Ilhéus",
+                    "Tipo": "Polo Regional / Turístico",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": "https://ilheus.metropolisweb.com.br/metropolisWEB/tributario/emitirCertidaoDebitoPublico.do?metodo=executarListar"
+                    }
+                },
+                {
+                    "Nome": "Itabuna",
+                    "Tipo": "Polo Regional",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "https://gpi07.cloud.el.com.br/ServerExec/acessoBase/?idPortal=fcfe02ce-6ae8-4278-8dae-9e220e91532b&idFunc=95c1ece1-3453-4e92-86ea-32b4bb36a0e4",
+                        "Regularidade Municipal - Municipio": "https://gpi07.cloud.el.com.br/ServerExec/acessoBase/?idPortal=fcfe02ce-6ae8-4278-8dae-9e220e91532b&idFunc=95c1ece1-3453-4e92-86ea-32b4bb36a0e4"
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Ceará (CE)",
+            "Capital": "Fortaleza",
+            "Links": {
+                "Concordata e Falência - Estado": "https://sirece.tjce.jus.br/sirece-web/nova/solicitacao.jsf",
+                "Regularidade Estadual - Estadual": "https://consultapublica.sefaz.ce.gov.br/certidaonegativa/preparar-consultar"
+            },
+            "Cidades": [
+                {
+                    "Nome": "Fortaleza",
+                    "Tipo": "Capital",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "https://issadmin.sefin.fortaleza.ce.gov.br/grpfor/pagesPublic/cartaoInscricao/emitirCartaoInscricao.seam",
+                        "Regularidade Municipal - Municipio": "https://grpfordam.sefin.fortaleza.ce.gov.br/grpfor/pagesPublic/certidoes/emitirCertidao.seam"
+                    }
+                },
+                {
+                    "Nome": "Juazeiro do Norte",
+                    "Tipo": "Polo Regional / Comercial",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "https://servicos2.speedgov.com.br/juazeirodonorte/pages/situacao_cadastral",
+                        "Regularidade Municipal - Municipio": "https://servicos2.speedgov.com.br/juazeirodonorte/pages/certidao_contribuinte"
+                    }
+                },
+                {
+                    "Nome": "Sobral",
+                    "Tipo": "Polo Regional / Universitário",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "https://servicos2.speedgov.com.br/sobral/pages/situacao_cadastral",
+                        "Regularidade Municipal - Municipio": "https://servicos2.speedgov.com.br/sobral/pages/certidao_contribuinte"
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Goiás (GO)",
+            "Capital": "Goiânia",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "Goiânia",
+                    "Tipo": "Capital",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Anápolis",
+                    "Tipo": "Polo Industrial / Logístico",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Rio Verde",
+                    "Tipo": "Polo do Agronegócio",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Minas Gerais (MG)",
+            "Capital": "Belo Horizonte",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "Belo Horizonte",
+                    "Tipo": "Capital",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Uberlândia",
+                    "Tipo": "Polo Regional / Logístico",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Ipatinga",
+                    "Tipo": "Polo Siderúrgico",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Uberaba",
+                    "Tipo": "Polo do Agronegócio",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Contagem",
+                    "Tipo": "Polo Industrial",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Betim",
+                    "Tipo": "Polo Industrial / Automotivo",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Juiz de Fora",
+                    "Tipo": "Polo Regional",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Montes Claros",
+                    "Tipo": "Polo Regional",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Paraná (PR)",
+            "Capital": "Curitiba",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "Curitiba",
+                    "Tipo": "Capital",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Londrina",
+                    "Tipo": "Polo Regional",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Maringá",
+                    "Tipo": "Polo Regional",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Cascavel",
+                    "Tipo": "Polo do Agronegócio",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Foz do Iguaçu",
+                    "Tipo": "Polo Turístico / Fronteira",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Rio de Janeiro (RJ)",
+            "Capital": "Rio de Janeiro",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "Rio de Janeiro",
+                    "Tipo": "Capital",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Macaé",
+                    "Tipo": "Polo de Energia / Petróleo",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Volta Redonda",
+                    "Tipo": "Polo Siderúrgico",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Duque de Caxias",
+                    "Tipo": "Polo Industrial / Logístico",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Campos dos Goytacazes",
+                    "Tipo": "Polo Regional",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Rio Grande do Sul (RS)",
+            "Capital": "Porto Alegre",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "Porto Alegre",
+                    "Tipo": "Capital",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Caxias do Sul",
+                    "Tipo": "Polo Industrial / Metal-Mecânico",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Pelotas",
+                    "Tipo": "Polo Regional",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Santa Maria",
+                    "Tipo": "Polo Universitário",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Passo Fundo",
+                    "Tipo": "Polo Regional",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Rio Grande",
+                    "Tipo": "Polo Portuário / Industrial",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Santa Catarina (SC)",
+            "Capital": "Florianópolis",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "Florianópolis",
+                    "Tipo": "Capital / Polo Tecnológico",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Joinville",
+                    "Tipo": "Polo Industrial",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Blumenau",
+                    "Tipo": "Polo Têxtil / Tecnológico",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Itajaí",
+                    "Tipo": "Polo Portuário",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Chapecó",
+                    "Tipo": "Polo de Agroindústria",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "São Paulo (SP)",
+            "Capital": "São Paulo",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "São Paulo",
+                    "Tipo": "Capital",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Campinas",
+                    "Tipo": "Polo Tecnológico / Industrial",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "São José dos Campos",
+                    "Tipo": "Polo Aeroespacial / Tecnológico",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Santos",
+                    "Tipo": "Polo Portuário",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Ribeirão Preto",
+                    "Tipo": "Polo do Agronegócio",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Sorocaba",
+                    "Tipo": "Polo Industrial",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Piracicaba",
+                    "Tipo": "Polo Industrial / Agronegócio",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Bauru",
+                    "Tipo": "Polo Regional",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "São José do Rio Preto",
+                    "Tipo": "Polo Regional",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Amapá (AP)",
+            "Capital": "Macapá",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "Macapá",
+                    "Tipo": "Capital",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Santana",
+                    "Tipo": "Polo Industrial / Portuário",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Distrito Federal (DF)",
+            "Capital": "Brasília",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "Brasília",
+                    "Tipo": "Capital Federal",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Espírito Santo (ES)",
+            "Capital": "Vitória",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "Vitória",
+                    "Tipo": "Capital",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Vila Velha",
+                    "Tipo": "Polo Comercial / Logístico",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Serra",
+                    "Tipo": "Polo Industrial",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Linhares",
+                    "Tipo": "Polo Regional / Industrial",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Maranhão (MA)",
+            "Capital": "São Luís",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "São Luís",
+                    "Tipo": "Capital",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Imperatriz",
+                    "Tipo": "Polo Regional / Comercial",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Mato Grosso (MT)",
+            "Capital": "Cuiabá",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "Cuiabá",
+                    "Tipo": "Capital",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Rondonópolis",
+                    "Tipo": "Polo do Agronegócio / Logístico",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Sinop",
+                    "Tipo": "Polo do Agronegócio",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Sorriso",
+                    "Tipo": "Polo do Agronegócio",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Mato Grosso do Sul (MS)",
+            "Capital": "Campo Grande",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "Campo Grande",
+                    "Tipo": "Capital",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Dourados",
+                    "Tipo": "Polo Regional / Agronegócio",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Três Lagoas",
+                    "Tipo": "Polo Industrial / Papel e Celulose",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Pará (PA)",
+            "Capital": "Belém",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "Belém",
+                    "Tipo": "Capital",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Ananindeua",
+                    "Tipo": "Polo Logístico",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Santarém",
+                    "Tipo": "Polo Regional / Portuário",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Marabá",
+                    "Tipo": "Polo de Mineração / Regional",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Parauapebas",
+                    "Tipo": "Polo de Mineração",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Paraíba (PB)",
+            "Capital": "João Pessoa",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "João Pessoa",
+                    "Tipo": "Capital",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Campina Grande",
+                    "Tipo": "Polo Tecnológico / Regional",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Pernambuco (PE)",
+            "Capital": "Recife",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "Recife",
+                    "Tipo": "Capital / Polo Tecnológico",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Jaboatão dos Guararapes",
+                    "Tipo": "Polo Industrial / Logístico",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Caruaru",
+                    "Tipo": "Polo Regional / Têxtil",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Petrolina",
+                    "Tipo": "Polo do Agronegócio / Fruticultura",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Piauí (PI)",
+            "Capital": "Teresina",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "Teresina",
+                    "Tipo": "Capital",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Parnaíba",
+                    "Tipo": "Polo Regional / Turístico",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Rio Grande do Norte (RN)",
+            "Capital": "Natal",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "Natal",
+                    "Tipo": "Capital / Turístico",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Mossoró",
+                    "Tipo": "Polo de Petróleo / Agronegócio",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Rondônia (RO)",
+            "Capital": "Porto Velho",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "Porto Velho",
+                    "Tipo": "Capital",
+                    "Links": {
+                        "Fscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Ji-Paraná",
+                    "Tipo": "Polo Regional",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Roraima (RR)",
+            "Capital": "Boa Vista",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "Boa Vista",
+                    "Tipo": "Capital",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Sergipe (SE)",
+            "Capital": "Aracaju",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "Aracaju",
+                    "Tipo": "Capital",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Nossa Senhora do Socorro",
+                    "Tipo": "Polo Industrial",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        },
+        {
+            "Estado": "Tocantins (TO)",
+            "Capital": "Palmas",
+            "Links": {
+                "Concordata e Falência - Estado": "",
+                "Regularidade Estadual - Estadual": ""
+            },
+            "Cidades": [
+                {
+                    "Nome": "Palmas",
+                    "Tipo": "Capital",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Araguaína",
+                    "Tipo": "Polo Regional / Agronegócio",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": ""
+                    }
+                }
+            ]
+        }
+    ]
+}
