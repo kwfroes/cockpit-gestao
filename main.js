@@ -1082,7 +1082,7 @@ if (loginForm) {
       // Muda a cor da badge se for Admin
       if (role === "admin") {
         mRole.className =
-          "text-[10px] font-bold bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded border border-purple-500/30 uppercase tracking-wider";
+          "text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider bg-purple-100 text-purple-800 border border-purple-200 dark:bg-purple-500/20 dark:text-purple-300 dark:border-purple-500/30";
       }
     }
 

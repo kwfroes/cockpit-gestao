@@ -482,7 +482,7 @@
       <nav class="mt-6 flex flex-col gap-1 pb-20 flex-1 overflow-y-auto">
         <a
           href="#dashboard"
-          class="py-4 px-6 hover:bg-[#1e293b] dark:hover:bg-slate-700 hover:text-white transition flex items-center gap-3 text-gray-600 dark:text-gray-400 active-link group"
+          class="py-4 px-6 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-black transition flex items-center gap-3 text-gray-600 dark:text-gray-400 active-link group"
         >
           <svg class="w-5 h-5" viewBox="0 0 16 16" fill="currentColor">
             <path
@@ -496,7 +496,7 @@
         </a>
         <a
           href="#gerador"
-          class="py-4 px-6 hover:bg-[#1e293b] dark:hover:bg-slate-700 hover:text-white transition flex items-center gap-3 text-gray-600 dark:text-gray-400 group"
+          class="py-4 px-6 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-black transition flex items-center gap-3 text-gray-600 dark:text-gray-400 group"
         >
           <svg class="w-5 h-5" viewBox="0 0 16 16" fill="currentColor">
             <path d="M0 5.3585V14H16V5.35849L8 10.3585L0 5.3585Z" />
@@ -506,7 +506,7 @@
         </a>
         <a
           href="#contratos"
-          class="py-4 px-6 hover:bg-[#1e293b] dark:hover:bg-slate-700 hover:text-white transition flex items-center gap-3 text-gray-600 dark:text-gray-400 group"
+          class="py-4 px-6 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-black transition flex items-center gap-3 text-gray-600 dark:text-gray-400 group"
         >
           <svg class="w-5 h-5" viewBox="0 0 16 16" fill="currentColor">
             <path d="M7 0H2V16H14V7H7V0Z" />
@@ -517,7 +517,7 @@
 
         <a
           href="#legislacao"
-          class="py-4 px-6 hover:bg-[#1e293b] dark:hover:bg-slate-700 hover:text-white transition flex items-center gap-3 text-gray-600 dark:text-gray-400 group"
+          class="py-4 px-6 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-black transition flex items-center gap-3 text-gray-600 dark:text-gray-400 group"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -547,7 +547,7 @@
 
         <a
           href="#qualificacao"
-          class="py-4 px-6 hover:bg-[#1e293b] dark:hover:bg-slate-700 hover:text-white transition flex items-center gap-3 text-gray-600 dark:text-gray-400 group"
+          class="py-4 px-6 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-black transition flex items-center gap-3 text-gray-600 dark:text-gray-400 group"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -570,7 +570,7 @@
         
         <a
           href="#regmap"
-          class="py-4 px-6 hover:bg-[#1e293b] dark:hover:bg-slate-700 hover:text-white transition flex items-center gap-3 text-gray-600 dark:text-gray-400 group"
+          class="py-4 px-6 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-black transition flex items-center gap-3 text-gray-600 dark:text-gray-400 group"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -582,7 +582,7 @@
 
         <a
           href="#matrix"
-          class="py-4 px-6 hover:bg-[#1e293b] dark:hover:bg-slate-700 hover:text-white transition flex items-center gap-3 text-gray-600 dark:text-gray-400 group"
+          class="py-4 px-6 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-black transition flex items-center gap-3 text-gray-600 dark:text-gray-400 group"
         >
           <svg 
             class="w-5 h-5"
@@ -600,7 +600,7 @@
 
         <a
           href="#conversor"
-          class="py-4 px-6 hover:bg-[#1e293b] dark:hover:bg-slate-700 hover:text-white transition flex items-center gap-3 text-gray-600 dark:text-gray-400 group"
+          class="py-4 px-6 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-black transition flex items-center gap-3 text-gray-600 dark:text-gray-400 group"
         >
           <svg class="w-5 h-5" viewBox="0 0 16 16" fill="currentColor">
             <path
@@ -633,114 +633,127 @@
       </nav>
 
       <div
-        class="mt-auto border-t border-slate-700 p-2 bg-[#1e293b] sticky bottom-0"
+        class="mt-auto border-t border-slate-300 dark:border-slate-700 p-2 bg-slate-100 dark:bg-[#1e293b] sticky bottom-0"
       >
-        <div
-          id="userMenuDropdown"
-          class="hidden absolute bottom-full left-0 w-full px-2 mb-2 z-50 transition-all duration-200 transform origin-bottom scale-95 opacity-0"
-        >
-          <div
-            class="bg-slate-800 dark:bg-slate-800 dark:border-slate-600 rounded-xl shadow-2xl border border-slate-600 overflow-hidden"
+    <div
+      id="userMenuDropdown"
+      class="hidden absolute bottom-full left-0 w-full px-2 mb-2 z-50 transition-all duration-200 transform origin-bottom scale-95 opacity-0"
+    >
+      <div
+        class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-xl shadow-2xl overflow-hidden"
+      >
+        <div class="p-4 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50">
+          <p
+            id="menuUserName"
+            class="text-black dark:text-white font-bold text-sm truncate"
           >
-            <div class="p-4 border-b border-slate-700 bg-slate-900/50">
-              <p
-                id="menuUserName"
-                class="text-white font-bold text-sm truncate"
-              >
-                Carregando...
-              </p>
-              <p
-                id="menuUserEmail"
-                class="text-xs text-slate-400 truncate mb-2"
-              >
-                ...
-              </p>
-              <span
-                id="menuUserRole"
-                class="text-[10px] font-bold bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded border border-indigo-500/30 uppercase tracking-wider"
-                >USER</span
-              >
-            </div>
-
-            <div class="p-1 space-y-1">
-              <button
-                onclick="toggleTheme()"
-                class="w-full text-left px-3 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white rounded-lg flex items-center gap-2 transition-colors group"
-              >
-                <svg
-                  class="w-4 h-4 block dark:hidden group-hover:text-blue-400 transition-colors"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                  ></path>
-                </svg>
-
-                <svg
-                  class="w-4 h-4 hidden dark:block text-yellow-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-                  ></path>
-                </svg>
-
-                <span class="block dark:hidden">Modo Escuro</span>
-                <span class="hidden dark:block text-white font-medium"
-                  >Modo Claro</span
-                >
-              </button>
-
-              <button
-                onclick="openResetModal()"
-                class="w-full text-left px-3 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white rounded-lg flex items-center gap-2 transition-colors"
-              >
-              <svg
-                class="w-4 h-4"
-                viewBox="0 0 52 52"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g>
-                  <path d="M42,23H10c-2.2,0-4,1.8-4,4v19c0,2.2,1.8,4,4,4h32c2.2,0,4-1.8,4-4V27C46,24.8,44.2,23,42,23z M31,44.5c-1.5,1-3.2,1.5-5,1.5c-0.6,0-1.2-0.1-1.8-0.2c-2.4-0.5-4.4-1.8-5.7-3.8l3.3-2.2c0.7,1.1,1.9,1.9,3.2,2.1c1.3,0.3,2.6,0,3.8-0.8c2.3-1.5,2.9-4.7,1.4-6.9c-0.7-1.1-1.9-1.9-3.2-2.1c-1.3-0.3-2.6,0-3.8,0.8c-0.3,0.2-0.5,0.4-0.7,0.6L26,37h-9v-9l2.6,2.6c0.4-0.4,0.9-0.8,1.3-1.1c2-1.3,4.4-1.8,6.8-1.4c2.4,0.5,4.4,1.8,5.7,3.8C36.2,36.1,35.1,41.7,31,44.5z"/>
-                  <path d="M10,18.1v0.4C10,18.4,10,18.3,10,18.1C10,18.1,10,18.1,10,18.1z"/>
-                  <path d="M11,19h4c0.6,0,1-0.3,1-0.9V18c0-5.7,4.9-10.4,10.7-10C32,8.4,36,13,36,18.4v-0.3c0,0.6,0.4,0.9,1,0.9h4c0.6,0,1-0.3,1-0.9V18c0-9.1-7.6-16.4-16.8-16c-8.5,0.4-15,7.6-15.2,16.1C10.1,18.6,10.5,19,11,19z"/>
-                </g>
-              </svg>
-                Alterar Senha
-              </button>
-              <button
-                onclick="showLogoutModal()"
-                class="w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-red-900/30 hover:text-red-300 rounded-lg flex items-center gap-2 transition-colors"
-              >
-                <svg
-                  class="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                  ></path>
-                </svg>
-                Sair
-              </button>
-            </div>
-          </div>
+            Carregando...
+          </p>
+          <p
+            id="menuUserEmail"
+            class="text-xs text-gray-500 dark:text-slate-400 truncate mb-2"
+          >
+            ...
+          </p>
+          <span
+            id="menuUserRole"
+            class="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider
+                  bg-indigo-100 text-indigo-800 border border-indigo-200
+                  dark:bg-indigo-500/20 dark:text-indigo-300 dark:border-indigo-500/30"
+          >
+            USER
+          </span>
         </div>
+
+        <div class="p-1 space-y-1">
+          <button
+            onclick="toggleTheme()"
+            class="w-full text-left px-3 py-2 text-sm
+                  text-gray-700 hover:bg-gray-100
+                  dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white
+                  rounded-lg flex items-center gap-2 transition-colors group"
+          >
+            <svg
+              class="w-4 h-4 block dark:hidden group-hover:text-blue-400 transition-colors"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+              ></path>
+            </svg>
+
+            <svg
+              class="w-4 h-4 hidden dark:block text-yellow-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+              ></path>
+            </svg>
+
+            <span class="block dark:hidden">Modo Escuro</span>
+            <span class="hidden dark:block text-white font-medium">
+              Modo Claro
+            </span>
+          </button>
+
+          <button
+            onclick="openResetModal()"
+            class="w-full text-left px-3 py-2 text-sm
+                  text-gray-700 hover:bg-gray-100
+                  dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white
+                  rounded-lg flex items-center gap-2 transition-colors"
+          >
+            <svg
+              class="w-4 h-4"
+              viewBox="0 0 52 52"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g>
+                <path d="M42,23H10c-2.2,0-4,1.8-4,4v19c0,2.2,1.8,4,4,4h32c2.2,0,4-1.8,4-4V27C46,24.8,44.2,23,42,23z M31,44.5c-1.5,1-3.2,1.5-5,1.5c-0.6,0-1.2-0.1-1.8-0.2c-2.4-0.5-4.4-1.8-5.7-3.8l3.3-2.2c0.7,1.1,1.9,1.9,3.2,2.1c1.3,0.3,2.6,0,3.8-0.8c2.3-1.5,2.9-4.7,1.4-6.9c-0.7-1.1-1.9-1.9-3.2-2.1c-1.3-0.3-2.6,0-3.8,0.8c-0.3,0.2-0.5,0.4-0.7,0.6L26,37h-9v-9l2.6,2.6c0.4-0.4,0.9-0.8,1.3-1.1c2-1.3,4.4-1.8,6.8-1.4c2.4,0.5,4.4,1.8,5.7,3.8C36.2,36.1,35.1,41.7,31,44.5z"/>
+                <path d="M10,18.1v0.4C10,18.4,10,18.3,10,18.1C10,18.1,10,18.1,10,18.1z"/>
+                <path d="M11,19h4c0.6,0,1-0.3,1-0.9V18c0-5.7,4.9-10.4,10.7-10C32,8.4,36,13,36,18.4v-0.3c0,0.6,0.4,0.9,1,0.9h4c0.6,0,1-0.3,1-0.9V18c0-9.1-7.6-16.4-16.8-16c-8.5,0.4-15,7.6-15.2,16.1C10.1,18.6,10.5,19,11,19z"/>
+              </g>
+            </svg>
+            Alterar Senha
+          </button>
+
+          <button
+            onclick="showLogoutModal()"
+            class="w-full text-left px-3 py-2 text-sm
+                  text-red-600 hover:bg-red-50
+                  dark:text-red-400 dark:hover:bg-red-900/30 dark:hover:text-red-300
+                  rounded-lg flex items-center gap-2 transition-colors"
+          >
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              ></path>
+            </svg>
+            Sair
+          </button>
+        </div>
+      </div>
+    </div>
 
         <div class="relative group">
           <input
@@ -750,82 +763,82 @@
             class="hidden"
           />
 
-          <button
-            id="userMenuBtn"
-            class="flex items-center gap-3 w-full p-1.5 rounded-xl hover:bg-slate-800 transition-colors focus:outline-none relative z-10"
-          >
-            <div class="relative w-10 h-10">
-              <img
-                id="userAvatarImg"
-                src=""
-                class="w-10 h-10 rounded-full object-cover border-2 border-slate-900 group-hover:border-slate-700 hidden"
-              />
+        <button
+          id="userMenuBtn"
+          class="flex items-center gap-3 w-full p-1.5 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors focus:outline-none relative z-10 group"
+        >
+          <div class="relative w-10 h-10">
+            <img
+              id="userAvatarImg"
+              src=""
+              class="w-10 h-10 rounded-full object-cover border-2 border-slate-300 dark:border-slate-900 group-hover:border-slate-400 dark:group-hover:border-slate-700 hidden"
+            />
 
-              <div
-                id="userAvatarFallback"
-                class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg border-2 border-slate-900 group-hover:border-slate-700 transition-colors"
-              >
-                U
-              </div>
-
-              <div
-                onclick="
-                  document.getElementById('avatarUpload').click();
-                  event.stopPropagation();
-                "
-                class="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                title="Alterar Foto"
-              >
-                <svg
-                  class="w-4 h-4 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-                  ></path>
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-                  ></path>
-                </svg>
-              </div>
-            </div>
-
-            <div class="flex-1 text-left overflow-hidden">
-              <p
-                id="sidebarUserName"
-                class="text-sm font-bold text-slate-200 truncate group-hover:text-white"
-              >
-                Usuário
-              </p>
-              <p
-                class="text-[10px] text-slate-500 truncate group-hover:text-slate-400"
-              >
-                Ver perfil
-              </p>
-            </div>
-
-            <svg
-              class="w-4 h-4 text-slate-500 group-hover:text-white transition-colors"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+            <div
+              id="userAvatarFallback"
+              class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg border-2 border-slate-300 dark:border-slate-900 group-hover:border-slate-400 dark:group-hover:border-slate-700 transition-colors"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"
-              ></path>
-            </svg>
-          </button>
+              U
+            </div>
+
+            <div
+              onclick="
+                document.getElementById('avatarUpload').click();
+                event.stopPropagation();
+              "
+              class="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+              title="Alterar Foto"
+            >
+              <svg
+                class="w-4 h-4 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                ></path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+
+          <div class="flex-1 text-left overflow-hidden">
+            <p
+              id="sidebarUserName"
+              class="text-sm font-bold text-slate-800 dark:text-slate-200 truncate group-hover:text-black dark:group-hover:text-white"
+            >
+              Usuário
+            </p>
+            <p
+              class="text-[10px] text-slate-500 dark:text-slate-500 truncate group-hover:text-slate-600 dark:group-hover:text-slate-400"
+            >
+              Ver perfil
+            </p>
+          </div>
+
+          <svg
+            class="w-4 h-4 text-slate-500 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-white transition-colors"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            ></path>
+          </svg>
+        </button>
         </div>
       </div>
     </aside>
