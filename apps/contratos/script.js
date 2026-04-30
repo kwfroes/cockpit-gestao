@@ -1659,24 +1659,24 @@ function renderizarModalVisualizar(contratoId) {
                 }</td>
                 <td class="px-4 py-3 text-sm">${infoExtra}</td>
 
-<td class="px-4 py-3 text-sm flex items-center">
-    <button class="btn-detalhar-aditivo text-blue-600 hover:text-blue-800 dark:text-blue-300" 
-        title="Detalhar Aditivo"
-        data-aditivo-id="${ad.id}" 
-        data-pai-id="${contratoPai.id}">
-        <svg class="w-5 h-5 pointer-events-none" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M2 7a1 1 0 0 1 1-1h18a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1zm0 5a1 1 0 0 1 1-1h18a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1zm1 4a1 1 0 1 0 0 2h18a1 1 0 1 0 0-2H3z" fill="currentColor"/>
-        </svg>
-    </button>
+  <td class="px-4 py-3 text-sm flex items-center">
+      <button class="btn-detalhar-aditivo text-blue-600 hover:text-blue-800 dark:text-blue-300" 
+          title="Detalhar Aditivo"
+          data-aditivo-id="${ad.id}" 
+          data-pai-id="${contratoPai.id}">
+          <svg class="w-5 h-5 pointer-events-none" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M2 7a1 1 0 0 1 1-1h18a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1zm0 5a1 1 0 0 1 1-1h18a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1zm1 4a1 1 0 1 0 0 2h18a1 1 0 1 0 0-2H3z" fill="currentColor"/>
+          </svg>
+      </button>
 
-    <button class="btn-editar-aditivo text-yellow-600 hover:text-yellow-800 ml-3" 
-        title="Editar Aditivo"
-        data-aditivo-id="${ad.id}">
-        <svg class="w-5 h-5 pointer-events-none" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="m3.99 16.854-1.314 3.504a.75.75 0 0 0 .966.965l3.503-1.314a3 3 0 0 0 1.068-.687L18.36 9.175s-.354-1.061-1.414-2.122c-1.06-1.06-2.122-1.414-2.122-1.414L4.677 15.786a3 3 0 0 0-.687 1.068zm12.249-12.63 1.383-1.383c.248-.248.579-.406.925-.348.487.08 1.232.322 1.934 1.025.703.703.945 1.447 1.025 1.934.058.346-.1.677-.348.925L19.774 7.76s-.353-1.06-1.414-2.12c-1.06-1.062-2.121-1.415-2.121-1.415z" fill="currentColor"/>
-        </svg>
-    </button>
-</td>
+      <button class="btn-editar-aditivo text-yellow-600 hover:text-yellow-800 ml-3" 
+          title="Editar Aditivo"
+          data-aditivo-id="${ad.id}">
+          <svg class="w-5 h-5 pointer-events-none" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="m3.99 16.854-1.314 3.504a.75.75 0 0 0 .966.965l3.503-1.314a3 3 0 0 0 1.068-.687L18.36 9.175s-.354-1.061-1.414-2.122c-1.06-1.06-2.122-1.414-2.122-1.414L4.677 15.786a3 3 0 0 0-.687 1.068zm12.249-12.63 1.383-1.383c.248-.248.579-.406.925-.348.487.08 1.232.322 1.934 1.025.703.703.945 1.447 1.025 1.934.058.346-.1.677-.348.925L19.774 7.76s-.353-1.06-1.414-2.12c-1.06-1.062-2.121-1.415-2.121-1.415z" fill="currentColor"/>
+          </svg>
+      </button>
+  </td>
 
             </tr>`;
     });
@@ -2028,6 +2028,19 @@ function renderizarModalVisualizar(contratoId) {
     );
 
   atualizarGraficoDetalhado(pagamentosRealizados);
+
+  const btnExcel = document.getElementById('btn-exportar-excel');
+  if (btnExcel) {
+      // Removemos o listener antigo clonando o botão para evitar execuções duplicadas
+      const novoBtnExcel = btnExcel.cloneNode(true);
+      btnExcel.parentNode.replaceChild(novoBtnExcel, btnExcel);
+
+      novoBtnExcel.addEventListener('click', function() {
+          // Esta função exportarAnaliseExcel deve estar definida no seu script.js
+          exportarAnaliseExcel(contratoPai.id); 
+          mostrarToast("Gerando relatório Excel...");
+      });
+  }
 }
 
 // --- FUNÇÃO RENDERIZAR MODAL DETALHES DO ADITIVO ---
@@ -4252,6 +4265,55 @@ const app = {
         const modal = document.getElementById("welcomeModalContratos");
         if (modal) modal.style.display = "none";
     }
+};
+
+function exportarAnaliseExcel(contratoPaiId) {
+  const contratoPai = db.contratos.find(c => c.id === contratoPaiId);
+  const aditivos = db.contratos.filter(c => c.parentId === contratoPaiId);
+  const familia = [contratoPai, ...aditivos];
+
+  const dadosParaExcel = [];
+
+  familia.forEach(instr => {
+    instr.pagamentos.forEach(pag => {
+      // Se houver detalhes (itens), cria uma linha para cada item
+      if (pag.detalhes && pag.detalhes.length > 0) {
+        pag.detalhes.forEach(item => {
+          dadosParaExcel.push({
+            "Instrumento": instr.aditivo ? instr.aditivo.numero : "Contrato Inicial",
+            "Processo SEI": pag.processoPagamentoSei,
+            "NF": pag.notaFiscal,
+            "Data Pagto": formatDate(pag.data),
+            "Competência": pag.periodoAte ? new Date(pag.periodoAte + "T00:00:00").getFullYear() : "N/D",
+            "Mês": pag.periodoAte ? new Date(pag.periodoAte + "T00:00:00").getMonth() + 1 : "N/D",
+            "Item Descrição": item.descricao,
+            "Qtd": item.quantidade,
+            "Valor Unit": item.valorUnitario,
+            "Total Item": item.quantidade * item.valorUnitario,
+            "Tipo": pag.isTRD ? "TRD" : "Normal"
+          });
+        });
+      } else {
+        // Se não tiver itens detalhados, exporta o cabeçalho do pagamento
+        dadosParaExcel.push({
+          "Instrumento": instr.aditivo ? instr.aditivo.numero : "Contrato Inicial",
+          "Processo SEI": pag.processoPagamentoSei,
+          "NF": pag.notaFiscal,
+          "Data Pagto": formatDate(pag.data),
+          "Total Pago": pag.valorPago,
+          "Tipo": pag.isTRD ? "TRD" : "Normal"
+        });
+      }
+    });
+  });
+
+  // Criar planilha
+  const worksheet = XLSX.utils.json_to_sheet(dadosParaExcel);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Análise Detalhada");
+
+  // Gerar arquivo e baixar
+  XLSX.writeFile(workbook, `Analise_Contrato_${contratoPai.numeroContrato}.xlsx`);
 };
 
 document.getElementById("btn-confirmar-novo-doc").addEventListener("click", function() {

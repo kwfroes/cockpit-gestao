@@ -6,6 +6,7 @@
     <title>Acompanhamento de Contratos</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <script>
       tailwind.config = {
@@ -142,6 +143,16 @@
         Nenhum contrato cadastrado. Carregando dados...
       </p>
     </main>
+
+    <section class="container mx-auto max-w-7xl px-4 mb-12">
+      <details class="bg-gray-200 dark:bg-slate-800 rounded-lg overflow-hidden transition-all">
+        <summary class="p-4 cursor-pointer font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-slate-700">
+          📁 Encerrados / Vencidos
+        </summary>
+        <div id="lista-contratos-encerrados" class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          </div>
+      </details>
+    </section>
 
     <!-- ========================================== -->
     <!-- MODAIS (Estrutura HTML) -->
@@ -866,14 +877,24 @@
           <!-- Conteúdo injetado via JS -->
         </div>
 
-        <div class="flex justify-between items-center pt-4">
-          <button
-            type="button"
-            id="btn-exportar-pdf"
-            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg"
-          >
-            Exportar PDF
-          </button>
+<div class="flex justify-between items-center pt-4 border-t dark:border-slate-700">
+  <div title="Exportar Relatório" class="flex gap-3">
+    <button
+      type="button"
+      id="btn-exportar-pdf"
+      class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2"
+    >
+      <span>PDF</span>
+    </button>
+    
+    <button 
+      type="button"
+      id="btn-exportar-excel" 
+      class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2"
+    >
+      <span>Excel</span>
+    </button>
+  </div>
           <div class="flex justify-end items-center pt-4">
             <button
               class="btn-abrir-modal-pagamento bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mr-4"
@@ -1401,6 +1422,24 @@
                     <button type="button" class="modal-close px-4 py-2 bg-gray-200 text-gray-800 rounded-lg text-sm font-bold">Cancelar</button>
                     <button type="button" id="btn-confirmar-novo-doc" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold">Adicionar</button>
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="modal-escolha-pdf" class="modal z-[80]">
+        <div class="modal-content !max-w-sm text-center">
+            <h3 class="text-lg font-bold mb-4">Como deseja exportar o relatório?</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">
+                O relatório completo inclui detalhes de empenho e uma página por pagamento.
+            </p>
+            <div class="flex flex-col gap-3">
+                <button id="btn-pdf-simples-exec" class="w-full py-3 bg-gray-600 hover:bg-gray-700 text-white font-bold rounded-lg transition-colors">
+                    📄 Relatório Simples
+                </button>
+                <button id="btn-pdf-completo-exec" class="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition-colors">
+                    📑 Relatório Completo (Empenhos)
+                </button>
+                <button class="modal-close mt-2 text-sm text-gray-500 hover:underline">Cancelar</button>
             </div>
         </div>
     </div>

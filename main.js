@@ -417,6 +417,7 @@ if (loginForm) {
     "#legislacao": "apps/legislacao/index.html",
     "#matrix": "apps/matrix/index.html",
     "#qualificacao": "apps/qualificacao/index.html",
+    "#regmap": "apps/regmap/index.html",
   };
   const defaultHash = "#home";
 

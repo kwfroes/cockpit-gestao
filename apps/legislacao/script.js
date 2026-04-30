@@ -477,7 +477,12 @@ const app = {
     });
 
     // 2. ORDENAÇÃO
-    filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+    // 2. ORDENAÇÃO: Fixados primeiro, depois por data decrescente
+    filtered.sort((a, b) => {
+      if (a.pinned && !b.pinned) return -1;
+      if (!a.pinned && b.pinned) return 1;
+      return new Date(b.date) - new Date(a.date);
+    });
 
     // --- LÓGICA DE PAGINAÇÃO ---
     const totalItems = filtered.length;
@@ -521,12 +526,24 @@ const app = {
           keywordBadge = `<span class="text-[10px] font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700/50 px-1.5 py-0.5 rounded ml-1 truncate max-w-[80px]" title="${shortestTag}">${shortestTag}</span>`;
       }
 
+// Verifica se o item está fixado
+      const isPinned = item.pinned === true;
+      const pinIcon = isPinned ? '📌' : '📍';
+      
+      // Adiciona uma cor de fundo levemente diferente se estiver fixado
+      const pinnedClass = isPinned ? 'bg-amber-50/50 dark:bg-amber-900/10' : '';
+
       const div = document.createElement("div");
-      div.className = `p-4 border-b dark:border-slate-700 cursor-pointer transition-colors ${isActive}`;
+      div.className = `p-4 border-b dark:border-slate-700 cursor-pointer transition-colors ${isActive} ${pinnedClass}`;
       div.onclick = () => this.openViewer(item.id);
       div.innerHTML = `
           <div class="flex justify-between items-start mb-1">
-              <div>
+              <div class="flex items-center gap-2">
+                  <button onclick="app.togglePin(event, ${item.id})" 
+                          class="hover:scale-125 transition-transform ${isPinned ? 'opacity-100' : 'opacity-20 hover:opacity-100'}"
+                          title="${isPinned ? 'Desfixar' : 'Fixar no topo'}">
+                      ${pinIcon}
+                  </button>
                   <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-300 bg-blue-100 dark:bg-blue-900/40 px-1.5 py-0.5 rounded">${item.type}</span>
                   ${sphereBadge}
                   ${keywordBadge}
@@ -1416,6 +1433,28 @@ showToast(message, type = 'success') {
 closeLawPreview() {
     document.getElementById('lawPreviewPopup').classList.add('hidden');
 },
+
+togglePin(event, id) {
+    event.stopPropagation(); // Evita que o clique abra a norma
+    
+    const index = this.data.findIndex(x => x.id === id);
+    if (index === -1) return;
+
+    const currentlyPinned = this.data.filter(x => x.pinned === true);
+
+    if (this.data[index].pinned) {
+      this.data[index].pinned = false;
+    } else {
+      if (currentlyPinned.length >= 3) {
+        alert("Você já possui 3 itens fixados. Desfixe um para fixar este.");
+        return;
+      }
+      this.data[index].pinned = true;
+    }
+
+    this.saveData(); // Salva no localStorage
+    this.renderList(document.getElementById("searchInput").value);
+  },
 
 
 };
