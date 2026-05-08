@@ -346,26 +346,61 @@ window.onload = function () {
 
   // Ajuste no Auto-Load para mostrar botões se der certo
   async function tryAutoLoadJson() {
+    let allRows = [];
+    let commonCols = null;
+    let filesLoaded = 0;
+
     try {
-      const response = await fetch("relatorio.json");
-      if (response.ok) {
-        const jsonOptimized = await response.json();
-        const jsonRaw = restoreDataFromImport(jsonOptimized);
+      // Tenta carregar do p1 ao p10
+      for (let i = 1; i <= 10; i++) {
+        try {
+          const fileName = `relatorio_p${i}.json`;
+          const response = await fetch(fileName);
+          
+          if (!response.ok) {
+            // Se não encontrar o arquivo (ex: p3), para de procurar
+            break; 
+          }
+
+          const part = await response.json();
+          
+          // Armazena as colunas da primeira parte carregada
+          if (!commonCols) commonCols = part.cols;
+          
+          // Acumula as linhas
+          allRows = allRows.concat(part.rows);
+          filesLoaded++;
+          
+          console.log(`Parte ${i} carregada com sucesso.`);
+        } catch (e) {
+          // Erro silencioso para arquivos que não existem
+          break; 
+        }
+      }
+
+      if (filesLoaded > 0) {
+        // Reconstrói o objeto otimizado unificado
+        const fullOptimized = {
+          cols: commonCols,
+          rows: allRows
+        };
+
+        // Sua lógica original de processamento
+        const jsonRaw = restoreDataFromImport(fullOptimized);
         allData = processRawData(jsonRaw);
         filteredData = [...allData];
 
         initDashboard(allData);
-        toggleHeaderButtons(true); // <--- MOSTRA OS BOTÕES
+        toggleHeaderButtons(true);
 
         document.getElementById("uploadScreen").classList.add("hidden");
         document.getElementById("dashboardScreen").classList.remove("hidden");
-        console.log("Histórico JSON carregado automaticamente.");
-        document.getElementById("uploadStatus").textContent =
-          "Histórico carregado.";
+        document.getElementById("uploadStatus").textContent = `Histórico carregado (${filesLoaded} partes).`;
+        
         atualizarStatsExternos();
       }
     } catch (error) {
-      console.log("Nenhum arquivo relatorio.json encontrado.");
+      console.error("Erro crítico ao processar arquivos automáticos:", error);
     }
   }
   tryAutoLoadJson();
