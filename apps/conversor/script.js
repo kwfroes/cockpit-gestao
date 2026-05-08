@@ -54,6 +54,44 @@ function downloadBlob(content, filename) {
 // ==========================================
 // FERRAMENTA 1: FILTRO DE CSV
 // ==========================================
+// Função para dividir o JSON em partes de aproximadamente 40MB
+function exportarJsonParticionado(dataRows, headers) {
+  const LIMIT_MB = 80;
+  const LIMIT_CHARS = LIMIT_MB * 1024 * 1024; // ~40 milhões de caracteres
+  
+  let partes = [];
+  let parteAtualRows = [];
+  let tamanhoAcumulado = 0;
+
+  dataRows.forEach((row) => {
+    const rowString = JSON.stringify(row);
+    if (tamanhoAcumulado + rowString.length > LIMIT_CHARS) {
+      partes.push([...parteAtualRows]);
+      parteAtualRows = [];
+      tamanhoAcumulado = 0;
+    }
+    parteAtualRows.push(row);
+    tamanhoAcumulado += rowString.length;
+  });
+
+  if (parteAtualRows.length > 0) partes.push(parteAtualRows);
+
+  // Exporta cada parte
+  partes.forEach((rows, index) => {
+    const jsonFinal = {
+      cols: headers,
+      rows: rows.map(r => Object.values(r)) // Converte para o formato otimizado [v1, v2...]
+    };
+    
+    const blob = new Blob([JSON.stringify(jsonFinal)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `relatorio_p${index + 1}.json`;
+    a.click();
+  });
+}
+
 let filteredData = [];
 let headers = [];
 
@@ -118,30 +156,29 @@ function processarCSV() {
         headers = results.meta.fields;
     },
     complete: function () {
-      document.getElementById("progressBar").style.width = "100%";
-      document.getElementById("statusText").innerText = "Concluído!";
-      document.getElementById("btnProcess").disabled = false;
+          document.getElementById("progressBar").style.width = "100%";
+          document.getElementById("statusText").innerText = "Concluído!";
+          document.getElementById("btnProcess").disabled = false;
 
-      document.getElementById("totalLines").innerText =
-        rowCount.toLocaleString();
-      document.getElementById("foundLines").innerText =
-        filteredData.length.toLocaleString();
-      document.getElementById("resultArea").classList.remove("hidden");
+          document.getElementById("totalLines").innerText =
+            rowCount.toLocaleString();
+          document.getElementById("foundLines").innerText =
+            filteredData.length.toLocaleString();
+          document.getElementById("resultArea").classList.remove("hidden");
 
-      const btn = document.getElementById("btnDownload");
-      btn.onclick = function () {
-        if (filteredData.length === 0) return alert("Sem dados.");
-        const csvOutput = Papa.unparse(
-          { fields: headers, data: filteredData },
-          { delimiter: ";" },
-        );
-        downloadBlob(
-          csvOutput,
-          `Relatorio_Filtrado_${startInput.value}_ate_${endInput.value}.csv`,
-        );
-      };
-      showToast(`Concluído! ${filteredData.length} registros filtrados.`);
-    },
+          const btn = document.getElementById("btnDownload");
+          
+          // ALTERAÇÃO AQUI: Novo comportamento para exportar JSON particionado
+          btn.innerText = "Gerar JSONs para o Dashboard"; 
+          btn.onclick = function () {
+            if (filteredData.length === 0) return alert("Sem dados.");
+            
+            // Chamada para a função que divide em arquivos de ~40MB
+            exportarJsonParticionado(filteredData, headers);
+          };
+
+          showToast(`Concluído! ${filteredData.length} registros filtrados.`);
+        },
     error: function (err) {
       console.error(err);
       alert("Erro: " + err.message);
