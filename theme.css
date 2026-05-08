@@ -41,9 +41,14 @@ body {
 }
 
 .active-link {
-  background-color: #1e293b;
+  background-color: #94a3b8; /* cinza médio (modo claro) */
   border-left: 4px solid var(--primary);
-  color: #ffffff !important;
+  color: #1e293b; /* texto escuro */
+}
+
+.dark .active-link {
+  background-color: #1e293b; 
+  color: #ffffff;
 }
 
 /* Ajuste do iframe para considerar header mobile */

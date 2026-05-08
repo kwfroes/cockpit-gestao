@@ -112,20 +112,69 @@
     <!-- Conteúdo Principal -->
     <main class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
       <!-- Botão de Adicionar Contrato -->
-      <div class="mb-6 flex justify-end space-x-3">
-        <button
-          id="btn-abrir-modal-contrato"
-          class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-5 rounded-lg shadow transition duration-150 ease-in-out"
-        >
-          + Novo Contrato
-        </button>
-        <button
-          id="btn-gerenciar-empresas"
-          class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-5 rounded-lg shadow transition duration-150 ease-in-out"
-        >
-          🏢 Entidades
-        </button>
-      </div>
+  <div class="mb-6 flex flex-col md:flex-row gap-4 items-center justify-between bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border dark:border-slate-700">
+    
+    <div class="flex flex-wrap gap-3 items-center w-full md:w-auto">
+      <input type="text" id="filtro-busca" placeholder="Buscar por objeto, CNPJ ou empresa..." 
+            class="p-2 text-sm border dark:border-slate-600 bg-gray-50 dark:bg-slate-900 rounded-lg w-full md:w-64">
+      
+  <div class="relative inline-block text-left">
+    <!-- Botão que abre o menu -->
+    <button id="btn-dropdown-status" type="button" class="flex items-center h-10 gap-2 bg-gray-50 dark:bg-slate-900 p-2 rounded-lg border dark:border-slate-700 text-sm font-medium dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 transition">
+      <span class="text-xs font-bold text-gray-500 uppercase">Status</span>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+    </button>
+
+    <!-- O container original transformado em menu flutuante -->
+    <!-- Removido 'flex-wrap' e 'items-center', adicionado 'flex-col' e posicionamento absoluto -->
+    <div id="container-filtro-status" class="hidden absolute left-0 mt-2 w-48 flex flex-col gap-1 bg-white dark:bg-slate-900 p-2 rounded-lg border dark:border-slate-700 shadow-xl z-50">
+      
+      <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-800 p-2 rounded transition">
+        <input type="checkbox" value="Vigente" class="filtro-status-check" checked>
+        <span class="text-sm dark:text-gray-300">Vigentes</span>
+      </label>
+
+      <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-800 p-2 rounded transition">
+        <input type="checkbox" value="A Iniciar" class="filtro-status-check" checked>
+        <span class="text-sm dark:text-gray-300">A Iniciar</span>
+      </label>
+
+      <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-800 p-2 rounded transition">
+        <input type="checkbox" value="Em Formalização" class="filtro-status-check" checked>
+        <span class="text-sm dark:text-gray-300">Formalização</span>
+      </label>
+
+      <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-800 p-2 rounded transition">
+        <input type="checkbox" value="Vencido/Encerrado" class="filtro-status-check">
+        <span class="text-sm dark:text-gray-300">Vencidos</span>
+      </label>
+    </div>
+  </div>
+
+    <select id="filtro-entidade" class="p-2 text-sm border dark:border-slate-600 bg-gray-50 dark:bg-slate-900 rounded-lg">
+      <option value="todas">Todas as Entidades</option>
+      </select>
+
+  <select id="filtro-tipo" class="p-2 text-sm border dark:border-slate-600 bg-gray-50 dark:bg-slate-900 rounded-lg">
+    <option value="todos">Todos os Instrumentos</option>
+    <option value="Dispensa">Dispensa</option>
+    <option value="Licitação">Licitação</option>
+    <option value="Inexigibilidade">Inexigibilidade</option>
+    <option value="Cooperacao Tecnica">Termo de Cooperação Técnica</option>
+  </select>
+  </div>
+
+
+
+  <div class="flex gap-2 w-full md:w-auto justify-end">
+    <button id="btn-gerenciar-empresas" class="bg-purple-600 hover:bg-purple-700 text-white text-sm font-bold py-2 px-3 rounded-lg shadow transition">
+      🏢 Entidades
+    </button>
+    <button id="btn-abrir-modal-contrato" class="bg-green-600 hover:bg-green-700 text-white text-sm font-bold py-2 px-4 rounded-lg shadow transition">
+      + Contrato
+    </button>
+  </div>
+</div>
 
       <!-- Lista de Contratos -->
       <div
@@ -144,15 +193,7 @@
       </p>
     </main>
 
-    <section class="container mx-auto max-w-7xl px-4 mb-12">
-      <details class="bg-gray-200 dark:bg-slate-800 rounded-lg overflow-hidden transition-all">
-        <summary class="p-4 cursor-pointer font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-slate-700">
-          📁 Encerrados / Vencidos
-        </summary>
-        <div id="lista-contratos-encerrados" class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          </div>
-      </details>
-    </section>
+
 
     <!-- ========================================== -->
     <!-- MODAIS (Estrutura HTML) -->
