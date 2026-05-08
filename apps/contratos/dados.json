@@ -478,6 +478,44 @@
               "valor": 46.78
             }
           ]
+        },
+        {
+          "data": "2026-06-08",
+          "valorPago": 1054.8,
+          "documentosExecucao": [
+            {
+              "tipo": "Guia de Recolhimento",
+              "numero": "00190.00009 03352.765006 00832.179170 5 14710000100417",
+              "valor": 1004.17
+            }
+          ],
+          "notaFiscal": "953452",
+          "processoPagamentoSei": "009.0242.2026.0026889-51",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=150148349",
+          "periodoDe": "2026-03-21",
+          "periodoAte": "2026-04-20",
+          "isTRD": false,
+          "id": "pag_1778073459702",
+          "detalhes": [
+            {
+              "id": "item_1778073476893",
+              "descricao": "Emissão CND",
+              "quantidade": 675,
+              "valorUnitario": 0.593
+            },
+            {
+              "id": "item_1778073489420",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 574.864
+            },
+            {
+              "id": "item_1778073496460",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 235,
+              "valorUnitario": 0.339
+            }
+          ]
         }
       ],
       "numeroContrato": "055/2025",

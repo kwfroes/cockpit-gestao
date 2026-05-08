@@ -1297,67 +1297,109 @@ function calcularResumoContrato(contratoPai) {
 
 // --- Funções de Renderização ---
 
+// Adicione esta definição no seu script.js
+function atualizarFiltroEntidades() {
+  const select = document.getElementById("filtro-entidade");
+  if (!select) return;
+
+  // Pega nomes únicos de empresas do banco, tratando se é objeto ou string
+  const empresasUnicas = [...new Set(db.contratos
+    .filter(c => !c.parentId)
+    .map(c => typeof c.empresa === 'object' ? c.empresa.nome : c.empresa))
+  ].sort();
+
+  select.innerHTML = '<option value="todas">Todas as Entidades</option>';
+  empresasUnicas.forEach(nome => {
+    const opt = document.createElement("option");
+    opt.value = nome;
+    opt.textContent = nome;
+    select.appendChild(opt);
+  });
+}
+
 // --- FUNÇÃO RENDERIZAR CARDS COM STATUS ---
 function renderizarContratos() {
-  const listaContratos = document.getElementById("lista-contratos");
+  // ATENÇÃO: Verifique se no seu HTML o ID é 'lista-contratos'
+  const listaPrincipal = document.getElementById("lista-contratos");
   const msgSemContratos = document.getElementById("msg-sem-contratos");
-  listaContratos.innerHTML = "";
+  const template = document.getElementById("template-card-contrato");
 
+  // 1. Captura os valores dos filtros
+  const busca = document.getElementById("filtro-busca")?.value.toLowerCase() || "";
+  const entidadeFiltro = document.getElementById("filtro-entidade")?.value || "todas";
+  
+  // Captura todos os status que estão marcados (checked)
+  const statusSelecionados = Array.from(document.querySelectorAll(".filtro-status-check:checked"))
+    .map(cb => cb.value);
+
+  // Limpa apenas o container principal
+  if (listaPrincipal) listaPrincipal.innerHTML = "";
   if (!msgSemContratos) return;
 
-  const contratosPai = db.contratos.filter((c) => !c.parentId);
+  // 2. Filtra os contratos (Apenas contratos PAI)
+  const contratosFiltrados = db.contratos.filter((c) => {
+    if (c.parentId) return false;
 
-  if (contratosPai.length === 0) {
+    const resumo = calcularResumoContrato(c);
+    const nomeEmpresa = typeof c.empresa === 'object' ? c.empresa.nome : c.empresa;
+    
+    const stringParaBusca = `${c.objeto} ${nomeEmpresa} ${c.processoSei}`.toLowerCase();
+
+    const matchesBusca = stringParaBusca.includes(busca);
+    const matchesEntidade = entidadeFiltro === "todas" || nomeEmpresa === entidadeFiltro;
+    const matchesStatus = statusSelecionados.includes(resumo.status);
+
+    return matchesBusca && matchesEntidade && matchesStatus;
+  });
+
+  // 3. Verifica se há resultados
+  if (contratosFiltrados.length === 0) {
     msgSemContratos.style.display = "block";
-    if (!document.body.classList.contains("loading")) {
-      msgSemContratos.textContent = "Nenhum contrato cadastrado.";
-    }
+    msgSemContratos.textContent = "Nenhum contrato corresponde aos critérios selecionados.";
     return;
   }
 
   msgSemContratos.style.display = "none";
-  const template = document.getElementById("template-card-contrato");
 
-  contratosPai.forEach((contrato) => {
+  // 4. Renderização em lista ÚNICA
+  contratosFiltrados.forEach((contrato) => {
     const card = template.content.cloneNode(true);
     const resumo = calcularResumoContrato(contrato);
+    const nomeEmpresa = typeof contrato.empresa === 'object' ? contrato.empresa.nome : contrato.empresa;
 
-    // Injeta Badge de Status ao lado do Processo
+    // Cabeçalho do Card (Status Badge)
     const divTopo = card.querySelector(".mb-2");
-    divTopo.innerHTML = `
-            <div class="flex justify-between items-start">
-                <span class="text-sm text-gray-500 dark:text-gray-400">${contrato.processoSei}</span>
-                <span class="text-xs font-bold px-2 py-1 rounded-full ${resumo.statusCor}">${resumo.status}</span>
-            </div>
-        `;
-
-    card.querySelector('[data-field="objeto"]').textContent = contrato.objeto;
-    card.querySelector('[data-field="empresaNome"]').textContent =
-      contrato.empresa.nome;
-
-    // Exibe Total Pago + Programado (se houver)
-    let htmlValores = formatCurrency(resumo.totalPago);
-    if (resumo.totalProgramado > 0) {
-      htmlValores += ` <span class="text-xs text-yellow-600 font-semibold" title="Programado">(+${formatCurrency(
-        resumo.totalProgramado,
-      )} prog.)</span>`;
+    if (divTopo) {
+      divTopo.innerHTML = `
+          <div class="flex justify-between items-start">
+              <span class="text-sm text-gray-500 dark:text-gray-400">${contrato.processoSei}</span>
+              <span class="text-xs font-bold px-2 py-1 rounded-full ${resumo.statusCor}">${resumo.status}</span>
+          </div>
+      `;
     }
 
+    card.querySelector('[data-field="objeto"]').textContent = contrato.objeto;
+    card.querySelector('[data-field="empresaNome"]').textContent = nomeEmpresa;
+
+    // Valores Financeiros
+    let htmlValores = formatCurrency(resumo.totalPago);
+    if (resumo.totalProgramado > 0) {
+      htmlValores += ` <span class="text-xs text-yellow-600 font-semibold" title="Programado">(+${formatCurrency(resumo.totalProgramado)} prog.)</span>`;
+    }
     card.querySelector('[data-field="totalPago"]').innerHTML = htmlValores;
-    card.querySelector('[data-field="valorTotal"]').textContent =
-      formatCurrency(resumo.valorTotal);
-    card.querySelector('[data-field="progressoValor"]').style.width =
-      `${resumo.percValor}%`;
+    card.querySelector('[data-field="valorTotal"]').textContent = formatCurrency(resumo.valorTotal);
+    card.querySelector('[data-field="progressoValor"]').style.width = `${resumo.percValor}%`;
 
-    card.querySelector('[data-field="diasRestantes"]').textContent =
-      resumo.diasRestantes;
-    card.querySelector('[data-field="progressoTempo"]').style.width =
-      `${resumo.percTempo}%`;
+    // Prazos
+    card.querySelector('[data-field="diasRestantes"]').textContent = resumo.diasRestantes;
+    card.querySelector('[data-field="progressoTempo"]').style.width = `${resumo.percTempo}%`;
 
+    // Ações
     card.querySelector(".btn-visualizar-contrato").dataset.id = contrato.id;
     card.querySelector(".btn-abrir-modal-pagamento").dataset.id = contrato.id;
 
-    listaContratos.appendChild(card);
+    // INSERE TUDO NO MESMO CONTAINER
+    listaPrincipal.appendChild(card);
   });
 }
 
@@ -2920,6 +2962,8 @@ async function carregarDados() {
     mostrarToast("Nenhum dado local encontrado. Começando do zero.", true);
   } finally {
     document.body.classList.remove("loading");
+    // NOVA ORDEM: Primeiro popula o filtro, depois renderiza
+    atualizarFiltroEntidades(); 
     renderizarContratos();
   }
 
@@ -3677,6 +3721,37 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => document.getElementById("input-nome-novo-doc").focus(), 100);
   });
 
+  // Listeners para filtros em tempo real
+  document.getElementById("filtro-busca")?.addEventListener("input", renderizarContratos);
+  document.getElementById("filtro-status")?.addEventListener("change", renderizarContratos);
+  document.getElementById("filtro-entidade")?.addEventListener("change", renderizarContratos);
+
+  document.querySelectorAll(".filtro-status-check").forEach(checkbox => {
+    checkbox.addEventListener("change", renderizarContratos);
+    });
+
+  // --- Lógica do Dropdown de Status ---
+const btnStatus = document.getElementById("btn-dropdown-status");
+const menuStatus = document.getElementById("container-filtro-status");
+
+// Abrir/Fechar ao clicar no botão
+btnStatus?.addEventListener("click", (e) => {
+  e.stopPropagation();
+  menuStatus.classList.toggle("hidden");
+});
+
+// Fechar ao clicar fora do menu
+document.addEventListener("click", (e) => {
+  if (!menuStatus.contains(e.target) && e.target !== btnStatus) {
+    menuStatus.classList.add("hidden");
+  }
+});
+
+// Impedir que o menu feche ao clicar nas opções (labels/checkboxes)
+menuStatus?.addEventListener("click", (e) => {
+  e.stopPropagation();
+});
+
   // Listener para o dropdown de tipo de aditivo
   document
     .getElementById("aditivo-tipo")
@@ -4270,49 +4345,62 @@ const app = {
 function exportarAnaliseExcel(contratoPaiId) {
   const contratoPai = db.contratos.find(c => c.id === contratoPaiId);
   const aditivos = db.contratos.filter(c => c.parentId === contratoPaiId);
-  const familia = [contratoPai, ...aditivos];
+  
+  // 1. Ordenamos os aditivos por data fim para garantir a cronologia
+  const aditivosOrdenados = [...aditivos].sort((a, b) => 
+    new Date(a.dataFim + "T00:00:00") - new Date(b.dataFim + "T00:00:00")
+  );
 
   const dadosParaExcel = [];
 
-  familia.forEach(instr => {
-    instr.pagamentos.forEach(pag => {
-      // Se houver detalhes (itens), cria uma linha para cada item
-      if (pag.detalhes && pag.detalhes.length > 0) {
-        pag.detalhes.forEach(item => {
-          dadosParaExcel.push({
-            "Instrumento": instr.aditivo ? instr.aditivo.numero : "Contrato Inicial",
-            "Processo SEI": pag.processoPagamentoSei,
-            "NF": pag.notaFiscal,
-            "Data Pagto": formatDate(pag.data),
-            "Competência": pag.periodoAte ? new Date(pag.periodoAte + "T00:00:00").getFullYear() : "N/D",
-            "Mês": pag.periodoAte ? new Date(pag.periodoAte + "T00:00:00").getMonth() + 1 : "N/D",
-            "Item Descrição": item.descricao,
-            "Qtd": item.quantidade,
-            "Valor Unit": item.valorUnitario,
-            "Total Item": item.quantidade * item.valorUnitario,
-            "Tipo": pag.isTRD ? "TRD" : "Normal"
-          });
-        });
-      } else {
-        // Se não tiver itens detalhados, exporta o cabeçalho do pagamento
-        dadosParaExcel.push({
-          "Instrumento": instr.aditivo ? instr.aditivo.numero : "Contrato Inicial",
-          "Processo SEI": pag.processoPagamentoSei,
-          "NF": pag.notaFiscal,
-          "Data Pagto": formatDate(pag.data),
-          "Total Pago": pag.valorPago,
-          "Tipo": pag.isTRD ? "TRD" : "Normal"
-        });
+  // 2. Iteramos apenas sobre os pagamentos do contrato pai (onde todos estão centralizados)
+  contratoPai.pagamentos.forEach(pag => {
+    if (!pag.periodoAte) return;
+
+    const dataRef = new Date(pag.periodoAte + "T00:00:00");
+    let instrumentoVigente = contratoPai.numeroContrato; // Valor padrão: Contrato Inicial
+
+    // 3. Lógica de Data: Descobrimos qual TA estava vigente na data do pagamento
+    // O primeiro TA começa um dia após o fim do contrato inicial
+    let inicioVigenciaAnterior = new Date(contratoPai.dataFim + "T00:00:00");
+
+    for (const ad of aditivosOrdenados) {
+      const fimVigenciaAditivo = new Date(ad.dataFim + "T00:00:00");
+      
+      if (dataRef > inicioVigenciaAnterior && dataRef <= fimVigenciaAditivo) {
+        // Se a data do pagamento cai neste intervalo, o instrumento é este TA
+        instrumentoVigente = `${contratoPai.numeroContrato}-${ad.aditivo.numero.replace(/\D/g, '')}`;
+        break; 
       }
+      inicioVigenciaAnterior = fimVigenciaAditivo;
+    }
+
+    // 4. Montagem das linhas para o Excel
+    const mapearLinha = (item = null) => ({
+      "Instrumento": instrumentoVigente,
+      "Processo SEI": pag.processoPagamentoSei,
+      "NF": pag.notaFiscal,
+      "Data Pagto": formatDate(pag.data),
+      "Competência": new Date(pag.periodoAte + "T00:00:00").getFullYear(),
+      "Mês": new Date(pag.periodoAte + "T00:00:00").getMonth() + 1,
+      "Item Descrição": item ? item.descricao : "N/D",
+      "Qtd": item ? item.quantidade : "N/D",
+      "Valor Unit": item ? item.valorUnitario : "N/D",
+      "Total Item": item ? (item.quantidade * item.valorUnitario) : pag.valorPago,
+      "Tipo": pag.isTRD ? "TRD" : "Normal"
     });
+
+    if (pag.detalhes && pag.detalhes.length > 0) {
+      pag.detalhes.forEach(item => dadosParaExcel.push(mapearLinha(item)));
+    } else {
+      dadosParaExcel.push(mapearLinha());
+    }
   });
 
-  // Criar planilha
+  // Geração do arquivo
   const worksheet = XLSX.utils.json_to_sheet(dadosParaExcel);
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, "Análise Detalhada");
-
-  // Gerar arquivo e baixar
   XLSX.writeFile(workbook, `Analise_Contrato_${contratoPai.numeroContrato}.xlsx`);
 };
 

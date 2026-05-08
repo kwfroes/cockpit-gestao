@@ -209,6 +209,11 @@ async function generateCaptcha() {
               sessionStorage.setItem("cockpit_user_login", localStorage.getItem("cockpit_saved_user"));
               sessionStorage.setItem("cockpit_user_realname", localStorage.getItem("cockpit_saved_name"));
               sessionStorage.setItem("cockpit_user_role", localStorage.getItem("cockpit_saved_role"));
+              const savedEmail = localStorage.getItem("cockpit_saved_email");
+              const savedAvatar = localStorage.getItem("cockpit_saved_avatar");
+              
+              if (savedEmail) sessionStorage.setItem("cockpit_user_email", savedEmail);
+              if (savedAvatar) sessionStorage.setItem("cockpit_user_avatar", savedAvatar);
               // Nota: Para segurança total, os dados do usuário (nome, cargo) 
               // também precisariam estar no localStorage ou recarregados do DB.
           }
@@ -264,38 +269,39 @@ if (loginForm) {
       if (foundUser) {
         const inputHash = await sha256(inputPass);
 
-        if (inputHash === foundUser.password_hash) {
-          // --- LOGIN SUCESSO ---
-          
-          // 3. PERSISTÊNCIA (Lembrar-me)
-          if (rememberMe) {
-            localStorage.setItem("cockpit_persistent_auth", "valid");
-            localStorage.setItem("cockpit_saved_user", foundUser.username);
-            // Dica: Para o 'checkSession' restaurar tudo, você pode salvar o nome/cargo aqui também
-            localStorage.setItem("cockpit_saved_name", foundUser.name);
-            localStorage.setItem("cockpit_saved_role", foundUser.role);
-          }
+    // --- DENTRO DO loginForm.addEventListener("submit"...) ---
+    if (inputHash === foundUser.password_hash) {
+      // 1. Dados que SEMPRE vão para a sessão atual
+      sessionStorage.setItem("cockpit_auth_token", "valid");
+      sessionStorage.setItem("cockpit_user_login", foundUser.username);
+      sessionStorage.setItem("cockpit_user_realname", foundUser.name);
+      sessionStorage.setItem("cockpit_user_role", foundUser.role);
+      sessionStorage.setItem("cockpit_user_email", foundUser.email || "Sem e-mail");
+      
+      if (foundUser.avatar) {
+        sessionStorage.setItem("cockpit_user_avatar", foundUser.avatar);
+      } else {
+        sessionStorage.removeItem("cockpit_user_avatar");
+      }
 
-          // 4. SESSÃO ATUAL
-          sessionStorage.setItem("cockpit_auth_token", "valid");
-          sessionStorage.setItem("cockpit_user_realname", foundUser.name);
-          sessionStorage.setItem("cockpit_user_role", foundUser.role);
-          sessionStorage.setItem("cockpit_user_email", foundUser.email || "Sem e-mail");
-          sessionStorage.setItem("cockpit_user_login", foundUser.username);
+      // 2. PERSISTÊNCIA (Apenas se o checkbox estiver marcado)
+      if (rememberMe) {
+        localStorage.setItem("cockpit_persistent_auth", "valid");
+        localStorage.setItem("cockpit_saved_user", foundUser.username);
+        localStorage.setItem("cockpit_saved_name", foundUser.name);
+        localStorage.setItem("cockpit_saved_role", foundUser.role);
+        localStorage.setItem("cockpit_saved_email", foundUser.email || "Sem e-mail");
+        if (foundUser.avatar) {
+            localStorage.setItem("cockpit_saved_avatar", foundUser.avatar);
+        }
+      }
 
-          if (foundUser.avatar) {
-            sessionStorage.setItem("cockpit_user_avatar", foundUser.avatar);
-          } else {
-            sessionStorage.removeItem("cockpit_user_avatar");
-          }
-
-          loginError.classList.add("hidden");
-          updateUserMenu();
-          updateUserAvatarVisuals();
-          unlockInterface();
-          navigate(window.location.hash || "#home");
-
-        } else {
+      loginError.classList.add("hidden");
+      updateUserMenu();
+      updateUserAvatarVisuals();
+      unlockInterface();
+      navigate(window.location.hash || "#home");
+    } else {
           showError("Senha incorreta");
           generateCaptcha(); // Opcional: trocar captcha se errar a senha também
         }
@@ -778,18 +784,21 @@ if (loginForm) {
 
   // Função que executa o Logout Real
   function performLogout() {
-    // 1. Limpa sessão
-    sessionStorage.removeItem("cockpit_auth_token");
-    sessionStorage.removeItem("cockpit_user_realname");
-    sessionStorage.removeItem("cockpit_user_role");
-    sessionStorage.clear();
-    localStorage.removeItem("cockpit_persistent_auth");
+      // 1. Limpa tudo
+      sessionStorage.clear(); 
+      
+      localStorage.removeItem("cockpit_persistent_auth");
+      localStorage.removeItem("cockpit_saved_user");
+      localStorage.removeItem("cockpit_saved_name");
+      localStorage.removeItem("cockpit_saved_role");
+      localStorage.removeItem("cockpit_saved_email");
+      localStorage.removeItem("cockpit_saved_avatar");
 
-    // 2. Limpa Iframe
-    frame.src = "about:blank";
+      // 2. Limpa Iframe
+      frame.src = "about:blank";
 
-    // 3. Esconde o Modal de Logout
-    hideLogoutModal();
+      // 3. Esconde o Modal de Logout
+      hideLogoutModal();
 
     // 4. Mostra a Tela de Login (Gatekeeper)
     if (loginOverlay) {
