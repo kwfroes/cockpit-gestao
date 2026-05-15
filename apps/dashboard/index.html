@@ -327,6 +327,17 @@
               </select>
             </div>
           </div>
+
+          <div class="col-span-1 md:col-span-2 lg:col-span-5 mt-4 p-4 border-t border-gray-200 dark:border-slate-700">
+            <label class="block text-lg font-bold text-blue-600 dark:text-blue-400 mb-2">Comparação</label>
+            <div class="flex flex-wrap gap-4" id="comparison-selectors">
+                <select id="compareAnalyst1" class="rounded-md border-gray-300 dark:bg-slate-900 dark:text-white sm:text-sm"><option value="none">Analista 1</option></select>
+                <select id="compareAnalyst2" class="rounded-md border-gray-300 dark:bg-slate-900 dark:text-white sm:text-sm"><option value="none">Analista 2</option></select>
+                <select id="compareAnalyst3" class="rounded-md border-gray-300 dark:bg-slate-900 dark:text-white sm:text-sm"><option value="none">Analista 3</option></select>
+                <button id="btnRunComparison" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded shadow text-sm font-bold">Comparar</button>
+            </div>
+        </div>
+        
         </section>
 
         <!-- Seção 1: KPIs Gerais (RF02) -->
@@ -432,6 +443,16 @@
               <canvas id="chartQuality"></canvas>
             </div>
           </div>
+        </section>
+
+        <section id="comparison-results" class="mb-6 hidden">
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Confronto de Performance</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <canvas id="chartComparisonRadar"></canvas>
+                    <div id="comparisonTableContainer" class="overflow-x-auto"></div>
+                </div>
+            </div>
         </section>
 
         <!-- Seção 3: Eficiência Operacional (RF04) -->
@@ -595,6 +616,11 @@
                       class="sort-icon ml-1 text-gray-400 group-hover:text-gray-600 dark:text-gray-300"
                       >⇅</span
                     >
+                  </th>
+
+                  <th id="th-analista" class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase cursor-pointer hover:bg-gray-200" data-col="analista">
+                      Analista
+                      <span class="sort-icon ml-1 text-gray-400">⇅</span>
                   </th>
 
                   <th

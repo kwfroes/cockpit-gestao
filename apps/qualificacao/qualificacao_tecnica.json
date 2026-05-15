@@ -23541,12 +23541,39 @@
   {
     "Família": "89.60",
     "Descrição": "BEBIDAS NAO ALCOOLICAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [
       "Alvará de Vigilância Sanitária",
       "Ministério da Agricultura"
     ],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4635-4/03",
+        "descricao": "Comércio atacadista de bebidas com atividade de fracionamento e acondicionamento associada"
+      },
+      {
+        "codigo": "4617-6/00",
+        "descricao": "Representantes comerciais e agentes do comércio de produtos alimentícios, bebidas e fumo"
+      },
+      {
+        "codigo": "1122-4/99",
+        "descricao": "Fabricação de outras bebidas não-alcoólicas não especificadas anteriormente"
+      },
+      {
+        "codigo": "1122-4/04",
+        "descricao": "Fabricação de bebidas isotônicas"
+      },
+      {
+        "codigo": "4723-7/00",
+        "descricao": "Comércio varejista de bebidas"
+      },
+      {
+        "codigo": "1052-0/00",
+        "descricao": "Fabricação de laticínios"
+      }
+    ],
     "Ramo": {
       "codigo": "89",
       "nome": "Alimentos"
@@ -23555,13 +23582,40 @@
   {
     "Família": "89.65",
     "Descrição": "BEBIDAS ALCOOLICAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [
       "Alvará de Vigilância Sanitária",
       "Ministério da Agricultura",
       "Declaração de Dispensa de Ato Público - Baixo Risco"
     ],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4635-4/99",
+        "descricao": "Comércio atacadista de bebidas não especificadas anteriormente"
+      },
+      {
+        "codigo": "1112-7/00",
+        "descricao": "Fabricação de vinho"
+      },
+      {
+        "codigo": "4723-7/00",
+        "descricao": "Comércio varejista de bebidas"
+      },
+      {
+        "codigo": "1111-9/02",
+        "descricao": "Fabricação de outras aguardentes e bebidas destiladas"
+      },
+      {
+        "codigo": "4617-6/00",
+        "descricao": "Representantes comerciais e agentes do comércio de produtos alimentícios, bebidas e fumo"
+      },
+      {
+        "codigo": "4635-4/03",
+        "descricao": "Comércio atacadista de bebidas com atividade de fracionamento e acondicionamento associada"
+      }
+    ],
     "Ramo": {
       "codigo": "89",
       "nome": "Alimentos"

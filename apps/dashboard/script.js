@@ -391,6 +391,7 @@ window.onload = function () {
         filteredData = [...allData];
 
         initDashboard(allData);
+        initComparisonFilters(allData);
         toggleHeaderButtons(true);
 
         document.getElementById("uploadScreen").classList.add("hidden");
@@ -520,9 +521,7 @@ window.onload = function () {
 
             filteredData = [...allData];
             initDashboard(allData);
-
-            // --- REMOVIDO: toggleHeaderButtons(true) ---
-            // (Não existe mais, pois os botões estão sempre visíveis no dashboard)
+            initComparisonFilters(allData);
 
             uploadStatus.textContent = `Sucesso! ${allData.length} linhas totais carregadas.`;
 
@@ -556,7 +555,8 @@ window.onload = function () {
 
       let tempoAnalise = null;
       if (dataSolicitacao && dataAnalise) {
-        tempoAnalise = _native_differenceInDays(dataAnalise, dataSolicitacao);
+          const diffMs = _calcBusinessTimeDiff(dataSolicitacao, dataAnalise);
+          tempoAnalise = Math.floor(diffMs / (1000 * 60 * 60 * 24));
       }
 
       // --- ADICIONADO PARA DEBUG ---
@@ -1594,108 +1594,350 @@ async function generateAnalysisSummary(data) {
       exportPDF().catch(console.error),
     );
 
-  /**
-   * Gera o Relatório em PDF. Agora é assíncrona para aguardar a análise da IA.
-   */
+
+/**
+ * Gera o Relatório em PDF com estrutura executiva, distribuído por páginas.
+ * Inclui KPIs, análise de equipe, traduções de categorias e segurança de layout.
+ */
 async function exportPDF() {
+    if (!filteredData || filteredData.length === 0) {
+        alert("Não há dados filtrados para exportar.");
+        return;
+    }
+
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    
-    // Usa o ID do loading que você já criou no script.js
+    const doc = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4"
+    });
+
+    // 1. FUNÇÃO AUXILIAR GLOBAL DO ESCOPO
+    function formatarTempoPreciso(ms) {
+        if (ms < 0 || isNaN(ms) || ms === null) return "0d 00h00m";
+        const totalMinutos = Math.floor(ms / 60000);
+        const totalHoras = Math.floor(totalMinutos / 60);
+        const dias = Math.floor(totalHoras / 24);
+        const horas = totalHoras % 24;
+        const minutos = totalMinutos % 60;
+        return `${dias}d ${horas.toString().padStart(2, '0')}h${minutos.toString().padStart(2, '0')}m`;
+    }
+
     const loadingIndicator = document.getElementById("pdfLoadingIndicator");
     if (loadingIndicator) loadingIndicator.classList.remove("hidden");
 
     try {
-        // 1. Captura os Filtros para o Cabeçalho
-        const analista = document.getElementById("filterAnalyst")?.value || "Geral";
-        const mesElement = document.getElementById("filterMonth");
-        const mesNome = mesElement ? mesElement.options[mesElement.selectedIndex].text : "";
-        const dataInicio = document.getElementById("filterPeriodStart")?.value || "Início";
-        const dataFim = document.getElementById("filterPeriodEnd")?.value || "Fim";
+        await new Promise(resolve => setTimeout(resolve, 400));
 
-        // 2. Título e Estilo
-        doc.setFontSize(18);
-        doc.setTextColor(41, 128, 186); // Azul institucional
-        doc.text("Relatório de Performance Operacional", 14, 20);
+        const MARGIN_LEFT = 14;
+        const PAGE_WIDTH = 210 - (MARGIN_LEFT * 2);
+        let currentY = 20;
+
+        const analistaFiltro = document.getElementById("filterAnalyst")?.value || "all";
+        const dataInicio = document.getElementById("filterPeriodStart")?.value || "---";
+        const dataFim = document.getElementById("filterPeriodEnd")?.value || "---";
+        const nomeRelatorioAnalista = analistaFiltro === 'all' ? 'Geral' : analistaFiltro;
+        const safeFileName = `Relatorio_CAF_${nomeRelatorioAnalista.replace(/\s/g, '_')}_${dataInicio}_a_${dataFim}`.replace(/[/\\?%*:|"<>]/g, '-');
+
+        // 2. PRÉ-PROCESSAMENTO GLOBAL 
+        const total = filteredData.length;
         
-        doc.setFontSize(10);
+        const milissegundosFiltrados = filteredData.map(r => {
+            return _calcBusinessTimeDiff(r._dataSolicitacao, r._dataAnalise);
+        }).filter(ms => ms !== null && ms >= 0);
+
+        const mediaMsGlobal = milissegundosFiltrados.length > 0 ? stats.mean(milissegundosFiltrados) : 0;
+        const medianaMsGlobal = milissegundosFiltrados.length > 0 ? stats.median(milissegundosFiltrados) : 0;
+        
+        const tempoRealMedia = formatarTempoPreciso(mediaMsGlobal);
+        const tempoRealMediana = formatarTempoPreciso(medianaMsGlobal);
+
+        const temposDias = filteredData.map(d => d._tempoAnalise).filter(t => t !== null && t >= 0);
+        const mediaDias = stats.mean(temposDias);
+        const medianaDias = stats.median(temposDias);
+
+        const deferidas = filteredData.filter(d => d["Situação Solicitação"] === "Deferida").length;
+        const indeferidas = filteredData.filter(d => d["Situação Solicitação"] === "Indeferida").length;
+        
+        // Ajuste aqui: Se _tempoAnalise calcula em dias úteis, usamos ele para o SLA de 5 dias úteis
+        const dentroSla = temposDias.filter(t => t <= 5).length;
+        const taxaSla = total > 0 ? ((dentroSla / total) * 100).toFixed(1) : "0.0";
+
+        // =========================================================================
+        // PÁGINA 1: CAPA E RESUMO EXECUTIVO
+        // =========================================================================
+        doc.setFontSize(22);
+        doc.setTextColor(41, 128, 186);
+        doc.text("Relatório de Performance Operacional", MARGIN_LEFT, currentY);
+        
+        currentY += 12;
+        doc.setDrawColor(41, 128, 186);
+        doc.line(MARGIN_LEFT, currentY, MARGIN_LEFT + PAGE_WIDTH, currentY);
+        
+        currentY += 15;
+        doc.setFontSize(12);
+        doc.setTextColor(60);
+        doc.text(`Analista: ${nomeRelatorioAnalista === 'all' ? 'Todos' : nomeRelatorioAnalista}`, MARGIN_LEFT, currentY);
+        doc.text(`Período: ${dataInicio} até ${dataFim}`, MARGIN_LEFT, currentY + 7);
+        doc.text(`Data de Geração: ${new Date().toLocaleString('pt-BR')}`, MARGIN_LEFT, currentY + 14);
+
+        currentY += 30;
+        doc.setFontSize(14);
+        doc.setTextColor(41, 128, 186);
+        doc.text("Resumo Executivo", MARGIN_LEFT, currentY);
+        
+        currentY += 8;
+        doc.setFontSize(11);
         doc.setTextColor(100);
-        doc.text(`Filtros: Analista: ${analista === 'all' ? 'Todos' : analista} | Período: ${dataInicio} a ${dataFim}`, 14, 28);
         
-        // 3. Tabela de KPIs (Lê o que está visível no Dashboard)
-        const kpiElements = document.querySelectorAll("#kpis > div");
-        if (kpiElements.length > 0) {
-            const kpiData = Array.from(kpiElements).map(div => [
-                div.querySelector("h4")?.innerText || "Indicador",
-                div.querySelector("p")?.innerText || "-"
-            ]);
+        const resumoTexto = `No período analisado, foram processadas ${total.toLocaleString('pt-BR')} solicitações. ` + 
+                           `A eficiência média de análise foi de ${tempoRealMedia}, com um índice de ` + 
+                           `cumprimento de SLA (até 5 dias) de ${taxaSla}%. ${analistaFiltro === 'all' ? 'A equipe apresentou a distribuição de carga detalhada a seguir.' : 'O analista manteve a consistência de entrega conforme os indicadores de desempenho.'}`;
+        
+        doc.text(doc.splitTextToSize(resumoTexto, PAGE_WIDTH), MARGIN_LEFT, currentY);
 
-            doc.autoTable({
-                startY: 35,
-                head: [["Indicador", "Valor"]],
-                body: kpiData,
-                theme: "striped",
-                headStyles: { fillColor: [41, 128, 186] }
-            });
-        }
-
-        // 4. Tabela de Performance (Ajuste para usar o doc.lastAutoTable.finalY)
-        const teamRows = Array.from(document.querySelectorAll("#teamTableBody tr")).map(tr => 
-            Array.from(tr.querySelectorAll("td")).map(td => td.innerText)
-        );
-
-        if (teamRows.length > 0 && teamRows[0][0] !== "Sem dados de equipe para exibir.") {
-            doc.setFontSize(14);
-            doc.setTextColor(0);
-            doc.text("Desempenho da Equipe", 14, doc.lastAutoTable.finalY + 15);
-
-            doc.autoTable({
-                startY: doc.lastAutoTable.finalY + 20,
-                head: [["Nome", "Total", "Média/Dia", "Desvio Padrão", "% Part."]],
-                body: teamRows,
-                theme: "grid"
-            });
-        }
-
-        // 5. Gráficos (Renderiza apenas se a seção não estiver 'hidden')
-        const chartIds = ["chartWorkload", "chartQuality", "chartMonthlyTrend", "chartAnalysisTime"];
-        let yPos = doc.lastAutoTable.finalY + 15;
-
-        chartIds.forEach(id => {
-            const canvas = document.getElementById(id);
-            // Verifica se o gráfico existe e se a seção pai dele não está oculta
-            if (canvas && !canvas.closest('section').classList.contains('hidden')) {
-                if (yPos > 220) { doc.addPage(); yPos = 20; }
-                const imgData = canvas.toDataURL("image/png", 1.0);
-                doc.addImage(imgData, 'PNG', 14, yPos, 180, 75);
-                yPos += 80;
-            }
+        // =========================================================================
+        // PÁGINA 2: KPIs GERAIS
+        // =========================================================================
+        doc.addPage();
+        currentY = 20;
+        doc.setFontSize(16);
+        doc.setTextColor(41, 128, 186);
+        doc.text("Indicadores Chave de Desempenho (KPIs)", MARGIN_LEFT, currentY);
+        
+        doc.autoTable({
+            startY: currentY + 8,
+            head: [["Indicador", "Valor", "Análise"]],
+            body: [
+                ["Total de Solicitações", `${total.toLocaleString('pt-BR')}`, "Volume total processado."],
+                ["Tempo Médio", `${tempoRealMedia}`, `Média real (${mediaDias.toFixed(1)} dias).`],
+                ["Tempo Mediano", `${tempoRealMediana}`, `Valor central (${medianaDias.toFixed(1)} dias).`],
+                ["Taxa de Deferimento", `${((deferidas / total) * 100).toFixed(1)}%`, "Percentual de aceites."],
+                ["Índice de SLA (5 dias)", `${taxaSla}%`, "Aderência ao prazo regulamentar."]
+            ],
+            theme: "striped",
+            headStyles: { fillColor: [41, 128, 186] },
+            margin: { left: MARGIN_LEFT }
         });
 
-        doc.save(`Relatorio_CAF_${analista}_${mesNome}.pdf`);
+        currentY = doc.lastAutoTable.finalY + 15;
+        const notaKpi = `Destaque: O tempo mediano de ${tempoRealMediana} indica que a maior parte das demandas é resolvida neste prazo.`;
+        doc.text(doc.splitTextToSize(notaKpi, PAGE_WIDTH), MARGIN_LEFT, currentY);
+
+        // =========================================================================
+        // PÁGINA 3: DESEMPENHO E RANKING
+        // =========================================================================
+        doc.addPage();
+        currentY = 20;
+        doc.setFontSize(16);
+        doc.setTextColor(41, 128, 186);
+        doc.text("Análise de Produtividade por Analista", MARGIN_LEFT, currentY);
+
+        const situacaoVal = document.getElementById("filterSituation")?.value || "all";
+        const ufVal = document.getElementById("filterUf")?.value || "all";
+        
+        const equipeNoPeriodo = allData.filter(row => {
+            const analysisDate = _native_startOfDay(row._dataAnalise);
+            const startDt = dataInicio !== "---" ? _native_startOfDay(_native_safeParseDate(dataInicio)) : null;
+            const endDt = dataFim !== "---" ? _native_startOfDay(_native_safeParseDate(dataFim)) : null;
+            const endLimit = endDt ? new Date(endDt.getTime() + 86400000) : null;
+            
+            return (!startDt || analysisDate >= startDt) && 
+                   (!endLimit || analysisDate < endLimit) &&
+                   (situacaoVal === "all" || row["Situação Solicitação"] === situacaoVal) &&
+                   (ufVal === "all" || row["Codigo Uf"] === ufVal);
+        });
+
+        const totalEquipePeriodo = equipeNoPeriodo.length;
+        const groupedByAnalyst = stats.groupBy(equipeNoPeriodo, "Usuario Analista");
+        let teamData = [];
+
+        for (const [name, rows] of Object.entries(groupedByAnalyst)) {
+            if (!name || name === "undefined" || name === "null") continue;
+            
+            const dailyCounts = stats.countBy(rows.filter(r => r._diaAnalise), "_diaAnalise");
+            const dailyValues = Object.values(dailyCounts);
+            
+            const milissegundosDoAnalista = rows.map(r => {
+                return _calcBusinessTimeDiff(r._dataSolicitacao, r._dataAnalise);
+            }).filter(ms => ms !== null && ms >= 0);
+            
+            const mediaMsAnalista = milissegundosDoAnalista.length > 0 ? stats.mean(milissegundosDoAnalista) : 0;
+            const tempoFormatadoAnalista = formatarTempoPreciso(mediaMsAnalista);
+            
+            teamData.push({
+                nome: name,
+                total: rows.length,
+                media: (rows.length / (dailyValues.length || 1)).toFixed(1),
+                desvio: stats.stdDev(dailyValues),
+                participacao: ((rows.length / totalEquipePeriodo) * 100).toFixed(1),
+                tempoMedioMs: mediaMsAnalista,
+                tempoMedioFormatado: tempoFormatadoAnalista
+            });
+        }
+
+        teamData.sort((a, b) => b.total - a.total);
+
+        const filteredTableRows = teamData
+            .filter(item => analistaFiltro === "all" || item.nome === analistaFiltro)
+            .map(item => [
+                item.nome,
+                item.total,
+                item.media,
+                Number(item.desvio).toFixed(2),
+                item.participacao + "%"
+            ]);
+
+        doc.autoTable({
+            startY: currentY + 8,
+            head: [["Analista", "Total", "Média Diária", "Desvio Padrão", "Participação"]],
+            body: filteredTableRows,
+            theme: "grid",
+            headStyles: { fillColor: [70, 70, 70] },
+            columnStyles: { 
+                1: { halign: 'center' }, 2: { halign: 'center' }, 
+                3: { halign: 'center' }, 4: { halign: 'center' } 
+            },
+            margin: { left: MARGIN_LEFT }
+        });
+
+        currentY = doc.lastAutoTable.finalY + 15;
+        doc.setFontSize(11);
+        doc.setTextColor(100);
+
+        let notaEquipe = "";
+        if (analistaFiltro !== 'all') {
+            const indexNoRanking = teamData.findIndex(a => a.nome === analistaFiltro);
+            const posicao = indexNoRanking + 1;
+            const dados = teamData[indexNoRanking];
+
+            if (dados) {
+                notaEquipe = `Análise: O analista ${analistaFiltro} apresentou o ${posicao}º maior volume de conclusões, ` +
+                             `representando ${dados.participacao}% de participação em relação à equipe no período analisado. ` +
+                             `A média diária do analista foi de ${dados.media} solicitações, com o tempo médio de atendimento de ${dados.tempoMedioFormatado}.`;
+            } else {
+                notaEquipe = `Análise: O analista selecionado não possui registros para o período/filtros atuais.`;
+            }
+        } else {
+            const topAnalyst = teamData[0] ? teamData[0].nome : "N/A";
+            const topPart = teamData[0] ? teamData[0].participacao : "0";
+            const listaDesvios = teamData.map(d => d.desvio);
+            const mediaDesvios = listaDesvios.length > 0 ? stats.mean(listaDesvios).toFixed(2) : "0.00";
+            const statusFluxo = mediaDesvios > 2.5 ? "volatilidade acentuada" : "boa constância e estabilidade";
+
+            notaEquipe = `Análise: O analista ${topAnalyst} liderou o volume de entregas com ${topPart}% de participação. ` +
+                         `Globalmente, a equipe apresentou um tempo médio de resposta de ${tempoRealMedia}, com ${taxaSla}% de aderência ao SLA (5 dias). ` +
+                         `O desvio padrão médio de ${mediaDesvios} indica uma ${statusFluxo} no fluxo produtivo do período.`;
+        }
+
+        doc.text(doc.splitTextToSize(notaEquipe, PAGE_WIDTH), MARGIN_LEFT, currentY);
+
+        // =========================================================================
+        // PÁGINA 4: PERFIL DAS SOLICITAÇÕES
+        // =========================================================================
+        doc.addPage();
+        currentY = 20;
+        doc.setFontSize(16);
+        doc.setTextColor(41, 128, 186);
+        doc.text("Perfil e Distribuição das Demandas", MARGIN_LEFT, currentY);
+
+        const profileSections = [
+            { label: "Tipo de Fornecedor", key: "Tipo Fornecedor" },
+            { label: "Categoria", key: "Categoria" },
+            { label: "Tipo de Solicitação", key: "Tipo Solicitacão" }
+        ];
+
+        const categoriasMap = {
+            "NO": "Normal - NO", "ME": "Microempresa - ME", "EPP": "Empresa de Pequeno Porte - EPP",
+            "MEI": "Microempreendedor Individual - MEI", "EC": "Economia Solidária - EC",
+            "ES": "Especial - ES", "AF": "Agricultura Familiar - AF"
+        };
+
+        profileSections.forEach((section) => {
+            const counts = stats.countBy(filteredData, section.key);
+            const tableBody = Object.entries(counts)
+                .sort((a, b) => b[1] - a[1])
+                .map(([name, count]) => {
+                    let treatedName = name || "Não Informado";
+                    if (section.key === "Tipo Fornecedor") {
+                        if (treatedName.toLowerCase() === "juridica") treatedName = "Jurídica";
+                        if (treatedName.toLowerCase() === "fisica") treatedName = "Física";
+                    }
+                    if (section.key === "Categoria") {
+                        treatedName = categoriasMap[treatedName] || treatedName;
+                    }
+                    return [treatedName, count, `${((count / total) * 100).toFixed(1)}%`];
+                });
+
+            doc.autoTable({
+                startY: currentY + 8,
+                head: [[section.label, "Qtd", "%"]],
+                body: tableBody,
+                theme: "grid",
+                styles: { fontSize: 9 },
+                headStyles: { fillColor: [100, 100, 100] },
+                margin: { left: MARGIN_LEFT }
+            });
+            currentY = doc.lastAutoTable.finalY + 12;
+            if (currentY > 240) { doc.addPage(); currentY = 20; }
+        });
+
+        // =========================================================================
+        // PÁGINA 5: ANÁLISE VISUAL
+        // =========================================================================
+        doc.addPage();
+        currentY = 20;
+        doc.setFontSize(16);
+        doc.setTextColor(41, 128, 186);
+        doc.text("Análise Gráfica de Tendências", MARGIN_LEFT, currentY);
+
+        const chartsToExport = [
+            { id: "chartWorkload", title: "Carga de Trabalho por Analista", note: "Distribuição proporcional da carga processada." },
+            { id: "chartMonthlyTrend", title: "Tendência Mensal de Volume", note: "Histórico de entrada e agilidade de resposta." },
+            { id: "chartAnalysisTime", title: "Distribuição do Tempo de Resposta", note: "Frequência de conclusão por faixa de dias." }
+        ];
+
+        for (const chart of chartsToExport) {
+            const canvas = document.getElementById(chart.id);
+            if (canvas && canvas.offsetParent !== null) {
+                if (currentY > 210) { doc.addPage(); currentY = 20; }
+                
+                doc.setFontSize(12);
+                doc.setTextColor(41, 128, 186);
+                doc.text(chart.title, MARGIN_LEFT, currentY + 5);
+                
+                const imgData = canvas.toDataURL("image/png", 2.0);
+                doc.addImage(imgData, 'PNG', MARGIN_LEFT, currentY + 10, 180, 70);
+                
+                currentY += 85;
+                doc.setFontSize(9);
+                doc.setTextColor(150);
+                doc.text(chart.note, MARGIN_LEFT, currentY);
+                currentY += 10;
+            }
+        }
+
+        // --- RODAPÉ DINÂMICO ---
+        const pageCount = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            doc.setFontSize(8);
+            doc.setTextColor(150);
+            doc.text(`CAF Digital - Relatório de Performance Operacional | Página ${i} de ${pageCount}`, MARGIN_LEFT, 288);
+        }
+
+        doc.save(`${safeFileName}.pdf`);
+
     } catch (error) {
-        console.error("Erro ao gerar PDF:", error);
+        console.error("Erro no PDF:", error);
+        alert("Erro ao gerar PDF.");
     } finally {
         if (loadingIndicator) loadingIndicator.classList.add("hidden");
     }
 }
 
+
   // --- 8. EXPORTAÇÃO JSON E ROTINAS DE DADOS (NOVO) ---
-
-  // Função auxiliar: Transforma Array de Objetos em Formato Matriz (Mais leve)
-  function optimizeDataForExport(data) {
-    if (!data || data.length === 0) return { cols: [], rows: [] };
-
-    // Pega as chaves do primeiro objeto (ignorando as chaves internas que começam com _)
-    const keys = Object.keys(data[0]).filter((k) => !k.startsWith("_"));
-
-    const rows = data.map((obj) => {
-      return keys.map((k) => obj[k]); // Mapeia apenas os valores na ordem das chaves
-    });
-
-    return { cols: keys, rows: rows };
-  }
-
   // Evento do Botão Exportar JSON
   const btnExportJson = document.getElementById("exportJsonButton");
   if (btnExportJson) {
@@ -1756,36 +1998,35 @@ async function exportPDF() {
 
   // Chamada dentro do updateDashboard
   function updateAnalystSectionVisibility() {
-    const selectedAnalyst = document.getElementById("filterAnalyst").value;
+        const selectedAnalyst = document.getElementById("filterAnalyst").value;
+        const thAnalista = document.querySelector('th[data-col="analista"]'); // Pega o cabeçalho novo
 
-    if (selectedAnalyst === "all") {
-      sectionAnalystDetail.classList.add("hidden");
-      return;
-    }
+        sectionAnalystDetail.classList.remove("hidden");
+        
+        if (selectedAnalyst === "all") {
+            analystNameDisplay.textContent = "Equipe Geral";
+            if (thAnalista) thAnalista.classList.remove("hidden"); // MOSTRA se for geral
+        } else {
+            analystNameDisplay.textContent = selectedAnalyst;
+            if (thAnalista) thAnalista.classList.add("hidden");    // OCULTA se for individual
+        }
 
-    // Mostra a seção
-    sectionAnalystDetail.classList.remove("hidden");
-    analystNameDisplay.textContent = selectedAnalyst;
+        currentAnalystData = [...filteredData];
 
-    // 1. Carrega e Prepara os Dados
-    // Filtra de allData para ter todo o histórico (ou filteredData se quiser respeitar os filtros de data)
-    currentAnalystData = [...filteredData];
+        currentSort = { col: "dataAnalise", direction: "desc" };
+        if (typeof updateSortIcons === "function") {
+            updateSortIcons();
+        }
 
-    // RESETAR ORDENAÇÃO VISUAL E LÓGICA
-    currentSort = { col: "dataAnalise", direction: "desc" }; // Padrão: Mais recentes primeiro
-    updateSortIcons(); // Atualiza as setinhas para refletir o reset
+        currentAnalystData.sort((a, b) => {
+            const dateA = a._dataAnalise ? a._dataAnalise.getTime() : 0;
+            const dateB = b._dataAnalise ? b._dataAnalise.getTime() : 0;
+            return dateB - dateA;
+        });
 
-    // Ordena: Mais recentes primeiro
-    currentAnalystData.sort((a, b) => {
-      const dateA = a._dataAnalise ? a._dataAnalise.getTime() : 0;
-      const dateB = b._dataAnalise ? b._dataAnalise.getTime() : 0;
-      return dateB - dateA;
-    });
-
-    // 2. Reseta para página 1 e renderiza
-    currentPage = 1;
-    renderAnalystTable();
-  }
+        currentPage = 1;
+        renderAnalystTable();
+   }
 
   function renderAnalystTable() {
     // Verifica se há dados
@@ -1833,83 +2074,62 @@ async function exportPDF() {
     // Renderiza Linhas
     analystTableBody.innerHTML = "";
 
-    pageData.forEach((row) => {
+ pageData.forEach((row) => {
       const dataFormatada = row._dataAnalise
         ? _native_formatDate(row._dataAnalise, "dd/MM/yy")
         : "N/A";
 
-      // --- NOVA LÓGICA DE COR DA DATA ---
+      // --- LÓGICA DE COR DA DATA ---
       const statusDia = getDayStatus(row._dataAnalise);
-
-      // Cor padrão: cinza. Se for FDS ou Feriado: #380000 (Vermelho Escuro/Preto)
       let dateColorClass = "text-gray-500 dark:text-gray-400";
-      let dateTitle = ""; // Tooltip nativo
+      let dateTitle = ""; 
 
       if (statusDia.isWeekend || statusDia.isFixed || statusDia.isMovable) {
         dateColorClass = "text-[#380000] dark:text-red-300 font-medium";
-
         if (statusDia.isWeekend) dateTitle = "Fim de Semana";
         else if (statusDia.isFixed) dateTitle = "Feriado Fixo";
         else if (statusDia.isMovable) dateTitle = "Feriado Cadastrado";
       }
 
-      // 1. CALCULA O TEMPO ÚTIL (Em milissegundos) usando a função que criamos no passo anterior
-      const rawDiff = _calcBusinessTimeDiff(
-        row._dataSolicitacao,
-        row._dataAnalise,
-      );
+      // 1. CALCULA O TEMPO ÚTIL
+      const rawDiff = _calcBusinessTimeDiff(row._dataSolicitacao, row._dataAnalise);
 
       // 2. FORMATA O TEXTO PARA EXIBIÇÃO
       const tempoTexto = formatDurationText(rawDiff);
 
       // 3. LÓGICA DO TERMÔMETRO (Cores)
       const oneDayMs = 24 * 60 * 60 * 1000;
-
       let badgeClass = "";
 
-      // Regra:
-      // <= 2 dias: Verde
-      // > 2 e <= 4 dias: Amarelo
-      // > 4 e <= 5 dias: Laranja
-      // > 5 dias: Vermelho
-
       if (rawDiff <= 2 * oneDayMs) {
-        // Verde (Ideal)
-        badgeClass =
-          "bg-green-100 text-green-800 border border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800";
+        badgeClass = "bg-green-100 text-green-800 border border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800";
       } else if (rawDiff <= 4 * oneDayMs) {
-        // Amarelo (Atenção)
-        badgeClass =
-          "bg-yellow-100 text-yellow-800 border border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800";
+        badgeClass = "bg-yellow-100 text-yellow-800 border border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800";
       } else if (rawDiff <= 5 * oneDayMs) {
-        // Laranja (Alerta)
-        badgeClass =
-          "bg-orange-100 text-orange-800 border border-orange-200 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-800";
+        badgeClass = "bg-orange-100 text-orange-800 border border-orange-200 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-800";
       } else {
-        // Vermelho (Crítico)
-        badgeClass =
-          "bg-red-100 text-red-800 border border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800";
+        badgeClass = "bg-red-100 text-red-800 border border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800";
       }
 
-      let statusClass = "text-gray-600 dark:text-gray-400"; // Padrão mais claro no dark
+      let statusClass = "text-gray-600 dark:text-gray-400"; 
+      if (row["Situação Solicitação"] === "Deferida") statusClass = "text-green-600 dark:text-green-400 font-bold";
+      if (row["Situação Solicitação"] === "Deferida Parcial") statusClass = "text-yellow-600 dark:text-yellow-400 font-bold";
+      if (row["Situação Solicitação"] === "Indeferida") statusClass = "text-red-600 dark:text-red-400 font-bold";
+      if (row["Situação Solicitação"] === "Em Análise") statusClass = "text-blue-600 dark:text-blue-400 font-bold";
 
-      if (row["Situação Solicitação"] === "Deferida")
-        statusClass = "text-green-600 dark:text-green-400 font-bold";
-
-      if (row["Situação Solicitação"] === "Deferida Parcial")
-        statusClass = "text-yellow-600 dark:text-yellow-400 font-bold";
-
-      if (row["Situação Solicitação"] === "Indeferida")
-        statusClass = "text-red-600 dark:text-red-400 font-bold";
-
-      if (row["Situação Solicitação"] === "Em Análise")
-        statusClass = "text-blue-600 dark:text-blue-400 font-bold";
+      // --- LOGICA DINÂMICA DA COLUNA ANALISTA ---
+      const selectedAnalyst = document.getElementById("filterAnalyst").value;
+      const tdAnalista = selectedAnalyst === "all" 
+        ? `<td class="px-4 py-2 text-sm text-gray-900 dark:text-white font-medium">${row["Usuario Analista"] || "N/A"}</td>` 
+        : "";
 
       const tr = `
             <tr class="hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
                 <td class="px-4 py-2 whitespace-nowrap text-sm ${dateColorClass}" title="${dateTitle}">
                     ${dataFormatada}
                 </td>
+
+                ${tdAnalista}
                 
                 <td class="px-4 py-2 whitespace-nowrap">
                     <span class="px-2 py-1 rounded-full text-xs font-semibold ${badgeClass}">
@@ -1917,18 +2137,18 @@ async function exportPDF() {
                     </span>
                 </td>
 
-                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-white">${
-                  row["CNPJ/CPF"] || ""
-                }</td>
-                <td class="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 truncate max-w-xs" title="${
-                  row["Razão Social/Nome"]
-                }">${row["Razão Social/Nome"] || ""}</td>
-                <td class="px-4 py-2 whitespace-nowrap text-sm ${statusClass}">${
-                  row["Situação Solicitação"] || ""
-                }</td>
-                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${
-                  row["Tipo Solicitacão"] || ""
-                }</td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                  ${row["CNPJ/CPF"] || ""}
+                </td>
+                <td class="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 truncate max-w-xs" title="${row["Razão Social/Nome"]}">
+                  ${row["Razão Social/Nome"] || ""}
+                </td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm ${statusClass}">
+                  ${row["Situação Solicitação"] || ""}
+                </td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                  ${row["Tipo Solicitacão"] || ""}
+                </td>
             </tr>
           `;
       analystTableBody.innerHTML += tr;
@@ -2500,6 +2720,11 @@ async function exportPDF() {
           valB = b._dataAnalise ? b._dataAnalise.getTime() : 0;
           break;
 
+        case "analista":
+          valA = (a["Usuario Analista"] || "").toLowerCase();
+          valB = (b["Usuario Analista"] || "").toLowerCase();
+          break;
+
         case "tempo":
           // Usa a mesma função de cálculo de dias úteis para ordenar
           valA = _calcBusinessTimeDiff(a._dataSolicitacao, a._dataAnalise);
@@ -2587,5 +2812,84 @@ async function exportPDF() {
           }
       }
   }
+
+  function initComparisonFilters(data) {
+    const analysts = [...new Set(data.map(d => d["Usuario Analista"]))].filter(Boolean).sort();
+    ["compareAnalyst1", "compareAnalyst2", "compareAnalyst3"].forEach(id => {
+        const sel = document.getElementById(id);
+        analysts.forEach(a => sel.add(new Option(a, a)));
+    });
+
+    document.getElementById("btnRunComparison").addEventListener("click", runComparison);
+}
+
+function runComparison() {
+    const selectedNames = [
+        document.getElementById("compareAnalyst1").value,
+        document.getElementById("compareAnalyst2").value,
+        document.getElementById("compareAnalyst3").value
+    ].filter(v => v !== "none");
+
+    if (selectedNames.length < 2) {
+        alert("Selecione pelo menos 2 analistas para comparar.");
+        return;
+    }
+
+    // 1. IMPORTANTE: Primeiro aplicamos os filtros normais (Data, UF, etc)
+    // Isso garante que estamos comparando dentro do período certo.
+    applyFilters(); 
+
+    // 2. Agora restringimos o resultado APENAS aos nomes selecionados na comparação
+    filteredData = filteredData.filter(d => selectedNames.includes(d["Usuario Analista"]));
+
+    // 3. Ajustamos o seletor principal de Analista para "Todos" 
+    // para evitar que o applyFilters() dentro do updateDashboard sobrescreva a lista.
+    document.getElementById("filterAnalyst").value = "all";
+
+    // 4. Renderizamos os gráficos e KPIs com esse novo set de dados
+    // Chamamos as funções de renderização diretamente para pular o applyFilters() automático
+    renderKPIs(filteredData);
+    renderTeamPerformance(filteredData);
+    renderOperationalEfficiency(filteredData);
+    renderRequestProfile(filteredData);
+    renderGeography(filteredData);
+
+    // Esconde a seção de radar que você não quer mais
+    document.getElementById("comparison-results").classList.add("hidden");
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    console.log("Comparação aplicada para:", selectedNames);
+}
+
+function renderComparisonCharts(data) {
+    const ctx = document.getElementById('chartComparisonRadar');
+    if (chartInstances['chartComparisonRadar']) chartInstances['chartComparisonRadar'].destroy();
+
+    // Normalização para o Radar (0-100)
+    const datasets = data.map((d, i) => {
+        const colors = ['rgba(59, 130, 246', 'rgba(234, 179, 8', 'rgba(16, 185, 129'];
+        return {
+            label: d.nome,
+            data: [
+                Math.min(d.total / 2, 100), // Ex: 200 analises = 100 pts
+                Math.max(100 - (d.SLA * 10), 0), // Menor SLA = Mais pontos
+                d.qualidade,
+                d.assinatura
+            ],
+            backgroundColor: `${colors[i]}, 0.2)`,
+            borderColor: `${colors[i]}, 1)`,
+            borderWidth: 2
+        };
+    });
+
+    chartInstances['chartComparisonRadar'] = new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: ['Volume', 'Velocidade (SLA)', 'Qualidade', 'Ass. Digital'],
+            datasets: datasets
+        },
+        options: { scales: { r: { suggestMin: 0, suggestMax: 100 } } }
+    });
+}
 
 }; // FECHA O window.onload
