@@ -133,7 +133,7 @@
       <div class="flex gap-2">
         <button
           onclick="app.exportJson()"
-          class="p-2 md:px-3 md:py-1.5 border border-gray-300 dark:border-slate-600 rounded hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-600 dark:text-gray-300 flex items-center gap-2 transition-colors"
+          class="p-2 md:px-3 md:py-1.5 border border-gray-300 dark:border-slate-600 rounded hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-600 dark:text-gray-300 flex items-center gap-2 transition-colors admin-only"
           title="Fazer Backup"
         >
           <svg
@@ -154,7 +154,7 @@
 
         <button
           onclick="app.openEditor()"
-          class="p-2 md:px-4 md:py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium shadow-sm flex items-center gap-2 transition-colors"
+          class="p-2 md:px-4 md:py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium shadow-sm flex items-center gap-2 transition-colors admin-only"
           title="Nova Norma"
         >
           <svg
@@ -271,12 +271,12 @@
                       </svg>
                     </button>
 
-                    <div class="w-px h-5 bg-gray-300 dark:bg-slate-600 mx-1"></div>
-                    <button onclick="app.editCurrent()" class="p-2 text-gray-400 hover:text-blue-600" title="Editar">
+                    <div class="w-px h-5 bg-gray-300 dark:bg-slate-600 mx-1 admin-only"></div>
+                    <button onclick="app.editCurrent()" class="p-2 text-gray-400 hover:text-blue-600 admin-only" title="Editar">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                     </button>
-                    <div class="w-px h-5 bg-gray-300 dark:bg-slate-600 mx-1"></div>
-                    <button onclick="app.deleteCurrent()" class="p-2 text-gray-400 hover:text-red-600" title="Excluir">
+                    <div class="w-px h-5 bg-gray-300 dark:bg-slate-600 mx-1 admin-only"></div>
+                    <button onclick="app.deleteCurrent()" class="p-2 text-gray-400 hover:text-red-600 admin-only" title="Excluir">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                     </button>
                 </div>
@@ -519,7 +519,7 @@
 
                 <button
                   onclick="app.editCurrent()"
-                  class="text-gray-400 hover:text-blue-600"
+                  class="text-gray-400 hover:text-blue-600 admin-only"
                   title="Editar"
                 >
                   <svg
@@ -536,10 +536,10 @@
                     ></path>
                   </svg>
                 </button>
-                <div class="w-px h-5 bg-gray-300 dark:bg-slate-600 mx-1"></div>
+                <div class="w-px h-5 bg-gray-300 dark:bg-slate-600 mx-1 admin-only"></div>
                 <button
                   onclick="app.deleteCurrent()"
-                  class="text-gray-400 hover:text-red-600"
+                  class="text-gray-400 hover:text-red-600 admin-only"
                   title="Excluir"
                 >
                   <svg

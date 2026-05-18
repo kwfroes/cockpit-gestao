@@ -29,6 +29,27 @@ window.addEventListener("message", (event) => {
   }
 });
 
+// ==========================================
+// CONTROLE DE ACESSO POR PERFIL (USER / ADMIN)
+// ==========================================
+function applyLawRoleRestrictions() {
+    const role = sessionStorage.getItem("cockpit_user_role");
+    
+    // Se não for admin, injeta o CSS para ocultar a classe admin-only
+    if (role !== "admin") {
+        const style = document.createElement("style");
+        style.id = "role-restrictions-style";
+        style.innerHTML = `
+            .admin-only { 
+                display: none !important; 
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+applyLawRoleRestrictions(); // Executa imediatamente
+
+
 const app = {
   data: [],
   currentId: null,

@@ -101,7 +101,7 @@
         <div>
           <button
             id="btn-exportar"
-            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-150 ease-in-out"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-150 ease-in-out admin-only"
           >
             Exportar Dados (JSON)
           </button>
@@ -167,10 +167,10 @@
 
 
   <div class="flex gap-2 w-full md:w-auto justify-end">
-    <button id="btn-gerenciar-empresas" class="bg-purple-600 hover:bg-purple-700 text-white text-sm font-bold py-2 px-3 rounded-lg shadow transition">
+    <button id="btn-gerenciar-empresas" class="bg-purple-600 hover:bg-purple-700 text-white text-sm font-bold py-2 px-3 rounded-lg shadow transition admin-only">
       🏢 Entidades
     </button>
-    <button id="btn-abrir-modal-contrato" class="bg-green-600 hover:bg-green-700 text-white text-sm font-bold py-2 px-4 rounded-lg shadow transition">
+    <button id="btn-abrir-modal-contrato" class="bg-green-600 hover:bg-green-700 text-white text-sm font-bold py-2 px-4 rounded-lg shadow transition admin-only">
       + Contrato
     </button>
   </div>
@@ -555,7 +555,7 @@
                 <div>
                   <label
                     for="aditivo-tipo"
-                    class="block text-sm font-medium text-gray-700"
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-100"
                     >Tipo de Aditivo</label
                   >
                   <select
@@ -575,7 +575,7 @@
                 <div>
                   <label
                     for="aditivo-numero"
-                    class="block text-sm font-medium text-gray-700"
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-100"
                     >Número do Aditivo</label
                   >
                   <input
@@ -602,7 +602,7 @@
                 <div>
                   <label
                     for="aditivo-data-assinatura"
-                    class="block text-sm font-medium text-gray-700"
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-100"
                     >Data Assinatura (Aditivo)</label
                   >
                   <input
@@ -627,7 +627,7 @@
                 style="display: none"
               >
                 <div>
-                  <h4 class="text-md font-semibold text-gray-800">
+                  <h4 class="text-md font-semibold text-gray-800 dark:text-gray-100">
                     Gestor do Contrato
                   </h4>
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
@@ -648,7 +648,7 @@
 
                 <div>
                   <div class="flex justify-between items-center mb-2">
-                    <h4 class="text-md font-semibold text-gray-800">
+                    <h4 class="text-md font-semibold text-gray-800 dark:text-gray-100">
                       Fiscais do Contrato
                     </h4>
                     <button
@@ -690,7 +690,7 @@
               <div>
                 <label
                   for="contrato-tipo"
-                  class="block text-sm font-medium text-gray-700"
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-100"
                   >Tipo de Contrato</label
                 >
                 <select
@@ -718,7 +718,7 @@
               <div class="col-span-1">
                 <label
                   for="contrato-estimativa-mensal"
-                  class="block text-sm font-medium text-gray-700"
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-100"
                   >Estimativa Mensal (R$)</label
                 >
                 <input
@@ -740,7 +740,7 @@
               <div class="col-span-1">
                 <label
                   for="contrato-data-assinatura"
-                  class="block text-sm font-medium text-gray-700"
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-100"
                   >Data Assinatura</label
                 >
                 <input
@@ -753,7 +753,7 @@
               <div class="col-span-1">
                 <label
                   for="contrato-data-inicio"
-                  class="block text-sm font-medium text-gray-700"
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-100"
                   >Data Início</label
                 >
                 <input
@@ -774,7 +774,7 @@
                 <label
                   id="label-valor-total"
                   for="contrato-valor-total"
-                  class="block text-sm font-medium text-gray-700"
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-100"
                   >Valor Total (R$)</label
                 >
                 <input
@@ -795,7 +795,7 @@
                 <label
                   id="label-data-fim"
                   for="contrato-data-fim"
-                  class="block text-sm font-medium text-gray-700"
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-100"
                   >Data Fim</label
                 >
                 <input
@@ -821,7 +821,7 @@
                 class="bg-gray-50 dark:bg-slate-700 p-3 rounded-md border border-gray-200"
               >
                 <h4
-                  class="text-md font-semibold text-gray-800 border-b pb-1 mb-3"
+                  class="text-md font-semibold text-gray-800 dark:text-gray-100 border-b pb-1 mb-3"
                 >
                   Gestor do Contrato
                 </h4>
@@ -845,7 +845,7 @@
                 <div
                   class="flex justify-between items-center mb-2 border-b pb-1"
                 >
-                  <h4 class="text-md font-semibold text-gray-800">
+                  <h4 class="text-md font-semibold text-gray-800 dark:text-gray-100">
                     Fiscais do Contrato
                   </h4>
                   <button
@@ -938,7 +938,7 @@
   </div>
           <div class="flex justify-end items-center pt-4">
             <button
-              class="btn-abrir-modal-pagamento bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mr-4"
+              class="btn-abrir-modal-pagamento bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mr-4 admin-only"
               data-id="contrato_1763149379825"
             >
               + Pagamento
@@ -1165,7 +1165,7 @@
             />
             <button
               type="submit"
-              class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg col-span-4"
+              class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg col-span-4 admin-only"
             >
               Adicionar Item
             </button>
@@ -1237,7 +1237,7 @@
           <button
             type="button"
             id="btn-detalhes-novo-pagamento"
-            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mr-2"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mr-2 admin-only"
           >
             + Novo Pagamento
           </button>
@@ -1378,7 +1378,7 @@
             Ver Detalhes
           </button>
           <button
-            class="btn-abrir-modal-pagamento text-center w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow-sm transition duration-150"
+            class="btn-abrir-modal-pagamento text-center w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow-sm transition duration-150 admin-only"
           >
             + Pagamento
           </button>
@@ -1394,14 +1394,14 @@
           name="fiscal-nome"
           placeholder="Nome do Fiscal"
           class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-6 fiscal-nome"
-          required
+          
         />
         <input
           type="text"
           name="fiscal-matricula"
           placeholder="Matrícula do Fiscal"
           class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-5 fiscal-matricula"
-          required
+          
         />
         <button
           type="button"
