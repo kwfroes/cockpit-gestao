@@ -1,6 +1,35 @@
 // Espera a página inteira carregar
 window.onload = function () {
 
+  function applyRoleRestrictions() {
+      const role = sessionStorage.getItem("cockpit_user_role");
+      
+      if (role !== "admin") {
+          // IDs de todos os botões/áreas que devem sumir para o User comum
+          const elementsToHide = [
+              "btnFullReset", 
+              "btnAddCsv", 
+              "btnOpenHolidays",
+              "exportJsonButton", 
+              "exportPdfButton", 
+              "exportPdfButtonDashboard",
+              "comparison-section" // Caso você tenha uma div isolada para a comparação de analistas
+          ];
+          
+          elementsToHide.forEach(id => {
+              const el = document.getElementById(id);
+              if (el) el.style.display = "none";
+          });
+
+          // Esconde o contêiner inteiro do Filtro de Analista para que ele nem saiba que existe
+          // const filterAnalyst = document.getElementById("filterAnalyst");
+          //if (filterAnalyst) {
+          //    filterAnalyst.closest('div').style.display = "none";
+          //}
+      }
+  }
+
+  applyRoleRestrictions();
   checkWelcomeModal();
   // --- Funções Nativas de Data (para substituir date-fns) ---
 
@@ -345,65 +374,131 @@ window.onload = function () {
   }
 
   // Ajuste no Auto-Load para mostrar botões se der certo
+// Ajuste no Auto-Load para animar a barra de progresso
   async function tryAutoLoadJson() {
     let allRows = [];
     let commonCols = null;
     let filesLoaded = 0;
+    const maxParts = 10; // Limite de partes que o sistema tenta buscar
+
+    // Elementos da nova interface de loading
+    const progressBar = document.getElementById("loadingProgressBar");
+    const percentageText = document.getElementById("loadingPercentage");
+    const loadingText = document.getElementById("loadingText");
+    const uploadScreen = document.getElementById("uploadScreen");
+    const dashboardScreen = document.getElementById("dashboardScreen");
+    const btnFallback = document.getElementById("btnFallbackUpload");
 
     try {
       // Tenta carregar do p1 ao p10
-      for (let i = 1; i <= 10; i++) {
+      for (let i = 1; i <= maxParts; i++) {
+        if (loadingText) loadingText.textContent = `Carregando histórico (Parte ${i} de ${maxParts})...`;
+        
         try {
           const fileName = `relatorio_p${i}.json`;
           const response = await fetch(fileName);
           
           if (!response.ok) {
-            // Se não encontrar o arquivo (ex: p3), para de procurar
+            // Se não encontrar o arquivo (ex: parou no p3), sai do loop
             break; 
           }
 
           const part = await response.json();
           
-          // Armazena as colunas da primeira parte carregada
+          // Armazena as colunas e acumula as linhas
           if (!commonCols) commonCols = part.cols;
-          
-          // Acumula as linhas
           allRows = allRows.concat(part.rows);
           filesLoaded++;
           
-          console.log(`Parte ${i} carregada com sucesso.`);
+          // Anima a barra (ex: 3 arquivos = 30%)
+          const progress = (filesLoaded / maxParts) * 100;
+          if (progressBar) progressBar.style.width = `${progress}%`;
+          if (percentageText) percentageText.textContent = `${Math.round(progress)}%`;
+          
+          // Pequeno delay estético para a barra não piscar rápido demais
+          await new Promise(resolve => setTimeout(resolve, 150));
+
         } catch (e) {
-          // Erro silencioso para arquivos que não existem
-          break; 
+          break; // Erro silencioso (arquivo não existe)
         }
       }
 
       if (filesLoaded > 0) {
-        // Reconstrói o objeto otimizado unificado
-        const fullOptimized = {
-          cols: commonCols,
-          rows: allRows
-        };
+        // Enche a barra até 100% no final (já que pode ter achado apenas 5 arquivos)
+        if (progressBar) progressBar.style.width = "100%";
+        if (percentageText) percentageText.textContent = "100%";
+        if (loadingText) loadingText.textContent = "Processando os dados. Quase lá!";
 
-        // Sua lógica original de processamento
+        // Reconstrói o objeto e processa
+        const fullOptimized = { cols: commonCols, rows: allRows };
         const jsonRaw = restoreDataFromImport(fullOptimized);
-        allData = processRawData(jsonRaw);
+        allData = processRawData(jsonRaw); // Aqui ele já filtra pela Regra do RLS
         filteredData = [...allData];
 
-        initDashboard(allData);
-        initComparisonFilters(allData);
-        toggleHeaderButtons(true);
+        // Espera meio segundo para o usuário ver o 100% antes de trocar de tela
+        setTimeout(() => {
+            try {
+                // 1. Inicia o dashboard principal
+                initDashboard(allData);
+                
+                // 2. CORREÇÃO DA REGRA DE NEGÓCIO: 
+                // Só tenta montar a aba de comparação se for Admin (evita crash por falta de dados)
+                const userRole = sessionStorage.getItem("cockpit_user_role");
+                if (userRole === "admin" && typeof initComparisonFilters === "function") {
+                    initComparisonFilters(allData);
+                }
 
-        document.getElementById("uploadScreen").classList.add("hidden");
-        document.getElementById("dashboardScreen").classList.remove("hidden");
-        document.getElementById("uploadStatus").textContent = `Histórico carregado (${filesLoaded} partes).`;
+                if (typeof toggleHeaderButtons === "function") toggleHeaderButtons(true);
+
+                // 3. CORREÇÃO DA TELA (Busca Flexível)
+                // Procura a tela do dashboard independente do ID que você usou no HTML
+                const dashScreen = document.getElementById("dashboardScreen") || 
+                                   document.getElementById("dashboard") || 
+                                   document.getElementById("mainContent") || 
+                                   document.querySelector("main");
+
+                // Transição suave
+                uploadScreen.classList.add("opacity-0");
+                setTimeout(() => {
+                    uploadScreen.classList.remove("flex"); 
+                    uploadScreen.classList.add("hidden");
+                    if (dashScreen) dashScreen.classList.remove("hidden");
+                }, 500);
+
+                if (typeof atualizarStatsExternos === "function") atualizarStatsExternos();
+
+            } catch (err) {
+                console.error("Erro interno ao montar o dashboard após o load:", err);
+                
+                // Fallback Seguro: Se qualquer gráfico quebrar, ele libera a tela mesmo assim
+                uploadScreen.classList.remove("flex");
+                uploadScreen.classList.add("hidden");
+                
+                const dashScreen = document.getElementById("dashboardScreen") || 
+                                   document.getElementById("dashboard") || 
+                                   document.getElementById("mainContent") || 
+                                   document.querySelector("main");
+                if (dashScreen) dashScreen.classList.remove("hidden");
+            }
+        }, 600);
+
+      } else {
+        // CENÁRIO: Não encontrou nenhum JSON na pasta
+        if (loadingText) loadingText.textContent = "Nenhuma base local encontrada.";
+        if (progressBar) progressBar.parentElement.classList.add("hidden");
+        if (percentageText) percentageText.parentElement.classList.add("hidden");
         
-        atualizarStatsExternos();
+        // Exibe o link para upload manual caso precise quebrar um galho
+        if (btnFallback) btnFallback.classList.remove("hidden");
       }
     } catch (error) {
       console.error("Erro crítico ao processar arquivos automáticos:", error);
+      if (loadingText) loadingText.textContent = "Erro ao iniciar o sistema.";
+      if (btnFallback) btnFallback.classList.remove("hidden");
     }
   }
+  
+  // Chama a função
   tryAutoLoadJson();
 
   // --- 1. LÓGICA DE UPLOAD (RF01, RF-A01) ---
@@ -475,27 +570,32 @@ window.onload = function () {
   }
 
   // Eventos de Drag-and-Drop
-  dropzone.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    dropzone.classList.add("border-blue-500", "bg-blue-50");
-  });
-  dropzone.addEventListener("dragleave", () =>
-    dropzone.classList.remove("border-blue-500", "bg-blue-50"),
-  );
-  dropzone.addEventListener("drop", (e) => {
-    e.preventDefault();
-    dropzone.classList.remove("border-blue-500", "bg-blue-50");
-    handleFiles(e.dataTransfer.files);
-  });
-  dropzone.addEventListener("click", () => fileInput.click());
-  fileInput.addEventListener("change", () => handleFiles(fileInput.files));
-
-  function handleFiles(files) {
-    if (files.length === 0) {
-      uploadStatus.textContent = "Nenhum arquivo selecionado.";
-      return;
+  if (dropzone) {
+      dropzone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropzone.classList.add("border-blue-500", "bg-blue-50");
+      });
+      dropzone.addEventListener("dragleave", () =>
+        dropzone.classList.remove("border-blue-500", "bg-blue-50"),
+      );
+      dropzone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropzone.classList.remove("border-blue-500", "bg-blue-50");
+        handleFiles(e.dataTransfer.files);
+      });
+      dropzone.addEventListener("click", () => fileInput.click());
     }
-    uploadStatus.textContent = `Carregando ${files.length} arquivo(s)...`;
+
+    if (fileInput) {
+      fileInput.addEventListener("change", () => handleFiles(fileInput.files));
+    }
+
+    function handleFiles(files) {
+      if (files.length === 0) {
+        if (uploadStatus) uploadStatus.textContent = "Nenhum arquivo selecionado.";
+        return;
+      }
+      if (uploadStatus) uploadStatus.textContent = `Carregando ${files.length} arquivo(s)...`;
 
     let filesProcessed = 0;
     let consolidatedData = [];
@@ -545,61 +645,116 @@ window.onload = function () {
   // --- 2. PROCESSAMENTO DE DADOS ---
 
   function processRawData(data) {
+    // --- ADICIONADO PARA CONTROLE DE ACESSO ---
+    const role = sessionStorage.getItem("cockpit_user_role");
+    const csvName = sessionStorage.getItem("cockpit_csv_name") || sessionStorage.getItem("cockpit_user_realname");
+    // ------------------------------------------
+
     // --- ADICIONADO PARA DEBUG ---
     const rejectedRows = [];
     // ---------------------------
 
-    const processedData = data.map((row) => {
-      const dataSolicitacao = _native_safeParseDate(row["Data Solicitacao"]);
-      const dataAnalise = _native_safeParseDate(row["Data Análise"]);
+    let processedData = data.map((row) => {
+        const dataSolicitacao = _native_safeParseDate(row["Data Solicitacao"]);
+        const dataAnalise = _native_safeParseDate(row["Data Análise"]);
 
-      let tempoAnalise = null;
-      if (dataSolicitacao && dataAnalise) {
-          const diffMs = _calcBusinessTimeDiff(dataSolicitacao, dataAnalise);
-          tempoAnalise = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-      }
+        let tempoAnalise = null;
+        if (dataSolicitacao && dataAnalise) {
+            const diffMs = _calcBusinessTimeDiff(dataSolicitacao, dataAnalise);
+            tempoAnalise = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        }
 
-      // --- ADICIONADO PARA DEBUG ---
-      // Se a data de análise for nula, guarde a linha para verificação
-      if (!dataAnalise && row["Data Análise"]) {
-        // Só loga se não for nula mas falhou o parse
-        rejectedRows.push(row);
-      }
-      // ---------------------------
+        // --- ADICIONADO PARA DEBUG ---
+        if (!dataAnalise && row["Data Análise"]) {
+            rejectedRows.push(row);
+        }
+        // ---------------------------
 
-      return {
-        ...row,
-        _dataSolicitacao: dataSolicitacao,
-        _dataAnalise: dataAnalise,
-        _tempoAnalise: tempoAnalise,
-        _mesAnoAnalise: dataAnalise
-          ? `${dataAnalise.getFullYear()}-${(dataAnalise.getMonth() + 1)
-              .toString()
-              .padStart(2, "0")}`
-          : null,
-        _diaAnalise: dataAnalise
-          ? _native_formatDate(_native_startOfDay(dataAnalise), "yyyy-MM-dd")
-          : null,
-      };
+        return {
+            ...row,
+            _dataSolicitacao: dataSolicitacao,
+            _dataAnalise: dataAnalise,
+            _tempoAnalise: tempoAnalise,
+            _mesAnoAnalise: dataAnalise
+                ? `${dataAnalise.getFullYear()}-${(dataAnalise.getMonth() + 1)
+                    .toString()
+                    .padStart(2, "0")}`
+                : null,
+            _diaAnalise: dataAnalise
+                ? _native_formatDate(_native_startOfDay(dataAnalise), "yyyy-MM-dd")
+                : null,
+        };
     });
 
     // --- ADICIONADO PARA DEBUG ---
-    // Imprime os dados rejeitados no console
     console.warn(`[DEBUG] Linhas totais recebidas do CSV: ${data.length}`);
     console.warn(
-      `[DEBUG] Linhas rejeitadas (Data Análise inválida, não-vazia): ${rejectedRows.length}`,
+        `[DEBUG] Linhas rejeitadas (Data Análise inválida, não-vazia): ${rejectedRows.length}`,
     );
     if (rejectedRows.length > 0) {
-      console.warn(
-        "[DEBUG] Amostra de linhas rejeitadas (primeiras 20):",
-        rejectedRows.slice(0, 20),
-      );
+        console.warn(
+            "[DEBUG] Amostra de linhas rejeitadas (primeiras 20):",
+            rejectedRows.slice(0, 20),
+        );
     }
     // ---------------------------
 
-    // CORREÇÃO: Removemos o filtro! Agora o dashboard vai carregar todas as linhas.
+    // --------------------------------------------------------
+    // GATEKEEPER DE DADOS
+    // Se não for admin, deleta da memória qualquer linha que 
+    // não pertença ao analista logado antes de montar o dash.
+    // --------------------------------------------------------
+    if (role !== "admin") {
+        // Função auxiliar para padronizar os nomes: 
+        // Remove acentos, espaços extras e transforma em minúsculas
+        const normalizeString = (str) => {
+            if (!str) return "";
+            return str.toString()
+                      .normalize("NFD")               // Separa os acentos das letras
+                      .replace(/[\u0300-\u036f]/g, "") // Remove os acentos matematicamente
+                      .trim()                         // Remove espaços nas pontas
+                      .toLowerCase();                 // Tudo minúsculo
+        };
+
+        const safeCsvName = normalizeString(csvName);
+
+        if (safeCsvName === "todos") {
+            return processedData;
+        }
+
+        return processedData.filter(row => {
+            const rowAnalyst = normalizeString(row["Usuario Analista"]);
+            return rowAnalyst === safeCsvName;
+        });
+    }
+
     return processedData;
-    // return processedData.filter(row => row._dataAnalise); // <-- FILTRO REMOVIDO
+  }
+
+  // --- NOVA FUNÇÃO: Badge de Período da Base ---
+  function updateDateRangeBadge(data) {
+      const badgeEl = document.getElementById("dateRangeBadge");
+      if (!badgeEl) return;
+
+      // Filtra as datas válidas
+      const validDates = data
+          .map(row => row._dataAnalise)
+          .filter(d => d instanceof Date && !isNaN(d));
+
+      if (validDates.length === 0) {
+          badgeEl.classList.add("hidden");
+          return;
+      }
+
+      // A MÁGICA AQUI: Usando reduce em vez de spread (...) para evitar estouro de Call Stack
+      const minDate = new Date(validDates.reduce((min, p) => p < min ? p : min, validDates[0]));
+      const maxDate = new Date(validDates.reduce((max, p) => p > max ? p : max, validDates[0]));
+
+      const minStr = _native_formatDate(minDate, "dd/MM/yy");
+      const maxStr = _native_formatDate(maxDate, "dd/MM/yy");
+
+      badgeEl.innerHTML = `<span class="opacity-75 font-normal">Base lida:</span> ${minStr} a ${maxStr}`;
+      badgeEl.classList.remove("hidden");
   }
 
   // --- 3. LÓGICA DE FILTROS (RF07) ---
@@ -613,6 +768,7 @@ window.onload = function () {
   ];
 
   function initDashboard(data) {
+    updateDateRangeBadge(data);
     populateFilters(data);
 
     // Listeners especiais para os atalhos de Mês/Ano

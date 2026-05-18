@@ -211,6 +211,8 @@ async function generateCaptcha() {
               sessionStorage.setItem("cockpit_user_role", localStorage.getItem("cockpit_saved_role"));
               const savedEmail = localStorage.getItem("cockpit_saved_email");
               const savedAvatar = localStorage.getItem("cockpit_saved_avatar");
+              const savedCsvName = localStorage.getItem("cockpit_saved_csv_name");
+              if (savedCsvName) sessionStorage.setItem("cockpit_csv_name", savedCsvName);
               
               if (savedEmail) sessionStorage.setItem("cockpit_user_email", savedEmail);
               if (savedAvatar) sessionStorage.setItem("cockpit_user_avatar", savedAvatar);
@@ -249,7 +251,7 @@ if (loginForm) {
     
     const inputUser = userInput.value.trim().toLowerCase();
     const inputPass = passwordInput.value;
-    const btn = loginForm.querySelector("button");
+    const btn = loginForm.querySelector("button[type='submit']");
 
     // 2. VALIDAÇÃO DO CAPTCHA (Primeira barreira)
     if (captchaInput !== currentCaptcha) {
@@ -277,6 +279,7 @@ if (loginForm) {
       sessionStorage.setItem("cockpit_user_realname", foundUser.name);
       sessionStorage.setItem("cockpit_user_role", foundUser.role);
       sessionStorage.setItem("cockpit_user_email", foundUser.email || "Sem e-mail");
+      sessionStorage.setItem("cockpit_csv_name", foundUser.csvName || foundUser.name); 
       
       if (foundUser.avatar) {
         sessionStorage.setItem("cockpit_user_avatar", foundUser.avatar);
@@ -291,12 +294,14 @@ if (loginForm) {
         localStorage.setItem("cockpit_saved_name", foundUser.name);
         localStorage.setItem("cockpit_saved_role", foundUser.role);
         localStorage.setItem("cockpit_saved_email", foundUser.email || "Sem e-mail");
+        localStorage.setItem("cockpit_saved_csv_name", foundUser.csvName || foundUser.name);
         if (foundUser.avatar) {
             localStorage.setItem("cockpit_saved_avatar", foundUser.avatar);
         }
       }
 
       loginError.classList.add("hidden");
+      aplicarPermissoesDeMenu();
       updateUserMenu();
       updateUserAvatarVisuals();
       unlockInterface();
@@ -812,7 +817,7 @@ if (loginForm) {
     userInput.value = "";
     passwordInput.value = "";
 
-    const loginBtn = loginForm.querySelector("button");
+    const loginBtn = loginForm.querySelector("button[type='submit']");
     if (loginBtn) {
       loginBtn.textContent = "Entrar no Sistema";
       loginBtn.disabled = false;
@@ -1383,5 +1388,29 @@ if (loginForm) {
       broadcastTheme(currentTheme);
     });
   }
+
+  function aplicarPermissoesDeMenu() {
+      const role = sessionStorage.getItem("cockpit_user_role");
+      const linkMatriz = document.querySelector('a[href="#matrix"]');
+      const linkConversor = document.querySelector('a[href="#conversor"]');
+      
+      const rotasRestritas = [linkMatriz, linkConversor];
+
+      rotasRestritas.forEach(link => {
+          if (link) {
+              if (role === "admin") {
+                  link.classList.remove("opacity-50", "cursor-not-allowed");
+              } else {
+                  link.classList.add("opacity-50", "cursor-not-allowed");
+              }
+          }
+      });
+  }
+
+  // Executa imediatamente na inicialização da página para checar o estado atual
+  aplicarPermissoesDeMenu();
+
+  // Torna a função global para que o formulário de login possa acioná-la
+  window.aplicarPermissoesDeMenu = aplicarPermissoesDeMenu;
 
 });

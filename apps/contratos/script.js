@@ -15,6 +15,25 @@ window.addEventListener("message", (event) => {
     applyTheme(event.data.theme);
 });
 
+// --- CONTROLE DE ACESSO POR PERFIL (USER / ADMIN) ---
+function applyContractRoleRestrictions() {
+    const role = sessionStorage.getItem("cockpit_user_role");
+    
+    // Se o usuário logado não for admin, injeta uma regra CSS que oculta tudo da classe 'admin-only'
+    if (role !== "admin") {
+        const style = document.createElement("style");
+        style.id = "role-restrictions-style";
+        style.innerHTML = `
+            .admin-only { 
+                display: none !important; 
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+// Executa a restrição imediatamente
+applyContractRoleRestrictions();
+
 // Estado global da aplicação
 let db = {
   contratos: [],
@@ -755,39 +774,54 @@ function preencherFormularioContrato(contrato) {
 
   document.getElementById("contrato-data-fim").value = contrato.dataFim || "";
 
-  // --- ETAPA 4: Gestão e Fiscalização (NOVO) ---
+  // --- ETAPA 4: Gestão e Fiscalização ---
+  // --- BUSCA SE EXISTE UM ADITIVO VÁLIDO QUE ALTEROU GESTOR/FISCAL ---
+  let gestorVigente = contrato.gestorInicial;
+  let fiscaisVigentes = contrato.fiscaisIniciais;
 
-  // 1. Preencher Gestor (Com limpeza de segurança)
-  if (contrato.gestorInicial) {
-    document.getElementById("contrato-gestor-nome").value =
-      contrato.gestorInicial.nome || "";
-    document.getElementById("contrato-gestor-matricula").value =
-      contrato.gestorInicial.matricula || "";
+  // CORREÇÃO: Busca todos os aditivos históricos vinculados a este contrato no banco geral
+  const aditivosHistoricos = db.contratos.filter((c) => c.parentId === contrato.id);
+  
+  // Varre os aditivos para encontrar as últimas atualizações de Gestor/Fiscal
+  aditivosHistoricos.forEach((ad) => {
+    if (ad.aditivo && ad.aditivo.tipo === "GestorFiscal") {
+      if (ad.aditivo.gestor && (ad.aditivo.gestor.nome || ad.aditivo.gestor.matricula)) {
+        gestorVigente = ad.aditivo.gestor;
+      }
+      if (ad.aditivo.fiscais && ad.aditivo.fiscais.length > 0) {
+        fiscaisVigentes = ad.aditivo.fiscais;
+      }
+    }
+  });
+
+  // Preenche o Gestor Vigente nos inputs corretos da Etapa 4 usando o ID do HTML
+  const inputGestorNome = document.getElementById("contrato-gestor-nome");
+  const inputGestorMatricula = document.getElementById("contrato-gestor-matricula");
+  
+  if (gestorVigente) {
+    if (inputGestorNome) inputGestorNome.value = gestorVigente.nome || "";
+    if (inputGestorMatricula) inputGestorMatricula.value = gestorVigente.matricula || "";
   } else {
-    // Importante: Limpa se o contrato não tiver gestor inicial definido
-    document.getElementById("contrato-gestor-nome").value = "";
-    document.getElementById("contrato-gestor-matricula").value = "";
+    if (inputGestorNome) inputGestorNome.value = "";
+    if (inputGestorMatricula) inputGestorMatricula.value = "";
   }
 
-  // 2. Preencher Fiscais
-  const containerFiscais = document.getElementById("fiscais-container-step4");
-  // Segurança: só executa se o elemento existir no HTML
-  if (containerFiscais) {
-    containerFiscais.innerHTML = ""; // Limpa linhas anteriores
-
-    if (contrato.fiscaisIniciais && contrato.fiscaisIniciais.length > 0) {
-      // Recria as linhas salvas
-      contrato.fiscaisIniciais.forEach((f) => {
+  // Preenche os Fiscais Vigentes no container do Passo 4
+  const containerFiscaisStep4 = document.getElementById("fiscais-container-step4");
+  if (containerFiscaisStep4) {
+    containerFiscaisStep4.innerHTML = ""; // Limpa o estado anterior
+    
+    if (fiscaisVigentes && fiscaisVigentes.length > 0) {
+      fiscaisVigentes.forEach((f) => {
         adicionarNovaLinhaFiscal("fiscais-container-step4");
-        const lastRow = containerFiscais.lastElementChild;
-        if (lastRow) {
-          lastRow.querySelector(".fiscal-nome").value = f.nome || "";
-          lastRow.querySelector(".fiscal-matricula").value = f.matricula || "";
+        const ultimaLinha = containerFiscaisStep4.lastElementChild;
+        if (ultimaLinha) {
+          ultimaLinha.querySelector(".fiscal-nome").value = f.nome || "";
+          ultimaLinha.querySelector(".fiscal-matricula").value = f.matricula || "";
         }
       });
     } else {
-      // Se não tiver fiscais, adiciona uma linha em branco padrão
-      adicionarNovaLinhaFiscal("fiscais-container-step4");
+      adicionarNovaLinhaFiscal("fiscais-container-step4"); // Adiciona linha em branco se não houver
     }
   }
 
@@ -1010,27 +1044,29 @@ function abrirModalContratoForm(modo, contratoId) {
         } else if (aditivo.aditivo.tipo === "Prazo" && aditivo.dataFim) {
           document.getElementById("contrato-data-fim").value = aditivo.dataFim;
         } else if (aditivo.aditivo.tipo === "GestorFiscal") {
-          // Gestor (se houver)
+          
+          // Popula os campos VISÍVEIS do Gestor do aditivo na Etapa 3
           if (aditivo.aditivo.gestor) {
-            document.getElementById("aditivo-gestor-nome").value =
-              aditivo.aditivo.gestor.nome || "";
-            document.getElementById("aditivo-gestor-matricula").value =
-              aditivo.aditivo.gestor.matricula || "";
+            document.getElementById("aditivo-gestor-nome").value = aditivo.aditivo.gestor.nome || "";
+            document.getElementById("aditivo-gestor-matricula").value = aditivo.aditivo.gestor.matricula || "";
           }
-          // Fiscais do aditivo (container próprio, não o do step4)
-          const containerFiscaisAditivo =
-            document.getElementById("fiscais-container");
-          containerFiscaisAditivo.innerHTML = "";
-          if (aditivo.aditivo.fiscais && aditivo.aditivo.fiscais.length > 0) {
-            aditivo.aditivo.fiscais.forEach((f) => {
-              adicionarNovaLinhaFiscal(); // usa o container padrão do aditivo
-              const ultimaLinha = containerFiscaisAditivo.lastElementChild;
-              ultimaLinha.querySelector(".fiscal-nome").value = f.nome;
-              ultimaLinha.querySelector(".fiscal-matricula").value =
-                f.matricula;
-            });
-          } else {
-            adicionarNovaLinhaFiscal(); // linha em branco
+          
+          // Popula o container VISÍVEL de fiscais do aditivo
+          const containerFiscaisAditivo = document.getElementById("fiscais-container");
+          if (containerFiscaisAditivo) {
+            containerFiscaisAditivo.innerHTML = "";
+            if (aditivo.aditivo.fiscais && aditivo.aditivo.fiscais.length > 0) {
+              aditivo.aditivo.fiscais.forEach((f) => {
+                adicionarNovaLinhaFiscal("fiscais-container"); // Redireciona para o container certo
+                const ultimaLinha = containerFiscaisAditivo.lastElementChild;
+                if (ultimaLinha) {
+                  ultimaLinha.querySelector(".fiscal-nome").value = f.nome || "";
+                  ultimaLinha.querySelector(".fiscal-matricula").value = f.matricula || "";
+                }
+              });
+            } else {
+              adicionarNovaLinhaFiscal("fiscais-container");
+            }
           }
         }
       } else {
@@ -1566,8 +1602,8 @@ function renderizarModalVisualizar(contratoId) {
             <div class="space-y-2">${content}</div>
         </fieldset>`;
 
-  const contratoActions = `<button class="btn-editar-contrato-form text-sm bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded-lg shadow-sm" data-id="${contratoPai.id}">Editar Contrato</button>
-         <button class="btn-adicionar-aditivo text-sm bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded-lg shadow-sm ml-2" data-id="${contratoPai.id}">+ Adicionar Aditivo</button>`;
+  const contratoActions = `<button class="btn-editar-contrato-form text-sm bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded-lg shadow-sm admin-only" data-id="${contratoPai.id}">Editar Contrato</button>
+         <button class="btn-adicionar-aditivo text-sm bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded-lg shadow-sm ml-2 admin-only" data-id="${contratoPai.id}">+ Adicionar Aditivo</button>`;
 
   const unidadeContent =
     renderField("Razão Social", contratoPai.unidade.nome) +
@@ -1711,7 +1747,7 @@ function renderizarModalVisualizar(contratoId) {
           </svg>
       </button>
 
-      <button class="btn-editar-aditivo text-yellow-600 hover:text-yellow-800 ml-3" 
+      <button class="btn-editar-aditivo text-yellow-600 hover:text-yellow-800 ml-3 admin-only" 
           title="Editar Aditivo"
           data-aditivo-id="${ad.id}">
           <svg class="w-5 h-5 pointer-events-none" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1795,7 +1831,7 @@ function renderizarModalVisualizar(contratoId) {
 
 
                                   <td class="px-4 py-3 text-sm flex items-center">
-                                      <button class="btn-editar-pagamento text-yellow-600 hover:text-yellow-800" 
+                                      <button class="btn-editar-pagamento text-yellow-600 hover:text-yellow-800 admin-only" 
                                           title="Editar"
                                           data-contrato-id="${p.origemContratoId}" 
                                           data-pagamento-id="${p.id}" 
@@ -1815,7 +1851,7 @@ function renderizarModalVisualizar(contratoId) {
                                           </svg>
                                       </button>
 
-                                      <button class="btn-excluir-pagamento text-red-600 hover:text-red-800 ml-3" 
+                                      <button class="btn-excluir-pagamento text-red-600 hover:text-red-800 ml-3 admin-only" 
                                           title="Excluir"
                                           data-contrato-id="${p.origemContratoId}" 
                                           data-pagamento-id="${p.id}" 
@@ -2391,7 +2427,7 @@ function renderizarModalDetalhesPagamento(contratoId, pagamentoId) {
                       valorTotalItem,
                     )}</td>
                     <td class="px-4 py-3 text-sm">
-                        <button class="btn-excluir-item-detalhe text-red-600 hover:text-red-800" data-item-id="${
+                        <button class="btn-excluir-item-detalhe text-red-600 hover:text-red-800 admin-only" data-item-id="${
                           item.id
                         }">Excluir</button>
                     </td>
@@ -2745,7 +2781,32 @@ function salvarContrato(e) {
       justificativa: document.getElementById("aditivo-justificativa").value,
       dataAssinatura: document.getElementById("aditivo-data-assinatura").value,
     };
-    // ... (Mantenha sua lógica de salvar campos específicos de aditivo Valor/Prazo/Gestor aqui) ...
+    // CAPTURA DEFINITIVA: Lê os dados específicos da tela para não gravar em branco
+    if (contratoData.aditivo.tipo === "Valor") {
+      const vTotal = document.getElementById("contrato-valor-total").value;
+      if (vTotal) contratoData.valorTotal = parseBRL(vTotal);
+    } else if (contratoData.aditivo.tipo === "Prazo") {
+      const dFim = document.getElementById("contrato-data-fim").value;
+      if (dFim) contratoData.dataFim = dFim;
+    } else if (contratoData.aditivo.tipo === "GestorFiscal") {
+      
+      // Captura o Gestor do Aditivo
+      contratoData.aditivo.gestor = {
+        nome: document.getElementById("aditivo-gestor-nome").value,
+        matricula: document.getElementById("aditivo-gestor-matricula").value
+      };
+      
+      // Captura os Fiscais do Aditivo do container correto
+      contratoData.aditivo.fiscais = [];
+      const linhasFiscais = document.querySelectorAll("#fiscais-container .fiscal-row");
+      linhasFiscais.forEach((row) => {
+        const nome = row.querySelector(".fiscal-nome").value;
+        const mat = row.querySelector(".fiscal-matricula").value;
+        if (nome || mat) {
+          contratoData.aditivo.fiscais.push({ nome: nome, matricula: mat });
+        }
+      });
+    }
   }
 
   if (id) {

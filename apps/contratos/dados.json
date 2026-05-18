@@ -530,10 +530,10 @@
         "rep": "Rodrigo Pimentel de Souza Lima"
       },
       "empresa": {
-        "nome": "SERVIÇO FEDERAL DE PROCESSAMENTO DE DADOS",
+        "nome": "Serviço Federal de Processamento de Dados",
         "cnpj": "33.683.111/0001-07",
         "endereco": "SGAN, Quadra 601, Módulo V, Brasília/DF, CEP 70836-900",
-        "rep": "CARLOS HENRIQUE RODRIGUES ALEXANDRIA"
+        "rep": "Carlos Henrique Rodrigues Alexandria"
       },
       "processoSei": "009.0242.2025.0024099-97",
       "numeroContrato": "055/2025",
@@ -543,11 +543,11 @@
       "tempoContrato": "12 meses",
       "dataAssinatura": "2025-09-19",
       "dataInicio": "2025-09-22",
-      "valorTotal": 0,
+      "valorTotal": 89491.04,
       "dataFim": "2026-09-22",
       "aditivo": {
         "tipo": "GestorFiscal",
-        "numero": "1º",
+        "numero": "Apostila",
         "processoSei": "009.0242.2025.0058052-81",
         "linkSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=137130333",
         "justificativa": "Inclusão de Gestor e Fiscal",
@@ -570,7 +570,12 @@
       "id": "contrato_1762970245777",
       "pagamentos": [],
       "parentId": "contrato_1762960911454",
-      "linkSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=123330907"
+      "linkSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=123330907",
+      "gestorInicial": {
+        "nome": "",
+        "matricula": ""
+      },
+      "fiscaisIniciais": []
     },
     {
       "unidade": {
