@@ -1,0 +1,14 @@
+[
+  {
+    "Família": "90.01",
+    "Descrição": "TESTE APLICADO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "90",
+      "nome": "Teste"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

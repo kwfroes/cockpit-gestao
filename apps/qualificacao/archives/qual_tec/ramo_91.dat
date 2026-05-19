@@ -1,0 +1,80 @@
+[
+  {
+    "Família": "91.10",
+    "Descrição": "COMBUSTIVEIS SOLIDOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "91",
+      "nome": "Combustíveis, Lubrificantes, Óleos e Ceras"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "91.30",
+    "Descrição": "COMBUSTIVEIS PROPELENTES LIQUIDOS A BASE DE PETROLEO",
+    "Documentos Exigidos": [
+      "Agencia Nacional do Petróleo - ANP"
+    ],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "91",
+      "nome": "Combustíveis, Lubrificantes, Óleos e Ceras"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "91.35",
+    "Descrição": "COMBUSTIVEIS, PROPELENTES LIQUIDOS E OXIDANTES A BASE QUIMICA",
+    "Documentos Exigidos": [
+      "Agencia Nacional do Petróleo - ANP"
+    ],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "91",
+      "nome": "Combustíveis, Lubrificantes, Óleos e Ceras"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "91.40",
+    "Descrição": "OLEOS COMBUSTIVEIS",
+    "Documentos Exigidos": [
+      "Agencia Nacional do Petróleo - ANP"
+    ],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "91",
+      "nome": "Combustíveis, Lubrificantes, Óleos e Ceras"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "91.50",
+    "Descrição": "OLEOS E GRAXAS PARA CORTE, LUBRIFICACAO E SISTEMAS HIDRAULICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "91",
+      "nome": "Combustíveis, Lubrificantes, Óleos e Ceras"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "91.60",
+    "Descrição": "CERAS, OLEOS E GORDURAS, DIVERSOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "91",
+      "nome": "Combustíveis, Lubrificantes, Óleos e Ceras"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

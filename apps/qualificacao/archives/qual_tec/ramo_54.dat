@@ -1,0 +1,86 @@
+[
+  {
+    "Família": "54.10",
+    "Descrição": "EDIFICACOES PRE-FABRICADAS E PORTATEIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "54",
+      "nome": "Estruturas e Andaimes Pré-Fabricados"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "54.11",
+    "Descrição": "ABRIGOS DE PAREDE RIGIDA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "54",
+      "nome": "Estruturas e Andaimes Pré-Fabricados"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "54.20",
+    "Descrição": "PONTES FIXAS E FLUTUANTES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "54",
+      "nome": "Estruturas e Andaimes Pré-Fabricados"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "54.30",
+    "Descrição": "TANQUES DE ARMAZENAGEM",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "54",
+      "nome": "Estruturas e Andaimes Pré-Fabricados"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "54.40",
+    "Descrição": "EQUIPAMENTOS PARA MONTAGEM DE ANDAIME E FORMAS DE CONCRETO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "54",
+      "nome": "Estruturas e Andaimes Pré-Fabricados"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "54.45",
+    "Descrição": "ESTRUTURAS DE TORRES PRE-FABRICADAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "54",
+      "nome": "Estruturas e Andaimes Pré-Fabricados"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "54.50",
+    "Descrição": "ESTRUTURAS PRE-FABRICADAS DIVERSAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "54",
+      "nome": "Estruturas e Andaimes Pré-Fabricados"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

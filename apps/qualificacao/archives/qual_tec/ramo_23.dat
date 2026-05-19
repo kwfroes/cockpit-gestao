@@ -1,0 +1,168 @@
+[
+  {
+    "Família": "23.05",
+    "Descrição": "VEICULOS DE EFEITO SOLO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2930-1/01",
+        "descricao": "Fabricação de cabines, carrocerias e reboques para caminhões"
+      }
+    ],
+    "Ramo": {
+      "codigo": "23",
+      "nome": "Veículos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "23.10",
+    "Descrição": "VEICULO MOTORIZADOS DE PASSAGEIROS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2930-1/03",
+        "descricao": "Fabricação de cabines, carrocerias e reboques para outros veículos automotores, exceto caminhões e ônibus"
+      },
+      {
+        "codigo": "4511-1/01",
+        "descricao": "Comércio a varejo de automóveis, camionetas e utilitários novos"
+      },
+      {
+        "codigo": "2920-4/01",
+        "descricao": "Fabricação de caminhões e ônibus"
+      },
+      {
+        "codigo": "2910-7/01",
+        "descricao": "Fabricação de automóveis, camionetas e utilitários"
+      }
+    ],
+    "Ramo": {
+      "codigo": "23",
+      "nome": "Veículos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "23.20",
+    "Descrição": "VEICULOS SOBRE RODAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2910-7/01",
+        "descricao": "Fabricação de automóveis, camionetas e utilitários"
+      },
+      {
+        "codigo": "2920-4/01",
+        "descricao": "Fabricação de caminhões e ônibus"
+      },
+      {
+        "codigo": "4511-1/01",
+        "descricao": "Comércio a varejo de automóveis, camionetas e utilitários novos"
+      },
+      {
+        "codigo": "2930-1/03",
+        "descricao": "Fabricação de cabines, carrocerias e reboques para outros veículos automotores, exceto caminhões e ônibus"
+      }
+    ],
+    "Ramo": {
+      "codigo": "23",
+      "nome": "Veículos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "23.30",
+    "Descrição": "REBOQUES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4511-1/05",
+        "descricao": "Comércio por atacado de reboques e semi-reboques novos e usados"
+      },
+      {
+        "codigo": "2930-1/01",
+        "descricao": "Fabricação de cabines, carrocerias e reboques para caminhões"
+      },
+      {
+        "codigo": "2930-1/03",
+        "descricao": "Fabricação de cabines, carrocerias e reboques para outros veículos automotores, exceto caminhões e ônibus"
+      }
+    ],
+    "Ramo": {
+      "codigo": "23",
+      "nome": "Veículos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "23.40",
+    "Descrição": "MOTOCICLETAS, MOTONETAS E BICICLETAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4542-1/02",
+        "descricao": "Comércio sob consignação de motocicletas e motonetas"
+      },
+      {
+        "codigo": "4542-1/01",
+        "descricao": "Representantes comerciais e agentes do comércio de motocicletas e motonetas, peças e acessórios"
+      },
+      {
+        "codigo": "4541-2/03",
+        "descricao": "Comércio a varejo de motocicletas e motonetas novas"
+      },
+      {
+        "codigo": "4541-2/01",
+        "descricao": "Comércio por atacado de motocicletas e motonetas"
+      },
+      {
+        "codigo": "3091-1/00",
+        "descricao": "Fabricação de motocicletas, peças e acessórios"
+      },
+      {
+        "codigo": "4541-2/04",
+        "descricao": "Comércio a varejo de motocicletas e motonetas usadas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "23",
+      "nome": "Veículos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "23.50",
+    "Descrição": "VEICULOS TATICOS SOBRE LAGARTAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3099-7/00",
+        "descricao": "Fabricação de equipamentos de transporte não especificados anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "23",
+      "nome": "Veículos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

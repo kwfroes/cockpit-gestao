@@ -1,0 +1,141 @@
+[
+  {
+    "Família": "26.10",
+    "Descrição": "PNEUS E CAMARAS DE AR, EXCETO OS DE AERONAVES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4530-7/03",
+        "descricao": "Comércio a varejo de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2211-1/00",
+        "descricao": "Fabricação de pneumáticos e de câmaras-de-ar"
+      },
+      {
+        "codigo": "4530-7/02",
+        "descricao": "Comércio por atacado de pneumáticos e câmaras-de-ar"
+      },
+      {
+        "codigo": "4530-7/05",
+        "descricao": "Comércio a varejo de pneumáticos e câmaras-de-ar"
+      }
+    ],
+    "Ramo": {
+      "codigo": "26",
+      "nome": "Pneus e Camaras"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "26.20",
+    "Descrição": "PNEUS E CAMARAS DE AR DE AERONAVES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4530-7/02",
+        "descricao": "Comércio por atacado de pneumáticos e câmaras-de-ar"
+      },
+      {
+        "codigo": "4530-7/05",
+        "descricao": "Comércio a varejo de pneumáticos e câmaras-de-ar"
+      },
+      {
+        "codigo": "2211-1/00",
+        "descricao": "Fabricação de pneumáticos e de câmaras-de-ar"
+      }
+    ],
+    "Ramo": {
+      "codigo": "26",
+      "nome": "Pneus e Camaras"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "26.30",
+    "Descrição": "PNEUS MACICOS E DE BAIXA PRESSAO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4530-7/03",
+        "descricao": "Comércio a varejo de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "4530-7/02",
+        "descricao": "Comércio por atacado de pneumáticos e câmaras-de-ar"
+      },
+      {
+        "codigo": "2211-1/00",
+        "descricao": "Fabricação de pneumáticos e de câmaras-de-ar"
+      }
+    ],
+    "Ramo": {
+      "codigo": "26",
+      "nome": "Pneus e Camaras"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "26.40",
+    "Descrição": "MATERIAL PARA REFORMA E REPARO DE PNEUS E CAMARAS DE AR",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4684-2/99",
+        "descricao": "Comércio atacadista de outros produtos químicos e petroquímicos não especificados anteriormente"
+      },
+      {
+        "codigo": "2219-6/00",
+        "descricao": "Fabricação de artefatos de borracha não especificados anteriormente"
+      },
+      {
+        "codigo": "2093-2/00",
+        "descricao": "Fabricação de aditivos de uso industrial"
+      },
+      {
+        "codigo": "2212-9/00",
+        "descricao": "Reforma de pneumáticos usados"
+      }
+    ],
+    "Ramo": {
+      "codigo": "26",
+      "nome": "Pneus e Camaras"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "26.50",
+    "Descrição": "MATERIAL DE LIMPEZA E POLIMENTO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4684-2/99",
+        "descricao": "Comércio atacadista de outros produtos químicos e petroquímicos não especificados anteriormente"
+      },
+      {
+        "codigo": "2062-2/00",
+        "descricao": "Fabricação de produtos de limpeza e polimento"
+      }
+    ],
+    "Ramo": {
+      "codigo": "26",
+      "nome": "Pneus e Camaras"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

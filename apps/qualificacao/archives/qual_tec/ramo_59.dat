@@ -1,0 +1,302 @@
+[
+  {
+    "Família": "59.05",
+    "Descrição": "RESISTORES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.10",
+    "Descrição": "CAPACITORES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.15",
+    "Descrição": "FILTROS E REDES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.20",
+    "Descrição": "FUSIVEIS INTERRUPTORES E PROTETORES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.25",
+    "Descrição": "DISJUNTORES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.30",
+    "Descrição": "CHAVES ELETRICAS E INTERRUPTORES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.35",
+    "Descrição": "CONECTORES ELETRICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.40",
+    "Descrição": "PLACAS TERMINAIS E LAMINAS TERMINAIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.45",
+    "Descrição": "RELES E SOLENOIDES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.50",
+    "Descrição": "BOBINAS E TRANSFORMADORES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.55",
+    "Descrição": "CRISTAIS OSCILADORES E PIEZOELETRICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.60",
+    "Descrição": "VALVULAS ELETRONICAS E FERRAGENS CORRELATAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.61",
+    "Descrição": "DISPOSITIVOS A SEMI-CONDUTOR E PLACAS ASSOCIADAS (CIRCUITOS)",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.62",
+    "Descrição": "MICROCIRCUITOS ELETRONICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.63",
+    "Descrição": "MODULOS ELETRONICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.65",
+    "Descrição": "FONES, MICROFONES E ALTO-FALANTES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.70",
+    "Descrição": "ISOLANTES ELETRICOS E MATERIAIS ISOLANTES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.75",
+    "Descrição": "FERRAGENS E ARTIGOS DE ELETRICIDADES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.77",
+    "Descrição": "ESCOVAS DE CONTACTO E ELETRODOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.80",
+    "Descrição": "DISPOSITIVOS OPTRONICOS E ITENS CORRELATOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.85",
+    "Descrição": "ANTENAS GUIAS DE ONDAS E ITENS CORRELATOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.90",
+    "Descrição": "SINCRONIZADORES E ANALIZADORES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.95",
+    "Descrição": "CONJ DE CABOS, CORDOES E FIOS ELETRICOS PARA EQUIP DE COMUNICACAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.98",
+    "Descrição": "CONJ ELETRICOS E ELETRONICOS,PLACAS,CARTOES E ITENS CORRELATOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "59.99",
+    "Descrição": "COMPONENTES ELETRICOS E ELETRONICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

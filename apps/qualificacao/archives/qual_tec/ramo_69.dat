@@ -1,0 +1,62 @@
+[
+  {
+    "Família": "69.10",
+    "Descrição": "ACESSORIOS PARA TREINAMENTO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "69",
+      "nome": "Aparelhos e Acessórios de Treinamento"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "69.15",
+    "Descrição": "ACESSORIOS PARA TREINAMENTO DE ANIMAL",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "69",
+      "nome": "Aparelhos e Acessórios de Treinamento"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "69.20",
+    "Descrição": "ACESSORIOS PARA TREINAMENTO DE ARMAMENTO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "69",
+      "nome": "Aparelhos e Acessórios de Treinamento"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "69.30",
+    "Descrição": "ACESSORIOS PARA TREINAMENTO OPERACIONAL",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "69",
+      "nome": "Aparelhos e Acessórios de Treinamento"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "69.40",
+    "Descrição": "ACESSORIOS PARA TREINAMENTO DE COMUNICACOES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "69",
+      "nome": "Aparelhos e Acessórios de Treinamento"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

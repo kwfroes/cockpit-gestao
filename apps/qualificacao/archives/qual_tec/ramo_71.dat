@@ -1,0 +1,50 @@
+[
+  {
+    "Família": "71.05",
+    "Descrição": "MOBILIARIO DOMESTICO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "71",
+      "nome": "Mobiliários"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "71.10",
+    "Descrição": "MOBILIARIO PARA ESCRITORIO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "71",
+      "nome": "Mobiliários"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "71.25",
+    "Descrição": "ARMARIOS E ESTANTES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "71",
+      "nome": "Mobiliários"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "71.95",
+    "Descrição": "MOBILIARIOS DIVERSOS E ACESSORIOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "71",
+      "nome": "Mobiliários"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

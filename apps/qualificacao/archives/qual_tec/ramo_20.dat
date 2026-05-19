@@ -1,0 +1,199 @@
+[
+  {
+    "Família": "20.10",
+    "Descrição": "COMPONENTES DE PROPULSAO PARA NAVIOS E EMBARCACOES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4669-9/01",
+        "descricao": "Comércio atacadista de bombas e compressores; partes e peças"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      }
+    ],
+    "Ramo": {
+      "codigo": "20",
+      "nome": "Equipamentos parta Navios e Embarcações"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "20.20",
+    "Descrição": "MASTREACAO E ACESSORIOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4669-9/01",
+        "descricao": "Comércio atacadista de bombas e compressores; partes e peças"
+      },
+      {
+        "codigo": "2511-0/00",
+        "descricao": "Fabricação de estruturas metálicas"
+      },
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      }
+    ],
+    "Ramo": {
+      "codigo": "20",
+      "nome": "Equipamentos parta Navios e Embarcações"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "20.30",
+    "Descrição": "MAQUINARIA DE CONVES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      },
+      {
+        "codigo": "4669-9/01",
+        "descricao": "Comércio atacadista de bombas e compressores; partes e peças"
+      },
+      {
+        "codigo": "2511-0/00",
+        "descricao": "Fabricação de estruturas metálicas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "20",
+      "nome": "Equipamentos parta Navios e Embarcações"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "20.40",
+    "Descrição": "FERRAGENS DE MARINHA E ITENS DE CASCO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      },
+      {
+        "codigo": "4669-9/01",
+        "descricao": "Comércio atacadista de bombas e compressores; partes e peças"
+      },
+      {
+        "codigo": "2511-0/00",
+        "descricao": "Fabricação de estruturas metálicas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "20",
+      "nome": "Equipamentos parta Navios e Embarcações"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "20.50",
+    "Descrição": "BOIAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3292-2/02",
+        "descricao": "Fabricação de equipamentos e acessórios para segurança pessoal e profissional"
+      },
+      {
+        "codigo": "4669-9/01",
+        "descricao": "Comércio atacadista de bombas e compressores; partes e peças"
+      },
+      {
+        "codigo": "2511-0/00",
+        "descricao": "Fabricação de estruturas metálicas"
+      },
+      {
+        "codigo": "2229-3/99",
+        "descricao": "Fabricação de artefatos de material plástico para outros usos não especificados anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "20",
+      "nome": "Equipamentos parta Navios e Embarcações"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "20.60",
+    "Descrição": "EQUIPAMENTO COMERCIAL DE PESCA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4669-9/01",
+        "descricao": "Comércio atacadista de bombas e compressores; partes e peças"
+      },
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "2511-0/00",
+        "descricao": "Fabricação de estruturas metálicas"
+      },
+      {
+        "codigo": "1311-1/00",
+        "descricao": "Preparação e fiação de fibras de algodão"
+      }
+    ],
+    "Ramo": {
+      "codigo": "20",
+      "nome": "Equipamentos parta Navios e Embarcações"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "20.90",
+    "Descrição": "EQUIPAMENTOS DIVERSOS PARA NAVIOS E MARINHARIA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3292-2/02",
+        "descricao": "Fabricação de equipamentos e acessórios para segurança pessoal e profissional"
+      },
+      {
+        "codigo": "4669-9/01",
+        "descricao": "Comércio atacadista de bombas e compressores; partes e peças"
+      },
+      {
+        "codigo": "2229-3/99",
+        "descricao": "Fabricação de artefatos de material plástico para outros usos não especificados anteriormente"
+      },
+      {
+        "codigo": "3102-1/00",
+        "descricao": "Fabricação de móveis com predominância de metal"
+      }
+    ],
+    "Ramo": {
+      "codigo": "20",
+      "nome": "Equipamentos parta Navios e Embarcações"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

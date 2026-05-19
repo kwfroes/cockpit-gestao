@@ -1,0 +1,50 @@
+[
+  {
+    "Família": "75.10",
+    "Descrição": "ARTIGOS DE ESCRITORIO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "75",
+      "nome": "Utensílios de Escritório e Material de Expediente"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "75.20",
+    "Descrição": "ACESSORIOS E DISPOSITIVOS PARA ESCRITORIO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "75",
+      "nome": "Utensílios de Escritório e Material de Expediente"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "75.30",
+    "Descrição": "FORMULARIOS NAO OFICIAIS E PAPEIS EM GERAL",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "75",
+      "nome": "Utensílios de Escritório e Material de Expediente"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "75.40",
+    "Descrição": "FORMULARIOS OFICIAIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "75",
+      "nome": "Utensílios de Escritório e Material de Expediente"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

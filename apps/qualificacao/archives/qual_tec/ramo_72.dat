@@ -1,0 +1,62 @@
+[
+  {
+    "Família": "72.10",
+    "Descrição": "UTENSILIOS DOMESTICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "72",
+      "nome": "Utensílios e Utilidades de Uso Doméstico e Comercial"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "72.20",
+    "Descrição": "REVESTIMENTOS PARA PISOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "72",
+      "nome": "Utensílios e Utilidades de Uso Doméstico e Comercial"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "72.30",
+    "Descrição": "TAPECARIAS, CORTINAS E PERSIANAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "72",
+      "nome": "Utensílios e Utilidades de Uso Doméstico e Comercial"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "72.40",
+    "Descrição": "RECIPIENTES PARA USO DOMESTICO E COMERCIAL",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "72",
+      "nome": "Utensílios e Utilidades de Uso Doméstico e Comercial"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "72.90",
+    "Descrição": "UTENSILIOS COMERCIAIS E DOMESTICOS DIVERSOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "72",
+      "nome": "Utensílios e Utilidades de Uso Doméstico e Comercial"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

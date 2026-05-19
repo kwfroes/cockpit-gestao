@@ -1,0 +1,2255 @@
+[
+  {
+    "Família": "04.01",
+    "Descrição": "AFERICAO E/OU CALIBRAGEM DE APARELHOS, INSTRUMENTOS E MAQUINAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "INMETRO - ABNT",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.02",
+    "Descrição": "MANUTENCAO DE AERONAVES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3316-3/02",
+        "descricao": "Manutenção de aeronaves na pista"
+      },
+      {
+        "codigo": "3316-3/01",
+        "descricao": "Manutenção e reparação de aeronaves, exceto a manutenção na pista"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.03",
+    "Descrição": "MANUTENCAO DE EQUIPAMENTO DE SEGURANCA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3319-8/00",
+        "descricao": "Manutenção e reparação de equipamentos e produtos não especificados anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.04",
+    "Descrição": "MANUTENCAO DE BOMBAS, MOTOBOMBAS E COMPRESSORES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      },
+      {
+        "codigo": "3314-7/04",
+        "descricao": "Manutenção e reparação de compressores"
+      },
+      {
+        "codigo": "3314-7/02",
+        "descricao": "Manutenção e reparação de equipamentos hidráulicos e pneumáticos, exceto válvulas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.05",
+    "Descrição": "MANUTENCAO DE CARROS FERROVIARIOS, VAGOES E LOCOMOTIVAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "3032-6/00",
+        "descricao": "Fabricação de peças e acessórios para veículos ferroviários"
+      },
+      {
+        "codigo": "3031-8/00",
+        "descricao": "Fabricação de locomotivas, vagões e outros materiais rodantes"
+      },
+      {
+        "codigo": "3315-5/00",
+        "descricao": "Manutenção e reparação de veículos ferroviários"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.06",
+    "Descrição": "MANUTENCAO DE ELETRODOMESTICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "9529-1/99",
+        "descricao": "Reparação e manutenção de outros objetos e equipamentos pessoais e domésticos não especificados anteriormente"
+      },
+      {
+        "codigo": "3314-7/07",
+        "descricao": "Manutenção e reparação de máquinas e aparelhos de refrigeração e ventilação para uso industrial e comercial"
+      },
+      {
+        "codigo": "9521-5/00",
+        "descricao": "Reparação e manutenção de equipamentos eletroeletrônicos de uso pessoal e doméstico"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.07",
+    "Descrição": "MANUTENCAO DE INSTALACOES PREDIAIS DE GAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CFT - Conselho Federal dos Técnicos Industriais",
+      "CREA - Conselho Regional de Engenharia e Agronomia"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.08",
+    "Descrição": "MANUTENCAO DE DRAGAS E EMBARCACOES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "3314-7/17",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos de terraplenagem, pavimentação e construção, exceto tratores"
+      },
+      {
+        "codigo": "3314-7/15",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso na extração mineral, exceto na extração de petróleo"
+      },
+      {
+        "codigo": "3317-1/02",
+        "descricao": "Manutenção e reparação de embarcações para esporte e lazer"
+      },
+      {
+        "codigo": "3317-1/01",
+        "descricao": "Manutenção e reparação de embarcações e estruturas flutuantes"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.09",
+    "Descrição": "MANUTENCAO DE ELEVADORES, ESCADAS ROLANTES, MONTACARGAS, TALHAS,MONOV",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado",
+      "Autorização da SEDUR - Município de Salvador"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      },
+      {
+        "codigo": "4329-1/03",
+        "descricao": "Instalação, manutenção e reparação de elevadores, escadas e esteiras rolantes, exceto de fabricação própria"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.10",
+    "Descrição": "MANUTENCAO DE EQUIPAMENTO CINE - FOTO E OTICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "3312-1/04",
+        "descricao": "Manutenção e reparação de equipamentos e instrumentos ópticos"
+      },
+      {
+        "codigo": "9512-6/00",
+        "descricao": "Reparação e manutenção de equipamentos de comunicação"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.11",
+    "Descrição": "MANUTENCAO DE EQUIPAMENTO CIRURGICO-HOSPITALAR",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "2660-4/00",
+        "descricao": "Fabricação de aparelhos eletromédicos e eletroterapêuticos e equipamentos de irradiação"
+      },
+      {
+        "codigo": "3312-1/03",
+        "descricao": "Manutenção e reparação de aparelhos eletromédicos e eletroterapêuticos e equipamentos de irradiação"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "3312-1/04",
+        "descricao": "Manutenção e reparação de equipamentos e instrumentos ópticos"
+      },
+      {
+        "codigo": "9529-1/99",
+        "descricao": "Reparação e manutenção de outros objetos e equipamentos pessoais e domésticos não especificados anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.12",
+    "Descrição": "MANUTENCAO DE EQUIPAMENTO DE COMUTACAO E TRANSM TELEFONICA/TELEGRAFICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4221-9/05",
+        "descricao": "Manutenção de estações e redes de telecomunicações"
+      },
+      {
+        "codigo": "9512-6/00",
+        "descricao": "Reparação e manutenção de equipamentos de comunicação"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.13",
+    "Descrição": "MANUTENCAO DE EQUIPAMENTO DE COZINHA INDUSTRIAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3314-7/07",
+        "descricao": "Manutenção e reparação de máquinas e aparelhos de refrigeração e ventilação para uso industrial e comercial"
+      },
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      },
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.14",
+    "Descrição": "MANUTENCAO DE EQUIPAMENTO DE LAVANDERIA INDUSTRIAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      },
+      {
+        "codigo": "3314-7/03",
+        "descricao": "Manutenção e reparação de válvulas industriais"
+      },
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.15",
+    "Descrição": "MANUTENCAO DE EQUIPAMENTO DE MICROFILMAGEM",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "3312-1/04",
+        "descricao": "Manutenção e reparação de equipamentos e instrumentos ópticos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.16",
+    "Descrição": "MANUTENCAO DE EQUIPAMENTO DE RADIOCOMUNICACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "4221-9/05",
+        "descricao": "Manutenção de estações e redes de telecomunicações"
+      },
+      {
+        "codigo": "9512-6/00",
+        "descricao": "Reparação e manutenção de equipamentos de comunicação"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.17",
+    "Descrição": "MANUTENCAO DE EQUIPAMENTO DE REFRIGERACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3314-7/07",
+        "descricao": "Manutenção e reparação de máquinas e aparelhos de refrigeração e ventilação para uso industrial e comercial"
+      },
+      {
+        "codigo": "4322-3/02",
+        "descricao": "Instalação e manutenção de sistemas centrais de ar condicionado, de ventilação e refrigeração"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.18",
+    "Descrição": "MANUTENCAO DE ANTENAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "9512-6/00",
+        "descricao": "Reparação e manutenção de equipamentos de comunicação"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      },
+      {
+        "codigo": "4221-9/05",
+        "descricao": "Manutenção de estações e redes de telecomunicações"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.19",
+    "Descrição": "MANUTENCAO DE EQUIPAMENTOS E MATERIAIS ELETRICOS E ELETRONICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      },
+      {
+        "codigo": "9521-5/00",
+        "descricao": "Reparação e manutenção de equipamentos eletroeletrônicos de uso pessoal e doméstico"
+      },
+      {
+        "codigo": "3313-9/99",
+        "descricao": "Manutenção e reparação de máquinas, aparelhos e materiais elétricos não especificados anteriormente"
+      },
+      {
+        "codigo": "3313-9/01",
+        "descricao": "Manutenção e reparação de geradores, transformadores e motores elétricos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.20",
+    "Descrição": "MANUTENCAO DE EQUIPAMENTO E VIDRARIA DE LABORATORIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2319-2/00",
+        "descricao": "Fabricação de artigos de vidro"
+      },
+      {
+        "codigo": "3314-7/07",
+        "descricao": "Manutenção e reparação de máquinas e aparelhos de refrigeração e ventilação para uso industrial e comercial"
+      },
+      {
+        "codigo": "3312-1/04",
+        "descricao": "Manutenção e reparação de equipamentos e instrumentos ópticos"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.21",
+    "Descrição": "MANUTENCAO DE EQUIPAMENTO GRAFICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      },
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      },
+      {
+        "codigo": "3314-7/99",
+        "descricao": "Manutenção e reparação de outras máquinas e equipamentos para usos industriais não especificados anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.22",
+    "Descrição": "MANUTENCAO DE EQUIPAMENTOS INDUSTRIAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "3314-7/99",
+        "descricao": "Manutenção e reparação de outras máquinas e equipamentos para usos industriais não especificados anteriormente"
+      },
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      },
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.23",
+    "Descrição": "MANUTENCAO DE EXTINTORES  E MANGUEIRAS DE COMBATE A INCENDIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica",
+      "Certificado de Credenciamento CBM/BA"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      },
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      },
+      {
+        "codigo": "4322-3/03",
+        "descricao": "Instalações de sistema de prevenção contra incêndio"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.24",
+    "Descrição": "MANUTENCAO DE COBERTURAS E PISOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4330-4/99",
+        "descricao": "Outras obras de acabamento da construção"
+      },
+      {
+        "codigo": "4399-1/99",
+        "descricao": "Serviços especializados para construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4330-4/05",
+        "descricao": "Aplicação de revestimentos e de resinas em interiores e exteriores"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.25",
+    "Descrição": "MANUTENCAO DE HIDROMETRO/CAVALETE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4222-7/01",
+        "descricao": "Construção de redes de abastecimento de água, coleta de esgoto e construções correlatas, exceto obras de irrigação"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.26",
+    "Descrição": "MANUTENCAO DE INSTALACOES ELETRICAS E ELETRONICAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "4329-1/04",
+        "descricao": "Montagem e instalação de sistemas e equipamentos de iluminação e sinalização em vias públicas, portos e aeroportos"
+      },
+      {
+        "codigo": "3313-9/99",
+        "descricao": "Manutenção e reparação de máquinas, aparelhos e materiais elétricos não especificados anteriormente"
+      },
+      {
+        "codigo": "8020-0/01",
+        "descricao": "Atividades de monitoramento de sistemas de segurança eletrônico"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.27",
+    "Descrição": "MANUTENCAO DE INSTRUMENTOS DE PRECISAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "3312-1/04",
+        "descricao": "Manutenção e reparação de equipamentos e instrumentos ópticos"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.28",
+    "Descrição": "MANUTENCAO DE REDE LOGICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      },
+      {
+        "codigo": "6190-6/02",
+        "descricao": "Provedores de voz sobre protocolo internet - VOIP"
+      },
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      },
+      {
+        "codigo": "4221-9/04",
+        "descricao": "Construção de estações e redes de telecomunicações"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.29",
+    "Descrição": "MANUTENCAO DE INSTRUMENTOS MUSICAIS E ACESSORIOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3220-5/00",
+        "descricao": "Fabricação de instrumentos musicais, peças e acessórios"
+      },
+      {
+        "codigo": "3319-8/00",
+        "descricao": "Manutenção e reparação de equipamentos e produtos não especificados anteriormente"
+      },
+      {
+        "codigo": "9521-5/00",
+        "descricao": "Reparação e manutenção de equipamentos eletroeletrônicos de uso pessoal e doméstico"
+      },
+      {
+        "codigo": "9529-1/99",
+        "descricao": "Reparação e manutenção de outros objetos e equipamentos pessoais e domésticos não especificados anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.30",
+    "Descrição": "MANUTENCAO DE LINHAS DE TRANSMIS E DISTRIBUICAO DE ENERGIA ELETRICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      },
+      {
+        "codigo": "3313-9/01",
+        "descricao": "Manutenção e reparação de geradores, transformadores e motores elétricos"
+      },
+      {
+        "codigo": "4221-9/01",
+        "descricao": "Construção de barragens e represas para geração de energia elétrica"
+      },
+      {
+        "codigo": "4221-9/02",
+        "descricao": "Construção de estações e redes de distribuição de energia elétrica"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.31",
+    "Descrição": "MANUTENCAO DE MAQUINAS DE ESCRITORIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "9529-1/99",
+        "descricao": "Reparação e manutenção de outros objetos e equipamentos pessoais e domésticos não especificados anteriormente"
+      },
+      {
+        "codigo": "3319-8/00",
+        "descricao": "Manutenção e reparação de equipamentos e produtos não especificados anteriormente"
+      },
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.32",
+    "Descrição": "MANUTENCAO DE MEDIDORES DE ENERGIA ELETRICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "4221-9/02",
+        "descricao": "Construção de estações e redes de distribuição de energia elétrica"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.33",
+    "Descrição": "MANUTENCAO DE MICRO COMPUTADORES E PERIFERICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.34",
+    "Descrição": "MANUTENCAO DE NO BREAK E ESTABILIZADORES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "3313-9/01",
+        "descricao": "Manutenção e reparação de geradores, transformadores e motores elétricos"
+      },
+      {
+        "codigo": "3313-9/99",
+        "descricao": "Manutenção e reparação de máquinas, aparelhos e materiais elétricos não especificados anteriormente"
+      },
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.35",
+    "Descrição": "MANUTENCAO DE REDES  E SISTEMAS DE TELECOMUNICACOES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "9512-6/00",
+        "descricao": "Reparação e manutenção de equipamentos de comunicação"
+      },
+      {
+        "codigo": "4221-9/05",
+        "descricao": "Manutenção de estações e redes de telecomunicações"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.36",
+    "Descrição": "MANUTENCAO DE RELOGIOS DE PONTO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.37",
+    "Descrição": "MANUTENCAO DE APARELHOS E SISTEMAS DE AR CONDICIONADO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "9521-5/00",
+        "descricao": "Reparação e manutenção de equipamentos eletroeletrônicos de uso pessoal e doméstico"
+      },
+      {
+        "codigo": "3314-7/07",
+        "descricao": "Manutenção e reparação de máquinas e aparelhos de refrigeração e ventilação para uso industrial e comercial"
+      },
+      {
+        "codigo": "4322-3/02",
+        "descricao": "Instalação e manutenção de sistemas centrais de ar condicionado, de ventilação e refrigeração"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.38",
+    "Descrição": "MANUTENCAO DE SISTEMAS DE PROTECAO CONTRA INCENDIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado",
+      "Certificado de Credenciamento CBM/BA"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      },
+      {
+        "codigo": "4322-3/03",
+        "descricao": "Instalações de sistema de prevenção contra incêndio"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.39",
+    "Descrição": "MANUTENCAO DE SISTEMAS DE SINALIZACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4322-3/03",
+        "descricao": "Instalações de sistema de prevenção contra incêndio"
+      },
+      {
+        "codigo": "4329-1/04",
+        "descricao": "Montagem e instalação de sistemas e equipamentos de iluminação e sinalização em vias públicas, portos e aeroportos"
+      },
+      {
+        "codigo": "4211-1/02",
+        "descricao": "Pintura para sinalização em pistas rodoviárias e aeroportos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.40",
+    "Descrição": "MANUTENCAO DE SUB ESTACOES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "3313-9/01",
+        "descricao": "Manutenção e reparação de geradores, transformadores e motores elétricos"
+      },
+      {
+        "codigo": "4221-9/02",
+        "descricao": "Construção de estações e redes de distribuição de energia elétrica"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.41",
+    "Descrição": "MANUTENCAO DE TORRES DE TRANSMISSAO DE RADIODIFUSAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "4221-9/05",
+        "descricao": "Manutenção de estações e redes de telecomunicações"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.42",
+    "Descrição": "MANUTENCAO DE VIAS FERREAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4399-1/99",
+        "descricao": "Serviços especializados para construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4211-1/01",
+        "descricao": "Construção de rodovias e ferrovias"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.43",
+    "Descrição": "MANUTENCAO E OPERAC DE SIST DE ABASTEC AGUA/ESGOT SANITARIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      },
+      {
+        "codigo": "3701-1/00",
+        "descricao": "Gestão de redes de esgoto"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.44",
+    "Descrição": "MANUTENCAO DE EQUIPAMENTO AUDIOVISUAL E DE SOM",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4329-1/04",
+        "descricao": "Montagem e instalação de sistemas e equipamentos de iluminação e sinalização em vias públicas, portos e aeroportos"
+      },
+      {
+        "codigo": "3313-9/99",
+        "descricao": "Manutenção e reparação de máquinas, aparelhos e materiais elétricos não especificados anteriormente"
+      },
+      {
+        "codigo": "9521-5/00",
+        "descricao": "Reparação e manutenção de equipamentos eletroeletrônicos de uso pessoal e doméstico"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.45",
+    "Descrição": "MANUTENCAO E REPARO DE ARMA DE FOGO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3311-2/00",
+        "descricao": "Manutenção e reparação de tanques, reservatórios metálicos e caldeiras, exceto para veículos"
+      },
+      {
+        "codigo": "2550-1/02",
+        "descricao": "Fabricação de armas de fogo e munições"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.46",
+    "Descrição": "MANUTENCAO E REPARO DE EQUIPAMENTO DE TOPOGRAFIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "3312-1/04",
+        "descricao": "Manutenção e reparação de equipamentos e instrumentos ópticos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.47",
+    "Descrição": "MANUTENCAO E REPARO DE IMPLEMENTO AGRICOLA/MAQ. ESCAV. E TERRA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      },
+      {
+        "codigo": "3314-7/11",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para agricultura e pecuária"
+      },
+      {
+        "codigo": "3314-7/17",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos de terraplenagem, pavimentação e construção, exceto tratores"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.48",
+    "Descrição": "MANUTENCAO E REPARO EM BALANCAS MECANICAS E ELETRONICAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "INMETRO - ABNT",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.49",
+    "Descrição": "MANUTENCAO E REPARO EM PARA - RAIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "4399-1/99",
+        "descricao": "Serviços especializados para construção não especificados anteriormente"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.50",
+    "Descrição": "MANUTENCAO E REPARO DE MOTOCICLETA/BICICLETA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "9529-1/04",
+        "descricao": "Reparação de bicicletas, triciclos e outros veículos não-motorizados"
+      },
+      {
+        "codigo": "4543-9/00",
+        "descricao": "Manutenção e reparação de motocicletas e motonetas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.51",
+    "Descrição": "MANUTENCAO DE INSTALACOES HIDROSANITARIAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8129-0/00",
+        "descricao": "Atividades de limpeza não especificadas anteriormente"
+      },
+      {
+        "codigo": "3702-9/00",
+        "descricao": "Atividades relacionadas a esgoto, exceto a gestão de redes"
+      },
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.52",
+    "Descrição": "MANUTENCAO EM EQUIPAMENTO ODONTOLOGICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "3319-8/00",
+        "descricao": "Manutenção e reparação de equipamentos e produtos não especificados anteriormente"
+      },
+      {
+        "codigo": "3312-1/03",
+        "descricao": "Manutenção e reparação de aparelhos eletromédicos e eletroterapêuticos e equipamentos de irradiação"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.53",
+    "Descrição": "MANUTENCAO EM MAQUINA  AUTENTICADORA DE CHEQUE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.54",
+    "Descrição": "MANUTENCAO EM MAQUINA DE CONTAR NOTAS E MOEDAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.55",
+    "Descrição": "MANUTENCAO EM MAQUINA FOTOCOPIADORA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.56",
+    "Descrição": "MANUTENCAO EM PREDIOS E AREA PUBLICAS/POSTOS",
+    "Tipo": "S",
+    "Terceirizado": "Sim",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7830-2/00",
+        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
+      },
+      {
+        "codigo": "7820-5/00",
+        "descricao": "Locação de mão-de-obra temporária"
+      },
+      {
+        "codigo": "7810-8/00",
+        "descricao": "Seleção e agenciamento de mão-de-obra"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.57",
+    "Descrição": "MANUTENCAO EM MAQUINA DE PLASTIFICAR DOCUMENTOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3314-7/99",
+        "descricao": "Manutenção e reparação de outras máquinas e equipamentos para usos industriais não especificados anteriormente"
+      },
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.58",
+    "Descrição": "MANUTENCAO EM MICROSCOPIO OTICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "3312-1/04",
+        "descricao": "Manutenção e reparação de equipamentos e instrumentos ópticos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.59",
+    "Descrição": "MANUTENCAO EM PROJETOR DE IMAGEM",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "3313-9/99",
+        "descricao": "Manutenção e reparação de máquinas, aparelhos e materiais elétricos não especificados anteriormente"
+      },
+      {
+        "codigo": "3312-1/04",
+        "descricao": "Manutenção e reparação de equipamentos e instrumentos ópticos"
+      },
+      {
+        "codigo": "9521-5/00",
+        "descricao": "Reparação e manutenção de equipamentos eletroeletrônicos de uso pessoal e doméstico"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.60",
+    "Descrição": "MANUTENCAO DE CORTINAS, PERSIANAS E TOLDOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4329-1/99",
+        "descricao": "Outras obras de instalações em construções não especificadas anteriormente"
+      },
+      {
+        "codigo": "9601-7/01",
+        "descricao": "Lavanderias"
+      },
+      {
+        "codigo": "1351-1/00",
+        "descricao": "Fabricação de artefatos têxteis para uso doméstico"
+      },
+      {
+        "codigo": "9529-1/05",
+        "descricao": "Reparação de artigos do mobiliário"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.61",
+    "Descrição": "MANUTENCAO EM CARTUCHOS E RECARREGAMENTO DE TONER PARA IMPRESSORAS A L",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3839-4/99",
+        "descricao": "Recuperação de materiais não especificados anteriormente"
+      },
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.62",
+    "Descrição": "MANUTENCAO DE EQUIPAMENTOS MANUAIS P/ TRANSPORTE DE MATERIAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2539-0/01",
+        "descricao": "Serviços de usinagem, tornearia e solda"
+      },
+      {
+        "codigo": "3314-7/17",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos de terraplenagem, pavimentação e construção, exceto tratores"
+      },
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.63",
+    "Descrição": "INSPECAO DE VEICULOS AUTOMOTORES A GNV",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "INMETRO - ABNT",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.64",
+    "Descrição": "MANUTENCAO DE PURIFICADOR E DESTILADOR DE AGUA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8129-0/00",
+        "descricao": "Atividades de limpeza não especificadas anteriormente"
+      },
+      {
+        "codigo": "3314-7/07",
+        "descricao": "Manutenção e reparação de máquinas e aparelhos de refrigeração e ventilação para uso industrial e comercial"
+      },
+      {
+        "codigo": "9521-5/00",
+        "descricao": "Reparação e manutenção de equipamentos eletroeletrônicos de uso pessoal e doméstico"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.65",
+    "Descrição": "MANUTENCAO DE EQUIPAMENTOS MECANICOS DE PEQUENO PORTE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      },
+      {
+        "codigo": "3314-7/17",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos de terraplenagem, pavimentação e construção, exceto tratores"
+      },
+      {
+        "codigo": "3314-7/11",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para agricultura e pecuária"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.66",
+    "Descrição": "MANUTENCAO E REPARO DE SELARIA, ARREAMENTO, CHICOTE E ACESSORIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2599-3/99",
+        "descricao": "Fabricação de outros produtos de metal não especificados anteriormente"
+      },
+      {
+        "codigo": "1510-6/00",
+        "descricao": "Curtimento e outras preparações de couro"
+      },
+      {
+        "codigo": "9529-1/05",
+        "descricao": "Reparação de artigos do mobiliário"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.67",
+    "Descrição": "MANUTENCAO DE EQUIPAMENTO PARA GINASTICA E RECREACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "9529-1/99",
+        "descricao": "Reparação e manutenção de outros objetos e equipamentos pessoais e domésticos não especificados anteriormente"
+      },
+      {
+        "codigo": "4399-1/99",
+        "descricao": "Serviços especializados para construção não especificados anteriormente"
+      },
+      {
+        "codigo": "3319-8/00",
+        "descricao": "Manutenção e reparação de equipamentos e produtos não especificados anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.68",
+    "Descrição": "MANUTENCAO DE UNIDADE DE EDUCACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      },
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      },
+      {
+        "codigo": "9529-1/05",
+        "descricao": "Reparação de artigos do mobiliário"
+      },
+      {
+        "codigo": "4330-4/99",
+        "descricao": "Outras obras de acabamento da construção"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.69",
+    "Descrição": "MANUTENCAO E CONSTRUCAO DAS RODOVIAS ESTADUAIS POR CONSORCIO PUBLICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8130-3/00",
+        "descricao": "Atividades paisagísticas"
+      },
+      {
+        "codigo": "4213-8/00",
+        "descricao": "Obras de urbanização - ruas, praças e calçadas"
+      },
+      {
+        "codigo": "4211-1/02",
+        "descricao": "Pintura para sinalização em pistas rodoviárias e aeroportos"
+      },
+      {
+        "codigo": "4211-1/01",
+        "descricao": "Construção de rodovias e ferrovias"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.70",
+    "Descrição": "OPERACAO E MANUTENCAO DE EQUIPAMENTOS DE PERFURACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "3314-7/10",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso geral não especificados anteriormente"
+      },
+      {
+        "codigo": "4391-6/00",
+        "descricao": "Obras de fundações"
+      },
+      {
+        "codigo": "3314-7/15",
+        "descricao": "Manutenção e reparação de máquinas e equipamentos para uso na extração mineral, exceto na extração de petróleo"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.71",
+    "Descrição": "MANUTENCAO PREVENTIVA E CORRETIVA DE PREDIOS PUBLICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CAU - Conselho Regional Arquitetura e Urbanismo"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "4399-1/03",
+        "descricao": "Obras de alvenaria"
+      },
+      {
+        "codigo": "4330-4/04",
+        "descricao": "Serviços de pintura de edifícios em geral"
+      },
+      {
+        "codigo": "4120-4/00",
+        "descricao": "Construção de edifícios"
+      },
+      {
+        "codigo": "4330-4/99",
+        "descricao": "Outras obras de acabamento da construção"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.72",
+    "Descrição": "MANUTENCAO DE COLETOR DE DADOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.73",
+    "Descrição": "MANUTENCAO DE REDE ELETRICA EXECUTADA EXCLUSIVAMENTE PELA COELBA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3313-9/01",
+        "descricao": "Manutenção e reparação de geradores, transformadores e motores elétricos"
+      },
+      {
+        "codigo": "4221-9/02",
+        "descricao": "Construção de estações e redes de distribuição de energia elétrica"
+      },
+      {
+        "codigo": "3514-0/00",
+        "descricao": "Distribuição de energia elétrica"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.74",
+    "Descrição": "MANUTENCAO DE SOFTWARE EMBARCADO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "6203-1/00",
+        "descricao": "Desenvolvimento e licenciamento de programas de computador não-customizáveis"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "04.99",
+    "Descrição": "MANUTENCAO DE VEICULOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4520-0/04",
+        "descricao": "Serviços de alinhamento e balanceamento de veículos automotores"
+      },
+      {
+        "codigo": "4520-0/02",
+        "descricao": "Serviços de lanternagem ou funilaria e pintura de veículos automotores"
+      },
+      {
+        "codigo": "4520-0/03",
+        "descricao": "Serviços de manutenção e reparação elétrica de veículos automotores"
+      },
+      {
+        "codigo": "4520-0/01",
+        "descricao": "Serviços de manutenção e reparação mecânica de veículos automotores"
+      }
+    ],
+    "Ramo": {
+      "codigo": "04",
+      "nome": "Serviços de Manutenção de Assistência Técnica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

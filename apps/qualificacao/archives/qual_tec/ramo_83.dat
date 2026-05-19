@@ -1,0 +1,110 @@
+[
+  {
+    "Família": "83.05",
+    "Descrição": "TECIDOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "83",
+      "nome": "Tecidos, Couros, Peles, Aviamentos, Barracas e Bandeiras"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "83.10",
+    "Descrição": "FIOS E LINHAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "83",
+      "nome": "Tecidos, Couros, Peles, Aviamentos, Barracas e Bandeiras"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "83.15",
+    "Descrição": "MIUDEZAS E AVIAMENTOS PARA COSTURA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "83",
+      "nome": "Tecidos, Couros, Peles, Aviamentos, Barracas e Bandeiras"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "83.20",
+    "Descrição": "MATERIAIS PARA ENCHIMENTO DE ESTOFADOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "83",
+      "nome": "Tecidos, Couros, Peles, Aviamentos, Barracas e Bandeiras"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "83.25",
+    "Descrição": "PELES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "83",
+      "nome": "Tecidos, Couros, Peles, Aviamentos, Barracas e Bandeiras"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "83.30",
+    "Descrição": "COUROS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "83",
+      "nome": "Tecidos, Couros, Peles, Aviamentos, Barracas e Bandeiras"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "83.35",
+    "Descrição": "MATERIAIS PARA CALCADOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "83",
+      "nome": "Tecidos, Couros, Peles, Aviamentos, Barracas e Bandeiras"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "83.40",
+    "Descrição": "BARRACAS E ENCERADOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "83",
+      "nome": "Tecidos, Couros, Peles, Aviamentos, Barracas e Bandeiras"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "83.45",
+    "Descrição": "BANDEIRAS, FLAMULAS E PAVILHOES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "83",
+      "nome": "Tecidos, Couros, Peles, Aviamentos, Barracas e Bandeiras"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

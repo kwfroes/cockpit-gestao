@@ -1,0 +1,98 @@
+[
+  {
+    "Família": "39.10",
+    "Descrição": "TRANSPORTADORES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "39",
+      "nome": "Equipamentos para Manuseio de Material"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "39.15",
+    "Descrição": "EQUIPAMENTOS ALIMENTADORES DE MATERIAS PRIMAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "39",
+      "nome": "Equipamentos para Manuseio de Material"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "39.20",
+    "Descrição": "EQUIPAMENTOS NAO PROPULSIONADOS P/  MOVIMENTACAO DE MATERIAIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "39",
+      "nome": "Equipamentos para Manuseio de Material"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "39.30",
+    "Descrição": "VEICULOS AUTO PROPULSIONADOS PARA ARMAZENS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "39",
+      "nome": "Equipamentos para Manuseio de Material"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "39.40",
+    "Descrição": "POLEAMES, TALHAS, MOITOES, MASSAMES E LINGAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "39",
+      "nome": "Equipamentos para Manuseio de Material"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "39.50",
+    "Descrição": "GUINCHOS, ICADORES, GUINDASTES E CABREAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "39",
+      "nome": "Equipamentos para Manuseio de Material"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "39.60",
+    "Descrição": "ELEVADORES E ESCADAS ROLANTES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "39",
+      "nome": "Equipamentos para Manuseio de Material"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "39.90",
+    "Descrição": "EQUIPAMENTOS DIVERSOS PARA MOVIMENTACAO DE MATERIAIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "39",
+      "nome": "Equipamentos para Manuseio de Material"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

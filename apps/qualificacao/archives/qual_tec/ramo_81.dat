@@ -1,0 +1,110 @@
+[
+  {
+    "Família": "81.05",
+    "Descrição": "SACOS E BOLSAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "81",
+      "nome": "Recipientes e Materiais de Acondicionamento e Embalagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "81.10",
+    "Descrição": "TAMBORES E LATAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "81",
+      "nome": "Recipientes e Materiais de Acondicionamento e Embalagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "81.15",
+    "Descrição": "CAIXAS, CAIXOTES E ENGRADADOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "81",
+      "nome": "Recipientes e Materiais de Acondicionamento e Embalagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "81.20",
+    "Descrição": "CILINDROS COMERCIAIS E INDUSTRIAIS PARA GASES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "81",
+      "nome": "Recipientes e Materiais de Acondicionamento e Embalagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "81.25",
+    "Descrição": "GARRAFAS E JARROS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "81",
+      "nome": "Recipientes e Materiais de Acondicionamento e Embalagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "81.30",
+    "Descrição": "CARRETEIS E BOBINAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "81",
+      "nome": "Recipientes e Materiais de Acondicionamento e Embalagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "81.35",
+    "Descrição": "MATERIAIS A GRANEL PARA ACONDICIONAMENTO E EMBALAGENS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "81",
+      "nome": "Recipientes e Materiais de Acondicionamento e Embalagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "81.40",
+    "Descrição": "CAIXAS, RECIPIENTES E EMBAL ESPEC PARA ARMAMENTO NUCLEAR E MUNICAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "81",
+      "nome": "Recipientes e Materiais de Acondicionamento e Embalagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "81.45",
+    "Descrição": "RECIPIENTES E ACONDICIONAMENTO DE EMBALAGEM DE VESTIGIOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "81",
+      "nome": "Recipientes e Materiais de Acondicionamento e Embalagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

@@ -1,0 +1,378 @@
+[
+  {
+    "Família": "84.05",
+    "Descrição": "VESTUARIO EXTERNO MASCULINO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4781-4/00",
+        "descricao": "Comércio varejista de artigos do vestuário e acessórios"
+      },
+      {
+        "codigo": "1412-6/01",
+        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
+      },
+      {
+        "codigo": "1411-8/02",
+        "descricao": "Facção de roupas íntimas"
+      },
+      {
+        "codigo": "1359-6/00",
+        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+      },
+      {
+        "codigo": "1354-5/00",
+        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "84",
+      "nome": "Vestuários e Equipamentos Individuais e Insignias"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "84.10",
+    "Descrição": "VESTUARIO EXTERNO FEMININO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4781-4/00",
+        "descricao": "Comércio varejista de artigos do vestuário e acessórios"
+      },
+      {
+        "codigo": "1412-6/01",
+        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
+      },
+      {
+        "codigo": "1411-8/02",
+        "descricao": "Facção de roupas íntimas"
+      },
+      {
+        "codigo": "1359-6/00",
+        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+      },
+      {
+        "codigo": "1354-5/00",
+        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "84",
+      "nome": "Vestuários e Equipamentos Individuais e Insignias"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "84.15",
+    "Descrição": "VESTUARIO PARA FINS ESPECIAIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4642-7/02",
+        "descricao": "Comércio atacadista de roupas e acessórios para uso profissional e de segurança do trabalho"
+      },
+      {
+        "codigo": "4781-4/00",
+        "descricao": "Comércio varejista de artigos do vestuário e acessórios"
+      }
+    ],
+    "Ramo": {
+      "codigo": "84",
+      "nome": "Vestuários e Equipamentos Individuais e Insignias"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "84.20",
+    "Descrição": "ROUPAS INTIMAS E PARA DORMIR, MASCULINAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4781-4/00",
+        "descricao": "Comércio varejista de artigos do vestuário e acessórios"
+      },
+      {
+        "codigo": "1412-6/01",
+        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
+      },
+      {
+        "codigo": "1411-8/02",
+        "descricao": "Facção de roupas íntimas"
+      },
+      {
+        "codigo": "1359-6/00",
+        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+      },
+      {
+        "codigo": "1354-5/00",
+        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "84",
+      "nome": "Vestuários e Equipamentos Individuais e Insignias"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "84.25",
+    "Descrição": "ROUPAS INTIMAS E PARA DORMIR, FEMININA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4781-4/00",
+        "descricao": "Comércio varejista de artigos do vestuário e acessórios"
+      },
+      {
+        "codigo": "1412-6/01",
+        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
+      },
+      {
+        "codigo": "1411-8/02",
+        "descricao": "Facção de roupas íntimas"
+      },
+      {
+        "codigo": "1359-6/00",
+        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+      },
+      {
+        "codigo": "1354-5/00",
+        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "84",
+      "nome": "Vestuários e Equipamentos Individuais e Insignias"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "84.30",
+    "Descrição": "CALCADOS MASCULINOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4782-2/01",
+        "descricao": "Comércio varejista de calçados"
+      }
+    ],
+    "Ramo": {
+      "codigo": "84",
+      "nome": "Vestuários e Equipamentos Individuais e Insignias"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "84.35",
+    "Descrição": "CALCADOS FEMININOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "84",
+      "nome": "Vestuários e Equipamentos Individuais e Insignias"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "84.40",
+    "Descrição": "MEIAS, LUVAS E OUTROS COMPLEMENTOS DO VESTUARIO MASCULINO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "1354-5/00",
+        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
+      },
+      {
+        "codigo": "1359-6/00",
+        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+      },
+      {
+        "codigo": "1411-8/02",
+        "descricao": "Facção de roupas íntimas"
+      },
+      {
+        "codigo": "1412-6/01",
+        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
+      }
+    ],
+    "Ramo": {
+      "codigo": "84",
+      "nome": "Vestuários e Equipamentos Individuais e Insignias"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "84.45",
+    "Descrição": "MEIAS, LUVAS E OUTROS  COMPLEMENTOS DO VESTUARIO FEMININO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "1354-5/00",
+        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
+      },
+      {
+        "codigo": "1359-6/00",
+        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+      },
+      {
+        "codigo": "1411-8/02",
+        "descricao": "Facção de roupas íntimas"
+      },
+      {
+        "codigo": "1412-6/01",
+        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
+      }
+    ],
+    "Ramo": {
+      "codigo": "84",
+      "nome": "Vestuários e Equipamentos Individuais e Insignias"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "84.50",
+    "Descrição": "VESTUARIO INFANTIL E COMPLEMENTOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "1354-5/00",
+        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
+      },
+      {
+        "codigo": "1359-6/00",
+        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+      },
+      {
+        "codigo": "1411-8/02",
+        "descricao": "Facção de roupas íntimas"
+      },
+      {
+        "codigo": "1412-6/01",
+        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
+      }
+    ],
+    "Ramo": {
+      "codigo": "84",
+      "nome": "Vestuários e Equipamentos Individuais e Insignias"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "84.55",
+    "Descrição": "DISTINTIVOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "84",
+      "nome": "Vestuários e Equipamentos Individuais e Insignias"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "84.60",
+    "Descrição": "MALAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "84",
+      "nome": "Vestuários e Equipamentos Individuais e Insignias"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "84.65",
+    "Descrição": "EQUIPAMENTOS INDIVIDUAIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "84",
+      "nome": "Vestuários e Equipamentos Individuais e Insignias"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "84.70",
+    "Descrição": "ROUPAS DE PROTECAO CONTRA PROJETEIS",
+    "Documentos Exigidos": [
+      "Ministério da Defesa - Exército"
+    ],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "84",
+      "nome": "Vestuários e Equipamentos Individuais e Insignias"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "84.75",
+    "Descrição": "VESTUARIO ESPECIALIZADOS PARA VOO E ACESSORIOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "84",
+      "nome": "Vestuários e Equipamentos Individuais e Insignias"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "84.80",
+    "Descrição": "VESTUARIO ESPORTIVO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "1354-5/00",
+        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
+      },
+      {
+        "codigo": "1359-6/00",
+        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+      },
+      {
+        "codigo": "1411-8/02",
+        "descricao": "Facção de roupas íntimas"
+      },
+      {
+        "codigo": "1412-6/01",
+        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
+      }
+    ],
+    "Ramo": {
+      "codigo": "84",
+      "nome": "Vestuários e Equipamentos Individuais e Insignias"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

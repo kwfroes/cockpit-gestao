@@ -1,0 +1,38 @@
+[
+  {
+    "Família": "85.10",
+    "Descrição": "ARTIGOS PARA TOALETES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "85",
+      "nome": "Artigos para Higiene Pessoal"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "85.30",
+    "Descrição": "ARTIGOS PARA HIGIENE PESSOAL",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "85",
+      "nome": "Artigos para Higiene Pessoal"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "85.40",
+    "Descrição": "ARTIGOS DE PAPEL PARA HIGIENE",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "85",
+      "nome": "Artigos para Higiene Pessoal"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

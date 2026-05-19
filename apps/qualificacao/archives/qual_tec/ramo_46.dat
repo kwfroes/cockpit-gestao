@@ -1,0 +1,50 @@
+[
+  {
+    "Família": "46.10",
+    "Descrição": "EQUIPAMENTOS PARA PURIFICACAO DE AGUA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "46",
+      "nome": "Equipamentos para Purificação de Água e Tratamento de Esgotos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "46.15",
+    "Descrição": "ACESSORIO PARA EQUIP. PURIFICAÇÃO DE ÁGUA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "46",
+      "nome": "Equipamentos para Purificação de Água e Tratamento de Esgotos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "46.20",
+    "Descrição": "EQUIPAMENTOS PARA DESTILACAO DE AGUA, PARA USO MARITIMO E INDUSTRIAL",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "46",
+      "nome": "Equipamentos para Purificação de Água e Tratamento de Esgotos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "46.30",
+    "Descrição": "EQUIPAMENTOS PARA TRATAMENTO DE ESGOTOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "46",
+      "nome": "Equipamentos para Purificação de Água e Tratamento de Esgotos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

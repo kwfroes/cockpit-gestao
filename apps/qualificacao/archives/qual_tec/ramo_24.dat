@@ -1,0 +1,95 @@
+[
+  {
+    "Família": "24.10",
+    "Descrição": "TRATORES DE BAIXA VELOCIDADE SOBRE LAGARTAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4661-3/00",
+        "descricao": "Comércio atacadista de máquinas, aparelhos e equipamentos para uso agropecuário; partes e peças"
+      },
+      {
+        "codigo": "2833-0/00",
+        "descricao": "Fabricação de máquinas e equipamentos para a agricultura e pecuária, peças e acessórios, exceto para irrigação"
+      },
+      {
+        "codigo": "2854-2/00",
+        "descricao": "Fabricação de máquinas e equipamentos para terraplenagem, pavimentação e construção, peças e acessórios, exceto tratores"
+      },
+      {
+        "codigo": "4662-1/00",
+        "descricao": "Comércio atacadista de máquinas, equipamentos para terraplenagem, mineração e construção; partes e peças"
+      }
+    ],
+    "Ramo": {
+      "codigo": "24",
+      "nome": "Tratores"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "24.20",
+    "Descrição": "TRATORES SOBRE RODAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2833-0/00",
+        "descricao": "Fabricação de máquinas e equipamentos para a agricultura e pecuária, peças e acessórios, exceto para irrigação"
+      },
+      {
+        "codigo": "2854-2/00",
+        "descricao": "Fabricação de máquinas e equipamentos para terraplenagem, pavimentação e construção, peças e acessórios, exceto tratores"
+      },
+      {
+        "codigo": "4661-3/00",
+        "descricao": "Comércio atacadista de máquinas, aparelhos e equipamentos para uso agropecuário; partes e peças"
+      },
+      {
+        "codigo": "4662-1/00",
+        "descricao": "Comércio atacadista de máquinas, equipamentos para terraplenagem, mineração e construção; partes e peças"
+      }
+    ],
+    "Ramo": {
+      "codigo": "24",
+      "nome": "Tratores"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "24.30",
+    "Descrição": "TRATORES DE ALTA VELOCIDADE SOBRE LAGARTAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2854-2/00",
+        "descricao": "Fabricação de máquinas e equipamentos para terraplenagem, pavimentação e construção, peças e acessórios, exceto tratores"
+      },
+      {
+        "codigo": "2833-0/00",
+        "descricao": "Fabricação de máquinas e equipamentos para a agricultura e pecuária, peças e acessórios, exceto para irrigação"
+      },
+      {
+        "codigo": "4661-3/00",
+        "descricao": "Comércio atacadista de máquinas, aparelhos e equipamentos para uso agropecuário; partes e peças"
+      },
+      {
+        "codigo": "4662-1/00",
+        "descricao": "Comércio atacadista de máquinas, equipamentos para terraplenagem, mineração e construção; partes e peças"
+      }
+    ],
+    "Ramo": {
+      "codigo": "24",
+      "nome": "Tratores"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

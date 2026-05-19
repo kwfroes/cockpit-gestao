@@ -1,0 +1,317 @@
+[
+  {
+    "Família": "29.10",
+    "Descrição": "COMPONENTES DO SISTEMA DE COMBUST DE MOTORES, EXCETO OS DE AERONAVE",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2219-6/00",
+        "descricao": "Fabricação de artefatos de borracha não especificados anteriormente"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2941-7/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema motor de veículos automotores"
+      },
+      {
+        "codigo": "2910-7/01",
+        "descricao": "Fabricação de automóveis, camionetas e utilitários"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      }
+    ],
+    "Ramo": {
+      "codigo": "29",
+      "nome": "Acessórios de Motores"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "29.15",
+    "Descrição": "COMPONENTES DO SISTEMA DE COMBUSTIVEL DE MOTORES DE AERONAVES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      },
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "3041-5/00",
+        "descricao": "Fabricação de aeronaves"
+      }
+    ],
+    "Ramo": {
+      "codigo": "29",
+      "nome": "Acessórios de Motores"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "29.20",
+    "Descrição": "COMPONENTES DO SISTEMA ELETRICO DE MOTORES, EXCETO OS DE AERONAVES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      },
+      {
+        "codigo": "2790-2/01",
+        "descricao": "Fabricação de eletrodos, contatos e outros artigos de carvão e grafita para uso elétrico, eletroímãs e isoladores"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2941-7/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema motor de veículos automotores"
+      }
+    ],
+    "Ramo": {
+      "codigo": "29",
+      "nome": "Acessórios de Motores"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "29.25",
+    "Descrição": "COMPONENTES DE SISTEMA ELETRICO DE MOTORES DE AERONAVES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      }
+    ],
+    "Ramo": {
+      "codigo": "29",
+      "nome": "Acessórios de Motores"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "29.30",
+    "Descrição": "COMPONENTES DE SIST DE RESFRIAM DE MOTOR, EXCETO OS DE AERONAVE",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2941-7/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema motor de veículos automotores"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      },
+      {
+        "codigo": "2219-6/00",
+        "descricao": "Fabricação de artefatos de borracha não especificados anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "29",
+      "nome": "Acessórios de Motores"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "29.35",
+    "Descrição": "COMPONENTES DE SISTEMA DE RESFRIAMENTO DE MOTORES DE AERONAVES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      },
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      }
+    ],
+    "Ramo": {
+      "codigo": "29",
+      "nome": "Acessórios de Motores"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "29.40",
+    "Descrição": "FILTROS DE AR E OLEO, PENEIRAS E PURIF. DE MOTORES, EXCETO O DE AERONA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2941-7/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema motor de veículos automotores"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      }
+    ],
+    "Ramo": {
+      "codigo": "29",
+      "nome": "Acessórios de Motores"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "29.45",
+    "Descrição": "FILTROS DE AR E DE OLEO, PENEIRAS E PURIFICADORES DE MOTORES DE AERONA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      }
+    ],
+    "Ramo": {
+      "codigo": "29",
+      "nome": "Acessórios de Motores"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "29.50",
+    "Descrição": "TURBO SUPERCOMPRESSORES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      },
+      {
+        "codigo": "2941-7/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema motor de veículos automotores"
+      }
+    ],
+    "Ramo": {
+      "codigo": "29",
+      "nome": "Acessórios de Motores"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "29.90",
+    "Descrição": "ACESSORIOS DIVERSOS DE MOTORES-EXCETO OS DE AERONAVE",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "29",
+      "nome": "Acessórios de Motores"
+    },
+    "CNAEs": [
+      {
+        "codigo": "2941-7/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema motor de veículos automotores"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      },
+      {
+        "codigo": "2219-6/00",
+        "descricao": "Fabricação de artefatos de borracha não especificados anteriormente"
+      }
+    ],
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "29.95",
+    "Descrição": "ACESSORIOS DIVERSOS DE MOTORES DE AERONAVES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "29",
+      "nome": "Acessórios de Motores"
+    },
+    "CNAEs": [
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      },
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      }
+    ],
+    "_signature": "Autor Kevin Fróes"
+  }
+]

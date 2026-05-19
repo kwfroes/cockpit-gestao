@@ -1,0 +1,253 @@
+[
+  {
+    "Família": "65.01",
+    "Descrição": "MEDICAMENTOS PARA ACAO JUDICIAL",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária",
+      "Autorização do Ministério da Saúde - DOU"
+    ],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "65",
+      "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "65.02",
+    "Descrição": "MEDICAMENTOS E CORRELATOS",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária",
+      "Autorização do Ministério da Saúde - DOU"
+    ],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "65",
+      "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "65.03",
+    "Descrição": "MEDICAMENTOS VETERINARIOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [
+      "Alvará de Vigilância Sanitária",
+      "Ministério da Agricultura"
+    ],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "65",
+      "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "65.04",
+    "Descrição": "PECAS E ACESSORIOS PARA EQUIP., INSTALACOES HOSP. E PARA LABORATORIOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "65",
+      "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "65.05",
+    "Descrição": "DROGAS, PRODUTOS BIOLOGICOS E REAGENTES",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária",
+      "Autorização do Ministério da Saúde - DOU"
+    ],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "65",
+      "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "65.07",
+    "Descrição": "ANTICONCEPCIONAIS E PRESERVATIVOS",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária",
+      "Autorização do Ministério da Saúde - DOU"
+    ],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "65",
+      "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "65.08",
+    "Descrição": "COSMETICOS E ARTIGOS DE TOUCADOR DE NATUREZA MEDICINAL",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária"
+    ],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "65",
+      "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "65.10",
+    "Descrição": "MATERIAIS CIRURGICOS PARA CURATIVOS",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária"
+    ],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "65",
+      "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "65.15",
+    "Descrição": "INSTRUMENTOS, EQUIPAMENTOS E SUPRIMENTOS MEDICOS E CIRURGICOS",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária"
+    ],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "65",
+      "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "65.16",
+    "Descrição": "INSTRUMENTOS, EQUIP E SUPRIMENTOS MEDICOS E CIRURGICOS USO VETERINARIO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "65",
+      "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "65.20",
+    "Descrição": "MATERIAIS E EQUIPAMENTOS PARA USO ODONTOLOGICO",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária"
+    ],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "65",
+      "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "65.25",
+    "Descrição": "EQUIP E SUPRIMENTOS PARA RAIO X DE USO MEDICO, ODONTOLOG E VETERINARIO",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária"
+    ],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "65",
+      "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "65.30",
+    "Descrição": "MOBILIARIOS, EQUIPAMENTOS, UTENSILIOS E ARTIGOS HOSPITALARES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "65",
+      "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "65.31",
+    "Descrição": "ARTIGOS HOSPITALARES EM TECIDO E UTENSILIOS PARA REABILITACAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "65",
+      "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "65.32",
+    "Descrição": "VESTUARIO HOSPITALAR E CIRURGICO E ITENS CORRELAT. PAR FINS ESPECIAIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [
+      "Alvará de Vigilância Sanitária",
+      "Declaração de Dispensa de Ato Público - Baixo Risco"
+    ],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "65",
+      "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "65.40",
+    "Descrição": "EQUIPAMENTOS, INSTRUMENTOS E ARTIGOS OFTALMOLOGICOS",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária"
+    ],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "65",
+      "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "65.45",
+    "Descrição": "JOGOS E CONJUNTOS MEDICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [
+      "Alvará de Vigilância Sanitária",
+      "Declaração de Dispensa de Ato Público - Baixo Risco"
+    ],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "65",
+      "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "65.50",
+    "Descrição": "ORTESES, PROTESES E MATERIAIS ESPECIAIS - OPME",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária"
+    ],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "65",
+      "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

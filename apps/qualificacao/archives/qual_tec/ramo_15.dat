@@ -1,0 +1,25 @@
+[
+  {
+    "Família": "15.10",
+    "Descrição": "AERONAVES E SEUS COMPONENTES ESTRUTURAIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3316-3/01",
+        "descricao": "Manutenção e reparação de aeronaves, exceto a manutenção na pista"
+      },
+      {
+        "codigo": "3041-5/00",
+        "descricao": "Fabricação de aeronaves"
+      }
+    ],
+    "Ramo": {
+      "codigo": "15",
+      "nome": "Aeronaves seus Componentes Estruturais"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

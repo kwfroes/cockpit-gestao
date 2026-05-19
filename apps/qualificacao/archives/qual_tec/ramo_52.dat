@@ -1,0 +1,38 @@
+[
+  {
+    "Família": "52.10",
+    "Descrição": "INSTRUMENTOS DE MEDICAO PARA PROFISSIONAIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "52",
+      "nome": "Instrumentos de Medição"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "52.20",
+    "Descrição": "CALIBRES DE INSPECAO E FERRAMENTAS DE PRECISAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "52",
+      "nome": "Instrumentos de Medição"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "52.80",
+    "Descrição": "JOGOS E CONJUNTOS DE INSTRUMENTOS DE MEDICAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "52",
+      "nome": "Instrumentos de Medição"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

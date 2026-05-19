@@ -1,0 +1,152 @@
+[
+  {
+    "Família": "35.10",
+    "Descrição": "EQUIPAMENTOS DE LAVANDERIA E LAVAGEM A SECO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "4665-6/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso comercial; partes e peças"
+      }
+    ],
+    "Ramo": {
+      "codigo": "35",
+      "nome": "Equipamentos para Serviços"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "35.20",
+    "Descrição": "EQUIPAMENTOS PARA CONSERTO DE CALCADOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2864-0/00",
+        "descricao": "Fabricação de máquinas e equipamentos para as indústrias do vestuário, do couro e de calçados, peças e acessórios"
+      }
+    ],
+    "Ramo": {
+      "codigo": "35",
+      "nome": "Equipamentos para Serviços"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "35.30",
+    "Descrição": "MAQUINAS INDUST. DE COSTURAR/OFICINAS MOVEIS DE REPARO EM TECIDOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4665-6/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso comercial; partes e peças"
+      },
+      {
+        "codigo": "2864-0/00",
+        "descricao": "Fabricação de máquinas e equipamentos para as indústrias do vestuário, do couro e de calçados, peças e acessórios"
+      }
+    ],
+    "Ramo": {
+      "codigo": "35",
+      "nome": "Equipamentos para Serviços"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "35.40",
+    "Descrição": "MAQUINAS DE ACONDICIONAR E EMBALAR",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "4665-6/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso comercial; partes e peças"
+      },
+      {
+        "codigo": "2829-1/99",
+        "descricao": "Fabricação de outras máquinas e equipamentos de uso geral não especificados anteriormente, peças e acessórios"
+      }
+    ],
+    "Ramo": {
+      "codigo": "35",
+      "nome": "Equipamentos para Serviços"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "35.50",
+    "Descrição": "MAQUINAS ACIONADAS COM MOEDAS (FICHAS)",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "4665-6/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso comercial; partes e peças"
+      }
+    ],
+    "Ramo": {
+      "codigo": "35",
+      "nome": "Equipamentos para Serviços"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "35.90",
+    "Descrição": "EQUIPAMENTOS DIVERSOS PARA SERVICOS PROFISSIONAIS E COMERCIAIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "4665-6/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso comercial; partes e peças"
+      },
+      {
+        "codigo": "2829-1/99",
+        "descricao": "Fabricação de outras máquinas e equipamentos de uso geral não especificados anteriormente, peças e acessórios"
+      }
+    ],
+    "Ramo": {
+      "codigo": "35",
+      "nome": "Equipamentos para Serviços"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

@@ -1,0 +1,644 @@
+[
+  {
+    "Família": "05.01",
+    "Descrição": "CARREGAMENTO DE MATERIAL BELICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "5211-7/99",
+        "descricao": "Depósitos de mercadorias para terceiros, exceto armazéns gerais e guarda-móveis"
+      },
+      {
+        "codigo": "4930-2/03",
+        "descricao": "Transporte rodoviário de produtos perigosos"
+      },
+      {
+        "codigo": "5212-5/00",
+        "descricao": "Carga e descarga"
+      }
+    ],
+    "Ramo": {
+      "codigo": "05",
+      "nome": "Serviços de Transporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "05.02",
+    "Descrição": "TRANSPORTE AEREO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "ANAC - Agencia Nacional de Aviação Civil",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "5240-1/99",
+        "descricao": "Atividades auxiliares dos transportes aéreos, exceto operação dos aeroportos e campos de aterrissagem"
+      },
+      {
+        "codigo": "5120-0/00",
+        "descricao": "Transporte aéreo de carga"
+      },
+      {
+        "codigo": "5112-9/01",
+        "descricao": "Serviço de táxi aéreo e locação de aeronaves com tripulação"
+      },
+      {
+        "codigo": "5111-1/00",
+        "descricao": "Transporte aéreo de passageiros regular"
+      }
+    ],
+    "Ramo": {
+      "codigo": "05",
+      "nome": "Serviços de Transporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "05.03",
+    "Descrição": "TRANSPORTE DE MUDANCA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "5212-5/00",
+        "descricao": "Carga e descarga"
+      },
+      {
+        "codigo": "4930-2/04",
+        "descricao": "Transporte rodoviário de mudanças"
+      }
+    ],
+    "Ramo": {
+      "codigo": "05",
+      "nome": "Serviços de Transporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "05.04",
+    "Descrição": "TRANSPORTE FERROVIARIO DE CARGA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "5250-8/03",
+        "descricao": "Agenciamento de cargas, exceto para o transporte marítimo"
+      },
+      {
+        "codigo": "5212-5/00",
+        "descricao": "Carga e descarga"
+      },
+      {
+        "codigo": "4911-6/00",
+        "descricao": "Transporte ferroviário de carga"
+      }
+    ],
+    "Ramo": {
+      "codigo": "05",
+      "nome": "Serviços de Transporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "05.05",
+    "Descrição": "TRANSPORTE FERROVIARIO DE PESSOAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4912-4/03",
+        "descricao": "Transporte metroviário"
+      },
+      {
+        "codigo": "4912-4/02",
+        "descricao": "Transporte ferroviário de passageiros municipal e em região metropolitana"
+      },
+      {
+        "codigo": "4912-4/01",
+        "descricao": "Transporte ferroviário de passageiros intermunicipal e interestadual"
+      }
+    ],
+    "Ramo": {
+      "codigo": "05",
+      "nome": "Serviços de Transporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "05.06",
+    "Descrição": "TRANSPORTE MARITIMO E FLUVIAL DE CARGA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "5231-1/02",
+        "descricao": "Operações de terminais"
+      },
+      {
+        "codigo": "5099-8/99",
+        "descricao": "Outros transportes aquaviários não especificados anteriormente"
+      },
+      {
+        "codigo": "5021-1/01",
+        "descricao": "Transporte por navegação interior de carga, municipal, exceto travessia"
+      },
+      {
+        "codigo": "5011-4/01",
+        "descricao": "Transporte marítimo de cabotagem - Carga"
+      }
+    ],
+    "Ramo": {
+      "codigo": "05",
+      "nome": "Serviços de Transporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "05.07",
+    "Descrição": "TRANSPORTE MARITIMO E FLUVIAL DE PESSOAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "5099-8/99",
+        "descricao": "Outros transportes aquaviários não especificados anteriormente"
+      },
+      {
+        "codigo": "5091-2/02",
+        "descricao": "Transporte por navegação de travessia, intermunicipal"
+      },
+      {
+        "codigo": "5022-0/01",
+        "descricao": "Transporte por navegação interior de passageiros em linhas regulares, municipal, exceto travessia"
+      },
+      {
+        "codigo": "5012-2/02",
+        "descricao": "Transporte marítimo de longo curso - Passageiros"
+      }
+    ],
+    "Ramo": {
+      "codigo": "05",
+      "nome": "Serviços de Transporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "05.08",
+    "Descrição": "TRANSPORTE RODOVIÁRIO - CARGAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "5250-8/03",
+        "descricao": "Agenciamento de cargas, exceto para o transporte marítimo"
+      },
+      {
+        "codigo": "4930-2/03",
+        "descricao": "Transporte rodoviário de produtos perigosos"
+      },
+      {
+        "codigo": "4930-2/01",
+        "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, municipal"
+      },
+      {
+        "codigo": "4930-2/02",
+        "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, intermunicipal, interestadual e internacional"
+      },
+      {
+        "codigo": "5012-2/01",
+        "descricao": "Transporte marítimo de longo curso - Carga"
+      }
+    ],
+    "Ramo": {
+      "codigo": "05",
+      "nome": "Serviços de Transporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "05.09",
+    "Descrição": "TRANSPORTE RODOVIARIO - COMBUSTIVEL/LUBRIFICANTE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4930-2/03",
+        "descricao": "Transporte rodoviário de produtos perigosos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "05",
+      "nome": "Serviços de Transporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "05.10",
+    "Descrição": "TRANSPORTE RODOVIARIO - CONTEINERS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4930-2/03",
+        "descricao": "Transporte rodoviário de produtos perigosos"
+      },
+      {
+        "codigo": "5212-5/00",
+        "descricao": "Carga e descarga"
+      },
+      {
+        "codigo": "4930-2/02",
+        "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, intermunicipal, interestadual e internacional"
+      }
+    ],
+    "Ramo": {
+      "codigo": "05",
+      "nome": "Serviços de Transporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "05.11",
+    "Descrição": "TRANSPORTE RODOVIARIO - ENCOMENDAS",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "Tipo": "S",
+    "CNAEs": [
+      {
+        "codigo": "4930-2/02",
+        "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, intermunicipal, interestadual e internacional"
+      },
+      {
+        "codigo": "5212-5/00",
+        "descricao": "Carga e descarga"
+      },
+      {
+        "codigo": "4930-2/03",
+        "descricao": "Transporte rodoviário de produtos perigosos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "05",
+      "nome": "Serviços de Transporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "05.12",
+    "Descrição": "TRANSPORTE RODOVIARIO - PESSOAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4924-8/00",
+        "descricao": "Transporte escolar"
+      },
+      {
+        "codigo": "4921-3/01",
+        "descricao": "Transporte rodoviário coletivo de passageiros, com itinerário fixo, municipal"
+      },
+      {
+        "codigo": "4929-9/01",
+        "descricao": "Transporte rodoviário coletivo de passageiros, sob regime de fretamento, municipal"
+      },
+      {
+        "codigo": "4929-9/02",
+        "descricao": "Transporte rodoviário coletivo de passageiros, sob regime de fretamento, intermunicipal, interestadual e internacional"
+      }
+    ],
+    "Ramo": {
+      "codigo": "05",
+      "nome": "Serviços de Transporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "05.13",
+    "Descrição": "TRANSPORTE RODOVIARIO - VALORES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "5211-7/99",
+        "descricao": "Depósitos de mercadorias para terceiros, exceto armazéns gerais e guarda-móveis"
+      },
+      {
+        "codigo": "8011-1/01",
+        "descricao": "Atividades de vigilância e segurança privada"
+      }
+    ],
+    "Ramo": {
+      "codigo": "05",
+      "nome": "Serviços de Transporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "05.14",
+    "Descrição": "SERVIÇOS DE REMOÇÃO E GUARDA DE VEICULOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "5229-0/99",
+        "descricao": "Outras atividades auxiliares dos transportes terrestres não especificadas anteriormente"
+      },
+      {
+        "codigo": "5229-0/02",
+        "descricao": "Serviços de reboque de veículos"
+      },
+      {
+        "codigo": "5223-1/00",
+        "descricao": "Estacionamento de veículos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "05",
+      "nome": "Serviços de Transporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "05.15",
+    "Descrição": "INDENIZAÇÃO POR DANOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "6621-5/02",
+        "descricao": "Auditoria e consultoria atuarial"
+      },
+      {
+        "codigo": "6621-5/01",
+        "descricao": "Peritos e avaliadores de seguros"
+      }
+    ],
+    "Ramo": {
+      "codigo": "05",
+      "nome": "Serviços de Transporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "05.16",
+    "Descrição": "GESTAO DE TRANSPORTE DE PESSOAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7020-4/00",
+        "descricao": "Atividades de consultoria em gestão empresarial, exceto consultoria técnica específica"
+      },
+      {
+        "codigo": "5250-8/03",
+        "descricao": "Agenciamento de cargas, exceto para o transporte marítimo"
+      }
+    ],
+    "Ramo": {
+      "codigo": "05",
+      "nome": "Serviços de Transporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "05.17",
+    "Descrição": "SERVICO DE REMOCAO DE PACIENTES, POR VIA TERRESTRE E POR VIA AÉREA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "ANAC - Agencia Nacional de Aviação Civil",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8622-4/00",
+        "descricao": "Serviços de remoção de pacientes, exceto os serviços móveis de atendimento a urgências"
+      },
+      {
+        "codigo": "8621-6/02",
+        "descricao": "Serviços móveis de atendimento a urgências, exceto por UTI móvel"
+      },
+      {
+        "codigo": "8621-6/01",
+        "descricao": "UTI móvel"
+      }
+    ],
+    "Ramo": {
+      "codigo": "05",
+      "nome": "Serviços de Transporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "05.18",
+    "Descrição": "AGENCIAMENTO DE CARGA AEREA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "5240-1/99",
+        "descricao": "Atividades auxiliares dos transportes aéreos, exceto operação dos aeroportos e campos de aterrissagem"
+      },
+      {
+        "codigo": "5250-8/04",
+        "descricao": "Organização logística do transporte de carga"
+      },
+      {
+        "codigo": "5250-8/03",
+        "descricao": "Agenciamento de cargas, exceto para o transporte marítimo"
+      }
+    ],
+    "Ramo": {
+      "codigo": "05",
+      "nome": "Serviços de Transporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "05.19",
+    "Descrição": "LOGISTICA MULTIMODAL DE CARGA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "5211-7/99",
+        "descricao": "Depósitos de mercadorias para terceiros, exceto armazéns gerais e guarda-móveis"
+      },
+      {
+        "codigo": "5250-8/04",
+        "descricao": "Organização logística do transporte de carga"
+      },
+      {
+        "codigo": "5250-8/05",
+        "descricao": "Operador de transporte multimodal - OTM"
+      },
+      {
+        "codigo": "4930-2/03",
+        "descricao": "Transporte rodoviário de produtos perigosos"
+      },
+      {
+        "codigo": "5212-5/00",
+        "descricao": "Carga e descarga"
+      },
+      {
+        "codigo": "4930-2/02",
+        "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, intermunicipal, interestadual e internacional"
+      }
+    ],
+    "Ramo": {
+      "codigo": "05",
+      "nome": "Serviços de Transporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "05.20",
+    "Descrição": "AGENCIAMENTO DE TRANSPORTE MARITIMO DE CARGAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [
+      "Certificado de Registro Especial Brasileiro - Tribunal Marítimo",
+      "Certificado Emitido pela ANTAQ"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "5250-8/04",
+        "descricao": "Organização logística do transporte de carga"
+      },
+      {
+        "codigo": "5250-8/02",
+        "descricao": "Atividades de despachantes aduaneiros"
+      },
+      {
+        "codigo": "5250-8/01",
+        "descricao": "Comissaria de despachos"
+      },
+      {
+        "codigo": "5232-0/00",
+        "descricao": "Atividades de agenciamento marítimo"
+      }
+    ],
+    "Ramo": {
+      "codigo": "05",
+      "nome": "Serviços de Transporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "05.21",
+    "Descrição": "AGENCIAMENTO DE TRANSPORTE MULTIMODAL DE CARGAS (EXCETO MARITIMO)",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "5250-8/04",
+        "descricao": "Organização logística do transporte de carga"
+      },
+      {
+        "codigo": "5250-8/05",
+        "descricao": "Operador de transporte multimodal - OTM"
+      },
+      {
+        "codigo": "5250-8/03",
+        "descricao": "Agenciamento de cargas, exceto para o transporte marítimo"
+      },
+      {
+        "codigo": "4930-2/03",
+        "descricao": "Transporte rodoviário de produtos perigosos"
+      },
+      {
+        "codigo": "5212-5/00",
+        "descricao": "Carga e descarga"
+      },
+      {
+        "codigo": "4930-2/02",
+        "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, intermunicipal, interestadual e internacional"
+      }
+    ],
+    "Ramo": {
+      "codigo": "05",
+      "nome": "Serviços de Transporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

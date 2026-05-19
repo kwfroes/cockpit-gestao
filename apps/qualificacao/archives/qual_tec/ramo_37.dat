@@ -1,0 +1,86 @@
+[
+  {
+    "Família": "37.10",
+    "Descrição": "EQUIPAMENTOS PARA PREPARACAO DO SOLO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "37",
+      "nome": "Mauinaria e Equipamentos Agrícolas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "37.20",
+    "Descrição": "EQUIPAMENTOS DE COLHEITA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "37",
+      "nome": "Mauinaria e Equipamentos Agrícolas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "37.30",
+    "Descrição": "EQUIPAMENTOS PARA LATICINIOS, APICULTURA, AVICULTURA E PECUARIA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "37",
+      "nome": "Mauinaria e Equipamentos Agrícolas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "37.40",
+    "Descrição": "EQUIPAMENTOS PARA CONTROLE DE PRAGAS, DOENCAS E GEADAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "37",
+      "nome": "Mauinaria e Equipamentos Agrícolas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "37.50",
+    "Descrição": "IMPLEMENTOS E FERRAMENTAS DE JARDINAGEM",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "37",
+      "nome": "Mauinaria e Equipamentos Agrícolas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "37.60",
+    "Descrição": "VEICULO DE TRACAO ANIMAL E REBOQUES PARA USO AGRICOLA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "37",
+      "nome": "Mauinaria e Equipamentos Agrícolas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "37.70",
+    "Descrição": "SELARIA, ARREAMENTO, CHICOTE E ACESSORIOS CORRELATOS PARA ANIMAIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "37",
+      "nome": "Mauinaria e Equipamentos Agrícolas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

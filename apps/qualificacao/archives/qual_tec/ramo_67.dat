@@ -1,0 +1,98 @@
+[
+  {
+    "Família": "67.10",
+    "Descrição": "CAMARAS CINEMATOGRAFICAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "67",
+      "nome": "Equipamentos Fotográficos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "67.20",
+    "Descrição": "CAMARAS FOTOGRAFICAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "67",
+      "nome": "Equipamentos Fotográficos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "67.30",
+    "Descrição": "EQUIPAMENTOS PARA PROJECAO FOTOGRAFICA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "67",
+      "nome": "Equipamentos Fotográficos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "67.40",
+    "Descrição": "EQUIPAMENTOS PARA REVELACAO E ACABAMENTO FOTOGRAFICO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "67",
+      "nome": "Equipamentos Fotográficos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "67.50",
+    "Descrição": "MATERIAIS FOTOGRAFICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "67",
+      "nome": "Equipamentos Fotográficos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "67.60",
+    "Descrição": "EQUIPAMENTOS FOTOGRAFICOS E ACESSORIOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "67",
+      "nome": "Equipamentos Fotográficos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "67.70",
+    "Descrição": "FILMES REVELADOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "67",
+      "nome": "Equipamentos Fotográficos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "67.80",
+    "Descrição": "JOGOS E CONJUNTOS FOTOGRAFICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "67",
+      "nome": "Equipamentos Fotográficos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

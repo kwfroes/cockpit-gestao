@@ -1,0 +1,157 @@
+[
+  {
+    "Família": "25.10",
+    "Descrição": "COMPONENTES DE CABINE, CARROCERIA E CHASSIS DE VEICULOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2949-2/99",
+        "descricao": "Fabricação de outras peças e acessórios para veículos automotores não especificadas anteriormente"
+      },
+      {
+        "codigo": "2930-1/01",
+        "descricao": "Fabricação de cabines, carrocerias e reboques para caminhões"
+      }
+    ],
+    "Ramo": {
+      "codigo": "25",
+      "nome": "Comonentes de Veículos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "25.20",
+    "Descrição": "COMPONENTES DE TRANSMISSAO DE VEICULOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2942-5/00",
+        "descricao": "Fabricação de peças e acessórios para os sistemas de marcha e transmissão de veículos automotores"
+      }
+    ],
+    "Ramo": {
+      "codigo": "25",
+      "nome": "Comonentes de Veículos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "25.30",
+    "Descrição": "COMPONENTES DE FREIO, DIRECAO, EIXO, RODA E LAGARTA DE VEICULOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2949-2/99",
+        "descricao": "Fabricação de outras peças e acessórios para veículos automotores não especificadas anteriormente"
+      },
+      {
+        "codigo": "2944-1/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema de direção e suspensão de veículos automotores"
+      },
+      {
+        "codigo": "2943-3/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema de freios de veículos automotores"
+      }
+    ],
+    "Ramo": {
+      "codigo": "25",
+      "nome": "Comonentes de Veículos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "25.40",
+    "Descrição": "EQUIPAMENTOS E ACESSORIOS DE VEICULOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2229-3/99",
+        "descricao": "Fabricação de artefatos de material plástico para outros usos não especificados anteriormente"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2949-2/99",
+        "descricao": "Fabricação de outras peças e acessórios para veículos automotores não especificadas anteriormente"
+      },
+      {
+        "codigo": "2945-0/00",
+        "descricao": "Fabricação de material elétrico e eletrônico para veículos automotores, exceto baterias"
+      }
+    ],
+    "Ramo": {
+      "codigo": "25",
+      "nome": "Comonentes de Veículos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "25.90",
+    "Descrição": "COMPONENTES DIVERSOS PARA VEICULOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2942-5/00",
+        "descricao": "Fabricação de peças e acessórios para os sistemas de marcha e transmissão de veículos automotores"
+      },
+      {
+        "codigo": "2943-3/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema de freios de veículos automotores"
+      },
+      {
+        "codigo": "2941-7/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema motor de veículos automotores"
+      },
+      {
+        "codigo": "2722-8/01",
+        "descricao": "Fabricação de baterias e acumuladores para veículos automotores"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2219-6/00",
+        "descricao": "Fabricação de artefatos de borracha não especificados anteriormente"
+      },
+      {
+        "codigo": "2949-2/99",
+        "descricao": "Fabricação de outras peças e acessórios para veículos automotores não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "25",
+      "nome": "Comonentes de Veículos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

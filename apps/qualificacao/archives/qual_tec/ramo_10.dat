@@ -1,0 +1,71 @@
+[
+  {
+    "Família": "10.05",
+    "Descrição": "ARMAS DE FOGO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Ministério da Defesa - Exército"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2550-1/02",
+        "descricao": "Fabricação de armas de fogo, outras armas e munições"
+      },
+      {
+        "codigo": "4789-0/09",
+        "descricao": "Comércio varejista de armas e munições"
+      }
+    ],
+    "Ramo": {
+      "codigo": "10",
+      "nome": "Armamentos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "10.10",
+    "Descrição": "ACESSORIOS PARA ARMAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2550-1/02",
+        "descricao": "Fabricação de armas de fogo, outras armas e munições"
+      },
+      {
+        "codigo": "4789-0/09",
+        "descricao": "Comércio varejista de armas e munições"
+      }
+    ],
+    "Ramo": {
+      "codigo": "10",
+      "nome": "Armamentos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "10.95",
+    "Descrição": "ARMAMENTO - MISCELANEA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2550-1/02",
+        "descricao": "Fabricação de armas de fogo, outras armas e munições"
+      },
+      {
+        "codigo": "4789-0/09",
+        "descricao": "Comércio varejista de armas e munições"
+      }
+    ],
+    "Ramo": {
+      "codigo": "10",
+      "nome": "Armamentos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

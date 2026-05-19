@@ -1,0 +1,74 @@
+[
+  {
+    "Família": "44.10",
+    "Descrição": "CALDEIRAS INDUSTRIAIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "44",
+      "nome": "Equipamentos de Forno, Central de Vapor, Secagem e Reator Nuclear"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "44.20",
+    "Descrição": "PERMUTADORES DE CALOR E CONDENSADORES DE VAPOR",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "44",
+      "nome": "Equipamentos de Forno, Central de Vapor, Secagem e Reator Nuclear"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "44.30",
+    "Descrição": "FORNALHAS, FORNOS E ESTUFAS INDUSTRIAIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "44",
+      "nome": "Equipamentos de Forno, Central de Vapor, Secagem e Reator Nuclear"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "44.40",
+    "Descrição": "SECADORES, DESIDRATADORES E ANTI-HIDRATADORES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "44",
+      "nome": "Equipamentos de Forno, Central de Vapor, Secagem e Reator Nuclear"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "44.60",
+    "Descrição": "EQUIPAMENTOS DE PURIFICACAO DE AR",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "44",
+      "nome": "Equipamentos de Forno, Central de Vapor, Secagem e Reator Nuclear"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "44.70",
+    "Descrição": "REATORES NUCLEARES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "44",
+      "nome": "Equipamentos de Forno, Central de Vapor, Secagem e Reator Nuclear"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

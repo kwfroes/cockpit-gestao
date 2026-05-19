@@ -1,0 +1,98 @@
+[
+  {
+    "Família": "56.10",
+    "Descrição": "MATERIAIS DE ORIGEM MINERAL PARA CONSTRUCAO, A GRANEL",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "56",
+      "nome": "Materiais para Construção"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "56.20",
+    "Descrição": "VIDROS, TIJOLOS, PISOS E BLOCOS PARA CONSTRUCAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "56",
+      "nome": "Materiais para Construção"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "56.30",
+    "Descrição": "TUBOS E CONDUTOS, NAO METALICOS, PARA CONSTRUCAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "56",
+      "nome": "Materiais para Construção"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "56.40",
+    "Descrição": "PAINEIS DE PAPELAO, PAPEL EMPREG EM CONST E MAT ISOLANTES TERMICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "56",
+      "nome": "Materiais para Construção"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "56.50",
+    "Descrição": "MATERIAIS PARA TELHADOS E REVESTIMENTOS DE PAREDES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "56",
+      "nome": "Materiais para Construção"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "56.60",
+    "Descrição": "CERCADOS, GRADES E PORTOES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "56",
+      "nome": "Materiais para Construção"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "56.70",
+    "Descrição": "COMPONENTES PRE-FABRICADOS PARA CONSTRUCAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "56",
+      "nome": "Materiais para Construção"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "56.80",
+    "Descrição": "MATERIAIS DIVERSOS PARA CONSTRUCAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "56",
+      "nome": "Materiais para Construção"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

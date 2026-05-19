@@ -1,0 +1,170 @@
+[
+  {
+    "Família": "99.05",
+    "Descrição": "CARTAZES MOSTRUARIOS E PLACAS DE IDENTIFICACAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "99",
+      "nome": "Diversos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "99.06",
+    "Descrição": "PLACA DE IDENTIFICACAO DE VEICULO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "99",
+      "nome": "Diversos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "99.10",
+    "Descrição": "ARTIGOS DE JOALHERIA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "99",
+      "nome": "Diversos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "99.15",
+    "Descrição": "ARTIGOS PARA COLECIONADORES E/OU HISTORICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "99",
+      "nome": "Diversos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "99.20",
+    "Descrição": "ARTIGOS PARA FUMANTES E ACENDEDORES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "99",
+      "nome": "Diversos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "99.25",
+    "Descrição": "EQUIPAMENTOS, E ARTIGOS RELIGIOSOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "99",
+      "nome": "Diversos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "99.30",
+    "Descrição": "EQUIPAMENTOS E ARTIGOS MORTUARIOS DE CEMITERIO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "99",
+      "nome": "Diversos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "99.35",
+    "Descrição": "ARTIGOS PARA BRINDES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "99",
+      "nome": "Diversos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "99.36",
+    "Descrição": "ARTIGO DECORATIVO E COMUNICACAO VISUAL",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "99",
+      "nome": "Diversos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "99.40",
+    "Descrição": "TESTE MICROSOFT",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "99",
+      "nome": "Diversos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "99.45",
+    "Descrição": "MATERIAIS ESPECIFICOS RELACIONADOS A EVENTOS DA SECOPA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "99",
+      "nome": "Diversos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "99.50",
+    "Descrição": "IMOVEL",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "99",
+      "nome": "Diversos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "99.55",
+    "Descrição": "BENS DESATIVADOS PARA LEILAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "99",
+      "nome": "Diversos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "99.60",
+    "Descrição": "BENS PARA LEILÃO - DETRAN",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "99",
+      "nome": "Diversos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

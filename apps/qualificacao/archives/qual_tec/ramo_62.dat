@@ -1,0 +1,74 @@
+[
+  {
+    "Família": "62.10",
+    "Descrição": "APARELHOS DE ILUMINACAO ELETRICA DE USO INTERNO E EXTERNO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "62",
+      "nome": "Aparelhos de Iluminação e Lâmpadas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "62.20",
+    "Descrição": "INATIVA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "62",
+      "nome": "Aparelhos de Iluminação e Lâmpadas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "62.30",
+    "Descrição": "EQUIPAMENTOS DE ILUMINACAO ELETRICA PORTATEIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "62",
+      "nome": "Aparelhos de Iluminação e Lâmpadas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "62.40",
+    "Descrição": "LAMPADAS ELETRICAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "62",
+      "nome": "Aparelhos de Iluminação e Lâmpadas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "62.50",
+    "Descrição": "REATORES, SUPORTE PARA LAMPADAS E ELEMENTOS DE PARTIDA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "62",
+      "nome": "Aparelhos de Iluminação e Lâmpadas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "62.60",
+    "Descrição": "APARELHOS DE ILUMINACAO NAO ELETRICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "62",
+      "nome": "Aparelhos de Iluminação e Lâmpadas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "Família": "88.10",
+    "Descrição": "ANIMAIS VIVOS CRIADOS PARA ALIMENTACAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "88",
+      "nome": "Animais Vivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "88.20",
+    "Descrição": "ANIMAIS VIVOS NAO CRIADOS PARA ALIMENTACAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "88",
+      "nome": "Animais Vivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

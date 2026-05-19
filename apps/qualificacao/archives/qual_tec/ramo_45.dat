@@ -1,0 +1,50 @@
+[
+  {
+    "Família": "45.10",
+    "Descrição": "DISPOSITIVOS E ACESSORIOS PARA INSTALACOES HIDRAULICAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "45",
+      "nome": "Equipamentos de Instalações Hidráulicas, Sanitárias e de Calefação"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "45.20",
+    "Descrição": "EQUIPAMENTOS PARA CALEFACAO E AQUECEDORES DOMESTICOS DE AGUA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "45",
+      "nome": "Equipamentos de Instalações Hidráulicas, Sanitárias e de Calefação"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "45.30",
+    "Descrição": "EQUIPAMENTOS PARA QUEIMA DE COMBUSTIVEL",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "45",
+      "nome": "Equipamentos de Instalações Hidráulicas, Sanitárias e de Calefação"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "45.40",
+    "Descrição": "EQUIP DIVERSOS DE INSTALACOES HIDRAULICAS, SANITARIAS E DE CALEFACAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "45",
+      "nome": "Equipamentos de Instalações Hidráulicas, Sanitárias e de Calefação"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

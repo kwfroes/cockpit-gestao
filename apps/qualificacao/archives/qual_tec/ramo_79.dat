@@ -1,0 +1,38 @@
+[
+  {
+    "Família": "79.10",
+    "Descrição": "ENCERADEIRAS E ASPIRADORES DE PO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "79",
+      "nome": "Equipamnetos e Materiais para Limpeza"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "79.20",
+    "Descrição": "EQUIPAMENTOS E MATERIAIS DE LIMPEZA MANUAIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "79",
+      "nome": "Equipamnetos e Materiais para Limpeza"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "79.30",
+    "Descrição": "COMPOSTOS E PREPARADOS PARA LIMPEZA E POLIMENTO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "79",
+      "nome": "Equipamnetos e Materiais para Limpeza"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]
