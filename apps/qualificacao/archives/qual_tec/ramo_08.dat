@@ -1,0 +1,1836 @@
+[
+  {
+    "Família": "08.01",
+    "Descrição": "APLICACAO DE PAPEL EM PAREDE E REVESTIMENTO COM CORTICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      },
+      {
+        "codigo": "7410-2/02",
+        "descricao": "Decoração de interiores"
+      },
+      {
+        "codigo": "4330-4/05",
+        "descricao": "Aplicação de revestimentos e de resinas em interiores e exteriores"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.02",
+    "Descrição": "INSTALACAO DE PISOS E FORROS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7410-2/02",
+        "descricao": "Decoração de interiores"
+      },
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      },
+      {
+        "codigo": "4330-4/03",
+        "descricao": "Obras de acabamento em gesso e estuque"
+      },
+      {
+        "codigo": "4330-4/05",
+        "descricao": "Aplicação de revestimentos e de resinas em interiores e exteriores"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.03",
+    "Descrição": "INSTALACAO DE EQUIPAMENTOS GRAFICOS E REPROGRAFICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "9511-8/00",
+        "descricao": "Reparação e manutenção de computadores e de equipamentos periféricos"
+      },
+      {
+        "codigo": "3314-7/99",
+        "descricao": "Manutenção e reparação de outras máquinas e equipamentos para usos industriais não especificados anteriormente"
+      },
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.04",
+    "Descrição": "INSTALACAO DE FORRO E PECA DE DECORACAO EM GESSO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      },
+      {
+        "codigo": "7410-2/02",
+        "descricao": "Decoração de interiores"
+      },
+      {
+        "codigo": "4330-4/02",
+        "descricao": "Instalação de portas, janelas, tetos, divisórias e armários embutidos de qualquer material"
+      },
+      {
+        "codigo": "4330-4/03",
+        "descricao": "Obras de acabamento em gesso e estuque"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.05",
+    "Descrição": "INSTALACAO DE MOLDURAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      },
+      {
+        "codigo": "4330-4/99",
+        "descricao": "Outras obras de acabamento da construção"
+      },
+      {
+        "codigo": "4330-4/02",
+        "descricao": "Instalação de portas, janelas, tetos, divisórias e armários embutidos de qualquer material"
+      },
+      {
+        "codigo": "4330-4/03",
+        "descricao": "Obras de acabamento em gesso e estuque"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.06",
+    "Descrição": "INSTALACAO DE PELICULA E TELA DE PROTECAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4330-4/02",
+        "descricao": "Instalação de portas, janelas, tetos, divisórias e armários embutidos de qualquer material"
+      },
+      {
+        "codigo": "4330-4/99",
+        "descricao": "Outras obras de acabamento da construção"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.07",
+    "Descrição": "INSTALACAO DE REDE LOCAL DE MICROCOMPUTADORES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.08",
+    "Descrição": "INSTALACAO SISTEMA INTEGRADO SEGURANCA PESSOAL/PATRIMONIAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "6204-0/00",
+        "descricao": "Consultoria em tecnologia da informação"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      },
+      {
+        "codigo": "8020-0/01",
+        "descricao": "Atividades de monitoramento de sistemas de segurança eletrônico"
+      },
+      {
+        "codigo": "8020-0/00",
+        "descricao": "Atividades de monitoramento de sistemas de segurança"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.09",
+    "Descrição": "INSTALACAO E MONTAGEM APAREL. MEDICOS HOSPITALARES E ODONTOLOGICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3312-1/03",
+        "descricao": "Manutenção e reparação de aparelhos eletromédicos e eletroterapêuticos e equipamentos de irradiação"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      },
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      },
+      {
+        "codigo": "4329-1/04",
+        "descricao": "Montagem e instalação de sistemas e equipamentos de iluminação e sinalização em vias públicas, portos e aeroportos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.10",
+    "Descrição": "INSTALACAO E MONTAGEM DE CASA DE FARINHA, BENEFICIAMENTO DE GRAOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4292-8/01",
+        "descricao": "Montagem de estruturas metálicas"
+      },
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.11",
+    "Descrição": "INSTALACAO E MONTAGEM DE CORTINAS, PERSIANAS E TOLDOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4292-8/01",
+        "descricao": "Montagem de estruturas metálicas"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      },
+      {
+        "codigo": "4330-4/99",
+        "descricao": "Outras obras de acabamento da construção"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.12",
+    "Descrição": "INSTALACAO E MONTAGEM DE COZINHAS INDUSTRIAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      },
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.13",
+    "Descrição": "INSTALACAO E MONTAGEM DE DIVISORIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4330-4/02",
+        "descricao": "Instalação de portas, janelas, tetos, divisórias e armários embutidos de qualquer material"
+      },
+      {
+        "codigo": "4330-4/99",
+        "descricao": "Outras obras de acabamento da construção"
+      },
+      {
+        "codigo": "4330-4/03",
+        "descricao": "Obras de acabamento em gesso e estuque"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.14",
+    "Descrição": "INSTALACAO E MONTAGEM DE ELEVADORES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado",
+      "Autorização da SEDUR - Município de Salvador"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4329-1/03",
+        "descricao": "Instalação, manutenção e reparação de elevadores, escadas e esteiras rolantes, exceto de fabricação própria"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.15",
+    "Descrição": "INSTALACAO E MONTAGEM DE EQUIPAMENTO DE LUZ, IMAGEM E SOM",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "4292-8/01",
+        "descricao": "Montagem de estruturas metálicas"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.16",
+    "Descrição": "INSTALACAO E MONTAGEM DE EQUIP. DE CALDEIRARIA (TANQUES, VASOS, SILOS)",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      },
+      {
+        "codigo": "4292-8/01",
+        "descricao": "Montagem de estruturas metálicas"
+      },
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.17",
+    "Descrição": "INSTALACAO E MONTAGEM DE EQUIPAMENTOS DE PROCESSAMENTO DE DADOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.18",
+    "Descrição": "INSTALACAO E MONTAGEM DE EQUIPAMENTOS DE TELECOMUNICACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4221-9/05",
+        "descricao": "Manutenção de estações e redes de telecomunicações"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.19",
+    "Descrição": "INSTALACAO E MONTAGEM DE EQUIPAMENTOS ELETRICOS E ELETRONICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.20",
+    "Descrição": "INSTALACAO E MONTAGEM DE EQUIPAMENTOS MECANICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4292-8/01",
+        "descricao": "Montagem de estruturas metálicas"
+      },
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.21",
+    "Descrição": "INSTALACAO E MONTAGEM DE ESTACAO DE TRATAMENTO DE AGUA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "4222-7/01",
+        "descricao": "Construção de redes de abastecimento de água, coleta de esgoto e construções correlatas, exceto obras de irrigação"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.22",
+    "Descrição": "INSTALACAO E MONTAGEM DE GALPOES E ESTRUTURA METALICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4330-4/02",
+        "descricao": "Instalação de portas, janelas, tetos, divisórias e armários embutidos de qualquer material"
+      },
+      {
+        "codigo": "4391-6/00",
+        "descricao": "Obras de fundações"
+      },
+      {
+        "codigo": "4292-8/01",
+        "descricao": "Montagem de estruturas metálicas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.23",
+    "Descrição": "INSTALACAO E MONTAGEM DE HIDROMETRO/CAVALETE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4222-7/01",
+        "descricao": "Construção de redes de abastecimento de água, coleta de esgoto e construções correlatas, exceto obras de irrigação"
+      },
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.24",
+    "Descrição": "INSTALACAO E MONTAGEM DE CAMARAS FRIGORIFICAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4322-3/02",
+        "descricao": "Instalação e manutenção de sistemas centrais de ar condicionado, de ventilação e refrigeração"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.25",
+    "Descrição": "INSTALACAO E MONTAGEM DE INSTRUMENTACAO E CONTROLE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "6204-0/00",
+        "descricao": "Consultoria em tecnologia da informação"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.26",
+    "Descrição": "INSTALACAO E MONTAGEM DE ISOLAMENTO ACUSTICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CAU - Conselho Regional Arquitetura e Urbanismo"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4330-4/05",
+        "descricao": "Aplicação de revestimentos e de resinas em interiores e exteriores"
+      },
+      {
+        "codigo": "4330-4/03",
+        "descricao": "Obras de acabamento em gesso e estuque"
+      },
+      {
+        "codigo": "4330-4/99",
+        "descricao": "Outras obras de acabamento da construção"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.27",
+    "Descrição": "INSTALACAO E MONTAGEM DE ISOLAMENTO TERMICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4322-3/02",
+        "descricao": "Instalação e manutenção de sistemas centrais de ar condicionado, de ventilação e refrigeração"
+      },
+      {
+        "codigo": "4330-4/99",
+        "descricao": "Outras obras de acabamento da construção"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.28",
+    "Descrição": "INSTALACAO E MONTAGEM DE EQUIP DE LABORATORIOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.29",
+    "Descrição": "INSTALACAO E MONTAGEM DE LAVANDERIA HOSPITALAR/INDUSTRIAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      },
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.30",
+    "Descrição": "INSTALACAO E MONTAGEM DE LINHAS DE TRANSM. E DISTRIB. DE ENERGIA ELETR",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4221-9/02",
+        "descricao": "Construção de estações e redes de distribuição de energia elétrica"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.31",
+    "Descrição": "INSTALACAO E MONTAGEM DE MOBILIARIO HOSPIT E DE LABORATORIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "3329-5/01",
+        "descricao": "Serviços de montagem de móveis de qualquer material"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.32",
+    "Descrição": "INSTALACAO E MONTAGEM DE OFICINAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.33",
+    "Descrição": "INSTALACAO E MONTAGEM DE PARA - RAIOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.34",
+    "Descrição": "INSTALACAO E MONTAGEM DE REDES DE TELECOMUNICACOES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "4221-9/05",
+        "descricao": "Manutenção de estações e redes de telecomunicações"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.35",
+    "Descrição": "INSTALACAO E MONTAGEM DE REDES DE AQUECIMENTO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      },
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.36",
+    "Descrição": "INSTALACAO E MONTAGEM DE SISTEMAS DE AR CONDICIONADO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4322-3/02",
+        "descricao": "Instalação e manutenção de sistemas centrais de ar condicionado, de ventilação e refrigeração"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.37",
+    "Descrição": "INSTALACAO E MONTAGEM DE SISTEMAS DE PROTECAO CONTRA INCENDIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      },
+      {
+        "codigo": "4322-3/03",
+        "descricao": "Instalações de sistema de prevenção contra incêndio"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.38",
+    "Descrição": "INSTALACAO E MONTAGEM DE SISTEMAS DE REFRIGERACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      },
+      {
+        "codigo": "4322-3/02",
+        "descricao": "Instalação e manutenção de sistemas centrais de ar condicionado, de ventilação e refrigeração"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.39",
+    "Descrição": "INSTALACAO E MONTAGEM DE SISTEMAS DE SINALIZACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      },
+      {
+        "codigo": "4292-8/01",
+        "descricao": "Montagem de estruturas metálicas"
+      },
+      {
+        "codigo": "4211-1/02",
+        "descricao": "Pintura para sinalização em pistas rodoviárias e aeroportos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.40",
+    "Descrição": "INSTALACAO E MONTAGEM DE SISTEMAS E TUBULACOES INDUSTRIAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      },
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.41",
+    "Descrição": "INSTALACAO E MONTAGEM DE SISTEMAS DE VENTILACAO E EXAUSTAO MECANICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      },
+      {
+        "codigo": "4292-8/01",
+        "descricao": "Montagem de estruturas metálicas"
+      },
+      {
+        "codigo": "4322-3/02",
+        "descricao": "Instalação e manutenção de sistemas centrais de ar condicionado, de ventilação e refrigeração"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.42",
+    "Descrição": "INSTALACAO E MONTAGEM DE STANDS E PALCOS EM FEIRAS E OUTROS EVENTOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CAU - Conselho Regional Arquitetura e Urbanismo"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      },
+      {
+        "codigo": "7319-0/01",
+        "descricao": "Criação de estandes para feiras e exposições"
+      },
+      {
+        "codigo": "4292-8/01",
+        "descricao": "Montagem de estruturas metálicas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.43",
+    "Descrição": "INSTALACAO E MONTAGEM DE SUBESTACOES DE ENERGIA ELETRICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4221-9/02",
+        "descricao": "Construção de estações e redes de distribuição de energia elétrica"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.44",
+    "Descrição": "INSTALACAO E MONTAGEM DE TAPETES E CARPETES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7410-2/02",
+        "descricao": "Decoração de interiores"
+      },
+      {
+        "codigo": "4330-4/05",
+        "descricao": "Aplicação de revestimentos e de resinas em interiores e exteriores"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.45",
+    "Descrição": "INSTALACAO E MONTAGEM DE USINAS DE TRATAM. DE LIXO E RECIC DE ENTULHOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3839-4/99",
+        "descricao": "Recuperação de materiais não especificados anteriormente"
+      },
+      {
+        "codigo": "4222-7/01",
+        "descricao": "Construção de redes de abastecimento de água, coleta de esgoto e construções correlatas, exceto obras de irrigação"
+      },
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.46",
+    "Descrição": "INSTALACAO E MONTAGEM DE USINAS HIDROELETRICAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "4221-9/01",
+        "descricao": "Construção de barragens e represas para geração de energia elétrica"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.47",
+    "Descrição": "INSTALACOES ELETRICAS DE BAIXA TENSAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.48",
+    "Descrição": "INSTALACOES ELETRICAS DE MEDIA E ALTA TENSAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "3321-0/00",
+        "descricao": "Instalação de máquinas e equipamentos industriais"
+      },
+      {
+        "codigo": "4221-9/02",
+        "descricao": "Construção de estações e redes de distribuição de energia elétrica"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.49",
+    "Descrição": "INSTALACOES PREDIAIS DE GAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.50",
+    "Descrição": "INSTALACOES PREDIAIS DE VIDROS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4330-4/99",
+        "descricao": "Outras obras de acabamento da construção"
+      },
+      {
+        "codigo": "4330-4/02",
+        "descricao": "Instalação de portas, janelas, tetos, divisórias e armários embutidos de qualquer material"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.51",
+    "Descrição": "INSTALACOES PREDIAIS ELETRONICAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      },
+      {
+        "codigo": "8020-0/01",
+        "descricao": "Atividades de monitoramento de sistemas de segurança eletrônico"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.52",
+    "Descrição": "INSTALACOES PREDIAIS HIDROSANITARIAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CAU - Conselho Regional Arquitetura e Urbanismo"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4222-7/01",
+        "descricao": "Construção de redes de abastecimento de água, coleta de esgoto e construções correlatas, exceto obras de irrigação"
+      },
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.53",
+    "Descrição": "INSTALACOES PREDIAIS TELEFONICAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      },
+      {
+        "codigo": "4221-9/05",
+        "descricao": "Manutenção de estações e redes de telecomunicações"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.54",
+    "Descrição": "INSTALACAO E MONTAGEM DE SISTEMAS DE IRRIGACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.55",
+    "Descrição": "INSTALACAO E MONTAGEM DE ESQUADRIAS E PORTAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4330-4/02",
+        "descricao": "Instalação de portas, janelas, tetos, divisórias e armários embutidos de qualquer material"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.56",
+    "Descrição": "ADAPTACAO E TRANSFORMACAO EM VEICULOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4520-0/07",
+        "descricao": "Serviços de instalação, manutenção e reparação de acessórios para veículos automotores"
+      },
+      {
+        "codigo": "2930-1/01",
+        "descricao": "Fabricação de cabines, carrocerias e reboques para caminhões"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.57",
+    "Descrição": "INSTALACAO E MONTAGEM DE EQUIPAMENTOS DE RADIO-COMUNICACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4221-9/05",
+        "descricao": "Manutenção de estações e redes de telecomunicações"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.58",
+    "Descrição": "INSTALACAO E MONTAGEM DE REDES METEREOLOGICAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4221-9/05",
+        "descricao": "Manutenção de estações e redes de telecomunicações"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.59",
+    "Descrição": "BLINDAGEM PARA PROTECAO RADIOLOGICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "4330-4/05",
+        "descricao": "Aplicação de revestimentos e de resinas em interiores e exteriores"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.60",
+    "Descrição": "INSTALACAO E MONTAGEM DE EQUIPAMENTO GERADOR DE ENERGIA SOLAR",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4292-8/01",
+        "descricao": "Montagem de estruturas metálicas"
+      },
+      {
+        "codigo": "4321-5/00",
+        "descricao": "Instalação e manutenção elétrica"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.61",
+    "Descrição": "INSTALACAO E MONTAGEM DE SALA-COFRE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4292-8/01",
+        "descricao": "Montagem de estruturas metálicas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.62",
+    "Descrição": "INSTALACAO E MONTAGEM DE POSTO DE COMBUSTIVEL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "4292-8/01",
+        "descricao": "Montagem de estruturas metálicas"
+      },
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "08.63",
+    "Descrição": "INSTALAÇÃO E MONTAGEM DE ESTRUTURA PARA A REALIZAÇÃO DE EVENTOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4292-8/01",
+        "descricao": "Montagem de estruturas metálicas"
+      },
+      {
+        "codigo": "7319-0/01",
+        "descricao": "Criação de estandes para feiras e exposições"
+      }
+    ],
+    "Ramo": {
+      "codigo": "08",
+      "nome": "Instalações e Montagens"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

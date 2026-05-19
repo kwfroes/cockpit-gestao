@@ -1,0 +1,76 @@
+[
+  {
+    "Família": "80.10",
+    "Descrição": "TINTAS VERNIZES E PRODUTOS CORRELATOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4761-0/03",
+        "descricao": "Comércio varejista de artigos de papelaria"
+      },
+      {
+        "codigo": "4679-6/01",
+        "descricao": "Comércio atacadista de tintas, vernizes e similares"
+      }
+    ],
+    "Ramo": {
+      "codigo": "80",
+      "nome": "Pincéis, tintas, Vedantes e Adesivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "80.20",
+    "Descrição": "PINCEIS PARA ARTISTAS E PINTORES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "80",
+      "nome": "Pincéis, tintas, Vedantes e Adesivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "80.30",
+    "Descrição": "COMPOSTOS PRESERVATIVOS E VEDANTES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "80",
+      "nome": "Pincéis, tintas, Vedantes e Adesivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "80.40",
+    "Descrição": "ADESIVOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "1741-9/02",
+        "descricao": "Fabricação de produtos de papel, cartolina, papel-cartão e papelão ondulado para uso comercial e de escritório"
+      },
+      {
+        "codigo": "1813-0/01",
+        "descricao": "Impressão de material para uso publicitário"
+      },
+      {
+        "codigo": "4761-0/03",
+        "descricao": "Comércio varejista de artigos de papelaria"
+      }
+    ],
+    "Ramo": {
+      "codigo": "80",
+      "nome": "Pincéis, tintas, Vedantes e Adesivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

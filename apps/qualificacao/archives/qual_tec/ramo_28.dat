@@ -1,0 +1,319 @@
+[
+  {
+    "Família": "28.05",
+    "Descrição": "MOTORES A GASOLINA EXCETO OS DE AERONAVES E COMPONENTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      },
+      {
+        "codigo": "2910-7/01",
+        "descricao": "Fabricação de automóveis, camionetas e utilitários"
+      },
+      {
+        "codigo": "2941-7/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema motor de veículos automotores"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      }
+    ],
+    "Ramo": {
+      "codigo": "28",
+      "nome": "Motores, Turbinas e seus Componentes"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "28.10",
+    "Descrição": "MOTORES A GASOLINA PARA AERONAVES E COMPONENTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3041-5/00",
+        "descricao": "Fabricação de aeronaves"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      },
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      }
+    ],
+    "Ramo": {
+      "codigo": "28",
+      "nome": "Motores, Turbinas e seus Componentes"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "28.15",
+    "Descrição": "MOTORES DIESEL E COMPONENTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4669-9/01",
+        "descricao": "Comércio atacadista de bombas e compressores; partes e peças"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2941-7/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema motor de veículos automotores"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      }
+    ],
+    "Ramo": {
+      "codigo": "28",
+      "nome": "Motores, Turbinas e seus Componentes"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "28.20",
+    "Descrição": "MAQUINAS ALTERNATIVAS A VAPOR E COMPONENTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2521-7/00",
+        "descricao": "Fabricação de tanques, reservatórios metálicos e caldeiras para aquecimento central"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      }
+    ],
+    "Ramo": {
+      "codigo": "28",
+      "nome": "Motores, Turbinas e seus Componentes"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "28.25",
+    "Descrição": "TURBINAS A VAPOR E COMPONENTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      }
+    ],
+    "Ramo": {
+      "codigo": "28",
+      "nome": "Motores, Turbinas e seus Componentes"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "28.30",
+    "Descrição": "TURBINAS E RODAS D'AGUA E COMPONENTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      },
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      }
+    ],
+    "Ramo": {
+      "codigo": "28",
+      "nome": "Motores, Turbinas e seus Componentes"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "28.35",
+    "Descrição": "TURBINAS A GAS E MOTOR A JATO EXCETO OS DE AERONAVES E COMPONENTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      }
+    ],
+    "Ramo": {
+      "codigo": "28",
+      "nome": "Motores, Turbinas e seus Componentes"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "28.40",
+    "Descrição": "TURBINAS A GAS E MOTORES A JATO DE AERONAVES E COMPONENTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      },
+      {
+        "codigo": "3041-5/00",
+        "descricao": "Fabricação de aeronaves"
+      },
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      }
+    ],
+    "Ramo": {
+      "codigo": "28",
+      "nome": "Motores, Turbinas e seus Componentes"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "28.45",
+    "Descrição": "MOTORES DE FOGUETES E COMPONENTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      },
+      {
+        "codigo": "3041-5/00",
+        "descricao": "Fabricação de aeronaves"
+      },
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      }
+    ],
+    "Ramo": {
+      "codigo": "28",
+      "nome": "Motores, Turbinas e seus Componentes"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "28.50",
+    "Descrição": "MOTORES ROTATIVOS A GASOLINA E COMPONENTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2941-7/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema motor de veículos automotores"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      }
+    ],
+    "Ramo": {
+      "codigo": "28",
+      "nome": "Motores, Turbinas e seus Componentes"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "28.95",
+    "Descrição": "MOTORES DIVERSOS E COMPONENTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2941-7/00",
+        "descricao": "Fabricação de peças e acessórios para o sistema motor de veículos automotores"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      }
+    ],
+    "Ramo": {
+      "codigo": "28",
+      "nome": "Motores, Turbinas e seus Componentes"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

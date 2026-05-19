@@ -1,0 +1,230 @@
+[
+  {
+    "Família": "58.05",
+    "Descrição": "EQUIPAMENTOS DE TELEFONIA E TELEGRAFICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "58",
+      "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "58.10",
+    "Descrição": "EQUIPAMENTOS E COMPONENTES PARA SEGURANCA DE COMUNICACAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "58",
+      "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "58.11",
+    "Descrição": "OUTROS EQUIPAMENTOS CRIPTOLOGICOS E COMPOMENTES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "58",
+      "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "58.15",
+    "Descrição": "EQUIPAMENTOS DE TELETIPO E FAC-SIMILE",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "58",
+      "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "58.20",
+    "Descrição": "EQUIP. PARA COMUNICACAO POR RADIO E TELEVISAO, EXCETO OS DE AERONAVES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "58",
+      "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "58.21",
+    "Descrição": "EQUIPAMENTOS PARA COMUNIC POR RADIO E TELEVISAO, PARA  AERONAVES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "58",
+      "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "58.25",
+    "Descrição": "EQUIPAMENTOS DE RADIO-NAVEGACAO, EXCETO OS DE AERONAVES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "58",
+      "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "58.26",
+    "Descrição": "EQUIPAMENTOS PARA RADIO NAVEGACAO DE AERONAVE",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "58",
+      "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "58.30",
+    "Descrição": "SISTEMAS DE INTERCOMUNICACAO E AMPLIFICACAO DE VOZ, EXCETO OS DE AERON",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "58",
+      "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "58.31",
+    "Descrição": "SISTEMAS PARA INTERCOMUNICACAO E AMPLIFICACAO DE VOZ DE AERONAVESS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "58",
+      "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "58.35",
+    "Descrição": "EQUIPAMENTOS PARA GRAVACAO E REPRODUCAO DE SOM",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "58",
+      "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "58.40",
+    "Descrição": "EQUIPAMENTOS RADAR, EXCETO OS DE AERONAVES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "58",
+      "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "58.41",
+    "Descrição": "EQUIPAMENTOS DE RADAR PARA AERONAVES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "58",
+      "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "58.45",
+    "Descrição": "EQUIPAMENTOS SUBMARINOS DE SOM",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "58",
+      "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "58.50",
+    "Descrição": "EQUIPAMENTOS PARA COMUNICACAO COM LUZ VISIVEL E INVISIVEL",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "58",
+      "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "58.55",
+    "Descrição": "EQUIPAMENTOS PARA VISAO NOTURNA, POR RADICAO EMITIDA E REFLETIDA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "58",
+      "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "58.60",
+    "Descrição": "DISPOSITIVOS DE RADIACAO COERENTE ESTIMULADA, SEUS COMPON E ACESSORIOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "58",
+      "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "58.65",
+    "Descrição": "EQUIP CONTRA-MEDIDAS ELETRONICAS E DE CAPACIDADE DE REACAO RAPIDA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "58",
+      "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "58.95",
+    "Descrição": "EQUIPAMENTOS DIVERSOS DE COMUNICACAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "58",
+      "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

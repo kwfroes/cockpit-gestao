@@ -1,0 +1,63 @@
+[
+  {
+    "Família": "77.10",
+    "Descrição": "INSTRUMENTOS MUSICAIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "77",
+      "nome": "Instrumentos Musicais e Equipamentos de Som de Uso Doméstico"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "77.20",
+    "Descrição": "PECAS E ACESSORIOS DE INSTRUMENTOS MUSICAIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "77",
+      "nome": "Instrumentos Musicais e Equipamentos de Som de Uso Doméstico"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "77.30",
+    "Descrição": "FONOGRAFOS, RADIOS E TELEVISORES DE TIPO DOMESTICO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4753-9/00",
+        "descricao": "Comércio varejista especializado de eletrodomésticos e equipamentos de áudio e vídeo"
+      }
+    ],
+    "Ramo": {
+      "codigo": "77",
+      "nome": "Instrumentos Musicais e Equipamentos de Som de Uso Doméstico"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "77.40",
+    "Descrição": "DISCOS E FITAS PARA EQUIP DE GRAVACAO E REPRODUCAO DE SOM E VIDEO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4753-9/00",
+        "descricao": "Comércio varejista especializado de eletrodomésticos e equipamentos de áudio e vídeo"
+      }
+    ],
+    "Ramo": {
+      "codigo": "77",
+      "nome": "Instrumentos Musicais e Equipamentos de Som de Uso Doméstico"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

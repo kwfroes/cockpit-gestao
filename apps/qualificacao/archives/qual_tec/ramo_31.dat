@@ -1,0 +1,95 @@
+[
+  {
+    "Família": "31.10",
+    "Descrição": "ROLAMENTOS ANTI- FRICCAO NAO MONTADOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2815-1/02",
+        "descricao": "Fabricação de equipamentos de transmissão para fins industriais, exceto rolamentos"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2815-1/01",
+        "descricao": "Fabricação de rolamentos para fins industriais"
+      }
+    ],
+    "Ramo": {
+      "codigo": "31",
+      "nome": "Rolamentos e Mancais"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "31.20",
+    "Descrição": "MANCAIS NAO MONTADOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2451-2/00",
+        "descricao": "Fundição de ferro e aço"
+      },
+      {
+        "codigo": "2815-1/02",
+        "descricao": "Fabricação de equipamentos de transmissão para fins industriais, exceto rolamentos"
+      },
+      {
+        "codigo": "2815-1/01",
+        "descricao": "Fabricação de rolamentos para fins industriais"
+      }
+    ],
+    "Ramo": {
+      "codigo": "31",
+      "nome": "Rolamentos e Mancais"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "31.30",
+    "Descrição": "ROLAMENTOS E MANCAIS MONTADOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2833-0/00",
+        "descricao": "Fabricação de máquinas e equipamentos para a agricultura e pecuária, peças e acessórios, exceto para irrigação"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2815-1/02",
+        "descricao": "Fabricação de equipamentos de transmissão para fins industriais, exceto rolamentos"
+      },
+      {
+        "codigo": "2815-1/01",
+        "descricao": "Fabricação de rolamentos para fins industriais"
+      }
+    ],
+    "Ramo": {
+      "codigo": "31",
+      "nome": "Rolamentos e Mancais"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

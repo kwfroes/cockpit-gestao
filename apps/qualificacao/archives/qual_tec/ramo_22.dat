@@ -1,0 +1,133 @@
+[
+  {
+    "Família": "22.10",
+    "Descrição": "LOCOMOTIVAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      },
+      {
+        "codigo": "4669-9/01",
+        "descricao": "Comércio atacadista de bombas e compressores; partes e peças"
+      },
+      {
+        "codigo": "3031-8/00",
+        "descricao": "Fabricação de locomotivas, vagões e outros materiais rodantes"
+      }
+    ],
+    "Ramo": {
+      "codigo": "22",
+      "nome": "Equipamentos Ferroviários"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "22.20",
+    "Descrição": "VAGOES FERROVIARIOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3031-8/00",
+        "descricao": "Fabricação de locomotivas, vagões e outros materiais rodantes"
+      }
+    ],
+    "Ramo": {
+      "codigo": "22",
+      "nome": "Equipamentos Ferroviários"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "22.30",
+    "Descrição": "EQUIPAMENTOS DE CONST. E MANUT. DE LEITOS DE FERROVIAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4662-1/00",
+        "descricao": "Comércio atacadista de máquinas, equipamentos para terraplenagem, mineração e construção; partes e peças"
+      },
+      {
+        "codigo": "2854-2/00",
+        "descricao": "Fabricação de máquinas e equipamentos para terraplenagem, pavimentação e construção, peças e acessórios, exceto tratores"
+      },
+      {
+        "codigo": "3031-8/00",
+        "descricao": "Fabricação de locomotivas, vagões e outros materiais rodantes"
+      }
+    ],
+    "Ramo": {
+      "codigo": "22",
+      "nome": "Equipamentos Ferroviários"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "22.40",
+    "Descrição": "ACESSORIOS E COMPONENTES DE LOCOMOTIVAS E VAGOES FERROVIARIOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2710-4/02",
+        "descricao": "Fabricação de transformadores, indutores, conversores, sincronizadores e semelhantes, peças e acessórios"
+      },
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      },
+      {
+        "codigo": "3031-8/00",
+        "descricao": "Fabricação de locomotivas, vagões e outros materiais rodantes"
+      }
+    ],
+    "Ramo": {
+      "codigo": "22",
+      "nome": "Equipamentos Ferroviários"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "22.50",
+    "Descrição": "MATERIAIS DE FERROVIA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4679-6/04",
+        "descricao": "Comércio atacadista especializado de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "2599-3/02",
+        "descricao": "Serviço de corte e dobra de metais"
+      },
+      {
+        "codigo": "1610-2/01",
+        "descricao": "Serrarias com desdobramento de madeira"
+      },
+      {
+        "codigo": "2423-7/02",
+        "descricao": "Produção de laminados longos de aço, exceto tubos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "22",
+      "nome": "Equipamentos Ferroviários"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

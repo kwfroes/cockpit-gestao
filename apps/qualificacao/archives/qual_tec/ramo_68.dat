@@ -1,0 +1,149 @@
+[
+  {
+    "Família": "68.05",
+    "Descrição": "PRODUTOS QUIMICOS DE USO GERAL",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária"
+    ],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4789-0/05",
+        "descricao": "Comércio varejista de produtos saneantes domissanitários"
+      },
+      {
+        "codigo": "2052-5/00",
+        "descricao": "Fabricação de desinfestantes domissanitários"
+      },
+      {
+        "codigo": "4646-0/01",
+        "descricao": "Comércio atacadista de cosméticos e produtos de perfumaria"
+      }
+    ],
+    "Ramo": {
+      "codigo": "68",
+      "nome": "Substâncias e Produtos Químicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "68.10",
+    "Descrição": "PRODUTOS QUIMICOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4646-0/01",
+        "descricao": "Comércio atacadista de cosméticos e produtos de perfumaria"
+      },
+      {
+        "codigo": "2052-5/00",
+        "descricao": "Fabricação de desinfestantes domissanitários"
+      },
+      {
+        "codigo": "4789-0/05",
+        "descricao": "Comércio varejista de produtos saneantes domissanitários"
+      }
+    ],
+    "Ramo": {
+      "codigo": "68",
+      "nome": "Substâncias e Produtos Químicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "68.15",
+    "Descrição": "PRODUTOS BIOLOGICOS E REAGENTES PARA USO VETERINARIO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [
+      "Alvará de Vigilância Sanitária",
+      "Ministério da Agricultura"
+    ],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "68",
+      "nome": "Substâncias e Produtos Químicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "68.20",
+    "Descrição": "CORANTES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "68",
+      "nome": "Substâncias e Produtos Químicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "68.25",
+    "Descrição": "PRODUTOS QUIMICOS NAO SUJEITOS A REGULACAO SANITARIA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "68",
+      "nome": "Substâncias e Produtos Químicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "68.30",
+    "Descrição": "GASES COMPRIMIDOS E LIQUEFEITOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "68",
+      "nome": "Substâncias e Produtos Químicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "68.40",
+    "Descrição": "PESTICIDAS E DESINFETANTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4789-0/05",
+        "descricao": "Comércio varejista de produtos saneantes domissanitários"
+      },
+      {
+        "codigo": "2052-5/00",
+        "descricao": "Fabricação de desinfestantes domissanitários"
+      }
+    ],
+    "Ramo": {
+      "codigo": "68",
+      "nome": "Substâncias e Produtos Químicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "68.50",
+    "Descrição": "ESPECIALIDADES QUIMICAS DIVERSAS",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária"
+    ],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "68",
+      "nome": "Substâncias e Produtos Químicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

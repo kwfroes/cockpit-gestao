@@ -1,0 +1,98 @@
+[
+  {
+    "Família": "76.10",
+    "Descrição": "LIVROS E FOLHETOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "76",
+      "nome": "Livros, Mapas e Outras Publicações"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "76.20",
+    "Descrição": "BIBLIOTECA MOVEL, BIBLIOTECA ITINERANTE",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "76",
+      "nome": "Livros, Mapas e Outras Publicações"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "76.30",
+    "Descrição": "JORNAIS E PERIODICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "76",
+      "nome": "Livros, Mapas e Outras Publicações"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "76.40",
+    "Descrição": "MAPAS, CARTAS E GLOBOS GEOGRAFICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "76",
+      "nome": "Livros, Mapas e Outras Publicações"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "76.50",
+    "Descrição": "DESENHOS E ESPECIFICACOES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "76",
+      "nome": "Livros, Mapas e Outras Publicações"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "76.60",
+    "Descrição": "FOLHAS E LIVROS DE MUSICA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "76",
+      "nome": "Livros, Mapas e Outras Publicações"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "76.70",
+    "Descrição": "MICROFILMES REVELADOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "76",
+      "nome": "Livros, Mapas e Outras Publicações"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "76.90",
+    "Descrição": "IMPRESSOS DIVERSOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "76",
+      "nome": "Livros, Mapas e Outras Publicações"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

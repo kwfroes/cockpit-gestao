@@ -1,0 +1,423 @@
+[
+{
+  "codigo": "01",
+  "nome": "Serviços Gerais e Administrativos",
+  "Descrição": "O ramo de Serviços Gerais e Administrativos (Código 01) reúne um conjunto diversificado de famílias voltadas essencialmente para o suporte operacional, logístico e de infraestrutura de uma organização. Essas atividades englobam desde a gestão corporativa interna — como a administração de cartões de benefício, gerenciamento de frotas e serviços bancários — até o atendimento a necessidades básicas de utilidade pública, que incluem o fornecimento de água, esgoto, energia elétrica, serviços cartoriais e funerários. \n\nAlém do suporte puramente administrativo, o ramo demonstra forte capilaridade em serviços especializados de logística, comunicação e hospitalidade, representados por agenciamento de viagens, postagem, publicidade e locação de imóveis. \n\nDestaca-se também a ampla variedade de modalidades para locação de maquinários e equipamentos (médicos, de segurança, transporte e escritório), além do suporte técnico a sistemas de saúde e provimento de mão de obra terceirizada. \n\nEm suma, as famílias deste ramo consolidam todas as atividades de meio cruciais para garantir a continuidade, regularidade e eficiência das operações institucionais."
+},
+{
+  "codigo": "02",
+  "nome": "Serviços Técnicos e Especializados",
+  "Descrição": "O ramo de Serviços Técnicos e Especializados (Código 02) reúne um amplo e estratégico conjunto de famílias voltadas para o atendimento de demandas que exigem alto nível de conhecimento técnico, regulatório e operacional. As atividades possuem forte inclinação para a área de tecnologia e governança digital, abrangendo o desenvolvimento de sistemas, segurança da informação, tratamento de dados e conectividade. Paralelamente, há uma robusta presença de serviços de consultoria, assessoria e auditoria em múltiplos domínios estruturantes, como o contábil, jurídico, atuarial, de recursos humanos e de sustentabilidade ambiental. \n\nO ramo também engloba funções analíticas e de campo complexas, que vão desde análises físico-químicas laboratoriais e pesquisas minerais até perícias e vistorias patrimoniais. \n\nAdicionalmente, o segmento contempla o planejamento logístico de grandes estruturas, a capacitação profissional e a organização de eventos e concursos públicos, consolidando-se como o núcleo de suporte especializado indispensável para a modernização administrativa, conformidade legal e eficiência de projetos institucionais de alta complexidade."
+},
+{
+  "codigo": "03",
+  "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas",
+  "Descrição": "O ramo de Serviços de Suporte a Administração de Prédios e Areas Públicas (Código 03) reúne um conjunto diversificado de famílias destinadas à manutenção, conservação e segurança da infraestrutura predial e de espaços coletivos. As atividades compreendem desde rotinas essenciais de zeladoria e higiene — como limpeza urbana, conservação de fachadas, coleta e incineração de resíduos, higienização de reservatórios de água e controle de pragas — até serviços operacionais especializados, como a manutenção de poços artesianos, atividades paisagísticas em parques e suporte a complexos zoobotânicos ou portuários. \n\nDestaca-se ainda o forte contingente voltado ao provimento de mão de obra terceirizada para serviços de copa, cozinha e apoio logístico-administrativo a edifícios públicos, além de soluções completas em segurança patrimonial, tanto por vigilância humana especializada quanto por monitoramento eletrônico. \n\nEm suma, as famílias deste ramo consolidam as atividades essenciais de conservação civil e operacional necessárias para garantir a integridade física, a segurança e o pleno funcionamento dos bens e espaços públicos."
+},
+{
+  "codigo": "04",
+  "nome": "Serviços de Manutenção de Assistência Técnica",
+  "Descrição": "O ramo de Serviços de Manutenção de Assistência Técnica (Código 04) reúne um conjunto altamente abrangente e diversificado de famílias destinadas à preservação, reparo e calibração de ativos em diferentes níveis de complexidade. As atividades contemplam desde intervenções altamente especializadas e de grande porte, reguladas por conselhos de engenharia — como a manutenção de aeronaves, locomotivas, dragas, subestações e linhas de transmissão de energia — até o suporte técnico a equipamentos de uso corporativo, laboratorial e hospitalar, incluindo instrumentos de medição, microscópios e sistemas cirúrgicos. Há também uma forte vertente voltada à infraestrutura de redes lógicas e telecomunicações, sistemas de ar condicionado central e controle preventivo contra incêndios. \n\nEm menor escala, o segmento assegura a continuidade operacional de rotinas administrativas e patrimoniais por meio do reparo de eletrodomésticos, mobiliário, bombas hidráulicas, portões, além da manutenção preventiva e corretiva de edifícios públicos, rodovias estaduais e frotas de veículos. \n\nEm suma, este ramo consolida os serviços de assistência técnica preventiva e corretiva indispensáveis para salvaguardar a integridade, a segurança e o pleno desempenho dos equipamentos e instalações públicas."
+},
+{
+  "codigo": "05",
+  "nome": "Serviços de Transporte",
+  "Descrição": "O ramo de Serviços de Transporte (Código 05) reúne um conjunto estratégico de famílias voltadas para a movimentação logística, operacional e assistencial de cargas e passageiros em múltiplos modais. As atividades abrangem de forma abrangente o transporte aéreo, rodoviário, ferroviário, metroviário e aquaviário (marítimo e fluvial), garantindo o fluxo regular de pessoas em linhas coletivas, escolares ou sob regime de fretamento. No segmento corporativo e de suprimentos, o ramo demonstra forte especialização na distribuição de cargas convencionais, mudanças, contêineres e encomendas, estendendo-se ao manejo e transporte seguro de produtos perigosos, combustíveis, lubrificantes e material bélico, que demandam rigorosas rotinas de carga, descarga e armazenamento.\n\nAdicionalmente, o setor contempla a complexidade da logística integrada por meio do agenciamento de cargas e da operação multimodal, além de prestar serviços assistenciais e de utilidade pública essenciais, como o reboque e guarda de veículos e a remoção aeroemédica e terrestre de pacientes em unidades de terapia intensiva móveis."
+},
+{
+  "codigo": "06",
+  "nome": "Estudos e Projetos",
+  "Descrição": "O ramo de Estudos e Projetos (Código 06) reúne um conjunto de famílias altamente especializadas e voltadas para o desenvolvimento de pesquisas, diagnósticos e planejamento técnico de engenharia, arquitetura e tecnologia. As atividades concentram-se fortemente na elaboração de estudos complexos de infraestrutura civil e ambiental, abrangendo desde projetos de rodovias, ferrovias, pontes e barragens até sistemas estruturais de drenagem, saneamento e instalações prediais de alta complexidade. Paralelamente, o ramo engloba serviços de geotecnologia, agrimensura, aerofotogrametria e levantamentos hidróficos e oceanográficos, fornecendo o mapeamento e o suporte geológico fundamentais para o ordenamento territorial.\n\nAdicionalmente, o segmento contempla ensaios técnicos, controles tecnológicos de materiais e análises dinâmicas em múltiplos escopos laboratoriais e de campo, consolidando-se como a base de suporte científico e de engenharia indispensável para viabilizar, licenciar e garantir a segurança de obras estruturantes e ambientais."
+},
+{
+  "codigo": "07",
+  "nome": "Obras e Construções",
+  "Descrição": "O ramo de Obras e Construções (Código 07) reúne um conjunto robusto e de alta complexidade técnica voltado para a execução física, reforma e modernização de infraestruturas urbanas e de engenharia pesada. Suas famílias compreendem grandes intervenções estruturais — como a construção de pontes, viadutos, túneis, barragens e diques — além de complexos modais de grande porte, representados por obras em aeroportos, ferrovias e portos. O ramo também atua diretamente na estruturação urbana e habitacional através de edificações civis, pavimentação viária, terraplenagem, escavação em rocha e implantação de redes de saneamento, águas pluviais e drenagem.\n\nAdicionalmente, o segmento contempla serviços de demolição, impermeabilização, engenharia ambiental por meio de reflorestamento e recomposição de jardins, além de funções estratégicas de supervisão, gerenciamento e fiscalização de contratos, consolidando todas as etapas necessárias para edificar e preservar o patrimônio público."
+},
+{
+  "codigo": "08",
+  "nome": "Instalações e Montagens",
+  "Descrição": "O ramo de Instalações e Montagens (Código 08) reúne um conjunto diversificado de famílias voltadas para a implementação física, estruturação e acabamento de elementos essenciais em ambientes civis, comerciais e de eventos. Suas atividades englobam desde serviços de acabamento e decoração de interiores — como a aplicação de revestimentos de parede, instalação de pisos e forros — até montagens técnicas de engenharia estrutural de maior porte, representadas pela montagem de estruturas metálicas e postos de combustível. O ramo também possui forte atuação na infraestrutura temporária e logística de entretenimento, englobando a montagem e instalação de estruturas específicas para a realização de eventos.\n\nEm suma, as famílias deste segmento consolidam as atividades operacionais de montagem e adequação de espaços necessárias para garantir a funcionalidade, a estética e a segurança técnica de instalações definitivas ou temporárias."
+},
+{
+  "codigo": "09",
+  "nome": "Serviços Médicos e Odontológicos",
+  "Descrição": "O ramo de Serviços Médicos e Odontológicos (Código 09) reúne um conjunto assistencial e especializado de famílias voltadas para a promoção, diagnóstico, tratamento e reabilitação da saúde humana. As atividades abrangem desde o acompanhamento psicossocial e terapias integrativas — como psicologia, psicanálise e acupuntura — até atendimentos de alta complexidade em ambiente hospitalar, ambulatorial e de pronto-socorro.\n\nO segmento demonstra forte capilaridade em métodos de diagnóstico subsidiário indispensáveis à prática clínica, englobando serviços laboratoriais de anatomia patológica, citologia e uma ampla gama de diagnósticos por imagem, como tomografia, ressonância magnética, ultrassonografia, radiografia e endoscopia.\n\nEm suma, as famílias deste ramo consolidam os serviços de assistência à saúde e suporte diagnóstico necessários para garantir o bem-estar, a segurança assistencial e a integridade biológica da população."
+},
+{
+  "codigo": "10",
+  "nome": "Armamentos",
+  "Descrição": "O ramo de Armamentos (Código 10) reúne as famílias voltadas para o fornecimento, fabricação e comercialização de materiais controlados, armas e munições. Suas atividades englobam desde a produção e o comércio varejista de armas de fogo de diversos portes e suas respectivas munições até o suprimento de acessórios correlatos e componentes balísticos especializados.\n\nO segmento é fortemente regulado por órgãos de fiscalização militar e de segurança nacional, cobrindo também o fornecimento de sistemas táticos e armamentos avançados, como mísseis, para o atendimento de demandas de defesa.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de equipamentos de força e produtos de uso restrito ou comercial necessários para as atividades de segurança pública, privada e defesa institucional."
+},
+{
+  "codigo": "13",
+  "nome": "Munições e Explosivos",
+  "Descrição": "O ramo de Munições e Explosivos (Código 13) reúne as famílias especializadas na fabricação, suprimento e comercialização de materiais de alta energia, balística e pirotecnia. Suas atividades englobam desde a produção industrial e o comércio varejista de munições destinadas a diversos calibres de armas de fogo até o fornecimento de explosivos comerciais e táticos.\n\nAdicionalmente, o segmento contempla o desenvolvimento, a fabricação e a venda de artigos pirotécnicos e fogos de artifício, atendendo a demandas festivas, de sinalização e de entretenimento.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de insumos balísticos, propulsores e químicos controlados necessários para as atividades de defesa, segurança e o setor de eventos."
+},
+{
+  "codigo": "15",
+  "nome": "Aeronaves seus Componentes Estruturais",
+  "Descrição": "O ramo de Aeronaves seus Componentes Estruturais (Código 15) reúne as famílias voltadas para o suprimento, industrialização e fabricação de vetores aéreos e suas partes fundamentais. Suas atividades concentram-se na cadeia produtiva da indústria aeroespacial, abrangendo desde a fabricação completa de aeronaves até o fornecimento de componentes estruturais necessários para a montagem e manutenção desses ativos.\n\nO segmento atende diretamente a demandas de alta tecnologia e precisão técnica exigidas pelas normas de segurança da aviação civil e militar, englobando também o suporte de engenharia associado ao ciclo de vida dos equipamentos.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de insumos e plataformas de voo indispensáveis para o desenvolvimento e a sustentação operacional do setor de transporte aéreo e defesa."
+},
+{
+  "codigo": "16",
+  "nome": "Componentes e Acessórios de Aeronaves",
+  "Descrição": "O ramo de Componentes e Acessórios de Aeronaves (Código 16) reúne as famílias voltadas para o suprimento, usinagem e fabricação de partes e sistemas complementares para vetores aéreos. Suas atividades concentram-se no fornecimento de itens essenciais para a propulsão e controle de voo, abrangendo a fabricação de turbinas, motores e demais peças e acessórios aeroespaciais específicos.\n\nO segmento opera sob rígidos critérios de conformidade técnica e controle de qualidade industrial, associando-se diretamente a rotinas especializadas de manutenção e reparação de aeronaves fora da pista de pouso.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de subconjuntos e peças sobressalentes necessários para garantir a sustentação mecânica, a segurança e a eficiência operacional das frotas aéreas."
+},
+{
+  "codigo": "17",
+  "nome": "Equipamentos de Lançamentos, Pouso e Manobra de Aeronaves",
+  "Descrição": "O ramo de Equipamentos de Lançamentos, Pouso e Manobra de Aeronaves (Código 17) reúne as famílias destinadas ao fornecimento, fabricação e suporte mecânico de sistemas de infraestrutura de solo para suporte de voo. Suas atividades compreendem o desenvolvimento e a industrialização de maquinários específicos de uso industrial aeronáutico, peças e acessórios essenciais para a movimentação e operação segura de vetores aéreos em pistas e pátios.\n\nO segmento envolve alta precisão técnica e forte controle normativo, associando-se diretamente a rotinas especializadas de calibração, manutenção e reparação de aparelhos e instrumentos de medida, teste e controle terrestre.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de insumos e maquinários de suporte aeroportuário necessários para garantir a segurança, a regularidade e a eficiência das manobras, pousos e decolagens."
+},
+{
+  "codigo": "19",
+  "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes",
+  "Descrição": "O ramo de Navios, Pequenas Embarcações, Pontões e Diques Flutuantes (Código 19) reúne as famílias voltadas para o suprimento, construção e comercialização de vetores aquaviários e estruturas flutuantes de suporte. Suas atividades abrangem desde a construção de navios de grande porte — como navios de guerra, embarcações de desembarque e navios para transporte de passageiros ou tropas — até o desenvolvimento de embarcações comerciais, de serviços especiais e de pequeno porte.\n\nO segmento também contempla o fornecimento e a fabricação de estruturas de engenharia naval e operacional essenciais para a manutenção logística e suporte hidroviário, representadas por diques flutuantes, pontões e dragas, além do agenciamento e representação comercial desses ativos.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de plataformas náuticas e infraestruturas flutuantes necessárias para as atividades de transporte aquaviário, apoio portuário e defesa institucional."
+},
+{
+    "codigo": "20",
+    "nome": "Equipamentos para Navios e Embarcações",
+    "Descrição": "O ramo de Equipamentos para Navios e Embarcações (Código 20) reúne as famílias focadas no fornecimento e fabricação de componentes essenciais para a infraestrutura, propulsão e segurança no ambiente náutico. Suas atividades englobam desde sistemas e motores de propulsão marítima até itens de mastreação, cordoaria, velas e aparelhos de sinalização ou salvamento.\n\nO segmento atende diretamente a estaleiros e operadoras de transporte aquaviário, suprindo as embarcações com bombas, compressores e artefatos de metal ou borracha indispensáveis para a navegabilidade.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de insumos e maquinários de marinharia necessários para garantir o desempenho operacional e a salvaguarda da vida humana no mar."
+  },
+  {
+    "codigo": "22",
+    "nome": "Equipamentos Ferroviários",
+    "Descrição": "O ramo de Equipamentos Ferroviários (Código 22) reúne as famílias direcionadas para o suprimento e fabricação de material rodante e insumos de via para o setor de transportes sobre trilhos. Suas atividades concentram-se na cadeia industrial ferroviária e metroviária, abrangendo a produção de locomotivas, vagões de passageiros ou de carga, além de motores, transformadores e sistemas de tração elétrica.\n\nO segmento também contempla o fornecimento de trilhos, dormentes, aparelhos de mudança de via e outros materiais estruturais para a montagem de linhas férreas.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de componentes e plataformas pesadas necessários para a expansão, modernização e operação dos sistemas de transporte ferroviário e metroviário."
+  },
+  {
+    "codigo": "23",
+    "nome": "Veículos",
+    "Descrição": "O ramo de Veículos (Código 23) reúne as famílias voltadas para a fabricação, montagem e comercialização de plataformas motorizadas de transporte terrestre de passageiros e cargas. Suas atividades compreendem o comércio atacadista e varejista de automóveis novos ou usados, camionetas, utilitários, autocarros, camiões e motocicletas, além de veículos táticos e de efeito solo.\n\nO segmento envolve uma extensa rede de concessionárias, representantes comerciais e encarroçadoras responsáveis pela adaptação de cabines, reboques e chassis.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de frotas comerciais, institucionais e de uso particular necessárias para garantir a mobilidade urbana, o transporte rodoviário e a logística de distribuição."
+  },
+  {
+    "codigo": "24",
+    "nome": "Tratores",
+    "Descrição": "O ramo de Tratores (Código 24) reúne as famílias especializadas na industrialização, fornecimento e comercialização de máquinas pesadas autopropulsadas de tração. Suas atividades abrangem desde tratores sobre rodas ou lagartas de alta e baixa velocidade até equipamentos associados à movimentação de solo e terraplenagem.\n\nO segmento serve diretamente às cadeias produtivas do agronegócio, da extração mineral e da construção civil, estruturando-se através do comércio atacadista de máquinas, partes e peças sobressalentes.\n\nEm suma, as famílias deste ramo consolidam o provimento de maquinários de força mecânica necessários para viabilizar operações de cultivo, colheita, escavação e infraestrutura pesada."
+  },
+  {
+    "codigo": "25",
+    "nome": "Componentes de Veículos",
+    "Descrição": "O ramo de Componentes de Veículos (Código 25) reúne as famílias dedicadas à fabricação e comercialização de autopeças, sistemas e subsistemas mecânicos ou elétricos para frotas terrestres. Suas atividades cobrem o fornecimento de itens essenciais para a estrutura e dinâmica automotiva, incluindo componentes de cabine, carroceria, chassis, sistemas de marcha, transmissão, freios e motores.\n\nO segmento alimenta o mercado de reposição e as linhas de montagem industrial por meio do comércio por atacado de peças novas, baterias, acumuladores e artefatos de borracha.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de insumos mecânicos necessários para assegurar a manutenção corretiva, o desempenho e a segurança ativa dos veículos automotores."
+  },
+  {
+    "codigo": "26",
+    "nome": "Pneus e Camaras",
+    "Descrição": "O ramo de Pneus e Camaras (Código 26) reúne as famílias focadas na fabricação, reforma e distribuição de pneumáticos e materiais correlatos para o setor de transportes. Suas atividades abrangem a produção e o comércio atacadista ou varejista de pneus e câmaras de ar para veículos automotores, bicicletas e aeronaves, além de insumos químicos para a vulcanização e reparação de borracha.\n\nO segmento também engloba serviços industriais de recauchutagem e renovação de bandas de rodagem, ao lado do fornecimento de aditivos e produtos de limpeza e polimento automotivo.\n\nEm suma, as famílias deste ramo consolidam o suprimento de componentes de rodagem necessários para garantir a aderência, a eficiência e a segurança no deslocamento de frotas terrestres e aéreas."
+  },
+  {
+    "codigo": "28",
+    "nome": "Motores, Turbinas e seus Componentes",
+    "Descrição": "O ramo de Motores, Turbinas e seus Componentes (Código 28) reúne as famílias especializadas no desenvolvimento, fabricação e comércio de unidades propulsoras térmicas e hidráulicas. Suas atividades englobam motores a combustão interna (gasolina ou gasóleo) e turbinas para uso industrial, agrícola e náutico, cobrindo também os motores de pistão destinados à aviação.\n\nO segmento atende à indústria automobilística e de maquinários pesados com peças sobressalentes para sistemas de ignição, blocos e cabeçotes, estruturado em canais de distribuição grossista.\n\nEm suma, as famílias deste ramo consolidam o provimento de sistemas de conversão de energia mecânica necessários para a movimentação de veículos, embarcações e geração de força industrial."
+  },
+  {
+    "codigo": "29",
+    "nome": "Acessórios de Motores",
+    "Descrição": "O ramo de Acessórios de Motores (Código 29) reúne as famílias destinadas ao fornecimento de componentes periféricos, agregados e sistemas auxiliares de alimentação e refrigeração de blocos motores. Suas atividades focam no comércio atacadista e na manufatura de peças do sistema de combustível, filtros, juntas e artefatos de borracha para veículos rodoviários, além de acessórios dedicados a motores de aeronaves.\n\nO segmento complementa a cadeia de autopeças mecânicas, garantindo o suprimento de componentes de precisão para otimizar a queima e a exaustão.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de subsistemas complementares necessários para o funcionamento integrado, eficiência térmica e longevidade dos motores de pistão ou turbinas."
+  },
+{
+    "codigo": "30",
+    "nome": "Equipamentos de Transmissão Mecânica de Força",
+    "Descrição": "O ramo de Equipamentos de Transmissão Mecânica de Força (Código 30) reúne as famílias dedicadas ao fornecimento e fabricação de componentes essenciais para a transferência de torque e potência em sistemas industriais e automotivos. Suas atividades englobam a produção de conversores de torção, caixas de mudança, engrenagens, polias, cordas dentadas e correntes de transmissão.\n\nO segmento atende diretamente a linhas de montagem e oficinas mecânicas com peças sobressalentes e serviços de usinagem, solda e tornearia.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de insumos cinemáticos necessários para garantir a movimentação mecânica e a eficiência operacional de máquinas e frotas."
+  },
+  {
+    "codigo": "31",
+    "nome": "Rolamentos e Mancais",
+    "Descrição": "O ramo de Rolamentos e Mancais (Código 31) reúne as famílias focadas na fabricação e distribuição de elementos de suporte e redução de atrito para eixos rotativos industriais e automotivos. Suas atividades abrangem o comércio atacadista e a produção de rolamentos antifricção e mancais, tanto em versões montadas quanto não montadas.\n\nO segmento atende de forma transversal a indústrias de bens de capital, oficinas e o setor de maquinários agrícolas, contando com suporte metalúrgico de fundição de ferro e aço.\n\nEm suma, as famílias deste ramo consolidam o suprimento de componentes de alta precisão técnica necessários para viabilizar a rotação suave, conter cargas mecânicas e estender a vida útil de sistemas motrizes."
+  },
+  {
+    "codigo": "32",
+    "nome": "Máquinas e Equipamentos para Trabalhar em Madeira",
+    "Descrição": "O ramo de Máquinas e Equipamentos para Trabalhar em Madeira (Código 32) reúne as famílias destinadas ao fornecimento, industrialização e comércio de maquinários e ferramentas de processamento madeireiro. Suas atividades compreendem desde equipamentos pesados para serraria e preparo inicial da madeira até máquinas operatrizes para marcenaria, carpintaria e transformação de derivados plásticos.\n\nO segmento abastece indústrias de móveis e o comércio varejista ou grossista de ferragens com lâminas, cortadores e acessórios específicos de corte.\n\nEm suma, as famílias deste ramo consolidam o provimento de soluções tecnológicas e utilitários mecânicos necessários para viabilizar o desdobro, a modelagem e o acabamento industrial de estruturas de madeira e afins."
+  },
+  {
+    "codigo": "34",
+    "nome": "Maquinaria para Trabalhar Metal",
+    "Descrição": "O ramo de Maquinaria para Trabalhar Metal (Código 34) reúne as famílias especializadas no fornecimento de máquinas-ferramenta e insumos para conformação, corte e acabamento de superfícies metálicas. Suas atividades abrangem desde o comércio de máquinas de serrar, limar e desbastar elétricas ou ultrassónicas até conjuntos completos, estojos e ferramentas para oficinas mecânicas.\n\nO segmento serve diretamente a caldeirarias, indústrias metalúrgicas e de autopeças através do fornecimento grossista e varejista de ferragens e utilitários de fixação.\n\nEm suma, as famílias deste ramo consolidam o provimento de equipamentos de usinagem e ferramentaria necessários para moldar ligas metálicas com alta precisão e eficiência industrial."
+  },
+  {
+    "codigo": "35",
+    "nome": "Equipamentos para Serviços",
+    "Descrição": "O ramo de Equipamentos para Serviços (Código 35) reúne as famílias focadas no suprimento de máquinas e utilitários voltados para o atendimento de demandas profissionais, comerciais e operacionais de suporte. Suas atividades englobam o fornecimento de maquinários para lavanderia e lavagem a seco, além de equipamentos especializados para a indústria do vestuário, couro e conserto de calçados.\n\nO segmento estrutura-se majoritariamente em canais de comércio atacadista e varejista de ferragens, ferramentas e bens de uso comercial.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de soluções mecânicas e operacionais necessárias para otimizar rotinas de prestação de serviços e a manutenção técnica de estabelecimentos comerciais."
+  },
+  {
+    "codigo": "36",
+    "nome": "Máquinas para Industrias Especializadas",
+    "Descrição": "O ramo de Máquinas para Industrias Especializadas (Código 36) reúne as famílias destinadas ao fornecimento de bens de capital e maquinários customizados para setores específicos da produção e utilidade pública. Suas atividades abrangem o desenvolvimento de máquinas para a indústria de alimentos, bebidas e fumo, além de equipamentos para impressão gráfica, duplicidade e encadernação.\n\nO segmento estende-se ao suporte regulamentado e de infraestrutura, incluindo maquinarias para montagem industrial, saneamento ambiental e linhas especializadas para material bélico ou munições.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de plataformas tecnológicas complexas necessárias para automatizar processos de fabricação e sustentar operações industriais verticais."
+  },
+  {
+    "codigo": "37",
+    "nome": "Maquinaria e Equipamentos Agrícolas",
+    "Descrição": "O ramo de Maquinaria e Equipamentos Agrícolas (Código 37) reúne as famílias voltadas para o fornecimento de implementos, ferramentas e sistemas mecânicos de suporte às atividades do campo. Suas atividades compreendem maquinários para a preparação do solo, semeadura, irrigação e colheita, além de sistemas específicos para laticínios, apicultura, avicultura e pecuária.\n\nO segmento atende também a demandas de manutenção rural e áreas verdes por meio de ferramentas de jardinagem, veículos de tração animal, reboques e pulverizadores para controle de pragas.\n\nEm suma, as famílias deste ramo consolidam o provimento de soluções mecânicas necessárias para mecanizar a produção agropecuária, otimizar cultivos e garantir o manejo eficiente de recursos no agronegócio."
+  },
+  {
+    "codigo": "38",
+    "nome": "Equipamentos de Construção, Mineração, Escavação e Conservação de Rodovias",
+    "Descrição": "O ramo de Equipamentos de Construção, Mineração, Escavação e Conservação de Rodovias (Código 38) reúne as famílias focadas na distribuição e fabricação de maquinários pesados para movimentação de terra e engenharia de infraestrutura. Suas atividades abrangem desde o fornecimento de escavadoras, guindastes e implementos para camiões e tratores até equipamentos de abertura de estradas e perfuração de poços de água.\n\nO segmento apoia diretamente o setor extrativista e a construção civil, englobando também plantas de mistura de asfalto e sistemas para produção e distribuição de petróleo.\n\nEm suma, as famílias deste ramo consolidam o suprimento de frotas pesadas e acessórios mecânicos necessários para viabilizar obras estruturantes, mineração e a manutenção de malhas rodoviárias."
+  },
+  {
+    "codigo": "39",
+    "nome": "Equipamentos para Manuseio de Material",
+    "Descrição": "O ramo de Equipamentos para Manuseio de Material (Código 39) reúne as famílias direcionadas ao fornecimento de sistemas mecânicos de elevação, transporte e logística interna de cargas. Suas atividades concentram-se no provimento de esteiras transportadoras, alimentadores de matéria-prima, elevadores, escadas rolantes e veículos autopropulsados ou manuais para armazéns.\n\nO segmento envolve também itens de suporte à movimentação, como talhas, guinchos, guindastes, poleames e lingas de amarração.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de infraestruturas logísticas necessárias para assegurar a movimentação vertical e horizontal de materiais com segurança e eficiência em indústrias e centros de distribuição."
+  },
+{
+    "codigo": "40",
+    "nome": "Cordas, Cabos, Correntes e seus Acessórios",
+    "Descrição": "O ramo de Cordas, Cabos, Correntes e seus Acessórios (Código 40) reúne as famílias voltadas para o fornecimento de materiais de amarração, elevação e fixação mecânica. Suas atividades abrangem o comércio e a distribuição de cabos e correntes de aço de alta resistência, além de cabos de fibra, cordoalhas e barbantes destinados a múltiplos usos industriais e operacionais.\n\nO segmento também contempla uma linha completa de ferragens especiais e acessórios complementares indispensáveis para a aplicação segura desses itens.\n\nEm suma, as famílias deste ramo consolidam o suprimento de insumos de suspensão e tração necessários para garantir a movimentação de cargas e o suporte logístico em setores como a construção civil, indústria naval e manufatura."
+  },
+  {
+    "codigo": "41",
+    "nome": "Equipamentos de Refrigeração, Circulação e Condicionamento de Ar",
+    "Descrição": "O ramo de Equipamentos de Refrigeração, Circulação e Condicionamento de Ar (Código 41) reúne as famílias focadas no fornecimento e comercialização de sistemas de controle térmico e ventilação. Suas atividades englobam desde grandes unidades de ar condicionado e refrigeradores industriais ou comerciais até componentes periféricos e peças de reposição essenciais para esses aparelhos.\n\nO segmento também abrange utilitários de menor porte, como ventiladores, circuladores de ar e ventoinhas elétricas para uso doméstico ou institucional.\n\nEm suma, as famílias deste ramo consolidam o provimento de soluções tecnológicas necessárias para assegurar o conforto térmico, a circulação adequada do ar e a conservação de insumos em ambientes públicos e corporativos."
+  },
+  {
+    "codigo": "42",
+    "nome": "Equipamentos para Combate a Incêndio, Resgate e Segurança",
+    "Descrição": "O ramo de Equipamentos para Combate a Incêndio, Resgate e Segurança (Código 42) reúne as famílias dedicadas ao fornecimento de materiais táteis e operacionais de proteção à vida e ao patrimônio. Suas atividades compreendem desde dispositivos específicos de contenção de sinistros — como extintores e mangueiras de combate a incêndio — até utilitários especializados de salvamento marítimo, mergulho e sistemas de descontaminação.\n\nO segmento cobre de forma transversal o suprimento de equipamentos de segurança pessoal e coletiva essenciais para mitigar riscos operacionais.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de soluções de emergência e salvaguarda necessárias para a atuação de brigadas, corpos de bombeiros e equipes de segurança institucional."
+  },
+  {
+    "codigo": "43",
+    "nome": "Bombas e Compressores",
+    "Descrição": "O ramo de Bombas e Compressores (Código 43) reúne as famílias especializadas na distribuição e suprimento de maquinários de pressurização e movimentação de fluidos e gases. Suas atividades abrangem a comercialização de bombas manuais e mecânicas, além de compressores e bombas de vácuo de aplicação industrial e comercial.\n\nO segmento estende-se também ao fornecimento de equipamentos auxiliares de filtragem a pressão e vácuo, separadores e centrifugadores.\n\nEm suma, as famílias deste ramo consolidam o provimento de bens de capital mecânicos necessários para viabilizar sistemas de sucção, recalque de água, fornecimento de ar comprimido e processos correlatos em instalações prediais e industriais."
+  },
+  {
+    "codigo": "44",
+    "nome": "Equipamentos de Forno, Central de Vapor, Secagem e Reator Nuclear",
+    "Descrição": "O ramo de Equipamentos de Forno, Central de Vapor, Secagem e Reator Nuclear (Código 44) reúne as famílias direcionadas ao fornecimento de grandes complexos térmicos e sistemas industriais de alta caloria. Suas atividades englobam o suprimento de caldeiras industriais, permutadores de calor, condensadores de vapor, fornalhas, estufas e fornos de grande porte. O setor também engloba utilitários de purificação de ar e maquinários voltados para os processos de secagem e desidratação industrial.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de plataformas tecnológicas robustas e componentes térmicos necessários para sustentar a geração de energia e o processamento de materiais em plantas industriais e centrais de serviços públicos."
+  },
+  {
+    "codigo": "45",
+    "nome": "Equipamentos de Instalações Hidráulicas, Sanitárias e de Calefação",
+    "Descrição": "O ramo de Equipamentos de Instalações Hidráulicas, Sanitárias e de Calefação (Código 45) reúne as famílias voltadas para o provimento de componentes mecânicos e térmicos de infraestrutura civil. Suas atividades compreendem desde o suprimento de dispositivos, conexões e acessórios hidráulicos ou sanitários até o fornecimento de aquecedores domésticos de água e sistemas de queima de combustível para calefação.\n\nO segmento atende diretamente às necessidades de acabamento e manutenção predial em redes fluviais e térmicas.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de utilitários e materiais hidrossanitários necessários para garantir a distribuição de água, o escoamento de efluentes e o controle de aquecimento em edifícios públicos."
+  },
+  {
+    "codigo": "46",
+    "nome": "Equipamentos para Purificação de Água e Tratamento de Esgotos",
+    "Descrição": "O ramo de Equipamentos para Purificação de Água e Tratamento de Esgotos (Código 46) reúne as famílias focadas no suprimento de tecnologias ambientais e de saneamento básico. Suas atividades englobam o fornecimento de estações e equipamentos para purificação de água potável, sistemas de destilação para uso marítimo ou industrial e seus acessórios de reposição.\n\nO segmento estende-se também ao comércio de plantas de filtração e maquinários voltados ao tratamento biológico e mecânico de efluentes sanitários.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de soluções ecológicas e de engenharia sanitária necessárias para garantir a potabilidade da água e a conformidade ambiental no descarte de esgotos."
+  },
+  {
+    "codigo": "47",
+    "nome": "Canos, Tubos, Mangueiras e Acessórios",
+    "Descrição": "O ramo de Canos, Tubos, Mangueiras e Acessórios (Código 47) reúne as famílias dedicadas ao fornecimento de condutores estruturais de fluidos, gases e fiação. Suas atividades concentram-se no comércio por atacado e varejo de canos e tubos rígidos, além de mangueiras e tubulações flexíveis feitas de múltiplos materiais.\n\nO segmento também assegura o suprimento de ferragens especiais, abraçadeiras e conexões de acoplamento indispensáveis para a montagem dessas linhas.\n\nEm suma, as famílias deste ramo consolidam a distribuição de insumos de condução física necessários para viabilizar e manter redes hidráulicas, pneumáticas e elétricas em obras civis e instalações industriais."
+  },
+  {
+    "codigo": "48",
+    "nome": "Válvulas",
+    "Descrição": "O ramo de Válvulas (Código 48) reúne as famílias focadas no provimento de dispositivos mecânicos de controle, bloqueio e regulagem de fluxo em tubulações. Suas atividades dividem-se de forma clara entre o fornecimento de válvulas acionadas por força motriz (sistemas automatizados, elétricos ou hidráulicos) e válvulas não acionadas por força motriz (de controle puramente manual ou mecânico).\n\nO segmento é transversal e atende diretamente a sistemas de saneamento, redes prediais de fluidos e plantas de processamento de gases.\n\nEm suma, as famílias deste ramo consolidam o suprimento de componentes de precisão mecânica necessários para garantir a estanqueidade, a segurança e a gestão de vazão em linhas de transporte fluidodinâmico."
+  },
+  {
+    "codigo": "49",
+    "nome": "Equipamentos de Oficinas de Manutenção e Reparos",
+    "Descrição": "O ramo de Equipamentos de Oficinas de Manutenção e Reparos (Código 49) reúne um conjunto altamente especializado de famílias destinadas ao suporte instrumental de centros técnicos de revisão. Suas atividades compreendem o fornecimento de ferramentaria, bancadas e insumos táticos para a manutenção de frotas rodoviárias, além de conjuntos de alta precisão técnica para oficinas de aeronaves e motores de pistão. O ramo também agrega demandas de alta restrição e segurança tática, cobrindo o ferramental de inspeção e reparo de material bélico, armamentos e mísseis guiados.\n\nEm suma, as famílias deste ramo consolidam o provimento de soluções mecânicas e aparelhos de teste necessários para viabilizar a assistência corretiva e preventiva de ativos estratégicos civis e militares."
+  },
+{
+    "codigo": "51",
+    "nome": "Ferramentas Manuais",
+    "Descrição": "O ramo de Ferramentas Manuais (Código 51) reúne as famílias voltadas para o fornecimento de instrumentos táticos e utilitários de uso manual para reparos, cortes e montagens mecânicas. Suas atividades abrangem desde ferramentas manuais de corte e sem corte — não acionadas por força motriz — até brocas, alargadores, escareadores, machos, matrizes e mandris para aplicação direta ou acoplamento em máquinas.\n\nO segmento também atende à organização das oficinas por meio do suprimento de caixas de ferramentas e estojos de acondicionamento.\n\nEm suma, as famílias deste ramo consolidam o abastecimento do instrumental básico e de precisão necessário para viabilizar intervenções manuais e ajustes técnicos em frotas, indústrias e serviços de manutenção civil."
+  },
+  {
+    "codigo": "52",
+    "nome": "Instrumentos de Medição",
+    "Descrição": "O ramo de Instrumentos de Medição (Código 52) reúne as famílias dedicadas ao fornecimento de aparelhos, calibres e dispositivos de alta precisão para controle dimensional e de conformidade técnica. Suas atividades concentram-se na distribuição de instrumentos de medição para uso profissional, além de calibres de inspeção e jogos táteis de ferramentaria especializada.\n\nO segmento atende de forma transversal a laboratórios, oficinas mecânicas e linhas de montagem que demandam rígida aferição física.\n\nEm suma, as famílias deste ramo consolidam o provimento de soluções instrumentais necessárias para garantir a exatidão, a calibração de maquinários e o controle de qualidade de componentes industriais e automotivos."
+  },
+  {
+    "codigo": "53",
+    "nome": "Ferragens e Abrasivos",
+    "Descrição": "O ramo de Ferragens e Abrasivos (Código 53) reúne as famílias focadas na distribuição de elementos de fixação mecânica, componentes estruturais secundários e insumos de desbaste industrial. Suas atividades abrangem uma ampla linha de fixadores, incluindo prisioneiros, porcas, arruelas, além de parafusos com e sem porca.\n\nO segmento também contempla materiais abrasivos, discos e pedras de polimento, bem como molas de arame, botões e ponteiros de controle mecânico.\n\nEm suma, as famílias deste ramo consolidam o suprimento de insumos de montagem e acabamento metalúrgico necessários para sustentar a união de partes e o tratamento de superfícies em oficinas e indústrias."
+  },
+  {
+    "codigo": "54",
+    "nome": "Estruturas e Andaimes Pré-Fabricados",
+    "Descrição": "O ramo de Estruturas e Andaimes Pré-Fabricados (Código 54) reúne as famílias destinadas ao fornecimento de módulos construtivos, abrigos portáteis e sistemas de escoramento de engenharia civil. Suas atividades englobam desde edificações pré-fabricadas, abrigos de parede rígida e torres estruturais até tanques de armazenagem de grande porte e pontes fixas ou flutuantes. O setor assegura também o provimento de componentes específicos para a montagem de andaimes e formas de concreto para obras.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de plataformas modulares e infraestruturas portáteis necessárias para dar suporte logístico, armazenagem e segurança operacional em canteiros de obras e projetos industriais."
+  },
+  {
+    "codigo": "55",
+    "nome": "Tábuas, Esquadrias e Compensados de Madeira",
+    "Descrição": "O ramo de Tábuas, Esquadrias e Compensados de Madeira (Código 55) reúne as famílias voltadas para o suprimento de insumos madeireiros estruturais e de acabamento para a construção civil e marcenaria. Suas atividades concentram-se no comércio e distribuição de tábuas brutas ou beneficiadas, compensados, folheados e artigos correlatos à base de madeira.\n\nO segmento atende também a etapas de fechamento predial e arquitetura por meio do fornecimento de esquadrias prontas para instalação.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de materiais de origem vegetal necessários para viabilizar estruturas de cobertura, divisórias, fôrmas e o acabamento de instalações públicas e edifícios."
+  },
+  {
+    "codigo": "56",
+    "nome": "Materiais para Construção",
+    "Descrição": "O ramo de Materiais para Construção (Código 56) reúne as famílias dedicadas ao provimento de insumos minerais, cerâmicos e componentes estruturais para a execução de obras civis. Suas atividades compreendem desde o comércio a granel de materiais minerais básicos até o fornecimento de tijolos, vidros, pisos, blocos e telhados para revestimento de paredes.\n\nO segmento também assegura a distribuição de condutos e tubos não metálicos, painéis de papelão, isolantes térmicos, além de elementos de vedação externa como cercados, grades e portões.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de insumos e peças pré-fabricadas indispensáveis para a edificação, acabamento e manutenção corretiva do patrimônio público e residencial."
+  },
+  {
+    "codigo": "58",
+    "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente",
+    "Descrição": "O ramo de Equipamentos de Comunicação, Detecção e Radiação Corrente (Código 58) reúne as famílias voltadas para o fornecimento de sistemas tecnológicos avançados de transmissão de dados, criptografia e vigilância tática. Suas atividades abrangem equipamentos de telefonia, telegráficos e soluções complexas de segurança da comunicação, incluindo dispositivos criptológicos de uso restrito.\n\nO segmento possui forte atuação em segurança de Estado e defesa, englobando sistemas de contra-medidas eletrônicas, equipamentos de reação rápida, visão noturna e dispositivos de radiação coerente estimulada com seus acessórios.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de plataformas eletrônicas e de monitoramento necessárias para sustentar as redes de telecomunicação e as operações táticas de segurança institucional."
+  },
+  {
+    "codigo": "59",
+    "nome": "Componentes de Equipamentos Elétricos e Eletrônicos",
+    "Descrição": "O ramo de Componentes de Equipamentos Elétricos e Eletrônicos (Código 59) reúne as famílias focadas no suprimento de peças de reposição discretas e subconjuntos integrados para sistemas de hardware e comunicação. Suas atividades concentram-se na distribuição de componentes fundamentais como resistores, capacitores, filtros, redes elétricas, além de fusíveis, interruptores e protetores de circuito. O setor atende também a redes lógicas através do fornecimento de conjuntos de cabos, cordões e fios elétricos específicos, estendendo-se a placas, cartões eletrônicos e sincronizadores ou analisadores de sinal.\n\nEm suma, as famílias deste ramo consolidam o provimento de insumos microeletrônicos e elétricos necessários para a manutenção de aparelhos de precisão, TI e infraestruturas de energia."
+  },
+{
+    "codigo": "60",
+    "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica",
+    "Descrição": "O ramo de Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica (Código 60) reúne as famílias dedicadas ao suprimento de insumos tecnológicos e ópticos para redes de alta velocidade e transmissão de dados. Suas atividades englobam o fornecimento de componentes de precisão como juntas rotativas, acopladores isolantes, misturadores, atenuadores e filtros ópticos.\n\nO segmento também atende a demandas físicas de rede por meio da distribuição de interconectores, cabos estruturados, suprimentos auxiliares e jogos ou conjuntos completos de fibra óptica.\n\nEm suma, as famílias deste ramo consolidam o provimento de materiais fotônicos e de conectividade necessários para a expansão, manutenção e alta performance de infraestruturas de telecomunicações e tráfego de dados."
+  },
+  {
+    "codigo": "61",
+    "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica",
+    "Descrição": "O ramo de Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica (Código 61) reúne as famílias focadas na infraestrutura de potência, geração e transmissão de eletricidade. Suas atividades abrangem desde o fornecimento de grandes unidades dinâmicas — como motores elétricos, geradores e conjuntos de geradores — até dispositivos de rede como transformadores, indutores e conversores.\n\nO segmento contempla também o provimento de fios e cabos elétricos condutores, baterias recarregáveis e equipamentos de controle e distribuição de energia.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de insumos elétricos pesados e componentes de circuito necessários para garantir o fornecimento contínuo de energia e a estabilidade de redes elétricas industriais e prediais."
+  },
+  {
+    "codigo": "62",
+    "nome": "Aparelhos de Iluminação e Lâmpadas",
+    "Descrição": "O ramo de Aparelhos de Iluminação e Lâmpadas (Código 62) reúne as famílias destinadas ao suprimento de soluções de iluminação artificial para ambientes internos, externos e operacionais. Suas atividades compreendem o comércio e distribuição de aparelhos de iluminação elétrica de uso fixo residencial ou público, refletores e luminárias portáteis.\n\nO segmento assegura também o fornecimento em larga escala de lâmpadas elétricas de variadas tecnologias, além de componentes estruturais de partida e regulação, como reatores e suportes de fixação (soquetes).\n\nEm suma, as famílias deste ramo consolidam o provimento de materiais elétricos de iluminação necessários para garantir a visibilidade, o conforto térmico-visual e a eficiência energética de edifícios e vias públicas."
+  },
+  {
+    "codigo": "63",
+    "nome": "Sistemas de Alarme, Sinalização e Detecção para Segurança",
+    "Descrição": "O ramo de Sistemas de Alarme, Sinalização e Detecção para Segurança (Código 63) reúne as famílias dedicadas ao fornecimento de dispositivos visuais e sonoros de controle de tráfego, advertência e monitoramento patrimonial. Suas atividades compreendem desde equipamentos complexos de engenharia viária — como sistemas de sinalização de tráfego terrestre e trânsito, e painéis ou letreiros luminosos — até soluções específicas de segurança para o modal aquaviário e de sinalização para aeronaves.\n\nO segmento atende também a demandas gerais de vigilância eletrônica por meio do provimento de sistemas diversos de alarme contra intrusão e detecção de riscos.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de utilitários de comunicação visual e sensores críticos necessários para salvaguardar vidas e organizar fluxos operacionais urbanos e de transportes."
+  },
+  {
+    "codigo": "65",
+    "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário",
+    "Descrição": "O ramo de Equipamentos e Artigos de uso Médico, Dentário e Veterinário (Código 65) reúne as famílias voltadas para o suprimento de insumos farmacêuticos, instrumentais clínicos e tecnologias de assistência à saúde. Suas atividades são altamente reguladas e abrangem o fornecimento de medicamentos de uso geral e veterinário, insumos biológicos e fórmulas de atendimento a demandas judiciais.\n\nO segmento estende-se ao provimento de mobiliário hospitalar especializado, artigos odontológicos, equipamentos oftalmológicos e jogos ou conjuntos cirúrgicos completos.\n\nEm suma, as famílias deste ramo consolidam a distribuição de produtos médicos e terapêuticos necessários para abastecer hospitais, clínicas e postos de atendimento, garantindo a biossegurança e a eficiência das práticas de saúde humana e animal."
+  },
+  {
+    "codigo": "66",
+    "nome": "Instrumentos e Equipamentos de Laboratório",
+    "Descrição": "O ramo de Instrumentos e Equipamentos de Laboratório (Código 66) reúne as famílias focadas no fornecimento de ferramentas de alta precisão instrumental para análise científica, controle de processos e navegação avançada. Suas atividades englobam desde sistemas embarcados — como instrumentos de voo, piloto automático, bússolas giroscópicas e de navegação marítima — até utilitários de campo para desenho técnico, topografia e cartografia.\n\nO segmento atende também a plantas industriais e laboratórios de ensaios com aparelhos de medição e controle de fluxo de líquidos ou gases, além de medidores de pressão, temperatura e humidade.\n\nEm suma, as famílias deste ramo consolidam o provimento de tecnologia analítica e de diagnóstico físico-químico necessária para subsidiar pesquisas laboratoriais e garantir a precisão de operações logísticas e industriais."
+  },
+  {
+    "codigo": "67",
+    "nome": "Equipamentos Fotográficos",
+    "Descrição": "O ramo de Equipamentos Fotográficos (Código 67) reúne as famílias direcionadas ao suprimento de dispositivos óticos de captura de imagem, projeção e processamento visual. Suas atividades concentram-se no comércio e fornecimento de câmaras fotográficas e cinematográficas profissionais, lentes e utilitários de projeção. O setor atende também a etapas físicas e de mídia por meio do provimento de materiais químicos fotográficos, filmes revelados e maquinários especializados para revelação e acabamento laboratorial.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de insumos e aparelhos óticos necessários para dar suporte a atividades de comunicação, documentação documental, perícias e produções audiovisuais institucionais."
+  },
+  {
+    "codigo": "68",
+    "nome": "Substâncias e Produtos Químicos",
+    "Descrição": "O ramo de Substâncias e Produtos Químicos (Código 68) reúne as famílias voltadas para a distribuição de insumos moleculares, compostos industriais e formulações químicas de aplicação sanitária ou produtiva. Suas atividades abrangem o comércio atacadista de produtos químicos de uso geral, reagentes laboratoriais e matérias-primas sujeitas a controle sanitário.\n\nO segmento estende-se ao fornecimento de gases comprimidos ou liquefeitos para fins industriais e medicinais, bem como à comercialização de defensivos, pesticidas e desinfetantes domissanitários.\n\nEm suma, as famílias deste ramo consolidam o suprimento de formulações químicas controladas e insumos de purificação necessários para atender a processos industriais, rotinas de assepsia e manutenção ambiental segura."
+  },
+  {
+    "codigo": "69",
+    "nome": "Aparelhos e Acessórios de Treinamento",
+    "Descrição": "O ramo de Aparelhos e Acessórios de Treinamento (Código 69) reúne as famílias focadas no suprimento de insumos didáticos, simuladores e ferramentas de capacitação tática ou operacional. Suas atividades concentram-se no provimento de acessórios gerais para dinâmicas de treinamento institucional, expandindo-se para nichos especializados que demandam simulação controlada, como o adestramento e treinamento de animais.\n\nO segmento possui forte apelo em segurança e defesa, cobrindo o fornecimento de maquetes, simuladores de tiro e acessórios específicos para o treinamento com armamentos e gestão operacional de forças.\n\nEm suma, as famílias deste ramo consolidam o provimento do aparato instrumental necessário para viabilizar programas de instrução, formação e reciclagem técnica de recursos humanos civis e militares."
+  },
+{
+    "codigo": "70",
+    "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte",
+    "Descrição": "O ramo de Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte (Código 70) reúne as famílias voltadas para o provimento de soluções de infraestrutura tecnológica, hardware e governança digital. Suas atividades abrangem desde o fornecimento de computadores e componentes de processamento até softwares especializados em segurança da informação.\n\nO segmento atende também à gestão de ativos digitais por meio do suprimento de bases de dados e conteúdos estruturados na internet.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de recursos de TI necessários para garantir a transformação digital, a conectividade e a proteção de dados nas operações institucionais."
+  },
+  {
+    "codigo": "71",
+    "nome": "Mobiliários",
+    "Descrição": "O ramo de Mobiliários (Código 71) reúne as famílias dedicadas à fabricação, comércio e distribuição de móveis e estruturas de armazenamento para ambientes corporativos e residenciais. Suas atividades concentram-se no fornecimento de mobiliário doméstico e de escritório, além de armários, estantes e acessórios funcionais diversos.\n\nO segmento visa atender diretamente ao layout operacional de repartições públicas e instalações institucionais.\n\nEm suma, as famílias deste ramo consolidam o suprimento de bens duráveis necessários para garantir o conforto, a ergonomia e a organização física dos postos de trabalho e espaços de atendimento."
+  },
+  {
+    "codigo": "72",
+    "nome": "Utensílios e Utilidades de Uso Doméstico e Comercial",
+    "Descrição": "O ramo de Utensílios e Utilidades de Uso Doméstico e Comercial (Código 72) reúne as famílias focadas no provimento de materiais de ambientação, decoração e recipientes de acondicionamento para múltiplos ambientes. Suas atividades abrangem o fornecimento de utilidades domésticas em geral, revestimentos têxteis e de segurança para pisos, além de cortinas, persianas e tapeçarias. O setor também engloba uma grande variedade de recipientes metálicos ou plásticos destinados ao uso comercial e logístico interno.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de insumos de acabamento e utilidades diárias necessários para equipar e manter a funcionalidade operacional de prédios públicos e refeitórios."
+  },
+  {
+    "codigo": "73",
+    "nome": "Equipamentos para Preparar e Servir Alimentos",
+    "Descrição": "O ramo de Equipamentos para Preparar e Servir Alimentos (Código 73) reúne as famílias destinadas ao fornecimento de maquinários industriais, utilitários manuais e artigos de mesa para o setor de nutrição e buffet. Suas atividades compreendem desde equipamentos pesados para cozinhar e assar alimentos até aparelhos e eletrodomésticos estruturais de cozinha profissional.\n\nO segmento assegura também a distribuição de cutelaria, talheres, louças e vidros de servir.\n\nEm suma, as famílias deste ramo consolidam o suprimento do aparato gastronômico necessário para viabilizar o funcionamento de cozinhas comunitárias, refeitórios administrativos e serviços contínuos de alimentação."
+  },
+  {
+    "codigo": "74",
+    "nome": "Máquinas para Escritórios e Arquivos Visuais",
+    "Descrição": "O ramo de Máquinas para Escritórios e Arquivos Visuais (Código 74) reúne as famílias voltadas para o suprimento de utilitários mecânicos e eletromecânicos tradicionais de suporte administrativo. Suas atividades englobam majoritariamente a distribuição e o comércio de máquinas de contabilidade, calculadoras financeiras, além de máquinas de escrever e de composição de textos para escritório.\n\nO segmento foca no provimento de ferramentas clássicas de escrituração e processamento documental descentralizado.\n\nEm suma, as famílias deste ramo consolidam o fornecimento de equipamentos mecânicos necessários para a execução de rotinas de conferência, registro financeiro e arquivo técnico."
+  },
+  {
+    "codigo": "75",
+    "nome": "Utensílios de Escritório e Material de Expediente",
+    "Descrição": "O ramo de Utensílios de Escritório e Material de Expediente (Código 75) reúne as famílias focadas na distribuição de suprimentos de papelaria e consumíveis diários para a administração de rotina. Suas atividades abrangem o comércio atacadista e varejista de artigos de escritório, papéis para impressão e acessórios de mesa.\n\nDestaca-se também a divisão estratégica entre o fornecimento de formulários não oficiais de uso comum e o suprimento regulado de formulários oficiais padronizados.\n\nEm suma, as famílias deste ramo consolidam o provimento de materiais de expediente indispensáveis para manter o fluxo contínuo de registros físicos e comunicações institucionais."
+  },
+  {
+    "codigo": "76",
+    "nome": "Livros, Mapas e Outras Publicações",
+    "Descrição": "O ramo de Livros, Mapas e Outras Publicações (Código 76) reúne as famílias direcionadas ao fornecimento de material bibliográfico, cartográfico e mídias de documentação em geral. Suas atividades compreendem o suprimento de livros didáticos, folhetos, jornais, periódicos e partituras musicais, estendendo-se a acervos complexos de bibliotecas móveis e itinerantes. O setor também engloba materiais de engenharia e geografia, como mapas, globos, desenhos de engenharia e microfilmes revelados.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de conteúdos informativos e de pesquisa necessários para o suporte à educação, cultura, planejamento territorial e preservação da memória institucional."
+  },
+  {
+    "codigo": "77",
+    "nome": "Instrumentos Musicais e Equipamentos de Som de Uso Doméstico",
+    "Descrição": "O ramo de Instrumentos Musicais e Equipamentos de Som de Uso Doméstico (Código 77) reúne as famílias focadas no suprimento de dispositivos acústicos, eletroeletrónicos de áudio e mídias de gravação. Suas atividades abrangem desde o comércio de instrumentos musicais e suas peças de reposição até aparelhos de som comuns, como rádios e televisores domésticos.\n\nO segmento contempla também a distribuição de discos e fitas magnéticas para gravação e reprodução sonora ou visual.\n\nEm suma, as famílias deste ramo consolidam o provimento de soluções de sonorização e audiovisual necessárias para atender a atividades culturais, de comunicação social e lazer comunitário."
+  },
+  {
+    "codigo": "78",
+    "nome": "Equipamentos para Recreação e Desporto",
+    "Descrição": "O ramo de Equipamentos para Recreação e Desporto (Código 78) reúne as famílias dedicadas ao fornecimento de materiais táticos, desportivos e de lazer para o desenvolvimento físico e recreativo. Suas atividades compreendem o comércio de uma ampla linha de equipamentos desportivos para modalidades olímpicas e coletivas, além de aparelhos mecânicos para ginástica. O setor atende também a demandas de entretenimento infantil e pedagógico através do provimento de jogos, brinquedos e artigos com rodas.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de utilitários de lazer necessários para dotar centros desportivos, escolas e praças públicas de infraestrutura adequada ao bem-estar e à saúde da população."
+  },
+  {
+    "codigo": "79",
+    "nome": "Equipamentos e Materiais para Limpeza",
+    "Descrição": "O ramo de Equipamentos e Materiais para Limpeza (Código 79) reúne as famílias destinadas ao suprimento de utilitários, maquinários e saneantes para rotinas de higiene ambiental. Suas atividades concentram-se no fornecimento de aparelhos elétricos de assepsia predial — como enceradeiras e aspiradores de pó — e no provimento de materiais e ferramentas de limpeza puramente manuais.\n\nO segmento também assegura a distribuição de compostos químicos, ceras e preparados industriais para limpeza e polimento de superfícies.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de insumos domissanitários necessários para garantir as condições de salubridade, conservação e estética dos edifícios públicos."
+  },
+{
+    "codigo": "80",
+    "nome": "Pincéis, tintas, Vedantes e Adesivos",
+    "Descrição": "O ramo de Pincéis, tintas, Vedantes e Adesivos (Código 80) reúne as famílias voltadas para o fornecimento de insumos de acabamento superficial, proteção química e fixação estrutural secundária. Suas atividades englobam desde a comercialização de tintas, vernizes e lacas para aplicação imobiliária ou industrial até o suprimento de pincéis e trinchas para artistas e pintores profissionais.\n\nO segmento também contempla uma linha de compostos preservativos, massas de vedação e adesivos de alta aderência, atendendo tanto a rotinas de manutenção predial quanto a processos de manufatura e papelaria.\n\nEm suma, as famílias deste ramo consolidam a distribuição de produtos químicos de revestimento e colagem necessários para garantir a conservação, a vedação estanque e o acabamento estético de bens públicos e instalações."
+  },
+  {
+    "codigo": "81",
+    "nome": "Recipientes e Materiais de Acondicionamento e Embalagens",
+    "Descrição": "O ramo de Recipientes e Materiais de Acondicionamento e Embalagens (Código 81) reúne as famílias focadas no provimento de soluções de armazenamento, proteção e logística de transporte de mercadorias. Suas atividades abrangem o fornecimento de sacos, bolsas, caixas, caixotes e engradados de múltiplos materiais, além de tambores e latas para o manejo de produtos líquidos ou granulados.\n\nO segmento demonstra alta especialização ao incluir cilindros comerciais e industriais para a movimentação segura de gases comprimidos, além de embalagens técnicas restritas para o acondicionamento de munições.\n\nEm suma, as famílias deste ramo consolidam o suprimento de insumos de embalagem e contentores necessários para garantir a integridade física, a segurança tática e a eficiência na movimentação de materiais e suprimentos institucionais."
+  },
+  {
+    "codigo": "83",
+    "nome": "Tecidos, Couros, Peles, Aviamentos, Barracas e Bandeiras",
+    "Descrição": "O ramo de Tecidos, Couros, Peles, Aviamentos, Barracas e Bandeiras (Código 83) reúne as famílias direcionadas ao suprimento de materiais têxteis, componentes de tapeçaria e estruturas flexíveis de cobertura. Suas atividades concentram-se no comércio e distribuição de tecidos a metro, fios, linhas e uma ampla gama de miudezas e aviamentos para costura industrial ou de alfaiataria.\n\nO segmento também atende a demandas logísticas de campo e de representação institucional por meio do fornecimento de couros, peles, materiais para calçados, barracas de acampamento, encerados de proteção de carga e bandeiras oficiais.\n\nEm suma, as famílias deste ramo consolidam o abastecimento de insumos têxteis e manufaturados de lona necessários para dar suporte a confecções, guarnições de alojamentos e operações de infraestrutura temporária."
+  },
+  {
+    "codigo": "84",
+    "nome": "Vestuários e Equipamentos Individuais e Insígnias",
+    "Descrição": "O ramo de Vestuários e Equipamentos Individuais e Insígnias (Código 84) reúne as famílias focadas na produção, alfaiataria e distribuição de peças de vestuário e aparato de identificação para uso corporativo, desportivo e operacional. Suas atividades cobrem desde o fornecimento de vestuário externo masculino e feminino comum até artigos de moda desportiva e acessórios complementares de alfaiataria.\n\nO segmento apresenta forte direcionamento regulatório e de segurança ao prover roupas especializadas para voo e indumentárias de proteção tática contra projéteis balísticos, além de insígnias e condecorações de identificação oficial.\n\nEm suma, as famílias deste ramo consolidam o suprimento de uniformes e dispositivos de proteção individual necessários para garantir a padronização visual, o decoro institucional e a salvaguarda de agentes públicos."
+  },
+  {
+    "codigo": "85",
+    "nome": "Artigos para Higiene Pessoal",
+    "Descrição": "O ramo de Artigos para Higiene Pessoal (Código 85) reúne as famílias dedicadas ao provimento de insumos de assepsia, cuidados diários e produtos de higiene em ambiente corporativo ou de internamento. Suas atividades compreendem o comércio por atacado e varejo de sabonetes, desodorizantes, pastas dentífricas e artigos gerais voltados para toaletes e cuidados individuais.\n\nO segmento também assegura o suprimento em larga escala de consumíveis de papel para higiene, como papel higiénico e toalhas descartáveis para secagem de mãos.\n\nEm suma, as famílias deste ramo consolidam a distribuição de produtos de uso pessoal diário indispensáveis para manter as condições de saúde coletiva, conforto biológico e sanitização nos edifícios e repartições públicas."
+  },
+  {
+    "codigo": "87",
+    "nome": "Suprimentos Agrícolas",
+    "Descrição": "O ramo de Suprimentos Agrícolas (Código 87) reúne as famílias destinadas ao fornecimento de insumos biológicos e químicos essenciais para o desenvolvimento de cultivos, pastagens e manejo botânico. Suas atividades concentram-se na distribuição de fertilizantes agrícolas e corretivos de solo, além do suprimento de sementes selecionadas e mudas de plantas para projetos de reflorestamento, paisagismo urbano ou produção vegetal.\n\nO segmento também atende diretamente à nutrição animal de subsistência por meio do fornecimento de forragens e alimentos volumosos para o campo.\n\nEm suma, as famílias deste ramo consolidam o provimento de recursos fundamentais para fomentar a produtividade rural, garantir o manejo fitossanitário e dar suporte a programas de conservação ambiental e áreas verdes."
+  },
+  {
+    "codigo": "88",
+    "nome": "Animais Vivos",
+    "Descrição": "O ramo de Animais Vivos (Código 88) reúne as famílias voltadas para o comércio, manejo e fornecimento de espécimes animais destinados a fins alimentares, científicos ou operacionais de segurança. Suas atividades dividem-se de forma clara entre o suprimento de animais vivos criados para a cadeia de alimentação pública e institucional (pecuária de corte) e o provimento de animais não criados para alimentação. Esta última categoria atende diretamente a demandas de apoio tático, policiamento, adestramento e cavalaria, além de cobrir o manejo de fauna para biotérios laboratoriais e zoológicos públicos.\n\nEm suma, as famílias deste ramo consolidam o abastecimento regular de recursos vivos necessários para garantir a segurança alimentar, o suporte a pesquisas biológicas e as operações de patrulhamento de forças do Estado."
+  },
+  {
+    "codigo": "89",
+    "nome": "Alimentos",
+    "Descrição": "O ramo de Alimentos (Código 89) reúne as famílias focadas no suprimento de géneros alimentícios e insumos nutricionais para o abastecimento público, refeitórios institucionais e subsistência geral. Suas atividades abrangem de forma ampla o comércio grossista de carnes, aves, peixes, ovos, laticínios, frutas e legumes frescos ou processados.\n\nO segmento opera sob rígidos critérios de vigilância sanitária, englobando também a distribuição regulada de bebidas alcoólicas e não alcoólicas, além do fornecimento de rações embaladas para o setor zootécnico e de suporte.\n\nEm suma, as famílias deste ramo consolidam a cadeia de suprimentos de subsistência e segurança alimentar necessária para atender a hospitais, cozinhas comunitárias, centros prisionais e rotinas administrativas contínuas."
+  },
+{
+    "codigo": "90",
+    "nome": "Teste",
+    "Descrição": "O ramo de Teste (Código 90) reúne famílias voltadas para o controle de qualidade, homologação e verificação de conformidade técnica de produtos e insumos industriais. Suas atividades abrangem o fornecimento de amostras padronizadas, corpos de prova e a aplicação de testes analíticos estruturados em ambiente laboratorial ou de campo.\n\nO segmento atende diretamente a critérios normativos de engenharia e segurança, consolidando as ferramentas e ensaios técnicos necessários para validar o desempenho mecânico, químico e operacional de materiais antes de sua integração a projetos ou cadeias de suprimentos."
+  },
+  {
+    "codigo": "91",
+    "nome": "Combustíveis, Lubrificantes, Óleos e Ceras",
+    "Descrição": "O ramo de Combustíveis, Lubrificantes, Óleos e Ceras (Código 91) reúne as famílias destinadas ao suprimento energético, propulsão mecânica e manutenção tribológica de frotas e maquinários industriais. Suas atividades englobam desde a distribuição de combustíveis fósseis e renováveis a granel e propelentes líquidos regulados pela Agência Nacional do Petróleo (ANP) até o fornecimento de fluidos hidráulicos, óleos de corte e graxas para atenuação de atrito.\n\nO segmento atende de forma transversal a modais de transporte terrestre, aéreo e plantas fabris, consolidando os insumos químicos e derivados de petróleo indispensáveis para a geração de força motriz e a preservação mecânica de ativos."
+  },
+  {
+    "codigo": "93",
+    "nome": "Materias Manufaturados Não Metálicos",
+    "Descrição": "O ramo de Materias Manufaturados Não Metálicos (Código 93) reúne as famílias focadas na distribuição e transformação industrial de polímeros, elastômeros e compostos de celulose ou silício. Suas atividades compreendem o fornecimento de artigos técnicos de borracha e plástico para uso operacional, além de insumos de papel, papelão, vidros estruturais e materiais refratários de alta resistência térmica para acabamento contra fogo.\n\nO segmento atua diretamente no abastecimento de embalagens, componentes de vedação e artigos industriais diversos, consolidando o suprimento de bens manufaturados essenciais para suporte logístico e manutenção predial."
+  },
+  {
+    "codigo": "94",
+    "nome": "Matérias-Primas Não Metálicas",
+    "Descrição": "O ramo de Matérias-Primas Não Metálicas (Código 94) reúne as famílias dedicadas ao fornecimento de insumos básicos de origem natural, vegetal ou animal, em estágio bruto ou semi-processado para transformação industrial. Suas atividades abrangem o comércio atacadista de fibras agrícolas, resinas vegetais, madeiras em tora e matérias-primas agroflorestais e animais não comestíveis para aplicação em manufaturas têxteis, químicas e de papel.\n\nEm suma, as famílias deste ramo consolidam o elo inicial de suprimentos de recursos renováveis e extraídos indispensáveis para alimentar processos de industrialização e produção de bens manufaturados."
+  },
+  {
+    "codigo": "95",
+    "nome": "Barras, Chapas e Perfilados Metálicos",
+    "Descrição": "O ramo de Barras, Chapas e Perfilados Metálicos (Código 95) reúne as famílias voltadas para o provimento de componentes estruturais de metalurgia e serralheria industrial de primeira transformação. Suas atividades englobam o fornecimento de barras, vergalhões, chapas planas, laminados finos, fitas e perfis estruturais fabricados tanto em ligas ferrosas (ferro e aço) quanto em metais não ferrosos (como alumínio e cobre), além de arames comuns sem aplicação elétrica.\n\nO segmento é basilar para o setor metalmecânico e a construção civil, consolidando os insumos geométricos e estruturais necessários para a fabricação de peças, estruturas metálicas pesadas e manutenção patrimonial."
+  },
+  {
+    "codigo": "96",
+    "nome": "Minérios, Minerais e seus Produtos Primários",
+    "Descrição": "O ramo de Minérios, Minerais e seus Produtos Primários (Código 96) reúne as famílias focadas na extração mineral, metalurgia extrativa e refino de compostos básicos estruturantes. Suas atividades compreendem a distribuição de minérios brutos, minerais naturais ou sintéticos, ligas metálicas básicas, aditivos de fundição, além de formas primárias e intermediárias de refino de metais preciosos ou comuns.\n\nO segmento também engloba a logística de reaproveitamento industrial por meio da destinação e comércio de sucatas ferrosas, consolidando o suprimento de matérias-primas minerais de alta densidade técnica necessárias para a cadeia siderúrgica e de fundição pesada."
+  },
+  {
+    "codigo": "99",
+    "nome": "Diversos",
+    "Descrição": "O ramo de Diversos (Código 99) reúne as famílias voltadas para o suprimento de utilitários institucionais específicos, materiais de sinalização urbana e artigos de fins históricos ou promocionais. Suas atividades abrangem desde o fornecimento de cartazes expositores, placas de identificação visual predial e veicular até itens de representação de valor, como joalheria, artigos numismáticos para colecionadores e estruturas mobiliárias sob demanda especial.\n\nO segmento funciona como um núcleo complementar de suprimentos corporativos, consolidando o abastecimento de artefatos visuais, materiais decorativos e utilidades sob medida que dão suporte à comunicação social e demandas singulares de instalações públicas."
+  }
+]
+

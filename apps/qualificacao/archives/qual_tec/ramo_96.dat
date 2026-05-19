@@ -1,0 +1,98 @@
+[
+  {
+    "Família": "96.10",
+    "Descrição": "MINERIOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "96",
+      "nome": "Minérios, Minerais e seus Produtos Primários"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "96.20",
+    "Descrição": "MINERAIS NATURAIS E SINTETICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "96",
+      "nome": "Minérios, Minerais e seus Produtos Primários"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "96.30",
+    "Descrição": "ADITIVOS METALICOS E LIGAS BASICAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "96",
+      "nome": "Minérios, Minerais e seus Produtos Primários"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "96.40",
+    "Descrição": "PRODUTOS SEMIACABADOS E PRODUTOS PRIMARIOS DE FERRO E DE ACO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "96",
+      "nome": "Minérios, Minerais e seus Produtos Primários"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "96.50",
+    "Descrição": "REFINADOS E FORMAS INTERMEDIARIAS DE METAIS BASICOS NAO FERROSOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "96",
+      "nome": "Minérios, Minerais e seus Produtos Primários"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "96.60",
+    "Descrição": "FORMAS PRIMARIAS DE METAIS PRECIOSOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "96",
+      "nome": "Minérios, Minerais e seus Produtos Primários"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "96.70",
+    "Descrição": "SUCATAS DE FERRO E DE ACO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "96",
+      "nome": "Minérios, Minerais e seus Produtos Primários"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "96.80",
+    "Descrição": "SUCATAS DE METAIS NAO FERROSOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "96",
+      "nome": "Minérios, Minerais e seus Produtos Primários"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

@@ -1,0 +1,919 @@
+[
+  {
+    "Família": "03.01",
+    "Descrição": "COLETA DE LIXO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia"
+    ],
+    "Documentos Elegíveis": [
+      "Certidão de Acervo Técnico com Atestado",
+      "Certidão de Acervo Operacional - CAO"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "3812-2/00",
+        "descricao": "Coleta de resíduos perigosos"
+      },
+      {
+        "codigo": "3811-4/00",
+        "descricao": "Coleta de resíduos não-perigosos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.02",
+    "Descrição": "CONSERVACAO DE PARQUES, JARDINS, AREAS GRAMADAS E RURAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CRA - Conselho Regional de Administração",
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CAU - Conselho Regional Arquitetura e Urbanismo"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "8130-3/00",
+        "descricao": "Atividades paisagísticas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.03",
+    "Descrição": "CONSERVACAO DE PISCINA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8129-0/00",
+        "descricao": "Atividades de limpeza não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.04",
+    "Descrição": "CONSERVACAO DE POCO ARTESIANO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4399-1/05",
+        "descricao": "Perfuração e construção de poços de água"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.05",
+    "Descrição": "CONSERVACAO E REFORMA DE MOVEIS DE ACO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "9529-1/05",
+        "descricao": "Reparação de artigos do mobiliário"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.06",
+    "Descrição": "CONSERVACAO E REFORMA DE MOVEIS DE MADEIRA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "9529-1/05",
+        "descricao": "Reparação de artigos do mobiliário"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.07",
+    "Descrição": "SERVICOS DE SERRALHERIA/CROMAGEM",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2539-0/02",
+        "descricao": "Serviços de tratamento e revestimento em metais"
+      },
+      {
+        "codigo": "2512-8/00",
+        "descricao": "Fabricação de esquadrias de metal"
+      },
+      {
+        "codigo": "2542-0/00",
+        "descricao": "Fabricação de artigos de serralheria, exceto esquadrias"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.08",
+    "Descrição": "DESINSETIZACAO, DESRATIZACAO E DESCUPINIZACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CRF - Conselho Regional de Farmácia",
+      "CRQ - Conselho Regional de Química",
+      "Conselho Regional de Biologia - CRB",
+      "CRMV - Conselho Regional de Medicina Veterinária",
+      "CFT - Conselho Federal dos Técnicos Industriais",
+      "CFTA - Conselho Federal dos Técnicos Agrícolas"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "8122-2/00",
+        "descricao": "Imunização e controle de pragas urbanas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.09",
+    "Descrição": "CONSERVACAO E APOIO OPERACIONAL A PARQUE ZOOBOTANICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [
+      "CRA - Conselho Regional de Administração",
+      "CRMV - Conselho Regional de Medicina Veterinária"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "8121-4/00",
+        "descricao": "Limpeza em prédios e em domicílios"
+      },
+      {
+        "codigo": "8129-0/00",
+        "descricao": "Atividades de limpeza não especificadas anteriormente"
+      },
+      {
+        "codigo": "8130-3/00",
+        "descricao": "Atividades paisagísticas"
+      },
+      {
+        "codigo": "9103-1/00",
+        "descricao": "Atividades de jardins botânicos, zoológicos, parques nacionais, reservas ecológicas e áreas de proteção ambiental"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.10",
+    "Descrição": "HIDROJATEAMENTO/CONSERVACAO DE FACHADAS PREDIAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4399-1/99",
+        "descricao": "Serviços especializados para construção não especificados anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.11",
+    "Descrição": "INCINERACAO/DESCARTE DE RESIDUOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3821-1/00",
+        "descricao": "Tratamento e disposição de resíduos não-perigosos"
+      },
+      {
+        "codigo": "3822-0/00",
+        "descricao": "Tratamento e disposição de resíduos perigosos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.12",
+    "Descrição": "INSTALACAO E CONSERVACAO DE CERCAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4299-5/99",
+        "descricao": "Outras obras de engenharia civil não especificadas anteriormente"
+      },
+      {
+        "codigo": "4399-1/99",
+        "descricao": "Serviços especializados para construção não especificados anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.13",
+    "Descrição": "JATEAMENTO DE AREIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4399-1/99",
+        "descricao": "Serviços especializados para construção não especificados anteriormente"
+      },
+      {
+        "codigo": "2539-0/01",
+        "descricao": "Serviços de usinagem, tornearia e solda"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.14",
+    "Descrição": "LIMPEZA DE CARPETES,ESTOFADOS, ARTIGOS EM TECIDOS,PERSIANAS E PISOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "9601-7/01",
+        "descricao": "Lavanderias"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.15",
+    "Descrição": "CONSERVACAO E LIMPEZA DE AREA INDUSTRIAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRA - Conselho Regional de Administração",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8129-0/00",
+        "descricao": "Atividades de limpeza não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.16",
+    "Descrição": "CONSERVACAO E LIMPEZA PREDIAL",
+    "Tipo": "S",
+    "Terceirizado": "Sim",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8111-7/00",
+        "descricao": "Serviços combinados para apoio a edifícios, exceto condomínios prediais"
+      },
+      {
+        "codigo": "7810-8/00",
+        "descricao": "Seleção e agenciamento de mão-de-obra"
+      },
+      {
+        "codigo": "7820-5/00",
+        "descricao": "Locação de mão-de-obra temporária"
+      },
+      {
+        "codigo": "7830-2/00",
+        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.17",
+    "Descrição": "LIMPEZA E HIGIENIZACAO DE RESERVATORIO DE AGUA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CRF - Conselho Regional de Farmácia",
+      "CRQ - Conselho Regional de Química",
+      "Conselho Regional de Biologia - CRB",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "8129-0/00",
+        "descricao": "Atividades de limpeza não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.18",
+    "Descrição": "LIMPEZA EM ESGOTO E CAIXA DE GORDURA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8129-0/00",
+        "descricao": "Atividades de limpeza não especificadas anteriormente"
+      },
+      {
+        "codigo": "3702-9/00",
+        "descricao": "Atividades relacionadas a esgoto, exceto a gestão de redes"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.19",
+    "Descrição": "LIMPEZA URBANA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia"
+    ],
+    "Documentos Elegíveis": [
+      "Certidão de Acervo Técnico com Atestado",
+      "Certidão de Acervo Operacional - CAO"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "8130-3/00",
+        "descricao": "Atividades paisagísticas"
+      },
+      {
+        "codigo": "3811-4/00",
+        "descricao": "Coleta de resíduos não-perigosos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.20",
+    "Descrição": "PINTURA INDUSTRIAL E COMERCIAL DE MEDIO E GRANDE PORTE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2539-0/02",
+        "descricao": "Serviços de tratamento e revestimento em metais"
+      },
+      {
+        "codigo": "4330-4/04",
+        "descricao": "Serviços de pintura de edifícios em geral"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.21",
+    "Descrição": "PODA DE ARVORES LINHAS DE DISTRIBUICAO ENERGIZADAS E DESENERGIZADAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8130-3/00",
+        "descricao": "Atividades paisagísticas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.22",
+    "Descrição": "SERVICOS DE ALVENARIA, CONCRETO E PINTURA DE PEQUENO PORTE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4330-4/04",
+        "descricao": "Serviços de pintura de edifícios em geral"
+      },
+      {
+        "codigo": "4399-1/99",
+        "descricao": "Serviços especializados para construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4399-1/03",
+        "descricao": "Obras de alvenaria"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.23",
+    "Descrição": "SERVICOS DE CARPINTARIA,MARCENARIA,MARMORARIA,VIDRACARIA E FIBRA VIDRO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2319-2/00",
+        "descricao": "Fabricação de artigos de vidro"
+      },
+      {
+        "codigo": "2040-1/00",
+        "descricao": "Fabricação de fibras artificiais e sintéticas"
+      },
+      {
+        "codigo": "4330-4/02",
+        "descricao": "Instalação de portas, janelas, tetos, divisórias e armários embutidos de qualquer material"
+      },
+      {
+        "codigo": "9529-1/05",
+        "descricao": "Reparação de artigos do mobiliário"
+      },
+      {
+        "codigo": "3101-2/00",
+        "descricao": "Fabricação de móveis com predominância de madeira"
+      },
+      {
+        "codigo": "1622-6/99",
+        "descricao": "Fabricação de outros artigos de carpintaria para construção"
+      },
+      {
+        "codigo": "1622-6/02",
+        "descricao": "Fabricação de esquadrias de madeira e de peças de madeira para instalações industriais e comerciais"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.24",
+    "Descrição": "SERVICOS HIDROSANITARIOS DE PEQUENO PORTE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4322-3/01",
+        "descricao": "Instalações hidráulicas, sanitárias e de gás"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.25",
+    "Descrição": "VIGILANCIA E SEGURANCA PATRIMONIAL",
+    "Tipo": "S",
+    "Terceirizado": "Sim",
+    "Documentos Exigidos": [
+      "Certificado de Segurança - Polícia Federal",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8011-1/01",
+        "descricao": "Atividades de vigilância e segurança privada"
+      },
+      {
+        "codigo": "7810-8/00",
+        "descricao": "Seleção e agenciamento de mão-de-obra"
+      },
+      {
+        "codigo": "7820-5/00",
+        "descricao": "Locação de mão-de-obra temporária"
+      },
+      {
+        "codigo": "7830-2/00",
+        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.26",
+    "Descrição": "INATIVA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "9999-9/99",
+        "descricao": "CNAE INEXISTENTE"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.27",
+    "Descrição": "DESCONTAMINACAO MICROBIOLOGICA DE AMBIENTES E EQUIPAMENTOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8129-0/00",
+        "descricao": "Atividades de limpeza não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.28",
+    "Descrição": "CONSERVACAO E REFORMA DE UTENSILIOS DOMESTICOS E COMERCIAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "9529-1/99",
+        "descricao": "Reparação e manutenção de outros objetos e equipamentos pessoais e domésticos não especificados anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.29",
+    "Descrição": "COPA E COZINHA",
+    "Tipo": "S",
+    "Terceirizado": "Sim",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8111-7/00",
+        "descricao": "Serviços combinados para apoio a edifícios, exceto condomínios prediais"
+      },
+      {
+        "codigo": "7810-8/00",
+        "descricao": "Seleção e agenciamento de mão-de-obra"
+      },
+      {
+        "codigo": "7820-5/00",
+        "descricao": "Locação de mão-de-obra temporária"
+      },
+      {
+        "codigo": "7830-2/00",
+        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.30",
+    "Descrição": "SUPORTE, CONTROLE E APOIO A ADMINISTRACAO DE EDIFICIOS PUBLICOS",
+    "Tipo": "S",
+    "Terceirizado": "Sim",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8211-3/00",
+        "descricao": "Serviços combinados de escritório e apoio administrativo"
+      },
+      {
+        "codigo": "8219-9/99",
+        "descricao": "Reparação de documentos e serviços especializados de apoio administrativo não especificados anteriormente"
+      },
+      {
+        "codigo": "8111-7/00",
+        "descricao": "Serviços combinados para apoio a edifícios, exceto condomínios prediais"
+      },
+      {
+        "codigo": "7830-2/00",
+        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
+      },
+      {
+        "codigo": "7820-5/00",
+        "descricao": "Locação de mão-de-obra temporária"
+      },
+      {
+        "codigo": "7810-8/00",
+        "descricao": "Seleção e agenciamento de mão-de-obra"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.31",
+    "Descrição": "APOIO PORTUARIO E GUARDA DE EMBARCACOES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8011-1/01",
+        "descricao": "Atividades de vigilância e segurança privada"
+      },
+      {
+        "codigo": "5212-5/00",
+        "descricao": "Carga e descarga"
+      },
+      {
+        "codigo": "5021-1/02",
+        "descricao": "Transporte por navegação interior de carga, intermunicipal, interestadual e internacional, exceto travessia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.32",
+    "Descrição": "SUPORTE OPERACIONAL E APOIO LOGISTICO A SERVICO PUBLICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8111-7/00",
+        "descricao": "Serviços combinados para apoio a edifícios, exceto condomínios prediais"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.33",
+    "Descrição": "SERVIÇOS DE APOIO AO ASSOCIATIVISMO E AO COOPERATIVISMO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "9499-5/00",
+        "descricao": "Atividades associativas não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.34",
+    "Descrição": "VIGILANCIA E SEGURANCA PATRIMONIAL ELETRONICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8020-0/01",
+        "descricao": "Atividades de monitoramento de sistemas de segurança eletrônico"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "03.35",
+    "Descrição": "ADMINISTRACAO E GESTAO DE BENS PUBLICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8111-7/00",
+        "descricao": "Serviços combinados para apoio a edifícios, exceto condomínios prediais"
+      }
+    ],
+    "Ramo": {
+      "codigo": "03",
+      "nome": "Serviços de Suporte a Administração de Prédios e Areas Públicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

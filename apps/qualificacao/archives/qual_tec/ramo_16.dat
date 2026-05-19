@@ -1,0 +1,25 @@
+[
+  {
+    "Família": "16.10",
+    "Descrição": "COMPONENTES E ACESSORIOS DE AERONAVES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3316-3/01",
+        "descricao": "Manutenção e reparação de aeronaves, exceto a manutenção na pista"
+      },
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      }
+    ],
+    "Ramo": {
+      "codigo": "16",
+      "nome": "Componentes e Acessórios de Aeronaves"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

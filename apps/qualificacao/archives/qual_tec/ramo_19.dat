@@ -1,0 +1,278 @@
+[
+  {
+    "Família": "19.05",
+    "Descrição": "NAVIOS DE GUERRA E EMBARCACOES DE DESEMBARQUE",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      },
+      {
+        "codigo": "3011-3/01",
+        "descricao": "Construção de embarcações de grande porte"
+      },
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      }
+    ],
+    "Ramo": {
+      "codigo": "19",
+      "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "19.10",
+    "Descrição": "NAVIOS PARA TRANSPORTE DE PASSAGEIRO E TROPA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      },
+      {
+        "codigo": "3011-3/01",
+        "descricao": "Construção de embarcações de grande porte"
+      },
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      }
+    ],
+    "Ramo": {
+      "codigo": "19",
+      "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "19.15",
+    "Descrição": "NAVIOS TANQUES E CARGUEIROS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      },
+      {
+        "codigo": "3011-3/01",
+        "descricao": "Construção de embarcações de grande porte"
+      },
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      }
+    ],
+    "Ramo": {
+      "codigo": "19",
+      "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "19.20",
+    "Descrição": "NAVIOS PESQUEIROS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      },
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      },
+      {
+        "codigo": "3011-3/01",
+        "descricao": "Construção de embarcações de grande porte"
+      }
+    ],
+    "Ramo": {
+      "codigo": "19",
+      "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "19.25",
+    "Descrição": "NAVIOS DE SERVICOS ESPECIAIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      },
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      },
+      {
+        "codigo": "3011-3/01",
+        "descricao": "Construção de embarcações de grande porte"
+      }
+    ],
+    "Ramo": {
+      "codigo": "19",
+      "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "19.30",
+    "Descrição": "BATELOES E CHATAS PARA CARGAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      },
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      }
+    ],
+    "Ramo": {
+      "codigo": "19",
+      "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "19.35",
+    "Descrição": "BATELOES E CHATAS PARA FINS ESPECIAIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "19",
+      "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes"
+    },
+    "CNAEs": [
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      },
+      {
+        "codigo": "4614-1/00",
+        "descricao": "Representantes comerciais e agentes do comércio de máquinas, equipamentos, embarcações e aeronaves"
+      }
+    ],
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "19.40",
+    "Descrição": "EMBARCACOES MIUDAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4763-6/05",
+        "descricao": "Comércio varejista de embarcações e outros veículos recreativos; peças e acessórios"
+      },
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      },
+      {
+        "codigo": "3012-1/00",
+        "descricao": "Construção de embarcações para esporte e lazer"
+      }
+    ],
+    "Ramo": {
+      "codigo": "19",
+      "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "19.45",
+    "Descrição": "PONTOES E DOCAS FLUTUANTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2511-0/00",
+        "descricao": "Fabricação de estruturas metálicas"
+      },
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      }
+    ],
+    "Ramo": {
+      "codigo": "19",
+      "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "19.50",
+    "Descrição": "DIQUES FLUTUANTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2511-0/00",
+        "descricao": "Fabricação de estruturas metálicas"
+      },
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      }
+    ],
+    "Ramo": {
+      "codigo": "19",
+      "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "19.55",
+    "Descrição": "DRAGAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "3011-3/02",
+        "descricao": "Construção de embarcações para uso comercial e para usos especiais, exceto de grande porte"
+      }
+    ],
+    "Ramo": {
+      "codigo": "19",
+      "nome": "Navios, Pequenas Embarcações, Pontões e Diques Flutuantes"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

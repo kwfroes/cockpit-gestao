@@ -1,0 +1,290 @@
+[
+  {
+    "Família": "60.04",
+    "Descrição": "JUNTAS ROTATIVAS DE FIBRA OTICA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "60.05",
+    "Descrição": "ACOPLADORES ISOLANTES E MISTURADORES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "60.06",
+    "Descrição": "ATENUADORES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "60.07",
+    "Descrição": "FILTROS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "60.08",
+    "Descrição": "MULTIPLEXADORES E DEMULTIPLEXADORES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "60.10",
+    "Descrição": "CONDUTORES DE FIBRA OTICA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "60.15",
+    "Descrição": "CABOS DE FIBRA OTICA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "60.20",
+    "Descrição": "CONJUNTOS MONTADOS DE CABOS DE FIBRA OTICA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "60.21",
+    "Descrição": "INTERRUPTORES DE FIBRA OTICA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "60.25",
+    "Descrição": "TRANSMISSORES DE FIBRA OTICA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "60.26",
+    "Descrição": "RECEPTORES DE FIBRA OTICA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "60.29",
+    "Descrição": "REPETIDORES OTICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "60.30",
+    "Descrição": "DISPOSITIVOS DE FIBRA OTICA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "60.31",
+    "Descrição": "CIRCUITOS OTICOS INTEGRADOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "60.32",
+    "Descrição": "FONTES DE LUZ DE FIBRA OTICA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "60.33",
+    "Descrição": "FOTOS DETETORES DE FIBRA OTICA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "60.34",
+    "Descrição": "MODULADORES E DEMODULADORES DE FIBRA OTICA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "60.35",
+    "Descrição": "DISPOSITIVOS DE TRANSFERENCIA DE LUZ E DE IMAGEM DE FIBRA OTICA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "60.40",
+    "Descrição": "SENSORES DE FIBRA OTICA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "60.50",
+    "Descrição": "DISPOSITIVOS PASSIVOS DE FIBRA OTICA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "60.60",
+    "Descrição": "INTERCONECTORES E SUPRIMENTOS DE FIBRA OTICA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "60.70",
+    "Descrição": "SUPRIMENTOS ACESSORIOS E ARTIGOS DE FIBRA OTICA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "60.80",
+    "Descrição": "JOGOS E CONJUNTOS DE FIBRA OTICA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "60.99",
+    "Descrição": "COMPONENTES DIVERSOS DE FIBRA OTICA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "60",
+      "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "Família": "74.20",
+    "Descrição": "MAQUINAS DE CONTABILIDADE E DE CALCULAR",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "74",
+      "nome": "Máquinas para Escritórios e Arquivos Visuais"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "74.30",
+    "Descrição": "MAQUINAS DE ESCREVER E DE COMPOSICAO PARA ESCRITORIO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "74",
+      "nome": "Máquinas para Escritórios e Arquivos Visuais"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "74.35",
+    "Descrição": "INATIVA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "74",
+      "nome": "Máquinas para Escritórios e Arquivos Visuais"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "74.50",
+    "Descrição": "INATIVA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "74",
+      "nome": "Máquinas para Escritórios e Arquivos Visuais"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "74.60",
+    "Descrição": "INATIVA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "74",
+      "nome": "Máquinas para Escritórios e Arquivos Visuais"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "74.90",
+    "Descrição": "MAQUINAS DIVERSAS PARA ESCRITORIO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "74",
+      "nome": "Máquinas para Escritórios e Arquivos Visuais"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "Família": "48.10",
+    "Descrição": "VALVULAS ACIONADAS POR FORCA MOTRIZ",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "48",
+      "nome": "Válvulas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "48.20",
+    "Descrição": "VALVULAS NAO ACIONADAS POR FORCA MOTRIZ",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "48",
+      "nome": "Válvulas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

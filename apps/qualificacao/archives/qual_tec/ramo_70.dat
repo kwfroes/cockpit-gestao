@@ -1,0 +1,533 @@
+[
+  {
+    "Família": "70.10",
+    "Descrição": "EQUIPAMENTOS DE PROCESSAMENTO AUTOMATICO DE DADOS E DE SEGURANÇA EM TI",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "4751-2/01",
+        "descricao": "Comércio varejista especializado de equipamentos e suprimentos de informática"
+      },
+      {
+        "codigo": "4651-6/01",
+        "descricao": "Comércio atacadista de equipamentos de informática"
+      }
+    ],
+    "Ramo": {
+      "codigo": "70",
+      "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "70.15",
+    "Descrição": "COMPONENTES DE EQUIP DE PROCESSAMENTO AUTOMATICO DE DADOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "4751-2/01",
+        "descricao": "Comércio varejista especializado de equipamentos e suprimentos de informática"
+      },
+      {
+        "codigo": "4651-6/01",
+        "descricao": "Comércio atacadista de equipamentos de informática"
+      }
+    ],
+    "Ramo": {
+      "codigo": "70",
+      "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "70.18",
+    "Descrição": "EQUIPAMENTOS DE TECNOLOGIA ASSISTIVA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "4751-2/01",
+        "descricao": "Comércio varejista especializado de equipamentos e suprimentos de informática"
+      },
+      {
+        "codigo": "4651-6/01",
+        "descricao": "Comércio atacadista de equipamentos de informática"
+      }
+    ],
+    "Ramo": {
+      "codigo": "70",
+      "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "70.20",
+    "Descrição": "UNIDADES CENTRAIS DE PROCESSAMENTO ANALOGICAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "4751-2/01",
+        "descricao": "Comércio varejista especializado de equipamentos e suprimentos de informática"
+      },
+      {
+        "codigo": "4651-6/01",
+        "descricao": "Comércio atacadista de equipamentos de informática"
+      }
+    ],
+    "Ramo": {
+      "codigo": "70",
+      "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "70.25",
+    "Descrição": "UNIDADES DE ARMAZENAMENTO, DE ENTRADA E SAIDA DE DADOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "4751-2/01",
+        "descricao": "Comércio varejista especializado de equipamentos e suprimentos de informática"
+      },
+      {
+        "codigo": "4651-6/01",
+        "descricao": "Comércio atacadista de equipamentos de informática"
+      }
+    ],
+    "Ramo": {
+      "codigo": "70",
+      "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "70.30",
+    "Descrição": "SOFTWARE DE PROCESSAMENTO AUTOMATICO DE DADOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "70",
+      "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "70.35",
+    "Descrição": "INATIVA - CARTUCHO DE TINTA E TONER ORIGINAIS PARA IMPRESSORAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "70",
+      "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "70.36",
+    "Descrição": "CARTUCHO DE TINTA E TONER COMPATIVEIS PARA IMPRESSORAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "4751-2/01",
+        "descricao": "Comércio varejista especializado de equipamentos e suprimentos de informática"
+      },
+      {
+        "codigo": "4651-6/01",
+        "descricao": "Comércio atacadista de equipamentos de informática"
+      }
+    ],
+    "Ramo": {
+      "codigo": "70",
+      "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "70.37",
+    "Descrição": "CARTUCHO DE TINTA E TONER ORIGINAIS PARA IMPRESSORA HP",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "4751-2/01",
+        "descricao": "Comércio varejista especializado de equipamentos e suprimentos de informática"
+      },
+      {
+        "codigo": "4651-6/01",
+        "descricao": "Comércio atacadista de equipamentos de informática"
+      }
+    ],
+    "Ramo": {
+      "codigo": "70",
+      "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "70.38",
+    "Descrição": "CARTUCHO DE TINTA E TONER ORIGINAIS PARA IMPRESSORA EPSON",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "4751-2/01",
+        "descricao": "Comércio varejista especializado de equipamentos e suprimentos de informática"
+      },
+      {
+        "codigo": "4651-6/01",
+        "descricao": "Comércio atacadista de equipamentos de informática"
+      }
+    ],
+    "Ramo": {
+      "codigo": "70",
+      "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "70.39",
+    "Descrição": "CARTUCHO DE TINTA E TONER ORIGINAIS PARA IMPRESSORA LEXMARK",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "4751-2/01",
+        "descricao": "Comércio varejista especializado de equipamentos e suprimentos de informática"
+      },
+      {
+        "codigo": "4651-6/01",
+        "descricao": "Comércio atacadista de equipamentos de informática"
+      }
+    ],
+    "Ramo": {
+      "codigo": "70",
+      "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "70.40",
+    "Descrição": "CARTUCHO DE TINTA E TONER ORIGINAIS PARA IMPRESSORA CANON",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "4751-2/01",
+        "descricao": "Comércio varejista especializado de equipamentos e suprimentos de informática"
+      },
+      {
+        "codigo": "4651-6/01",
+        "descricao": "Comércio atacadista de equipamentos de informática"
+      }
+    ],
+    "Ramo": {
+      "codigo": "70",
+      "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "70.41",
+    "Descrição": "CARTUCHO DE TINTA E TONER ORIGINAIS PARA IMPRESSORA XEROX",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "4751-2/01",
+        "descricao": "Comércio varejista especializado de equipamentos e suprimentos de informática"
+      },
+      {
+        "codigo": "4651-6/01",
+        "descricao": "Comércio atacadista de equipamentos de informática"
+      }
+    ],
+    "Ramo": {
+      "codigo": "70",
+      "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "70.42",
+    "Descrição": "CARTUCHO DE TINTA E TONER ORIGINAIS PARA IMPRESSORA OKIDATA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "4751-2/01",
+        "descricao": "Comércio varejista especializado de equipamentos e suprimentos de informática"
+      },
+      {
+        "codigo": "4651-6/01",
+        "descricao": "Comércio atacadista de equipamentos de informática"
+      }
+    ],
+    "Ramo": {
+      "codigo": "70",
+      "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "70.43",
+    "Descrição": "CARTUCHO DE TINTA E TONER ORIGINAIS PARA IMPRESSORA KYOCERA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "4751-2/01",
+        "descricao": "Comércio varejista especializado de equipamentos e suprimentos de informática"
+      },
+      {
+        "codigo": "4651-6/01",
+        "descricao": "Comércio atacadista de equipamentos de informática"
+      }
+    ],
+    "Ramo": {
+      "codigo": "70",
+      "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "70.44",
+    "Descrição": "CARTUCHO DE TINTA E TONER ORIGINAIS PARA IMPRESSORA BROTHER",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "4751-2/01",
+        "descricao": "Comércio varejista especializado de equipamentos e suprimentos de informática"
+      },
+      {
+        "codigo": "4651-6/01",
+        "descricao": "Comércio atacadista de equipamentos de informática"
+      }
+    ],
+    "Ramo": {
+      "codigo": "70",
+      "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "70.45",
+    "Descrição": "CARTUCHO DE TINTA E TONER ORIGINAIS PARA IMPRESSORA SAMSUNG",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "4751-2/01",
+        "descricao": "Comércio varejista especializado de equipamentos e suprimentos de informática"
+      },
+      {
+        "codigo": "4651-6/01",
+        "descricao": "Comércio atacadista de equipamentos de informática"
+      }
+    ],
+    "Ramo": {
+      "codigo": "70",
+      "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "70.46",
+    "Descrição": "CARTUCHO DE TINTA E TONER ORIGINAIS PARA IMPRESSORA RICOH",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "4751-2/01",
+        "descricao": "Comércio varejista especializado de equipamentos e suprimentos de informática"
+      },
+      {
+        "codigo": "4651-6/01",
+        "descricao": "Comércio atacadista de equipamentos de informática"
+      }
+    ],
+    "Ramo": {
+      "codigo": "70",
+      "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "70.47",
+    "Descrição": "CARTUCHO DE TINTA E TONER ORIGINAIS PARA IMPRESSORAS DIVERSAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "4751-2/01",
+        "descricao": "Comércio varejista especializado de equipamentos e suprimentos de informática"
+      },
+      {
+        "codigo": "4651-6/01",
+        "descricao": "Comércio atacadista de equipamentos de informática"
+      }
+    ],
+    "Ramo": {
+      "codigo": "70",
+      "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "70.48",
+    "Descrição": "CARTUCHO DE TINTA E TONER ORIGINAIS PARA IMPRESSORA OLIVETTI",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "4751-2/01",
+        "descricao": "Comércio varejista especializado de equipamentos e suprimentos de informática"
+      },
+      {
+        "codigo": "4651-6/01",
+        "descricao": "Comércio atacadista de equipamentos de informática"
+      }
+    ],
+    "Ramo": {
+      "codigo": "70",
+      "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "70.49",
+    "Descrição": "BASES DE DADOS E CONTEÚDOS DIGITAIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "70",
+      "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "70.51",
+    "Descrição": "SOFTWARES E EQUIPAMENTOS DE SEGURANÇA DA INFORMAÇÃO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "6209-1/00",
+        "descricao": "Suporte técnico, manutenção e outros serviços em tecnologia da informação"
+      },
+      {
+        "codigo": "4751-2/01",
+        "descricao": "Comércio varejista especializado de equipamentos e suprimentos de informática"
+      },
+      {
+        "codigo": "4651-6/01",
+        "descricao": "Comércio atacadista de equipamentos de informática"
+      }
+    ],
+    "Ramo": {
+      "codigo": "70",
+      "nome": "Equipamentos de Processamento Automático de Dados de uso Geral, Programas, Suprimentos e Equipamento de Suporte"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

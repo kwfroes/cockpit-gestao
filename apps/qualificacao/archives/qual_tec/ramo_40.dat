@@ -1,0 +1,50 @@
+[
+  {
+    "Família": "40.10",
+    "Descrição": "CABOS E CORRENTES DE ACO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "40",
+      "nome": "Cordas, Cabos, Correntes e seus Acessórios"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "40.20",
+    "Descrição": "CABOS DE FIBRA, CORDOALHAS E BARBANTES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "40",
+      "nome": "Cordas, Cabos, Correntes e seus Acessórios"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "40.30",
+    "Descrição": "ACESSORIOS PARA CORDAS, CABOS E CORRENTES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "40",
+      "nome": "Cordas, Cabos, Correntes e seus Acessórios"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "40.31",
+    "Descrição": "INATIVA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "40",
+      "nome": "Cordas, Cabos, Correntes e seus Acessórios"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

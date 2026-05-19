@@ -1,0 +1,83 @@
+[
+  {
+    "Família": "32.10",
+    "Descrição": "MAQUINAS PARA SERRARIA E PREPARO DE MADEIRA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2832-1/00",
+        "descricao": "Fabricação de equipamentos para irrigação agrícola, peças e acessórios"
+      },
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      }
+    ],
+    "Ramo": {
+      "codigo": "32",
+      "nome": "Máquinas e Equipamentos para Trabalhar em Madeira"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "32.20",
+    "Descrição": "MAQUINARIA PARA TRABALHOS EM MADEIRA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2866-6/00",
+        "descricao": "Fabricação de máquinas e equipamentos para a indústria do plástico, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
+      }
+    ],
+    "Ramo": {
+      "codigo": "32",
+      "nome": "Máquinas e Equipamentos para Trabalhar em Madeira"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "32.30",
+    "Descrição": "FERRAMENTAS E ACESSORIOS DE MAQUINARIA PARA TRABALHO EM  MADEIRA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2543-8/00",
+        "descricao": "Fabricação de ferramentas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "32",
+      "nome": "Máquinas e Equipamentos para Trabalhar em Madeira"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

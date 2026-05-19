@@ -1,0 +1,38 @@
+[
+  {
+    "Família": "43.10",
+    "Descrição": "COMPRESSORES E BOMBAS DE VACUO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "43",
+      "nome": "Bombas e Compressores"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "43.20",
+    "Descrição": "BOMBAS MANUAIS E MECANICAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "43",
+      "nome": "Bombas e Compressores"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "43.30",
+    "Descrição": "CENTRIFUGADORES, SEPARADORES E FILTROS A PRESSAO E A VACUO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "43",
+      "nome": "Bombas e Compressores"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

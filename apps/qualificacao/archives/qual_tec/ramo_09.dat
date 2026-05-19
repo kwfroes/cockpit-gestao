@@ -1,0 +1,1440 @@
+[
+  {
+    "Família": "09.01",
+    "Descrição": "ACOMPANHAMENTO PSICOLOGICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Conselho Regional de Psicologia - CRP",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8650-0/03",
+        "descricao": "Atividades de psicologia e psicanálise"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.02",
+    "Descrição": "ACUMPUTURA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8690-9/03",
+        "descricao": "Atividades de acupuntura"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.03",
+    "Descrição": "CARDIOLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8610-1/01",
+        "descricao": "Atividades de atendimento hospitalar, exceto pronto-socorro e unidades para atendimento a urgências"
+      },
+      {
+        "codigo": "8640-2/08",
+        "descricao": "Serviços de diagnóstico por registro gráfico - ECG, EEG e outros exames análogos"
+      },
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.04",
+    "Descrição": "CLINICA E ATENDIMENTOS DE EMERGENCIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [
+      "CRM - Conselho Regional de Medicina",
+      "Conselho Regional de Enfermagem"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "8630-5/01",
+        "descricao": "Atividade médica ambulatorial com recursos para realização de procedimentos cirúrgicos"
+      },
+      {
+        "codigo": "8621-6/02",
+        "descricao": "Serviços móveis de atendimento a urgências, exceto por UTI móvel"
+      },
+      {
+        "codigo": "8610-1/02",
+        "descricao": "Atividades de atendimento em pronto-socorro e unidades hospitalares para atendimento a urgências"
+      },
+      {
+        "codigo": "8610-1/01",
+        "descricao": "Atividades de atendimento hospitalar, exceto pronto-socorro e unidades para atendimento a urgências"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.05",
+    "Descrição": "CONFECCAO DE PROTESE DE MEMBROS E ORTOPEDICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4773-3/00",
+        "descricao": "Comércio varejista de artigos médicos e ortopédicos"
+      },
+      {
+        "codigo": "3250-7/03",
+        "descricao": "Fabricação de aparelhos e utensílios para correção de defeitos físicos e aparelhos ortopédicos em geral sob encomenda"
+      },
+      {
+        "codigo": "3250-7/04",
+        "descricao": "Fabricação de aparelhos e utensílios para correção de defeitos físicos e aparelhos ortopédicos em geral, exceto sob encomenda"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.06",
+    "Descrição": "DERMATOLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "9602-5/02",
+        "descricao": "Outras atividades de tratamento de beleza"
+      },
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      },
+      {
+        "codigo": "8630-5/01",
+        "descricao": "Atividade médica ambulatorial com recursos para realização de procedimentos cirúrgicos"
+      },
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.07",
+    "Descrição": "ENDOCRINOLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      },
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.08",
+    "Descrição": "FISIOTERAPIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [
+      "CRM - Conselho Regional de Medicina",
+      "Conselho Regional de Fisioterapia"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "9313-1/00",
+        "descricao": "Atividades de condicionamento físico"
+      },
+      {
+        "codigo": "8650-0/04",
+        "descricao": "Atividades de fisioterapia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.09",
+    "Descrição": "FONOAUDIOLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8630-5/02",
+        "descricao": "Atividade médica ambulatorial com recursos para realização de exames complementares"
+      },
+      {
+        "codigo": "8650-0/06",
+        "descricao": "Atividades de fonoaudiologia"
+      },
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      },
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.10",
+    "Descrição": "GASTROENTEROLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8610-1/01",
+        "descricao": "Atividades de atendimento hospitalar, exceto pronto-socorro e unidades para atendimento a urgências"
+      },
+      {
+        "codigo": "8630-5/01",
+        "descricao": "Atividade médica ambulatorial com recursos para realização de procedimentos cirúrgicos"
+      },
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      },
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.11",
+    "Descrição": "GERIATRIA/GERONTOLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8800-6/00",
+        "descricao": "Serviços de assistência social sem alojamento"
+      },
+      {
+        "codigo": "8711-5/01",
+        "descricao": "Clínicas e residências geriátricas"
+      },
+      {
+        "codigo": "8690-9/99",
+        "descricao": "Outras atividades de atenção à saúde humana não especificadas anteriormente"
+      },
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.12",
+    "Descrição": "HEMATOLOGIA/HEMOTERAPIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8640-2/02",
+        "descricao": "Laboratórios clínicos"
+      },
+      {
+        "codigo": "8640-2/12",
+        "descricao": "Serviços de hemoterapia"
+      },
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      },
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.13",
+    "Descrição": "HEPATOLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8640-2/02",
+        "descricao": "Laboratórios clínicos"
+      },
+      {
+        "codigo": "8630-5/01",
+        "descricao": "Atividade médica ambulatorial com recursos para realização de procedimentos cirúrgicos"
+      },
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      },
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.14",
+    "Descrição": "HOMEOPATIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8690-9/01",
+        "descricao": "Atividades de práticas integrativas e complementares em saúde humana"
+      },
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.15",
+    "Descrição": "INFECTOLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8640-2/02",
+        "descricao": "Laboratórios clínicos"
+      },
+      {
+        "codigo": "8630-5/06",
+        "descricao": "Serviços de vacinação e imunização humana"
+      },
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      },
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.16",
+    "Descrição": "MEDICINA NUCLEAR",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8610-1/01",
+        "descricao": "Atividades de atendimento hospitalar, exceto pronto-socorro e unidades para atendimento a urgências"
+      },
+      {
+        "codigo": "8640-2/05",
+        "descricao": "Serviços de diagnóstico por imagem com uso de radiação ionizante, exceto tomografia"
+      },
+      {
+        "codigo": "8640-2/09",
+        "descricao": "Serviços de diagnóstico por métodos ópticos - endoscopia e outros exames análogos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.17",
+    "Descrição": "NEFROLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8630-5/01",
+        "descricao": "Atividade médica ambulatorial com recursos para realização de procedimentos cirúrgicos"
+      },
+      {
+        "codigo": "8640-2/03",
+        "descricao": "Serviços de diálise e nefrologia"
+      },
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      },
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.18",
+    "Descrição": "OBSTETRICIA, GINECOLOGIA E NEONATOLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8640-2/05",
+        "descricao": "Serviços de diagnóstico por imagem com uso de radiação ionizante, exceto tomografia"
+      },
+      {
+        "codigo": "8610-1/01",
+        "descricao": "Atividades de atendimento hospitalar, exceto pronto-socorro e unidades para atendimento a urgências"
+      },
+      {
+        "codigo": "8610-1/02",
+        "descricao": "Atividades de atendimento em pronto-socorro e unidades hospitalares para atendimento a urgências"
+      },
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.19",
+    "Descrição": "ODONTOLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Conselho Regional de Odontologia",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3250-7/06",
+        "descricao": "Serviços de prótese dentária"
+      },
+      {
+        "codigo": "8640-2/05",
+        "descricao": "Serviços de diagnóstico por imagem com uso de radiação ionizante, exceto tomografia"
+      },
+      {
+        "codigo": "8630-5/01",
+        "descricao": "Atividade médica ambulatorial com recursos para realização de procedimentos cirúrgicos"
+      },
+      {
+        "codigo": "8630-5/04",
+        "descricao": "Atividade odontológica"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.20",
+    "Descrição": "OFTALMOLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8630-5/01",
+        "descricao": "Atividade médica ambulatorial com recursos para realização de procedimentos cirúrgicos"
+      },
+      {
+        "codigo": "8640-2/07",
+        "descricao": "Serviços de diagnóstico por imagem sem uso de radiação ionizante, exceto ressonância magnética"
+      },
+      {
+        "codigo": "8640-2/08",
+        "descricao": "Serviços de diagnóstico por registro gráfico - ECG, EEG e outros exames análogos"
+      },
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      },
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.21",
+    "Descrição": "ORTOPEDIA E TRAUMATOLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8640-2/05",
+        "descricao": "Serviços de diagnóstico por imagem com uso de radiação ionizante, exceto tomografia"
+      },
+      {
+        "codigo": "8610-1/01",
+        "descricao": "Atividades de atendimento hospitalar, exceto pronto-socorro e unidades para atendimento a urgências"
+      },
+      {
+        "codigo": "8630-5/01",
+        "descricao": "Atividade médica ambulatorial com recursos para realização de procedimentos cirúrgicos"
+      },
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      },
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.22",
+    "Descrição": "OTORRINOLARINGOLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8610-1/01",
+        "descricao": "Atividades de atendimento hospitalar, exceto pronto-socorro e unidades para atendimento a urgências"
+      },
+      {
+        "codigo": "8630-5/01",
+        "descricao": "Atividade médica ambulatorial com recursos para realização de procedimentos cirúrgicos"
+      },
+      {
+        "codigo": "8640-2/08",
+        "descricao": "Serviços de diagnóstico por registro gráfico - ECG, EEG e outros exames análogos"
+      },
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      },
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.23",
+    "Descrição": "PATOLOGIA CLINICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [
+      "CRF - Conselho Regional de Farmácia",
+      "CRM - Conselho Regional de Medicina",
+      "Conselho Regional de Biomedicina",
+      "CRBio - Termo de Responsabilidade Técnica"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      },
+      {
+        "codigo": "8640-2/01",
+        "descricao": "Laboratórios de anatomia patológica e citológica"
+      },
+      {
+        "codigo": "8640-2/02",
+        "descricao": "Laboratórios clínicos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.24",
+    "Descrição": "PEDIATRIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8610-1/01",
+        "descricao": "Atividades de atendimento hospitalar, exceto pronto-socorro e unidades para atendimento a urgências"
+      },
+      {
+        "codigo": "8610-1/02",
+        "descricao": "Atividades de atendimento em pronto-socorro e unidades hospitalares para atendimento a urgências"
+      },
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      },
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.25",
+    "Descrição": "PNEUMOLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8630-5/01",
+        "descricao": "Atividade médica ambulatorial com recursos para realização de procedimentos cirúrgicos"
+      },
+      {
+        "codigo": "8640-2/08",
+        "descricao": "Serviços de diagnóstico por registro gráfico - ECG, EEG e outros exames análogos"
+      },
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      },
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.26",
+    "Descrição": "PSICOTERAPIA/PSICOMOTRICIDADE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [
+      "CREMEB",
+      "Conselho Regional de Psicologia - CRP"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "8650-0/04",
+        "descricao": "Atividades de fisioterapia"
+      },
+      {
+        "codigo": "8650-0/99",
+        "descricao": "Atividades de profissionais da área de saúde não especificadas anteriormente"
+      },
+      {
+        "codigo": "8650-0/03",
+        "descricao": "Atividades de psicologia e psicanálise"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.27",
+    "Descrição": "PSIQUIATRIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8690-9/99",
+        "descricao": "Outras atividades de atenção à saúde humana não especificadas anteriormente"
+      },
+      {
+        "codigo": "8610-1/01",
+        "descricao": "Atividades de atendimento hospitalar, exceto pronto-socorro e unidades para atendimento a urgências"
+      },
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      },
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.28",
+    "Descrição": "RADIOLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8640-2/07",
+        "descricao": "Serviços de diagnóstico por imagem sem uso de radiação ionizante, exceto ressonância magnética"
+      },
+      {
+        "codigo": "8640-2/06",
+        "descricao": "Serviços de ressonância magnética"
+      },
+      {
+        "codigo": "8640-2/04",
+        "descricao": "Serviços de tomografia"
+      },
+      {
+        "codigo": "8640-2/05",
+        "descricao": "Serviços de diagnóstico por imagem com uso de radiação ionizante, exceto tomografia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.29",
+    "Descrição": "REUMATOLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      },
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.30",
+    "Descrição": "UROLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8610-1/01",
+        "descricao": "Atividades de atendimento hospitalar, exceto pronto-socorro e unidades para atendimento a urgências"
+      },
+      {
+        "codigo": "8640-2/08",
+        "descricao": "Serviços de diagnóstico por registro gráfico - ECG, EEG e outros exames análogos"
+      },
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      },
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.31",
+    "Descrição": "VETERINARIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRMV - Conselho Regional de Medicina Veterinária",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7500-1/00",
+        "descricao": "Atividades veterinárias"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.32",
+    "Descrição": "INATIVA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "9999-9/99",
+        "descricao": "CNAE INEXISTENTE"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.33",
+    "Descrição": "SAUDE OCUPACIONAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CRM - Conselho Regional de Medicina",
+      "Conselho Regional de Fisioterapia",
+      "CAT - Certidão de Acervo Técnico",
+      "Conselho Regional de Educação Física"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      },
+      {
+        "codigo": "8630-5/02",
+        "descricao": "Atividade médica ambulatorial com recursos para realização de exames complementares"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.34",
+    "Descrição": "ACOES PREVENTIVAS E DE CONTROLE DE VIGILANCIA DA SAUDE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "8122-2/00",
+        "descricao": "Imunização e controle de pragas urbanas"
+      },
+      {
+        "codigo": "8690-9/99",
+        "descricao": "Outras atividades de atenção à saúde humana não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.35",
+    "Descrição": "ANESTESIOLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      },
+      {
+        "codigo": "8630-5/01",
+        "descricao": "Atividade médica ambulatorial com recursos para realização de procedimentos cirúrgicos"
+      },
+      {
+        "codigo": "8610-1/01",
+        "descricao": "Atividades de atendimento hospitalar, exceto pronto-socorro e unidades para atendimento a urgências"
+      },
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.36",
+    "Descrição": "ELECTRENCEFALOGRAFIA E NEUROFISIOLOGIA CLINICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      },
+      {
+        "codigo": "8640-2/08",
+        "descricao": "Serviços de diagnóstico por registro gráfico - ECG, EEG e outros exames análogos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.37",
+    "Descrição": "ENDOSCOPIA DIGESTIVA E PERORAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8630-5/01",
+        "descricao": "Atividade médica ambulatorial com recursos para realização de procedimentos cirúrgicos"
+      },
+      {
+        "codigo": "8640-2/08",
+        "descricao": "Serviços de diagnóstico por registro gráfico - ECG, EEG e outros exames análogos"
+      },
+      {
+        "codigo": "8640-2/09",
+        "descricao": "Serviços de diagnóstico por métodos ópticos - endoscopia e outros exames análogos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.38",
+    "Descrição": "RESSONANCIA MAGNETICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8640-2/06",
+        "descricao": "Serviços de ressonância magnética"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.39",
+    "Descrição": "CIRURGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8630-5/01",
+        "descricao": "Atividade médica ambulatorial com recursos para realização de procedimentos cirúrgicos"
+      },
+      {
+        "codigo": "8610-1/01",
+        "descricao": "Atividades de atendimento hospitalar, exceto pronto-socorro e unidades para atendimento a urgências"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.40",
+    "Descrição": "NEUROLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8630-5/01",
+        "descricao": "Atividade médica ambulatorial com recursos para realização de procedimentos cirúrgicos"
+      },
+      {
+        "codigo": "8610-1/02",
+        "descricao": "Atividades de atendimento em pronto-socorro e unidades hospitalares para atendimento a urgências"
+      },
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      },
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.41",
+    "Descrição": "ANGIOLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8630-5/01",
+        "descricao": "Atividade médica ambulatorial com recursos para realização de procedimentos cirúrgicos"
+      },
+      {
+        "codigo": "8640-2/07",
+        "descricao": "Serviços de diagnóstico por imagem sem uso de radiação ionizante, exceto ressonância magnética"
+      },
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      },
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.42",
+    "Descrição": "ONCOLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8640-2/10",
+        "descricao": "Serviços de quimioterapia"
+      },
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      },
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.43",
+    "Descrição": "MANIPULACAO DE PRODUTOS FARMACEUTICOS E ALIMENTOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRF - Conselho Regional de Farmácia",
+      "Alvará de Vigilância Sanitária",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "1099-6/07",
+        "descricao": "Fabricação de alimentos dietéticos e complementos alimentares"
+      },
+      {
+        "codigo": "8630-5/99",
+        "descricao": "Atividades de atenção ambulatorial não especificadas anteriormente"
+      },
+      {
+        "codigo": "4771-7/02",
+        "descricao": "Comércio varejista de produtos farmacêuticos, com manipulação de fórmulas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.44",
+    "Descrição": "MEDICINA HIPERBARICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8630-5/01",
+        "descricao": "Atividade médica ambulatorial com recursos para realização de procedimentos cirúrgicos"
+      },
+      {
+        "codigo": "8630-5/02",
+        "descricao": "Atividade médica ambulatorial com recursos para realização de exames complementares"
+      },
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.45",
+    "Descrição": "MEDICINA INTENSIVA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRM - Conselho Regional de Medicina",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8630-5/03",
+        "descricao": "Atividade médica ambulatorial restrita a consultas"
+      },
+      {
+        "codigo": "8610-1/02",
+        "descricao": "Atividades de atendimento em pronto-socorro e unidades hospitalares para atendimento a urgências"
+      },
+      {
+        "codigo": "8610-1/01",
+        "descricao": "Atividades de atendimento hospitalar, exceto pronto-socorro e unidades para atendimento a urgências"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "09.46",
+    "Descrição": "DIAGNOSTICO POR IMAGEM",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [
+      "CRM - Conselho Regional de Medicina",
+      "Conselho Regional de Técnico em Radiologia"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "8640-2/04",
+        "descricao": "Serviços de tomografia"
+      },
+      {
+        "codigo": "8640-2/09",
+        "descricao": "Serviços de diagnóstico por métodos ópticos - endoscopia e outros exames análogos"
+      },
+      {
+        "codigo": "8640-2/06",
+        "descricao": "Serviços de ressonância magnética"
+      },
+      {
+        "codigo": "8640-2/07",
+        "descricao": "Serviços de diagnóstico por imagem sem uso de radiação ionizante, exceto ressonância magnética"
+      },
+      {
+        "codigo": "8640-2/05",
+        "descricao": "Serviços de diagnóstico por imagem com uso de radiação ionizante, exceto tomografia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "09",
+      "nome": "Serviços Medicos e Odontológicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

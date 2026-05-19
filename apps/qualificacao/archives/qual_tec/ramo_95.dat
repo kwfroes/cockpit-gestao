@@ -1,0 +1,110 @@
+[
+  {
+    "Família": "95.05",
+    "Descrição": "ARAMES DE FERRO E DE ACO, NAO UTILIZAVEIS EM ELETRICIDADE",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "95",
+      "nome": "Barras, Chapas e Perfilados Metálicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "95.10",
+    "Descrição": "BARRAS E VERGALHOES DE FERRO E DE ACO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "95",
+      "nome": "Barras, Chapas e Perfilados Metálicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "95.15",
+    "Descrição": "CHAPAS, FITAS, LAMINADOS FINOS E PLACAS DE FERRO E DE ACO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "95",
+      "nome": "Barras, Chapas e Perfilados Metálicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "95.20",
+    "Descrição": "PERFIS ESTRUTURAIS DE FERRO E ACO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "95",
+      "nome": "Barras, Chapas e Perfilados Metálicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "95.25",
+    "Descrição": "ARAMES DE METAL NAO FERROSO, NAO UTILIZAVEIS EM ELETRICIDADE",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "95",
+      "nome": "Barras, Chapas e Perfilados Metálicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "95.30",
+    "Descrição": "BARRAS E VERGALHOES DE METAIS NAO FERROSOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "95",
+      "nome": "Barras, Chapas e Perfilados Metálicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "95.35",
+    "Descrição": "PLACAS, CHAPAS, FITAS E LAMINADOS FINOS DE METAIS NAO FERROSOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "95",
+      "nome": "Barras, Chapas e Perfilados Metálicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "95.40",
+    "Descrição": "PERFIS ESTRUTURAIS DE METAIS NAO FERROSOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "95",
+      "nome": "Barras, Chapas e Perfilados Metálicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "95.45",
+    "Descrição": "PLACAS, CHAPAS, FITAS E LAMINADOS FINOS DE METAIS PRECIOSOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "95",
+      "nome": "Barras, Chapas e Perfilados Metálicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

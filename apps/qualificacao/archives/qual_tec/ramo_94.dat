@@ -1,0 +1,62 @@
+[
+  {
+    "Família": "94.10",
+    "Descrição": "MATERIAS-PRIMAS DE ORIGEM VEGETAL",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "94",
+      "nome": "Matérias-Primas Não Metálicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "94.20",
+    "Descrição": "FIBRAS VEGETAIS, ANIMAIS E SINTETICAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "94",
+      "nome": "Matérias-Primas Não Metálicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "94.30",
+    "Descrição": "MATERIAS-PRIMAS DIVERSAS DE ORIGEM ANIMAL, NAO COMESTIVEIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "94",
+      "nome": "Matérias-Primas Não Metálicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "94.40",
+    "Descrição": "MATERIAS-PRIMAS DIVERSAS, FLORESTAIS E AGRICOLAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "94",
+      "nome": "Matérias-Primas Não Metálicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "94.50",
+    "Descrição": "RESIDUOS NAO METALICOS, EXCETO TEXTEIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "94",
+      "nome": "Matérias-Primas Não Metálicas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

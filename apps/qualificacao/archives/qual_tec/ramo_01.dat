@@ -1,0 +1,2646 @@
+[
+  {
+    "Família": "01.00",
+    "Descrição": "CONSIGNACOES DE SEGURADORA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Regularidade SUSEP",
+      "Certidão de Administradores SUSEP",
+      "Carta Patente SUSEP"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "65.11-1-01",
+        "descricao": "Sociedade seguradora de seguros vida"
+      },
+      {
+        "codigo": "6622-3/00",
+        "descricao": "Corretores e agentes de seguros, de planos de previdência complementar e de saúde"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.01",
+    "Descrição": "ADMINISTRACAO DE CARTAO DE CREDITO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [
+      "CORECON - Conselho Regional de Economia",
+      "CRA - Conselho Regional de Administração"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "6613-4/00",
+        "descricao": "Administração de cartões de crédito"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.02",
+    "Descrição": "ADMINISTRACAO DE VALE, TIQUETE E CARTAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8299-7/02",
+        "descricao": "Emissão de vales alimentação, vales transporte e similares"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.03",
+    "Descrição": "FORN DE ALIMENTOS E MAT DE LIMP. E HIG. PARA CREDENCIAMENTO E PALACIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [
+      "Alvará de Vigilância Sanitária",
+      "Ministério da Agricultura",
+      "ADAB - Agencia Estadual de Defesa Agropecuária",
+      "Declaração de Dispensa de Ato Público - Baixo Risco"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "5620-1/01",
+        "descricao": "Fornecimento de alimentos preparados preponderantemente para empresas"
+      },
+      {
+        "codigo": "5620-1/02",
+        "descricao": "Serviços de alimentação para eventos e recepções - bufê"
+      },
+      {
+        "codigo": "2062-2/00",
+        "descricao": "Fabricação de produtos de limpeza e polimento"
+      },
+      {
+        "codigo": "4649-4/08",
+        "descricao": "Comércio atacadista de produtos de higiene, limpeza e conservação domiciliar"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.04",
+    "Descrição": "AGENCIAMENTO DE VIAGEM E HOTELARIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Ministério do Turismo",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "79.11-2-00",
+        "descricao": "Agências de viagens"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.05",
+    "Descrição": "ELABORACAO E REVISAO DE TEXTOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7490-1/01",
+        "descricao": "Serviços de tradução, interpretação e similares"
+      },
+      {
+        "codigo": "8219-9/99",
+        "descricao": "Preparação de documentos e serviços especializados de apoio administrativo não especificados anteriormente"
+      },
+      {
+        "codigo": "9002-7/01",
+        "descricao": "Atividades de artistas plásticos, jornalistas independentes e escritores"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.06",
+    "Descrição": "ARMAZENAGEM EM GERAL (FRIGORIFICA, GRAO)",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [
+      "Ministério da Agricultura Abastecimento"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "5211-7/01",
+        "descricao": "Armazéns gerais - emissão de warrant"
+      },
+      {
+        "codigo": "5211-7/99",
+        "descricao": "Depósitos de mercadorias para terceiros, exceto armazéns gerais e guarda móveis"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.07",
+    "Descrição": "ASSINATURA E DISTRIBUICAO DE JORNAIS, REVISTAS E PERIODICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4618-4/03",
+        "descricao": "Representantes comerciais e agentes do comércio de jornais, revistas e outras publicações"
+      },
+      {
+        "codigo": "4761-0/02",
+        "descricao": "Comércio varejista de jornais e revistas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.08",
+    "Descrição": "BUFFET, REFEICOES E LANCHES PARA EVENTOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "5611-2/01",
+        "descricao": "Restaurantes e similares"
+      },
+      {
+        "codigo": "5620-1/01",
+        "descricao": "Fornecimento de alimentos preparados preponderantemente para empresas"
+      },
+      {
+        "codigo": "5620-1/02",
+        "descricao": "Serviços de alimentação para eventos e recepções - bufê"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.09",
+    "Descrição": "CHAVEIRO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "9529-1/02",
+        "descricao": "Chaveiros"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.10",
+    "Descrição": "CLIPPING - LEITURA E RECORTES DE DIARIOS OFICIAIS, JORNAIS E REVISTAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "6399-2/00",
+        "descricao": "Outras atividades de prestação de serviços de informação não especificadas anteriormente"
+      },
+      {
+        "codigo": "7319-0/04",
+        "descricao": "Consultoria em publicidade"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.11",
+    "Descrição": "COLETA E TRANSPORTE DE DOCUMENTOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "5320-2/01",
+        "descricao": "Serviços de malote não realizados pelo correio nacional"
+      },
+      {
+        "codigo": "5320-2/02",
+        "descricao": "Serviços de entrega rápida"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.12",
+    "Descrição": "ADMINISTRACAO DE PLANOS, PROGRAMAS E SERVICOS DE SAUDE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [
+      "CRA - Conselho Regional de Administração",
+      "CRM - Conselho Regional de Medicina",
+      "Conselho Regional de Odontologia"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "6550-2/00",
+        "descricao": "Planos de saúde"
+      },
+      {
+        "codigo": "8640-2/99",
+        "descricao": "Atividades de serviços de complementação diagnóstica e terapêutica não especificadas anteriormente"
+      },
+      {
+        "codigo": "8690-9/01",
+        "descricao": "Atividades de práticas integrativas e complementares em saúde humana"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.13",
+    "Descrição": "CONFECCAO DE CARIMBOS, PLACAS E DISTINTIVOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3299-0/03",
+        "descricao": "Fabricação de letras, letreiros e placas de qualquer material, exceto luminosos"
+      },
+      {
+        "codigo": "3299-0/02",
+        "descricao": "Fabricação de canetas, lápis e outros artigos para escritório"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.14",
+    "Descrição": "CONFECCAO DE PASTAS,CRACHAS,BRINDES E ITENS DE ESCRITORIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3299-0/02",
+        "descricao": "Fabricação de canetas, lápis e outros artigos para escritório"
+      },
+      {
+        "codigo": "1813-0/99",
+        "descricao": "Impressão de material para outros usos"
+      },
+      {
+        "codigo": "1813-0/01",
+        "descricao": "Impressão de material para uso publicitário"
+      },
+      {
+        "codigo": "4647-8/01",
+        "descricao": "Comércio atacadista de artigos de escritório e de papelaria"
+      },
+      {
+        "codigo": "4761-0/03",
+        "descricao": "Comércio varejista de artigos de papelaria"
+      },
+      {
+        "codigo": "4789-0/01",
+        "descricao": "Comércio varejista de suvenires, bijuterias e artesanatos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.15",
+    "Descrição": "CONFECCAO DE ARTIGOS EM FIBRA DE VIDRO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2319-2/00",
+        "descricao": "Fabricação de artigos de vidro"
+      },
+      {
+        "codigo": "1323-5/00",
+        "descricao": "Tecelagem de fios de fibras artificiais e sintéticas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.16",
+    "Descrição": "POSTAGEM",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "5310-5/01",
+        "descricao": "Atividades do correio nacional"
+      },
+      {
+        "codigo": "5310-5/02",
+        "descricao": "Atividades de franqueadas do correio nacional"
+      },
+      {
+        "codigo": "5320-2/01",
+        "descricao": "Serviços de malote não realizados pelo correio nacional"
+      },
+      {
+        "codigo": "5320-2/02",
+        "descricao": "Serviços de entrega rápida"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.17",
+    "Descrição": "CONFECCAO DE MOLDURAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "1629-3/01",
+        "descricao": "Fabricação de artefatos diversos de madeira, exceto móveis"
+      },
+      {
+        "codigo": "1629-3/02",
+        "descricao": "Fabricação de artefatos diversos de cortiça, bambu, palha, vime e outros materiais trançados, exceto móveis"
+      },
+      {
+        "codigo": "2330-3/99",
+        "descricao": "Fabricação de outros artefatos e produtos de concreto, cimento, fibrocimento, gesso e materiais semelhantes"
+      },
+      {
+        "codigo": "2599-3/99",
+        "descricao": "Fabricação de outros produtos de metal não especificados anteriormente"
+      },
+      {
+        "codigo": "2229-3/99",
+        "descricao": "Fabricação de artefatos de material plástico para outros usos não especificados anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.18",
+    "Descrição": "DESPACHOS ADUANEIROS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "5250-8/02",
+        "descricao": "Atividades de despachantes aduaneiros"
+      },
+      {
+        "codigo": "5250-8/01",
+        "descricao": "Comissaria de despachos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.19",
+    "Descrição": "DIVULGACAO ESCRITA, FALADA E TELEVISADA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7311-4/00",
+        "descricao": "Agências de publicidade"
+      },
+      {
+        "codigo": "7319-0/03",
+        "descricao": "Marketing direto"
+      },
+      {
+        "codigo": "7319-0/04",
+        "descricao": "Consultoria em publicidade"
+      },
+      {
+        "codigo": "5911-1/02",
+        "descricao": "Produção de filmes para publicidade"
+      },
+      {
+        "codigo": "6319-4/00",
+        "descricao": "Portais, provedores de conteúdo e outros serviços de informação na internet"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.20",
+    "Descrição": "ARTE GRAFICA DE SEGURANCA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "1812-1/00",
+        "descricao": "Impressão de material de segurança"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.21",
+    "Descrição": "ARTE GRAFICA NORMAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "1813-0/99",
+        "descricao": "Impressão de material para outros usos"
+      },
+      {
+        "codigo": "1813-0/01",
+        "descricao": "Impressão de material para uso publicitário"
+      },
+      {
+        "codigo": "1821-1/00",
+        "descricao": "Serviços de pré impressão"
+      },
+      {
+        "codigo": "7410-2/99",
+        "descricao": "Atividades de design não especificadas anteriormente"
+      },
+      {
+        "codigo": "5829-8/00",
+        "descricao": "Edição integrada à impressão de cadastros, listas e de outros produtos gráficos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.22",
+    "Descrição": "EMBALAGEM/ETIQUETAGEM DE ENCOMENDAS E DOCUMENTOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8292-0/00",
+        "descricao": "Envasamento e empacotamento sob contrato"
+      },
+      {
+        "codigo": "1813-0/99",
+        "descricao": "Impressão de material para outros usos"
+      },
+      {
+        "codigo": "5310-5/02",
+        "descricao": "Atividades de franqueadas do correio nacional"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.23",
+    "Descrição": "ADESTRAMENTO DE ANIMAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "9609-2/07",
+        "descricao": "Alojamento de animais domésticos"
+      },
+      {
+        "codigo": "8011-1/02",
+        "descricao": "Serviços de adestramento de cães de guarda"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.24",
+    "Descrição": "ESTACIONAMENTO DE VEICULOS AUTOMOTORES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "5223-1/00",
+        "descricao": "Estacionamento de veículos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.25",
+    "Descrição": "ADMINISTRACAO E GERENCIAMENTO DE ABASTECIMENTO DA FROTA DE VEICULOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8299-7/99",
+        "descricao": "Outras atividades de serviços prestados principalmente às empresas não especificadas anteriormente"
+      },
+      {
+        "codigo": "7490-1/04",
+        "descricao": "Atividades de intermediação e agenciamento de serviços e negócios em geral, exceto imobiliários"
+      },
+      {
+        "codigo": "4731-8/00",
+        "descricao": "Comércio varejista de combustíveis para veículos automotores"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.26",
+    "Descrição": "LOCACAO DE EQUIPAMENTOS PARA SEGURANCA/VIGILANCIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7739-0/99",
+        "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.27",
+    "Descrição": "LOCACAO DE EQUIP/MAQ P/ JOGOS, RECREACAO, ATIV. FISICAS E EDUCACIONAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7721-7/00",
+        "descricao": "Aluguel de equipamentos recreativos e esportivos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.28",
+    "Descrição": "FORNECIMENTO CONTINUO DE REFEICOES",
+    "Documentos Exigidos": [
+      "CRN - Conselho Regional de Nutrição",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [
+      "Alvará de Vigilância Sanitária",
+      "Declaração de Dispensa de Ato Público - Baixo Risco"
+    ],
+    "Tipo": "S",
+    "CNAEs": [
+      {
+        "codigo": "5611-2/01",
+        "descricao": "Restaurantes e similares"
+      },
+      {
+        "codigo": "5620-1/01",
+        "descricao": "Fornecimento de alimentos preparados preponderantemente para empresas"
+      },
+      {
+        "codigo": "5620-1/02",
+        "descricao": "Serviços de alimentação para eventos e recepções - bufê"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.29",
+    "Descrição": "SERVICOS FOTOGRAFICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7420-0/02",
+        "descricao": "Atividades de produção de fotografias aéreas e submarinas"
+      },
+      {
+        "codigo": "7420-0/03",
+        "descricao": "Laboratórios fotográficos"
+      },
+      {
+        "codigo": "7420-0/01",
+        "descricao": "Atividades de produção de fotografias, exceto aérea e submarina"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.30",
+    "Descrição": "ADMINISTRACAO DE BILHETERIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7990-2/00",
+        "descricao": "Serviços de reservas e outros serviços de turismo não especificados anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.31",
+    "Descrição": "SERVICOS DE TRATAMENTO DE AGUA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CRQ - Conselho Regional de Química",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "3600-6/01",
+        "descricao": "Captação, tratamento e distribuição de água"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.32",
+    "Descrição": "SERVICO DE IMPRESSAO CORPORATIVA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "1821-1/00",
+        "descricao": "Serviços de pré-impressão"
+      },
+      {
+        "codigo": "1813-0/99",
+        "descricao": "Impressão de material para outros usos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.33",
+    "Descrição": "LAVANDERIA E TINTURARIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "1340-5/02",
+        "descricao": "Alvejamento, tingimento e torção em fios, tecidos, artefatos têxteis e peças do vestuário"
+      },
+      {
+        "codigo": "9601-7/03",
+        "descricao": "Toalheiros"
+      },
+      {
+        "codigo": "9601-7/02",
+        "descricao": "Tinturarias"
+      },
+      {
+        "codigo": "9601-7/01",
+        "descricao": "Lavanderias"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.34",
+    "Descrição": "LEILAO E ALIENACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8299-7/04",
+        "descricao": "Leiloeiros independentes"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.35",
+    "Descrição": "SERVICO DE LOGISTICA E ENTREGA FRACIONADA DE GENEROS ALIMENTICIOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [
+      "Alvará de Vigilância Sanitária",
+      "Declaração de Dispensa de Ato Público - Baixo Risco"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "47.12-1-00",
+        "descricao": "Comércio varejista de mercadorias em geral, com predominância de produtos alimentícios - minimercados, mercearias e armazéns"
+      },
+      {
+        "codigo": "46.17-6-00",
+        "descricao": "Representantes comerciais e agentes do comércio de produtos alimentícios, bebidas e fumo"
+      },
+      {
+        "codigo": "56.11-2-01",
+        "descricao": "Restaurantes e similares"
+      },
+      {
+        "codigo": "56.20-1-02",
+        "descricao": "Serviços de alimentação para eventos e recepções - bufê"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.36",
+    "Descrição": "LOCACAO DE AERONAVES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7719-5/02",
+        "descricao": "Locação de aeronaves sem tripulação"
+      },
+      {
+        "codigo": "5112-9/01",
+        "descricao": "Serviço de táxi aéreo e locação de aeronaves com tripulação"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.37",
+    "Descrição": "LOCACAO DE ANDAIMES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7732-2/02",
+        "descricao": "Aluguel de andaimes"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.38",
+    "Descrição": "LOCACAO DE EMBARCACAO MARITIMA/FLUVIAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7721-7/00",
+        "descricao": "Aluguel de equipamentos recreativos e esportivos"
+      },
+      {
+        "codigo": "5091-2/01",
+        "descricao": "Transporte por navegação de travessia, municipal"
+      },
+      {
+        "codigo": "7719-5/01",
+        "descricao": "Locação de embarcações sem tripulação, exceto para fins recreativos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.39",
+    "Descrição": "LOCACAO DE EQUIP DE AUDIOVISUAL/ELETRODOMESTICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7739-0/03",
+        "descricao": "Aluguel de palcos, coberturas e outras estruturas de uso temporário, exceto andaimes"
+      },
+      {
+        "codigo": "7729-2/02",
+        "descricao": "Aluguel de móveis, utensílios e aparelhos de uso doméstico e pessoal; instrumentos musicais"
+      },
+      {
+        "codigo": "7739-0/99",
+        "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.40",
+    "Descrição": "LOCACAO DE EQUIPAMENTO DE ALARME",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7739-0/99",
+        "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.41",
+    "Descrição": "LOCACAO DE EQUIPAMENTO DE LABORATORIO E ELETRO - MEDICINAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7739-0/99",
+        "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+      },
+      {
+        "codigo": "7729-2/03",
+        "descricao": "Aluguel de material médico"
+      },
+      {
+        "codigo": "7739-0/02",
+        "descricao": "Aluguel de equipamentos científicos, médicos e hospitalares, sem operador"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.42",
+    "Descrição": "LOCACAO DE EQUIPAMENTO DE MICROFILMAGEM",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7739-0/99",
+        "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.43",
+    "Descrição": "LOCACAO DE EQUIPAMENTO DE TOPOGRAFIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7739-0/99",
+        "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.44",
+    "Descrição": "LOCACAO DE EQUIPAMENTO DE ELEVACAO/MOVIMENTACAO DE CARGA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4399-1/04",
+        "descricao": "Serviços de operação e fornecimento de equipamentos para transporte e elevação de cargas e pessoas para uso em obras"
+      },
+      {
+        "codigo": "7739-0/99",
+        "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.45",
+    "Descrição": "LOCACAO DE EQUIPAMENTO DE TELECOMUNICACAO E RADIOCOMUNICAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7739-0/99",
+        "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.46",
+    "Descrição": "LOCACAO DE IMOVEIS E ESPACO FISICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7312-2/00",
+        "descricao": "Agenciamento de espaços para publicidade, exceto em veículos de comunicação"
+      },
+      {
+        "codigo": "6821-8/02",
+        "descricao": "Corretagem no aluguel de imóveis"
+      },
+      {
+        "codigo": "6810-2/02",
+        "descricao": "Aluguel de imóveis próprios"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.47",
+    "Descrição": "CONSIGNACOES DE INSTITUICOES FINANCEIRAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Autorização BACEN",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "6619-3/02",
+        "descricao": "Correspondentes de instituições financeiras"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.48",
+    "Descrição": "LOCACAO DE MAQUINAS DE ESCAVACAO E TERRAPLENAGEM",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4313-4/00",
+        "descricao": "Obras de terraplenagem"
+      },
+      {
+        "codigo": "7732-2/01",
+        "descricao": "Aluguel de máquinas e equipamentos para construção sem operador, exceto andaimes"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.49",
+    "Descrição": "LOCACAO DE MAQUINAS E EQUIPAMENTOS PARA ESCRITORIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7733-1/00",
+        "descricao": "Aluguel de máquinas e equipamentos para escritórios"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.50",
+    "Descrição": "LOCACAO DE EQUIPAMENTOS DE PROCESSAMENTO DE DADOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7733-1/00",
+        "descricao": "Aluguel de máquinas e equipamentos para escritórios"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.51",
+    "Descrição": "LOCACAO DE VEICULOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7719-5/99",
+        "descricao": "Locação de outros meios de transporte sem condutor"
+      },
+      {
+        "codigo": "7711-0/00",
+        "descricao": "Locação de automóveis sem condutor"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.52",
+    "Descrição": "LOCUCAO DE TEXTO/MESTRE CERIMONIAL/LOCUTOR/APRESENTADOR",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.53",
+    "Descrição": "SERVICOS DE COLETA DE AGUA PARA ANALISE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.54",
+    "Descrição": "MICROFILMAGEM",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7420-0/05",
+        "descricao": "Serviços de microfilmagem"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.55",
+    "Descrição": "ORGANIZACAO DE ARQUIVO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "9101-5/00",
+        "descricao": "Atividades de bibliotecas e arquivos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.56",
+    "Descrição": "CONSIGNACOES DE PLANOS DE SAUDE E ODONTOLOGICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "ANS - Agencia Nacional de Saúde Suplementar",
+      "Conselho Regional de Odontologia"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "6550-2/00",
+        "descricao": "Planos de saúde"
+      },
+      {
+        "codigo": "6622-3/00",
+        "descricao": "Corretores e agentes de seguros, de planos de previdência complementar e de saúde"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.57",
+    "Descrição": "PESQUISA DE MERCADO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7320-3/00",
+        "descricao": "Pesquisas de mercado e de opinião pública"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.58",
+    "Descrição": "PESQUISA HISTORICA/DOCUMENTAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "9101-5/00",
+        "descricao": "Atividades de bibliotecas e arquivos"
+      },
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.59",
+    "Descrição": "PINTURA E ARTES PLASTICAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "9002-7/01",
+        "descricao": "Atividades de artistas plásticos, jornalistas independentes e escritores"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.60",
+    "Descrição": "LOCACAO DE VESTUARIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7723-3/00",
+        "descricao": "Aluguel de objetos do vestuário, jóias e acessórios"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.61",
+    "Descrição": "SERVICO DE ASSISTENCIA A SAUDE - PLANSERV",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Alvará de Vigilância Sanitária",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [
+      "CRF - Conselho Regional de Farmácia",
+      "CRQ - Conselho Regional de Química",
+      "CRM - Conselho Regional de Medicina",
+      "Conselho Regional de Fisioterapia",
+      "Conselho Regional de Enfermagem",
+      "Conselho Regional de Biomedicina"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "6622-3/00",
+        "descricao": "Corretores e agentes de seguros, de planos de previdência complementar e de saúde"
+      },
+      {
+        "codigo": "6550-2/00",
+        "descricao": "Planos de saúde"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.62",
+    "Descrição": "PRODUCAO DE RADIO, TELEVISAO, CINEMA, VIDEO E DISCOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "5911-1/01",
+        "descricao": "Estúdios cinematográficos"
+      },
+      {
+        "codigo": "5920-1/00",
+        "descricao": "Atividades de gravação de som e de edição de música"
+      },
+      {
+        "codigo": "6010-1/00",
+        "descricao": "Atividades de rádio"
+      },
+      {
+        "codigo": "5911-1/99",
+        "descricao": "Atividades de produção cinematográfica, de vídeos e de programas de televisão não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.63",
+    "Descrição": "PRODUCAO E REALIZ DE SHOWS E EVENTOS ARTISTICOS/CULTURAIS E ESPORTIVOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "9319-1/01",
+        "descricao": "Produção e promoção de eventos esportivos"
+      },
+      {
+        "codigo": "9001-9/99",
+        "descricao": "Artes cênicas, espetáculos e atividades complementares não especificadas anteriormente"
+      },
+      {
+        "codigo": "9001-9/03",
+        "descricao": "Produção de espetáculos de dança"
+      },
+      {
+        "codigo": "9001-9/02",
+        "descricao": "Produção musical"
+      },
+      {
+        "codigo": "9001-9/01",
+        "descricao": "Produção teatral"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.64",
+    "Descrição": "PROGRAMACAO E COMUNICACAO VISUAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7311-4/00",
+        "descricao": "Agências de publicidade"
+      },
+      {
+        "codigo": "7410-2/99",
+        "descricao": "Atividades de design não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.65",
+    "Descrição": "CONFECCAO DE ARTIGOS EM ACRILICO/PLASTICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2229-3/99",
+        "descricao": "Fabricação de artefatos de material plástico para outros usos não especificados anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.66",
+    "Descrição": "REPROGRAFIA, ENCADERNACAO E PLASTIFICACAO DE DOCUMENTOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "1822-9/01",
+        "descricao": "Serviços de encadernação e plastificação"
+      },
+      {
+        "codigo": "8219-9/01",
+        "descricao": "Fotocópias"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.67",
+    "Descrição": "CONFECCAO DE PLACAS PARA VEICULOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3299-0/03",
+        "descricao": "Fabricação de letras, letreiros e placas de qualquer material, exceto luminosos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.68",
+    "Descrição": "SEGUROS/CONSIGNAÇÕES DE SEGURADORA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Regularidade SUSEP",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [
+      "ANS - Agencia Nacional de Saúde Suplementar",
+      "Certidão de Administradores SUSEP",
+      "Carta Patente SUSEP"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "6520-1/00",
+        "descricao": "Sociedade seguradora de seguros saúde"
+      },
+      {
+        "codigo": "6622-3/00",
+        "descricao": "Corretores e agentes de seguros, de planos de previdência complementar e de saúde"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.69",
+    "Descrição": "SERIGRAFIA E SILK SCREEN",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "1813-0/99",
+        "descricao": "Impressão de material para outros usos"
+      },
+      {
+        "codigo": "1813-0/01",
+        "descricao": "Impressão de material para uso publicitário"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.70",
+    "Descrição": "TELEMARKETING",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8220-2/00",
+        "descricao": "Atividades de teleatendimento"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.71",
+    "Descrição": "SERVICOS DE TELEFONIA MOVEL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "6120-5/99",
+        "descricao": "Serviços de telecomunicações sem fio não especificados anteriormente"
+      },
+      {
+        "codigo": "6120-5/02",
+        "descricao": "Serviço móvel especializado - sme"
+      },
+      {
+        "codigo": "6120-5/01",
+        "descricao": "Telefonia móvel celular"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.72",
+    "Descrição": "CESSÃO ONEROSA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4912-4/02",
+        "descricao": "Transporte metroferroviário de passageiros"
+      },
+      {
+        "codigo": "5611-2/03",
+        "descricao": "Lanchonetes, casas de chá, sucos e similares"
+      },
+      {
+        "codigo": "5221-1/00",
+        "descricao": "Serviços auxiliares dos transportes terrestres"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.73",
+    "Descrição": "LOCACAO E MANUTENCAO DE CABINES E MODULOS MOVEIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7739-0/03",
+        "descricao": "Aluguel de palcos, coberturas e outras estruturas de uso temporário, exceto andaimes"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.74",
+    "Descrição": "CONFECCAO DE ARTIGOS EM TECIDO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "1354-5/00",
+        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
+      },
+      {
+        "codigo": "1359-6/00",
+        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+      },
+      {
+        "codigo": "1411-8/02",
+        "descricao": "Facção de roupas íntimas"
+      },
+      {
+        "codigo": "1412-6/01",
+        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.75",
+    "Descrição": "LOCACAO DE EQUIPAMENTO DE REFRIGERACAO E CONDICIONAMENTO DE AR",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7729-2/02",
+        "descricao": "Aluguel de móveis, utensílios e aparelhos de uso doméstico e pessoal; instrumentos musicais"
+      },
+      {
+        "codigo": "7739-0/99",
+        "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.76",
+    "Descrição": "EMPLACAMENTO, LICENCIAMENTO E REGULARIZACAO DE VEICULOS OFICIAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8299-7/99",
+        "descricao": "Outras atividades de serviços prestados principalmente às empresas não especificadas anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.77",
+    "Descrição": "LOCACAO DE EQUIPAMENTOS E MAQUINARIOS ELETRICOS E MECANICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7731-4/00",
+        "descricao": "Aluguel de máquinas e equipamentos agrícolas sem operador"
+      },
+      {
+        "codigo": "7732-2/02",
+        "descricao": "Aluguel de andaimes"
+      },
+      {
+        "codigo": "7739-0/99",
+        "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+      },
+      {
+        "codigo": "7732-2/01",
+        "descricao": "Aluguel de máquinas e equipamentos para construção sem operador, exceto andaimes"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.78",
+    "Descrição": "ASSINATURA DE CANAIS FECHADOS DE TELEVISAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "6143-4/00",
+        "descricao": "Operadoras de televisão por assinatura por satélite"
+      },
+      {
+        "codigo": "6142-6/00",
+        "descricao": "Operadoras de televisão por assinatura por microondas"
+      },
+      {
+        "codigo": "6141-8/00",
+        "descricao": "Operadoras de televisão por assinatura por cabo"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.79",
+    "Descrição": "SERVICOS DE COMUNICACAO VIA PAGER",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "6120-5/99",
+        "descricao": "Serviços de telecomunicações sem fio não especificados anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.80",
+    "Descrição": "SERVICOS BANCARIOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "6499-9/99",
+        "descricao": "Outras atividades de serviços financeiros não especificadas anteriormente"
+      },
+      {
+        "codigo": "6422-1/00",
+        "descricao": "Bancos múltiplos, com carteira comercial"
+      },
+      {
+        "codigo": "6423-9/00",
+        "descricao": "Caixas econômicas"
+      },
+      {
+        "codigo": "6421-2/00",
+        "descricao": "Bancos comerciais"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.81",
+    "Descrição": "SERVICOS DE FORNECIMENTO DE AGUA POTAVEL/ESGOTO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3701-1/00",
+        "descricao": "Gestão de redes de esgoto"
+      },
+      {
+        "codigo": "3702-9/00",
+        "descricao": "Atividades relacionadas a esgoto, exceto a gestão de redes"
+      },
+      {
+        "codigo": "3600-6/01",
+        "descricao": "Captação, tratamento e distribuição de água"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.82",
+    "Descrição": "SERVICOS DE FORNECIMENTO DE ENERGIA ELETRICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3514-0/00",
+        "descricao": "Distribuição de energia elétrica"
+      },
+      {
+        "codigo": "3513-1/00",
+        "descricao": "Comércio atacadista de energia elétrica"
+      },
+      {
+        "codigo": "3512-3/00",
+        "descricao": "Transmissão de energia elétrica"
+      },
+      {
+        "codigo": "3511-5/02",
+        "descricao": "Atividades de coordenação e controle da operação da geração e transmissão de energia elétrica"
+      },
+      {
+        "codigo": "3511-5/01",
+        "descricao": "Geração de energia elétrica"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.83",
+    "Descrição": "SERVICOS DE TELEFONIA FIXA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "6110-8/01",
+        "descricao": "Serviços de telefonia fixa comutada (STFC)"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.84",
+    "Descrição": "LOCACAO DE RECIPIENTE PARA FORNEC DE GASES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7739-0/99",
+        "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.85",
+    "Descrição": "SERVICOS DE DECORACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7410-2/02",
+        "descricao": "Design de interiores"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.86",
+    "Descrição": "CARTORIOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "6912-5/00",
+        "descricao": "Cartórios"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.87",
+    "Descrição": "INSCRIÇÃO E MANUTENÇÃO EM ENTIDADES FISCALIZADORAS E DE REPRESENTAÇÃO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "9411-1/00",
+        "descricao": "Atividades de organizações associativas patronais e empresariais"
+      },
+      {
+        "codigo": "9412-0/99",
+        "descricao": "Outras atividades associativas profissionais"
+      },
+      {
+        "codigo": "9412-0/01",
+        "descricao": "Atividades de fiscalização profissional"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.88",
+    "Descrição": "ASSINATURA DE USO DE BANCO DE DADOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "6319-4/00",
+        "descricao": "Portais, provedores de conteúdo e outros serviços de informação na internet"
+      },
+      {
+        "codigo": "6203-1/00",
+        "descricao": "Desenvolvimento e licenciamento de programas de computador não customizáveis"
+      },
+      {
+        "codigo": "6311-9/00",
+        "descricao": "Tratamento de dados, provedores de serviços de aplicação e serviços de hospedagem na internet"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.89",
+    "Descrição": "LOCACAO DE MOBILIARIOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7729-2/02",
+        "descricao": "Aluguel de móveis, utensílios e aparelhos de uso doméstico e pessoal; instrumentos musicais"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.90",
+    "Descrição": "CONCESSAO E PERMISSAO DE SERVICOS E AREAS PUBLICAS",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "Tipo": "S",
+    "CNAEs": [
+      {
+        "codigo": "4912-4/02",
+        "descricao": "Transporte metroferroviário de passageiros"
+      },
+      {
+        "codigo": "5611-2/03",
+        "descricao": "Lanchonetes, casas de chá, sucos e similares"
+      },
+      {
+        "codigo": "5221-1/00",
+        "descricao": "Serviços auxiliares dos transportes terrestres"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.91",
+    "Descrição": "SERVICOS FUNERARIOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "9603-3/99",
+        "descricao": "Atividades funerárias e serviços relacionados não especificados anteriormente"
+      },
+      {
+        "codigo": "9603-3/05",
+        "descricao": "Serviços de somatoconservação"
+      },
+      {
+        "codigo": "9603-3/03",
+        "descricao": "Serviços de sepultamento"
+      },
+      {
+        "codigo": "9603-3/02",
+        "descricao": "Serviços de cremação"
+      },
+      {
+        "codigo": "9603-3/01",
+        "descricao": "Gestão e manutenção de cemitérios"
+      },
+      {
+        "codigo": "9603-3/04",
+        "descricao": "Serviços de funerárias"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.92",
+    "Descrição": "GESTAO DE FROTA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8020-0/00",
+        "descricao": "Atividades de monitoramento de sistemas de segurança"
+      },
+      {
+        "codigo": "5250-8/04",
+        "descricao": "Organização logística do transporte de carga"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.93",
+    "Descrição": "ABASTECIMENTO DE VEICULOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4784-9/00",
+        "descricao": "Comércio varejista de gás liqüefeito de petróleo (glp)"
+      },
+      {
+        "codigo": "4731-8/00",
+        "descricao": "Comércio varejista de combustíveis para veículos automotores"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.94",
+    "Descrição": "HOSPEDAGEM PARA FORMACAO EDUCACIONAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Ministério do Turismo",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [
+      "Alvará de Vigilância Sanitária",
+      "Declaração de Dispensa de Ato Público - Baixo Risco"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "5590-6/01",
+        "descricao": "Albergues, exceto assistenciais"
+      },
+      {
+        "codigo": "5510-8/02",
+        "descricao": "Apart hotéis"
+      },
+      {
+        "codigo": "5510-8/01",
+        "descricao": "Hotéis"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.95",
+    "Descrição": "GESTÃO PLENA DO SISTEMA ESTADUAL DE SAÚDE - SUS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8660-7/00",
+        "descricao": "Atividades de apoio à gestão de saúde"
+      },
+      {
+        "codigo": "8411-6/00",
+        "descricao": "Administração pública em geral"
+      },
+      {
+        "codigo": "8412-4/00",
+        "descricao": "Regulação das atividades de saúde, educação, serviços culturais e outros serviços sociais"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.96",
+    "Descrição": "SERVICO DE APOIO ADMINISTRATIVO E OPERACIONAL AO PLANSERV",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "8211-3/00",
+        "descricao": "Serviços combinados de escritório e apoio administrativo"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.97",
+    "Descrição": "LOCACAO DE ESPACO COM FORNECIMENTO DE REFEICAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRN - Conselho Regional de Nutrição",
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [
+      "Alvará de Vigilância Sanitária",
+      "Declaração de Dispensa de Ato Público - Baixo Risco"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "5620-1/01",
+        "descricao": "Fornecimento de alimentos preparados preponderantemente para empresas"
+      },
+      {
+        "codigo": "5620-1/02",
+        "descricao": "Serviços de alimentação para eventos e recepções - bufê"
+      },
+      {
+        "codigo": "8230-0/02",
+        "descricao": "Casas de festas e eventos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.98",
+    "Descrição": "SERVICOS DE CONDUCAO E CONSERVACAO DE VEICULOS ADMINISTRATIVOS",
+    "Tipo": "S",
+    "Terceirizado": "Sim",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7830-2/00",
+        "descricao": "Fornecimento e gestão de recursos humanos para terceiros"
+      },
+      {
+        "codigo": "7820-5/00",
+        "descricao": "Locação de mão-de-obra temporária"
+      },
+      {
+        "codigo": "7810-8/00",
+        "descricao": "Seleção e agenciamento de mão-de-obra"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "01.99",
+    "Descrição": "ADMINISTRACAO E MANUTENCAO DE PALACIOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CRA - Conselho Regional de Administração",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "6822-6/00",
+        "descricao": "Gestão e administração da propriedade imobiliaria"
+      },
+      {
+        "codigo": "8111-7/00",
+        "descricao": "Serviços combinados para apoio a edifícios, exceto condomínios prediais"
+      }
+    ],
+    "Ramo": {
+      "codigo": "01",
+      "nome": "Serviços Gerais e Administrativos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

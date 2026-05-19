@@ -1,0 +1,103 @@
+[
+  {
+    "Família": "63.10",
+    "Descrição": "SISTEMAS DE SINALIZACAO DE TRAFEGO E TRANSITO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4329-1/04",
+        "descricao": "Montagem e instalação de sistemas e equipamentos de iluminação e sinalização em vias públicas, portos e aeroportos"
+      },
+      {
+        "codigo": "3299-0/04",
+        "descricao": "Fabricação de painéis e letreiros luminosos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "63",
+      "nome": "Sistemas de Alarme, Sinalização e Detecção para Segurança"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "63.20",
+    "Descrição": "SISTEMAS DE SINALIZACAO E ALARME DE EMBARCACOES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "63",
+      "nome": "Sistemas de Alarme, Sinalização e Detecção para Segurança"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "63.30",
+    "Descrição": "SISTEMAS DE SINALIZACAO E ALARME PARA FERROVIAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3299-0/04",
+        "descricao": "Fabricação de painéis e letreiros luminosos"
+      },
+      {
+        "codigo": "4329-1/04",
+        "descricao": "Montagem e instalação de sistemas e equipamentos de iluminação e sinalização em vias públicas, portos e aeroportos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "63",
+      "nome": "Sistemas de Alarme, Sinalização e Detecção para Segurança"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "63.40",
+    "Descrição": "SISTEMAS DE SINALIZACAO PARA AERONAVES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "63",
+      "nome": "Sistemas de Alarme, Sinalização e Detecção para Segurança"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "63.50",
+    "Descrição": "SISTEMAS DIVERSOS DE SINALIZACAO, ALARME E DETECCAO PARA SEGURANCA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3299-0/04",
+        "descricao": "Fabricação de painéis e letreiros luminosos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "63",
+      "nome": "Sistemas de Alarme, Sinalização e Detecção para Segurança"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "63.60",
+    "Descrição": "SISTEMA DE DETECCAO E DESARME DE EXPLOSIVOS PARA SEGURANCA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "63",
+      "nome": "Sistemas de Alarme, Sinalização e Detecção para Segurança"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

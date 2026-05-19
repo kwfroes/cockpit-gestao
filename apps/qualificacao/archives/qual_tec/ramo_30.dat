@@ -1,0 +1,122 @@
+[
+  {
+    "Família": "30.10",
+    "Descrição": "CONVERSORES DE TORCAO E CAIXA DE MUDANCAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2811-9/00",
+        "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      },
+      {
+        "codigo": "2815-1/02",
+        "descricao": "Fabricação de equipamentos de transmissão para fins industriais, exceto rolamentos"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "2942-5/00",
+        "descricao": "Fabricação de peças e acessórios para os sistemas de marcha e transmissão de veículos automotores"
+      }
+    ],
+    "Ramo": {
+      "codigo": "30",
+      "nome": "Equipamentos de Transmissão Mecânica de Força"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "30.20",
+    "Descrição": "ENGRENAGENS, POLIAS, CORDAS DENTADAS E CORRENTES DE TRANSMISSAO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2815-1/01",
+        "descricao": "Fabricação de rolamentos para fins industriais"
+      },
+      {
+        "codigo": "2219-6/00",
+        "descricao": "Fabricação de artefatos de borracha não especificados anteriormente"
+      },
+      {
+        "codigo": "2815-1/02",
+        "descricao": "Fabricação de equipamentos de transmissão para fins industriais, exceto rolamentos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "30",
+      "nome": "Equipamentos de Transmissão Mecânica de Força"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "30.30",
+    "Descrição": "CORREAME, CORREIAS DE TRANSMIS, CORREIAS DOS VENTILAD E ACESSORIOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2815-1/02",
+        "descricao": "Fabricação de equipamentos de transmissão para fins industriais, exceto rolamentos"
+      },
+      {
+        "codigo": "2219-6/00",
+        "descricao": "Fabricação de artefatos de borracha não especificados anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "30",
+      "nome": "Equipamentos de Transmissão Mecânica de Força"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "30.40",
+    "Descrição": "EQUIPAMENTOS DIVERSOS PARA TRANSMISSAO DE FORCA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2539-0/01",
+        "descricao": "Serviços de usinagem, tornearia e solda"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2942-5/00",
+        "descricao": "Fabricação de peças e acessórios para os sistemas de marcha e transmissão de veículos automotores"
+      },
+      {
+        "codigo": "2815-1/02",
+        "descricao": "Fabricação de equipamentos de transmissão para fins industriais, exceto rolamentos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "30",
+      "nome": "Equipamentos de Transmissão Mecânica de Força"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

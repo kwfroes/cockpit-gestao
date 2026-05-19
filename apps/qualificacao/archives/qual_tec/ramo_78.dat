@@ -1,0 +1,38 @@
+[
+  {
+    "Família": "78.10",
+    "Descrição": "EQUIPAMENTOS ESPORTIVOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "78",
+      "nome": "Equipamentos para Recreação e Desporto"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "78.20",
+    "Descrição": "JOGOS, BRINQUEDOS E ARTIGOS CORRELATOS COM RODAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "78",
+      "nome": "Equipamentos para Recreação e Desporto"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "78.30",
+    "Descrição": "EQUIPAMENTOS PARA GINASTICA E RECREACAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "78",
+      "nome": "Equipamentos para Recreação e Desporto"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

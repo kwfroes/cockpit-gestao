@@ -1,0 +1,146 @@
+[
+  {
+    "Família": "49.10",
+    "Descrição": "EQUIPAMENTOS E MATERIAIS PARA MANUTENCAO DE VEICULOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "49",
+      "nome": "Equipamentos de Oficinas de Manutenção e Reparos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "49.20",
+    "Descrição": "EQUIP  ESPECIALIZADOS DE OFICINA DE MANUT E REPARO DE AERONAVES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "49",
+      "nome": "Equipamentos de Oficinas de Manutenção e Reparos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "49.21",
+    "Descrição": "EQUIPAMENTOS ESPEC. PARA MANUT, REPARO E INSPECAO DE MOTORES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "49",
+      "nome": "Equipamentos de Oficinas de Manutenção e Reparos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "49.23",
+    "Descrição": "EQUIPAMENTOS ESPEC. P/ MANUT, REPARO E INSP DE MINAS SUBMARINA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "49",
+      "nome": "Equipamentos de Oficinas de Manutenção e Reparos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "49.25",
+    "Descrição": "EQUIPAMENTOS ESPEC. P/ MANUT., REPARO E INSPECAO DE MUNICAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "49",
+      "nome": "Equipamentos de Oficinas de Manutenção e Reparos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "49.27",
+    "Descrição": "EQUIPAMENTOS ESPEC. P/MANUT., REPARO E INSPECAO DE FOGUETES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "49",
+      "nome": "Equipamentos de Oficinas de Manutenção e Reparos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "49.30",
+    "Descrição": "EQUIPAMENTOS PARA FORNECIMENTO DE COMBUSTIVEL E LUBRIFICACAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "49",
+      "nome": "Equipamentos de Oficinas de Manutenção e Reparos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "49.31",
+    "Descrição": "EQUIPAMENTOS PARA OFICINA DE MANUT E REPARO DE DIRECAO DE TIRO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "49",
+      "nome": "Equipamentos de Oficinas de Manutenção e Reparos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "49.33",
+    "Descrição": "EQUIPAMENTOS ESPEC P/ OFICINA DE MANUT E REPARO DE ARMAMENTO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "49",
+      "nome": "Equipamentos de Oficinas de Manutenção e Reparos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "49.35",
+    "Descrição": "EQUIPAMENTOS ESPECIAL. P/ MANUT., REPARO E INSPECAO DE MISSEIS GUIADOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "49",
+      "nome": "Equipamentos de Oficinas de Manutenção e Reparos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "49.40",
+    "Descrição": "EQUIPAMENTOS ESPECIALIZADOS P/MANUTENCAO E REPARO DIVERSOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "49",
+      "nome": "Equipamentos de Oficinas de Manutenção e Reparos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "49.60",
+    "Descrição": "EQUIPAMENTOS ESPEC P/ MANUT, REPARO E INSP. DE VEICULOS ESPACIAIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "49",
+      "nome": "Equipamentos de Oficinas de Manutenção e Reparos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

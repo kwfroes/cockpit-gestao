@@ -1,0 +1,74 @@
+[
+  {
+    "Família": "73.10",
+    "Descrição": "EQUIPAMENTOS PARA COZINHAR, ASSAR E SERVIR ALIMENTOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "73",
+      "nome": "Equipamentos para Preparar e Servir Alimentos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "73.20",
+    "Descrição": "EQUIPAMENTOS E APARELHOS DE COZINHA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "73",
+      "nome": "Equipamentos para Preparar e Servir Alimentos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "73.30",
+    "Descrição": "UTENSILIOS E FERRAMENTAS MANUAIS DE COZINHA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "73",
+      "nome": "Equipamentos para Preparar e Servir Alimentos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "73.40",
+    "Descrição": "CUTELARIA E TALHERES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "73",
+      "nome": "Equipamentos para Preparar e Servir Alimentos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "73.50",
+    "Descrição": "LOUCAS E ARTIGOS DE MESA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "73",
+      "nome": "Equipamentos para Preparar e Servir Alimentos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "73.60",
+    "Descrição": "JOGOS, CONJUNTOS E EQUIPAMENTOS PARA PREPARAR E SERVIR ALIMENTOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "73",
+      "nome": "Equipamentos para Preparar e Servir Alimentos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

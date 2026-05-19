@@ -1,0 +1,2211 @@
+[
+  {
+    "Família": "06.01",
+    "Descrição": "AEROFOTOGRAMETRIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "6311-9/00",
+        "descricao": "Tratamento de dados, provedores de serviços de aplicação e serviços de hospedagem na internet"
+      },
+      {
+        "codigo": "7420-0/02",
+        "descricao": "Atividades de produção de fotografias aéreas e submarinas"
+      },
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.02",
+    "Descrição": "AGRIMENSURA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      },
+      {
+        "codigo": "7119-7/99",
+        "descricao": "Atividades técnicas relacionadas à engenharia e arquitetura não especificadas anteriormente"
+      },
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.03",
+    "Descrição": "ANALISE DINAMICA DE BASES DE EQUIPAMENTOS E ESTRUTURAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/99",
+        "descricao": "Atividades técnicas relacionadas à engenharia e arquitetura não especificadas anteriormente"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.04",
+    "Descrição": "CONTROLE TECNOLOGICO DE MATERIAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/99",
+        "descricao": "Atividades técnicas relacionadas à engenharia e arquitetura não especificadas anteriormente"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.05",
+    "Descrição": "ENSAIOS ELETRICOS E ELETRONICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/99",
+        "descricao": "Atividades técnicas relacionadas à engenharia e arquitetura não especificadas anteriormente"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.06",
+    "Descrição": "ENSAIOS GEOTECNICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "7119-7/02",
+        "descricao": "Atividades de estudos geológicos"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.07",
+    "Descrição": "ENSAIOS MECANICOS E METALURGICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CRQ - Conselho Regional de Química"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/99",
+        "descricao": "Atividades técnicas relacionadas à engenharia e arquitetura não especificadas anteriormente"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.08",
+    "Descrição": "ESTUDOS E PROJETOS QUIMICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CRQ - Conselho Regional de Química"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7210-0/00",
+        "descricao": "Pesquisa e desenvolvimento experimental em ciências físicas e naturais"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.09",
+    "Descrição": "ENSAIOS RADIOGRAFICOS/ULTRA-SOM/LIQ. PENET./PART. MAGNETICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/99",
+        "descricao": "Atividades técnicas relacionadas à engenharia e arquitetura não especificadas anteriormente"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.10",
+    "Descrição": "ESTUDOS E PROJETOS ACUSTICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CAU - Conselho Regional Arquitetura e Urbanismo"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.11",
+    "Descrição": "ESTUDOS E PROJETOS DE AEROPORTOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.12",
+    "Descrição": "ESTUDOS E PROJETOS DE ARQUITETURA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CAU - Conselho Regional Arquitetura e Urbanismo",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      },
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.13",
+    "Descrição": "ESTUDOS E PROJETOS DE ASSENTAMENTO POPULACIONAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.14",
+    "Descrição": "ESTUDOS E PROJETOS DE BARRAGENS E DIQUES",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "Tipo": "S",
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "7119-7/02",
+        "descricao": "Atividades de estudos geológicos"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.15",
+    "Descrição": "ESTUDOS E PROJETOS DE COMUTACAO TELEFONICA E TELEGRAFICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "6190-6/99",
+        "descricao": "Outras atividades de telecomunicações não especificadas anteriormente"
+      },
+      {
+        "codigo": "6204-0/00",
+        "descricao": "Consultoria em tecnologia da informação"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.16",
+    "Descrição": "ESTUDOS E PROJETOS DE CORTES, ATERROS, ESCORAMENTOS E TERRAPLENAGEM",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CAU - Conselho Regional Arquitetura e Urbanismo"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.17",
+    "Descrição": "ESTUDOS E PROJETOS DE DRENAGEM",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CAU - Conselho Regional Arquitetura e Urbanismo"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7119-7/02",
+        "descricao": "Atividades de estudos geológicos"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.18",
+    "Descrição": "ESTUDOS E PROJETOS DE EDIFICACOES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CAU - Conselho Regional Arquitetura e Urbanismo"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.19",
+    "Descrição": "ESTUDOS E PROJETOS DE ESTRUTURAS DE CONCRETO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CAU - Conselho Regional Arquitetura e Urbanismo"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.20",
+    "Descrição": "ESTUDOS E PROJETOS DE ESTRUTURAS METALICAS E DE MADEIRAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CAU - Conselho Regional Arquitetura e Urbanismo"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.21",
+    "Descrição": "ESTUDOS E PROJETOS DE FERROVIAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.22",
+    "Descrição": "ESTUDOS E PROJETOS DE FUNDACOES DIRETAS E PROFUNDAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/02",
+        "descricao": "Atividades de estudos geológicos"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.23",
+    "Descrição": "ESTUDOS E PROJETOS DE GEOTECNICA E GEOLOGIA",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "Tipo": "S",
+    "CNAEs": [
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "7119-7/02",
+        "descricao": "Atividades de estudos geológicos"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.24",
+    "Descrição": "ESTUDOS E PROJETOS DE HIDROGRAFIA E OCEANOGRAFIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      },
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.25",
+    "Descrição": "ESTUDOS E PROJETOS DE HIDROLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.26",
+    "Descrição": "ESTUDOS E PROJETOS DE INSTALACAO DE ELEVADORES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.27",
+    "Descrição": "ESTUDOS E PROJETOS DE INSTAL DE REDE LOCAL DE MICROCOMPUTADORES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CAU - Conselho Regional Arquitetura e Urbanismo"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      },
+      {
+        "codigo": "6204-0/00",
+        "descricao": "Consultoria em tecnologia da informação"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.28",
+    "Descrição": "ESTUDOS E PROJETOS DE INSTALACOES ELETRICAS DE BAIXA TENSAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CAU - Conselho Regional Arquitetura e Urbanismo"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.29",
+    "Descrição": "ESTUDOS E PROJETOS DE INSTALACOES ELETRICAS DE MEDIA E ALTA TENSAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.30",
+    "Descrição": "ESTUDOS E PROJETOS DE INSTALACOES FISICAS NA AREA DE INFORMATICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "6204-0/00",
+        "descricao": "Consultoria em tecnologia da informação"
+      },
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.31",
+    "Descrição": "ESTUDOS E PROJETOS DE INSTALACOES PREDIAIS DE GAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.32",
+    "Descrição": "ESTUDOS E PROJETOS DE INSTALACOES PREDIAIS ELETRONICAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      },
+      {
+        "codigo": "6204-0/00",
+        "descricao": "Consultoria em tecnologia da informação"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.33",
+    "Descrição": "ESTUDOS E PROJETOS DE INSTALACOES PREDIAIS HIDROSANITARIAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CAU - Conselho Regional Arquitetura e Urbanismo"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.34",
+    "Descrição": "ESTUDOS E PROJETOS DE INSTALACOES PREDIAIS TELEFONICAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CAU - Conselho Regional Arquitetura e Urbanismo"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "6204-0/00",
+        "descricao": "Consultoria em tecnologia da informação"
+      },
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.35",
+    "Descrição": "ESTUDOS E PROJETOS DE INSTRUMENTACAO E CONTROLE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "6204-0/00",
+        "descricao": "Consultoria em tecnologia da informação"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.36",
+    "Descrição": "ESTUDOS E PROJETOS DE LINHAS DE TRANSMISSAO E DISTRIBUICAO DE ENERGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/02",
+        "descricao": "Atividades de estudos geológicos"
+      },
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.37",
+    "Descrição": "ESTUDOS E PROJETOS DE MEIO AMBIENTE",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Conselho Regional de Biologia - CRB",
+      "CAU - Conselho Regional Arquitetura e Urbanismo"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.38",
+    "Descrição": "ESTUDOS E PROJETOS DE OBRAS PORTUARIAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      },
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.39",
+    "Descrição": "ESTUDOS E PROJETOS DE PAVIMENTACAO E SISTEMA VIARIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CAU - Conselho Regional Arquitetura e Urbanismo"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.40",
+    "Descrição": "ESTUDOS E PROJETOS DE PONTES E VIADUTOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7119-7/02",
+        "descricao": "Atividades de estudos geológicos"
+      },
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.41",
+    "Descrição": "ESTUDOS E PROJETOS DE REBAIXAMENTO DE LENCOL D'AGUA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/02",
+        "descricao": "Atividades de estudos geológicos"
+      },
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.42",
+    "Descrição": "ESTUDOS E PROJETOS DE RECUPERACAO E REFORCO DE ESTRUTURAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CAU - Conselho Regional Arquitetura e Urbanismo"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.43",
+    "Descrição": "ESTUDOS E PROJETOS DE REDES DE TELECOMUNICACOES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "6204-0/00",
+        "descricao": "Consultoria em tecnologia da informação"
+      },
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.44",
+    "Descrição": "ESTUDOS E PROJETOS DE RODOVIAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7119-7/02",
+        "descricao": "Atividades de estudos geológicos"
+      },
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.45",
+    "Descrição": "ESTUDOS E PROJETOS DE SANEAMENTO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.46",
+    "Descrição": "ESTUDOS E PROJETOS DE SISTEMA DE IRRIGACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7490-1/03",
+        "descricao": "Serviços de agronomia e de consultoria às atividades agrícolas e pecuárias"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.47",
+    "Descrição": "ESTUDOS E PROJETOS DE SISTEMAS DE AR CONDICIONADO CENTRAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CFT - Conselho Federal dos Técnicos Industriais"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.48",
+    "Descrição": "ESTUDOS E PROJETOS DE SISTEMAS DE PROTECAO CONTRA INCENDIO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CAU - Conselho Regional Arquitetura e Urbanismo"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.49",
+    "Descrição": "ESTUDOS E PROJETOS DE SIST PROT, COMANDO, CONTR, GERACAO ENER ELETRICA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "6204-0/00",
+        "descricao": "Consultoria em tecnologia da informação"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.50",
+    "Descrição": "ESTUDOS E PROJETOS DE SISTEMA DE REFRIGERACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.51",
+    "Descrição": "ESTUDOS E PROJETOS DE SISTEMAS DE SINALIZACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CAU - Conselho Regional Arquitetura e Urbanismo"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      },
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.52",
+    "Descrição": "ESTUDOS E PROJETOS DE SISTEMAS INTEGRADO-SEGURANCA PESSOAL/PATRIMONIAL",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "6204-0/00",
+        "descricao": "Consultoria em tecnologia da informação"
+      },
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.53",
+    "Descrição": "ESTUDOS E PROJETOS DE SONORIZACAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CAU - Conselho Regional Arquitetura e Urbanismo"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.54",
+    "Descrição": "ESTUDOS E PROJETOS DE SUBESTACOES",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7119-7/02",
+        "descricao": "Atividades de estudos geológicos"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.55",
+    "Descrição": "ESTUDOS E PROJETOS DE TUNEIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7119-7/02",
+        "descricao": "Atividades de estudos geológicos"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.56",
+    "Descrição": "ESTUDOS E PROJETOS DE URBANISMO E PAISAGISMO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CAU - Conselho Regional Arquitetura e Urbanismo",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      },
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.57",
+    "Descrição": "ESTUDOS E PROJETOS DE VIABILIDADE TECNICO-ECONOMICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      },
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      },
+      {
+        "codigo": "7020-4/00",
+        "descricao": "Atividades de consultoria em gestão empresarial, exceto consultoria técnica específica"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.58",
+    "Descrição": "INSPECOES E TESTES EM MATERIAIS E EQUIPAMENTOS ELETRICOS /MECANICOS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.59",
+    "Descrição": "MAPEAMENTO GEOLOGICO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      },
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7119-7/02",
+        "descricao": "Atividades de estudos geológicos"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.60",
+    "Descrição": "MAQUETES E PERSPECTIVAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      },
+      {
+        "codigo": "7410-2/03",
+        "descricao": "Design de produto"
+      },
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.61",
+    "Descrição": "PLANEJAMENTO/CONTROLE DE ENGENHARIA-MEDICINA DO TRABALHO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7020-4/00",
+        "descricao": "Atividades de consultoria em gestão empresarial, exceto consultoria técnica específica"
+      },
+      {
+        "codigo": "8599-6/04",
+        "descricao": "Treinamento em desenvolvimento profissional e gerencial"
+      },
+      {
+        "codigo": "8630-5/02",
+        "descricao": "Atividade médica ambulatorial com recursos para realização de exames complementares"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.62",
+    "Descrição": "SONDAGENS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CAU - Conselho Regional Arquitetura e Urbanismo"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7119-7/02",
+        "descricao": "Atividades de estudos geológicos"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.63",
+    "Descrição": "TOPOGRAFIAS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "CAU - Conselho Regional Arquitetura e Urbanismo"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      },
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.64",
+    "Descrição": "ESTUDOS E PROJETOS DE OBRAS DE TRATAMENTO E ABASTECIMENTO DE AGUA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7119-7/02",
+        "descricao": "Atividades de estudos geológicos"
+      },
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.65",
+    "Descrição": "ESTUDOS E PROJETOS DE REDES DE AGUAS PLUVIAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      },
+      {
+        "codigo": "7119-7/02",
+        "descricao": "Atividades de estudos geológicos"
+      },
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.66",
+    "Descrição": "ESTUDOS E PROJETOS DE TRAFEGO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7111-1/00",
+        "descricao": "Serviços de arquitetura"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.67",
+    "Descrição": "ESTUDOS E PROJETOS ADMINIST, SOCIAIS, ECONOMICOS E CULTURAIS",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "Atestado de Capacidade Técnica"
+    ],
+    "Documentos Elegíveis": [
+      "CORECON - Conselho Regional de Economia",
+      "CRA - Conselho Regional de Administração",
+      "Conselho Regional de Serviço Social"
+    ],
+    "CNAEs": [
+      {
+        "codigo": "7320-3/00",
+        "descricao": "Pesquisas de mercado e de opinião pública"
+      },
+      {
+        "codigo": "9001-9/99",
+        "descricao": "Artes cênicas, espetáculos e atividades complementares não especificados anteriormente"
+      },
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      },
+      {
+        "codigo": "7020-4/00",
+        "descricao": "Atividades de consultoria em gestão empresarial, exceto consultoria técnica específica"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.68",
+    "Descrição": "ESTUDOS E PROJETOS DE EQUIPAMENTOS MECANICOS E DE CALDEIRARIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.69",
+    "Descrição": "ESTUDOS E PROJETOS DE PISCICULTURA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7120-1/00",
+        "descricao": "Testes e análises técnicas"
+      },
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      },
+      {
+        "codigo": "7490-1/03",
+        "descricao": "Serviços de agronomia e de consultoria às atividades agrícolas e pecuárias"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.70",
+    "Descrição": "ESTUDOS E PROJETOS DE RADIOFUSAO",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      },
+      {
+        "codigo": "7020-4/00",
+        "descricao": "Atividades de consultoria em gestão empresarial, exceto consultoria técnica específica"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.71",
+    "Descrição": "ESTUDOS E PROJETOS DE FONTES DE ENERGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7490-1/99",
+        "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+      },
+      {
+        "codigo": "7119-7/02",
+        "descricao": "Atividades de estudos geológicos"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "06.72",
+    "Descrição": "SERVICOS DE GEOTECNOLOGIA",
+    "Tipo": "S",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [
+      "CREA - Conselho Regional de Engenharia e Agronomia",
+      "Certidão de Acervo Técnico com Atestado"
+    ],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "7119-7/03",
+        "descricao": "Serviços de desenho técnico relacionados à arquitetura e engenharia"
+      },
+      {
+        "codigo": "6204-0/00",
+        "descricao": "Consultoria em tecnologia da informação"
+      },
+      {
+        "codigo": "7119-7/01",
+        "descricao": "Serviços de cartografia, topografia e geodésia"
+      },
+      {
+        "codigo": "7112-0/00",
+        "descricao": "Serviços de engenharia"
+      }
+    ],
+    "Ramo": {
+      "codigo": "06",
+      "nome": "Estudos e Projetos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

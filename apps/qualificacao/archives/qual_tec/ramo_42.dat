@@ -1,0 +1,62 @@
+[
+  {
+    "Família": "42.10",
+    "Descrição": "EQUIPAMENTOS PARA COMBATE A INCENDIO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "42",
+      "nome": "Equipamentos para Combate a Incêndio, Resgate e Segurança"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "42.20",
+    "Descrição": "EQUIPAMENTOS DE MERGULHO E DE SALVAMENTO MARITIMO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "42",
+      "nome": "Equipamentos para Combate a Incêndio, Resgate e Segurança"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "42.30",
+    "Descrição": "EQUIPAMENTOS PARA DESCONTAMINACAO E IMPREGNACAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "42",
+      "nome": "Equipamentos para Combate a Incêndio, Resgate e Segurança"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "42.40",
+    "Descrição": "EQUIPAMENTOS PARA SEGURANCA E SALVAMENTO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "42",
+      "nome": "Equipamentos para Combate a Incêndio, Resgate e Segurança"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "42.50",
+    "Descrição": "EQUIPAMENTOS E ACESSÓRIOS P/USO PROFISSIONAL E DE SEGURANÇA TRABALHO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "42",
+      "nome": "Equipamentos para Combate a Incêndio, Resgate e Segurança"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

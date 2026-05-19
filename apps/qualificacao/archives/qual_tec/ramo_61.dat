@@ -1,0 +1,158 @@
+[
+  {
+    "Família": "61.05",
+    "Descrição": "MOTORES ELETRICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "61",
+      "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "61.10",
+    "Descrição": "EQUIPAMENTOS PARA CONTROLE ELETRICO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "61",
+      "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "61.15",
+    "Descrição": "GERADORES E CONJUNTO DE GERADORES ELETRICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "61",
+      "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "61.16",
+    "Descrição": "UNIDADES DE FORCA DE CELULA DE COMBUSTIVEL, COMPONENT E  ACESSORIOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "61",
+      "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "61.17",
+    "Descrição": "SISTEMAS DE ENERGIA ELETRICA SOLAR",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "61",
+      "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "61.20",
+    "Descrição": "TRANSFORMADORES PARA ESTACAO DE FORCA E DISTRIB ACIMA DE 1KVA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "61",
+      "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "61.25",
+    "Descrição": "CONVERSORES ELETRICOS ROTATIVOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "61",
+      "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "61.30",
+    "Descrição": "CONVERSORES ELETRICOS NAO ROTATIVOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "61",
+      "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "61.35",
+    "Descrição": "BATERIAIS NAO CARREGAVEIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "61",
+      "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "61.40",
+    "Descrição": "BATERIAS RECARREGAVEIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "61",
+      "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "61.45",
+    "Descrição": "FIOS E CABOS ELETRICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "61",
+      "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "61.50",
+    "Descrição": "EQUIP DIVERSOS PARA GERACAO E DISTRIBUICAO DE ENERGIA ELETRICA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "61",
+      "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "61.60",
+    "Descrição": "ACESSORIOS E REVESTIMENTOS DIVERSOS PARA BATERIAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "61",
+      "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

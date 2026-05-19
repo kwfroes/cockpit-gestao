@@ -11,6 +11,7 @@ let currentSugList = [];
 let selectedSug = new Set();
 let lastEditedIndex = null;
 let ramosDictionary = [];
+let descricoesRamos = [];
 
 const grid = document.getElementById('family-grid');
 const searchInput = document.getElementById('search-family');
@@ -57,15 +58,20 @@ window.addEventListener("message", (event) => {
 async function initApp() {
     try {
         // Carrega ambos os arquivos em paralelo para ganhar velocidade
-        const [respFamilies, respCnaes, respDocs, respRamos] = await Promise.all([
+        const [respFamilies, respCnaes, respDocs, respRamos, respDescRamos] = await Promise.all([
             fetch('qualificacao_tecnica.json'),
             fetch('cnae.json'),
             fetch('../gerador/docs-qual-tec.json').catch(() => null),
-            fetch('./archives/ramos_classificados.json').catch(() => null) 
+            fetch('./archives/ramos_classificados.json').catch(() => null),
+            fetch('./archives/descricao_ramos.json').catch(() => null)
         ]);
 
         if (respRamos && respRamos.ok) {
             window.ramosDictionary = await respRamos.json();
+        }
+
+        if (respDescRamos && respDescRamos.ok) {
+            descricoesRamos = await respDescRamos.json();
         }
 
         // Validação rigorosa: se qualquer um falhar, interrompe o fluxo
@@ -227,20 +233,36 @@ grid.innerHTML = '';
                 ${item.Descrição}
             </h4>
 
-            <div onclick="copyToClipboard(event, 'Família ${item.Família} - ${item.Descrição} | Ramo: ${item.Ramo && item.Ramo.nome ? item.Ramo.nome : 'Geral'}')" 
-                class="flex items-center gap-1 mb-6 cursor-copy group/info">
-                
-                <span class="opacity-50 uppercase text-[11px] font-mono whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]" 
-                    title="${item.Ramo && item.Ramo.nome ? item.Ramo.nome : 'Geral'}">
-                    ${item.Ramo && item.Ramo.nome ? item.Ramo.nome : 'Geral'}
-                </span>
+            ${(() => {
+                const nomeRamo = item.Ramo && item.Ramo.nome ? item.Ramo.nome : 'Geral';
+                const codRamo = item.Ramo && item.Ramo.codigo ? item.Ramo.codigo : null;
+                const temDescricao = codRamo && descricoesRamos.some(r => r.codigo === codRamo);
 
-                <span class="opacity-30">|</span>
-
-                <p class="text-[13px] text-gray-500 dark:text-gray-400 font-mono whitespace-nowrap group-hover/info:text-blue-500 transition-colors">
-                    FAMÍLIA: ${item.Família}
-                </p>
-            </div>
+                return `
+                <div class="flex items-center justify-between gap-2 mb-6">
+                    <div onclick="copyToClipboard(event, 'Família ${item.Família} - ${item.Descrição} | Ramo: ${nomeRamo}')" 
+                        class="flex items-center gap-1 cursor-copy group/info overflow-hidden">
+                        
+                        <span class="opacity-50 uppercase text-[11px] font-mono whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]" 
+                            title="${nomeRamo}">
+                            ${nomeRamo}
+                        </span>
+                        <span class="opacity-30">|</span>
+                        <p class="text-[13px] text-gray-500 dark:text-gray-400 font-mono whitespace-nowrap group-hover/info:text-blue-500 transition-colors">
+                            FAMÍLIA: ${item.Família}
+                        </p>
+                    </div>
+                    
+                    ${temDescricao ? `
+                    <button type="button" onclick="event.stopPropagation(); showRamoInfo('${codRamo}')" 
+                        class="shrink-0 p-1.5 text-blue-500 hover:text-white bg-blue-50 hover:bg-blue-500 dark:bg-blue-900/30 dark:hover:bg-blue-600 rounded-lg transition-all" 
+                        title="Ver detalhes técnicos deste ramo">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </button>
+                    ` : ''}
+                </div>
+                `;
+            })()}
 
             <div class="space-y-4 flex-grow">
                 ${renderDocList("Obrigatórios", item["Documentos Exigidos"] || item["DOCUMENTOS EXIGIDOS"], "text-red-500")}
@@ -888,6 +910,43 @@ window.closeErrorModal = () => {
     setTimeout(() => {
         modal.classList.add('hidden');
     }, 300);
+};
+
+// --- MODAL DE INFORMAÇÕES DO RAMO ---
+window.showRamoInfo = (codigo) => {
+    const ramoInfo = descricoesRamos.find(r => r.codigo === codigo);
+    if (!ramoInfo) return;
+
+    document.getElementById('ramo-codigo-display').textContent = ramoInfo.codigo;
+    document.getElementById('ramo-nome-display').textContent = ramoInfo.nome;
+    document.getElementById('ramo-desc-display').textContent = ramoInfo.Descrição;
+    document.getElementById('ramo-icon-display').innerHTML = iconesRamos[codigo] || iconesRamos["padrao"];
+
+    const modal = document.getElementById('ramo-info-modal');
+    const content = document.getElementById('ramo-info-content');
+
+    modal.classList.remove('hidden');
+    
+    // Pequeno atraso para o CSS transition de Fade e Scale funcionar
+    setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        content.classList.remove('scale-95', 'opacity-0');
+        content.classList.add('scale-100', 'opacity-100');
+    }, 10);
+};
+
+window.closeRamoInfoModal = () => {
+    const modal = document.getElementById('ramo-info-modal');
+    const content = document.getElementById('ramo-info-content');
+
+    // Efeito inverso
+    modal.classList.remove('opacity-100');
+    content.classList.remove('scale-100', 'opacity-100');
+    content.classList.add('scale-95', 'opacity-0');
+
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 300); // 300ms = tempo da transition do tailwind
 };
 
 // --- INTEGRAÇÃO COM A HOME: ENVIAR ESTATÍSTICAS ---

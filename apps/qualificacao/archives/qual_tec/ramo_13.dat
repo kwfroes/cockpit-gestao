@@ -1,0 +1,67 @@
+[
+  {
+    "Família": "13.05",
+    "Descrição": "MUNICOES E EXPLOSIVOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2550-1/02",
+        "descricao": "Fabricação de armas de fogo, outras armas e munições"
+      },
+      {
+        "codigo": "4789-0/09",
+        "descricao": "Comércio varejista de armas e munições"
+      }
+    ],
+    "Ramo": {
+      "codigo": "13",
+      "nome": "Munições e Explosivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "13.70",
+    "Descrição": "PIROTECNICOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4789-0/06",
+        "descricao": "Comércio varejista de fogos de artifício e artigos pirotécnicos"
+      },
+      {
+        "codigo": "2092-4/02",
+        "descricao": "Fabricação de artigos pirotécnicos"
+      }
+    ],
+    "Ramo": {
+      "codigo": "13",
+      "nome": "Munições e Explosivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "13.75",
+    "Descrição": "DETONANTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2092-4/01",
+        "descricao": "Fabricação de pólvoras, explosivos e detonantes"
+      }
+    ],
+    "Ramo": {
+      "codigo": "13",
+      "nome": "Munições e Explosivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

@@ -38,7 +38,7 @@
         })();
     </script>
     <style>
-        .matrix-container { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 1rem; height: calc(100vh - 160px); }
+        .matrix-container { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 1rem; height: calc(100vh - 220px); }
         .quadrant { overflow-y: auto; border-radius: 0.75rem; padding: 1rem; border-width: 2px; }
     </style>
 </head>
@@ -63,29 +63,39 @@
         </div>
     </header>
 
+    <div id="focus-panel" class="hidden shrink-0 bg-white dark:bg-slate-800 border-b dark:border-slate-700 px-6 py-3"></div>
+
     <main class="flex-1 p-4 md:p-6 overflow-hidden">
         <div class="matrix-container max-w-7xl mx-auto">
-            <section id="q1" class="quadrant border-red-500 bg-red-50/30 dark:bg-red-900/10">
+            <section id="q1" class="quadrant border-red-500 bg-red-50/30 dark:bg-red-900/10" 
+                     ondragover="app.handleDragOver(event)" ondragleave="app.handleDragLeave(event)" ondrop="app.handleDrop(event, 1)">
                 <h2 class="text-red-600 font-bold text-xs uppercase mb-3 flex justify-between">Q1: Urgente & Importante <span>Fazer Agora</span></h2>
-                <div id="q1-list" class="space-y-2"></div>
+                <div id="q1-list" class="space-y-2 min-h-[150px]"></div>
             </section>
-            <section id="q2" class="quadrant border-blue-500 bg-blue-50/30 dark:bg-blue-900/10">
+            
+            <section id="q2" class="quadrant border-blue-500 bg-blue-50/30 dark:bg-blue-900/10"
+                     ondragover="app.handleDragOver(event)" ondragleave="app.handleDragLeave(event)" ondrop="app.handleDrop(event, 2)">
                 <h2 class="text-blue-600 font-bold text-xs uppercase mb-3 flex justify-between">Q2: Estratégico <span>Agendar</span></h2>
-                <div id="q2-list" class="space-y-2"></div>
+                <div id="q2-list" class="space-y-2 min-h-[150px]"></div>
             </section>
-            <section id="q3" class="quadrant border-yellow-500 bg-yellow-50/30 dark:bg-yellow-900/10">
+            
+            <section id="q3" class="quadrant border-yellow-500 bg-yellow-50/30 dark:bg-yellow-900/10"
+                     ondragover="app.handleDragOver(event)" ondragleave="app.handleDragLeave(event)" ondrop="app.handleDrop(event, 3)">
                 <h2 class="text-yellow-600 font-bold text-xs uppercase mb-3 flex justify-between">Q3: Falso Urgente <span>Delegar</span></h2>
-                <div id="q3-list" class="space-y-2"></div>
+                <div id="q3-list" class="space-y-2 min-h-[150px]"></div>
             </section>
-            <section id="q4" class="quadrant border-gray-400 bg-gray-50 dark:bg-slate-800/50">
+            
+            <section id="q4" class="quadrant border-gray-400 bg-gray-50 dark:bg-slate-800/50"
+                     ondragover="app.handleDragOver(event)" ondragleave="app.handleDragLeave(event)" ondrop="app.handleDrop(event, 4)">
                 <h2 class="text-gray-500 font-bold text-xs uppercase mb-3 flex justify-between">Q4: Distração <span>Eliminar</span></h2>
-                <div id="q4-list" class="space-y-2 opacity-60"></div>
+                <div id="q4-list" class="space-y-2 opacity-60 min-h-[150px]"></div>
             </section>
         </div>
     </main>
 
     <div id="taskModal" class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
+            <input type="hidden" id="editingTaskId" value="">
             <div class="p-4 border-b dark:border-slate-700 bg-gray-50 dark:bg-slate-900 flex justify-between items-center">
                 <h3 class="font-bold">Análise de Prioridade</h3>
                 <button onclick="app.closeModal()" class="text-2xl hover:text-red-500">&times;</button>
@@ -107,24 +117,43 @@
                         </div>
                     </div>
 
-                    <div class="space-y-3 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                        <p class="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase">Análise de Competência e Impacto</p>
+                    <div class="space-y-4 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                        <p class="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wide border-b dark:border-blue-800/50 pb-1">
+                            Análise de Impacto e Urgência Real
+                        </p>
                         
-                        <label class="flex items-center gap-3 text-sm cursor-pointer">
-                            <input type="checkbox" id="impact_goal" class="w-4 h-4 rounded"> Contribui para metas da SAEB/Coordenação?
-                        </label>
-
-                        <label class="flex items-center gap-3 text-sm cursor-pointer" onchange="document.getElementById('delegateField').classList.toggle('hidden', this.checked)">
-                            <input type="checkbox" id="only_me" checked class="w-4 h-4 rounded"> Só eu posso realizar esta tarefa?
-                        </label>
-
-                        <div id="delegateField" class="hidden mt-2 animate-in fade-in duration-300">
-                            <label class="block text-[10px] font-bold text-yellow-600 uppercase mb-1">Delegar para:</label>
-                            <input type="text" id="delegateName" placeholder="Nome do servidor/setor" class="w-full p-2 border border-yellow-200 dark:border-yellow-900/50 rounded bg-white dark:bg-slate-900 text-sm">
+                        <div class="flex items-start justify-between gap-4">
+                            <div class="flex-1">
+                                <p class="text-xs font-semibold text-gray-700 dark:text-gray-200">Impacto Estratégico</p>
+                                <p class="text-[10px] text-gray-400">Compromete metas da SAEB/Coordenação se deixar de ser feita?</p>
+                            </div>
+                            <input type="checkbox" id="impact_goal" class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 mt-1 cursor-pointer">
                         </div>
-                        <div class="mt-4">
+
+                        <div class="flex items-start justify-between gap-4">
+                            <div class="flex-1">
+                                <p class="text-xs font-semibold text-gray-700 dark:text-gray-200">Consequência Imediata</p>
+                                <p class="text-[10px] text-gray-400">O atraso gera bloqueio de equipe, perda de prazo legal ou quebra de fluxo nesta semana?</p>
+                            </div>
+                            <input type="checkbox" id="is_critical" class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 mt-1 cursor-pointer">
+                        </div>
+
+                        <div class="flex items-start justify-between gap-4 border-t dark:border-slate-700/50 pt-3">
+                            <div class="flex-1">
+                                <p class="text-xs font-semibold text-gray-700 dark:text-gray-200">Exclusividade de Execução</p>
+                                <p class="text-[10px] text-gray-400">Apenas você possui a competência ou a atribuição legal para executar?</p>
+                            </div>
+                            <input type="checkbox" id="only_me" checked class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 mt-1 cursor-pointer" onchange="document.getElementById('delegateField').classList.toggle('hidden', this.checked)">
+                        </div>
+
+                        <div id="delegateField" class="hidden mt-2 animate-in fade-in duration-200">
+                            <label class="block text-[10px] font-bold text-yellow-600 uppercase mb-1">Encaminhar / Delegar para:</label>
+                            <input type="text" id="delegateName" placeholder="Nome do servidor ou setor responsável" class="w-full p-2 border border-yellow-200 dark:border-yellow-900/50 rounded bg-white dark:bg-slate-900 text-sm outline-none focus:ring-1 focus:ring-yellow-500">
+                        </div>
+
+                        <div class="border-t dark:border-slate-700/50 pt-3">
                             <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">Observações / Detalhes</label>
-                            <textarea id="taskNote" rows="3" placeholder="Protocolos, notas ou observações adicionais..." class="w-full p-2 border dark:border-slate-600 rounded bg-gray-50 dark:bg-slate-900 text-xs outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                            <textarea id="taskNote" rows="2" placeholder="Protocolos, SEI, notas ou links de referência..." class="w-full p-2 border dark:border-slate-600 rounded bg-gray-50 dark:bg-slate-900 text-xs outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                         </div>
                     </div>
                 </div>

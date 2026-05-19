@@ -1,0 +1,25 @@
+[
+  {
+    "Família": "17.10",
+    "Descrição": "EQUIPAMENTOS PARA LANCAMENTOS, POUSO E MANOBRA DE AERONAVES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "3312-1/02",
+        "descricao": "Manutenção e reparação de aparelhos e instrumentos de medida, teste e controle"
+      },
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
+      }
+    ],
+    "Ramo": {
+      "codigo": "17",
+      "nome": "Equipamentos de Lançamentos, Pouso e Manobra de Aeronaves"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

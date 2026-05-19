@@ -1,0 +1,293 @@
+[
+  {
+    "Família": "66.05",
+    "Descrição": "INSTRUMENTOS DE NAVEGACAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "66",
+      "nome": "Instrumentos e Equipamentos de Laboratório"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "66.10",
+    "Descrição": "INSTRUMENTOS DE VOO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "66",
+      "nome": "Instrumentos e Equipamentos de Laboratório"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "66.15",
+    "Descrição": "MECANISMOS DE PILOTO AUTOMATICO E COMP GIROSCOPICOS DE AERONAVES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "66",
+      "nome": "Instrumentos e Equipamentos de Laboratório"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "66.20",
+    "Descrição": "INSTRUMENTOS DE MOTOR",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "66",
+      "nome": "Instrumentos e Equipamentos de Laboratório"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "66.25",
+    "Descrição": "INSTRUMENTOS DE TESTE E MED DE PROPRIEDADES ELETRICA/ ELETRONICA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "66",
+      "nome": "Instrumentos e Equipamentos de Laboratório"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "66.30",
+    "Descrição": "INSTRUMENTOS PARA ANALISES QUIMICAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "66",
+      "nome": "Instrumentos e Equipamentos de Laboratório"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "66.35",
+    "Descrição": "INSTRUMENTOS PARA ENSAIO E VERIFICACAO DE PROPRIEDADES FISICAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "66",
+      "nome": "Instrumentos e Equipamentos de Laboratório"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "66.36",
+    "Descrição": "CAMARAS DE CONTROLE AMBIENTAL E EQUIPAMENTOS CORRELATOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "66",
+      "nome": "Instrumentos e Equipamentos de Laboratório"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "66.40",
+    "Descrição": "MATERIAIS E EQUIPAMENTOS DE LABORATORIO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4645-1/01",
+        "descricao": "Comércio atacadista de instrumentos e materiais para uso médico, cirúrgico, hospitalar e de laboratórios"
+      },
+      {
+        "codigo": "4664-8/00",
+        "descricao": "Comércio atacadista de máquinas, aparelhos e equipamentos para uso odonto-médico-hospitalar; partes e peças"
+      }
+    ],
+    "Ramo": {
+      "codigo": "66",
+      "nome": "Instrumentos e Equipamentos de Laboratório"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "66.43",
+    "Descrição": "MATERIAL E EQUIPAMENTO DE LABORATORIO FORENSE",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "66",
+      "nome": "Instrumentos e Equipamentos de Laboratório"
+    },
+    "CNAEs": [
+      {
+        "codigo": "4645-1/01",
+        "descricao": "Comércio atacadista de instrumentos e materiais para uso médico, cirúrgico, hospitalar e de laboratórios"
+      },
+      {
+        "codigo": "4664-8/00",
+        "descricao": "Comércio atacadista de máquinas, aparelhos e equipamentos para uso odonto-médico-hospitalar; partes e peças"
+      }
+    ],
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "66.45",
+    "Descrição": "INSTRUMENTOS PARA MEDICAO DE TEMPO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "66",
+      "nome": "Instrumentos e Equipamentos de Laboratório"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "66.50",
+    "Descrição": "INSTRUMENTOS DE OTICA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2670-1/01",
+        "descricao": "Fabricação de equipamentos e instrumentos ópticos, peças e acessórios"
+      }
+    ],
+    "Ramo": {
+      "codigo": "66",
+      "nome": "Instrumentos e Equipamentos de Laboratório"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "66.53",
+    "Descrição": "INSTRUMENTO DE OPTICA PARA INVESTIGACAO PERICIAL FORENSE",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2670-1/01",
+        "descricao": "Fabricação de equipamentos e instrumentos ópticos, peças e acessórios"
+      },
+      {
+        "codigo": "4645-1/01",
+        "descricao": "Comércio atacadista de instrumentos e materiais para uso médico, cirúrgico, hospitalar e de laboratórios"
+      }
+    ],
+    "Ramo": {
+      "codigo": "66",
+      "nome": "Instrumentos e Equipamentos de Laboratório"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "66.55",
+    "Descrição": "INSTRUMENTOS  GEOGRAFICOS E ASTRONOMICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "66",
+      "nome": "Instrumentos e Equipamentos de Laboratório"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "66.60",
+    "Descrição": "INSTRUMENTOS E APARELHOS METEOROLOGICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "66",
+      "nome": "Instrumentos e Equipamentos de Laboratório"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "66.65",
+    "Descrição": "INSTRUMENTOS E APARELHOS DE DETECCAO DE PERIGOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "66",
+      "nome": "Instrumentos e Equipamentos de Laboratório"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "66.70",
+    "Descrição": "ESCALAS E BALANCAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "66",
+      "nome": "Instrumentos e Equipamentos de Laboratório"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "66.75",
+    "Descrição": "INSTRUMENTOS DE DESENHO, TOPOGRAFIA  E CARTOGRAFIA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "66",
+      "nome": "Instrumentos e Equipamentos de Laboratório"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "66.80",
+    "Descrição": "INSTRUMENTOS PARA MED. DE FLUXO LIQ E GAS, NIVEL DE LIQ E MOVIM.  MECA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "66",
+      "nome": "Instrumentos e Equipamentos de Laboratório"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "66.85",
+    "Descrição": "INSTRUMENTOS PARA MED E CONTROLE DE PRESSAO, TEMPERAT E UMIDADE",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "66",
+      "nome": "Instrumentos e Equipamentos de Laboratório"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "66.95",
+    "Descrição": "INSTRUMENTOS COMBINADOS DIVERSOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "66",
+      "nome": "Instrumentos e Equipamentos de Laboratório"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

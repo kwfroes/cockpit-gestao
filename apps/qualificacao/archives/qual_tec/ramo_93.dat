@@ -1,0 +1,111 @@
+[
+  {
+    "Família": "93.10",
+    "Descrição": "PAPEL E PAPELAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "93",
+      "nome": "Materias Manufaturados Não Metálicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "93.20",
+    "Descrição": "ARTIGOS DE BORRACHA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "93",
+      "nome": "Materias Manufaturados Não Metálicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "93.30",
+    "Descrição": "ARTIGOS DE PLASTICOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4686-9/02",
+        "descricao": "Comércio atacadista de embalagens"
+      },
+      {
+        "codigo": "1813-0/99",
+        "descricao": "Impressão de material para outros usos"
+      },
+      {
+        "codigo": "3299-0/03",
+        "descricao": "Fabricação de letras, letreiros e placas de qualquer material, exceto luminosos"
+      },
+      {
+        "codigo": "2229-3/99",
+        "descricao": "Fabricação de artefatos de material plástico para outros usos não especificados anteriormente"
+      }
+    ],
+    "Ramo": {
+      "codigo": "93",
+      "nome": "Materias Manufaturados Não Metálicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "93.40",
+    "Descrição": "ARTIGOS DE VIDRO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "93",
+      "nome": "Materias Manufaturados Não Metálicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "93.50",
+    "Descrição": "MATERIAIS REFRATARIOS E DE ACABAMENTO SUPERFICIAL CONTRA FOGO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "93",
+      "nome": "Materias Manufaturados Não Metálicos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "93.90",
+    "Descrição": "MATERIAIS DIVERSOS  NAO METALICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "93",
+      "nome": "Materias Manufaturados Não Metálicos"
+    },
+    "CNAEs": [
+      {
+        "codigo": "4686-9/02",
+        "descricao": "Comércio atacadista de embalagens"
+      },
+      {
+        "codigo": "1813-0/99",
+        "descricao": "Impressão de material para outros usos"
+      },
+      {
+        "codigo": "3299-0/03",
+        "descricao": "Fabricação de letras, letreiros e placas de qualquer material, exceto luminosos"
+      },
+      {
+        "codigo": "2229-3/99",
+        "descricao": "Fabricação de artefatos de material plástico para outros usos não especificados anteriormente"
+      }
+    ],
+    "_signature": "Autor Kevin Fróes"
+  }
+]

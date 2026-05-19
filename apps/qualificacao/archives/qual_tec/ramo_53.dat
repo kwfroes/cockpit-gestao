@@ -1,0 +1,182 @@
+[
+  {
+    "Família": "53.05",
+    "Descrição": "PARAFUSOS SEM PORCA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "53",
+      "nome": "Ferragens e Abrasivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "53.06",
+    "Descrição": "PARAFUSOS COM PORCA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "53",
+      "nome": "Ferragens e Abrasivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "53.07",
+    "Descrição": "PRISIONEIROS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "53",
+      "nome": "Ferragens e Abrasivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "53.10",
+    "Descrição": "PORCAS E ARRUELAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "53",
+      "nome": "Ferragens e Abrasivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "53.15",
+    "Descrição": "PREGOS, CHAVETAS E PINOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "53",
+      "nome": "Ferragens e Abrasivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "53.20",
+    "Descrição": "REBITES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "53",
+      "nome": "Ferragens e Abrasivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "53.25",
+    "Descrição": "DISPOSITIVOS PARA FIXACAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "53",
+      "nome": "Ferragens e Abrasivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "53.30",
+    "Descrição": "GAXETAS E OUTROS MATERIAIS PARA VEDACAO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "53",
+      "nome": "Ferragens e Abrasivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "53.35",
+    "Descrição": "TELAS METALICAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "53",
+      "nome": "Ferragens e Abrasivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "53.40",
+    "Descrição": "FERRAMENTAS DIVERSAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "53",
+      "nome": "Ferragens e Abrasivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "53.45",
+    "Descrição": "DISCOS E PEDRAS ABRASIVOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "53",
+      "nome": "Ferragens e Abrasivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "53.50",
+    "Descrição": "MATERIAIS ABRASIVOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "53",
+      "nome": "Ferragens e Abrasivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "53.55",
+    "Descrição": "BOTOES E PONTEIROS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "53",
+      "nome": "Ferragens e Abrasivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "53.60",
+    "Descrição": "MOLAS DE ARAME, PLANAS E HELICOIDAIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "53",
+      "nome": "Ferragens e Abrasivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "53.65",
+    "Descrição": "ANEIS, BUCHAS E ESPACADORES",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "53",
+      "nome": "Ferragens e Abrasivos"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

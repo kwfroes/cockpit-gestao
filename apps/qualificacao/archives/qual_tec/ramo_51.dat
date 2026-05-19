@@ -1,0 +1,97 @@
+[
+  {
+    "Família": "51.10",
+    "Descrição": "FERRAMENTAS MANUAIS DE CORTE, NAO ACIONADAS POR FORCA MOTRIZ",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4761-0/03",
+        "descricao": "Comércio varejista de artigos de papelaria"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "51",
+      "nome": "Ferramentas Manuais"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "51.20",
+    "Descrição": "FERRAMENTAS MANUAIS SEM CORTE, NAO ACIONADAS POR FORCA MOTRIZ",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "51",
+      "nome": "Ferramentas Manuais"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "51.30",
+    "Descrição": "FERRAMENTAS MANUAIS ACIONADAS POR FORCA MOTRIZ",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "51",
+      "nome": "Ferramentas Manuais"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "51.33",
+    "Descrição": "BROCAS, ALARGADORES E ESCAREADORES, MANUAIS E PARA USO EM MAQUINAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "51",
+      "nome": "Ferramentas Manuais"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "51.36",
+    "Descrição": "MACHOS, MATRIZES E MANDRIS, MANUAIS E DE USO EM MAQUINA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "51",
+      "nome": "Ferramentas Manuais"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "51.40",
+    "Descrição": "CAIXAS PARA FERRAMENTAS E FERRAGENS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "51",
+      "nome": "Ferramentas Manuais"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "51.80",
+    "Descrição": "JOGOS E CONJUNTOS DE FERRAMENTAS MANUAIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "51",
+      "nome": "Ferramentas Manuais"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

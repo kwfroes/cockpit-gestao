@@ -1,0 +1,38 @@
+[
+  {
+    "Família": "87.10",
+    "Descrição": "FORRAGENS E ALIMENTOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "87",
+      "nome": "Suprimentos Agrícolas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "87.20",
+    "Descrição": "FERTILIZANTES AGRICOLAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "87",
+      "nome": "Suprimentos Agrícolas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "87.30",
+    "Descrição": "SEMENTES E MUDAS DE PLANTAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "87",
+      "nome": "Suprimentos Agrícolas"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

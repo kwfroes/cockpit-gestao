@@ -1,0 +1,38 @@
+[
+  {
+    "Família": "55.10",
+    "Descrição": "TABUAS E ARTIGOS CORRELATOS A BASE DE MADEIRA",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "55",
+      "nome": "Tábuas, Esquadrias e Compensados de Madeira"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "55.20",
+    "Descrição": "ESQUADRIAS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "55",
+      "nome": "Tábuas, Esquadrias e Compensados de Madeira"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "55.30",
+    "Descrição": "COMPENSADOS E FOLHEADOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "55",
+      "nome": "Tábuas, Esquadrias e Compensados de Madeira"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]

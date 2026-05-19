@@ -1,0 +1,38 @@
+[
+  {
+    "Família": "47.10",
+    "Descrição": "CANOS E TUBOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "47",
+      "nome": "Canos, Tubos, Mangueiras e Acessórios"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "47.20",
+    "Descrição": "MANGUEIRAS E TUBULACOES FLEXIVEIS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "47",
+      "nome": "Canos, Tubos, Mangueiras e Acessórios"
+    },
+    "_signature": "Autor Kevin Fróes"
+  },
+  {
+    "Família": "47.30",
+    "Descrição": "ACESSORIOS E FERRAGENS ESPECIAIS DE MANGUEIRAS, CANOS E TUBOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "47",
+      "nome": "Canos, Tubos, Mangueiras e Acessórios"
+    },
+    "_signature": "Autor Kevin Fróes"
+  }
+]
