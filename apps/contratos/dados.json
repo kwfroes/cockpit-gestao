@@ -487,6 +487,26 @@
               "tipo": "Guia de Recolhimento",
               "numero": "00190.00009 03352.765006 00832.179170 5 14710000100417",
               "valor": 1004.17
+            },
+            {
+              "tipo": "Nota de Empenho",
+              "numero": "09101.0006.26.0000066-2",
+              "valor": 7457.59
+            },
+            {
+              "tipo": "Registro de Documento Hábil",
+              "numero": "09101.0006.26.0000411-2",
+              "valor": 1054.8
+            },
+            {
+              "tipo": "Passivo por Competência",
+              "numero": "09101.0006.26.0000320-2",
+              "valor": 1054.8
+            },
+            {
+              "tipo": "Documento de Arrecadação Estadual",
+              "numero": "85850000000 2 50630333202 7 60622193616 2 89608005193 1",
+              "valor": 50.63
             }
           ],
           "notaFiscal": "953452",

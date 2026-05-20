@@ -192,9 +192,18 @@ const app = {
 
   // --- 2. FORMATAÇÃO RICA ---
   format(command, value = null) {
-    document.execCommand(command, false, value);
-    document.getElementById("editContent").focus();
-  },
+      document.execCommand(command, false, value);
+      
+      // Devolve o foco para a aba que estiver visível
+      const mainContent = document.getElementById("editContent");
+      const appendixContent = document.getElementById("editAppendix");
+      
+      if (!mainContent.classList.contains("hidden")) {
+          mainContent.focus();
+      } else {
+          appendixContent.focus();
+      }
+    },
 
   openEditor(id = null) {
     const modal = document.getElementById("editorModal");
@@ -210,6 +219,7 @@ const app = {
       document.getElementById("editKeywords").value = item.keywords || "";
 
       contentDiv.innerHTML = item.content;
+      document.getElementById("editAppendix").innerHTML = item.appendix || "";
       const radios = document.getElementsByName("editType");
       for (let r of radios) if (r.value === item.type) r.checked = true;
       document.getElementById("modalTitle").textContent = "Editar Norma";
@@ -232,9 +242,11 @@ const app = {
       document.getElementById("editKeywords").value = "";
 
       contentDiv.innerHTML = "";
+      document.getElementById("editAppendix").innerHTML = "";
       document.getElementsByName("editType")[0].checked = true;
       document.getElementById("modalTitle").textContent = "Nova Norma";
     }
+    this.switchEditorTab('main');
     modal.classList.remove("hidden");
   },
 
@@ -242,87 +254,169 @@ const app = {
     document.getElementById("editorModal").classList.add("hidden");
   },
 
-  // --- FUNÇÃO AJUDANTE DE PROCESSAMENTO (Centraliza a Lógica) ---
+// --- FUNÇÃO AJUDANTE DE PROCESSAMENTO (Centraliza a Lógica) ---
   processText(rawText) {
     // Limpeza Prévia
     let cleanedText = rawText.replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n");
     const lines = cleanedText.split("\n");
-    let htmlOutput = "";
 
-    // Regex Atualizado: Adicionei INSTRUÇÃO, PORTARIA, RESOLUÇÃO e suporte a barras (ex: Nº 12/2023)
-    const headerPattern =
-      /^\s*(LIVRO|TÍTULO|CAPÍTULO|SEÇÃO|SUBSEÇÃO|INSTRUÇÃO|PORTARIA|RESOLUÇÃO)\s+(Nº\s*)?([IVXLCDM\d\.\/-]+)\.?\s*$/i;
+    const headerPattern = /^\s*(LIVRO|TÍTULO|CAPÍTULO|SEÇÃO|SUBSEÇÃO|INSTRUÇÃO|PORTARIA|RESOLUÇÃO)\s+(Nº\s*)?([IVXLCDM\d\.\/-]+)\.?\s*$/i;
+
+    let currentArt = "";
+    let currentPar = "";
+    let currentInc = "";
+    let currentAli = "";
+    
+    let blocks = [];
+    let blockRegistry = {}; 
 
     for (let i = 0; i < lines.length; i++) {
-      let line = lines[i].trim();
-      if (!line) continue;
+        let line = lines[i].trim();
+        if (!line) continue;
 
-      // Tachado (Vetado)
-      if (
-        line.toLowerCase().includes("(vetado)") ||
-        line.toLowerCase() === "vetado"
-      ) {
-        htmlOutput += `<p style="text-decoration: line-through; color: #9ca3af; margin-bottom: 0.5em;">${line}</p>`;
-        continue;
-      }
-
-      // Fusão de Títulos (Agora pega INSTRUÇÃO também)
-      if (headerPattern.test(line)) {
-        let nextLineIndex = i + 1;
-        let nextLine = "";
-        while (nextLineIndex < lines.length) {
-          if (lines[nextLineIndex].trim()) {
-            nextLine = lines[nextLineIndex].trim();
-            break;
-          }
-          nextLineIndex++;
+        if (line.toLowerCase().includes("(vetado)") || line.match(/vetado\.?$/i) || line.toLowerCase() === "vetado") {
+            blocks.push({
+                html: `<p style="text-decoration: line-through; color: #9ca3af; margin-bottom: 0.5em;">${line}</p>`,
+                key: null
+            });
+            continue;
         }
 
-        if (
-          nextLine &&
-          !headerPattern.test(nextLine) &&
-          !nextLine.startsWith("Art.") &&
-          !nextLine.match(/^\d/) &&
-          !nextLine.includes("(Vetado)")
-        ) {
-          htmlOutput += `
-                        <div style="margin: 1.5em 0 1em 0; text-align: center; font-weight: bold; color: var(--title-color, #1e3a8a); line-height: 1.2;">
-                            ${line}<br>${nextLine}
-                        </div>
-                    `;
-          i = nextLineIndex;
-          continue;
-        } else {
-          htmlOutput += `
-                        <div style="margin: 1.5em 0 1em 0; text-align: center; font-weight: bold; color: var(--title-color, #1e3a8a);">${line}</div>
-                    `;
-          continue;
+        if (headerPattern.test(line)) {
+            let nextLineIndex = i + 1;
+            let nextLine = "";
+            while (nextLineIndex < lines.length) {
+                if (lines[nextLineIndex].trim()) {
+                    nextLine = lines[nextLineIndex].trim();
+                    break;
+                }
+                nextLineIndex++;
+            }
+
+            if (nextLine && !headerPattern.test(nextLine) && !nextLine.startsWith("Art.") && !nextLine.match(/^\d/) && !nextLine.includes("(Vetado)")) {
+                blocks.push({
+                    html: `<div style="margin: 1.5em 0 1em 0; text-align: center; font-weight: bold; color: var(--title-color, #1e3a8a); line-height: 1.2;">${line}<br>${nextLine}</div>`,
+                    key: null
+                });
+                i = nextLineIndex;
+                continue;
+            } else {
+                blocks.push({
+                    html: `<div style="margin: 1.5em 0 1em 0; text-align: center; font-weight: bold; color: var(--title-color, #1e3a8a);">${line}</div>`,
+                    key: null
+                });
+                continue;
+            }
         }
-      }
 
-      // --- NEGRITOS PADRÃO ---
+        let key = null; 
 
-      // 1. Regras de Leis (Art., §, Incisos)
-      line = line.replace(/(\((Redação dada|Incluído|Vigência|Vide).*?\))/gi, '<i class="opacity-80 text-sm font-normal italic"> $1 </i>');
-      line = line.replace(/^(Art\.\s*(\d+)\s*[º\.]?)/i, '<b id="art-$2">$1</b>');
-      line = line.replace(/^(Art\.\s*\d+)(?!\d|º)/i, '<b id="art-$2">$1</b>');
-      line = line.replace(/^(§\s*\d+\s*º?)/i, "<b>$1</b>");
-      line = line.replace(/^(Parágrafo único)/i, "<b>$1</b>");
-      line = line.replace(/^([IVXLCDM]+\s-\s)/, "<b>$1</b>");
-      
-      line = line.replace(/(\(Incluído por.*?\))/gi, '<i class="opacity-80 text-sm">$1</i>');
-      line = line.replace(/art\.\s*(\d+)/gi, (match, p1) => {
-        return `<a href="javascript:void(0)" onclick="app.scrollToArt(${p1})" class="text-blue-600 dark:text-blue-400 underline decoration-dotted hover:text-blue-800 font-medium">${match}</a>`;
-      });
+        let artMatch = line.match(/^Art\s*\.?\s*(\d+(?:-[A-Za-z])?)/i);
+        if (artMatch) {
+            currentArt = `Art-${artMatch[1].toUpperCase()}`;
+            currentPar = ""; 
+            currentInc = "";
+            currentAli = "";
+            key = currentArt;
+        }
 
-      // 2. NOVA REGRA: Itens Numéricos (comum em Instruções)
-      // Ex: "1. Texto", "1.1 Texto", "1.1.2. Texto"
-      // Regex: Início da linha + Números e pontos + Espaço ou ponto final
-      line = line.replace(/^(\d+(\.\d+)*\.?)\s/, "<b>$1 </b>");
+        // 2. Identifica Parágrafo (Agora suporta letras, ex: § 3º-A)
+        let parMatch = line.match(/^§\s*(\d+)(?:\s*[º°]\s*)?(?:-([A-Za-z]))?/i);
+        let puMatch = line.match(/^(Parágrafo único)/i);
+        if (parMatch) {
+            let parNum = parMatch[1];
+            if (parMatch[2]) parNum += "-" + parMatch[2].toUpperCase(); // Junta o número com a letra
+            
+            currentPar = `Par-${parNum}`;
+            currentInc = ""; // Reset cascata
+            currentAli = "";
+            key = `${currentArt}-${currentPar}`;
+        } else if (puMatch) {
+            currentPar = `Par-PU`;
+            currentInc = ""; 
+            currentAli = "";
+            key = `${currentArt}-${currentPar}`;
+        }
 
-      htmlOutput += `<p style="margin-bottom: 0.8em; text-align: justify;">${line}</p>`;
+        // 3. Identifica Inciso (Agora suporta Hífen -, En-Dash – e Em-Dash —)
+        let incMatch = line.match(/^([IVXLCDM]+)\s*[-–—]/i);
+        if (incMatch) {
+            currentInc = `Inc-${incMatch[1]}`;
+            currentAli = ""; 
+            key = `${currentArt}${currentPar ? '-' + currentPar : ''}-${currentInc}`;
+        }
+
+        let aliMatch = line.match(/^([a-z])\s*\)/i);
+        if (aliMatch) {
+            currentAli = `Ali-${aliMatch[1]}`;
+            key = `${currentArt}${currentPar ? '-' + currentPar : ''}${currentInc ? '-' + currentInc : ''}-${currentAli}`;
+        }
+
+        let penaMatch = line.match(/^Pena\s*-/i);
+        if (penaMatch) {
+            key = `${currentArt}${currentPar ? '-' + currentPar : ''}-Pena`;
+            line = line.replace(/^(Pena\s*-)/i, "<b>$1</b>"); 
+        }
+
+        if (!key && line.length < 100 && !/[.:;]$/.test(line)) {
+            let nextLine = (i + 1 < lines.length) ? lines[i + 1].trim() : "";
+            let nextArtMatch = nextLine.match(/^Art\s*\.?\s*(\d+(?:-[A-Za-z])?)/i);
+            
+            if (nextArtMatch) {
+                key = `Art-${nextArtMatch[1].toUpperCase()}-Rubrica`;
+                line = `<b class="text-gray-700 dark:text-gray-300">${line}</b>`; 
+            }
+        }
+
+        line = line.replace(/(\((Redação dada|Incluído|Vigência|Vide|Revigorado).*?\))/gi, '<i class="opacity-80 text-sm font-normal italic"> $1 </i>');
+        line = line.replace(/^(Art\s*\.?\s*(\d+(?:-[A-Za-z])?)\s*[º\.]?)/i, '<b id="art-$2">$1</b>');
+        line = line.replace(/^(§\s*\d+\s*[º°]?\s*(?:-[A-Za-z])?)/i, "<b>$1</b>");
+        line = line.replace(/^(Parágrafo único)/i, "<b>$1</b>");
+        line = line.replace(/^([IVXLCDM]+\s*[-–—]\s*)/, "<b>$1</b>");        
+        line = line.replace(/^([a-z]\s*\))/i, "<b>$1</b>"); 
+        line = line.replace(/(\(Incluído por.*?\))/gi, '<i class="opacity-80 text-sm">$1</i>');
+        
+        line = line.replace(/art\s*\.?\s*(\d+(?:-[A-Za-z])?)/gi, (match, p1) => {
+            return `<a href="javascript:void(0)" onclick="app.scrollToArt('${p1.toUpperCase()}')" class="text-blue-600 dark:text-blue-400 underline decoration-dotted hover:text-blue-800 font-medium">${match}</a>`;
+        });
+        
+        line = line.replace(/^(\d+(\.\d+)*\.?)\s/, "<b>$1 </b>");
+
+        let htmlOutput = `<p style="margin-bottom: 0.8em; text-align: justify;">${line}</p>`;
+
+        // --- LÓGICA DO TACHADO AUTOMÁTICO (EM CASCATA BLINDADA) ---
+        if (key) {
+            if (blockRegistry[key] !== undefined) {
+                for (let j = 0; j < blocks.length; j++) {
+                    let blockKey = blocks[j].key;
+                    
+                    let isChild = false;
+                    if (blockKey && blockKey.startsWith(key + '-')) {
+                        // Extrai a parte da chave que vem logo após o artigo pai
+                        let suffix = blockKey.substring(key.length + 1);
+                        
+                        // Garante que é um elemento da hierarquia, e não uma letra de artigo novo
+                        if (/^(Par|Inc|Ali|Pena|Rubrica)/.test(suffix)) {
+                            isChild = true;
+                        }
+                    }
+
+                    if (blockKey === key || isChild) {
+                        if (!blocks[j].html.includes('text-decoration: line-through')) {
+                            blocks[j].html = blocks[j].html.replace('<p style="', '<p style="text-decoration: line-through; color: #9ca3af; ');
+                        }
+                    }
+                }
+                blockRegistry[key] = blocks.length; 
+            } else {
+                blockRegistry[key] = blocks.length; 
+            }
+        }
+
+        blocks.push({ html: htmlOutput, key: key });
     }
-    return htmlOutput;
+    
+    return blocks.map(b => b.html).join("");
   },
 
   // --- IMPORTAR TXT (Agora usa o processador comum) ---
@@ -344,20 +438,21 @@ const app = {
   // --- AUTO FORMATAR (Botão ✨) ---
   // Agora pega o texto cru do editor e repassa pelo mesmo processador
   autoFormat() {
-    const editor = document.getElementById("editContent");
+      // Descobre qual editor está aberto
+      const mainContent = document.getElementById("editContent");
+      const appendixContent = document.getElementById("editAppendix");
+      const editor = !mainContent.classList.contains("hidden") ? mainContent : appendixContent;
 
-    // Pega apenas o TEXTO puro (sem HTML sujo anterior), preservando quebras de linha
-    // O .innerText geralmente preserva as quebras visuais como \n
-    const rawText = editor.innerText;
+      const rawText = editor.innerText;
 
-    if (!rawText.trim()) {
-      alert("Cole algum texto primeiro para formatar.");
-      return;
-    }
+      if (!rawText.trim()) {
+        alert("Cole algum texto primeiro para formatar.");
+        return;
+      }
 
-    const processedHtml = this.processText(rawText);
-    editor.innerHTML = processedHtml;
-  },
+      const processedHtml = this.processText(rawText);
+      editor.innerHTML = processedHtml;
+    },
   // --- 3. AJUSTE DE TABELAS AO SALVAR ---
   save() {
     const id = document.getElementById("editId").value;
@@ -375,6 +470,7 @@ const app = {
     const keywords = document.getElementById("editKeywords").value.trim();
 
     let content = document.getElementById("editContent").innerHTML;
+    let appendix = document.getElementById("editAppendix").innerHTML;
 
     // (Bloco de correção de tabela mantido...)
     const tempDiv = document.createElement("div");
@@ -400,6 +496,7 @@ const app = {
       sphere,
       keywords,
       content,
+      appendix,
       updatedAt: Date.now(),
     };
 
@@ -737,6 +834,18 @@ const app = {
         .getElementById("viewerContainer")
         .scrollIntoView({ behavior: "smooth" });
     }
+
+    // No final do openViewer(), após carregar o viewContent:
+    const btnAppendix = document.getElementById("btnViewAppendix");
+    const sepAppendix = document.getElementById("divAppendixSeparator");
+    
+    if (item.appendix && item.appendix.trim() !== "" && item.appendix.trim() !== "<br>") {
+        btnAppendix.classList.remove("hidden");
+        sepAppendix.classList.remove("hidden");
+    } else {
+        btnAppendix.classList.add("hidden");
+        sepAppendix.classList.add("hidden");
+    }
   },
 
   editCurrent() {
@@ -984,80 +1093,67 @@ const app = {
     const content = document.getElementById("viewContent");
     const title = document.getElementById("viewTitle");
 
-    // --- 1. LIMPEZA TOTAL (O Segredo para não travar) ---
-    // Removemos todas as cores possíveis de todos os temas antes de aplicar o escolhido.
+    // Elementos do Modal de Anexo
+    const appxBody = document.getElementById("appendixModalBody");
+    const appxContent = document.getElementById("appendixViewContent");
+    const appxTitle = document.getElementById("appendixModalTitle");
 
-    // Cores de Fundo e Borda (Viewer)
-    viewer.classList.remove(
-      "bg-white",
-      "border-gray-200", // Padrão
-      "bg-[#fdf6e3]",
-      "border-[#eee8d5]", // Sépia
-      "bg-gray-900",
-      "border-gray-700", // Dark Comum
-      "bg-[#1c1917]",
-      "border-[#44403c]", // Dark "Papel Velho"
-    );
+    // Se os elementos principais não existirem, aborta para evitar erros catastróficos
+    if (!viewer || !content || !title) return;
 
-    // Cores de Texto do Conteúdo
-    content.classList.remove(
-      "text-gray-800", // Padrão
-      "text-[#433422]", // Sépia
-      "text-gray-300", // Dark Comum
-      "text-[#d6d3d1]", // Dark "Papel Velho"
-    );
+    // --- 1. DEFINIÇÃO DOS MAPAS DE CORES (Centralizado para fácil manutenção) ---
+    const themes = {
+      sepia: {
+        bg: ["bg-[#fdf6e3]", "border-[#eee8d5]"],
+        text: ["text-[#433422]"],
+        title: ["text-[#5b4636]"],
+        tableStripe: "#eee8d5",
+        tableBorder: "#d3cbb7",
+        titleVarColor: "#78350f"
+      },
+      dark: {
+        bg: ["bg-[#1c1917]", "border-[#44403c]"],
+        text: ["text-[#d6d3d1]"],
+        title: ["text-[#e7e5e4]"],
+        tableStripe: "#292524",
+        tableBorder: "#57534e",
+        titleVarColor: "#93c5fd"
+      },
+      default: {
+        bg: ["bg-white", "border-gray-200"],
+        text: ["text-gray-800"],
+        title: ["text-gray-900"],
+        tableStripe: "#f9fafb",
+        tableBorder: "#e5e7eb",
+        titleVarColor: "#1e3a8a"
+      }
+    };
 
-    // Cores de Título
-    title.classList.remove(
-      "text-gray-900", // Padrão
-      "text-[#5b4636]", // Sépia
-      "text-gray-100", // Dark Comum
-      "text-[#e7e5e4]", // Dark "Papel Velho"
-    );
+    // Coleta todas as classes possíveis para a Limpeza Total
+    const allBgClasses = Object.values(themes).flatMap(t => t.bg);
+    const allTextClasses = Object.values(themes).flatMap(t => t.text);
+    const allTitleClasses = Object.values(themes).flatMap(t => t.title);
 
-    // --- 2. APLICAÇÃO DO TEMA ---
+    // --- 2. LIMPEZA TOTAL CONTRA CONFLITOS ---
+    const clearAndAdd = (el, classesToRemove, classesToAdd) => {
+      if (!el) return;
+      el.classList.remove(...classesToRemove);
+      el.classList.add(...classesToAdd);
+    };
 
-    // Variáveis para as cores da Tabela (Zebrado e Bordas)
-    let tableStripe = "";
-    let tableBorder = "";
-    let titleVarColor = "";
+    const currentTheme = themes[this.preferences.theme] || themes.default;
 
-    if (this.preferences.theme === "sepia") {
-      // TEMA SÉPIA (Dia)
-      viewer.classList.add("bg-[#fdf6e3]", "border-[#eee8d5]");
-      content.classList.add("text-[#433422]");
-      title.classList.add("text-[#5b4636]");
+    // Aplica a limpa e a nova cor cirurgicamente
+    clearAndAdd(viewer, allBgClasses, currentTheme.bg);
+    clearAndAdd(appxBody, allBgClasses, currentTheme.bg);
 
-      tableStripe = "#eee8d5";
-      tableBorder = "#d3cbb7";
-      titleVarColor = "#78350f";
-    } else if (this.preferences.theme === "dark") {
-      // --- MODO ESCURO "WARM" (Estilo Dark Academia / Couro Antigo) ---
+    clearAndAdd(content, allTextClasses, currentTheme.text);
+    clearAndAdd(appxContent, allTextClasses, currentTheme.text);
 
-      // Fundo: Stone-900 (Um cinza bem quente, quase marrom café)
-      // Borda: Stone-700 (Para separar suavemente)
-      viewer.classList.add("bg-[#1c1917]", "border-[#44403c]");
+    clearAndAdd(title, allTitleClasses, currentTheme.title);
+    clearAndAdd(appxTitle, allTitleClasses, currentTheme.title);
 
-      // Texto: Stone-300 (Um cinza claro meio bege, não é branco estourado)
-      content.classList.add("text-[#d6d3d1]");
-      title.classList.add("text-[#e7e5e4]");
-
-      // Tabelas: Mantendo a paleta quente
-      tableStripe = "#292524"; // Stone-800 para linhas pares
-      tableBorder = "#57534e"; // Stone-600 para as grades
-      titleVarColor = "#93c5fd";
-    } else {
-      // TEMA PADRÃO (Clean)
-      viewer.classList.add("bg-white", "border-gray-200");
-      content.classList.add("text-gray-800");
-      title.classList.add("text-gray-900");
-
-      tableStripe = "#f9fafb";
-      tableBorder = "#e5e7eb";
-      titleVarColor = "#1e3a8a";
-    }
-
-    // --- 3. INJEÇÃO DE CSS DINÂMICO (Para Fontes e Tabelas) ---
+    // --- 3. INJEÇÃO DE CSS DINÂMICO (Fontes e Tabelas) ---
     let styleTag = document.getElementById("dynamic-font-style");
     if (!styleTag) {
       styleTag = document.createElement("style");
@@ -1065,59 +1161,63 @@ const app = {
       document.head.appendChild(styleTag);
     }
 
-    let fontStack = "";
-    if (this.preferences.font === "serif") {
-      fontStack = "'Merriweather', serif";
-    } else if (this.preferences.font === "mono") {
-      fontStack = "'Courier New', Courier, monospace";
-    } else {
-      fontStack = "'Inter', sans-serif";
-    }
+    const fonts = {
+      serif: "'Merriweather', serif",
+      mono: "'Courier New', Courier, monospace",
+      default: "'Inter', sans-serif"
+    };
+    const fontStack = fonts[this.preferences.font] || fonts.default;
 
+    // Melhores seletores para garantir que tabelas de anexos recebam estilos de tabela mesmo sem a classe .law-content
     styleTag.innerHTML = `
-            :root {
-                --title-color: ${titleVarColor} !important;
-            }
-            #viewContent, #viewContent * {
-                font-family: ${fontStack} !important;
-            }
-            .law-content th {
-                background-color: ${tableStripe} !important;
-                border-color: ${tableBorder} !important;
-                color: inherit !important;
-            }
-            .law-content tr:nth-child(even) {
-                background-color: ${tableStripe} !important;
-            }
-            .law-content td, .law-content th {
-                border-color: ${tableBorder} !important;
-            }
-        `;
+      :root {
+          --title-color: ${currentTheme.titleVarColor} !important;
+      }
+      
+      #viewContent, #viewContent *, #appendixViewContent, #appendixViewContent * {
+          font-family: ${fontStack} !important;
+      }
 
+    /* 👇 REGRA AMPLIADA CONTRA HTML SUJO (Planalto) 👇 */
+    /* Força tags p, span, font, div e tabelas a obedecerem a cor do tema */
+    #viewContent p, #viewContent span:not([class*="bg-"]), #viewContent font, #viewContent div, #viewContent td, #viewContent th,
+    #appendixViewContent p, #appendixViewContent span:not([class*="bg-"]), #appendixViewContent font, #appendixViewContent div, #appendixViewContent td, #appendixViewContent th,
+    #editContent p, #editContent span:not([class*="bg-"]), #editContent font, #editContent div, #editContent td, #editContent th,
+    #editAppendix p, #editAppendix span:not([class*="bg-"]), #editAppendix font, #editAppendix div, #editAppendix td, #editAppendix th {
+        color: inherit !important;
+        background-color: transparent !important;
+    }
+    /* 👆 FIM DA REGRA AMPLIADA 👆 */
+
+      .law-content th, #appendixViewContent th {
+          background-color: ${currentTheme.tableStripe} !important;
+          border-color: ${currentTheme.tableBorder} !important;
+          color: inherit !important;
+      }
+      .law-content tr:nth-child(even), #appendixViewContent tr:nth-child(even) {
+          background-color: ${currentTheme.tableStripe} !important;
+      }
+      .law-content td, .law-content th, #appendixViewContent td, #appendixViewContent th {
+          border-color: ${currentTheme.tableBorder} !important;
+      }
+    `;
+
+    // --- 4. ATUALIZAÇÃO DA MINIBAR (Segura contra erros de elemento nulo) ---
     const minibar = document.getElementById("fixedMinibar");
+    if (minibar) {
+      const style = window.getComputedStyle(viewer);
+      const contentStyle = window.getComputedStyle(content);
+      
+      const minibarInner = minibar.querySelector('div');
+      if (minibarInner) {
+        minibarInner.style.backgroundColor = style.backgroundColor;
+        minibarInner.style.borderColor = style.borderBottomColor;
+      }
 
-    if (minibar && viewer) {
-        const style = window.getComputedStyle(viewer);
-        const contentStyle = window.getComputedStyle(content);
-        
-        // Pegamos a div interna da minibar para pintar
-        const minibarInner = minibar.querySelector('div');
-        if (minibarInner) {
-            minibarInner.style.backgroundColor = style.backgroundColor;
-            minibarInner.style.borderColor = style.borderBottomColor;
-        }
-
-        const titleEl = document.getElementById("minibarTitle");
-        if (titleEl) {
-            // Se o tema for 'default', removemos a cor do JS. 
-            // Isso faz o Título obedecer o CSS (text-gray-700 / dark:text-gray-100)
-            if (this.preferences.theme === 'default') {
-                titleEl.style.color = contentStyle.color; 
-            } else {
-                // Se for Sépia ou Dark Warm, aí sim usamos a cor do texto do leitor
-                titleEl.style.color = contentStyle.color;
-            }
-        }
+      const titleEl = document.getElementById("minibarTitle");
+      if (titleEl) {
+        titleEl.style.color = contentStyle.color;
+      }
     }
   },
 
@@ -1379,19 +1479,20 @@ showLawPreview(event, id) {
 
 // 3. Add botão para relacionar na caixa de texto
 previewLinksInEditor() {
-    const editor = document.getElementById("editContent");
+    // Descobre qual editor está aberto
+    const mainContent = document.getElementById("editContent");
+    const appendixContent = document.getElementById("editAppendix");
+    const editor = !mainContent.classList.contains("hidden") ? mainContent : appendixContent;
+    
     if (!editor) return;
 
     let content = editor.innerHTML;
     let linkCount = 0;
 
-    // 1. Normalização do conteúdo (remove espaços HTML que quebram Regex)
     let cleanHtml = content.replace(/&nbsp;/g, ' ');
     
-    // 2. Regex para identificar Normas Jurídicas
     const regex = /(Lei|Decreto|Instrução|Portaria|Resolução)\s*(Federal|Estadual|Municipal|da\sBahia|do\sEstado)?\s*(?:nº\s*)?([\d\.\/-]+)/gi;
 
-    // 3. Processamento e Cruzamento com a Biblioteca (this.data)
     const linkedContent = cleanHtml.replace(regex, (match, type, scope, number) => {
         const cleanNumber = number.replace(/[^\d]/g, ""); 
         const typeUpper = type.toUpperCase();
@@ -1416,14 +1517,13 @@ previewLinksInEditor() {
         return match;
     });
 
-    // 4. Atualização da UI e Feedback via Toast
     if (linkCount > 0) {
         editor.innerHTML = linkedContent;
         this.showToast(`${linkCount} link(s) gerado(s) com sucesso!`, 'success');
     } else {
         this.showToast("Nenhuma citação correspondente encontrada na biblioteca.", 'warning');
     }
-},
+  },
 
 showToast(message, type = 'success') {
     const container = document.getElementById("toast-container");
@@ -1476,6 +1576,41 @@ togglePin(event, id) {
     this.saveData(); // Salva no localStorage
     this.renderList(document.getElementById("searchInput").value);
   },
+
+  switchEditorTab(tab) {
+      const tabMain = document.getElementById("tabMain");
+      const tabAppendix = document.getElementById("tabAppendix");
+      const contentMain = document.getElementById("editContent");
+      const contentAppendix = document.getElementById("editAppendix");
+
+      if (tab === 'main') {
+          tabMain.className = "px-4 py-2 text-sm font-bold border-b-2 border-blue-600 text-blue-600 dark:text-blue-400";
+          tabAppendix.className = "px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-700 dark:text-gray-400 border-b-2 border-transparent";
+          contentMain.classList.remove("hidden");
+          contentAppendix.classList.add("hidden");
+      } else {
+          tabAppendix.className = "px-4 py-2 text-sm font-bold border-b-2 border-blue-600 text-blue-600 dark:text-blue-400";
+          tabMain.className = "px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-700 dark:text-gray-400 border-b-2 border-transparent";
+          contentAppendix.classList.remove("hidden");
+          contentMain.classList.add("hidden");
+      }
+  },
+
+  openAppendixModal() {
+        if (!this.currentId) return;
+        const item = this.data.find(x => x.id === this.currentId);
+        if (!item || !item.appendix) return;
+
+        // CORREÇÃO: O anexo já é HTML salvo pelo editor. 
+        // NUNCA passe ele pelo processText() aqui, senão ele quebra as tags e a cor!
+        let contentHtml = item.appendix;
+        
+        // Aplica apenas o gerador de links para outras leis, se quiser
+        contentHtml = this.linkifyNormas(contentHtml);
+        
+        document.getElementById("appendixViewContent").innerHTML = contentHtml;
+        document.getElementById("appendixModal").classList.remove("hidden");
+    },
 
 
 };
