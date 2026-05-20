@@ -244,7 +244,27 @@
                 <span id="minibarTitle" class="text-sm font-bold truncate pr-4 uppercase text-gray-700 dark:text-gray-100">
                     Título da Norma
                 </span>
+
+
+                
+
+                
                 <div class="flex gap-1 items-center shrink-0">
+                <div id="divAppendixSeparator" class="hidden w-px h-5 bg-gray-300 dark:bg-slate-600 mx-1"></div>
+
+
+                <button id="btnViewAppendix" onclick="app.openAppendixModal()" class="hidden p-2 text-gray-400 hover:text-amber-700 dark:text-gray-400 dark:hover:text-amber-300 font-bold text-xs flex items-center gap-1 rounded transition-colors" title="Ver Anexos">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path 
+                        stroke-linecap="round" 
+                        stroke-linejoin="round" 
+                        stroke-width="2" 
+                        d="M17 5.93023V16C17 18.7614 14.7614 21 12 21C9.23858 21 7 18.7614 7 16V6.33333C7 4.49238 8.49238 3 10.3333 3C12.1743 3 13.6667 4.49238 13.6667 6.33333V15.9845C13.6667 16.905 12.9205 17.6512 12 17.6512C11.0795 17.6512 10.3333 16.905 10.3333 15.9845V6.5"
+                      />
+                    </svg>
+                </button>
+                <div class="w-px h-5 bg-gray-300 dark:bg-slate-600 mx-1"></div>
+
                     <button onclick="app.internalSearch()" class="p-2 text-gray-400 hover:text-blue-600 transition-colors" title="Localizar">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </button>
@@ -987,12 +1007,18 @@
               </button>
             </div>
 
+            <div class="flex border-b border-gray-300 dark:border-slate-600 mb-2">
+              <button onclick="app.switchEditorTab('main')" id="tabMain" class="px-4 py-2 text-sm font-bold border-b-2 border-blue-600 text-blue-600 dark:text-blue-400">Texto Principal</button>
+              <button onclick="app.switchEditorTab('appendix')" id="tabAppendix" class="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-700 dark:text-gray-400 border-b-2 border-transparent">Anexos / Notas</button>
+          </div>
+
             <div
               id="editContent"
               contenteditable="true"
               class="flex-1 w-full p-4 border border-t-0 border-gray-300 dark:border-slate-600 rounded-b focus:ring-0 outline-none overflow-y-auto law-content bg-white dark:bg-slate-900 dark:text-gray-200 h-64"
             ></div>
-          </div>
+
+            <div id="editAppendix" contenteditable="true" class="hidden flex-1 w-full p-4 border border-t-0 border-gray-300 dark:border-slate-600 rounded-b focus:ring-0 outline-none overflow-y-auto law-content bg-white dark:bg-slate-900 dark:text-gray-200 h-64 placeholder-gray-400" placeholder="Cole aqui os anexos, partes mantidas por veto, etc..."></div>          </div>
         </div>
 
         <div
@@ -1061,6 +1087,21 @@
             <button id="previewPopupGoTo" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded transition-colors">
                 Abrir Norma Completa
             </button>
+        </div>
+    </div>
+
+    <div id="appendixModal" class="fixed inset-0 bg-gray-900/50 dark:bg-gray-900/80 backdrop-blur-sm hidden z-[70] flex items-center justify-center p-4">
+        <div id="appendixModalBody" class="rounded-xl shadow-2xl w-full max-w-4xl max-h-[85vh] flex flex-col border transition-colors">
+            
+            <div class="p-4 border-b border-inherit flex justify-between items-center rounded-t-xl opacity-90">
+                <h3 id="appendixModalTitle" class="font-bold flex items-center gap-2">
+                    <span>📎</span> Anexos e Notas Relacionadas
+                </h3>
+                <button onclick="document.getElementById('appendixModal').classList.add('hidden')" class="text-red-400 hover:text-red-600 text-2xl">&times;</button>
+            </div>
+
+            <div id="appendixViewContent" class="p-6 flex-1 overflow-y-auto law-content text-sm rounded-b-xl">
+                </div>
         </div>
     </div>
 
