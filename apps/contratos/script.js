@@ -1237,9 +1237,9 @@ function calcularResumoContrato(contratoPai) {
         // Se for TRD, nunca soma no saldo do contrato
         if (p.isTRD) return;
 
-        const dataPagamento = new Date(p.data + "T00:00:00");
+        const dataPagamento = p.data ? new Date(p.data + "T00:00:00") : null;
 
-        if (dataPagamento > hoje) {
+        if (dataPagamento && dataPagamento > hoje) {
           totalProgramadoAgregado += val;
         } else {
           totalPagoAgregado += val;
@@ -1488,10 +1488,10 @@ function renderizarModalVisualizar(contratoId) {
   // --- SEPARAÇÃO: REALIZADO vs PROGRAMADO (Para Gráficos) ---
   // Os gráficos só devem considerar o que já aconteceu (<= hoje) e que não é TRD (TRD distorce análise de saldo)
   const pagamentosRealizados = pagamentos.filter((p) => {
+    if (!p.data) return true; // Se está em andamento, desconta do saldo normalmente
     const d = new Date(p.data + "T00:00:00");
-    return d <= hoje; // Apenas passados ou hoje
+    return d <= hoje;
   });
-
   // --- CÁLCULO DOS DADOS PARA GRÁFICOS ---
   const pagamentosPorAno = {};
   const consumoPorItem = {};
@@ -1781,8 +1781,9 @@ function renderizarModalVisualizar(contratoId) {
                         ? `<tr><td colspan="6" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Nenhum pagamento.</td></tr>`
                         : pagamentos
                             .map((p) => {
-                              const dataPagto = new Date(p.data + "T00:00:00");
-                              const isProgramado = dataPagto > hoje;
+                              const dataPagto = p.data ? new Date(p.data + "T00:00:00") : null;
+                              const isProgramado = dataPagto && dataPagto > hoje;
+                              const badgeAndamento = '<span class="text-[10px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded font-bold uppercase border border-blue-200 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-800">Em andamento</span>';
                               const rowClass = isProgramado
                                 ? "bg-yellow-10"
                                 : p.origemContratoId !== contratoPai.id
@@ -1793,41 +1794,37 @@ function renderizarModalVisualizar(contratoId) {
                                 : "";
 
                               return `<tr class="${rowClass}">
-                                <td class="px-4 py-3 text-sm">
-                                    ${formatDate(p.data)} 
-                                    ${
-                                      p.origemContratoId !== contratoPai.id
-                                        ? '<span class="text-blue-500 text-xs block">(Aditivo)</span>'
-                                        : ""
-                                    }
-                                    ${statusLabel}
-                                </td>
-                                <td class="px-4 py-3 text-sm">${
-                                  p.periodoDe
-                                    ? `${formatDate(
-                                        p.periodoDe,
-                                      )} a ${formatDate(p.periodoAte)}`
-                                    : "N/D"
-                                }</td>
-                                <td class="px-4 py-3 text-sm">
-                                    ${formatCurrency(p.valorPago)}
-                                    ${
-                                      p.isTRD
-                                        ? '<span class="ml-1 px-2 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800 border border-red-200 dark:bg-red-900/40 dark:text-red-400 dark:border-red-800">TRD</span>'
-                                        : ""
-                                    }
-                                </td>
-                                <td class="px-4 py-3 text-sm">${
-                                  p.notaFiscal
-                                }</td>
-                                
-                                <td class="px-4 py-3 text-sm">
-                                    ${
-                                      p.linkPagamentoSei
-                                        ? `<a href="${p.linkPagamentoSei}" target="_blank" class="text-blue-600 hover:underline">${p.processoPagamentoSei}</a>`
-                                        : p.processoPagamentoSei || "N/D"
-                                    }
-                                </td>
+                                        <td class="px-4 py-3 text-sm">
+                                                ${p.data ? formatDate(p.data) : badgeAndamento} 
+                                                ${
+                                                  p.origemContratoId !== contratoPai.id
+                                                    ? '<span class="text-blue-500 text-xs block">(Aditivo)</span>'
+                                                    : ""
+                                                }
+                                                ${statusLabel}
+                                            </td>
+                                            <td class="px-4 py-3 text-sm">${
+                                              p.periodoDe
+                                                ? `${formatDate(p.periodoDe)} a ${formatDate(p.periodoAte)}`
+                                                : "N/D"
+                                            }</td>
+                                            <td class="px-4 py-3 text-sm">
+                                                ${formatCurrency(p.valorPago)}
+                                                ${
+                                                  p.isTRD
+                                                    ? '<span class="ml-1 px-2 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800 border border-red-200 dark:bg-red-900/40 dark:text-red-400 dark:border-red-800">TRD</span>'
+                                                    : ""
+                                                }
+                                            </td>
+                                            <td class="px-4 py-3 text-sm">${p.notaFiscal ? p.notaFiscal : badgeAndamento}</td>
+                                            
+                                            <td class="px-4 py-3 text-sm">
+                                                ${
+                                                  p.linkPagamentoSei
+                                                    ? `<a href="${p.linkPagamentoSei}" target="_blank" class="text-blue-600 hover:underline">${p.processoPagamentoSei}</a>`
+                                                    : p.processoPagamentoSei || "N/D"
+                                                }
+                                            </td>
 
 
                                   <td class="px-4 py-3 text-sm flex items-center">
@@ -2427,9 +2424,15 @@ function renderizarModalDetalhesPagamento(contratoId, pagamentoId) {
                       valorTotalItem,
                     )}</td>
                     <td class="px-4 py-3 text-sm">
-                        <button class="btn-excluir-item-detalhe text-red-600 hover:text-red-800 admin-only" data-item-id="${
-                          item.id
-                        }">Excluir</button>
+                      <button 
+                          class="btn-excluir-item-detalhe text-red-600 hover:text-red-800 admin-only" 
+                          data-item-id="${item.id}"
+                          title="Excluir"
+                      >
+                          <svg class="w-5 h-5 pointer-events-none" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path fill-rule="evenodd" clip-rule="evenodd" d="M12.663 1.5h-1.326c-1.069 0-1.49.09-1.921.27-.432.181-.792.453-1.084.82-.292.365-.493.746-.784 1.774L7.368 5H5a1 1 0 0 0 0 2h.563l.703 11.25c.082 1.32.123 1.98.407 2.481a2.5 2.5 0 0 0 1.083 1.017C8.273 22 8.935 22 10.258 22h3.484c1.323 0 1.985 0 2.502-.252a2.5 2.5 0 0 0 1.083-1.017c.284-.5.325-1.16.407-2.482L18.437 7H19a1 1 0 1 0 0-2h-2.367l-.18-.636c-.292-1.028-.493-1.409-.785-1.775a2.694 2.694 0 0 0-1.084-.819c-.431-.18-.852-.27-1.92-.27zm1.89 3.5-.025-.09c-.203-.717-.29-.905-.424-1.074a.696.696 0 0 0-.292-.221c-.2-.084-.404-.115-1.149-.115h-1.326c-.745 0-.95.031-1.149.115a.696.696 0 0 0-.292.221c-.135.169-.221.357-.424 1.074L9.446 5h5.108zM9.61 8.506a.75.75 0 0 0-.724.776l.297 8.495a.75.75 0 0 0 1.499-.053l-.297-8.494a.75.75 0 0 0-.775-.724zm4.008.724a.75.75 0 0 1 1.499.052l-.297 8.495a.75.75 0 0 1-1.499-.053l.297-8.494z" fill="currentColor"/>
+                          </svg>
+                      </button>
                     </td>
                 </tr>
             `;
@@ -3281,18 +3284,15 @@ function exportarDetalhesPDF(contratoPaiId) {
       const headPagamento = [
         ["Data", "Período", "Valor Pago", "NF", "Proc. Pag. SEI"],
       ];
-      const bodyPagamento = [
-        [
-          formatDate(p.data) +
-            (p.origemAditivo ? `\n(Aditivo ${p.origemAditivo})` : ""),
-          p.periodoDe
-            ? `${formatDate(p.periodoDe)} a ${formatDate(p.periodoAte)}`
-            : "N/D",
-          formatCurrency(p.valorPago),
-          p.notaFiscal,
-          p.processoPagamentoSei,
-        ],
-      ];
+    const bodyPagamento = [
+      [
+        (p.data ? formatDate(p.data) : "Em andamento") + (p.origemAditivo ? `\n(Aditivo ${p.origemAditivo})` : ""),
+        p.periodoDe ? `${formatDate(p.periodoDe)} a ${formatDate(p.periodoAte)}` : "N/D",
+        formatCurrency(p.valorPago),
+        p.notaFiscal || "Em andamento",
+        p.processoPagamentoSei,
+      ],
+    ];
 
       // Verifica se precisa de nova página ANTES de desenhar
       let requiredHeight = 20; // Altura estimada do pagto + detalhes
@@ -3573,11 +3573,9 @@ function exportarAditivoPDF(aditivoId, contratoPaiId) {
     // --- Bloco 4: Lista de Pagamentos ---
     if (pagamentosFiltrados.length > 0) {
       const rowsPagamentos = pagamentosFiltrados.map((p) => [
-        formatDate(p.data),
-        p.periodoDe
-          ? `${formatDate(p.periodoDe)} a ${formatDate(p.periodoAte)}`
-          : "N/D",
-        p.notaFiscal,
+        p.data ? formatDate(p.data) : "Em andamento",
+        p.periodoDe ? `${formatDate(p.periodoDe)} a ${formatDate(p.periodoAte)}` : "N/D",
+        p.notaFiscal || "Em andamento",
         formatCurrency(p.valorPago) + (p.isTRD ? " (TRD)" : ""),
       ]);
 
@@ -4440,8 +4438,8 @@ function exportarAnaliseExcel(contratoPaiId) {
     const mapearLinha = (item = null) => ({
       "Instrumento": instrumentoVigente,
       "Processo SEI": pag.processoPagamentoSei,
-      "NF": pag.notaFiscal,
-      "Data Pagto": formatDate(pag.data),
+      "NF": pag.notaFiscal || "Em andamento",
+      "Data Pagto": pag.data ? formatDate(pag.data) : "Em andamento",
       "Competência": new Date(pag.periodoAte + "T00:00:00").getFullYear(),
       "Mês": new Date(pag.periodoAte + "T00:00:00").getMonth() + 1,
       "Item Descrição": item ? item.descricao : "N/D",

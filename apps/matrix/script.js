@@ -132,7 +132,10 @@ calculateDynamicQuadrant(deadlineValue, isStrategic, isCritical, isExclusive) {
         const delegateName = document.getElementById("delegateName").value.trim();
         const notes = document.getElementById("taskNote").value.trim();
 
-        if (!title) return alert("Por favor, insira a descrição da atividade.");
+        if (!title) {
+            document.getElementById("taskTitle").focus();
+            return this.showToast("Por favor, insira a descrição da atividade.", "warning");
+        }
 
         const quadrant = this.calculateDynamicQuadrant(deadline, isStrategic, isCritical, isExclusive);
 
@@ -179,19 +182,26 @@ calculateDynamicQuadrant(deadlineValue, isStrategic, isCritical, isExclusive) {
         this.closeModal();
     },
 
-    // Garanta que o resetForm limpe o ID oculto e volte o título do modal ao normal
     resetForm() { 
+        // 1. Limpa o ID de edição (Crucial para separar Edição de Criação)
         document.getElementById("editingTaskId").value = "";
+        
+        // 2. Limpa os campos de texto e data
         document.getElementById("taskTitle").value = "";
         document.getElementById("taskDeadline").value = "";
         document.getElementById("taskEstimate").value = "";
+        document.getElementById("delegateName").value = "";
+        document.getElementById("taskNote").value = "";
+        
+        // 3. Reseta os checkboxes para o padrão
         document.getElementById("impact_goal").checked = false;
         document.getElementById("is_critical").checked = false;
         document.getElementById("only_me").checked = true;
-        document.getElementById("delegateName").value = "";
-        document.getElementById("taskNote").value = "";
+        
+        // 4. Esconde o campo de delegação
         document.getElementById("delegateField").classList.add("hidden");
         
+        // 5. Restaura o título do modal para o padrão
         const modalTitle = document.querySelector("#taskModal h3");
         if (modalTitle) modalTitle.textContent = "Análise de Prioridade";
     },
@@ -393,8 +403,10 @@ calculateDynamicQuadrant(deadlineValue, isStrategic, isCritical, isExclusive) {
                 this.saveData();
                 this.refreshQuadrants();
                 this.render();
-                alert("Backup da SAEB restaurado!");
-            } catch (err) { alert("Arquivo inválido."); }
+                this.showToast("Backup da SAEB restaurado com sucesso!", "success");
+            } catch (err) { 
+                this.showToast("Arquivo inválido ou corrompido.", "error"); 
+                        }
         };
         reader.readAsText(file);
     },
@@ -409,16 +421,6 @@ calculateDynamicQuadrant(deadlineValue, isStrategic, isCritical, isExclusive) {
         this.resetForm(); 
     },
 
-    resetForm() { 
-        document.getElementById("taskTitle").value = "";
-        document.getElementById("taskDeadline").value = "";
-        document.getElementById("taskEstimate").value = "";
-        document.getElementById("impact_goal").checked = false;
-        document.getElementById("only_me").checked = true;
-        document.getElementById("delegateName").value = "";
-        document.getElementById("taskNote").value = "";
-        document.getElementById("delegateField").classList.add("hidden");
-    },
 
     toggleComplete(id) {
     this.tasks = this.tasks.map(task => 
@@ -518,6 +520,44 @@ calculateDynamicQuadrant(deadlineValue, isStrategic, isCritical, isExclusive) {
             this.saveData();
             this.render();
         }
+    },
+
+    showToast(message, type = 'error') {
+        // Remove toasts anteriores para não empilhar vários
+        const existingToast = document.getElementById('cockpit-toast');
+        if (existingToast) existingToast.remove();
+
+        const toast = document.createElement('div');
+        toast.id = 'cockpit-toast';
+        
+        // Define as cores do Tailwind com base no tipo de aviso
+        const bgColors = {
+            success: 'bg-green-600 dark:bg-green-500',
+            warning: 'bg-yellow-500 dark:bg-yellow-600',
+            error: 'bg-red-600 dark:bg-red-500'
+        };
+
+        const colorClass = bgColors[type] || bgColors.error;
+
+        // Estilização base com Tailwind (fixo no canto inferior direito, animação de entrada)
+        toast.className = `fixed bottom-6 right-6 text-white px-6 py-3 rounded shadow-2xl z-[100] font-medium text-sm flex items-center gap-2 transform transition-all duration-300 translate-y-10 opacity-0 ${colorClass}`;
+        
+        // Ícone simples baseado no tipo
+        const icon = type === 'success' ? '✅' : type === 'warning' ? '⚠️' : '❌';
+        toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+
+        document.body.appendChild(toast);
+
+        // Dispara a animação de entrada (slide up e fade in)
+        requestAnimationFrame(() => {
+            toast.classList.remove('translate-y-10', 'opacity-0');
+        });
+
+        // Remove o toast após 3 segundos
+        setTimeout(() => {
+            toast.classList.add('opacity-0', 'translate-y-2');
+            setTimeout(() => toast.remove(), 300); // Aguarda a transição terminar
+        }, 3000);
     },
 };
 

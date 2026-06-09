@@ -59,8 +59,84 @@ const app = {
   itemsPerPage: 6,
   searchMatches: [],      // Guarda os resultados encontrados
   currentSearchIndex: -1, // Posição atual da busca
+  annotations: {}, // Propriedade para armazenar notas e highlights
+  currentSelectionText: "",
+
+  // --- Variável para guardar o callback de confirmação ---
+  confirmCallback: null,
+
+  // --- Sistema Customizado de Modais ---
+  showModalUI(title, message, isConfirm, type = 'info', callback = null) {
+      this.confirmCallback = callback;
+      
+      const modal = document.getElementById('customConfirmModal');
+      const box = document.getElementById('customConfirmBox');
+      document.getElementById('customConfirmTitle').textContent = title;
+      document.getElementById('customConfirmMessage').textContent = message;
+      
+      const btnCancel = document.getElementById('customConfirmBtnCancel');
+      const btnOk = document.getElementById('customConfirmBtnOk');
+      const iconContainer = document.getElementById('customConfirmIcon');
+
+      // Configuração visual baseada no 'tipo' do modal
+      if (type === 'danger') {
+          btnOk.className = "px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded font-bold transition-colors w-full shadow-sm";
+          iconContainer.className = "w-12 h-12 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-full flex items-center justify-center mb-4 mx-auto";
+          iconContainer.innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>`;
+          btnOk.textContent = "Excluir";
+      } else if (type === 'warning') {
+          btnOk.className = "px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded font-bold transition-colors w-full shadow-sm";
+          iconContainer.className = "w-12 h-12 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-full flex items-center justify-center mb-4 mx-auto";
+          iconContainer.innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>`;
+          btnOk.textContent = isConfirm ? "Continuar" : "OK";
+      } else { // 'info' default
+          btnOk.className = "px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-bold transition-colors w-full shadow-sm";
+          iconContainer.className = "w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center mb-4 mx-auto";
+          iconContainer.innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
+          btnOk.textContent = isConfirm ? "Confirmar" : "OK";
+      }
+
+      if (isConfirm) {
+          btnCancel.classList.remove('hidden');
+      } else {
+          btnCancel.classList.add('hidden');
+      }
+
+      modal.classList.remove('hidden');
+      // Animação de entrada
+      setTimeout(() => {
+          box.classList.remove('scale-95', 'opacity-0');
+      }, 10);
+  },
+
+  showAlert(title, message) {
+      this.showModalUI(title, message, false, 'info');
+  },
+
+  showConfirm(title, message, callback, type = 'danger') {
+      this.showModalUI(title, message, true, type, callback);
+  },
+
+  closeConfirmModal() {
+      const modal = document.getElementById('customConfirmModal');
+      const box = document.getElementById('customConfirmBox');
+      
+      box.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => {
+          modal.classList.add('hidden');
+          this.confirmCallback = null;
+      }, 200); // Tempo da animação CSS
+  },
+
+  executeConfirmModal() {
+      if (this.confirmCallback) {
+          this.confirmCallback(); // Executa o código que foi passado para ele!
+      }
+      this.closeConfirmModal();
+  },
 
   async init() {
+    this.loadAnnotations();
     await this.loadData();
 
     document.getElementById("viewerContainer").addEventListener('scroll', () => this.handleScroll());
@@ -112,6 +188,58 @@ const app = {
           }
         }
       }
+    });
+
+    // Listener para o Menu de Highlight (Dentro do init)
+    document.getElementById('viewContent').addEventListener('mouseup', (e) => {
+        const selection = window.getSelection();
+        const text = selection.toString().replace(/\s+/g, ' ').trim();
+        const popup = document.getElementById('highlightToolbar');
+        
+        if (text.length >= 10 && !e.target.closest('#highlightToolbar')) {
+            const viewerRect = document.getElementById('viewerContainer').getBoundingClientRect();
+            popup.style.top = (e.clientY - viewerRect.top + document.getElementById('viewerContainer').scrollTop - 40) + 'px';
+            popup.style.left = (e.clientX - viewerRect.left) + 'px';
+            popup.classList.remove('hidden');
+            this.currentSelectionText = text;
+
+            // NOVO E DEFINITIVO: Algoritmo blindado para achar a âncora
+            let anchor = null;
+            if (selection.rangeCount > 0) {
+                // 1. Usa anchorNode (onde o usuário começou a grifar)
+                let node = selection.anchorNode;
+                let el = node.nodeType === 1 ? node : node.parentElement;
+
+                // 2. Proteção contra o "Vazamento de Seleção" (quando o navegador seleciona a div pai)
+                if (el.id === 'viewContent' && node.childNodes.length > 0) {
+                    let child = node.childNodes[selection.anchorOffset];
+                    if (child) {
+                        el = child.nodeType === 1 ? child : child.parentElement;
+                    }
+                }
+
+                // 3. Sobe na árvore até achar o elemento que é FILHO DIRETO do viewContent
+                let currentBlock = el;
+                while (currentBlock && currentBlock.parentElement && currentBlock.parentElement.id !== 'viewContent') {
+                    currentBlock = currentBlock.parentElement;
+                }
+
+                // 4. Agora varremos o bloco e os irmãos anteriores com segurança
+                while (currentBlock && currentBlock.id !== 'viewContent') {
+                    if (currentBlock.dataset && currentBlock.dataset.key) {
+                        anchor = currentBlock.dataset.key;
+                        break;
+                    }
+                    currentBlock = currentBlock.previousElementSibling;
+                }
+            }
+            
+            // 5. Fallback: Se grifar algo ANTES do Art. 1º (ex: a Ementa), salva como Preâmbulo
+            this.currentSelectionAnchor = anchor || 'Preambulo';
+
+        } else if (text.length === 0) {
+            popup.classList.add('hidden');
+        }
     });
 
   },
@@ -382,35 +510,32 @@ const app = {
         
         line = line.replace(/^(\d+(\.\d+)*\.?)\s/, "<b>$1 </b>");
 
-        let htmlOutput = `<p style="margin-bottom: 0.8em; text-align: justify;">${line}</p>`;
+        let htmlOutput = `<p style="margin-bottom: 0.8em; text-align: justify;"${key ? ` data-key="${key}"` : ''}>${line}</p>`;
 
         // --- LÓGICA DO TACHADO AUTOMÁTICO (EM CASCATA BLINDADA) ---
         if (key) {
+            // Se a chave já existe, significa que encontramos uma nova versão/atualização do mesmo elemento
             if (blockRegistry[key] !== undefined) {
-                for (let j = 0; j < blocks.length; j++) {
-                    let blockKey = blocks[j].key;
-                    
-                    let isChild = false;
-                    if (blockKey && blockKey.startsWith(key + '-')) {
-                        // Extrai a parte da chave que vem logo após o artigo pai
-                        let suffix = blockKey.substring(key.length + 1);
-                        
-                        // Garante que é um elemento da hierarquia, e não uma letra de artigo novo
-                        if (/^(Par|Inc|Ali|Pena|Rubrica)/.test(suffix)) {
-                            isChild = true;
-                        }
-                    }
+                // Recupera diretamente o índice do bloco antigo usando o mapa (O(1)), sem varrer o array todo
+                const targetIdx = blockRegistry[key];
+                
+                if (blocks[targetIdx] && !blocks[targetIdx].html.includes('text-decoration: line-through')) {
+                    blocks[targetIdx].html = blocks[targetIdx].html.replace('<p style="', '<p style="text-decoration: line-through; color: #9ca3af; ');
+                }
 
-                    if (blockKey === key || isChild) {
+                // --- Cascata Otimizada para os Filhos Imediatos ---
+                // Em vez de varrer desde o bloco 0, varremos apenas os últimos blocos adicionados recentemente
+                for (let j = blocks.length - 1; j >= targetIdx; j--) {
+                    let blockKey = blocks[j].key;
+                    if (blockKey && (blockKey === key || blockKey.startsWith(key + '-'))) {
                         if (!blocks[j].html.includes('text-decoration: line-through')) {
                             blocks[j].html = blocks[j].html.replace('<p style="', '<p style="text-decoration: line-through; color: #9ca3af; ');
                         }
                     }
                 }
-                blockRegistry[key] = blocks.length; 
-            } else {
-                blockRegistry[key] = blocks.length; 
             }
+            // Registra a posição do bloco atual associado a esta chave
+            blockRegistry[key] = blocks.length;
         }
 
         blocks.push({ html: htmlOutput, key: key });
@@ -421,38 +546,52 @@ const app = {
 
   // --- IMPORTAR TXT (Agora usa o processador comum) ---
   importTxtContent(input) {
-    const file = input.files[0];
-    if (!file) return;
-    if (file.size > 1024 * 1024 && !confirm("Arquivo grande. Continuar?"))
-      return;
+      const file = input.files[0];
+      if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const processedHtml = this.processText(e.target.result);
-      document.getElementById("editContent").innerHTML = processedHtml;
-      input.value = "";
-    };
-    reader.readAsText(file);
-  },
+      // Função interna que faz o trabalho
+      const processFile = () => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const processedHtml = this.processText(e.target.result);
+          document.getElementById("editContent").innerHTML = processedHtml;
+          input.value = "";
+        };
+        reader.readAsText(file);
+      };
+
+      if (file.size > 1024 * 1024) {
+        this.showConfirm(
+          "Arquivo Muito Grande", 
+          "Esse arquivo é pesado e pode travar seu navegador. Deseja tentar importar mesmo assim?", 
+          () => {
+            processFile();
+          }, 
+          'warning'
+        );
+      } else {
+        processFile();
+      }
+    },
 
   // --- AUTO FORMATAR (Botão ✨) ---
   // Agora pega o texto cru do editor e repassa pelo mesmo processador
   autoFormat() {
-      // Descobre qual editor está aberto
-      const mainContent = document.getElementById("editContent");
-      const appendixContent = document.getElementById("editAppendix");
-      const editor = !mainContent.classList.contains("hidden") ? mainContent : appendixContent;
+        const mainContent = document.getElementById("editContent");
+        const appendixContent = document.getElementById("editAppendix");
+        const editor = !mainContent.classList.contains("hidden") ? mainContent : appendixContent;
 
-      const rawText = editor.innerText;
+        const rawText = editor.innerText;
 
-      if (!rawText.trim()) {
-        alert("Cole algum texto primeiro para formatar.");
-        return;
-      }
+        if (!rawText.trim()) {
+          this.showAlert("Editor Vazio", "Cole algum texto primeiro para poder formatar.");
+          return;
+        }
 
-      const processedHtml = this.processText(rawText);
-      editor.innerHTML = processedHtml;
+        const processedHtml = this.processText(rawText);
+        editor.innerHTML = processedHtml;
     },
+
   // --- 3. AJUSTE DE TABELAS AO SALVAR ---
   save() {
     const id = document.getElementById("editId").value;
@@ -486,7 +625,7 @@ const app = {
     });
     content = tempDiv.innerHTML;
 
-    if (!title) return alert("O título é obrigatório.");
+    if (!title) return this.showAlert("Campo Obrigatório", "O título da norma não pode ficar em branco.");
 
     // Objeto a ser salvo (com keywords adicionado)
     const newItemData = {
@@ -526,20 +665,27 @@ const app = {
   },
 
   deleteCurrent() {
-    if (!this.currentId) return;
-    if (confirm("Tem certeza que deseja excluir esta norma?")) {
-      this.data = this.data.filter((x) => x.id !== this.currentId);
-      this.saveData();
-      this.renderList();
-      document.getElementById("lawViewer").classList.add("hidden");
-      document.getElementById("emptyState").classList.remove("hidden");
-      this.currentId = null;
-      if (window.innerWidth < 768) {
-        this.isMobileListVisible = true; // Volta para a lista
-        this.updateMobileView();
-      }
-    }
-  },
+      if (!this.currentId) return;
+
+      this.showConfirm(
+        "Excluir Norma", 
+        "Tem certeza que deseja excluir esta norma? Esta ação não pode ser desfeita.", 
+        () => {
+          // Isso aqui só roda se o usuário clicar no botão vermelho "Excluir"
+          this.data = this.data.filter((x) => x.id !== this.currentId);
+          this.saveData();
+          this.renderList();
+          document.getElementById("lawViewer").classList.add("hidden");
+          document.getElementById("emptyState").classList.remove("hidden");
+          this.currentId = null;
+          if (window.innerWidth < 768) {
+            this.isMobileListVisible = true;
+            this.updateMobileView();
+          }
+        }, 
+        'danger' // <- Este parâmetro deixa o botão vermelho e coloca o ícone de atenção
+      );
+    },
 
   filter(type) {
     this.filterType = type;
@@ -723,7 +869,7 @@ const app = {
     document.getElementById('lawList').scrollTop = 0;
   },
 
-  openViewer(id) {
+  openViewer(id, preventScroll = false) {
     this.closeInternalSearch();
     this.currentId = id;
     const item = this.data.find((x) => x.id === id);
@@ -738,9 +884,9 @@ const app = {
     // 1. Atualiza a lista lateral (para pintar o item selecionado)
     this.renderList(searchTerm);
 
-    // Isso garante que o texto comece sempre do topo
-    document.getElementById("viewerContainer").scrollTop = 0;
-
+    if (!preventScroll) {
+        document.getElementById("viewerContainer").scrollTop = 0;
+    }
 
 
     // 2. Prepara HTML da Esfera
@@ -759,34 +905,32 @@ const app = {
 
     // 3. Prepara Título
     const titleHtml = `
-            <span class="uppercase">${item.title}</span>
-            ${item.keywords ? `
-              <div class="mt-2 text-sm font-normal text-blue-500 font-mono bg-blue-50 dark:bg-blue-900/30 dark:text-blue-300 inline-flex items-center gap-1.5 px-2 py-1 rounded">
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  class="w-3.5 h-3.5"
-                >
-                  <path 
-                    d="M4.72848 16.1369C3.18295 14.5914 2.41018 13.8186 2.12264 12.816C1.83509 11.8134 2.08083 10.7485 2.57231 8.61875L2.85574 7.39057C3.26922 5.59881 3.47597 4.70292 4.08944 4.08944C4.70292 3.47597 5.59881 3.26922 7.39057 2.85574L8.61875 2.57231C10.7485 2.08083 11.8134 1.83509 12.816 2.12264C13.8186 2.41018 14.5914 3.18295 16.1369 4.72848L17.9665 6.55812C20.6555 9.24711 22 10.5916 22 12.2623C22 13.933 20.6555 15.2775 17.9665 17.9665C15.2775 20.6555 13.933 22 12.2623 22C10.5916 22 9.24711 20.6555 6.55812 17.9665L4.72848 16.1369Z" 
-                    stroke="currentColor" 
-                    stroke-width="1.5"
-                  />
-                  <circle cx="8.60724" cy="8.87891" r="2" transform="rotate(-45 8.60724 8.87891)" stroke="currentColor" stroke-width="1.5"/>
-                  <path d="M11.5417 18.5L18.5208 11.5208" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-                ${item.keywords}
-              </div>
-            ` : ""}
+                <span class="uppercase">${item.title}</span>
+                ${item.keywords ? `
+                  <div class="mt-2 text-sm font-medium font-mono inline-flex items-center gap-1.5 px-2 py-1 rounded" style="color: var(--title-color); background-color: color-mix(in srgb, var(--title-color) 15%, transparent); border: 1px solid color-mix(in srgb, var(--title-color) 30%, transparent);">
+                    <svg 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      class="w-3.5 h-3.5"
+                    >
+                      <path 
+                        d="M4.72848 16.1369C3.18295 14.5914 2.41018 13.8186 2.12264 12.816C1.83509 11.8134 2.08083 10.7485 2.57231 8.61875L2.85574 7.39057C3.26922 5.59881 3.47597 4.70292 4.08944 4.08944C4.70292 3.47597 5.59881 3.26922 7.39057 2.85574L8.61875 2.57231C10.7485 2.08083 11.8134 1.83509 12.816 2.12264C13.8186 2.41018 14.5914 3.18295 16.1369 4.72848L17.9665 6.55812C20.6555 9.24711 22 10.5916 22 12.2623C22 13.933 20.6555 15.2775 17.9665 17.9665C15.2775 20.6555 13.933 22 12.2623 22C10.5916 22 9.24711 20.6555 6.55812 17.9665L4.72848 16.1369Z" 
+                        stroke="currentColor" 
+                        stroke-width="1.5"
+                      />
+                      <circle cx="8.60724" cy="8.87891" r="2" transform="rotate(-45 8.60724 8.87891)" stroke="currentColor" stroke-width="1.5"/>
+                      <path d="M11.5417 18.5L18.5208 11.5208" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    ${item.keywords}
+                  </div>
+                ` : ""}
         `;
 
-    // 4. Injeta os dados na tela (IMPORTANTE: Isso faz o texto aparecer)
+    // 4. Injeta os dados na tela
     document.getElementById("viewTitle").innerHTML = titleHtml;
-    // SINCRONIZA O TÍTULO DA MINIBAR AQUI TAMBÉM
     document.getElementById("minibarTitle").textContent = item.title; 
 
-    // CHAMA A APARÊNCIA ANTES DE MOSTRAR
     this.applyAppearance();
 
     document.getElementById("emptyState").classList.add("hidden");
@@ -796,23 +940,48 @@ const app = {
     document.getElementById("viewDate").textContent =
       `Publicado em: ${new Date(item.date).toLocaleDateString("pt-BR", { dateStyle: "long" })}`;
 
-
+    // CORREÇÃO: Deixa o conteúdo limpo para a Regex do Highlight funcionar
     let contentHtml = item.content;
-    contentHtml = this.linkifyNormas(contentHtml);
 
-
-    // 5. Lógica de Destaque (Highlight)
     if (searchTerm && searchTerm.length > 2) {
       try {
         const regex = new RegExp(`(${searchTerm})`, "gi");
-        contentHtml = contentHtml.replace(
-          regex,
-          '<span class="bg-yellow-200 text-black font-bold">$1</span>',
-        );
+        contentHtml = contentHtml.replace(regex, '<span class="bg-yellow-200 text-black font-bold">$1</span>');
       } catch (e) {
         console.warn(e);
       }
     }
+
+    // --- PROCESSAMENTO DE HIGHLIGHTS COCKPIT (ANTI-TRAVAMENTO) ---
+    const ann = this.annotations[id];
+    if (ann && ann.highlights && ann.highlights.length > 0) {
+        // Ordena do maior texto pro menor para evitar sub-substituições incorretas
+        const sortedHighlights = [...ann.highlights].sort((a, b) => b.text.length - a.text.length);
+        
+        sortedHighlights.forEach((hl) => {
+            if (hl.text && hl.text.length >= 10) {
+                // CORREÇÃO PARA LINKS NO MEIO: Substitui espaços por um padrão que tolera tags HTML internas como <a> e </a>
+                const escapedLiteral = hl.text
+                    .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+                    .replace(/\s+/g, '(?:\\s|<[^>]*>)+'); // Ignora dinamicamente qualquer tag HTML no meio do texto selecionado
+                
+                try {
+                    const regex = new RegExp(`(${escapedLiteral})`, "gi");
+                    
+                    const markTag = `<mark class="${hl.color} rounded-sm px-0.5 cursor-pointer hover:ring-2 hover:ring-red-500 transition-all shadow-sm" onclick="app.removeSingleHighlight(${id}, ${hl.id})" title="Clique para apagar apenas este grifo">$1</mark>`;
+                    
+                    if (regex.test(contentHtml)) {
+                        contentHtml = contentHtml.replace(regex, markTag);
+                    }
+                } catch (regexError) {
+                    console.error("Erro ao aplicar grifo otimizado:", regexError);
+                }
+            }
+        });
+    }
+
+    // REINSERÇÃO: Aplica os links automáticos dinâmicos após os grifos estruturais
+    contentHtml = this.linkifyNormas(contentHtml);
 
     document.getElementById("viewContent").innerHTML = contentHtml;
 
@@ -835,6 +1004,21 @@ const app = {
         .scrollIntoView({ behavior: "smooth" });
     }
 
+    // 3. Trava a animação responsiva no final da função
+    if (!preventScroll) {
+        if (window.innerWidth < 768) {
+          const sidebar = document.getElementById("sidebar");
+          if (sidebar.classList.contains("translate-x-0")) {
+            this.toggleMobileMenu();
+          }
+          window.scrollTo(0, 0);
+        } else {
+          document
+            .getElementById("viewerContainer")
+            .scrollIntoView({ behavior: "smooth" });
+        }
+    }
+
     // No final do openViewer(), após carregar o viewContent:
     const btnAppendix = document.getElementById("btnViewAppendix");
     const sepAppendix = document.getElementById("divAppendixSeparator");
@@ -846,6 +1030,8 @@ const app = {
         btnAppendix.classList.add("hidden");
         sepAppendix.classList.add("hidden");
     }
+
+    this.updateNoteIndicator();
   },
 
   editCurrent() {
@@ -931,7 +1117,7 @@ const app = {
     const sphere = item.sphere || "Federal";
 
     const w = window.open("", "_blank", "width=900,height=800");
-    if (!w) return alert("Popups bloqueados.");
+    if (!w) return this.showAlert("Pop-ups Bloqueados", "Por favor, permita pop-ups neste site para conseguir imprimir ou salvar o PDF.");
 
     w.document.write(`
             <!DOCTYPE html>
@@ -1205,19 +1391,23 @@ const app = {
     // --- 4. ATUALIZAÇÃO DA MINIBAR (Segura contra erros de elemento nulo) ---
     const minibar = document.getElementById("fixedMinibar");
     if (minibar) {
-      const style = window.getComputedStyle(viewer);
-      const contentStyle = window.getComputedStyle(content);
-      
-      const minibarInner = minibar.querySelector('div');
-      if (minibarInner) {
-        minibarInner.style.backgroundColor = style.backgroundColor;
-        minibarInner.style.borderColor = style.borderBottomColor;
-      }
+      // setTimeout obriga o Javascript a esperar o navegador "pintar" a tela
+      // com a nova cor antes de tentar copiá-la. Fim da transparência!
+      setTimeout(() => {
+        const style = window.getComputedStyle(viewer);
+        const contentStyle = window.getComputedStyle(content);
+        
+        const minibarInner = minibar.querySelector('div');
+        if (minibarInner) {
+          minibarInner.style.backgroundColor = style.backgroundColor;
+          minibarInner.style.borderColor = style.borderBottomColor;
+        }
 
-      const titleEl = document.getElementById("minibarTitle");
-      if (titleEl) {
-        titleEl.style.color = contentStyle.color;
-      }
+        const titleEl = document.getElementById("minibarTitle");
+        if (titleEl) {
+          titleEl.style.color = contentStyle.color;
+        }
+      }, 50); // 50 milissegundos é invisível aos olhos, mas resolve o bug!
     }
   },
 
@@ -1566,8 +1756,8 @@ togglePin(event, id) {
     if (this.data[index].pinned) {
       this.data[index].pinned = false;
     } else {
-      if (currentlyPinned.length >= 3) {
-        alert("Você já possui 3 itens fixados. Desfixe um para fixar este.");
+    if (currentlyPinned.length >= 3) {
+        this.showAlert("Limite de Fixados", "Você já possui 3 itens fixados no topo. Desfixe algum para fixar este.");
         return;
       }
       this.data[index].pinned = true;
@@ -1611,6 +1801,311 @@ togglePin(event, id) {
         document.getElementById("appendixViewContent").innerHTML = contentHtml;
         document.getElementById("appendixModal").classList.remove("hidden");
     },
+
+  // --- SISTEMA DE ANOTAÇÕES PESSOAIS ---
+  loadAnnotations() {
+      const saved = localStorage.getItem("cockpit_law_annotations");
+      this.annotations = saved ? JSON.parse(saved) : {};
+  },
+
+  saveAnnotationsStore() {
+      localStorage.setItem("cockpit_law_annotations", JSON.stringify(this.annotations));
+  },
+
+  addHighlight(colorClass) {
+        if (!this.currentSelectionText || !this.currentId) return;
+        
+        if (!this.annotations[this.currentId]) {
+            this.annotations[this.currentId] = { highlights: [], notes: '' };
+        }
+        
+        const isDuplicate = this.annotations[this.currentId].highlights.some(h => h.text === this.currentSelectionText);
+
+        // Resgata a âncora que foi salva no evento de seleção (mouseup)
+        let anchor = this.currentSelectionAnchor || null;
+        
+        if (!isDuplicate && this.currentSelectionText.length > 0) {
+            // CORREÇÃO: Injeta um ID único usando o Timestamp atual
+            this.annotations[this.currentId].highlights.push({ 
+                id: Date.now(), 
+                text: this.currentSelectionText, 
+                color: colorClass,
+                anchor: anchor
+            });
+            this.saveAnnotationsStore();
+            this.showToast("Texto marcado com sucesso!");
+        }
+        
+        document.getElementById('highlightToolbar').classList.add('hidden');
+        window.getSelection().removeAllRanges();
+        
+        const container = document.getElementById("viewerContainer");
+        const currentScroll = container.scrollTop;
+        
+        this.openViewer(this.currentId, true);
+        
+        setTimeout(() => {
+            container.scrollTop = currentScroll;
+        }, 10);
+    },
+
+  clearHighlights() {
+      if (!this.currentId || !this.annotations[this.currentId]) return;
+      
+      this.showConfirm("Limpar Marcações", "Deseja remover todas as marcações coloridas desta norma?", () => {
+          this.annotations[this.currentId].highlights = [];
+          this.saveAnnotationsStore();
+          document.getElementById('highlightToolbar').classList.add('hidden');
+          this.openViewer(this.currentId);
+          this.showToast("Marcações removidas.");
+      }, 'warning');
+  },
+
+  openNotes() {
+      if (!this.currentId) return;
+      const ann = this.annotations[this.currentId];
+
+      // Observação geral
+      document.getElementById('personalNotesText').value = (ann && ann.notes) ? ann.notes : '';
+
+      // Lista de notas ancoradas
+      const list = document.getElementById('anchorNotesList');
+      const count = document.getElementById('anchorNotesCount');
+      const anchorNotes = (ann && ann.anchorNotes) ? ann.anchorNotes : [];
+
+      count.textContent = anchorNotes.length > 0 ? `${anchorNotes.length} nota(s)` : '';
+
+      if (anchorNotes.length === 0) {
+          list.innerHTML = '<p class="text-xs text-gray-400 italic">Nenhuma nota ancorada ainda.</p>';
+      } else {
+          list.innerHTML = anchorNotes.map(n => `
+              <div class="flex items-start gap-2 bg-gray-50 dark:bg-slate-900/50 border dark:border-slate-700 rounded-lg p-3">
+                  <div class="flex-1 min-w-0">
+                      <button onclick="app.scrollToAnchor('${n.anchor}')"
+                              class="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400 hover:underline mb-1 block text-left">
+                          📍 ${n.label}
+                      </button>
+                      <p class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">${n.note}</p>
+                  </div>
+                  <button onclick="app.removeAnchorNote(${n.id})"
+                          class="text-gray-300 hover:text-red-500 dark:text-slate-600 dark:hover:text-red-400 shrink-0 mt-0.5"
+                          title="Remover nota">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                      </svg>
+                  </button>
+              </div>
+          `).join('');
+      }
+
+      // Garante que o formulário de nova nota esteja fechado ao abrir
+      document.getElementById('anchorNoteForm').classList.add('hidden');
+      document.getElementById('notesModal').classList.remove('hidden');
+  },
+
+  saveNotes() {
+      if (!this.currentId) return;
+      const text = document.getElementById("personalNotesText").value;
+      
+      if (!this.annotations[this.currentId]) {
+          this.annotations[this.currentId] = { highlights: [], notes: '' };
+      }
+      
+      this.annotations[this.currentId].notes = text;
+      this.saveAnnotationsStore();
+      
+      document.getElementById("notesModal").classList.add("hidden");
+      this.updateNoteIndicator();
+      this.showToast("Observação salva com sucesso!");
+  },
+
+  updateNoteIndicator() {
+      const indicator = document.getElementById('noteIndicator');
+      if (!indicator || !this.currentId) return;
+
+      const ann = this.annotations[this.currentId];
+      const hasNotes = ann && ann.notes && ann.notes.trim().length > 0;
+      const hasAnchors = ann && ann.anchorNotes && ann.anchorNotes.length > 0;
+
+      if (hasNotes || hasAnchors) {
+          indicator.classList.remove('hidden');
+      } else {
+          indicator.classList.add('hidden');
+      }
+  },
+
+  // --- EXPORTAÇÃO E IMPORTAÇÃO DO BACKUP DE NOTAS ---
+  exportAnnotations() {
+      if (Object.keys(this.annotations).length === 0) {
+          return this.showAlert("Aviso", "Você ainda não possui marcações ou notas para fazer backup.");
+      }
+      const dataStr = JSON.stringify(this.annotations, null, 2);
+      const filename = `cockpit_anotacoes_${new Date().toISOString().split('T')[0]}.json`;
+      this.downloadFile(filename, dataStr, "application/json");
+      this.showToast("Backup gerado com sucesso!");
+  },
+
+  importAnnotations(input) {
+      const file = input.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+          try {
+              const importedData = JSON.parse(e.target.result);
+              
+              this.showConfirm("Restaurar Notas", "Deseja mesclar este backup com suas notas atuais? (Notas existentes poderão ser sobrescritas)", () => {
+                  this.annotations = { ...this.annotations, ...importedData };
+                  this.saveAnnotationsStore();
+                  input.value = ""; // limpa o input
+                  if (this.currentId) this.openViewer(this.currentId);
+                  this.showToast("Backup restaurado com sucesso!");
+              }, 'warning');
+          } catch (error) {
+              this.showAlert("Erro", "Arquivo de backup inválido ou corrompido.");
+          }
+      };
+      reader.readAsText(file);
+  },
+
+  removeSingleHighlight(lawId, highlightId) {
+        this.showConfirm("Remover Grifo", "Deseja remover apenas esta marcação do texto?", () => {
+            if (this.annotations[lawId] && this.annotations[lawId].highlights) {
+                
+                // CORREÇÃO CRÍTICA: Convertendo o highlightId recebido para Number
+                const idParaRemover = Number(highlightId);
+                
+                this.annotations[lawId].highlights = this.annotations[lawId].highlights.filter(
+                    hl => hl.id !== idParaRemover
+                );
+                
+                this.saveAnnotationsStore();
+                
+                // Mantém a posição da tela estável
+                const container = document.getElementById("viewerContainer");
+                const currentScroll = container.scrollTop;
+                
+                // Força a re-renderização imediata
+                this.openViewer(Number(lawId), true);
+                
+                setTimeout(() => {
+                    container.scrollTop = currentScroll;
+                }, 10);
+                
+                this.showToast("Marcação removida.");
+            }
+        }, 'warning');
+    },
+
+    addAnchorNote() {
+        if (!this.currentId) return;
+
+        // Puxa a âncora que identificamos no evento do mouse
+        let anchor = this.currentSelectionAnchor || null;
+
+        this._pendingAnchor = anchor;
+        this.openAnchorNoteModal(anchor);
+    },
+
+    openAnchorNoteModal(anchor) {
+    // Converte a chave técnica em label legível. Ex: "Art-5-Par-2" → "Art. 5, § 2º"
+    const labelMap = (key) => {
+        if (!key) return 'Dispositivo não identificado';
+        if (key === 'Preambulo') return 'Preâmbulo / Ementa';
+        return key
+            .replace(/Art-(\w+)/,      'Art. $1')
+            .replace(/-Par-PU/,        ', Parágrafo único')
+            .replace(/-Par-(\w+)/,     ', § $1º')
+            .replace(/-Inc-([IVXLCDM]+)/, ', inc. $1')
+            .replace(/-Ali-([a-z])/,   ', al. $1')
+            .replace(/-Pena/,          ', Pena')
+            .replace(/-Rubrica/,       ' (Rubrica)');
+    };
+
+    document.getElementById('anchorNoteFormLabel').textContent = labelMap(anchor);
+    document.getElementById('anchorNoteText').value = '';
+    document.getElementById('anchorNoteForm').classList.remove('hidden');
+    document.getElementById('notesModal').classList.remove('hidden');
+
+      setTimeout(() => document.getElementById('anchorNoteText').focus(), 50);
+  },
+
+  cancelAnchorNote() {
+      document.getElementById('anchorNoteForm').classList.add('hidden');
+      document.getElementById('anchorNoteText').value = '';
+      this._pendingAnchor = null;
+  },
+
+  saveAnchorNote() {
+      const text = document.getElementById('anchorNoteText').value.trim();
+      if (!text) return;
+
+      const anchor = this._pendingAnchor;
+
+      const labelMap = (key) => {
+          if (!key) return 'Dispositivo não identificado';
+          if (key === 'Preambulo') return 'Preâmbulo / Ementa';
+          return key
+              .replace(/Art-(\w+)/,      'Art. $1')
+              .replace(/-Par-PU/,        ', Parágrafo único')
+              .replace(/-Par-(\w+)/,     ', § $1º')
+              .replace(/-Inc-([IVXLCDM]+)/, ', inc. $1')
+              .replace(/-Ali-([a-z])/,   ', al. $1')
+              .replace(/-Pena/,          ', Pena')
+              .replace(/-Rubrica/,       ' (Rubrica)');
+      };
+
+      if (!this.annotations[this.currentId]) {
+          this.annotations[this.currentId] = { highlights: [], notes: '', anchorNotes: [] };
+      }
+      if (!this.annotations[this.currentId].anchorNotes) {
+          this.annotations[this.currentId].anchorNotes = [];
+      }
+
+      this.annotations[this.currentId].anchorNotes.push({
+          id: Date.now(),
+          anchor: anchor,
+          label: labelMap(anchor),
+          note: text,
+          createdAt: Date.now()
+      });
+
+      this.saveAnnotationsStore();
+      this.cancelAnchorNote();
+      this.openNotes(); // Recarrega a lista
+      this.updateNoteIndicator();
+      this.showToast('Nota salva com sucesso!');
+  },
+
+  scrollToAnchor(anchor) {
+    document.getElementById('notesModal').classList.add('hidden');
+    if (!anchor) return;
+
+    // Tenta ir direto ao elemento com data-key
+    const el = document.querySelector(`[data-key="${anchor}"]`);
+    if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.add('bg-yellow-100', 'dark:bg-yellow-900/30');
+        setTimeout(() => el.classList.remove('bg-yellow-100', 'dark:bg-yellow-900/30'), 2000);
+        return;
+    }
+
+    // Fallback: rola até o artigo pai
+    const artMatch = anchor.match(/Art-(\w+)/);
+    if (artMatch) this.scrollToArt(artMatch[1]);
+  },
+
+  removeAnchorNote(noteId) {
+      this.showConfirm('Remover Nota', 'Deseja remover esta nota ancorada?', () => {
+          if (!this.annotations[this.currentId]?.anchorNotes) return;
+          this.annotations[this.currentId].anchorNotes = 
+              this.annotations[this.currentId].anchorNotes.filter(n => n.id !== noteId);
+          this.saveAnnotationsStore();
+          this.openNotes(); // Atualiza a lista
+          this.updateNoteIndicator();
+          this.showToast('Nota removida.');
+      }, 'warning');
+  },
 
 
 };

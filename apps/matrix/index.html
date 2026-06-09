@@ -38,7 +38,19 @@
         })();
     </script>
     <style>
-        .matrix-container { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 1rem; height: calc(100vh - 220px); }
+        .matrix-container { 
+            display: grid; 
+            grid-template-columns: 1fr; /* 1 coluna no mobile */
+            gap: 1rem; 
+            height: auto; 
+        }
+        @media (min-width: 768px) {
+            .matrix-container { 
+                grid-template-columns: 1fr 1fr; /* 2 colunas no monitor */
+                grid-template-rows: 1fr 1fr; 
+                height: calc(100vh - 220px); 
+            }
+        }
         .quadrant { overflow-y: auto; border-radius: 0.75rem; padding: 1rem; border-width: 2px; }
     </style>
 </head>
