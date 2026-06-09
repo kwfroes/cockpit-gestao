@@ -241,7 +241,7 @@
         <div id="fixedMinibar" class="hidden sticky -top-9 z-40 w-full no-print transition-all duration-300">
             <div class="max-w-4xl mx-auto bg-white dark:bg-slate-800 border shadow-md rounded-b-xl px-6 py-3 flex justify-between items-center">
                 
-                <span id="minibarTitle" class="text-sm font-bold truncate pr-4 uppercase text-gray-700 dark:text-gray-100">
+                <span id="minibarTitle" class="flex-1 text-center text-sm font-bold truncate px-2 uppercase text-gray-700 dark:text-gray-100">
                     Título da Norma
                 </span>
 
@@ -249,11 +249,10 @@
                 
 
                 
-                <div class="flex gap-1 items-center shrink-0">
+              <div class="flex gap-1 items-center shrink-0">
                 <div id="divAppendixSeparator" class="hidden w-px h-5 bg-gray-300 dark:bg-slate-600 mx-1"></div>
 
-
-                <button id="btnViewAppendix" onclick="app.openAppendixModal()" class="hidden p-2 text-gray-400 hover:text-amber-700 dark:text-gray-400 dark:hover:text-amber-300 font-bold text-xs flex items-center gap-1 rounded transition-colors" title="Ver Anexos">
+                <button id="btnViewAppendix" onclick="app.openAppendixModal()" class="hidden p-2 text-gray-500 hover:text-amber-600 dark:text-gray-400 dark:hover:text-amber-400 font-bold text-xs flex items-center gap-1 rounded transition-colors" title="Ver Anexos">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path 
                         stroke-linecap="round" 
@@ -265,14 +264,23 @@
                 </button>
                 <div class="w-px h-5 bg-gray-300 dark:bg-slate-600 mx-1"></div>
 
-                    <button onclick="app.internalSearch()" class="p-2 text-gray-400 hover:text-blue-600 transition-colors" title="Localizar">
+                <button onclick="app.openNotes()" class="p-2 text-gray-500 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors rounded relative" title="Minhas Observações">
+                    <svg class="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1920">
+                        <path d="M1809.888 1806.674V1920H110v-113.326h1699.888Zm-1332.35-415.453 143.471 95.647-60.29 93.154H326.816l150.724-188.8ZM616.817 921.94l389.954 260.196-32.75 51.45c-15.753 27.085-46.011 41.364-75.25 36.038-72.754-12.92-146.19 18.359-187.667 80.801l-27.991 41.704-138.825-92.7 27.879-41.818c41.59-62.33 42.497-142.564 2.266-204.213-16.205-24.932-14.506-58.476 3.627-82.388l38.757-49.07Zm678.595-803.027L1537.93 280.74c16.092 10.766 20.399 33.318 11.106 49.523L1067.627 1086.6 687.419 832.864l556.77-703.187c12.466-16.66 35.018-21.532 51.223-10.766ZM312.65 1693.348h309.833l123.186-190.727 59.722-89.414c16.433-24.592 45.104-37.398 72.642-32.185 76.495 14.28 154.123-22.098 192.654-88.394l575.242-903.547c40.344-69.696 20.626-158.657-44.99-202.627l-242.744-161.83c-65.616-43.63-155.37-27.764-203.533 35.585L488.53 901.654c-47.71 62.782-51.336 148.683-8.953 213.506 15.3 23.685 14.62 54.963-1.7 79.668l-58.249 87.26-190.16 238.438c-25.84 32.298-30.712 75.475-12.807 112.646 17.906 37.058 54.737 60.176 95.987 60.176Z" fill-rule="evenodd"/>
+                    </svg>
+                    <span id="noteIndicator" class="hidden absolute top-1 right-1 w-2 h-2 bg-indigo-500 rounded-full"></span>
+                </button>
+                <div class="w-px h-5 bg-gray-300 dark:bg-slate-600 mx-1"></div>
+
+
+                    <button onclick="app.internalSearch()" class="p-2 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors rounded" title="Localizar">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </button>
                 <div class="w-px h-5 bg-gray-300 dark:bg-slate-600 mx-1"></div>
 
                     <button
                       onclick="app.exportToPdf()"
-                      class="p-2 w-full text-left px-1 py-1 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-600 flex items-center justify-center gap-2"
+                      class="p-2 w-full text-left px-1 py-1 text-sm text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 flex items-center justify-center gap-2 transition-colors rounded"
                       title="Imprimir / PDF"
                     >
                       <svg 
@@ -292,11 +300,11 @@
                     </button>
 
                     <div class="w-px h-5 bg-gray-300 dark:bg-slate-600 mx-1 admin-only"></div>
-                    <button onclick="app.editCurrent()" class="p-2 text-gray-400 hover:text-blue-600 admin-only" title="Editar">
+                    <button onclick="app.editCurrent()" class="p-2 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors rounded admin-only" title="Editar">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                     </button>
                     <div class="w-px h-5 bg-gray-300 dark:bg-slate-600 mx-1 admin-only"></div>
-                    <button onclick="app.deleteCurrent()" class="p-2 text-gray-400 hover:text-red-600 admin-only" title="Excluir">
+                    <button onclick="app.deleteCurrent()" class="p-2 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors rounded admin-only" title="Excluir">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                     </button>
                 </div>
@@ -453,64 +461,62 @@
                         d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
                       ></path>
                     </svg>
-                    <span class="hidden sm:inline text-xs font-semibold"
-                      >Exportar</span
-                    >
-                  </button>
-                  <div
-                    class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all z-20"
-                  >
-                  <button
-                    onclick="app.exportToPdf()"
-                    class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center gap-2"
-                  >
-                    <svg 
-                      xmlns="http://www.w3.org/2000/svg" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      class="w-5 h-5"
-                    >
-                      <path 
-                        d="M6 17.9827C4.44655 17.9359 3.51998 17.7626 2.87868 17.1213C2 16.2426 2 14.8284 2 12C2 9.17157 2 7.75736 2.87868 6.87868C3.75736 6 5.17157 6 8 6H16C18.8284 6 20.2426 6 21.1213 6.87868C22 7.75736 22 9.17157 22 12C22 14.8284 22 16.2426 21.1213 17.1213C20.48 17.7626 19.5535 17.9359 18 17.9827" 
-                        stroke="currentColor" 
-                        stroke-width="1.5"
-                      />
-                      <path d="M9 10H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                      <path d="M19 14L5 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                      <path 
-                        d="M17.1213 2.87868L16.591 3.40901V3.40901L17.1213 2.87868ZM6.87868 2.87868L7.40901 3.40901V3.40901L6.87868 2.87868ZM6.87868 21.1213L7.40901 20.591H7.40901L6.87868 21.1213ZM18.75 14C18.75 13.5858 18.4142 13.25 18 13.25C17.5858 13.25 17.25 13.5858 17.25 14H18.75ZM6.75 14C6.75 13.5858 6.41421 13.25 6 13.25C5.58579 13.25 5.25 13.5858 5.25 14H6.75ZM17.25 16C17.25 17.4354 17.2484 18.4365 17.1469 19.1919C17.0482 19.9257 16.8678 20.3142 16.591 20.591L17.6517 21.6517C18.2536 21.0497 18.5125 20.2919 18.6335 19.3918C18.7516 18.5132 18.75 17.393 18.75 16H17.25ZM12 22.75C13.393 22.75 14.5132 22.7516 15.3918 22.6335C16.2919 22.5125 17.0497 22.2536 17.6517 21.6517L16.591 20.591C16.3142 20.8678 15.9257 21.0482 15.1919 21.1469C14.4365 21.2484 13.4354 21.25 12 21.25V22.75ZM12 2.75C13.4354 2.75 14.4365 2.75159 15.1919 2.85315C15.9257 2.9518 16.3142 3.13225 16.591 3.40901L17.6517 2.34835C17.0497 1.74643 16.2919 1.48754 15.3918 1.36652C14.5132 1.24841 13.393 1.25 12 1.25V2.75ZM12 1.25C10.607 1.25 9.48678 1.24841 8.60825 1.36652C7.70814 1.48754 6.95027 1.74643 6.34835 2.34835L7.40901 3.40901C7.68577 3.13225 8.07434 2.9518 8.80812 2.85315C9.56347 2.75159 10.5646 2.75 12 2.75V1.25ZM5.25 16C5.25 17.393 5.24841 18.5132 5.36652 19.3918C5.48754 20.2919 5.74643 21.0497 6.34835 21.6517L7.40901 20.591C7.13225 20.3142 6.9518 19.9257 6.85315 19.1919C6.75159 18.4365 6.75 17.4354 6.75 16H5.25ZM12 21.25C10.5646 21.25 9.56347 21.2484 8.80812 21.1469C8.07435 21.0482 7.68577 20.8678 7.40901 20.591L6.34835 21.6517C6.95027 22.2536 7.70814 22.5125 8.60825 22.6335C9.48678 22.7516 10.607 22.75 12 22.75V21.25ZM18.7323 5.97741C18.6859 4.43521 18.5237 3.22037 17.6517 2.34835L16.591 3.40901C17.0016 3.8196 17.1859 4.4579 17.233 6.02259L18.7323 5.97741ZM6.76698 6.02259C6.81413 4.4579 6.99842 3.8196 7.40901 3.40901L6.34835 2.34835C5.47633 3.22037 5.31413 4.43521 5.26766 5.97741L6.76698 6.02259ZM18.75 16V14H17.25V16H18.75ZM6.75 16V14H5.25V16H6.75Z" 
-                        fill="currentColor"
-                      />
-                      <circle cx="17" cy="10" r="1" fill="currentColor"/>
-                      <path d="M15 16.5H9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                      <path d="M13 19H9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    </svg>
-                    <span>Imprimir / PDF</span>
+                    <span class="hidden sm:inline text-xs font-semibold">Exportar</span>
                   </button>
 
-                  <button
-                    onclick="app.exportToTxt()"
-                    class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center gap-2"
-                  >
-                    <svg 
-                      xmlns="http://www.w3.org/2000/svg" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      class="w-5 h-5"
+                  <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all z-20">
+                    
+                    <button
+                      onclick="app.exportToPdf()"
+                      class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center gap-2"
                     >
-                      <path 
-                        d="M3 10C3 6.22876 3 4.34315 4.17157 3.17157C5.34315 2 7.22876 2 11 2H13C16.7712 2 18.6569 2 19.8284 3.17157C21 4.34315 21 6.22876 21 10V14C21 17.7712 21 19.6569 19.8284 20.8284C18.6569 22 16.7712 22 13 22H11C7.22876 22 5.34315 22 4.17157 20.8284C3 19.6569 3 17.7712 3 14V10Z" 
-                        stroke="currentColor" 
-                        stroke-width="1.5"
-                      />
-                      <path d="M8 12H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                      <path d="M8 8H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                      <path d="M8 16H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    </svg>
-                    <span>Texto (.txt)</span>
-                  </button>
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        class="w-5 h-5"
+                      >
+                        <path 
+                          d="M6 17.9827C4.44655 17.9359 3.51998 17.7626 2.87868 17.1213C2 16.2426 2 14.8284 2 12C2 9.17157 2 7.75736 2.87868 6.87868C3.75736 6 5.17157 6 8 6H16C18.8284 6 20.2426 6 21.1213 6.87868C22 7.75736 22 9.17157 22 12C22 14.8284 22 16.2426 21.1213 17.1213C20.48 17.7626 19.5535 17.9359 18 17.9827" 
+                          stroke="currentColor" 
+                          stroke-width="1.5"
+                        />
+                        <path d="M9 10H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        <path d="M19 14L5 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        <path 
+                          d="M17.1213 2.87868L16.591 3.40901V3.40901L17.1213 2.87868ZM6.87868 2.87868L7.40901 3.40901V3.40901L6.87868 2.87868ZM6.87868 21.1213L7.40901 20.591H7.40901L6.87868 21.1213ZM18.75 14C18.75 13.5858 18.4142 13.25 18 13.25C17.5858 13.25 17.25 13.5858 17.25 14H18.75ZM6.75 14C6.75 13.5858 6.41421 13.25 6 13.25C5.58579 13.25 5.25 13.5858 5.25 14H6.75ZM17.25 16C17.25 17.4354 17.2484 18.4365 17.1469 19.1919C17.0482 19.9257 16.8678 20.3142 16.591 20.591L17.6517 21.6517C18.2536 21.0497 18.5125 20.2919 18.6335 19.3918C18.7516 18.5132 18.75 17.393 18.75 16H17.25ZM12 22.75C13.393 22.75 14.5132 22.7516 15.3918 22.6335C16.2919 22.5125 17.0497 22.2536 17.6517 21.6517L16.591 20.591C16.3142 20.8678 15.9257 21.0482 15.1919 21.1469C14.4365 21.2484 13.4354 21.25 12 21.25V22.75ZM12 2.75C13.4354 2.75 14.4365 2.75159 15.1919 2.85315C15.9257 2.9518 16.3142 3.13225 16.591 3.40901L17.6517 2.34835C17.0497 1.74643 16.2919 1.48754 15.3918 1.36652C14.5132 1.24841 13.393 1.25 12 1.25V2.75ZM12 1.25C10.607 1.25 9.48678 1.24841 8.60825 1.36652C7.70814 1.48754 6.95027 1.74643 6.34835 2.34835L7.40901 3.40901C7.68577 3.13225 8.07434 2.9518 8.80812 2.85315C9.56347 2.75159 10.5646 2.75 12 2.75V1.25ZM5.25 16C5.25 17.393 5.24841 18.5132 5.36652 19.3918C5.48754 20.2919 5.74643 21.0497 6.34835 21.6517L7.40901 20.591C7.13225 20.3142 6.9518 19.9257 6.85315 19.1919C6.75159 18.4365 6.75 17.4354 6.75 16H5.25ZM12 21.25C10.5646 21.25 9.56347 21.2484 8.80812 21.1469C8.07435 21.0482 7.68577 20.8678 7.40901 20.591L6.34835 21.6517C6.95027 22.2536 7.70814 22.5125 8.60825 22.6335C9.48678 22.7516 10.607 22.75 12 22.75V21.25ZM18.7323 5.97741C18.6859 4.43521 18.5237 3.22037 17.6517 2.34835L16.591 3.40901C17.0016 3.8196 17.1859 4.4579 17.233 6.02259L18.7323 5.97741ZM6.76698 6.02259C6.81413 4.4579 6.99842 3.8196 7.40901 3.40901L6.34835 2.34835C5.47633 3.22037 5.31413 4.43521 5.26766 5.97741L6.76698 6.02259ZM18.75 16V14H17.25V16H18.75ZM6.75 16V14H5.25V16H6.75Z" 
+                          fill="currentColor"
+                        />
+                        <circle cx="17" cy="10" r="1" fill="currentColor"/>
+                        <path d="M15 16.5H9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        <path d="M13 19H9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                      </svg>
+                      <span>Imprimir / PDF</span>
+                    </button>
 
-                   <button
+                    <button
+                      onclick="app.exportToTxt()"
+                      class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center gap-2"
+                    >
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        class="w-5 h-5"
+                      >
+                        <path 
+                          d="M3 10C3 6.22876 3 4.34315 4.17157 3.17157C5.34315 2 7.22876 2 11 2H13C16.7712 2 18.6569 2 19.8284 3.17157C21 4.34315 21 6.22876 21 10V14C21 17.7712 21 19.6569 19.8284 20.8284C18.6569 22 16.7712 22 13 22H11C7.22876 22 5.34315 22 4.17157 20.8284C3 19.6569 3 17.7712 3 14V10Z" 
+                          stroke="currentColor" 
+                          stroke-width="1.5"
+                        />
+                        <path d="M8 12H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        <path d="M8 8H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        <path d="M8 16H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                      </svg>
+                      <span>Texto (.txt)</span>
+                    </button>
+
+                    <button
                       onclick="app.exportToCsv()"
                       class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center gap-2"
                     >
@@ -530,9 +536,67 @@
                         <path d="M17 18V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                       </svg>
                       <span>Excel (.csv)</span>
-                   </button>
+                    </button>
 
-                  </div>
+                    <div class="border-t dark:border-slate-700 my-1"></div>
+
+                    <div class="relative group/submenu">
+                      <div class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center justify-between cursor-pointer">
+                        <div class="flex items-center gap-2">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+                          </svg>
+                          <span>Notas</span>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3 h-3 text-gray-400">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                        </svg>
+                      </div>
+
+                      <div class="absolute right-full top-0 mr-1 w-48 bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-lg shadow-xl opacity-0 group-hover/submenu:opacity-100 invisible group-hover/submenu:visible transition-all z-30">
+                        
+                        <button
+                          onclick="app.exportAnnotations()"
+                          class="w-full text-left px-4 py-2 text-sm text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-slate-700 flex items-center gap-2"
+                        >
+                          <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            viewBox="0 0 512 512"
+                            fill="none"
+                            class="w-5 h-5"
+                          >
+                            <g><g><path d="M250.435,46.748v99.061h89.043V46.748H250.435z M306.087,112.417h-22.261V80.139h22.261V112.417z" fill="currentColor"/></g></g>
+                            <g><g><rect x="180.714" y="342.072" width="150.573" height="33.391" fill="currentColor"/></g></g>
+                            <g><g><rect x="180.714" y="410.346" width="150.573" height="33.391" fill="currentColor"/></g></g>
+                            <g><g><path d="M438.776,0H0v512h512V73.224L438.776,0z M155.826,33.391h200.348v125.774H155.826V33.391z M388.452,478.609H123.548V307.2 h264.904V478.609z M478.609,478.609h-56.765v-204.8H90.157v204.8H33.391V33.391h89.044v159.165h267.13V33.391h35.38l53.663,53.663 V478.609z" fill="currentColor"/></g></g>
+                          </svg>
+                          <span>Exportar Notas</span>
+                        </button>
+
+                        <input type="file" id="importNotesInput" accept=".json" class="hidden" onchange="app.importAnnotations(this)">
+                        <button
+                          onclick="document.getElementById('importNotesInput').click()"
+                          class="w-full text-left px-4 py-2 text-sm text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-slate-700 flex items-center gap-2"
+                        >
+                          <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            viewBox="0 0 24 24" 
+                            fill="none"
+                            class="w-5 h-5"
+                          >
+                            <path 
+                              d="M12 10V16M12 16L10 14M12 16L14 14M12.0627 6.06274L11.9373 5.93726C11.5914 5.59135 11.4184 5.4184 11.2166 5.29472C11.0376 5.18506 10.8425 5.10425 10.6385 5.05526C10.4083 5 10.1637 5 9.67452 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V15.8C3 16.9201 3 17.4802 3.21799 17.908C3.40973 18.2843 3.71569 18.5903 4.09202 18.782C4.51984 19 5.07989 19 6.2 19H17.8C18.9201 19 19.4802 19 19.908 18.782C20.2843 18.5903 20.5903 18.2843 20.782 17.908C21 17.4802 21 16.9201 21 15.8V10.2C21 9.0799 21 8.51984 20.782 8.09202C20.5903 7.71569 20.2843 7.40973 19.908 7.21799C19.4802 7 18.9201 7 17.8 7H14.3255C13.8363 7 13.5917 7 13.3615 6.94474C13.1575 6.89575 12.9624 6.81494 12.7834 6.70528C12.5816 6.5816 12.4086 6.40865 12.0627 6.06274Z"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+                          <span>Importar Notas</span>
+                        </button>
+
+                      </div>
+                    </div> </div>
                 </div>
 
                 <div class="w-px h-5 bg-gray-300 dark:bg-slate-600 mx-1"></div>
@@ -612,12 +676,32 @@
                 </button>
             </div>
             <div id="searchStats" class="text-[10px] text-gray-400 mt-1 px-1 uppercase font-bold tracking-wider"></div>
-        </div>
+          </div>
 
-        <button id="scrollTopBtn" onclick="app.scrollToTop()" 
-            class="fixed bottom-8 right-8 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all opacity-0 pointer-events-none z-50">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
-        </button>
+          <button id="scrollTopBtn" onclick="app.scrollToTop()" 
+              class="fixed bottom-8 right-8 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all opacity-0 pointer-events-none z-50">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+          </button>
+
+          <div id="highlightToolbar" class="hidden absolute z-50 bg-white dark:bg-slate-800 shadow-xl border dark:border-slate-700 rounded-lg p-1.5 flex gap-1 transition-all">
+              <button onclick="app.addHighlight('bg-yellow-300 dark:bg-yellow-500/50 text-black dark:text-white')" class="w-6 h-6 rounded-full bg-yellow-300 border border-yellow-400" title="Amarelo"></button>
+              <button onclick="app.addHighlight('bg-green-300 dark:bg-green-500/50 text-black dark:text-white')" class="w-6 h-6 rounded-full bg-green-300 border border-green-400" title="Verde"></button>
+              <button onclick="app.addHighlight('bg-blue-300 dark:bg-blue-500/50 text-black dark:text-white')" class="w-6 h-6 rounded-full bg-blue-300 border border-blue-400" title="Azul"></button>
+              <button onclick="app.addHighlight('bg-red-300 dark:bg-red-500/50 text-black dark:text-white')" class="w-6 h-6 rounded-full bg-red-300 border border-red-400" title="Vermelho"></button>
+              <div class="w-px h-6 bg-gray-300 dark:bg-slate-600 mx-1"></div>
+              <button onclick="app.addAnchorNote()" 
+                      class="p-1 text-gray-400 hover:text-indigo-500" 
+                      title="Adicionar nota a este trecho">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                  </svg>
+              </button>
+              <div class="w-px h-6 bg-gray-300 dark:bg-slate-600 mx-1"></div>
+              <button onclick="app.clearHighlights()" class="p-1 text-gray-400 hover:text-red-500" title="Limpar marcações desta norma">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+              </button>
+          </div>
       </main>
     </div>
 
@@ -1102,6 +1186,87 @@
 
             <div id="appendixViewContent" class="p-6 flex-1 overflow-y-auto law-content text-sm rounded-b-xl">
                 </div>
+        </div>
+    </div>
+
+    <div id="notesModal" class="fixed inset-0 bg-gray-900/50 dark:bg-gray-900/80 backdrop-blur-sm hidden z-[80] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl flex flex-col border dark:border-slate-700 max-h-[90vh]">
+            
+            <!-- Cabeçalho -->
+            <div class="p-4 border-b dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-900 rounded-t-xl shrink-0">
+                <h3 class="font-bold flex items-center gap-2 text-gray-800 dark:text-white">
+                    <span>📝</span> Minhas Observações
+                </h3>
+                <button onclick="document.getElementById('notesModal').classList.add('hidden')" class="text-gray-400 hover:text-red-500 text-2xl">&times;</button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto">
+
+                <!-- SEÇÃO 1: Notas Ancoradas -->
+                <div class="p-4 border-b dark:border-slate-700">
+                    <div class="flex items-center justify-between mb-3">
+                        <p class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+                            Notas por Dispositivo
+                        </p>
+                        <span id="anchorNotesCount" class="text-xs text-gray-400 dark:text-gray-500"></span>
+                    </div>
+
+                    <!-- Lista de notas existentes -->
+                    <div id="anchorNotesList" class="space-y-2 mb-3">
+                        <!-- Populado por app.openNotes() -->
+                        <p class="text-xs text-gray-400 italic">Nenhuma nota ancorada ainda.</p>
+                    </div>
+
+                    <!-- Formulário de nova nota ancorada -->
+                    <div id="anchorNoteForm" class="hidden bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800 rounded-lg p-3 space-y-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400">📍</span>
+                            <span id="anchorNoteFormLabel" class="text-xs font-mono font-bold text-indigo-700 dark:text-indigo-300"></span>
+                        </div>
+                        <textarea id="anchorNoteText" rows="3"
+                            class="w-full p-2 text-sm border border-indigo-200 dark:border-indigo-700 rounded focus:ring-2 focus:ring-indigo-500 outline-none bg-white dark:bg-slate-900 dark:text-gray-200 resize-none"
+                            placeholder="Digite sua nota sobre este dispositivo..."></textarea>
+                        <div class="flex justify-end gap-2">
+                            <button onclick="app.cancelAnchorNote()" class="px-3 py-1 text-xs text-gray-500 hover:bg-gray-200 dark:hover:bg-slate-700 rounded">Cancelar</button>
+                            <button onclick="app.saveAnchorNote()" class="px-3 py-1 text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded">Salvar Nota</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEÇÃO 2: Observação Geral -->
+                <div class="p-4">
+                    <p class="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-2">
+                        Observação Geral
+                    </p>
+                    <p class="text-xs text-gray-400 mb-2">Anotações livres sobre a norma. Salvas apenas no seu navegador.</p>
+                    <textarea id="personalNotesText"
+                        class="w-full h-32 p-3 text-sm border dark:border-slate-600 rounded focus:ring-2 focus:ring-blue-500 outline-none bg-white dark:bg-slate-900 dark:text-gray-200 resize-none"
+                        placeholder="Digite suas análises, links e lembretes aqui..."></textarea>
+                </div>
+
+            </div>
+
+            <!-- Rodapé -->
+            <div class="p-4 border-t dark:border-slate-700 bg-gray-50 dark:bg-slate-800 rounded-b-xl flex justify-end gap-2 shrink-0">
+                <button onclick="document.getElementById('notesModal').classList.add('hidden')" class="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700 rounded">Fechar</button>
+                <button onclick="app.saveNotes()" class="px-6 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white font-bold rounded shadow-sm">Salvar Observação Geral</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="customConfirmModal" class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm hidden z-[110] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-sm overflow-hidden border dark:border-slate-700 transform transition-all scale-95 opacity-0 duration-200" id="customConfirmBox">
+            <div class="p-6">
+                <div id="customConfirmIcon" class="w-12 h-12 rounded-full flex items-center justify-center mb-4 mx-auto"></div>
+                
+                <h3 id="customConfirmTitle" class="text-xl font-bold text-center text-gray-800 dark:text-white mb-2">Título</h3>
+                <p id="customConfirmMessage" class="text-sm text-center text-gray-600 dark:text-gray-300 mb-6">Mensagem</p>
+                
+                <div class="flex gap-3 justify-center">
+                    <button id="customConfirmBtnCancel" onclick="app.closeConfirmModal()" class="px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded font-medium transition-colors hidden w-full">Cancelar</button>
+                    <button id="customConfirmBtnOk" onclick="app.executeConfirmModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-bold transition-colors w-full shadow-sm">Confirmar</button>
+                </div>
+            </div>
         </div>
     </div>
 

@@ -21566,9 +21566,28 @@
   {
     "Família": "68.30",
     "Descrição": "GASES COMPRIMIDOS E LIQUEFEITOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4784-9/00",
+        "descricao": "Comércio varejista de gás liqüefeito de petróleo (GLP)"
+      },
+      {
+        "codigo": "4682-6/00",
+        "descricao": "Comércio atacadista de gás liqüefeito de petróleo (GLP)"
+      },
+      {
+        "codigo": "3520-4/01",
+        "descricao": "Produção de gás; processamento de gás natural"
+      },
+      {
+        "codigo": "2014-2/00",
+        "descricao": "Fabricação de gases industriais"
+      }
+    ],
     "Ramo": {
       "codigo": "68",
       "nome": "Substâncias e Produtos Químicos"
