@@ -88,6 +88,12 @@
                 <button onclick="exportFullBase()" class="bg-emerald-600 hover:bg-emerald-700 text-white p-2 rounded-lg transition-all shadow-md admin-only" title="Exportar JSON">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                 </button>
+
+                <input type="file" id="upload-cnpj" accept="application/pdf" class="hidden" onchange="analisarFornecedor(event)">
+
+                <button onclick="abrirModalPreAnalise()" class="bg-amber-600 hover:bg-amber-700 text-white p-2 rounded-lg transition-all shadow-md" title="Analisar CNPJ (PDF)">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </button>
             </div>
         </div>
     </header>
@@ -453,7 +459,12 @@
 
     <div id="toast-container" class="fixed bottom-20 right-5 z-[200] flex flex-col gap-2"></div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="./archives/icons.js"></script>
+    <script src="analisador_cnpj.js"></script>
     <script src="script.js"></script>
+
 </body>
 </html>

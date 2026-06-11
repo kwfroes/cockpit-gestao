@@ -1629,12 +1629,16 @@
     "Documentos Elegíveis": [],
     "CNAEs": [
       {
-        "codigo": "7311-4/00",
-        "descricao": "Agências de publicidade"
+        "codigo": "1813-0/01",
+        "descricao": "Impressão de material para uso publicitário"
       },
       {
         "codigo": "7410-2/99",
         "descricao": "Atividades de design não especificadas anteriormente"
+      },
+      {
+        "codigo": "7311-4/00",
+        "descricao": "Agências de publicidade"
       }
     ],
     "Ramo": {
@@ -1866,20 +1870,24 @@
     "Documentos Elegíveis": [],
     "CNAEs": [
       {
-        "codigo": "1354-5/00",
-        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
+        "codigo": "1412-6/02",
+        "descricao": "Confecção, sob medida, de peças do vestuário, exceto roupas íntimas"
       },
       {
-        "codigo": "1359-6/00",
-        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+        "codigo": "1412-6/01",
+        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
       },
       {
         "codigo": "1411-8/02",
         "descricao": "Facção de roupas íntimas"
       },
       {
-        "codigo": "1412-6/01",
-        "descricao": "Confecção de peças de vestuário, exceto roupas íntimas e as confeccionadas sob medida"
+        "codigo": "1359-6/00",
+        "descricao": "Fabricação de outros produtos têxteis não especificados anteriormente"
+      },
+      {
+        "codigo": "1354-5/00",
+        "descricao": "Fabricação de tecidos especiais, inclusive artefatos"
       }
     ],
     "Ramo": {
@@ -5347,32 +5355,36 @@
     "Documentos Elegíveis": [],
     "CNAEs": [
       {
-        "codigo": "2319-2/00",
-        "descricao": "Fabricação de artigos de vidro"
+        "codigo": "4330-4/99",
+        "descricao": "Outras obras de acabamento da construção"
       },
       {
-        "codigo": "2040-1/00",
-        "descricao": "Fabricação de fibras artificiais e sintéticas"
-      },
-      {
-        "codigo": "4330-4/02",
-        "descricao": "Instalação de portas, janelas, tetos, divisórias e armários embutidos de qualquer material"
-      },
-      {
-        "codigo": "9529-1/05",
-        "descricao": "Reparação de artigos do mobiliário"
-      },
-      {
-        "codigo": "3101-2/00",
-        "descricao": "Fabricação de móveis com predominância de madeira"
+        "codigo": "1622-6/02",
+        "descricao": "Fabricação de esquadrias de madeira e de peças de madeira para instalações industriais e comerciais"
       },
       {
         "codigo": "1622-6/99",
         "descricao": "Fabricação de outros artigos de carpintaria para construção"
       },
       {
-        "codigo": "1622-6/02",
-        "descricao": "Fabricação de esquadrias de madeira e de peças de madeira para instalações industriais e comerciais"
+        "codigo": "3101-2/00",
+        "descricao": "Fabricação de móveis com predominância de madeira"
+      },
+      {
+        "codigo": "9529-1/05",
+        "descricao": "Reparação de artigos do mobiliário"
+      },
+      {
+        "codigo": "4330-4/02",
+        "descricao": "Instalação de portas, janelas, tetos, divisórias e armários embutidos de qualquer material"
+      },
+      {
+        "codigo": "2040-1/00",
+        "descricao": "Fabricação de fibras artificiais e sintéticas"
+      },
+      {
+        "codigo": "2319-2/00",
+        "descricao": "Fabricação de artigos de vidro"
       }
     ],
     "Ramo": {
@@ -18580,7 +18592,13 @@
     "Ramo": {
       "codigo": "37",
       "nome": "Mauinaria e Equipamentos Agrícolas"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.61-3/00",
+        "descricao": "Comércio atacadista de máquinas, aparelhos e equipamentos para uso agropecuário; partes e peças"
+      }
+    ]
   },
   {
     "Família": "37.30",
@@ -19777,9 +19795,20 @@
   {
     "Família": "56.40",
     "Descrição": "PAINEIS DE PAPELAO, PAPEL EMPREG EM CONST E MAT ISOLANTES TERMICOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4329-1/05",
+        "descricao": "Tratamentos térmicos, acústicos ou de vibração"
+      },
+      {
+        "codigo": "1733-8/00",
+        "descricao": "Fabricação de chapas e de embalagens de papelão ondulado"
+      }
+    ],
     "Ramo": {
       "codigo": "56",
       "nome": "Materiais para Construção"
@@ -19882,7 +19911,13 @@
     "Ramo": {
       "codigo": "58",
       "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "47.53-9/00",
+        "descricao": "Comércio varejista especializado de eletrodomésticos e equipamentos de áudio e vídeo"
+      }
+    ]
   },
   {
     "Família": "58.21",
@@ -20047,7 +20082,17 @@
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.73-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "47.42-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      }
+    ]
   },
   {
     "Família": "59.10",
@@ -20212,7 +20257,13 @@
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "47.53-9/00",
+        "descricao": "Comércio varejista especializado de eletrodomésticos e equipamentos de áudio e vídeo"
+      }
+    ]
   },
   {
     "Família": "59.70",
@@ -20300,7 +20351,17 @@
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.73-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "47.42-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      }
+    ]
   },
   {
     "Família": "59.99",
@@ -20597,7 +20658,17 @@
     "Ramo": {
       "codigo": "61",
       "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.73-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "47.42-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      }
+    ]
   },
   {
     "Família": "61.15",
@@ -20696,7 +20767,17 @@
     "Ramo": {
       "codigo": "61",
       "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.73-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "47.42-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      }
+    ]
   },
   {
     "Família": "61.50",
@@ -20751,7 +20832,17 @@
     "Ramo": {
       "codigo": "62",
       "nome": "Aparelhos de Iluminação e Lâmpadas"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.73-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "47.42-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      }
+    ]
   },
   {
     "Família": "62.40",
@@ -21404,7 +21495,13 @@
     "Ramo": {
       "codigo": "67",
       "nome": "Equipamentos Fotográficos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "47.89-0/08",
+        "descricao": "Comércio varejista de artigos fotográficos e para filmagem"
+      }
+    ]
   },
   {
     "Família": "67.30",
@@ -22214,7 +22311,17 @@
     "Ramo": {
       "codigo": "71",
       "nome": "Mobiliários"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.49-4/04",
+        "descricao": "Comércio atacadista de móveis e artigos de colchoaria"
+      },
+      {
+        "codigo": "47.54-7/01",
+        "descricao": "Comércio varejista de móveis"
+      }
+    ]
   },
   {
     "Família": "71.25",
@@ -22236,7 +22343,17 @@
     "Ramo": {
       "codigo": "71",
       "nome": "Mobiliários"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.49-4/04",
+        "descricao": "Comércio atacadista de móveis e artigos de colchoaria"
+      },
+      {
+        "codigo": "47.54-7/01",
+        "descricao": "Comércio varejista de móveis"
+      }
+    ]
   },
   {
     "Família": "72.10",
@@ -22263,9 +22380,24 @@
   {
     "Família": "72.30",
     "Descrição": "TAPECARIAS, CORTINAS E PERSIANAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4649-4/05",
+        "descricao": "Comércio atacadista de artigos de tapeçaria; persianas e cortinas"
+      },
+      {
+        "codigo": "1352-9/00",
+        "descricao": "Fabricação de artefatos de tapeçaria"
+      },
+      {
+        "codigo": "4759-8/01",
+        "descricao": "Comércio varejista de artigos de tapeçaria, cortinas e persianas"
+      }
+    ],
     "Ramo": {
       "codigo": "72",
       "nome": "Utensílios e Utilidades de Uso Doméstico e Comercial"
@@ -22423,14 +22555,27 @@
     "Ramo": {
       "codigo": "74",
       "nome": "Máquinas para Escritórios e Arquivos Visuais"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "77.33-1/00",
+        "descricao": "Aluguel de máquinas e equipamentos para escritórios"
+      }
+    ]
   },
   {
     "Família": "75.10",
     "Descrição": "ARTIGOS DE ESCRITORIO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4761-0/03",
+        "descricao": "Comércio varejista de artigos de papelaria"
+      }
+    ],
     "Ramo": {
       "codigo": "75",
       "nome": "Utensílios de Escritório e Material de Expediente"
@@ -22461,9 +22606,20 @@
   {
     "Família": "75.40",
     "Descrição": "FORMULARIOS OFICIAIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "1741-9/01",
+        "descricao": "Fabricação de formulários contínuos"
+      },
+      {
+        "codigo": "1813-0/99",
+        "descricao": "Impressão de material para outros usos"
+      }
+    ],
     "Ramo": {
       "codigo": "75",
       "nome": "Utensílios de Escritório e Material de Expediente"
@@ -23247,9 +23403,16 @@
   {
     "Família": "84.65",
     "Descrição": "EQUIPAMENTOS INDIVIDUAIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4642-7/02",
+        "descricao": "Comércio atacadista de roupas e acessórios para uso profissional e de segurança do trabalho"
+      }
+    ],
     "Ramo": {
       "codigo": "84",
       "nome": "Vestuários e Equipamentos Individuais e Insignias"
@@ -23937,7 +24100,13 @@
     "Ramo": {
       "codigo": "95",
       "nome": "Barras, Chapas e Perfilados Metálicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.85-1/00",
+        "descricao": "Comércio atacadista de produtos siderúrgicos e metalúrgicos, exceto para construção"
+      }
+    ]
   },
   {
     "Família": "95.20",
@@ -24096,9 +24265,20 @@
   {
     "Família": "99.05",
     "Descrição": "CARTAZES MOSTRUARIOS E PLACAS DE IDENTIFICACAO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "1813-0/01",
+        "descricao": "Impressão de material para uso publicitário"
+      },
+      {
+        "codigo": "3299-0/03",
+        "descricao": "Fabricação de letras, letreiros e placas de qualquer material, exceto luminosos"
+      }
+    ],
     "Ramo": {
       "codigo": "99",
       "nome": "Diversos"
