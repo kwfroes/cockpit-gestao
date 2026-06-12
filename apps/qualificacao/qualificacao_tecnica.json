@@ -18374,6 +18374,10 @@
       {
         "codigo": "2865-8/00",
         "descricao": "Fabricação de máquinas e equipamentos para as indústrias de celulose, papel e papelão e artefatos, peças e acessórios"
+      },
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
       }
     ],
     "Ramo": {
@@ -18422,6 +18426,10 @@
       {
         "codigo": "2863-1/00",
         "descricao": "Fabricação de máquinas e equipamentos para a indústria têxtil, peças e acessórios"
+      },
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
       }
     ],
     "Ramo": {
@@ -18432,6 +18440,185 @@
   {
     "Família": "36.30",
     "Descrição": "MAQUINAS PARA INDUSTRIAS DE PRODUTOS DE CERAMICA E DE CONCRETO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      }
+    ],
+    "Ramo": {
+      "codigo": "36",
+      "nome": "Máquinas para Industrias Especializadas"
+    }
+  },
+  {
+    "Família": "36.35",
+    "Descrição": "MAQUINAS PARA INDUSTRIAS DE CRISTAL E VIDRO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "36",
+      "nome": "Máquinas para Industrias Especializadas"
+    },
+    "CNAEs": [
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      }
+    ]
+  },
+  {
+    "Família": "36.40",
+    "Descrição": "MAQUINAS PARA INDUSTRIAS DE TABACO",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "36",
+      "nome": "Máquinas para Industrias Especializadas"
+    },
+    "CNAEs": [
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      }
+    ]
+  },
+  {
+    "Família": "36.45",
+    "Descrição": "MAQUINAS PARA INDUSTRIAS DE COURO E CURTUMES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2863-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para a indústria têxtil, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
+      }
+    ],
+    "Ramo": {
+      "codigo": "36",
+      "nome": "Máquinas para Industrias Especializadas"
+    }
+  },
+  {
+    "Família": "36.50",
+    "Descrição": "MAQUINAS PARA INDUSTRIAS DE PRODUTOS QUIMICOS E FARMACEUTICOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "36",
+      "nome": "Máquinas para Industrias Especializadas"
+    },
+    "CNAEs": [
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      }
+    ]
+  },
+  {
+    "Família": "36.55",
+    "Descrição": "SISTEMAS DE GERACAO E DISTRIBUICAO DE GAS, FIXOS OU MOVEIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "4669-9/01",
+        "descricao": "Comércio atacadista de bombas e compressores; partes e peças"
+      }
+    ],
+    "Ramo": {
+      "codigo": "36",
+      "nome": "Máquinas para Industrias Especializadas"
+    }
+  },
+  {
+    "Família": "36.70",
+    "Descrição": "MAQUINAS ESPECIALIZADAS PARA FABRICACAO DE PLACA DE CIRCUITO IMPRESSO,",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "36",
+      "nome": "Máquinas para Industrias Especializadas"
+    },
+    "CNAEs": [
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      }
+    ]
+  },
+  {
+    "Família": "36.85",
+    "Descrição": "MAQUINAS ESPEC PARA FABR DE RECIPIENTES METALICOS E EQUP. CORRELATOS",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "Tipo": "M",
+    "Ramo": {
+      "codigo": "36",
+      "nome": "Máquinas para Industrias Especializadas"
+    },
+    "CNAEs": [
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      }
+    ]
+  },
+  {
+    "Família": "36.90",
+    "Descrição": "MAQUINAS ESPECIALIZADAS DE MATERIAL  BELICO, MUNICOES E EQUIPAMENTOS",
     "Tipo": "M",
     "Terceirizado": "Não",
     "Documentos Exigidos": [],
@@ -18452,94 +18639,6 @@
     }
   },
   {
-    "Família": "36.35",
-    "Descrição": "MAQUINAS PARA INDUSTRIAS DE CRISTAL E VIDRO",
-    "Documentos Exigidos": [],
-    "Documentos Elegíveis": [],
-    "Tipo": "M",
-    "Ramo": {
-      "codigo": "36",
-      "nome": "Máquinas para Industrias Especializadas"
-    }
-  },
-  {
-    "Família": "36.40",
-    "Descrição": "MAQUINAS PARA INDUSTRIAS DE TABACO",
-    "Documentos Exigidos": [],
-    "Documentos Elegíveis": [],
-    "Tipo": "M",
-    "Ramo": {
-      "codigo": "36",
-      "nome": "Máquinas para Industrias Especializadas"
-    }
-  },
-  {
-    "Família": "36.45",
-    "Descrição": "MAQUINAS PARA INDUSTRIAS DE COURO E CURTUMES",
-    "Documentos Exigidos": [],
-    "Documentos Elegíveis": [],
-    "Tipo": "M",
-    "Ramo": {
-      "codigo": "36",
-      "nome": "Máquinas para Industrias Especializadas"
-    }
-  },
-  {
-    "Família": "36.50",
-    "Descrição": "MAQUINAS PARA INDUSTRIAS DE PRODUTOS QUIMICOS E FARMACEUTICOS",
-    "Documentos Exigidos": [],
-    "Documentos Elegíveis": [],
-    "Tipo": "M",
-    "Ramo": {
-      "codigo": "36",
-      "nome": "Máquinas para Industrias Especializadas"
-    }
-  },
-  {
-    "Família": "36.55",
-    "Descrição": "SISTEMAS DE GERACAO E DISTRIBUICAO DE GAS, FIXOS OU MOVEIS",
-    "Documentos Exigidos": [],
-    "Documentos Elegíveis": [],
-    "Tipo": "M",
-    "Ramo": {
-      "codigo": "36",
-      "nome": "Máquinas para Industrias Especializadas"
-    }
-  },
-  {
-    "Família": "36.70",
-    "Descrição": "MAQUINAS ESPECIALIZADAS PARA FABRICACAO DE PLACA DE CIRCUITO IMPRESSO,",
-    "Documentos Exigidos": [],
-    "Documentos Elegíveis": [],
-    "Tipo": "M",
-    "Ramo": {
-      "codigo": "36",
-      "nome": "Máquinas para Industrias Especializadas"
-    }
-  },
-  {
-    "Família": "36.85",
-    "Descrição": "MAQUINAS ESPEC PARA FABR DE RECIPIENTES METALICOS E EQUP. CORRELATOS",
-    "Documentos Exigidos": [],
-    "Documentos Elegíveis": [],
-    "Tipo": "M",
-    "Ramo": {
-      "codigo": "36",
-      "nome": "Máquinas para Industrias Especializadas"
-    }
-  },
-  {
-    "Família": "36.90",
-    "Descrição": "MAQUINAS ESPECIALIZADAS DE MATERIAL  BELICO, MUNICOES E EQUIPAMENTOS",
-    "Documentos Exigidos": [],
-    "Documentos Elegíveis": [],
-    "Tipo": "M",
-    "Ramo": {
-      "codigo": "36",
-      "nome": "Máquinas para Industrias Especializadas"
-    }
-  },
-  {
     "Família": "36.93",
     "Descrição": "MAQUINARIA INDUSTRIAL PARA MONTAGEM",
     "Documentos Exigidos": [],
@@ -18548,14 +18647,31 @@
     "Ramo": {
       "codigo": "36",
       "nome": "Máquinas para Industrias Especializadas"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      }
+    ]
   },
   {
     "Família": "36.94",
     "Descrição": "EQUIPAMENTOS E INSTALACOES PARA SANEAMENTO AMBIENTAL",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      }
+    ],
     "Ramo": {
       "codigo": "36",
       "nome": "Máquinas para Industrias Especializadas"
@@ -18570,7 +18686,17 @@
     "Ramo": {
       "codigo": "36",
       "nome": "Máquinas para Industrias Especializadas"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "2869-1/00",
+        "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      }
+    ]
   },
   {
     "Família": "37.10",
@@ -18580,18 +18706,7 @@
     "Tipo": "M",
     "Ramo": {
       "codigo": "37",
-      "nome": "Mauinaria e Equipamentos Agrícolas"
-    }
-  },
-  {
-    "Família": "37.20",
-    "Descrição": "EQUIPAMENTOS DE COLHEITA",
-    "Documentos Exigidos": [],
-    "Documentos Elegíveis": [],
-    "Tipo": "M",
-    "Ramo": {
-      "codigo": "37",
-      "nome": "Mauinaria e Equipamentos Agrícolas"
+      "nome": "Maquinaria e Equipamentos Agrícolas"
     },
     "CNAEs": [
       {
@@ -18601,14 +18716,39 @@
     ]
   },
   {
-    "Família": "37.30",
-    "Descrição": "EQUIPAMENTOS PARA LATICINIOS, APICULTURA, AVICULTURA E PECUARIA",
+    "Família": "37.20",
+    "Descrição": "EQUIPAMENTOS DE COLHEITA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "46.61-3/00",
+        "descricao": "Comércio atacadista de máquinas, aparelhos e equipamentos para uso agropecuário; partes e peças"
+      }
+    ],
     "Ramo": {
       "codigo": "37",
-      "nome": "Mauinaria e Equipamentos Agrícolas"
+      "nome": "Maquinaria e Equipamentos Agrícolas"
+    }
+  },
+  {
+    "Família": "37.30",
+    "Descrição": "EQUIPAMENTOS PARA LATICINIOS, APICULTURA, AVICULTURA E PECUARIA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "4661-3/00",
+        "descricao": "Comércio atacadista de máquinas, aparelhos e equipamentos para uso agropecuário; partes e peças"
+      }
+    ],
+    "Ramo": {
+      "codigo": "37",
+      "nome": "Maquinaria e Equipamentos Agrícolas"
     }
   },
   {
@@ -18619,18 +18759,35 @@
     "Tipo": "M",
     "Ramo": {
       "codigo": "37",
-      "nome": "Mauinaria e Equipamentos Agrícolas"
-    }
+      "nome": "Maquinaria e Equipamentos Agrícolas"
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.61-3/00",
+        "descricao": "Comércio atacadista de máquinas, aparelhos e equipamentos para uso agropecuário; partes e peças"
+      }
+    ]
   },
   {
     "Família": "37.50",
     "Descrição": "IMPLEMENTOS E FERRAMENTAS DE JARDINAGEM",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4661-3/00",
+        "descricao": "Comércio atacadista de máquinas, aparelhos e equipamentos para uso agropecuário; partes e peças"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      }
+    ],
     "Ramo": {
       "codigo": "37",
-      "nome": "Mauinaria e Equipamentos Agrícolas"
+      "nome": "Maquinaria e Equipamentos Agrícolas"
     }
   },
   {
@@ -18641,26 +18798,46 @@
     "Tipo": "M",
     "Ramo": {
       "codigo": "37",
-      "nome": "Mauinaria e Equipamentos Agrícolas"
-    }
+      "nome": "Maquinaria e Equipamentos Agrícolas"
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.61-3/00",
+        "descricao": "Comércio atacadista de máquinas, aparelhos e equipamentos para uso agropecuário; partes e peças"
+      }
+    ]
   },
   {
     "Família": "37.70",
     "Descrição": "SELARIA, ARREAMENTO, CHICOTE E ACESSORIOS CORRELATOS PARA ANIMAIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4692-3/00",
+        "descricao": "Comércio atacadista de mercadorias em geral, com predominância de insumos agropecuários"
+      }
+    ],
     "Ramo": {
       "codigo": "37",
-      "nome": "Mauinaria e Equipamentos Agrícolas"
+      "nome": "Maquinaria e Equipamentos Agrícolas"
     }
   },
   {
     "Família": "38.05",
     "Descrição": "EQUIPAMENTOS PARA MOVIMENTACAO E ESCAVACAO DE TERRA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4662-1/00",
+        "descricao": "Comércio atacadista de máquinas, equipamentos para terraplenagem, mineração e construção; partes e peças"
+      }
+    ],
     "Ramo": {
       "codigo": "38",
       "nome": "Equipamentos de Contrução, Mineração, Escavação e Conservação de Rodovias"
@@ -18675,7 +18852,13 @@
     "Ramo": {
       "codigo": "38",
       "nome": "Equipamentos de Contrução, Mineração, Escavação e Conservação de Rodovias"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4662-1/00",
+        "descricao": "Comércio atacadista de máquinas, equipamentos para terraplenagem, mineração e construção; partes e peças"
+      }
+    ]
   },
   {
     "Família": "38.15",
@@ -18686,7 +18869,13 @@
     "Ramo": {
       "codigo": "38",
       "nome": "Equipamentos de Contrução, Mineração, Escavação e Conservação de Rodovias"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4662-1/00",
+        "descricao": "Comércio atacadista de máquinas, equipamentos para terraplenagem, mineração e construção; partes e peças"
+      }
+    ]
   },
   {
     "Família": "38.20",
@@ -18697,7 +18886,13 @@
     "Ramo": {
       "codigo": "38",
       "nome": "Equipamentos de Contrução, Mineração, Escavação e Conservação de Rodovias"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4662-1/00",
+        "descricao": "Comércio atacadista de máquinas, equipamentos para terraplenagem, mineração e construção; partes e peças"
+      }
+    ]
   },
   {
     "Família": "38.25",
@@ -18708,14 +18903,35 @@
     "Ramo": {
       "codigo": "38",
       "nome": "Equipamentos de Contrução, Mineração, Escavação e Conservação de Rodovias"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4662-1/00",
+        "descricao": "Comércio atacadista de máquinas, equipamentos para terraplenagem, mineração e construção; partes e peças"
+      }
+    ]
   },
   {
     "Família": "38.30",
     "Descrição": "IMPLEMENTOS PARA CAMINHOES E TRATORES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "4661-3/00",
+        "descricao": "Comércio atacadista de máquinas, aparelhos e equipamentos para uso agropecuário; partes e peças"
+      },
+      {
+        "codigo": "4662-1/00",
+        "descricao": "Comércio atacadista de máquinas, equipamentos para terraplenagem, mineração e construção; partes e peças"
+      }
+    ],
     "Ramo": {
       "codigo": "38",
       "nome": "Equipamentos de Contrução, Mineração, Escavação e Conservação de Rodovias"
@@ -18724,9 +18940,20 @@
   {
     "Família": "38.35",
     "Descrição": "EQUIPAMENTOS PARA PRODUCAO E DISTRIBUICAO DE PETROLEO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "4662-1/00",
+        "descricao": "Comércio atacadista de máquinas, equipamentos para terraplenagem, mineração e construção; partes e peças"
+      }
+    ],
     "Ramo": {
       "codigo": "38",
       "nome": "Equipamentos de Contrução, Mineração, Escavação e Conservação de Rodovias"
@@ -18741,14 +18968,27 @@
     "Ramo": {
       "codigo": "38",
       "nome": "Equipamentos de Contrução, Mineração, Escavação e Conservação de Rodovias"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4662-1/00",
+        "descricao": "Comércio atacadista de máquinas, equipamentos para terraplenagem, mineração e construção; partes e peças"
+      }
+    ]
   },
   {
     "Família": "39.10",
     "Descrição": "TRANSPORTADORES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      }
+    ],
     "Ramo": {
       "codigo": "39",
       "nome": "Equipamentos para Manuseio de Material"
@@ -18763,14 +19003,31 @@
     "Ramo": {
       "codigo": "39",
       "nome": "Equipamentos para Manuseio de Material"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      }
+    ]
   },
   {
     "Família": "39.20",
     "Descrição": "EQUIPAMENTOS NAO PROPULSIONADOS P/  MOVIMENTACAO DE MATERIAIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      }
+    ],
     "Ramo": {
       "codigo": "39",
       "nome": "Equipamentos para Manuseio de Material"
@@ -18785,14 +19042,27 @@
     "Ramo": {
       "codigo": "39",
       "nome": "Equipamentos para Manuseio de Material"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      }
+    ]
   },
   {
     "Família": "39.40",
     "Descrição": "POLEAMES, TALHAS, MOITOES, MASSAMES E LINGAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      }
+    ],
     "Ramo": {
       "codigo": "39",
       "nome": "Equipamentos para Manuseio de Material"
@@ -18807,14 +19077,43 @@
     "Ramo": {
       "codigo": "39",
       "nome": "Equipamentos para Manuseio de Material"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "2852-6/00",
+        "descricao": "Fabricação de outras máquinas e equipamentos para uso na extração mineral, peças e acessórios, exceto na extração de petróleo"
+      },
+      {
+        "codigo": "2822-4/02",
+        "descricao": "Fabricação de máquinas, equipamentos e aparelhos para transporte e elevação de cargas, peças e acessórios"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      }
+    ]
   },
   {
     "Família": "39.60",
     "Descrição": "ELEVADORES E ESCADAS ROLANTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2822-4/02",
+        "descricao": "Fabricação de máquinas, equipamentos e aparelhos para transporte e elevação de cargas, peças e acessórios"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "2822-4/01",
+        "descricao": "Fabricação de máquinas, equipamentos e aparelhos para transporte e elevação de pessoas, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "39",
       "nome": "Equipamentos para Manuseio de Material"
@@ -18829,14 +19128,51 @@
     "Ramo": {
       "codigo": "39",
       "nome": "Equipamentos para Manuseio de Material"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "2852-6/00",
+        "descricao": "Fabricação de outras máquinas e equipamentos para uso na extração mineral, peças e acessórios, exceto na extração de petróleo"
+      },
+      {
+        "codigo": "2822-4/02",
+        "descricao": "Fabricação de máquinas, equipamentos e aparelhos para transporte e elevação de cargas, peças e acessórios"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      }
+    ]
   },
   {
     "Família": "40.10",
     "Descrição": "CABOS E CORRENTES DE ACO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2599-3/99",
+        "descricao": "Fabricação de outros produtos de metal não especificados anteriormente"
+      },
+      {
+        "codigo": "2592-6/01",
+        "descricao": "Fabricação de produtos de trefilados de metal padronizados"
+      }
+    ],
     "Ramo": {
       "codigo": "40",
       "nome": "Cordas, Cabos, Correntes e seus Acessórios"
@@ -18845,9 +19181,28 @@
   {
     "Família": "40.20",
     "Descrição": "CABOS DE FIBRA, CORDOALHAS E BARBANTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4689-3/99",
+        "descricao": "Comércio atacadista especializado em outros produtos intermediários não especificados anteriormente"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "1353-7/00",
+        "descricao": "Fabricação de artefatos de cordoaria"
+      }
+    ],
     "Ramo": {
       "codigo": "40",
       "nome": "Cordas, Cabos, Correntes e seus Acessórios"
@@ -18862,7 +19217,29 @@
     "Ramo": {
       "codigo": "40",
       "nome": "Cordas, Cabos, Correntes e seus Acessórios"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2599-3/99",
+        "descricao": "Fabricação de outros produtos de metal não especificados anteriormente"
+      },
+      {
+        "codigo": "2592-6/01",
+        "descricao": "Fabricação de produtos de trefilados de metal padronizados"
+      }
+    ]
   },
   {
     "Família": "40.31",
@@ -18884,7 +19261,13 @@
     "Ramo": {
       "codigo": "41",
       "nome": "Equipamentos de Refrigeração, Circulação e Condicionamento de Ar"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.69-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      }
+    ]
   },
   {
     "Família": "41.20",
@@ -18895,7 +19278,13 @@
     "Ramo": {
       "codigo": "41",
       "nome": "Equipamentos de Refrigeração, Circulação e Condicionamento de Ar"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.69-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      }
+    ]
   },
   {
     "Família": "41.30",
@@ -18906,7 +19295,13 @@
     "Ramo": {
       "codigo": "41",
       "nome": "Equipamentos de Refrigeração, Circulação e Condicionamento de Ar"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.69-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      }
+    ]
   },
   {
     "Família": "41.40",
@@ -18937,9 +19332,20 @@
   {
     "Família": "42.10",
     "Descrição": "EQUIPAMENTOS PARA COMBATE A INCENDIO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "2829-1/99",
+        "descricao": "Fabricação de outras máquinas e equipamentos de uso geral não especificados anteriormente, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "42",
       "nome": "Equipamentos para Combate a Incêndio, Resgate e Segurança"
@@ -18948,9 +19354,24 @@
   {
     "Família": "42.20",
     "Descrição": "EQUIPAMENTOS DE MERGULHO E DE SALVAMENTO MARITIMO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4689-3/99",
+        "descricao": "Comércio atacadista especializado em outros produtos intermediários não especificados anteriormente"
+      },
+      {
+        "codigo": "4642-7/02",
+        "descricao": "Comércio atacadista de roupas e acessórios para uso profissional e de segurança do trabalho"
+      },
+      {
+        "codigo": "3292-2/02",
+        "descricao": "Fabricação de equipamentos e acessórios para segurança pessoal e profissional"
+      }
+    ],
     "Ramo": {
       "codigo": "42",
       "nome": "Equipamentos para Combate a Incêndio, Resgate e Segurança"
@@ -18959,9 +19380,24 @@
   {
     "Família": "42.30",
     "Descrição": "EQUIPAMENTOS PARA DESCONTAMINACAO E IMPREGNACAO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4645-1/01",
+        "descricao": "Comércio atacadista de instrumentos e materiais para uso médico, cirúrgico, hospitalar e de laboratórios"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "2829-1/99",
+        "descricao": "Fabricação de outras máquinas e equipamentos de uso geral não especificados anteriormente, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "42",
       "nome": "Equipamentos para Combate a Incêndio, Resgate e Segurança"
@@ -18976,7 +19412,21 @@
     "Ramo": {
       "codigo": "42",
       "nome": "Equipamentos para Combate a Incêndio, Resgate e Segurança"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4689-3/99",
+        "descricao": "Comércio atacadista especializado em outros produtos intermediários não especificados anteriormente"
+      },
+      {
+        "codigo": "4642-7/02",
+        "descricao": "Comércio atacadista de roupas e acessórios para uso profissional e de segurança do trabalho"
+      },
+      {
+        "codigo": "3292-2/02",
+        "descricao": "Fabricação de equipamentos e acessórios para segurança pessoal e profissional"
+      }
+    ]
   },
   {
     "Família": "42.50",
@@ -18987,14 +19437,51 @@
     "Ramo": {
       "codigo": "42",
       "nome": "Equipamentos para Combate a Incêndio, Resgate e Segurança"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4689-3/99",
+        "descricao": "Comércio atacadista especializado em outros produtos intermediários não especificados anteriormente"
+      },
+      {
+        "codigo": "4642-7/02",
+        "descricao": "Comércio atacadista de roupas e acessórios para uso profissional e de segurança do trabalho"
+      },
+      {
+        "codigo": "3292-2/02",
+        "descricao": "Fabricação de equipamentos e acessórios para segurança pessoal e profissional"
+      }
+    ]
   },
   {
     "Família": "43.10",
     "Descrição": "COMPRESSORES E BOMBAS DE VACUO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4744-0/03",
+        "descricao": "Comércio varejista de materiais hidráulicos"
+      },
+      {
+        "codigo": "2812-7/00",
+        "descricao": "Fabricação de equipamentos hidráulicos e pneumáticos, peças e acessórios, exceto válvulas"
+      },
+      {
+        "codigo": "2814-3/02",
+        "descricao": "Fabricação de compressores para uso não-industrial, peças e acessórios"
+      },
+      {
+        "codigo": "2814-3/01",
+        "descricao": "Fabricação de compressores para uso industrial, peças e acessórios"
+      },
+      {
+        "codigo": "4669-9/01",
+        "descricao": "Comércio atacadista de bombas e compressores; partes e peças"
+      }
+    ],
     "Ramo": {
       "codigo": "43",
       "nome": "Bombas e Compressores"
@@ -19009,14 +19496,51 @@
     "Ramo": {
       "codigo": "43",
       "nome": "Bombas e Compressores"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4744-0/03",
+        "descricao": "Comércio varejista de materiais hidráulicos"
+      },
+      {
+        "codigo": "2812-7/00",
+        "descricao": "Fabricação de equipamentos hidráulicos e pneumáticos, peças e acessórios, exceto válvulas"
+      },
+      {
+        "codigo": "2814-3/02",
+        "descricao": "Fabricação de compressores para uso não-industrial, peças e acessórios"
+      },
+      {
+        "codigo": "2814-3/01",
+        "descricao": "Fabricação de compressores para uso industrial, peças e acessórios"
+      },
+      {
+        "codigo": "4669-9/01",
+        "descricao": "Comércio atacadista de bombas e compressores; partes e peças"
+      }
+    ]
   },
   {
     "Família": "43.30",
     "Descrição": "CENTRIFUGADORES, SEPARADORES E FILTROS A PRESSAO E A VACUO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2829-1/99",
+        "descricao": "Fabricação de outras máquinas e equipamentos de uso geral não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "4645-1/01",
+        "descricao": "Comércio atacadista de instrumentos e materiais para uso médico, cirúrgico, hospitalar e de laboratórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      }
+    ],
     "Ramo": {
       "codigo": "43",
       "nome": "Bombas e Compressores"
@@ -19025,9 +19549,20 @@
   {
     "Família": "44.10",
     "Descrição": "CALDEIRAS INDUSTRIAIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2522-5/00",
+        "descricao": "Fabricação de caldeiras geradoras de vapor, exceto para aquecimento central e para veículos"
+      }
+    ],
     "Ramo": {
       "codigo": "44",
       "nome": "Equipamentos de Forno, Central de Vapor, Secagem e Reator Nuclear"
@@ -19036,9 +19571,24 @@
   {
     "Família": "44.20",
     "Descrição": "PERMUTADORES DE CALOR E CONDENSADORES DE VAPOR",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2821-6/01",
+        "descricao": "Fabricação de fornos industriais, aparelhos e equipamentos não-elétricos para instalações térmicas, peças e acessórios"
+      },
+      {
+        "codigo": "2821-6/02",
+        "descricao": "Fabricação de estufas e fornos elétricos para fins industriais, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "44",
       "nome": "Equipamentos de Forno, Central de Vapor, Secagem e Reator Nuclear"
@@ -19047,9 +19597,28 @@
   {
     "Família": "44.30",
     "Descrição": "FORNALHAS, FORNOS E ESTUFAS INDUSTRIAIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4665-6/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso comercial; partes e peças"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2821-6/01",
+        "descricao": "Fabricação de fornos industriais, aparelhos e equipamentos não-elétricos para instalações térmicas, peças e acessórios"
+      },
+      {
+        "codigo": "2821-6/02",
+        "descricao": "Fabricação de estufas e fornos elétricos para fins industriais, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "44",
       "nome": "Equipamentos de Forno, Central de Vapor, Secagem e Reator Nuclear"
@@ -19058,9 +19627,28 @@
   {
     "Família": "44.40",
     "Descrição": "SECADORES, DESIDRATADORES E ANTI-HIDRATADORES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2829-1/99",
+        "descricao": "Fabricação de outras máquinas e equipamentos de uso geral não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "4649-4/01",
+        "descricao": "Comércio atacadista de equipamentos elétricos de uso pessoal e doméstico"
+      },
+      {
+        "codigo": "4661-3/00",
+        "descricao": "Comércio atacadista de máquinas, aparelhos e equipamentos para uso agropecuário; partes e peças"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      }
+    ],
     "Ramo": {
       "codigo": "44",
       "nome": "Equipamentos de Forno, Central de Vapor, Secagem e Reator Nuclear"
@@ -19075,14 +19663,43 @@
     "Ramo": {
       "codigo": "44",
       "nome": "Equipamentos de Forno, Central de Vapor, Secagem e Reator Nuclear"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "2829-1/99",
+        "descricao": "Fabricação de outras máquinas e equipamentos de uso geral não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "4649-4/01",
+        "descricao": "Comércio atacadista de equipamentos elétricos de uso pessoal e doméstico"
+      },
+      {
+        "codigo": "4661-3/00",
+        "descricao": "Comércio atacadista de máquinas, aparelhos e equipamentos para uso agropecuário; partes e peças"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      }
+    ]
   },
   {
     "Família": "44.70",
     "Descrição": "REATORES NUCLEARES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2829-1/99",
+        "descricao": "Fabricação de outras máquinas e equipamentos de uso geral não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      }
+    ],
     "Ramo": {
       "codigo": "44",
       "nome": "Equipamentos de Forno, Central de Vapor, Secagem e Reator Nuclear"
@@ -19091,9 +19708,32 @@
   {
     "Família": "45.10",
     "Descrição": "DISPOSITIVOS E ACESSORIOS PARA INSTALACOES HIDRAULICAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2813-5/00",
+        "descricao": "Fabricação de válvulas, registros e dispositivos semelhantes, peças e acessórios"
+      },
+      {
+        "codigo": "2341-9/00",
+        "descricao": "Fabricação de produtos cerâmicos refratários"
+      },
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4744-0/03",
+        "descricao": "Comércio varejista de materiais hidráulicos"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      }
+    ],
     "Ramo": {
       "codigo": "45",
       "nome": "Equipamentos de Instalações Hidráulicas, Sanitárias e de Calefação"
@@ -19102,9 +19742,24 @@
   {
     "Família": "45.20",
     "Descrição": "EQUIPAMENTOS PARA CALEFACAO E AQUECEDORES DOMESTICOS DE AGUA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2759-7/99",
+        "descricao": "Fabricação de outros aparelhos eletrodomésticos não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4649-4/01",
+        "descricao": "Comércio atacadista de equipamentos elétricos de uso pessoal e doméstico"
+      }
+    ],
     "Ramo": {
       "codigo": "45",
       "nome": "Equipamentos de Instalações Hidráulicas, Sanitárias e de Calefação"
@@ -19113,9 +19768,20 @@
   {
     "Família": "45.30",
     "Descrição": "EQUIPAMENTOS PARA QUEIMA DE COMBUSTIVEL",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2821-6/01",
+        "descricao": "Fabricação de fornos industriais, aparelhos e equipamentos não-elétricos para instalações térmicas, peças e acessórios"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      }
+    ],
     "Ramo": {
       "codigo": "45",
       "nome": "Equipamentos de Instalações Hidráulicas, Sanitárias e de Calefação"
@@ -19130,14 +19796,51 @@
     "Ramo": {
       "codigo": "45",
       "nome": "Equipamentos de Instalações Hidráulicas, Sanitárias e de Calefação"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "2813-5/00",
+        "descricao": "Fabricação de válvulas, registros e dispositivos semelhantes, peças e acessórios"
+      },
+      {
+        "codigo": "2341-9/00",
+        "descricao": "Fabricação de produtos cerâmicos refratários"
+      },
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4744-0/03",
+        "descricao": "Comércio varejista de materiais hidráulicos"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      }
+    ]
   },
   {
     "Família": "46.10",
     "Descrição": "EQUIPAMENTOS PARA PURIFICACAO DE AGUA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4649-4/01",
+        "descricao": "Comércio atacadista de equipamentos elétricos de uso pessoal e doméstico"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "2829-1/99",
+        "descricao": "Fabricação de outras máquinas e equipamentos de uso geral não especificados anteriormente, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "46",
       "nome": "Equipamentos para Purificação de Água e Tratamento de Esgotos"
@@ -19152,14 +19855,39 @@
     "Ramo": {
       "codigo": "46",
       "nome": "Equipamentos para Purificação de Água e Tratamento de Esgotos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4649-4/01",
+        "descricao": "Comércio atacadista de equipamentos elétricos de uso pessoal e doméstico"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "2829-1/99",
+        "descricao": "Fabricação de outras máquinas e equipamentos de uso geral não especificados anteriormente, peças e acessórios"
+      }
+    ]
   },
   {
     "Família": "46.20",
     "Descrição": "EQUIPAMENTOS PARA DESTILACAO DE AGUA, PARA USO MARITIMO E INDUSTRIAL",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "3314-7/99",
+        "descricao": "Manutenção e reparação de outras máquinas e equipamentos para usos industriais não especificados anteriormente"
+      }
+    ],
     "Ramo": {
       "codigo": "46",
       "nome": "Equipamentos para Purificação de Água e Tratamento de Esgotos"
@@ -19174,14 +19902,59 @@
     "Ramo": {
       "codigo": "46",
       "nome": "Equipamentos para Purificação de Água e Tratamento de Esgotos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "3314-7/99",
+        "descricao": "Manutenção e reparação de outras máquinas e equipamentos para usos industriais não especificados anteriormente"
+      }
+    ]
   },
   {
     "Família": "47.10",
     "Descrição": "CANOS E TUBOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2330-3/02",
+        "descricao": "Fabricação de artefatos de cimento para uso na construção"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4744-0/03",
+        "descricao": "Comércio varejista de materiais hidráulicos"
+      },
+      {
+        "codigo": "2223-4/00",
+        "descricao": "Fabricação de tubos e acessórios de material plástico para uso na construção"
+      },
+      {
+        "codigo": "2423-7/01",
+        "descricao": "Produção de tubos de aço sem costura"
+      },
+      {
+        "codigo": "2439-3/00",
+        "descricao": "Produção de outros tubos de ferro e aço"
+      },
+      {
+        "codigo": "2431-8/00",
+        "descricao": "Produção de tubos de aço com costura"
+      }
+    ],
     "Ramo": {
       "codigo": "47",
       "nome": "Canos, Tubos, Mangueiras e Acessórios"
@@ -19190,9 +19963,28 @@
   {
     "Família": "47.20",
     "Descrição": "MANGUEIRAS E TUBULACOES FLEXIVEIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2223-4/00",
+        "descricao": "Fabricação de tubos e acessórios de material plástico para uso na construção"
+      },
+      {
+        "codigo": "2219-6/00",
+        "descricao": "Fabricação de artefatos de borracha não especificados anteriormente"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4744-0/03",
+        "descricao": "Comércio varejista de materiais hidráulicos"
+      }
+    ],
     "Ramo": {
       "codigo": "47",
       "nome": "Canos, Tubos, Mangueiras e Acessórios"
@@ -19201,9 +19993,28 @@
   {
     "Família": "47.30",
     "Descrição": "ACESSORIOS E FERRAGENS ESPECIAIS DE MANGUEIRAS, CANOS E TUBOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2223-4/00",
+        "descricao": "Fabricação de tubos e acessórios de material plástico para uso na construção"
+      },
+      {
+        "codigo": "2599-3/99",
+        "descricao": "Fabricação de outros produtos de metal não especificados anteriormente"
+      },
+      {
+        "codigo": "4744-0/03",
+        "descricao": "Comércio varejista de materiais hidráulicos"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      }
+    ],
     "Ramo": {
       "codigo": "47",
       "nome": "Canos, Tubos, Mangueiras e Acessórios"
@@ -19212,9 +20023,16 @@
   {
     "Família": "48.10",
     "Descrição": "VALVULAS ACIONADAS POR FORCA MOTRIZ",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2813-5/00",
+        "descricao": "Fabricação de válvulas, registros e dispositivos semelhantes, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "48",
       "nome": "Válvulas"
@@ -19223,9 +20041,24 @@
   {
     "Família": "48.20",
     "Descrição": "VALVULAS NAO ACIONADAS POR FORCA MOTRIZ",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2223-4/00",
+        "descricao": "Fabricação de tubos e acessórios de material plástico para uso na construção"
+      },
+      {
+        "codigo": "2813-5/00",
+        "descricao": "Fabricação de válvulas, registros e dispositivos semelhantes, peças e acessórios"
+      },
+      {
+        "codigo": "4744-0/03",
+        "descricao": "Comércio varejista de materiais hidráulicos"
+      }
+    ],
     "Ramo": {
       "codigo": "48",
       "nome": "Válvulas"
@@ -19234,9 +20067,24 @@
   {
     "Família": "49.10",
     "Descrição": "EQUIPAMENTOS E MATERIAIS PARA MANUTENCAO DE VEICULOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "4530-7/03",
+        "descricao": "Comércio a varejo de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      }
+    ],
     "Ramo": {
       "codigo": "49",
       "nome": "Equipamentos de Oficinas de Manutenção e Reparos"
@@ -19245,9 +20093,16 @@
   {
     "Família": "49.20",
     "Descrição": "EQUIP  ESPECIALIZADOS DE OFICINA DE MANUT E REPARO DE AERONAVES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      }
+    ],
     "Ramo": {
       "codigo": "49",
       "nome": "Equipamentos de Oficinas de Manutenção e Reparos"
@@ -19262,14 +20117,39 @@
     "Ramo": {
       "codigo": "49",
       "nome": "Equipamentos de Oficinas de Manutenção e Reparos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "4530-7/03",
+        "descricao": "Comércio a varejo de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      }
+    ]
   },
   {
     "Família": "49.23",
     "Descrição": "EQUIPAMENTOS ESPEC. P/ MANUT, REPARO E INSP DE MINAS SUBMARINA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2550-1/01",
+        "descricao": "Fabricação de equipamento bélico pesado, exceto veículos militares de combate"
+      },
+      {
+        "codigo": "2550-1/02",
+        "descricao": "Fabricação de armas de fogo e munições"
+      }
+    ],
     "Ramo": {
       "codigo": "49",
       "nome": "Equipamentos de Oficinas de Manutenção e Reparos"
@@ -19278,9 +20158,16 @@
   {
     "Família": "49.25",
     "Descrição": "EQUIPAMENTOS ESPEC. P/ MANUT., REPARO E INSPECAO DE MUNICAO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2550-1/02",
+        "descricao": "Fabricação de armas de fogo e munições"
+      }
+    ],
     "Ramo": {
       "codigo": "49",
       "nome": "Equipamentos de Oficinas de Manutenção e Reparos"
@@ -19300,9 +20187,52 @@
   {
     "Família": "49.30",
     "Descrição": "EQUIPAMENTOS PARA FORNECIMENTO DE COMBUSTIVEL E LUBRIFICACAO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4732-6/00",
+        "descricao": "Comércio varejista de lubrificantes"
+      },
+      {
+        "codigo": "4681-8/05",
+        "descricao": "Comércio atacadista de lubrificantes"
+      },
+      {
+        "codigo": "4731-8/00",
+        "descricao": "Comércio varejista de combustíveis para veículos automotores"
+      },
+      {
+        "codigo": "4681-8/04",
+        "descricao": "Comércio atacadista de combustíveis de origem mineral em bruto"
+      },
+      {
+        "codigo": "4681-8/03",
+        "descricao": "Comércio atacadista de combustíveis de origem vegetal, exceto álcool carburante"
+      },
+      {
+        "codigo": "4681-8/02",
+        "descricao": "Comércio atacadista de combustíveis realizado por transportador retalhista (TRR)"
+      },
+      {
+        "codigo": "4612-5/00",
+        "descricao": "Representantes comerciais e agentes do comércio de combustíveis, minerais, produtos siderúrgicos e químicos"
+      },
+      {
+        "codigo": "1932-2/00",
+        "descricao": "Fabricação de biocombustíveis, exceto álcool"
+      },
+      {
+        "codigo": "4681-8/01",
+        "descricao": "Comércio atacadista de álcool carburante, biodiesel, gasolina e demais derivados de petróleo, exceto lubrificantes, não realizado por transportador retalhista (TRR)"
+      },
+      {
+        "codigo": "1921-7/00",
+        "descricao": "Fabricação de produtos do refino de petróleo"
+      }
+    ],
     "Ramo": {
       "codigo": "49",
       "nome": "Equipamentos de Oficinas de Manutenção e Reparos"
@@ -19311,9 +20241,16 @@
   {
     "Família": "49.31",
     "Descrição": "EQUIPAMENTOS PARA OFICINA DE MANUT E REPARO DE DIRECAO DE TIRO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2550-1/02",
+        "descricao": "Fabricação de armas de fogo e munições"
+      }
+    ],
     "Ramo": {
       "codigo": "49",
       "nome": "Equipamentos de Oficinas de Manutenção e Reparos"
@@ -19322,9 +20259,16 @@
   {
     "Família": "49.33",
     "Descrição": "EQUIPAMENTOS ESPEC P/ OFICINA DE MANUT E REPARO DE ARMAMENTO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2550-1/02",
+        "descricao": "Fabricação de armas de fogo e munições"
+      }
+    ],
     "Ramo": {
       "codigo": "49",
       "nome": "Equipamentos de Oficinas de Manutenção e Reparos"
@@ -19333,9 +20277,16 @@
   {
     "Família": "49.35",
     "Descrição": "EQUIPAMENTOS ESPECIAL. P/ MANUT., REPARO E INSPECAO DE MISSEIS GUIADOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2550-1/01",
+        "descricao": "Fabricação de equipamento bélico pesado, exceto veículos militares de combate"
+      }
+    ],
     "Ramo": {
       "codigo": "49",
       "nome": "Equipamentos de Oficinas de Manutenção e Reparos"
@@ -19372,8 +20323,46 @@
     "Documentos Elegíveis": [],
     "CNAEs": [
       {
+        "codigo": "4647-8/01",
+        "descricao": "Comércio atacadista de artigos de escritório e de papelaria"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
         "codigo": "4761-0/03",
         "descricao": "Comércio varejista de artigos de papelaria"
+      },
+      {
+        "codigo": "2543-8/00",
+        "descricao": "Fabricação de ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      }
+    ],
+    "Ramo": {
+      "codigo": "51",
+      "nome": "Ferramentas Manuais"
+    }
+  },
+  {
+    "Família": "51.20",
+    "Descrição": "FERRAMENTAS MANUAIS SEM CORTE, NAO ACIONADAS POR FORCA MOTRIZ",
+    "Tipo": "M",
+    "Terceirizado": "Não",
+    "Documentos Exigidos": [],
+    "Documentos Elegíveis": [],
+    "CNAEs": [
+      {
+        "codigo": "2543-8/00",
+        "descricao": "Fabricação de ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
       },
       {
         "codigo": "4744-0/01",
@@ -19386,22 +20375,26 @@
     }
   },
   {
-    "Família": "51.20",
-    "Descrição": "FERRAMENTAS MANUAIS SEM CORTE, NAO ACIONADAS POR FORCA MOTRIZ",
-    "Documentos Exigidos": [],
-    "Documentos Elegíveis": [],
-    "Tipo": "M",
-    "Ramo": {
-      "codigo": "51",
-      "nome": "Ferramentas Manuais"
-    }
-  },
-  {
     "Família": "51.30",
     "Descrição": "FERRAMENTAS MANUAIS ACIONADAS POR FORCA MOTRIZ",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2840-2/00",
+        "descricao": "Fabricação de máquinas-ferramenta, peças e acessórios"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      }
+    ],
     "Ramo": {
       "codigo": "51",
       "nome": "Ferramentas Manuais"
@@ -19416,7 +20409,21 @@
     "Ramo": {
       "codigo": "51",
       "nome": "Ferramentas Manuais"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2543-8/00",
+        "descricao": "Fabricação de ferramentas"
+      }
+    ]
   },
   {
     "Família": "51.36",
@@ -19427,7 +20434,21 @@
     "Ramo": {
       "codigo": "51",
       "nome": "Ferramentas Manuais"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2543-8/00",
+        "descricao": "Fabricação de ferramentas"
+      }
+    ]
   },
   {
     "Família": "51.40",
@@ -19438,7 +20459,17 @@
     "Ramo": {
       "codigo": "51",
       "nome": "Ferramentas Manuais"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      }
+    ]
   },
   {
     "Família": "51.80",
@@ -19449,7 +20480,21 @@
     "Ramo": {
       "codigo": "51",
       "nome": "Ferramentas Manuais"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2543-8/00",
+        "descricao": "Fabricação de ferramentas"
+      }
+    ]
   },
   {
     "Família": "52.10",
@@ -19460,14 +20505,51 @@
     "Ramo": {
       "codigo": "52",
       "nome": "Instrumentos de Medição"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.45-1/01",
+        "descricao": "Comércio atacadista de instrumentos e materiais para uso médico, cirúrgico, hospitalar e de laboratórios"
+      },
+      {
+        "codigo": "46.69-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2651-5/00",
+        "descricao": "Fabricação de aparelhos e equipamentos de medida, teste e controle"
+      }
+    ]
   },
   {
     "Família": "52.20",
     "Descrição": "CALIBRES DE INSPECAO E FERRAMENTAS DE PRECISAO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2651-5/00",
+        "descricao": "Fabricação de aparelhos e equipamentos de medida, teste e controle"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      }
+    ],
     "Ramo": {
       "codigo": "52",
       "nome": "Instrumentos de Medição"
@@ -19482,14 +20564,55 @@
     "Ramo": {
       "codigo": "52",
       "nome": "Instrumentos de Medição"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2651-5/00",
+        "descricao": "Fabricação de aparelhos e equipamentos de medida, teste e controle"
+      }
+    ]
   },
   {
     "Família": "53.05",
     "Descrição": "PARAFUSOS SEM PORCA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2599-3/99",
+        "descricao": "Fabricação de outros produtos de metal não especificados anteriormente"
+      },
+      {
+        "codigo": "2592-6/02",
+        "descricao": "Fabricação de produtos de trefilados de metal, exceto padronizados"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      }
+    ],
     "Ramo": {
       "codigo": "53",
       "nome": "Ferragens e Abrasivos"
@@ -19504,7 +20627,33 @@
     "Ramo": {
       "codigo": "53",
       "nome": "Ferragens e Abrasivos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2599-3/99",
+        "descricao": "Fabricação de outros produtos de metal não especificados anteriormente"
+      },
+      {
+        "codigo": "2592-6/02",
+        "descricao": "Fabricação de produtos de trefilados de metal, exceto padronizados"
+      }
+    ]
   },
   {
     "Família": "53.07",
@@ -19515,7 +20664,33 @@
     "Ramo": {
       "codigo": "53",
       "nome": "Ferragens e Abrasivos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2599-3/99",
+        "descricao": "Fabricação de outros produtos de metal não especificados anteriormente"
+      },
+      {
+        "codigo": "2592-6/02",
+        "descricao": "Fabricação de produtos de trefilados de metal, exceto padronizados"
+      }
+    ]
   },
   {
     "Família": "53.10",
@@ -19526,7 +20701,33 @@
     "Ramo": {
       "codigo": "53",
       "nome": "Ferragens e Abrasivos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2599-3/99",
+        "descricao": "Fabricação de outros produtos de metal não especificados anteriormente"
+      },
+      {
+        "codigo": "2592-6/02",
+        "descricao": "Fabricação de produtos de trefilados de metal, exceto padronizados"
+      }
+    ]
   },
   {
     "Família": "53.15",
@@ -19537,7 +20738,33 @@
     "Ramo": {
       "codigo": "53",
       "nome": "Ferragens e Abrasivos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2599-3/99",
+        "descricao": "Fabricação de outros produtos de metal não especificados anteriormente"
+      },
+      {
+        "codigo": "2592-6/02",
+        "descricao": "Fabricação de produtos de trefilados de metal, exceto padronizados"
+      }
+    ]
   },
   {
     "Família": "53.20",
@@ -19548,7 +20775,33 @@
     "Ramo": {
       "codigo": "53",
       "nome": "Ferragens e Abrasivos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2599-3/99",
+        "descricao": "Fabricação de outros produtos de metal não especificados anteriormente"
+      },
+      {
+        "codigo": "2592-6/02",
+        "descricao": "Fabricação de produtos de trefilados de metal, exceto padronizados"
+      }
+    ]
   },
   {
     "Família": "53.25",
@@ -19559,14 +20812,63 @@
     "Ramo": {
       "codigo": "53",
       "nome": "Ferragens e Abrasivos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2599-3/99",
+        "descricao": "Fabricação de outros produtos de metal não especificados anteriormente"
+      },
+      {
+        "codigo": "2592-6/02",
+        "descricao": "Fabricação de produtos de trefilados de metal, exceto padronizados"
+      }
+    ]
   },
   {
     "Família": "53.30",
     "Descrição": "GAXETAS E OUTROS MATERIAIS PARA VEDACAO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2219-6/00",
+        "descricao": "Fabricação de artefatos de borracha não especificados anteriormente"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      }
+    ],
     "Ramo": {
       "codigo": "53",
       "nome": "Ferragens e Abrasivos"
@@ -19575,9 +20877,20 @@
   {
     "Família": "53.35",
     "Descrição": "TELAS METALICAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2599-3/99",
+        "descricao": "Fabricação de outros produtos de metal não especificados anteriormente"
+      },
+      {
+        "codigo": "2592-6/02",
+        "descricao": "Fabricação de produtos de trefilados de metal, exceto padronizados"
+      }
+    ],
     "Ramo": {
       "codigo": "53",
       "nome": "Ferragens e Abrasivos"
@@ -19597,9 +20910,32 @@
   {
     "Família": "53.45",
     "Descrição": "DISCOS E PEDRAS ABRASIVOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2399-1/02",
+        "descricao": "Fabricação de abrasivos"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      }
+    ],
     "Ramo": {
       "codigo": "53",
       "nome": "Ferragens e Abrasivos"
@@ -19614,7 +20950,25 @@
     "Ramo": {
       "codigo": "53",
       "nome": "Ferragens e Abrasivos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      }
+    ]
   },
   {
     "Família": "53.55",
@@ -19636,7 +20990,33 @@
     "Ramo": {
       "codigo": "53",
       "nome": "Ferragens e Abrasivos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2599-3/99",
+        "descricao": "Fabricação de outros produtos de metal não especificados anteriormente"
+      },
+      {
+        "codigo": "2592-6/02",
+        "descricao": "Fabricação de produtos de trefilados de metal, exceto padronizados"
+      }
+    ]
   },
   {
     "Família": "53.65",
@@ -19647,14 +21027,51 @@
     "Ramo": {
       "codigo": "53",
       "nome": "Ferragens e Abrasivos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4744-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "2219-6/00",
+        "descricao": "Fabricação de artefatos de borracha não especificados anteriormente"
+      }
+    ]
   },
   {
     "Família": "54.10",
     "Descrição": "EDIFICACOES PRE-FABRICADAS E PORTATEIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2511-0/00",
+        "descricao": "Fabricação de estruturas metálicas"
+      },
+      {
+        "codigo": "2330-3/01",
+        "descricao": "Fabricação de estruturas pré-moldadas de concreto armado, em série e sob encomenda"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      }
+    ],
     "Ramo": {
       "codigo": "54",
       "nome": "Estruturas e Andaimes Pré-Fabricados"
@@ -19669,7 +21086,21 @@
     "Ramo": {
       "codigo": "54",
       "nome": "Estruturas e Andaimes Pré-Fabricados"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "2511-0/00",
+        "descricao": "Fabricação de estruturas metálicas"
+      },
+      {
+        "codigo": "2330-3/01",
+        "descricao": "Fabricação de estruturas pré-moldadas de concreto armado, em série e sob encomenda"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      }
+    ]
   },
   {
     "Família": "54.20",
@@ -19680,14 +21111,35 @@
     "Ramo": {
       "codigo": "54",
       "nome": "Estruturas e Andaimes Pré-Fabricados"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "2511-0/00",
+        "descricao": "Fabricação de estruturas metálicas"
+      },
+      {
+        "codigo": "2330-3/01",
+        "descricao": "Fabricação de estruturas pré-moldadas de concreto armado, em série e sob encomenda"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      }
+    ]
   },
   {
     "Família": "54.30",
     "Descrição": "TANQUES DE ARMAZENAGEM",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2521-7/00",
+        "descricao": "Fabricação de tanques, reservatórios metálicos e caldeiras para aquecimento central"
+      }
+    ],
     "Ramo": {
       "codigo": "54",
       "nome": "Estruturas e Andaimes Pré-Fabricados"
@@ -19696,9 +21148,24 @@
   {
     "Família": "54.40",
     "Descrição": "EQUIPAMENTOS PARA MONTAGEM DE ANDAIME E FORMAS DE CONCRETO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      },
+      {
+        "codigo": "4662-1/00",
+        "descricao": "Comércio atacadista de máquinas, equipamentos para terraplenagem, mineração e construção; partes e peças"
+      },
+      {
+        "codigo": "2511-0/00",
+        "descricao": "Fabricação de estruturas metálicas"
+      }
+    ],
     "Ramo": {
       "codigo": "54",
       "nome": "Estruturas e Andaimes Pré-Fabricados"
@@ -19713,7 +21180,21 @@
     "Ramo": {
       "codigo": "54",
       "nome": "Estruturas e Andaimes Pré-Fabricados"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "2511-0/00",
+        "descricao": "Fabricação de estruturas metálicas"
+      },
+      {
+        "codigo": "2330-3/01",
+        "descricao": "Fabricação de estruturas pré-moldadas de concreto armado, em série e sob encomenda"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      }
+    ]
   },
   {
     "Família": "54.50",
@@ -19724,14 +21205,51 @@
     "Ramo": {
       "codigo": "54",
       "nome": "Estruturas e Andaimes Pré-Fabricados"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "2511-0/00",
+        "descricao": "Fabricação de estruturas metálicas"
+      },
+      {
+        "codigo": "2330-3/01",
+        "descricao": "Fabricação de estruturas pré-moldadas de concreto armado, em série e sob encomenda"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      }
+    ]
   },
   {
     "Família": "55.10",
     "Descrição": "TABUAS E ARTIGOS CORRELATOS A BASE DE MADEIRA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "1610-2/03",
+        "descricao": "Serrarias com desdobramento de madeira em bruto"
+      },
+      {
+        "codigo": "4671-1/00",
+        "descricao": "Comércio atacadista de madeira e produtos derivados"
+      },
+      {
+        "codigo": "4744-0/02",
+        "descricao": "Comércio varejista de madeira e artefatos"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      }
+    ],
     "Ramo": {
       "codigo": "55",
       "nome": "Tábuas, Esquadrias e Compensados de Madeira"
@@ -19740,9 +21258,32 @@
   {
     "Família": "55.20",
     "Descrição": "ESQUADRIAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "1622-6/02",
+        "descricao": "Fabricação de esquadrias de madeira e de peças de madeira para instalações industriais e comerciais"
+      },
+      {
+        "codigo": "4671-1/00",
+        "descricao": "Comércio atacadista de madeira e produtos derivados"
+      },
+      {
+        "codigo": "4744-0/02",
+        "descricao": "Comércio varejista de madeira e artefatos"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      }
+    ],
     "Ramo": {
       "codigo": "55",
       "nome": "Tábuas, Esquadrias e Compensados de Madeira"
@@ -19751,9 +21292,32 @@
   {
     "Família": "55.30",
     "Descrição": "COMPENSADOS E FOLHEADOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "1621-8/00",
+        "descricao": "Fabricação de madeira laminada e de chapas de madeira compensada, prensada e aglomerada"
+      },
+      {
+        "codigo": "4671-1/00",
+        "descricao": "Comércio atacadista de madeira e produtos derivados"
+      },
+      {
+        "codigo": "4744-0/02",
+        "descricao": "Comércio varejista de madeira e artefatos"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      }
+    ],
     "Ramo": {
       "codigo": "55",
       "nome": "Tábuas, Esquadrias e Compensados de Madeira"
@@ -19762,9 +21326,24 @@
   {
     "Família": "56.10",
     "Descrição": "MATERIAIS DE ORIGEM MINERAL PARA CONSTRUCAO, A GRANEL",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4679-6/04",
+        "descricao": "Comércio atacadista especializado de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      }
+    ],
     "Ramo": {
       "codigo": "56",
       "nome": "Materiais para Construção"
@@ -19773,9 +21352,32 @@
   {
     "Família": "56.20",
     "Descrição": "VIDROS, TIJOLOS, PISOS E BLOCOS PARA CONSTRUCAO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2341-9/00",
+        "descricao": "Fabricação de produtos cerâmicos refratários"
+      },
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4679-6/04",
+        "descricao": "Comércio atacadista especializado de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "0810-0/06",
+        "descricao": "Extração de areia, cascalho ou pedregulho e beneficiamento associado"
+      }
+    ],
     "Ramo": {
       "codigo": "56",
       "nome": "Materiais para Construção"
@@ -19784,9 +21386,28 @@
   {
     "Família": "56.30",
     "Descrição": "TUBOS E CONDUTOS, NAO METALICOS, PARA CONSTRUCAO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2223-4/00",
+        "descricao": "Fabricação de tubos e acessórios de material plástico para uso na construção"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4679-6/04",
+        "descricao": "Comércio atacadista especializado de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      }
+    ],
     "Ramo": {
       "codigo": "56",
       "nome": "Materiais para Construção"
@@ -19801,8 +21422,16 @@
     "Documentos Elegíveis": [],
     "CNAEs": [
       {
-        "codigo": "4329-1/05",
-        "descricao": "Tratamentos térmicos, acústicos ou de vibração"
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4679-6/04",
+        "descricao": "Comércio atacadista especializado de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
       },
       {
         "codigo": "1733-8/00",
@@ -19817,9 +21446,28 @@
   {
     "Família": "56.50",
     "Descrição": "MATERIAIS PARA TELHADOS E REVESTIMENTOS DE PAREDES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2341-9/00",
+        "descricao": "Fabricação de produtos cerâmicos refratários"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4679-6/04",
+        "descricao": "Comércio atacadista especializado de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      }
+    ],
     "Ramo": {
       "codigo": "56",
       "nome": "Materiais para Construção"
@@ -19828,9 +21476,28 @@
   {
     "Família": "56.60",
     "Descrição": "CERCADOS, GRADES E PORTOES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2592-6/01",
+        "descricao": "Fabricação de produtos de trefilados de metal padronizados"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4679-6/04",
+        "descricao": "Comércio atacadista especializado de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      }
+    ],
     "Ramo": {
       "codigo": "56",
       "nome": "Materiais para Construção"
@@ -19839,9 +21506,28 @@
   {
     "Família": "56.70",
     "Descrição": "COMPONENTES PRE-FABRICADOS PARA CONSTRUCAO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2330-3/01",
+        "descricao": "Fabricação de estruturas pré-moldadas de concreto armado, em série e sob encomenda"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4679-6/04",
+        "descricao": "Comércio atacadista especializado de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      }
+    ],
     "Ramo": {
       "codigo": "56",
       "nome": "Materiais para Construção"
@@ -19856,14 +21542,59 @@
     "Ramo": {
       "codigo": "56",
       "nome": "Materiais para Construção"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4744-0/05",
+        "descricao": "Comércio varejista de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4679-6/04",
+        "descricao": "Comércio atacadista especializado de materiais de construção não especificados anteriormente"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      }
+    ]
   },
   {
     "Família": "58.05",
     "Descrição": "EQUIPAMENTOS DE TELEFONIA E TELEGRAFICOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2640-0/00",
+        "descricao": "Fabricação de aparelhos de recepção, reprodução, gravação e amplificação de áudio e vídeo"
+      },
+      {
+        "codigo": "2632-9/00",
+        "descricao": "Fabricação de aparelhos telefônicos e de outros equipamentos de comunicação, peças e acessórios"
+      },
+      {
+        "codigo": "2631-1/00",
+        "descricao": "Fabricação de equipamentos transmissores de comunicação, peças e acessórios"
+      },
+      {
+        "codigo": "4752-1/00",
+        "descricao": "Comércio varejista especializado de equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4753-9/00",
+        "descricao": "Comércio varejista especializado de eletrodomésticos e equipamentos de áudio e vídeo"
+      },
+      {
+        "codigo": "4649-4/02",
+        "descricao": "Comércio atacadista de aparelhos eletrônicos de uso pessoal e doméstico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      }
+    ],
     "Ramo": {
       "codigo": "58",
       "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
@@ -19872,9 +21603,24 @@
   {
     "Família": "58.10",
     "Descrição": "EQUIPAMENTOS E COMPONENTES PARA SEGURANCA DE COMUNICACAO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2631-1/00",
+        "descricao": "Fabricação de equipamentos transmissores de comunicação, peças e acessórios"
+      },
+      {
+        "codigo": "8020-0/01",
+        "descricao": "Atividades de monitoramento de sistemas de segurança eletrônico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      }
+    ],
     "Ramo": {
       "codigo": "58",
       "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
@@ -19883,9 +21629,16 @@
   {
     "Família": "58.11",
     "Descrição": "OUTROS EQUIPAMENTOS CRIPTOLOGICOS E COMPOMENTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "6203-1/00",
+        "descricao": "Desenvolvimento e licenciamento de programas de computador não-customizáveis"
+      }
+    ],
     "Ramo": {
       "codigo": "58",
       "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
@@ -19900,7 +21653,37 @@
     "Ramo": {
       "codigo": "58",
       "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "2640-0/00",
+        "descricao": "Fabricação de aparelhos de recepção, reprodução, gravação e amplificação de áudio e vídeo"
+      },
+      {
+        "codigo": "2632-9/00",
+        "descricao": "Fabricação de aparelhos telefônicos e de outros equipamentos de comunicação, peças e acessórios"
+      },
+      {
+        "codigo": "2631-1/00",
+        "descricao": "Fabricação de equipamentos transmissores de comunicação, peças e acessórios"
+      },
+      {
+        "codigo": "4752-1/00",
+        "descricao": "Comércio varejista especializado de equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4753-9/00",
+        "descricao": "Comércio varejista especializado de eletrodomésticos e equipamentos de áudio e vídeo"
+      },
+      {
+        "codigo": "4649-4/02",
+        "descricao": "Comércio atacadista de aparelhos eletrônicos de uso pessoal e doméstico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      }
+    ]
   },
   {
     "Família": "58.20",
@@ -19916,15 +21699,54 @@
       {
         "codigo": "47.53-9/00",
         "descricao": "Comércio varejista especializado de eletrodomésticos e equipamentos de áudio e vídeo"
+      },
+      {
+        "codigo": "2640-0/00",
+        "descricao": "Fabricação de aparelhos de recepção, reprodução, gravação e amplificação de áudio e vídeo"
+      },
+      {
+        "codigo": "2632-9/00",
+        "descricao": "Fabricação de aparelhos telefônicos e de outros equipamentos de comunicação, peças e acessórios"
+      },
+      {
+        "codigo": "2631-1/00",
+        "descricao": "Fabricação de equipamentos transmissores de comunicação, peças e acessórios"
+      },
+      {
+        "codigo": "4752-1/00",
+        "descricao": "Comércio varejista especializado de equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4753-9/00",
+        "descricao": "Comércio varejista especializado de eletrodomésticos e equipamentos de áudio e vídeo"
+      },
+      {
+        "codigo": "4649-4/02",
+        "descricao": "Comércio atacadista de aparelhos eletrônicos de uso pessoal e doméstico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
       }
     ]
   },
   {
     "Família": "58.21",
     "Descrição": "EQUIPAMENTOS PARA COMUNIC POR RADIO E TELEVISAO, PARA  AERONAVES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      },
+      {
+        "codigo": "3316-3/01",
+        "descricao": "Manutenção e reparação de aeronaves, exceto a manutenção na pista"
+      }
+    ],
     "Ramo": {
       "codigo": "58",
       "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
@@ -19939,7 +21761,17 @@
     "Ramo": {
       "codigo": "58",
       "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "2651-5/00",
+        "descricao": "Fabricação de aparelhos e equipamentos de medida, teste e controle"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      }
+    ]
   },
   {
     "Família": "58.26",
@@ -19950,7 +21782,17 @@
     "Ramo": {
       "codigo": "58",
       "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      },
+      {
+        "codigo": "3316-3/01",
+        "descricao": "Manutenção e reparação de aeronaves, exceto a manutenção na pista"
+      }
+    ]
   },
   {
     "Família": "58.30",
@@ -19961,7 +21803,37 @@
     "Ramo": {
       "codigo": "58",
       "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "2640-0/00",
+        "descricao": "Fabricação de aparelhos de recepção, reprodução, gravação e amplificação de áudio e vídeo"
+      },
+      {
+        "codigo": "2632-9/00",
+        "descricao": "Fabricação de aparelhos telefônicos e de outros equipamentos de comunicação, peças e acessórios"
+      },
+      {
+        "codigo": "2631-1/00",
+        "descricao": "Fabricação de equipamentos transmissores de comunicação, peças e acessórios"
+      },
+      {
+        "codigo": "4752-1/00",
+        "descricao": "Comércio varejista especializado de equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4753-9/00",
+        "descricao": "Comércio varejista especializado de eletrodomésticos e equipamentos de áudio e vídeo"
+      },
+      {
+        "codigo": "4649-4/02",
+        "descricao": "Comércio atacadista de aparelhos eletrônicos de uso pessoal e doméstico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      }
+    ]
   },
   {
     "Família": "58.31",
@@ -19972,7 +21844,17 @@
     "Ramo": {
       "codigo": "58",
       "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      },
+      {
+        "codigo": "3316-3/01",
+        "descricao": "Manutenção e reparação de aeronaves, exceto a manutenção na pista"
+      }
+    ]
   },
   {
     "Família": "58.35",
@@ -19983,14 +21865,59 @@
     "Ramo": {
       "codigo": "58",
       "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.49-4/02",
+        "descricao": "Comércio atacadista de aparelhos eletrônicos de uso pessoal e doméstico"
+      },
+      {
+        "codigo": "2640-0/00",
+        "descricao": "Fabricação de aparelhos de recepção, reprodução, gravação e amplificação de áudio e vídeo"
+      },
+      {
+        "codigo": "2632-9/00",
+        "descricao": "Fabricação de aparelhos telefônicos e de outros equipamentos de comunicação, peças e acessórios"
+      },
+      {
+        "codigo": "2631-1/00",
+        "descricao": "Fabricação de equipamentos transmissores de comunicação, peças e acessórios"
+      },
+      {
+        "codigo": "4752-1/00",
+        "descricao": "Comércio varejista especializado de equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4753-9/00",
+        "descricao": "Comércio varejista especializado de eletrodomésticos e equipamentos de áudio e vídeo"
+      },
+      {
+        "codigo": "4649-4/02",
+        "descricao": "Comércio atacadista de aparelhos eletrônicos de uso pessoal e doméstico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      }
+    ]
   },
   {
     "Família": "58.40",
     "Descrição": "EQUIPAMENTOS RADAR, EXCETO OS DE AERONAVES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2651-5/00",
+        "descricao": "Fabricação de aparelhos e equipamentos de medida, teste e controle"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      }
+    ],
     "Ramo": {
       "codigo": "58",
       "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
@@ -20005,14 +21932,31 @@
     "Ramo": {
       "codigo": "58",
       "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "3042-3/00",
+        "descricao": "Fabricação de turbinas, motores e outros componentes e peças para aeronaves"
+      },
+      {
+        "codigo": "3316-3/01",
+        "descricao": "Manutenção e reparação de aeronaves, exceto a manutenção na pista"
+      }
+    ]
   },
   {
     "Família": "58.45",
     "Descrição": "EQUIPAMENTOS SUBMARINOS DE SOM",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2651-5/00",
+        "descricao": "Fabricação de aparelhos e equipamentos de medida, teste e controle"
+      }
+    ],
     "Ramo": {
       "codigo": "58",
       "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
@@ -20021,9 +21965,24 @@
   {
     "Família": "58.50",
     "Descrição": "EQUIPAMENTOS PARA COMUNICACAO COM LUZ VISIVEL E INVISIVEL",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2670-1/01",
+        "descricao": "Fabricação de equipamentos e instrumentos ópticos, peças e acessórios"
+      },
+      {
+        "codigo": "2631-1/00",
+        "descricao": "Fabricação de equipamentos transmissores de comunicação, peças e acessórios"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      }
+    ],
     "Ramo": {
       "codigo": "58",
       "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
@@ -20032,9 +21991,24 @@
   {
     "Família": "58.55",
     "Descrição": "EQUIPAMENTOS PARA VISAO NOTURNA, POR RADICAO EMITIDA E REFLETIDA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2670-1/01",
+        "descricao": "Fabricação de equipamentos e instrumentos ópticos, peças e acessórios"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "2651-5/00",
+        "descricao": "Fabricação de aparelhos e equipamentos de medida, teste e controle"
+      }
+    ],
     "Ramo": {
       "codigo": "58",
       "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
@@ -20043,9 +22017,20 @@
   {
     "Família": "58.60",
     "Descrição": "DISPOSITIVOS DE RADIACAO COERENTE ESTIMULADA, SEUS COMPON E ACESSORIOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "2670-1/01",
+        "descricao": "Fabricação de equipamentos e instrumentos ópticos, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "58",
       "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
@@ -20060,7 +22045,13 @@
     "Ramo": {
       "codigo": "58",
       "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "6203-1/00",
+        "descricao": "Desenvolvimento e licenciamento de programas de computador não-customizáveis"
+      }
+    ]
   },
   {
     "Família": "58.95",
@@ -20071,28 +22062,67 @@
     "Ramo": {
       "codigo": "58",
       "nome": "Equipamentos de Comunicação, Detecção e Radiação Corrente"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "2640-0/00",
+        "descricao": "Fabricação de aparelhos de recepção, reprodução, gravação e amplificação de áudio e vídeo"
+      },
+      {
+        "codigo": "2632-9/00",
+        "descricao": "Fabricação de aparelhos telefônicos e de outros equipamentos de comunicação, peças e acessórios"
+      },
+      {
+        "codigo": "2631-1/00",
+        "descricao": "Fabricação de equipamentos transmissores de comunicação, peças e acessórios"
+      },
+      {
+        "codigo": "4752-1/00",
+        "descricao": "Comércio varejista especializado de equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4753-9/00",
+        "descricao": "Comércio varejista especializado de eletrodomésticos e equipamentos de áudio e vídeo"
+      },
+      {
+        "codigo": "4649-4/02",
+        "descricao": "Comércio atacadista de aparelhos eletrônicos de uso pessoal e doméstico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      }
+    ]
   },
   {
     "Família": "59.05",
     "Descrição": "RESISTORES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
-    "Ramo": {
-      "codigo": "59",
-      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    },
     "CNAEs": [
       {
-        "codigo": "46.73-7/00",
+        "codigo": "2610-8/00",
+        "descricao": "Fabricação de componentes eletrônicos"
+      },
+      {
+        "codigo": "4673-7/00",
         "descricao": "Comércio atacadista de material elétrico"
       },
       {
-        "codigo": "47.42-3/00",
+        "codigo": "4742-3/00",
         "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
       }
-    ]
+    ],
+    "Ramo": {
+      "codigo": "59",
+      "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
+    }
   },
   {
     "Família": "59.10",
@@ -20103,7 +22133,25 @@
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "2610-8/00",
+        "descricao": "Fabricação de componentes eletrônicos"
+      }
+    ]
   },
   {
     "Família": "59.15",
@@ -20114,14 +22162,51 @@
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "2610-8/00",
+        "descricao": "Fabricação de componentes eletrônicos"
+      }
+    ]
   },
   {
     "Família": "59.20",
     "Descrição": "FUSIVEIS INTERRUPTORES E PROTETORES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2731-7/00",
+        "descricao": "Fabricação de aparelhos e equipamentos para distribuição e controle de energia elétrica"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      }
+    ],
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
@@ -20136,7 +22221,25 @@
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "2731-7/00",
+        "descricao": "Fabricação de aparelhos e equipamentos para distribuição e controle de energia elétrica"
+      }
+    ]
   },
   {
     "Família": "59.30",
@@ -20147,7 +22250,25 @@
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "2731-7/00",
+        "descricao": "Fabricação de aparelhos e equipamentos para distribuição e controle de energia elétrica"
+      }
+    ]
   },
   {
     "Família": "59.35",
@@ -20158,7 +22279,25 @@
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "2731-7/00",
+        "descricao": "Fabricação de aparelhos e equipamentos para distribuição e controle de energia elétrica"
+      }
+    ]
   },
   {
     "Família": "59.40",
@@ -20169,7 +22308,25 @@
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "2731-7/00",
+        "descricao": "Fabricação de aparelhos e equipamentos para distribuição e controle de energia elétrica"
+      }
+    ]
   },
   {
     "Família": "59.45",
@@ -20180,7 +22337,25 @@
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "2731-7/00",
+        "descricao": "Fabricação de aparelhos e equipamentos para distribuição e controle de energia elétrica"
+      }
+    ]
   },
   {
     "Família": "59.50",
@@ -20191,7 +22366,25 @@
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "2731-7/00",
+        "descricao": "Fabricação de aparelhos e equipamentos para distribuição e controle de energia elétrica"
+      }
+    ]
   },
   {
     "Família": "59.55",
@@ -20202,7 +22395,25 @@
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "2610-8/00",
+        "descricao": "Fabricação de componentes eletrônicos"
+      }
+    ]
   },
   {
     "Família": "59.60",
@@ -20213,7 +22424,25 @@
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "2610-8/00",
+        "descricao": "Fabricação de componentes eletrônicos"
+      }
+    ]
   },
   {
     "Família": "59.61",
@@ -20224,7 +22453,25 @@
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "2610-8/00",
+        "descricao": "Fabricação de componentes eletrônicos"
+      }
+    ]
   },
   {
     "Família": "59.62",
@@ -20235,7 +22482,25 @@
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "2610-8/00",
+        "descricao": "Fabricação de componentes eletrônicos"
+      }
+    ]
   },
   {
     "Família": "59.63",
@@ -20246,24 +22511,51 @@
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "2610-8/00",
+        "descricao": "Fabricação de componentes eletrônicos"
+      }
+    ]
   },
   {
     "Família": "59.65",
     "Descrição": "FONES, MICROFONES E ALTO-FALANTES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4649-4/02",
+        "descricao": "Comércio atacadista de aparelhos eletrônicos de uso pessoal e doméstico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4753-9/00",
+        "descricao": "Comércio varejista especializado de eletrodomésticos e equipamentos de áudio e vídeo"
+      }
+    ],
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    },
-    "CNAEs": [
-      {
-        "codigo": "47.53-9/00",
-        "descricao": "Comércio varejista especializado de eletrodomésticos e equipamentos de áudio e vídeo"
-      }
-    ]
+    }
   },
   {
     "Família": "59.70",
@@ -20274,7 +22566,21 @@
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      }
+    ]
   },
   {
     "Família": "59.75",
@@ -20285,7 +22591,25 @@
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "2731-7/00",
+        "descricao": "Fabricação de aparelhos e equipamentos para distribuição e controle de energia elétrica"
+      }
+    ]
   },
   {
     "Família": "59.77",
@@ -20296,7 +22620,25 @@
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "2731-7/00",
+        "descricao": "Fabricação de aparelhos e equipamentos para distribuição e controle de energia elétrica"
+      }
+    ]
   },
   {
     "Família": "59.80",
@@ -20307,7 +22649,21 @@
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      }
+    ]
   },
   {
     "Família": "59.85",
@@ -20318,7 +22674,21 @@
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      }
+    ]
   },
   {
     "Família": "59.90",
@@ -20329,14 +22699,47 @@
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      }
+    ]
   },
   {
     "Família": "59.95",
     "Descrição": "CONJ DE CABOS, CORDOES E FIOS ELETRICOS PARA EQUIP DE COMUNICACAO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2733-3/00",
+        "descricao": "Fabricação de fios, cabos e condutores elétricos isolados"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      }
+    ],
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
@@ -20360,6 +22763,18 @@
       {
         "codigo": "47.42-3/00",
         "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
       }
     ]
   },
@@ -20372,14 +22787,43 @@
     "Ramo": {
       "codigo": "59",
       "nome": "Componentes de Equipamentos Elétricos e Eletrônicos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      }
+    ]
   },
   {
     "Família": "60.04",
     "Descrição": "JUNTAS ROTATIVAS DE FIBRA OTICA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2670-1/01",
+        "descricao": "Fabricação de equipamentos e instrumentos ópticos, peças e acessórios"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      }
+    ],
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
@@ -20394,7 +22838,17 @@
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      }
+    ]
   },
   {
     "Família": "60.06",
@@ -20405,7 +22859,21 @@
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "2670-1/01",
+        "descricao": "Fabricação de equipamentos e instrumentos ópticos, peças e acessórios"
+      }
+    ]
   },
   {
     "Família": "60.07",
@@ -20416,14 +22884,43 @@
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "2670-1/01",
+        "descricao": "Fabricação de equipamentos e instrumentos ópticos, peças e acessórios"
+      }
+    ]
   },
   {
     "Família": "60.08",
     "Descrição": "MULTIPLEXADORES E DEMULTIPLEXADORES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2631-1/00",
+        "descricao": "Fabricação de equipamentos transmissores de comunicação, peças e acessórios"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      }
+    ],
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
@@ -20432,9 +22929,24 @@
   {
     "Família": "60.10",
     "Descrição": "CONDUTORES DE FIBRA OTICA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2733-3/00",
+        "descricao": "Fabricação de fios, cabos e condutores elétricos isolados"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      }
+    ],
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
@@ -20449,7 +22961,21 @@
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "2733-3/00",
+        "descricao": "Fabricação de fios, cabos e condutores elétricos isolados"
+      }
+    ]
   },
   {
     "Família": "60.20",
@@ -20460,7 +22986,21 @@
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "2733-3/00",
+        "descricao": "Fabricação de fios, cabos e condutores elétricos isolados"
+      }
+    ]
   },
   {
     "Família": "60.21",
@@ -20471,7 +23011,21 @@
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "2631-1/00",
+        "descricao": "Fabricação de equipamentos transmissores de comunicação, peças e acessórios"
+      }
+    ]
   },
   {
     "Família": "60.25",
@@ -20482,7 +23036,21 @@
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "2631-1/00",
+        "descricao": "Fabricação de equipamentos transmissores de comunicação, peças e acessórios"
+      }
+    ]
   },
   {
     "Família": "60.26",
@@ -20493,7 +23061,21 @@
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "2631-1/00",
+        "descricao": "Fabricação de equipamentos transmissores de comunicação, peças e acessórios"
+      }
+    ]
   },
   {
     "Família": "60.29",
@@ -20504,7 +23086,21 @@
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "2631-1/00",
+        "descricao": "Fabricação de equipamentos transmissores de comunicação, peças e acessórios"
+      }
+    ]
   },
   {
     "Família": "60.30",
@@ -20515,14 +23111,39 @@
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      }
+    ]
   },
   {
     "Família": "60.31",
     "Descrição": "CIRCUITOS OTICOS INTEGRADOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2610-8/00",
+        "descricao": "Fabricação de componentes eletrônicos"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      }
+    ],
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
@@ -20537,7 +23158,21 @@
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "2610-8/00",
+        "descricao": "Fabricação de componentes eletrônicos"
+      }
+    ]
   },
   {
     "Família": "60.33",
@@ -20548,7 +23183,21 @@
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "2610-8/00",
+        "descricao": "Fabricação de componentes eletrônicos"
+      }
+    ]
   },
   {
     "Família": "60.34",
@@ -20559,7 +23208,21 @@
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "2631-1/00",
+        "descricao": "Fabricação de equipamentos transmissores de comunicação, peças e acessórios"
+      }
+    ]
   },
   {
     "Família": "60.35",
@@ -20570,14 +23233,43 @@
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      }
+    ]
   },
   {
     "Família": "60.40",
     "Descrição": "SENSORES DE FIBRA OTICA",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2651-5/00",
+        "descricao": "Fabricação de aparelhos e equipamentos de medida, teste e controle"
+      },
+      {
+        "codigo": "2670-1/01",
+        "descricao": "Fabricação de equipamentos e instrumentos ópticos, peças e acessórios"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      }
+    ],
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
@@ -20592,7 +23284,17 @@
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      }
+    ]
   },
   {
     "Família": "60.60",
@@ -20603,7 +23305,17 @@
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      }
+    ]
   },
   {
     "Família": "60.70",
@@ -20614,7 +23326,17 @@
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      }
+    ]
   },
   {
     "Família": "60.80",
@@ -20625,7 +23347,17 @@
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      }
+    ]
   },
   {
     "Família": "60.99",
@@ -20636,14 +23368,39 @@
     "Ramo": {
       "codigo": "60",
       "nome": "Materiais, Componentes, Conjuntos e Acessórios de Fibras Ótica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      }
+    ]
   },
   {
     "Família": "61.05",
     "Descrição": "MOTORES ELETRICOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2710-4/03",
+        "descricao": "Fabricação de motores elétricos, peças e acessórios"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      }
+    ],
     "Ramo": {
       "codigo": "61",
       "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
@@ -20667,15 +23424,50 @@
       {
         "codigo": "47.42-3/00",
         "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "2733-3/00",
+        "descricao": "Fabricação de fios, cabos e condutores elétricos isolados"
+      },
+      {
+        "codigo": "2731-7/00",
+        "descricao": "Fabricação de aparelhos e equipamentos para distribuição e controle de energia elétrica"
       }
     ]
   },
   {
     "Família": "61.15",
     "Descrição": "GERADORES E CONJUNTO DE GERADORES ELETRICOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2710-4/01",
+        "descricao": "Fabricação de geradores de corrente contínua e alternada, peças e acessórios"
+      },
+      {
+        "codigo": "2710-4/02",
+        "descricao": "Fabricação de transformadores, indutores, conversores, sincronizadores e semelhantes, peças e acessórios"
+      },
+      {
+        "codigo": "2710-4/03",
+        "descricao": "Fabricação de motores elétricos, peças e acessórios"
+      }
+    ],
     "Ramo": {
       "codigo": "61",
       "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
@@ -20690,7 +23482,33 @@
     "Ramo": {
       "codigo": "61",
       "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2710-4/01",
+        "descricao": "Fabricação de geradores de corrente contínua e alternada, peças e acessórios"
+      },
+      {
+        "codigo": "2710-4/02",
+        "descricao": "Fabricação de transformadores, indutores, conversores, sincronizadores e semelhantes, peças e acessórios"
+      },
+      {
+        "codigo": "2710-4/03",
+        "descricao": "Fabricação de motores elétricos, peças e acessórios"
+      }
+    ]
   },
   {
     "Família": "61.17",
@@ -20712,7 +23530,33 @@
     "Ramo": {
       "codigo": "61",
       "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2710-4/01",
+        "descricao": "Fabricação de geradores de corrente contínua e alternada, peças e acessórios"
+      },
+      {
+        "codigo": "2710-4/02",
+        "descricao": "Fabricação de transformadores, indutores, conversores, sincronizadores e semelhantes, peças e acessórios"
+      },
+      {
+        "codigo": "2710-4/03",
+        "descricao": "Fabricação de motores elétricos, peças e acessórios"
+      }
+    ]
   },
   {
     "Família": "61.25",
@@ -20723,7 +23567,33 @@
     "Ramo": {
       "codigo": "61",
       "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2710-4/01",
+        "descricao": "Fabricação de geradores de corrente contínua e alternada, peças e acessórios"
+      },
+      {
+        "codigo": "2710-4/02",
+        "descricao": "Fabricação de transformadores, indutores, conversores, sincronizadores e semelhantes, peças e acessórios"
+      },
+      {
+        "codigo": "2710-4/03",
+        "descricao": "Fabricação de motores elétricos, peças e acessórios"
+      }
+    ]
   },
   {
     "Família": "61.30",
@@ -20734,14 +23604,67 @@
     "Ramo": {
       "codigo": "61",
       "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2710-4/01",
+        "descricao": "Fabricação de geradores de corrente contínua e alternada, peças e acessórios"
+      },
+      {
+        "codigo": "2710-4/02",
+        "descricao": "Fabricação de transformadores, indutores, conversores, sincronizadores e semelhantes, peças e acessórios"
+      },
+      {
+        "codigo": "2710-4/03",
+        "descricao": "Fabricação de motores elétricos, peças e acessórios"
+      }
+    ]
   },
   {
     "Família": "61.35",
     "Descrição": "BATERIAIS NAO CARREGAVEIS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2722-8/01",
+        "descricao": "Fabricação de baterias e acumuladores para veículos automotores"
+      },
+      {
+        "codigo": "2721-0/00",
+        "descricao": "Fabricação de pilhas, baterias e acumuladores elétricos, exceto para veículos automotores"
+      },
+      {
+        "codigo": "4530-7/03",
+        "descricao": "Comércio a varejo de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      }
+    ],
     "Ramo": {
       "codigo": "61",
       "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
@@ -20756,28 +23679,63 @@
     "Ramo": {
       "codigo": "61",
       "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "2722-8/01",
+        "descricao": "Fabricação de baterias e acumuladores para veículos automotores"
+      },
+      {
+        "codigo": "2721-0/00",
+        "descricao": "Fabricação de pilhas, baterias e acumuladores elétricos, exceto para veículos automotores"
+      },
+      {
+        "codigo": "4530-7/03",
+        "descricao": "Comércio a varejo de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      }
+    ]
   },
   {
     "Família": "61.45",
     "Descrição": "FIOS E CABOS ELETRICOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
-    "Ramo": {
-      "codigo": "61",
-      "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
-    },
     "CNAEs": [
       {
-        "codigo": "46.73-7/00",
-        "descricao": "Comércio atacadista de material elétrico"
+        "codigo": "2733-3/00",
+        "descricao": "Fabricação de fios, cabos e condutores elétricos isolados"
+      },
+      {
+        "codigo": "2731-7/00",
+        "descricao": "Fabricação de aparelhos e equipamentos para distribuição e controle de energia elétrica"
       },
       {
         "codigo": "47.42-3/00",
         "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "46.73-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
       }
-    ]
+    ],
+    "Ramo": {
+      "codigo": "61",
+      "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
+    }
   },
   {
     "Família": "61.50",
@@ -20788,7 +23746,33 @@
     "Ramo": {
       "codigo": "61",
       "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "4663-0/00",
+        "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "2710-4/01",
+        "descricao": "Fabricação de geradores de corrente contínua e alternada, peças e acessórios"
+      },
+      {
+        "codigo": "2710-4/02",
+        "descricao": "Fabricação de transformadores, indutores, conversores, sincronizadores e semelhantes, peças e acessórios"
+      },
+      {
+        "codigo": "2710-4/03",
+        "descricao": "Fabricação de motores elétricos, peças e acessórios"
+      }
+    ]
   },
   {
     "Família": "61.60",
@@ -20799,14 +23783,63 @@
     "Ramo": {
       "codigo": "61",
       "nome": "Condutores Elétricos e Equipamentos de Força e Distribuição de Energia Elétrica"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "2722-8/01",
+        "descricao": "Fabricação de baterias e acumuladores para veículos automotores"
+      },
+      {
+        "codigo": "2721-0/00",
+        "descricao": "Fabricação de pilhas, baterias e acumuladores elétricos, exceto para veículos automotores"
+      },
+      {
+        "codigo": "4530-7/03",
+        "descricao": "Comércio a varejo de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "4530-7/01",
+        "descricao": "Comércio por atacado de peças e acessórios novos para veículos automotores"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      }
+    ]
   },
   {
     "Família": "62.10",
     "Descrição": "APARELHOS DE ILUMINACAO ELETRICA DE USO INTERNO E EXTERNO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2740-6/01",
+        "descricao": "Fabricação de lâmpadas"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4649-4/06",
+        "descricao": "Comércio atacadista de lustres, luminárias e abajures"
+      }
+    ],
     "Ramo": {
       "codigo": "62",
       "nome": "Aparelhos de Iluminação e Lâmpadas"
@@ -20841,15 +23874,58 @@
       {
         "codigo": "47.42-3/00",
         "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4649-4/06",
+        "descricao": "Comércio atacadista de lustres, luminárias e abajures"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "2740-6/01",
+        "descricao": "Fabricação de lâmpadas"
       }
     ]
   },
   {
     "Família": "62.40",
     "Descrição": "LAMPADAS ELETRICAS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2740-6/01",
+        "descricao": "Fabricação de lâmpadas"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4649-4/06",
+        "descricao": "Comércio atacadista de lustres, luminárias e abajures"
+      }
+    ],
     "Ramo": {
       "codigo": "62",
       "nome": "Aparelhos de Iluminação e Lâmpadas"
@@ -20864,14 +23940,47 @@
     "Ramo": {
       "codigo": "62",
       "nome": "Aparelhos de Iluminação e Lâmpadas"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "4649-4/06",
+        "descricao": "Comércio atacadista de lustres, luminárias e abajures"
+      },
+      {
+        "codigo": "4679-6/99",
+        "descricao": "Comércio atacadista de materiais de construção em geral"
+      },
+      {
+        "codigo": "4742-3/00",
+        "descricao": "Comércio varejista de material elétrico"
+      },
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "2740-6/01",
+        "descricao": "Fabricação de lâmpadas"
+      }
+    ]
   },
   {
     "Família": "62.60",
     "Descrição": "APARELHOS DE ILUMINACAO NAO ELETRICOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4649-4/99",
+        "descricao": "Comércio atacadista de outros equipamentos e artigos de uso pessoal e doméstico não especificados anteriormente"
+      },
+      {
+        "codigo": "4672-9/00",
+        "descricao": "Comércio atacadista de ferragens e ferramentas"
+      }
+    ],
     "Ramo": {
       "codigo": "62",
       "nome": "Aparelhos de Iluminação e Lâmpadas"
@@ -20886,8 +23995,16 @@
     "Documentos Elegíveis": [],
     "CNAEs": [
       {
-        "codigo": "4329-1/04",
-        "descricao": "Montagem e instalação de sistemas e equipamentos de iluminação e sinalização em vias públicas, portos e aeroportos"
+        "codigo": "2599-3/99",
+        "descricao": "Fabricação de outros produtos de metal não especificados anteriormente"
+      },
+      {
+        "codigo": "2651-5/00",
+        "descricao": "Fabricação de aparelhos e equipamentos de medida, teste e controle"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
       },
       {
         "codigo": "3299-0/04",
@@ -20902,9 +24019,20 @@
   {
     "Família": "63.20",
     "Descrição": "SISTEMAS DE SINALIZACAO E ALARME DE EMBARCACOES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2651-5/00",
+        "descricao": "Fabricação de aparelhos e equipamentos de medida, teste e controle"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      }
+    ],
     "Ramo": {
       "codigo": "63",
       "nome": "Sistemas de Alarme, Sinalização e Detecção para Segurança"
@@ -20923,8 +24051,12 @@
         "descricao": "Fabricação de painéis e letreiros luminosos"
       },
       {
-        "codigo": "4329-1/04",
-        "descricao": "Montagem e instalação de sistemas e equipamentos de iluminação e sinalização em vias públicas, portos e aeroportos"
+        "codigo": "2651-5/00",
+        "descricao": "Fabricação de aparelhos e equipamentos de medida, teste e controle"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
       }
     ],
     "Ramo": {
@@ -20941,7 +24073,17 @@
     "Ramo": {
       "codigo": "63",
       "nome": "Sistemas de Alarme, Sinalização e Detecção para Segurança"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "2651-5/00",
+        "descricao": "Fabricação de aparelhos e equipamentos de medida, teste e controle"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      }
+    ]
   },
   {
     "Família": "63.50",
@@ -20951,6 +24093,14 @@
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
     "CNAEs": [
+      {
+        "codigo": "4673-7/00",
+        "descricao": "Comércio atacadista de material elétrico"
+      },
+      {
+        "codigo": "4652-4/00",
+        "descricao": "Comércio atacadista de componentes eletrônicos e equipamentos de telefonia e comunicação"
+      },
       {
         "codigo": "3299-0/04",
         "descricao": "Fabricação de painéis e letreiros luminosos"
@@ -20970,17 +24120,42 @@
     "Ramo": {
       "codigo": "63",
       "nome": "Sistemas de Alarme, Sinalização e Detecção para Segurança"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "2651-5/00",
+        "descricao": "Fabricação de aparelhos e equipamentos de medida, teste e controle"
+      },
+      {
+        "codigo": "4669-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      }
+    ]
   },
   {
     "Família": "65.01",
     "Descrição": "MEDICAMENTOS PARA ACAO JUDICIAL",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Alvará de Vigilância Sanitária",
       "Autorização do Ministério da Saúde - DOU"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2123-8/00",
+        "descricao": "Fabricação de preparações farmacêuticas"
+      },
+      {
+        "codigo": "2121-1/01",
+        "descricao": "Fabricação de medicamentos alopáticos para uso humano"
+      },
+      {
+        "codigo": "4644-3/01",
+        "descricao": "Comércio atacadista de medicamentos e drogas de uso humano"
+      }
+    ],
     "Ramo": {
       "codigo": "65",
       "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
@@ -20998,17 +24173,42 @@
     "Ramo": {
       "codigo": "65",
       "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "2123-8/00",
+        "descricao": "Fabricação de preparações farmacêuticas"
+      },
+      {
+        "codigo": "2121-1/01",
+        "descricao": "Fabricação de medicamentos alopáticos para uso humano"
+      },
+      {
+        "codigo": "4644-3/01",
+        "descricao": "Comércio atacadista de medicamentos e drogas de uso humano"
+      }
+    ]
   },
   {
     "Família": "65.03",
     "Descrição": "MEDICAMENTOS VETERINARIOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [
       "Alvará de Vigilância Sanitária",
       "Ministério da Agricultura"
     ],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2122-0/00",
+        "descricao": "Fabricação de medicamentos para uso veterinário"
+      },
+      {
+        "codigo": "4644-3/02",
+        "descricao": "Comércio atacadista de medicamentos e drogas de uso veterinário"
+      }
+    ],
     "Ramo": {
       "codigo": "65",
       "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
@@ -21017,9 +24217,24 @@
   {
     "Família": "65.04",
     "Descrição": "PECAS E ACESSORIOS PARA EQUIP., INSTALACOES HOSP. E PARA LABORATORIOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "3250-7/05",
+        "descricao": "Fabricação de materiais para medicina e odontologia"
+      },
+      {
+        "codigo": "3250-7/01",
+        "descricao": "Fabricação de instrumentos não-eletrônicos e utensílios para uso médico, cirúrgico, odontológico e de laboratório"
+      },
+      {
+        "codigo": "4645-1/01",
+        "descricao": "Comércio atacadista de instrumentos e materiais para uso médico, cirúrgico, hospitalar e de laboratórios"
+      }
+    ],
     "Ramo": {
       "codigo": "65",
       "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
@@ -21037,7 +24252,21 @@
     "Ramo": {
       "codigo": "65",
       "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "2123-8/00",
+        "descricao": "Fabricação de preparações farmacêuticas"
+      },
+      {
+        "codigo": "2121-1/01",
+        "descricao": "Fabricação de medicamentos alopáticos para uso humano"
+      },
+      {
+        "codigo": "4644-3/01",
+        "descricao": "Comércio atacadista de medicamentos e drogas de uso humano"
+      }
+    ]
   },
   {
     "Família": "65.07",
@@ -21051,16 +24280,45 @@
     "Ramo": {
       "codigo": "65",
       "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "2123-8/00",
+        "descricao": "Fabricação de preparações farmacêuticas"
+      },
+      {
+        "codigo": "2121-1/01",
+        "descricao": "Fabricação de medicamentos alopáticos para uso humano"
+      },
+      {
+        "codigo": "4644-3/01",
+        "descricao": "Comércio atacadista de medicamentos e drogas de uso humano"
+      }
+    ]
   },
   {
     "Família": "65.08",
     "Descrição": "COSMETICOS E ARTIGOS DE TOUCADOR DE NATUREZA MEDICINAL",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Alvará de Vigilância Sanitária"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "4772-5/00",
+        "descricao": "Comércio varejista de cosméticos, produtos de perfumaria e de higiene pessoal"
+      },
+      {
+        "codigo": "4646-0/01",
+        "descricao": "Comércio atacadista de cosméticos e produtos de perfumaria"
+      },
+      {
+        "codigo": "2063-1/00",
+        "descricao": "Fabricação de cosméticos, produtos de perfumaria e de higiene pessoal"
+      }
+    ],
     "Ramo": {
       "codigo": "65",
       "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
@@ -21077,7 +24335,21 @@
     "Ramo": {
       "codigo": "65",
       "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "3250-7/05",
+        "descricao": "Fabricação de materiais para medicina e odontologia"
+      },
+      {
+        "codigo": "3250-7/01",
+        "descricao": "Fabricação de instrumentos não-eletrônicos e utensílios para uso médico, cirúrgico, odontológico e de laboratório"
+      },
+      {
+        "codigo": "4645-1/01",
+        "descricao": "Comércio atacadista de instrumentos e materiais para uso médico, cirúrgico, hospitalar e de laboratórios"
+      }
+    ]
   },
   {
     "Família": "65.15",
@@ -21090,7 +24362,21 @@
     "Ramo": {
       "codigo": "65",
       "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "3250-7/05",
+        "descricao": "Fabricação de materiais para medicina e odontologia"
+      },
+      {
+        "codigo": "3250-7/01",
+        "descricao": "Fabricação de instrumentos não-eletrônicos e utensílios para uso médico, cirúrgico, odontológico e de laboratório"
+      },
+      {
+        "codigo": "4645-1/01",
+        "descricao": "Comércio atacadista de instrumentos e materiais para uso médico, cirúrgico, hospitalar e de laboratórios"
+      }
+    ]
   },
   {
     "Família": "65.16",
@@ -21101,7 +24387,17 @@
     "Ramo": {
       "codigo": "65",
       "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "2122-0/00",
+        "descricao": "Fabricação de medicamentos para uso veterinário"
+      },
+      {
+        "codigo": "4644-3/02",
+        "descricao": "Comércio atacadista de medicamentos e drogas de uso veterinário"
+      }
+    ]
   },
   {
     "Família": "65.20",
@@ -21114,16 +24410,41 @@
     "Ramo": {
       "codigo": "65",
       "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "3250-7/05",
+        "descricao": "Fabricação de materiais para medicina e odontologia"
+      },
+      {
+        "codigo": "3250-7/01",
+        "descricao": "Fabricação de instrumentos não-eletrônicos e utensílios para uso médico, cirúrgico, odontológico e de laboratório"
+      },
+      {
+        "codigo": "4645-1/01",
+        "descricao": "Comércio atacadista de instrumentos e materiais para uso médico, cirúrgico, hospitalar e de laboratórios"
+      }
+    ]
   },
   {
     "Família": "65.25",
     "Descrição": "EQUIP E SUPRIMENTOS PARA RAIO X DE USO MEDICO, ODONTOLOG E VETERINARIO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [
       "Alvará de Vigilância Sanitária"
     ],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "2660-4/00",
+        "descricao": "Fabricação de aparelhos eletromédicos e eletroterapêuticos e equipamentos de irradiação"
+      },
+      {
+        "codigo": "4645-1/01",
+        "descricao": "Comércio atacadista de instrumentos e materiais para uso médico, cirúrgico, hospitalar e de laboratórios"
+      }
+    ],
     "Ramo": {
       "codigo": "65",
       "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
@@ -21132,9 +24453,24 @@
   {
     "Família": "65.30",
     "Descrição": "MOBILIARIOS, EQUIPAMENTOS, UTENSILIOS E ARTIGOS HOSPITALARES",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "3250-7/02",
+        "descricao": "Fabricação de mobiliário para uso médico, cirúrgico, odontológico e de laboratório"
+      },
+      {
+        "codigo": "4645-1/01",
+        "descricao": "Comércio atacadista de instrumentos e materiais para uso médico, cirúrgico, hospitalar e de laboratórios"
+      },
+      {
+        "codigo": "46.49-4/04",
+        "descricao": "Comércio atacadista de móveis e artigos de colchoaria"
+      }
+    ],
     "Ramo": {
       "codigo": "65",
       "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
@@ -21143,9 +24479,24 @@
   {
     "Família": "65.31",
     "Descrição": "ARTIGOS HOSPITALARES EM TECIDO E UTENSILIOS PARA REABILITACAO",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "1413-4/01",
+        "descricao": "Confecção de roupas profissionais, exceto sob medida"
+      },
+      {
+        "codigo": "4641-9/02",
+        "descricao": "Comércio atacadista de artigos de cama, mesa e banho"
+      },
+      {
+        "codigo": "4642-7/01",
+        "descricao": "Comércio atacadista de artigos do vestuário e acessórios, exceto profissionais e de segurança"
+      }
+    ],
     "Ramo": {
       "codigo": "65",
       "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
@@ -21163,7 +24514,21 @@
     "Ramo": {
       "codigo": "65",
       "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "1413-4/01",
+        "descricao": "Confecção de roupas profissionais, exceto sob medida"
+      },
+      {
+        "codigo": "4641-9/02",
+        "descricao": "Comércio atacadista de artigos de cama, mesa e banho"
+      },
+      {
+        "codigo": "4642-7/01",
+        "descricao": "Comércio atacadista de artigos do vestuário e acessórios, exceto profissionais e de segurança"
+      }
+    ]
   },
   {
     "Família": "65.40",
@@ -21176,17 +24541,46 @@
     "Ramo": {
       "codigo": "65",
       "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "3250-7/05",
+        "descricao": "Fabricação de materiais para medicina e odontologia"
+      },
+      {
+        "codigo": "3250-7/01",
+        "descricao": "Fabricação de instrumentos não-eletrônicos e utensílios para uso médico, cirúrgico, odontológico e de laboratório"
+      },
+      {
+        "codigo": "4645-1/01",
+        "descricao": "Comércio atacadista de instrumentos e materiais para uso médico, cirúrgico, hospitalar e de laboratórios"
+      }
+    ]
   },
   {
     "Família": "65.45",
     "Descrição": "JOGOS E CONJUNTOS MEDICOS",
+    "Tipo": "M",
+    "Terceirizado": "Não",
     "Documentos Exigidos": [],
     "Documentos Elegíveis": [
       "Alvará de Vigilância Sanitária",
       "Declaração de Dispensa de Ato Público - Baixo Risco"
     ],
-    "Tipo": "M",
+    "CNAEs": [
+      {
+        "codigo": "3250-7/01",
+        "descricao": "Fabricação de instrumentos não-eletrônicos e utensílios para uso médico, cirúrgico, odontológico e de laboratório"
+      },
+      {
+        "codigo": "4773-3/00",
+        "descricao": "Comércio varejista de artigos médicos e ortopédicos"
+      },
+      {
+        "codigo": "4645-1/01",
+        "descricao": "Comércio atacadista de instrumentos e materiais para uso médico, cirúrgico, hospitalar e de laboratórios"
+      }
+    ],
     "Ramo": {
       "codigo": "65",
       "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
@@ -21203,7 +24597,21 @@
     "Ramo": {
       "codigo": "65",
       "nome": "Equipamentos e Artigos de uso Médico, Dentário e Veterinário"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "3250-7/05",
+        "descricao": "Fabricação de materiais para medicina e odontologia"
+      },
+      {
+        "codigo": "3250-7/01",
+        "descricao": "Fabricação de instrumentos não-eletrônicos e utensílios para uso médico, cirúrgico, odontológico e de laboratório"
+      },
+      {
+        "codigo": "4645-1/01",
+        "descricao": "Comércio atacadista de instrumentos e materiais para uso médico, cirúrgico, hospitalar e de laboratórios"
+      }
+    ]
   },
   {
     "Família": "66.05",
@@ -21258,7 +24666,13 @@
     "Ramo": {
       "codigo": "66",
       "nome": "Instrumentos e Equipamentos de Laboratório"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.69-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      }
+    ]
   },
   {
     "Família": "66.30",
@@ -21280,7 +24694,13 @@
     "Ramo": {
       "codigo": "66",
       "nome": "Instrumentos e Equipamentos de Laboratório"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.69-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      }
+    ]
   },
   {
     "Família": "66.36",
@@ -21308,6 +24728,10 @@
       {
         "codigo": "4664-8/00",
         "descricao": "Comércio atacadista de máquinas, aparelhos e equipamentos para uso odonto-médico-hospitalar; partes e peças"
+      },
+      {
+        "codigo": "46.45-1/01",
+        "descricao": "Comércio atacadista de instrumentos e materiais para uso médico, cirúrgico, hospitalar e de laboratórios"
       }
     ],
     "Ramo": {
@@ -21429,7 +24853,13 @@
     "Ramo": {
       "codigo": "66",
       "nome": "Instrumentos e Equipamentos de Laboratório"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.69-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      }
+    ]
   },
   {
     "Família": "66.75",
@@ -21512,7 +24942,13 @@
     "Ramo": {
       "codigo": "67",
       "nome": "Equipamentos Fotográficos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.49-4/02",
+        "descricao": "Comércio atacadista de aparelhos eletrônicos de uso pessoal e doméstico"
+      }
+    ]
   },
   {
     "Família": "67.40",
@@ -22300,7 +25736,13 @@
     "Ramo": {
       "codigo": "71",
       "nome": "Mobiliários"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.49-4/04",
+        "descricao": "Comércio atacadista de móveis e artigos de colchoaria"
+      }
+    ]
   },
   {
     "Família": "71.10",
@@ -22332,7 +25774,13 @@
     "Ramo": {
       "codigo": "71",
       "nome": "Mobiliários"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.49-4/04",
+        "descricao": "Comércio atacadista de móveis e artigos de colchoaria"
+      }
+    ]
   },
   {
     "Família": "71.95",
@@ -22434,7 +25882,13 @@
     "Ramo": {
       "codigo": "73",
       "nome": "Equipamentos para Preparar e Servir Alimentos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.49-4/01",
+        "descricao": "Comércio atacadista de equipamentos elétricos de uso pessoal e doméstico"
+      }
+    ]
   },
   {
     "Família": "73.20",
@@ -22746,6 +26200,10 @@
       {
         "codigo": "4753-9/00",
         "descricao": "Comércio varejista especializado de eletrodomésticos e equipamentos de áudio e vídeo"
+      },
+      {
+        "codigo": "46.49-4/02",
+        "descricao": "Comércio atacadista de aparelhos eletrônicos de uso pessoal e doméstico"
       }
     ],
     "Ramo": {
@@ -22779,7 +26237,17 @@
     "Ramo": {
       "codigo": "78",
       "nome": "Equipamentos para Recreação e Desporto"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.69-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "46.49-4/99",
+        "descricao": "Comércio atacadista de outros equipamentos e artigos de uso pessoal e doméstico não especificados anteriormente"
+      }
+    ]
   },
   {
     "Família": "78.20",
@@ -22801,7 +26269,13 @@
     "Ramo": {
       "codigo": "78",
       "nome": "Equipamentos para Recreação e Desporto"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "46.69-9/99",
+        "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      }
+    ]
   },
   {
     "Família": "79.10",
@@ -23956,6 +27430,10 @@
       {
         "codigo": "2229-3/99",
         "descricao": "Fabricação de artefatos de material plástico para outros usos não especificados anteriormente"
+      },
+      {
+        "codigo": "46.49-4/99",
+        "descricao": "Comércio atacadista de outros equipamentos e artigos de uso pessoal e doméstico não especificados anteriormente"
       }
     ],
     "Ramo": {

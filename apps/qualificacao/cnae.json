@@ -1100,6 +1100,10 @@
     "DESCRIÇÃO": "Serrarias sem desdobramento de madeira"
   },
   {
+    "CNAE": "1610-2/03",
+    "DESCRIÇÃO": "Serrarias com desdobramento de madeira em bruto"
+  },
+  {
     "CNAE": "1621-8/00",
     "DESCRIÇÃO": "Fabricação de madeira laminada e de chapas de madeira compensada, prensada e aglomerada"
   },
@@ -1502,6 +1506,10 @@
   {
     "CNAE": "2399-1/01",
     "DESCRIÇÃO": "Decoração, lapidação, gravação, vitrificação e outros trabalhos em cerâmica, louça, vidro e cristal"
+  },
+  {
+    "CNAE": "2399-1/02",
+    "DESCRIÇÃO": "Fabricação de abrasivos"
   },
   {
     "CNAE": "2399-1/99",
