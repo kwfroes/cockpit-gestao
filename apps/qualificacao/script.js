@@ -1161,6 +1161,7 @@ window.analisarFornecedor = async (event) => {
     try {
         const resultado = await AnalisadorCnpj.processar(file);
         
+        salvarHistoricoAnalise(resultado);
         // Chama a função que constrói e exibe o modal
         exibirModalResultadoAnalise(resultado);
 
@@ -1208,7 +1209,7 @@ function exibirModalResultadoAnalise(resultado) {
                     </div>
                     
                     <button onclick="toggleCnaeList('${uniqueId}')" class="shrink-0 flex items-center gap-1.5 text-xs bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300 px-3 py-1.5 rounded-full whitespace-nowrap border border-amber-200 dark:border-amber-800/50 shadow-sm hover:bg-amber-200 dark:hover:bg-amber-900/70 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500">
-                        ${cnaesCompativeis.length} CNAE(s) compatível(is)
+                        ${cnaesCompativeis.length} Compatibilidade(s)
                         <svg id="icon-${uniqueId}" class="w-3.5 h-3.5 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                 </div>
@@ -1505,6 +1506,7 @@ window.abrirModalPreAnalise = () => {
                         Não, emitir na Receita Federal
                     </a>
                 </div>
+                ${getHistoricoHtml()}
             </div>
         </div>
     `;
@@ -1924,6 +1926,51 @@ window.vincularCnaesEmLote = () => {
         }
     }
 };
+
+// Função para salvar no localStorage
+function salvarHistoricoAnalise(resultado) {
+    let historico = JSON.parse(localStorage.getItem('cockpit_cnpj_history') || '[]');
+    historico = historico.filter(h => h.cnpj !== resultado.cnpj);
+    historico.unshift({
+        cnpj: resultado.cnpj,
+        razaoSocial: resultado.razaoSocial,
+        data: new Date().getTime(),
+        resultado: resultado
+    });
+    localStorage.setItem('cockpit_cnpj_history', JSON.stringify(historico.slice(0, 3)));
+}
+
+// Função para reabrir uma análise salva
+window.reabrirAnalise = (cnpj) => {
+    const historico = JSON.parse(localStorage.getItem('cockpit_cnpj_history') || '[]');
+    const item = historico.find(h => h.cnpj === cnpj);
+    if (item) {
+        const modalPre = document.getElementById('modal-pre-analise');
+        if (modalPre) modalPre.remove();
+        exibirModalResultadoAnalise(item.resultado);
+    }
+};
+
+// Função para renderizar o histórico dentro do modal
+function getHistoricoHtml() {
+    const historico = JSON.parse(localStorage.getItem('cockpit_cnpj_history') || '[]');
+    if (historico.length === 0) return '';
+    
+    const itens = historico.map(h => `
+        <button onclick="reabrirAnalise('${h.cnpj}')" 
+            class="w-full text-left p-3 bg-slate-50 dark:bg-slate-900 border dark:border-slate-700 rounded-lg hover:border-blue-400 transition-all group">
+            <div class="text-[10px] font-bold text-slate-800 dark:text-slate-200 truncate group-hover:text-blue-600">${h.razaoSocial}</div>
+            <div class="text-[9px] text-slate-500 font-mono mt-0.5">${h.cnpj}</div>
+        </button>
+    `).join('');
+
+    return `
+        <div class="mt-6 border-t dark:border-slate-700 pt-4">
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Últimas análises</p>
+            <div class="space-y-2">${itens}</div>
+        </div>
+    `;
+}
 
 // Inicia o App
 initApp();
