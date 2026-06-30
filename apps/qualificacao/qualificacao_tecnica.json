@@ -16176,6 +16176,10 @@
       {
         "codigo": "2811-9/00",
         "descricao": "Fabricação de motores e turbinas, peças e acessórios, exceto para aviões e veículos rodoviários"
+      },
+      {
+        "codigo": "45.30-7/03",
+        "descricao": "Comércio a varejo de peças e acessórios novos para veículos automotores"
       }
     ],
     "Ramo": {
@@ -16928,6 +16932,10 @@
       {
         "codigo": "4663-0/00",
         "descricao": "Comércio atacadista de máquinas e equipamentos para uso industrial; partes e peças"
+      },
+      {
+        "codigo": "47.44-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
       }
     ],
     "Ramo": {
@@ -16954,6 +16962,10 @@
       {
         "codigo": "2869-1/00",
         "descricao": "Fabricação de máquinas e equipamentos para uso industrial específico não especificados anteriormente, peças e acessórios"
+      },
+      {
+        "codigo": "47.44-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
       }
     ],
     "Ramo": {
@@ -16980,6 +16992,10 @@
       {
         "codigo": "2543-8/00",
         "descricao": "Fabricação de ferramentas"
+      },
+      {
+        "codigo": "47.44-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
       }
     ],
     "Ramo": {
@@ -20905,7 +20921,13 @@
     "Ramo": {
       "codigo": "53",
       "nome": "Ferragens e Abrasivos"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "47.44-0/01",
+        "descricao": "Comércio varejista de ferragens e ferramentas"
+      }
+    ]
   },
   {
     "Família": "53.45",
@@ -26028,6 +26050,10 @@
       {
         "codigo": "4761-0/03",
         "descricao": "Comércio varejista de artigos de papelaria"
+      },
+      {
+        "codigo": "47.89-0/07",
+        "descricao": "Comércio varejista de equipamentos para escritório"
       }
     ],
     "Ramo": {
@@ -26044,7 +26070,13 @@
     "Ramo": {
       "codigo": "75",
       "nome": "Utensílios de Escritório e Material de Expediente"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "47.89-0/07",
+        "descricao": "Comércio varejista de equipamentos para escritório"
+      }
+    ]
   },
   {
     "Família": "75.30",
@@ -26176,7 +26208,13 @@
     "Ramo": {
       "codigo": "77",
       "nome": "Instrumentos Musicais e Equipamentos de Som de Uso Doméstico"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "47.56-3/00",
+        "descricao": "Comércio varejista especializado de instrumentos musicais e acessórios"
+      }
+    ]
   },
   {
     "Família": "77.20",
@@ -26187,7 +26225,13 @@
     "Ramo": {
       "codigo": "77",
       "nome": "Instrumentos Musicais e Equipamentos de Som de Uso Doméstico"
-    }
+    },
+    "CNAEs": [
+      {
+        "codigo": "47.56-3/00",
+        "descricao": "Comércio varejista especializado de instrumentos musicais e acessórios"
+      }
+    ]
   },
   {
     "Família": "77.30",
@@ -26246,6 +26290,10 @@
       {
         "codigo": "46.49-4/99",
         "descricao": "Comércio atacadista de outros equipamentos e artigos de uso pessoal e doméstico não especificados anteriormente"
+      },
+      {
+        "codigo": "47.63-6/02",
+        "descricao": "Comércio varejista de artigos esportivos"
       }
     ]
   },
@@ -26274,6 +26322,10 @@
       {
         "codigo": "46.69-9/99",
         "descricao": "Comércio atacadista de outras máquinas e equipamentos não especificados anteriormente; partes e peças"
+      },
+      {
+        "codigo": "47.63-6/02",
+        "descricao": "Comércio varejista de artigos esportivos"
       }
     ]
   },

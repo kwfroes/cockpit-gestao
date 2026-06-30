@@ -1492,7 +1492,7 @@ window.abrirModalPreAnalise = () => {
                     <svg class="w-5 h-5 shrink-0 mt-0.5 animate-pulse" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M4,23H20a1,1,0,0,0,1-1V6a1,1,0,0,0-.293-.707l-4-4A1,1,0,0,0,16,1H4A1,1,0,0,0,3,2V22A1,1,0,0,0,4,23ZM5,3H15.586L19,6.414V21H5Zm8,4v6a1,1,0,0,1-2,0V7a1,1,0,0,1,2,0Zm0,9v1a1,1,0,0,1-2,0V16a1,1,0,0,1,2,0Z"/>
                     </svg>                    
-                <span><strong>Nota Importante:</strong> A extração de dados pode não funcionar corretamente em documentos escaneados ou salvos como imagem. Utilize sempre o PDF digital gerado diretamente pelo sistema.</span>
+                <span><strong>Nota Importante:</strong> A extração de dados pode não funcionar corretamente em documentos escaneados ou salvos como imagem. Utilize sempre o PDF digital gerado diretamente pelo sistema, usando sempre a opção <b>"Salvar como PDF"</b>.</span>
                 </div>
                 
                 <div class="flex flex-col gap-3">
