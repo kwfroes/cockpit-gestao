@@ -558,10 +558,56 @@
           ]
         },
         {
-          "data": "",
+          "data": "2026-06-17",
           "valorPago": 941.93,
-          "documentosExecucao": null,
-          "notaFiscal": "",
+          "documentosExecucao": [
+            {
+              "tipo": "Guia de Recolhimento",
+              "numero": "00190.00009 03352.765006 00840.558175 7 14940000089672",
+              "valor": 896.72
+            },
+            {
+              "tipo": "Nota de Empenho",
+              "numero": "09101.0006.26.0000066-2",
+              "valor": 7457.59
+            },
+            {
+              "tipo": "Registro de Documento Hábil",
+              "numero": "09101.0006.26.0000505-4",
+              "valor": 941.93
+            },
+            {
+              "tipo": "Passivo por Competência",
+              "numero": "09101.0006.26.0000413-6",
+              "valor": 941.93
+            },
+            {
+              "tipo": "Documento de Arrecadação Estadual",
+              "numero": "85800000000 3 45210333202 0 60715194237 0 13758005193 0",
+              "valor": 45.21
+            },
+            {
+              "tipo": "Autorização do Documento Hábil",
+              "numero": "09101.0006.26.0000500-1",
+              "valor": 941.93
+            },
+            {
+              "tipo": "Liquidação de Empenho",
+              "numero": "09101.0006.26.0001134-2",
+              "valor": 941.93
+            },
+            {
+              "tipo": "Nota de Ordem Bancária",
+              "numero": "09101.0006.26.0001720-8",
+              "valor": 896.72
+            },
+            {
+              "tipo": "Nota de Ordem Bancária ",
+              "numero": "09101.0006.26.0001724-0",
+              "valor": 45.21
+            }
+          ],
+          "notaFiscal": "987948",
           "processoPagamentoSei": "009.0242.2026.0031827-25",
           "linkPagamentoSei": "https://seibahia.ba.gov.br/sei/controlador.php?acao=procedimento_trabalhar&id_procedimento=152290737",
           "periodoDe": "2026-04-21",
@@ -580,6 +626,38 @@
               "descricao": "Consulta Faixa 1",
               "quantidade": 1,
               "valorUnitario": 574.864
+            }
+          ]
+        },
+        {
+          "data": "",
+          "valorPago": 918.73,
+          "documentosExecucao": null,
+          "notaFiscal": "1022404",
+          "processoPagamentoSei": "009.0242.2026.0037593-48",
+          "linkPagamentoSei": "https://seibahia.ba.gov.br/controlador.php?acao=procedimento_trabalhar&id_procedimento=154376166",
+          "periodoDe": "2026-05-21",
+          "periodoAte": "2026-06-20",
+          "isTRD": false,
+          "id": "pag_1782490895468",
+          "detalhes": [
+            {
+              "id": "item_1782490915778",
+              "descricao": "Consulta Faixa 1",
+              "quantidade": 1,
+              "valorUnitario": 574.864
+            },
+            {
+              "id": "item_1782490923248",
+              "descricao": "Consulta Faixa 2",
+              "quantidade": 96,
+              "valorUnitario": 0.339
+            },
+            {
+              "id": "item_1782490931297",
+              "descricao": "Emissão CND",
+              "quantidade": 525,
+              "valorUnitario": 0.593
             }
           ]
         }
