@@ -102,8 +102,14 @@ async function generateCaptcha() {
   const passwordInput = document.getElementById("passwordInput");
   const loginError = document.getElementById("loginError");
   const frame = document.getElementById("appFrame"); // Referência ao iframe
-  const APP_MASTER_KEY = "B{G@k5A[m:IZB]0M!+nWK8Gy<oHdeS";
-  const REQUEST_KEY = "admin0000";
+
+  // =========================================================
+  // INICIALIZAÇÃO DO SUPABASE
+  // =========================================================
+  const supabaseUrl = 'https://whnzeysvqbtuecxmthht.supabase.co';
+  const supabaseKey = 'sb_publishable_Gw4cFK56R9kms2ogg50UqA_ZhHi79qw';
+  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
 
   // --- Funções de Criptografia ---
   async function sha256(message) {
@@ -198,27 +204,21 @@ async function generateCaptcha() {
 
   // --- Lógica de Sessão ---
 
-  function checkSession() {
-      const sessionAuth = sessionStorage.getItem("cockpit_auth_token");
-      const localAuth = localStorage.getItem("cockpit_persistent_auth");
+async function checkSession() {
+      // Pede ao Supabase para verificar se há uma sessão ativa e válida no navegador
+      const { data: { session }, error } = await supabase.auth.getSession();
 
-      if (sessionAuth === "valid" || localAuth === "valid") {
-          // Se estiver no local mas não no session, restaura os dados básicos
-          if (localAuth === "valid" && !sessionAuth) {
-              sessionStorage.setItem("cockpit_auth_token", "valid");
-              sessionStorage.setItem("cockpit_user_login", localStorage.getItem("cockpit_saved_user"));
-              sessionStorage.setItem("cockpit_user_realname", localStorage.getItem("cockpit_saved_name"));
-              sessionStorage.setItem("cockpit_user_role", localStorage.getItem("cockpit_saved_role"));
-              const savedEmail = localStorage.getItem("cockpit_saved_email");
-              const savedAvatar = localStorage.getItem("cockpit_saved_avatar");
-              const savedCsvName = localStorage.getItem("cockpit_saved_csv_name");
-              if (savedCsvName) sessionStorage.setItem("cockpit_csv_name", savedCsvName);
-              
-              if (savedEmail) sessionStorage.setItem("cockpit_user_email", savedEmail);
-              if (savedAvatar) sessionStorage.setItem("cockpit_user_avatar", savedAvatar);
-              // Nota: Para segurança total, os dados do usuário (nome, cargo) 
-              // também precisariam estar no localStorage ou recarregados do DB.
-          }
+      if (session) {
+          const user = session.user;
+          
+          // Alimenta o sessionStorage para manter a compatibilidade com o resto do seu app
+          sessionStorage.setItem("cockpit_auth_token", "valid");
+          sessionStorage.setItem("cockpit_user_email", user.email);
+          
+          // Como o usuário de teste foi criado no painel, ele não tem Nome e Role definidos ainda.
+          // Usamos o e-mail como fallback provisório.
+          sessionStorage.setItem("cockpit_user_realname", user.user_metadata?.name || user.email.split('@')[0]);
+          sessionStorage.setItem("cockpit_user_role", user.user_metadata?.role || "admin");
           
           unlockInterface();
           applyPermissions();
@@ -227,7 +227,7 @@ async function generateCaptcha() {
           navigate(window.location.hash || "#home");
       } else {
           frame.src = "about:blank";
-          generateCaptcha(); // Gera um captcha assim que a tela de login aparece
+          generateCaptcha();
       }
   }
 
@@ -242,86 +242,55 @@ async function generateCaptcha() {
 
   // --- Formulário de Login ---
 if (loginForm) {
-  loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-    // 1. Captura os novos campos
-    const captchaInput = document.getElementById("captchaInput").value.toUpperCase();
-    const rememberMe = document.getElementById("rememberMe").checked;
-    
-    const inputUser = userInput.value.trim().toLowerCase();
-    const inputPass = passwordInput.value;
-    const btn = loginForm.querySelector("button[type='submit']");
+      const captchaInput = document.getElementById("captchaInput").value.toUpperCase();
+      const inputEmail = userInput.value.trim().toLowerCase(); // Agora é e-mail
+      const inputPass = passwordInput.value;
+      const btn = loginForm.querySelector("button[type='submit']");
 
-    // 2. VALIDAÇÃO DO CAPTCHA (Primeira barreira)
-    if (captchaInput !== currentCaptcha) {
-      showError("Código de verificação incorreto.");
-      generateCaptcha(); // Muda o captcha em cada erro para evitar brute-force
-      return; // Interrompe o login aqui mesmo
-    }
-
-    btn.textContent = "Autenticando...";
-    btn.disabled = true;
-
-    const dbUsers = await loadDatabase();
-
-    if (dbUsers) {
-      const foundUser = dbUsers.find((u) => u.username === inputUser);
-
-      if (foundUser) {
-        const inputHash = await sha256(inputPass);
-
-    // --- DENTRO DO loginForm.addEventListener("submit"...) ---
-    if (inputHash === foundUser.password_hash) {
-      // 1. Dados que SEMPRE vão para a sessão atual
-      sessionStorage.setItem("cockpit_auth_token", "valid");
-      sessionStorage.setItem("cockpit_user_login", foundUser.username);
-      sessionStorage.setItem("cockpit_user_realname", foundUser.name);
-      sessionStorage.setItem("cockpit_user_role", foundUser.role);
-      sessionStorage.setItem("cockpit_user_email", foundUser.email || "Sem e-mail");
-      sessionStorage.setItem("cockpit_csv_name", foundUser.csvName || foundUser.name); 
-      
-      if (foundUser.avatar) {
-        sessionStorage.setItem("cockpit_user_avatar", foundUser.avatar);
-      } else {
-        sessionStorage.removeItem("cockpit_user_avatar");
-      }
-
-      // 2. PERSISTÊNCIA (Apenas se o checkbox estiver marcado)
-      if (rememberMe) {
-        localStorage.setItem("cockpit_persistent_auth", "valid");
-        localStorage.setItem("cockpit_saved_user", foundUser.username);
-        localStorage.setItem("cockpit_saved_name", foundUser.name);
-        localStorage.setItem("cockpit_saved_role", foundUser.role);
-        localStorage.setItem("cockpit_saved_email", foundUser.email || "Sem e-mail");
-        localStorage.setItem("cockpit_saved_csv_name", foundUser.csvName || foundUser.name);
-        if (foundUser.avatar) {
-            localStorage.setItem("cockpit_saved_avatar", foundUser.avatar);
-        }
-      }
-
-      loginError.classList.add("hidden");
-      aplicarPermissoesDeMenu();
-      updateUserMenu();
-      updateUserAvatarVisuals();
-      unlockInterface();
-      navigate(window.location.hash || "#home");
-    } else {
-          showError("Senha incorreta");
-          generateCaptcha(); // Opcional: trocar captcha se errar a senha também
-        }
-      } else {
-        showError("Usuário não encontrado");
+      if (captchaInput !== currentCaptcha) {
+        showError("Código de verificação incorreto.");
         generateCaptcha();
+        return;
       }
-    } else {
-      showError("Erro ao carregar banco de dados");
-    }
 
-    btn.textContent = "Entrar no Sistema";
-    btn.disabled = false;
-  });
-}
+      btn.textContent = "Autenticando...";
+      btn.disabled = true;
+
+      // Chama a autenticação do Supabase
+      console.log("Tentando login com:", { email: inputEmail, password: inputPass });
+      const { data, error } = await supabase.auth.signInWithPassword({
+          email: inputEmail,
+          password: inputPass,
+      });
+
+      if (error) {
+        console.log("O SUPABASE DISSE:", error); // Adicione isso antes do showError
+          showError("Credenciais inválidas ou usuário não encontrado.");
+          generateCaptcha();
+      } else {
+          // SUCESSO!
+          const user = data.user;
+          
+          sessionStorage.setItem("cockpit_auth_token", "valid");
+          sessionStorage.setItem("cockpit_user_email", user.email);
+          sessionStorage.setItem("cockpit_user_realname", user.user_metadata?.name || user.email.split('@')[0]);
+          sessionStorage.setItem("cockpit_user_role", user.user_metadata?.role || "admin");
+
+          loginError.classList.add("hidden");
+          aplicarPermissoesDeMenu();
+          updateUserMenu();
+          updateUserAvatarVisuals();
+          unlockInterface();
+          navigate(window.location.hash || "#home");
+      }
+
+      btn.textContent = "Entrar no Sistema";
+      btn.disabled = false;
+    });
+  }
 
   // =========================================================
   // 4. SISTEMA DE ERRO (MODAL)
@@ -429,6 +398,7 @@ if (loginForm) {
     "#matrix": "apps/matrix/index.html",
     "#qualificacao": "apps/qualificacao/index.html",
     "#regmap": "apps/regmap/index.html",
+    "#usuarios": "apps/usuarios/index.html",
   };
   const defaultHash = "#home";
 
@@ -533,7 +503,7 @@ if (loginForm) {
 
     // --- PROTEÇÃO DE ROTA (NOVA) ---
     // Se tentar acessar o conversor sem ser admin, bloqueia e joga para Home
-    if (hash === "#conversor" || hash === "#matrix") {
+    if (hash === "#conversor" || hash === "#matrix" || hash === "#usuarios") {
       const role = sessionStorage.getItem("cockpit_user_role");
       if (role !== "admin") {
         showError("Acesso Negado: Você não acesso à essa função. ");
@@ -788,40 +758,30 @@ if (loginForm) {
   }
 
   // Função que executa o Logout Real
-  function performLogout() {
-      // 1. Limpa tudo
-      sessionStorage.clear(); 
+async function performLogout() {
+      // 1. Destrói a sessão no Supabase
+      await supabase.auth.signOut();
       
-      localStorage.removeItem("cockpit_persistent_auth");
-      localStorage.removeItem("cockpit_saved_user");
-      localStorage.removeItem("cockpit_saved_name");
-      localStorage.removeItem("cockpit_saved_role");
-      localStorage.removeItem("cockpit_saved_email");
-      localStorage.removeItem("cockpit_saved_avatar");
+      // 2. Limpa dados locais
+      sessionStorage.clear(); 
+      localStorage.clear(); // O Supabase gerencia a persistência agora, podemos limpar tudo
 
-      // 2. Limpa Iframe
+      // 3. Limpa Iframe e esconde Modal
       frame.src = "about:blank";
-
-      // 3. Esconde o Modal de Logout
       hideLogoutModal();
 
-    // 4. Mostra a Tela de Login (Gatekeeper)
-    if (loginOverlay) {
-      loginOverlay.style.display = "flex";
-      setTimeout(() => {
-        loginOverlay.classList.remove("opacity-0", "pointer-events-none");
-      }, 10);
-    }
+      // 4. Mostra a Tela de Login
+      if (loginOverlay) {
+        loginOverlay.style.display = "flex";
+        setTimeout(() => {
+          loginOverlay.classList.remove("opacity-0", "pointer-events-none");
+        }, 10);
+      }
 
-    // 5. Reseta campos de login
-    userInput.value = "";
-    passwordInput.value = "";
-
-    const loginBtn = loginForm.querySelector("button[type='submit']");
-    if (loginBtn) {
-      loginBtn.textContent = "Entrar no Sistema";
-      loginBtn.disabled = false;
-    }
+      // 5. Reseta campos
+      userInput.value = "";
+      passwordInput.value = "";
+      generateCaptcha();
   }
 
   // --- Event Listeners ---
@@ -857,6 +817,7 @@ if (loginForm) {
     // Seleciona o link do conversor
     const conversorLink = document.querySelector('a[href="#conversor"]');
     const matrixLink = document.querySelector('a[href="#matrix"]');
+    const usuariosLink = document.querySelector('a[href="#usuarios"]');
 
     // Lógica para o Conversor
       if (conversorLink) {
@@ -882,6 +843,17 @@ if (loginForm) {
           
           // Opcional: desabilitar cliques completamente
           // matrixLink.style.pointerEvents = 'none';
+        }
+      }
+
+      // Lógica para a Gestão de Usuários 
+      if (usuariosLink) {
+        if (role === "admin") {
+          usuariosLink.classList.remove("opacity-30", "cursor-not-allowed");
+          usuariosLink.title = "Gestão de Usuários";
+        } else {
+          usuariosLink.classList.add("opacity-30", "cursor-not-allowed");
+          usuariosLink.title = "Acesso exclusivo para Administradores";
         }
       }
     }
@@ -1021,13 +993,14 @@ if (loginForm) {
     });
   }
 
-  // 2. Form RESET SENHA
+  // 2. Form RESET SENHA (ATUALIZADO PARA SUPABASE)
   const resForm = document.getElementById("resetForm");
   if (resForm) {
     resForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+      
+      const email = document.getElementById("resEmail").value.trim().toLowerCase();
       const rawPass = document.getElementById("resNewPass").value;
-
       const confirmPass = document.getElementById("resConfirm").value;
 
       // --- VALIDAÇÃO DE IGUALDADE ---
@@ -1036,34 +1009,43 @@ if (loginForm) {
         return;
       }
 
-      const securePass = await encryptLight(rawPass);
+      // Verifica se o usuário está logado no sistema
+      const isLoggedIn = sessionStorage.getItem("cockpit_auth_token") === "valid";
 
-      const payload = {
-        type: "senha",
-        date: new Date().toISOString(),
-        payload: {
-          username: document
-            .getElementById("resUser")
-            .value.trim()
-            .toLowerCase(),
-          email: document.getElementById("resEmail").value.trim().toLowerCase(),
-          avatar: tempResetAvatar,
-          secure_data: securePass,
-        },
-      };
+      try {
+        if (isLoggedIn) {
+          // 1. USUÁRIO LOGADO: Altera a própria senha diretamente no banco
+          const { error } = await supabase.auth.updateUser({ 
+              password: rawPass 
+          });
+          
+          if (error) throw error;
 
-      downloadRequest(
-        payload,
-        `solicitacao_senha_${payload.payload.username}.json`,
-      );
+          closeRequestModals();
+          showSuccess(
+            "Senha Atualizada!",
+            "Sua nova senha foi salva com sucesso e já está valendo."
+          );
+        } else {
+          // 2. USUÁRIO DESLOGADO (Esqueceu a senha na tela de login)
+          // O Supabase ignora a senha digitada aqui e envia um e-mail com link seguro
+          const { error } = await supabase.auth.resetPasswordForEmail(email);
+          
+          if (error) throw error;
 
-      // SUBSTITUI O ALERT AQUI:
-      closeRequestModals();
-      showSuccess(
-        "Solicitação Gerada!",
-        "O arquivo de troca de senha foi salvo.\n\nEnvie-o para o administrador para processamento.",
-      );
-      resForm.reset();
+          closeRequestModals();
+          showSuccess(
+            "E-mail Enviado!",
+            "Verifique a caixa de entrada do e-mail informado para redefinir sua senha."
+          );
+        }
+        
+        resForm.reset();
+        
+      } catch (err) {
+        console.error("Erro no Supabase:", err);
+        showError("Não foi possível alterar a senha: " + err.message);
+      }
     });
   }
 

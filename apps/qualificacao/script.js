@@ -802,51 +802,84 @@ window.copySummary = () => {
 };
 
 
-window.normalizeCnaeInput = (input) => {
-    // 1. Limpeza rigorosa: remove TUDO que não for dígito (0-9)
-    // Isso remove espaços, pontos, traços e barras ANTES de validar
+window.normalizeCnaeInput = async (input) => {
     let value = input.value.replace(/\D/g, ''); 
-
     const descInput = input.parentElement.querySelector('.cnae-desc');
 
-    // 2. Agora validamos apenas a STRING LIMPA (somente números)
     if (value.length === 7) {
-        // 3. Aplica a máscara padrão 0000-0/00 em cima dos números limpos
         const formattedCnae = value.substring(0, 4) + '-' + value.substring(4, 5) + '/' + value.substring(5, 7);
-        
-        // Atualiza o valor do input com a máscara correta
         input.value = formattedCnae;
 
-        // 4. Busca no dicionário
-        const cnaeEncontrado = cnaeDictionary.find(c => c.CNAE === formattedCnae);
+        // Inicia o processo de busca
+        if (descInput) descInput.placeholder = "Buscando no IBGE...";
+        input.classList.add('animate-pulse'); // Feedback visual de carregamento
 
-        if (cnaeEncontrado) {
-            descInput.value = cnaeEncontrado.DESCRIÇÃO;
-            input.classList.remove('border-red-500', 'ring-2', 'ring-red-200');
-            input.classList.add('border-emerald-500'); 
+        try {
+            // 1. Tenta buscar na API do IBGE primeiro (Prioridade)
+            const url = `https://servicodados.ibge.gov.br/api/v2/cnae/subclasses/${value}`;
+            const response = await fetch(url);
             
-            if (typeof handleCnaeBlur === 'function') {
-                handleCnaeBlur(descInput);
+            if (!response.ok) throw new Error('api_error');
+            
+            const data = await response.json();
+            const item = Array.isArray(data) ? data[0] : data;
+            
+            if (item && item.id) {
+                const cnaeEncontrado = {
+                    "CNAE": formattedCnae,
+                    "DESCRIÇÃO": item.descricao
+                };
+                
+                // Atualiza o dicionário local caso não exista (mantém a base atualizada)
+                if (!cnaeDictionary.some(c => c.CNAE === formattedCnae)) {
+                    cnaeDictionary.push(cnaeEncontrado);
+                }
+                
+                aplicarSucessoCnae(input, descInput, cnaeEncontrado.DESCRIÇÃO);
+            } else {
+                throw new Error('invalid_data');
             }
+        } catch (error) {
+            // 2. Fallback (Rede de Segurança): Se a API falhar ou estiver offline, busca no local
+            let cnaeEncontradoLocal = cnaeDictionary.find(c => c.CNAE === formattedCnae);
 
-            setTimeout(() => input.classList.remove('border-emerald-500'), 1500);
-        } else {
-            aplicarErroCnae(input, descInput, "CNAE não encontrado na base.");
+            if (cnaeEncontradoLocal) {
+                if (descInput) descInput.placeholder = "Descrição do CNAE"; // Restaura o placeholder
+                aplicarSucessoCnae(input, descInput, cnaeEncontradoLocal.DESCRIÇÃO);
+            } else {
+                aplicarErroCnae(input, descInput, "CNAE não encontrado (API e Base Local).");
+            }
+        } finally {
+            input.classList.remove('animate-pulse'); // Remove o carregamento em qualquer cenário
         }
+
     } else if (value.length > 7) {
-        // Caso o usuário cole algo maior, tentamos pegar apenas os primeiros 7 números
         let extraClean = value.substring(0, 7);
         input.value = extraClean;
-        // Chama a função novamente com o valor corrigido
         window.normalizeCnaeInput(input);
-        
     } else if (value.length > 0) {
         aplicarErroCnae(input, descInput, "Formato inválido (mínimo 7 dígitos).");
     } else {
-        input.classList.remove('border-red-500', 'ring-2', 'ring-red-200');
-        if (descInput) descInput.placeholder = "Descrição do CNAE";
+        input.classList.remove('border-red-500', 'ring-2', 'ring-red-200', 'border-emerald-500');
+        if (descInput) {
+            descInput.value = "";
+            descInput.placeholder = "Descrição do CNAE";
+        }
     }
 };
+
+// Função auxiliar (mantida igual)
+function aplicarSucessoCnae(input, descInput, descricao) {
+    if (descInput) descInput.value = descricao;
+    input.classList.remove('border-red-500', 'ring-2', 'ring-red-200');
+    input.classList.add('border-emerald-500'); 
+    
+    if (typeof handleCnaeBlur === 'function') {
+        handleCnaeBlur(descInput);
+    }
+
+    setTimeout(() => input.classList.remove('border-emerald-500'), 1500);
+}
 
 function aplicarErroCnae(input, descInput, mensagem) {
     input.classList.add('border-red-500', 'ring-2', 'ring-red-200');
@@ -1234,12 +1267,22 @@ function exibirModalResultadoAnalise(resultado) {
 
     // 2. Constrói o HTML da Lista de TODOS os CNAEs com Checkboxes e o Botão Flutuante
     let cnaesHtml = resultado.cnaesDetalhados.map(cnae => `
-        <label class="cnae-card p-3 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 flex flex-row items-center gap-3 mb-2 shadow-sm transition-all hover:border-blue-400 cursor-pointer" data-search="${cnae.codigo} ${cnae.descricao.toLowerCase()}">
-            <input type="checkbox" class="cnae-checkbox-vincular w-4 h-4 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-slate-800 dark:bg-slate-700 dark:border-slate-600" value="${cnae.codigo}" data-desc="${cnae.descricao}">
-            <div class="flex flex-col">
-                <span class="text-blue-600 dark:text-blue-400 font-mono font-bold text-sm mb-1">${cnae.codigo}</span>
-                <span class="text-slate-700 dark:text-slate-300 text-sm leading-tight">${cnae.descricao}</span>
+        <label class="cnae-card p-3 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 flex flex-row items-center justify-between gap-3 mb-2 shadow-sm transition-all hover:border-blue-400 cursor-pointer" data-search="${cnae.codigo} ${cnae.descricao.toLowerCase()}">
+            <div class="flex flex-row items-center gap-3 flex-1">
+                <input type="checkbox" class="cnae-checkbox-vincular w-4 h-4 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-slate-800 dark:bg-slate-700 dark:border-slate-600" value="${cnae.codigo}" data-desc="${cnae.descricao}">
+                <div class="flex flex-col">
+                    <span class="text-blue-600 dark:text-blue-400 font-mono font-bold text-sm mb-1">${cnae.codigo}</span>
+                    <span class="text-slate-700 dark:text-slate-300 text-sm leading-tight">${cnae.descricao}</span>
+                </div>
             </div>
+            
+            <button type="button" onclick="event.stopPropagation(); event.preventDefault(); reabrirBuscaIbgeDireto('${cnae.codigo}')" 
+                class="p-2 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors shrink-0" 
+                title="Ver detalhes completos do CNAE no IBGE">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </button>
         </label>
     `).join('');
 
@@ -1971,6 +2014,175 @@ function getHistoricoHtml() {
         </div>
     `;
 }
+
+// ==========================================
+// INTEGRAÇÃO API IBGE - MODAL STANDALONE
+// ==========================================
+window.abrirModalBuscaCnae = () => {
+    document.getElementById('ibge-cnae-input').value = '';
+    document.getElementById('ibge-cnae-result').classList.add('hidden');
+    document.getElementById('modal-busca-cnae').classList.remove('hidden');
+    setTimeout(() => document.getElementById('ibge-cnae-input').focus(), 100);
+};
+
+window.fecharModalBuscaCnae = () => {
+    document.getElementById('modal-busca-cnae').classList.add('hidden');
+};
+
+document.getElementById('ibge-cnae-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') buscarCnaeIbge();
+});
+
+window.buscarCnaeIbge = async () => {
+    const input = document.getElementById('ibge-cnae-input');
+    const btn = document.getElementById('ibge-cnae-btn');
+    const resultDiv = document.getElementById('ibge-cnae-result');
+    
+    const codigoBruto = input.value.trim();
+    const codigoLimpo = codigoBruto.replace(/\D/g, '');
+
+    resultDiv.classList.remove('hidden');
+
+    if (codigoLimpo.length !== 7) {
+        resultDiv.innerHTML = `<div class="p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800/50 rounded-xl text-sm font-bold text-center">Informe um código válido contendo exatos 7 números.</div>`;
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = `<svg class="animate-spin h-5 w-5 mx-auto text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+    resultDiv.innerHTML = `<div class="text-center text-sm text-slate-500 dark:text-slate-400 py-8 animate-pulse">Consultando base de dados do IBGE...</div>`;
+
+    try {
+        const url = `https://servicodados.ibge.gov.br/api/v2/cnae/subclasses/${encodeURIComponent(codigoLimpo)}`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('not_found');
+        
+        const data = await response.json();
+        const item = Array.isArray(data) ? data[0] : data;
+        if (!item || !item.id) throw new Error('not_found');
+
+        renderResultadoIbge(item, resultDiv);
+    } catch (err) {
+        resultDiv.innerHTML = `<div class="p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800/50 rounded-xl text-sm text-center">Subclasse <b>${codigoBruto}</b> não encontrada na API do IBGE. Verifique o código digitado.</div>`;
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Buscar';
+    }
+};
+
+function renderResultadoIbge(item, container) {
+    const escapeHtml = (str) => {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    };
+
+    const classe = item.classe || {};
+    const grupo = classe.grupo || {};
+    const divisao = grupo.divisao || {};
+    const secao = divisao.secao || {};
+
+    let atividadesHtml = '';
+    if (item.atividades && item.atividades.length > 0) {
+        atividadesHtml = `
+        <div class="mt-4 pt-4 border-t dark:border-slate-700">
+            <h4 class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Atividades Relacionadas</h4>
+            <ul class="list-disc pl-5 text-xs text-slate-700 dark:text-slate-300 space-y-1">
+                ${item.atividades.map(a => `<li>${escapeHtml(a)}</li>`).join('')}
+            </ul>
+        </div>`;
+    }
+
+    container.innerHTML = `
+    <div class="bg-slate-50 dark:bg-slate-800/50 border dark:border-slate-700 rounded-xl p-5 shadow-sm animate-fade-in">
+        <div class="inline-block px-3 py-1 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 font-mono font-bold text-xs rounded-md mb-3 border border-indigo-200 dark:border-indigo-800">
+            ${escapeHtml(item.id)}
+        </div>
+        <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight mb-4">${escapeHtml(item.descricao || '')}</h3>
+        
+        <div class="text-xs text-slate-600 dark:text-slate-400 space-y-2 border-t dark:border-slate-700 pt-4">
+            <p><strong class="text-slate-800 dark:text-slate-200 uppercase text-[10px] tracking-widest">Classe:</strong> ${escapeHtml(classe.id || '-')} — ${escapeHtml(classe.descricao || '-')}</p>
+            <p><strong class="text-slate-800 dark:text-slate-200 uppercase text-[10px] tracking-widest">Grupo:</strong> ${escapeHtml(grupo.id || '-')} — ${escapeHtml(grupo.descricao || '-')}</p>
+            <p><strong class="text-slate-800 dark:text-slate-200 uppercase text-[10px] tracking-widest">Divisão:</strong> ${escapeHtml(divisao.id || '-')} — ${escapeHtml(divisao.descricao || '-')}</p>
+            <p><strong class="text-slate-800 dark:text-slate-200 uppercase text-[10px] tracking-widest">Seção:</strong> ${escapeHtml(secao.id || '-')} — ${escapeHtml(secao.descricao || '-')}</p>
+        </div>
+        ${atividadesHtml}
+    </div>`;
+};
+
+// Função para abrir os detalhes do CNAE diretamente a partir de um código pronto
+window.reabrirBuscaIbgeDireto = (codigo) => {
+    // Exibe o modal do IBGE (ele vai sobrepor o de análise por causa do z-index superior)
+    document.getElementById('modal-busca-cnae').classList.remove('hidden');
+    
+    // Alimenta o input de texto com o código clicado
+    const input = document.getElementById('ibge-cnae-input');
+    input.value = codigo;
+    
+    // Dispara a busca automática na API do IBGE
+    buscarCnaeIbge();
+};
+
+// ==========================================
+// TRAVA DE ROLAGEM DA TELA PRINCIPAL (CORRIGIDO)
+// ==========================================
+const gerenciarRolagemDoFundo = () => {
+    const modaisEstaticos = [
+        'family-form-modal', 
+        'suggestions-modal', 
+        'welcomeModalQualificacao', 
+        'summary-modal', 
+        'errorModal', 
+        'ramo-info-modal',
+        'modal-busca-cnae' // O modal do IBGE
+    ];
+
+    const modaisDinamicos = [
+        'modal-analise-cnpj', 
+        'modal-pre-analise', 
+        'modal-vinculo-cnaes'
+    ];
+
+    // Verifica se tem algum modal estático aberto (sem a classe hidden)
+    const temEstaticoAberto = modaisEstaticos.some(id => {
+        const modal = document.getElementById(id);
+        return modal && !modal.classList.contains('hidden');
+    });
+
+    // Verifica se tem algum modal dinâmico que existe no DOM atualmente
+    const temDinamicoAberto = modaisDinamicos.some(id => {
+        return document.getElementById(id) !== null;
+    });
+
+    // Se tiver qualquer um aberto, adiciona a trava (evitando fazer isso se já tiver)
+    if (temEstaticoAberto || temDinamicoAberto) {
+        if (!document.body.classList.contains('overflow-hidden')) {
+            document.body.classList.add('overflow-hidden');
+        }
+    } else {
+        document.body.classList.remove('overflow-hidden');
+    }
+};
+
+// 1. Observador de Modais Estáticos (Vigia APENAS a classe desses 7 elementos, super leve)
+const observerEstatico = new MutationObserver(gerenciarRolagemDoFundo);
+const idsEstaticos = ['family-form-modal', 'suggestions-modal', 'welcomeModalQualificacao', 'summary-modal', 'errorModal', 'ramo-info-modal', 'modal-busca-cnae'];
+
+idsEstaticos.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+        observerEstatico.observe(el, { attributes: true, attributeFilter: ['class'] });
+    }
+});
+
+// 2. Observador de Modais Dinâmicos (Vigia APENAS elementos sendo injetados/removidos direto no body)
+const observerDinamico = new MutationObserver(gerenciarRolagemDoFundo);
+observerDinamico.observe(document.body, { childList: true });
+
+// Roda uma vez no início para garantir que já trave caso o modal de Boas-Vindas esteja aberto
+gerenciarRolagemDoFundo();
+
+
 
 // Inicia o App
 initApp();

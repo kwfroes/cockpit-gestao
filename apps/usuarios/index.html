@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Verificação de segurança padrão do Cockpit
+        (function () {
+            const isAuthenticated = sessionStorage.getItem("cockpit_auth_token") === "valid";
+            if (!isAuthenticated) window.top.location.href = "../../index.html";
+        })();
+    </script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-300 p-6">
+    <div class="max-w-4xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Gerenciar Usuários</h1>
+            <button onclick="document.getElementById('modal').classList.remove('hidden')" 
+                    class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                + Novo Usuário
+            </button>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 rounded-xl shadow overflow-hidden">
+            <table class="w-full text-left">
+                <thead class="bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 uppercase text-sm">
+                    <tr>
+                        <th class="p-4  text-center">Nome</th>
+                        <th class="p-4  text-center">E-mail</th>
+                        <th class="p-4 text-center">Cargo</th>
+                        <th class="p-4 text-center">Status</th>
+                        <th class="p-4 text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody" class="divide-y divide-gray-200 dark:divide-slate-800">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-lg w-96 shadow-xl border border-slate-200 dark:border-slate-700">
+            <h2 class="text-lg font-bold mb-4 text-slate-900 dark:text-slate-100">Adicionar Usuário</h2>
+
+            <label class="block text-xs font-bold text-slate-500 mb-1">Foto de Perfil (Opcional)</label>
+            <input id="newAvatar" type="file" accept="image/*" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-500 p-2 mb-3 rounded outline-none file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+            
+            <label class="block text-xs font-bold text-slate-500 mb-1">Nome</label>
+            <input id="newName" type="text" placeholder="Kevin Fróes" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 mb-3 rounded outline-none focus:ring-2 focus:ring-blue-500">
+            
+            <label class="block text-xs font-bold text-slate-500 mb-1">E-mail</label>
+            <input id="newEmail" type="email" placeholder="E-mail de acesso" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 mb-3 rounded outline-none focus:ring-2 focus:ring-blue-500">
+            
+            <label class="block text-xs font-bold text-slate-500 mb-1">Senha (Mínimo 6 caracteres)</label>
+            <input id="newPass" type="password" placeholder="Senha provisória" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 mb-3 rounded outline-none focus:ring-2 focus:ring-blue-500">
+            
+            <label class="block text-xs font-bold text-slate-500 mb-1">Nível de Acesso</label>
+            <select id="newRole" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 mb-6 rounded outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="user">Usuário Comum</option>
+                <option value="admin">Administrador</option>
+            </select>
+
+            <div class="flex gap-2">
+                <button onclick="app.salvarUsuario()" id="btnSaveUser" class="flex-1 bg-green-600 text-white py-2 rounded hover:bg-green-700 transition">Salvar</button>
+                <button onclick="document.getElementById('modal').classList.add('hidden')" class="flex-1 bg-gray-300 dark:bg-slate-700 text-slate-800 dark:text-white py-2 rounded hover:bg-gray-400 dark:hover:bg-slate-600 transition">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    <div id="editModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-lg w-96 shadow-xl border border-slate-200 dark:border-slate-700">
+            <h2 class="text-lg font-bold mb-4 text-slate-900 dark:text-slate-100">Editar Perfil</h2>
+            
+            <input type="hidden" id="editId">
+
+            <label class="block text-xs font-bold text-slate-500 mb-1">Alterar Foto (Opcional)</label>
+            <input id="editAvatar" type="file" accept="image/*" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-500 p-2 mb-3 rounded outline-none file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+            
+            <label class="block text-xs font-bold text-slate-500 mb-1">Nome</label>
+            <input id="editName" type="text" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 mb-4 rounded outline-none focus:ring-2 focus:ring-blue-500">
+            
+            <label class="block text-xs font-bold text-slate-500 mb-1">E-mail</label>
+            <input id="editEmail" type="email" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 mb-3 rounded outline-none focus:ring-2 focus:ring-blue-500">
+
+            <label class="block text-xs font-bold text-slate-500 mb-1">Cargo</label>
+            <select id="editRole" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 mb-4 rounded outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="user">Usuário</option>
+                <option value="admin">Administrador</option>
+            </select>
+
+            <label class="block text-xs font-bold text-slate-500 mb-1">Redefinir Senha (opcional)</label>
+            <input id="editPass" type="password" placeholder="Deixe em branco para não alterar" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 mb-6 rounded outline-none focus:ring-2 focus:ring-blue-500">
+
+            <div class="flex gap-2">
+                <button onclick="app.salvarEdicao()" id="btnUpdateUser" class="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">Atualizar</button>
+                <button onclick="document.getElementById('editModal').classList.add('hidden')" class="flex-1 bg-gray-300 dark:bg-slate-700 text-slate-800 dark:text-white py-2 rounded hover:bg-gray-400 dark:hover:bg-slate-600 transition">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirmStatusModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 backdrop-blur-sm transition-opacity">
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-2xl w-full max-w-sm border border-slate-200 dark:border-slate-700 text-center transform transition-all scale-95 opacity-0" id="confirmStatusContent">
+            
+            <div id="confirmIcon" class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4">
+                </div>
+
+            <h3 id="confirmTitle" class="text-xl font-bold text-gray-800 dark:text-white mb-2">
+                Atenção
+            </h3>
+            
+            <p id="confirmMessage" class="text-sm text-gray-500 mb-6 font-medium">
+                Tem certeza que deseja fazer isso?
+            </p>
+
+            <div class="flex gap-3">
+                <button onclick="app.fecharConfirmacao()" class="flex-1 px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-white font-medium rounded-lg transition-colors">
+                    Cancelar
+                </button>
+                <button id="btnConfirmAction" class="flex-1 px-4 py-2 font-medium rounded-lg text-white shadow-md transition-colors">
+                    Sim, Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="cropperModal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-[100] p-4 backdrop-blur-sm transition-opacity">
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-2xl w-full max-w-lg p-6 flex flex-col border border-slate-200 dark:border-slate-700">
+        <h3 class="text-lg font-bold mb-4 text-slate-800 dark:text-white">Ajustar Foto de Perfil</h3>
+        
+        <div class="w-full h-64 sm:h-80 bg-slate-100 dark:bg-slate-800 relative rounded overflow-hidden">
+            <img id="imageToCrop" src="" class="max-w-full block">
+        </div>
+        
+        <p class="text-xs text-slate-500 mt-4 text-center">Arraste para mover. Use o scroll do mouse ou os dedos para dar zoom.</p>
+
+        <div class="flex gap-3 mt-4">
+            <button onclick="app.cancelarRecorte()" class="flex-1 px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-white font-medium rounded-lg transition-colors">Cancelar</button>
+            <button onclick="app.confirmarRecorte()" class="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-md transition-colors">Confirmar Recorte</button>
+        </div>
+    </div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>
