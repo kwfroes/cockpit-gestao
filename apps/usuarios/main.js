@@ -113,7 +113,7 @@ const app = {
 
                 <td class="p-4 text-right">
                 <!-- Botão Editar -->
-                <button onclick="app.abrirEdicao('${u.id}', '${u.name}', '${u.role}')"
+                <button onclick="app.abrirEdicao('${u.id}', '${u.name}', '${u.email}', '${u.role}')"
                     class="text-blue-500 hover:text-blue-700 mr-3"
                     title="Editar Usuário">
 
