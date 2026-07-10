@@ -94,6 +94,10 @@
                 <button onclick="abrirModalPreAnalise()" class="bg-amber-600 hover:bg-amber-700 text-white p-2 rounded-lg transition-all shadow-md" title="Analisar CNPJ (PDF)">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                 </button>
+
+                <button onclick="abrirModalBuscaCnae()" class="bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-lg transition-all shadow-md" title="Consultar CNAES IBGE">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </button>
             </div>
         </div>
     </header>
@@ -453,6 +457,31 @@
                 <button onclick="closeRamoInfoModal()" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold uppercase shadow-lg shadow-blue-500/30 transition-all active:scale-95">
                     Fechar Detalhes
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-busca-cnae" class="fixed inset-0 z-[150] bg-slate-900/80 hidden flex items-center justify-center transition-opacity backdrop-blur-sm p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[85vh] border dark:border-slate-800 animate-fade-in">
+            <div class="p-5 border-b dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-850 rounded-t-2xl">
+                <h3 class="font-bold dark:text-white flex items-center gap-2 text-xs uppercase tracking-widest text-indigo-600 dark:text-indigo-400">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    Consulta CNAE — Subclasse IBGE
+                </h3>
+                <button onclick="fecharModalBuscaCnae()" class="text-slate-400 hover:text-red-500 text-2xl transition-colors">&times;</button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
+                <div class="flex gap-3 mb-2">
+                    <input type="text" id="ibge-cnae-input" placeholder="Ex: 78.20-5-00 ou 0500301" 
+                        class="flex-1 p-3 text-sm border rounded-xl dark:bg-slate-850 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500 transition-all shadow-inner">
+                    <button id="ibge-cnae-btn" onclick="buscarCnaeIbge()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl text-sm font-bold transition-all shadow-md active:scale-95">
+                        Buscar
+                    </button>
+                </div>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400 mb-6 ml-1">Informe o código do CNAE.</p>
+
+                <div id="ibge-cnae-result" class="hidden"></div>
             </div>
         </div>
     </div>

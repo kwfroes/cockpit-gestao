@@ -1201,24 +1201,31 @@ window.onload = function () {
     performanceData.sort((a, b) => b.totalMes - a.totalMes);
 
     // Popula a tabela
-    performanceData.forEach((d) => {
+    performanceData.forEach((d, index) => {
       const row = `
-                <tr>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${
-                      d.nome
-                    }</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${d.totalMes.toLocaleString(
-                      "pt-BR",
-                    )}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${d.mediaDiaria.toFixed(
-                      1,
-                    )}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${d.desvioPadrao.toFixed(
-                      2,
-                    )}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${d.participacao.toFixed(
-                      1,
-                    )}%</td>
+                <tr class="hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-500 dark:text-gray-400">
+                        ${index + 1}º
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                        ${d.nome}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                        ${d.totalMes.toLocaleString("pt-BR")}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                        ${d.mediaDiaria.toFixed(1)}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                        ${d.desvioPadrao.toFixed(2)}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                        ${d.participacao.toFixed(1)}%
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-center flex justify-center gap-3">
+                        <button onclick="window.exportAnalystPDF('${d.nome}')" title="Gerar Relatório PDF" class="text-red-500 hover:text-red-700 transition-transform transform hover:scale-110 text-lg">📄</button>
+                        <button onclick="window.exportAnalystCSV('${d.nome}')" title="Gerar Planilha Excel/CSV" class="text-green-500 hover:text-green-700 transition-transform transform hover:scale-110 text-lg">📊</button>
+                    </td>
                 </tr>
             `;
       tableBody.innerHTML += row;
@@ -1755,7 +1762,7 @@ async function generateAnalysisSummary(data) {
  * Gera o Relatório em PDF com estrutura executiva, distribuído por páginas.
  * Inclui KPIs, análise de equipe, traduções de categorias e segurança de layout.
  */
-async function exportPDF() {
+async function exportPDF(overrideAnalyst = null) {
     if (!filteredData || filteredData.length === 0) {
         alert("Não há dados filtrados para exportar.");
         return;
@@ -1789,14 +1796,24 @@ async function exportPDF() {
         const PAGE_WIDTH = 210 - (MARGIN_LEFT * 2);
         let currentY = 20;
 
-        const analistaFiltro = document.getElementById("filterAnalyst")?.value || "all";
+        const analistaFiltro = overrideAnalyst || document.getElementById("filterAnalyst")?.value || "all";        
         const dataInicio = document.getElementById("filterPeriodStart")?.value || "---";
         const dataFim = document.getElementById("filterPeriodEnd")?.value || "---";
         const nomeRelatorioAnalista = analistaFiltro === 'all' ? 'Geral' : analistaFiltro;
         const safeFileName = `Relatorio_CAF_${nomeRelatorioAnalista.replace(/\s/g, '_')}_${dataInicio}_a_${dataFim}`.replace(/[/\\?%*:|"<>]/g, '-');
 
         // 2. PRÉ-PROCESSAMENTO GLOBAL 
-        const total = filteredData.length;
+        const pdfData = analistaFiltro !== 'all' 
+            ? filteredData.filter(d => d["Usuario Analista"] === analistaFiltro)
+            : filteredData;
+
+        if (pdfData.length === 0) {
+            alert(`Não há registros suficientes para ${analistaFiltro} no período.`);
+            if (loadingIndicator) loadingIndicator.classList.add("hidden");
+            return;
+        }
+
+        const total = pdfData.length;
         
         const milissegundosFiltrados = filteredData.map(r => {
             return _calcBusinessTimeDiff(r._dataSolicitacao, r._dataAnalise);
@@ -2010,7 +2027,7 @@ async function exportPDF() {
         };
 
         profileSections.forEach((section) => {
-            const counts = stats.countBy(filteredData, section.key);
+            const counts = stats.countBy(pdfData, section.key);
             const tableBody = Object.entries(counts)
                 .sort((a, b) => b[1] - a[1])
                 .map(([name, count]) => {
@@ -2041,35 +2058,39 @@ async function exportPDF() {
         // =========================================================================
         // PÁGINA 5: ANÁLISE VISUAL
         // =========================================================================
-        doc.addPage();
-        currentY = 20;
-        doc.setFontSize(16);
-        doc.setTextColor(41, 128, 186);
-        doc.text("Análise Gráfica de Tendências", MARGIN_LEFT, currentY);
+        const isFiltroGlobalAtivoParaOAnalista = document.getElementById("filterAnalyst")?.value === analistaFiltro;
 
-        const chartsToExport = [
-            { id: "chartWorkload", title: "Carga de Trabalho por Analista", note: "Distribuição proporcional da carga processada." },
-            { id: "chartMonthlyTrend", title: "Tendência Mensal de Volume", note: "Histórico de entrada e agilidade de resposta." },
-            { id: "chartAnalysisTime", title: "Distribuição do Tempo de Resposta", note: "Frequência de conclusão por faixa de dias." }
-        ];
+        if (analistaFiltro === 'all' || isFiltroGlobalAtivoParaOAnalista) {
+            doc.addPage();
+            currentY = 20;
+            doc.setFontSize(16);
+            doc.setTextColor(41, 128, 186);
+            doc.text("Análise Gráfica de Tendências", MARGIN_LEFT, currentY);
 
-        for (const chart of chartsToExport) {
-            const canvas = document.getElementById(chart.id);
-            if (canvas && canvas.offsetParent !== null) {
-                if (currentY > 210) { doc.addPage(); currentY = 20; }
-                
-                doc.setFontSize(12);
-                doc.setTextColor(41, 128, 186);
-                doc.text(chart.title, MARGIN_LEFT, currentY + 5);
-                
-                const imgData = canvas.toDataURL("image/png", 2.0);
-                doc.addImage(imgData, 'PNG', MARGIN_LEFT, currentY + 10, 180, 70);
-                
-                currentY += 85;
-                doc.setFontSize(9);
-                doc.setTextColor(150);
-                doc.text(chart.note, MARGIN_LEFT, currentY);
-                currentY += 10;
+            const chartsToExport = [
+                { id: "chartWorkload", title: "Carga de Trabalho por Analista", note: "Distribuição proporcional da carga processada." },
+                { id: "chartMonthlyTrend", title: "Tendência Mensal de Volume", note: "Histórico de entrada e agilidade de resposta." },
+                { id: "chartAnalysisTime", title: "Distribuição do Tempo de Resposta", note: "Frequência de conclusão por faixa de dias." }
+            ];
+
+            for (const chart of chartsToExport) {
+                const canvas = document.getElementById(chart.id);
+                if (canvas && canvas.offsetParent !== null) {
+                    if (currentY > 210) { doc.addPage(); currentY = 20; }
+                    
+                    doc.setFontSize(12);
+                    doc.setTextColor(41, 128, 186);
+                    doc.text(chart.title, MARGIN_LEFT, currentY + 5);
+                    
+                    const imgData = canvas.toDataURL("image/png", 2.0);
+                    doc.addImage(imgData, 'PNG', MARGIN_LEFT, currentY + 10, 180, 70);
+                    
+                    currentY += 85;
+                    doc.setFontSize(9);
+                    doc.setTextColor(150);
+                    doc.text(chart.note, MARGIN_LEFT, currentY);
+                    currentY += 10;
+                }
             }
         }
 
@@ -3047,5 +3068,85 @@ function renderComparisonCharts(data) {
         options: { scales: { r: { suggestMin: 0, suggestMax: 100 } } }
     });
 }
+
+// ==========================================================
+  // EXPORTAÇÕES INDIVIDUAIS DO ANALISTA (CHAMADAS PELA TABELA)
+  // ==========================================================
+  
+  // Wrapper Global para o botão PDF da Tabela
+  window.exportAnalystPDF = function(analystName) {
+      exportPDF(analystName).catch(console.error);
+  };
+
+  // Lógica Global do Gerador de Planilha (CSV) para Excel
+  window.exportAnalystCSV = function(analystName) {
+      // 1. Pega os dados que já estão filtrados por data globalmente,
+      //    e restringe apenas ao analista clicado.
+      const dataToExport = filteredData.filter(row => row["Usuario Analista"] === analystName);
+
+      if (dataToExport.length === 0) {
+          alert(`Não há registros de análises para ${analystName} no período selecionado.`);
+          return;
+      }
+
+      // 2. Faz o de/para formatando a saída de acordo com o padrão exigido
+      const csvData = dataToExport.map(row => {
+          // Traduz a Situação
+          let tipoSolicitacaoOriginal = (row["Tipo Solicitacão"] || "").toLowerCase();
+          let tipoFinal = row["Tipo Solicitacão"] || "";
+          
+          if (tipoSolicitacaoOriginal.includes("nova")) {
+              tipoFinal = "Inscrição";
+          } else if (tipoSolicitacaoOriginal.includes("altera")) {
+              tipoFinal = "Atualização";
+          }
+
+          // Cálculo do Status SLA
+          const tempoDias = row._tempoAnalise !== null && row._tempoAnalise >= 0 ? row._tempoAnalise : -1;
+          let slaStatus = "N/A";
+          if (tempoDias >= 0) {
+              slaStatus = tempoDias <= 5 ? "No Prazo" : "Atrasado";
+          }
+
+          const protocoloStr = row["Num Solicitacao"] || row["IdSolicitacao"] || "";
+          const cnpjStr = row["CNPJ/CPF"] || "";
+
+          // Formatação limpa de objeto
+          return {
+              "Protocolo": protocoloStr ? protocoloStr + "\t" : "",
+              "CNPJ/CPF": cnpjStr ? cnpjStr + "\t" : "",
+              "Razão Social / Solicitante": row["Razão Social/Nome"] || "",
+              "Data Solicitação": row["Data Solicitacao"] || "",
+              "Data Análise": row["Data Análise"] || "",
+              "Tempo de Análise (Dias Úteis)": tempoDias >= 0 ? tempoDias : "0",
+              "Status do SLA": slaStatus,
+              "Situação": row["Situação Solicitação"] || "",
+              "Tipo Solicitação": tipoFinal,
+              "Categoria": row["Categoria"] || "",
+              "Analista Responsável": row["Usuario Analista"] || ""
+          };
+      });
+
+      // 3. Utiliza a biblioteca PapaParse (já instanciada no HTML) para montar o CSV
+      // Utilizamos o delimitador ';' nativo para Excel Português
+      const csvString = Papa.unparse(csvData, {
+          delimiter: ";",
+          header: true
+      });
+
+      // 4. Adiciona Byte Order Mark (BOM) para o Excel reconhecer acentos sem quebrar
+      const blob = new Blob(["\uFEFF" + csvString], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      
+      const safeName = analystName.replace(/\s/g, '_');
+      a.download = `Relatorio_CAF_${safeName}.csv`;
+      
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+  };
 
 }; // FECHA O window.onload
