@@ -204,27 +204,37 @@ async function generateCaptcha() {
 
   // --- Lógica de Sessão ---
 
-async function checkSession() {
-      // Pede ao Supabase para verificar se há uma sessão ativa e válida no navegador
+  async function checkSession() {
       const { data: { session }, error } = await supabase.auth.getSession();
 
       if (session) {
           const user = session.user;
           
-          // Alimenta o sessionStorage para manter a compatibilidade com o resto do seu app
+          // ADICIONAMOS A BUSCA PELA TRAVA: precisa_trocar_senha
+          const { data: profile } = await supabase.from('profiles').select('name, role, avatar_url, apelido, precisa_trocar_senha').eq('id', user.id).single();
+          
           sessionStorage.setItem("cockpit_auth_token", "valid");
           sessionStorage.setItem("cockpit_user_email", user.email);
+          sessionStorage.setItem("cockpit_user_realname", profile?.name || user.user_metadata?.name || user.email.split('@')[0]);
+          sessionStorage.setItem("cockpit_user_role", profile?.role || user.user_metadata?.role || "user");
+          sessionStorage.setItem("cockpit_user_apelido", profile?.apelido || "");
           
-          // Como o usuário de teste foi criado no painel, ele não tem Nome e Role definidos ainda.
-          // Usamos o e-mail como fallback provisório.
-          sessionStorage.setItem("cockpit_user_realname", user.user_metadata?.name || user.email.split('@')[0]);
-          sessionStorage.setItem("cockpit_user_role", user.user_metadata?.role || "admin");
+          if (profile?.avatar_url) {
+              sessionStorage.setItem("cockpit_user_avatar", profile.avatar_url);
+          } else {
+              sessionStorage.removeItem("cockpit_user_avatar");
+          }
           
-          unlockInterface();
-          applyPermissions();
-          updateUserMenu();
-          updateUserAvatarVisuals();
-          navigate(window.location.hash || "#home");
+          // A MÁGICA DO BLOQUEIO:
+          if (profile?.precisa_trocar_senha) {
+              document.getElementById("forcedPasswordModal").classList.remove("hidden");
+          } else {
+              unlockInterface();
+              applyPermissions();
+              updateUserMenu();
+              updateUserAvatarVisuals();
+              navigate(window.location.hash || "#home");
+          }
       } else {
           frame.src = "about:blank";
           generateCaptcha();
@@ -270,21 +280,34 @@ if (loginForm) {
         console.log("O SUPABASE DISSE:", error); // Adicione isso antes do showError
           showError("Credenciais inválidas ou usuário não encontrado.");
           generateCaptcha();
-      } else {
+    } else {
           // SUCESSO!
           const user = data.user;
+          const { data: profile } = await supabase.from('profiles').select('name, role, avatar_url, apelido, precisa_trocar_senha').eq('id', user.id).single();
           
           sessionStorage.setItem("cockpit_auth_token", "valid");
           sessionStorage.setItem("cockpit_user_email", user.email);
-          sessionStorage.setItem("cockpit_user_realname", user.user_metadata?.name || user.email.split('@')[0]);
-          sessionStorage.setItem("cockpit_user_role", user.user_metadata?.role || "admin");
+          sessionStorage.setItem("cockpit_user_realname", profile?.name || user.user_metadata?.name || user.email.split('@')[0]);
+          sessionStorage.setItem("cockpit_user_role", profile?.role || user.user_metadata?.role || "admin");
+          sessionStorage.setItem("cockpit_user_apelido", profile?.apelido || "");
 
-          loginError.classList.add("hidden");
-          aplicarPermissoesDeMenu();
-          updateUserMenu();
-          updateUserAvatarVisuals();
-          unlockInterface();
-          navigate(window.location.hash || "#home");
+          if (profile?.avatar_url) {
+              sessionStorage.setItem("cockpit_user_avatar", profile.avatar_url);
+          } else {
+              sessionStorage.removeItem("cockpit_user_avatar");
+          }
+
+          // A MÁGICA DO BLOQUEIO AO LOGAR:
+          if (profile?.precisa_trocar_senha) {
+              document.getElementById("forcedPasswordModal").classList.remove("hidden");
+          } else {
+              loginError.classList.add("hidden");
+              aplicarPermissoesDeMenu();
+              updateUserMenu();
+              updateUserAvatarVisuals();
+              unlockInterface();
+              navigate(window.location.hash || "#home");
+          }
       }
 
       btn.textContent = "Entrar no Sistema";
@@ -946,50 +969,47 @@ async function performLogout() {
     document.body.removeChild(link);
   }
 
-  // 1. Form CADASTRO
+// 1. Form CADASTRO (ATUALIZADO: Vai direto para a tabela pedidos_acesso)
   const regForm = document.getElementById("registerForm");
   if (regForm) {
     regForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const rawPass = document.getElementById("regPass").value;
+      
+      const btn = document.getElementById("btnSubmitRegister");
+      const name = document.getElementById("regName").value.trim();
+      const email = document.getElementById("regEmail").value.trim().toLowerCase();
 
-      const confirmPass = document.getElementById("regConfirm").value;
+      btn.textContent = "Enviando...";
+      btn.disabled = true;
 
-      // --- VALIDAÇÃO DE IGUALDADE ---
-      if (rawPass !== confirmPass) {
-        showError("As senhas não coincidem!"); // Usa seu modal de erro existente
-        return; // Para tudo aqui
+      try {
+        // Envia o Nome e o E-mail para a tabela de quarentena no Supabase
+        const { error } = await supabase
+          .from('pedidos_acesso')
+          .insert([{ nome: name, email: email }]);
+
+        if (error) {
+          // Verifica se o erro é de e-mail duplicado (já solicitou antes)
+          if (error.code === '23505') {
+            throw new Error("Já existe uma solicitação pendente ou cadastro para este e-mail.");
+          }
+          throw error;
+        }
+
+        closeRequestModals();
+        showSuccess(
+          "Solicitação Enviada!",
+          "Seus dados foram enviados com sucesso.\n\nAguarde o administrador aprovar seu acesso. Você será avisado quando estiver liberado."
+        );
+        regForm.reset();
+
+      } catch (err) {
+        console.error("Erro ao solicitar acesso:", err);
+        showError(err.message || "Erro ao enviar solicitação. Tente novamente.");
+      } finally {
+        btn.textContent = "Enviar Solicitação";
+        btn.disabled = false;
       }
-
-      const securePass = await encryptLight(rawPass);
-
-      const payload = {
-        type: "cadastro",
-        date: new Date().toISOString(),
-        payload: {
-          name: document.getElementById("regName").value,
-          username: document
-            .getElementById("regUser")
-            .value.trim()
-            .toLowerCase(),
-          avatar: tempRegisterAvatar,
-          email: document.getElementById("regEmail").value.trim().toLowerCase(),
-          secure_data: securePass,
-        },
-      };
-
-      downloadRequest(
-        payload,
-        `solicitacao_cadastro_${payload.payload.username}.json`,
-      );
-
-      // SUBSTITUI O ALERT AQUI:
-      closeRequestModals();
-      showSuccess(
-        "Arquivo Gerado!",
-        "O arquivo foi salvo no seu computador.\n\nEnvie este arquivo para o administrador:\ncockpitgestao@gmail.com\n\nApós a conclusão, você será informado no e-mail cadastrado.",
-      );
-      regForm.reset();
     });
   }
 
@@ -1057,10 +1077,13 @@ async function performLogout() {
 
   // 1. Função para atualizar os dados do menu
   function updateUserMenu() {
-    const realName =
-      sessionStorage.getItem("cockpit_user_realname") || "Usuário";
+    const realName = sessionStorage.getItem("cockpit_user_realname") || "Usuário";
     const email = sessionStorage.getItem("cockpit_user_email") || "Sem e-mail";
     const role = sessionStorage.getItem("cockpit_user_role") || "USER";
+    const apelido = sessionStorage.getItem("cockpit_user_apelido"); // Busca o apelido na memória
+
+    // Se tiver apelido usa ele, se não, usa o primeiro nome do nome completo
+    const displayName = apelido ? apelido : realName.split(" ")[0];
 
     // Preenche textos
     const sbName = document.getElementById("sidebarUserName");
@@ -1069,8 +1092,8 @@ async function performLogout() {
     const mRole = document.getElementById("menuUserRole");
     const avatar = document.getElementById("userAvatar");
 
-    if (sbName) sbName.textContent = realName.split(" ")[0]; // Só o primeiro nome na barra
-    if (mName) mName.textContent = realName;
+    if (sbName) sbName.textContent = displayName; // Exibe o apelido ou primeiro nome na barra lateral
+    if (mName) mName.textContent = apelido ? `${realName} (${apelido})` : realName; // Exibe Nome Completo (Apelido) no menu expandido
     if (mEmail) mEmail.textContent = email;
 
     if (mRole) {
@@ -1082,9 +1105,9 @@ async function performLogout() {
       }
     }
 
-    // Gera inicial do Avatar
+    // Gera inicial do Avatar baseada no nome de exibição (Apelido ou Nome)
     if (avatar) {
-      avatar.textContent = realName.charAt(0).toUpperCase();
+      avatar.textContent = displayName.charAt(0).toUpperCase();
     }
   }
 
@@ -1313,6 +1336,207 @@ async function performLogout() {
 
   // Chama ao iniciar (para carregar se o usuário já fez login com foto)
   updateUserAvatarVisuals();
+
+  // =========================================================
+  // SISTEMA DE TROCA DE SENHA OBRIGATÓRIA
+  // =========================================================
+  
+  // Se ele desistir e clicar em "Cancelar e Sair"
+  window.cancelForcedLogin = async function() {
+      await supabase.auth.signOut();
+      sessionStorage.clear();
+      window.location.reload();
+  };
+
+  const forcedPasswordForm = document.getElementById("forcedPasswordForm");
+  if (forcedPasswordForm) {
+      forcedPasswordForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const newPass = document.getElementById("forcedNewPass").value.trim();
+          const confirmPass = document.getElementById("forcedConfirmPass").value.trim();
+          const btn = document.getElementById("btnSubmitForcedPass");
+
+          if (newPass !== confirmPass) {
+              showError("As senhas digitadas não coincidem.");
+              return;
+          }
+
+          btn.textContent = "Salvando...";
+          btn.disabled = true;
+
+          try {
+              // 1. Grava a senha nova e segura no Cofre do Supabase
+              const { error: passErr } = await supabase.auth.updateUser({ password: newPass });
+              if (passErr) throw passErr;
+
+              // 2. Tira a trava (precisa_trocar_senha: false) da tabela pública
+              const { data: { user } } = await supabase.auth.getUser();
+              const { error: profErr } = await supabase.from('profiles').update({ precisa_trocar_senha: false }).eq('id', user.id);
+              if (profErr) throw profErr;
+
+              // 3. Destranca o Cockpit e deixa ele entrar!
+              document.getElementById("forcedPasswordModal").classList.add("hidden");
+              if (document.getElementById("loginError")) document.getElementById("loginError").classList.add("hidden");
+              
+              unlockInterface();
+              if (typeof aplicarPermissoesDeMenu === "function") aplicarPermissoesDeMenu();
+              if (typeof applyPermissions === "function") applyPermissions();
+              updateUserMenu();
+              updateUserAvatarVisuals();
+              navigate(window.location.hash || "#home");
+
+              showSuccess("Acesso Liberado!", "Sua senha definitiva foi salva com sucesso. Bem-vindo ao Cockpit!");
+
+          } catch (err) {
+              showError("Não foi possível alterar a senha: " + err.message);
+          } finally {
+              btn.textContent = "Salvar Senha e Entrar";
+              btn.disabled = false;
+          }
+      });
+  }
+
+  // =========================================================
+  // SISTEMA DE "MEU PERFIL" (USUÁRIO LOGADO)
+  // =========================================================
+  
+  let profileCropper = null;
+  let profileCroppedBlob = null;
+
+  window.openMyProfile = function() {
+      const modal = document.getElementById('myProfileModal');
+      const emailField = document.getElementById('myProfileEmail');
+      const imgPreview = document.getElementById('myAvatarPreview');
+      
+      const email = sessionStorage.getItem("cockpit_user_email") || "";
+      const avatar = sessionStorage.getItem("cockpit_user_avatar");
+      const realName = sessionStorage.getItem("cockpit_user_realname") || "U";
+      
+      emailField.value = email;
+      document.getElementById('myProfileFullName').value = realName;
+      document.getElementById('myProfileApelido').value = sessionStorage.getItem("cockpit_user_apelido") || "";
+      document.getElementById('myProfileNewPass').value = "";
+      profileCroppedBlob = null; // Reseta imagens cortadas anteriormente
+      
+      // Carrega a imagem atual ou a letra padrão
+      if (avatar) {
+          imgPreview.src = avatar;
+      } else {
+          imgPreview.src = `https://ui-avatars.com/api/?background=cbd5e1&color=475569&name=${realName}`;
+      }
+
+      // Fecha o dropdown se estiver aberto
+      const userMenuDropdown = document.getElementById("userMenuDropdown");
+      if (userMenuDropdown) {
+          userMenuDropdown.classList.add("hidden");
+      }
+      
+      modal.classList.remove('hidden');
+  };
+
+  window.iniciarRecortePerfil = function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const url = URL.createObjectURL(file);
+      const imageElement = document.getElementById('imageToCropProfile');
+      imageElement.src = url;
+
+      document.getElementById('cropperProfileModal').classList.remove('hidden');
+
+      if (profileCropper) profileCropper.destroy();
+
+      profileCropper = new Cropper(imageElement, {
+          aspectRatio: 1, 
+          viewMode: 1,
+          dragMode: 'move',
+          autoCropArea: 1,
+          guides: true,
+          background: false
+      });
+  };
+
+  window.cancelarRecortePerfil = function() {
+      document.getElementById('cropperProfileModal').classList.add('hidden');
+      document.getElementById('myAvatarInput').value = ''; 
+      profileCroppedBlob = null;
+      if (profileCropper) profileCropper.destroy();
+  };
+
+  window.confirmarRecortePerfil = function() {
+      if (!profileCropper) return;
+      const canvas = profileCropper.getCroppedCanvas({ width: 400, height: 400, imageSmoothingEnabled: true });
+      canvas.toBlob((blob) => {
+          profileCroppedBlob = blob;
+          document.getElementById('myAvatarPreview').src = URL.createObjectURL(blob);
+          document.getElementById('cropperProfileModal').classList.add('hidden');
+      }, 'image/jpeg', 0.8);
+  };
+
+  const myProfileForm = document.getElementById("myProfileForm");
+  if (myProfileForm) {
+      myProfileForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const btn = document.getElementById("btnSubmitMyProfile");
+          const newPass = document.getElementById("myProfileNewPass").value.trim();
+          const apelido = document.getElementById("myProfileApelido").value.trim(); 
+          
+          btn.textContent = "Salvando...";
+          btn.disabled = true;
+
+          try {
+              const { data: { user } } = await supabase.auth.getUser();
+              if (!user) throw new Error("Usuário não autenticado.");
+
+              let newAvatarUrl = null;
+
+              // 1. UPLOAD DA IMAGEM SE FOI ALTERADA
+              if (profileCroppedBlob) {
+                  const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.jpg`;
+                  const filePath = `avatares/${fileName}`; 
+
+                  const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, profileCroppedBlob, { contentType: 'image/jpeg' });
+                  if (uploadError) throw uploadError;
+
+                  const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
+                  newAvatarUrl = data.publicUrl;
+              }
+
+              // 2. ATUALIZA A SENHA NO AUTH (se informada)
+              if (newPass) {
+                  const { error: passErr } = await supabase.auth.updateUser({ password: newPass });
+                  if (passErr) throw passErr;
+              }
+
+// 3. ATUALIZA O PERFIL (Apelido e/ou Imagem)
+              const profileUpdateData = { apelido: apelido };
+
+              if (newAvatarUrl) {
+                  await supabase.auth.updateUser({ data: { avatar_url: newAvatarUrl } });
+                  profileUpdateData.avatar_url = newAvatarUrl;
+                  sessionStorage.setItem("cockpit_user_avatar", newAvatarUrl);
+              }
+
+              const { error: profErr } = await supabase.from('profiles').update(profileUpdateData).eq('id', user.id);
+              if (profErr) throw profErr;
+
+              sessionStorage.setItem("cockpit_user_apelido", apelido); // Salva o apelido novo
+
+              document.getElementById('myProfileModal').classList.add('hidden');
+              updateUserAvatarVisuals(); // Atualiza a bolinha no canto da tela
+              updateUserMenu(); // Atualiza o menu de perfil
+              
+              showSuccess("Perfil Atualizado", "Suas alterações foram salvas com sucesso!");
+
+          } catch (err) {
+              console.error("Erro ao atualizar perfil:", err);
+              showError("Erro ao salvar: " + err.message);
+          } finally {
+              btn.textContent = "Salvar Alterações";
+              btn.disabled = false;
+          }
+      });
+  }
 
   // =========================================================
   // GESTÃO DE TEMA (DARK MODE)

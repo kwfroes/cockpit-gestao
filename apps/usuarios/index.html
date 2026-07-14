@@ -19,24 +19,49 @@
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Gerenciar Usuários</h1>
             <button onclick="document.getElementById('modal').classList.remove('hidden')" 
-                    class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                    class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium shadow-md transition-colors">
                 + Novo Usuário
             </button>
         </div>
 
-        <div class="bg-white dark:bg-slate-900 rounded-xl shadow overflow-hidden">
+        <div class="flex gap-4 border-b border-gray-200 dark:border-slate-800 mb-6">
+            <button onclick="app.mudarAba('usuarios')" id="tabUsuarios" class="px-4 py-3 font-bold text-blue-600 border-b-2 border-blue-600 transition-colors">
+                Usuários Ativos
+            </button>
+            <button onclick="app.mudarAba('pendentes')" id="tabPendentes" class="px-4 py-3 font-bold text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 border-b-2 border-transparent transition-colors flex items-center gap-2">
+                Solicitações Pendentes
+                <span id="badgePendentes" class="hidden bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full shadow-sm">0</span>
+            </button>
+        </div>
+
+        <div id="containerUsuarios" class="bg-white dark:bg-slate-900 rounded-xl shadow overflow-hidden">
             <table class="w-full text-left">
                 <thead class="bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 uppercase text-sm">
                     <tr>
-                        <th class="p-4  text-center">Nome</th>
-                        <th class="p-4  text-center">E-mail</th>
+                        <th class="p-4 text-center">Nome</th>
+                        <th class="p-4 text-center">E-mail</th>
                         <th class="p-4 text-center">Cargo</th>
                         <th class="p-4 text-center">Status</th>
                         <th class="p-4 text-center">Ações</th>
                     </tr>
                 </thead>
                 <tbody id="userTableBody" class="divide-y divide-gray-200 dark:divide-slate-800">
-                    </tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="containerPendentes" class="hidden bg-white dark:bg-slate-900 rounded-xl shadow overflow-hidden">
+            <table class="w-full text-left">
+                <thead class="bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 uppercase text-sm">
+                    <tr>
+                        <th class="p-4 text-left">Nome</th>
+                        <th class="p-4 text-left">E-mail</th>
+                        <th class="p-4 text-center">Data do Pedido</th>
+                        <th class="p-4 text-right">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="pendentesTableBody" class="divide-y divide-gray-200 dark:divide-slate-800">
+                </tbody>
             </table>
         </div>
     </div>
