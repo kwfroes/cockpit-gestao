@@ -16,6 +16,7 @@ const app = {
         this.loadTheme();
         this.setupGlobalEvents();
         await this.carregarUsuarios();
+        await this.carregarPendentes();
     },
 
     loadTheme() {
@@ -395,6 +396,183 @@ const app = {
             document.getElementById('cropperModal').classList.add('hidden');
             this.showToast("Imagem recortada e otimizada!");
         }, 'image/jpeg', 0.8);
+    },
+
+    // --- FUNÇÕES DA NOVA ABA DE APROVAÇÃO ---
+
+    mudarAba(aba) {
+        const tabUsuarios = document.getElementById('tabUsuarios');
+        const tabPendentes = document.getElementById('tabPendentes');
+        const contUsuarios = document.getElementById('containerUsuarios');
+        const contPendentes = document.getElementById('containerPendentes');
+
+        if (aba === 'usuarios') {
+            tabUsuarios.className = "px-4 py-3 font-bold text-blue-600 border-b-2 border-blue-600 transition-colors";
+            tabPendentes.className = "px-4 py-3 font-bold text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 border-b-2 border-transparent transition-colors flex items-center gap-2";
+            contUsuarios.classList.remove('hidden');
+            contPendentes.classList.add('hidden');
+        } else {
+            tabPendentes.className = "px-4 py-3 font-bold text-blue-600 border-b-2 border-blue-600 transition-colors flex items-center gap-2";
+            tabUsuarios.className = "px-4 py-3 font-bold text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 border-b-2 border-transparent transition-colors";
+            contPendentes.classList.remove('hidden');
+            contUsuarios.classList.add('hidden');
+        }
+    },
+
+    async carregarPendentes() {
+        const tbody = document.getElementById('pendentesTableBody');
+        const badge = document.getElementById('badgePendentes');
+        tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-slate-500">Buscando solicitações...</td></tr>';
+
+        // Busca dados que caíram na tabela pedidos_acesso
+        const { data, error } = await supabase.from('pedidos_acesso').select('*').eq('status', 'pendente').order('created_at', { ascending: false });
+
+        if (error) {
+            this.showToast("Erro ao carregar pedidos.", "error");
+            return;
+        }
+
+        // Atualiza a bolinha vermelha de notificação
+        if (data.length > 0) {
+            badge.textContent = data.length;
+            badge.classList.remove('hidden');
+        } else {
+            badge.classList.add('hidden');
+            tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-slate-500">Nenhuma solicitação pendente no momento.</td></tr>';
+            return;
+        }
+
+        // Monta a tabela
+        tbody.innerHTML = data.map(p => {
+            const dataPed = new Date(p.created_at).toLocaleDateString('pt-BR');
+            return `
+            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                <td class="p-4 text-slate-800 dark:text-slate-200 font-bold">${p.nome}</td>
+                <td class="p-4 text-slate-600 dark:text-slate-400">${p.email}</td>
+                <td class="p-4 text-slate-500 text-center text-sm">${dataPed}</td>
+                <td class="p-4 text-right flex justify-end gap-3 items-center h-full">
+                    
+                    <button onclick="app.aprovarPendente('${p.id}', '${p.nome}', '${p.email}')" 
+                        class="text-green-500 hover:text-green-700 transition-colors" 
+                        title="Aprovar Solicitação">
+                        
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4.56499 12.4068C4.29258 12.0947 3.81879 12.0626 3.50676 12.335C3.19472 12.6074 3.1626 13.0812 3.43501 13.3932L4.56499 12.4068ZM7.14286 16.5L6.57787 16.9932C6.7203 17.1564 6.92629 17.25 7.14286 17.25C7.35942 17.25 7.56542 17.1564 7.70784 16.9932L7.14286 16.5ZM15.565 7.99324C15.8374 7.68121 15.8053 7.20742 15.4932 6.93501C15.1812 6.6626 14.7074 6.69472 14.435 7.00676L15.565 7.99324ZM10.5064 11.5068C10.234 11.8188 10.2662 12.2926 10.5782 12.565C10.8902 12.8374 11.364 12.8053 11.6364 12.4932L10.5064 11.5068ZM9.67213 14.7432C9.94454 14.4312 9.91242 13.9574 9.60039 13.685C9.28835 13.4126 8.81457 13.4447 8.54215 13.7568L9.67213 14.7432ZM3.43501 13.3932L6.57787 16.9932L7.70784 16.0068L4.56499 12.4068L3.43501 13.3932ZM7.70784 16.9932L9.67213 14.7432L8.54215 13.7568L6.57787 16.0068L7.70784 16.9932ZM11.6364 12.4932L13.6007 10.2432L12.4707 9.25676L10.5064 11.5068L11.6364 12.4932ZM13.6007 10.2432L15.565 7.99324L14.435 7.00676L12.4707 9.25676L13.6007 10.2432Z" fill="currentColor"/>
+                            <path d="M20.0002 7.5625L15.7144 12.0625M11.0002 16L11.4286 16.5625L13.5715 14.3125" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+
+                    </button>
+
+                    <button onclick="app.rejeitarPendente('${p.id}', '${p.nome}')" 
+                        class="text-red-500 hover:text-red-700 transition-colors" 
+                        title="Rejeitar Solicitação">
+                        
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 3.5C8 2.67157 8.67157 2 9.5 2H14.5C15.3284 2 16 2.67157 16 3.5V4.5C16 5.32843 15.3284 6 14.5 6H9.5C8.67157 6 8 5.32843 8 4.5V3.5Z" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M14.5 11L9.50004 16M9.50002 11L14.5 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M21 16.0002C21 18.8286 21 20.2429 20.1213 21.1215C19.2426 22.0002 17.8284 22.0002 15 22.0002H9C6.17157 22.0002 4.75736 22.0002 3.87868 21.1215C3 20.2429 3 18.8286 3 16.0002V13.0002M16 4.00195C18.175 4.01406 19.3529 4.11051 20.1213 4.87889C21 5.75757 21 7.17179 21 10.0002V12.0002M8 4.00195C5.82497 4.01406 4.64706 4.11051 3.87868 4.87889C3.11032 5.64725 3.01385 6.82511 3.00174 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+
+                    </button>
+                </td>               
+            </tr>
+            `;
+        }).join('');
+    },
+
+    async aprovarPendente(id, nome, email) {
+        const modal = document.getElementById('confirmStatusModal');
+        const content = document.getElementById('confirmStatusContent');
+        const btnConfirm = document.getElementById('btnConfirmAction');
+        const iconDiv = document.getElementById('confirmIcon');
+
+        // Visual Verde (Aprovação)
+        document.getElementById('confirmTitle').textContent = "Aprovar Acesso?";
+        iconDiv.className = "w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4";
+        iconDiv.innerHTML = '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
+        
+        btnConfirm.className = "flex-1 px-4 py-2 font-medium rounded-lg text-white shadow-md transition-colors bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/30";
+        btnConfirm.textContent = "Sim, Aprovar";
+        
+        document.getElementById('confirmMessage').textContent = `Liberar o acesso para "${nome}"? A senha provisória será 123456.`;
+
+        // Ação real ao confirmar
+        btnConfirm.onclick = async () => {
+            btnConfirm.textContent = "Aprovando...";
+            btnConfirm.disabled = true;
+            try {
+                const { error } = await supabase.functions.invoke('gerenciar-usuarios', {
+                    body: { acao: 'aprovar', idPedido: id, email: email, name: nome }
+                });
+
+                if (error) throw error;
+
+                this.showToast("Acesso liberado com sucesso!");
+                this.fecharConfirmacao();
+                await this.carregarPendentes();
+                await this.carregarUsuarios();
+            } catch (err) {
+                this.fecharConfirmacao();
+                this.showToast("Erro ao aprovar: " + err.message, "error");
+            } finally {
+                btnConfirm.disabled = false;
+            }
+        };
+
+        // Exibe o modal com animação
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+        }, 10);
+    },
+
+    async rejeitarPendente(id, nome = "este usuário") {
+        const modal = document.getElementById('confirmStatusModal');
+        const content = document.getElementById('confirmStatusContent');
+        const btnConfirm = document.getElementById('btnConfirmAction');
+        const iconDiv = document.getElementById('confirmIcon');
+
+        // Visual Vermelho (Rejeição/Exclusão)
+        document.getElementById('confirmTitle').textContent = "Rejeitar Solicitação?";
+        iconDiv.className = "w-14 h-14 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4";
+        iconDiv.innerHTML = '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>';
+        
+        btnConfirm.className = "flex-1 px-4 py-2 font-medium rounded-lg text-white shadow-md transition-colors bg-red-600 hover:bg-red-700 shadow-red-500/30";
+        btnConfirm.textContent = "Sim, Rejeitar";
+        
+        document.getElementById('confirmMessage').textContent = `Tem certeza que deseja recusar e excluir o pedido de "${nome}"?`;
+
+        // Ação real ao confirmar
+        btnConfirm.onclick = async () => {
+            btnConfirm.textContent = "Excluindo...";
+            btnConfirm.disabled = true;
+            try {
+                const { error } = await supabase.functions.invoke('gerenciar-usuarios', {
+                    body: { acao: 'rejeitar', idPedido: id }
+                });
+
+                if (error) throw error;
+
+                this.showToast("Solicitação excluída.");
+                this.fecharConfirmacao();
+                await this.carregarPendentes();
+            } catch (err) {
+                this.fecharConfirmacao();
+                this.showToast("Erro ao excluir: " + err.message, "error");
+            } finally {
+                btnConfirm.disabled = false;
+            }
+        };
+
+        // Exibe o modal com animação
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+        }, 10);
     },
 };
 
