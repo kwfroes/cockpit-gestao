@@ -1,3 +1,8 @@
+// --- CONEXÃO SUPABASE ---
+var supabaseUrl = 'https://whnzeysvqbtuecxmthht.supabase.co';
+var supabaseKey = 'sb_publishable_Gw4cFK56R9kms2ogg50UqA_ZhHi79qw';
+var supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
 // --- GESTÃO DE TEMA (DARK MODE) ---
 function applyTheme(theme) {
   if (theme === "dark") document.documentElement.classList.add("dark");
@@ -2722,7 +2727,7 @@ function abrirModalEditarEmpresa(empId = null) {
   abrirModal("modal-form-empresa-banco");
 }
 
-function salvarEmpresaBanco(e) {
+async function salvarEmpresaBanco(e) {
   e.preventDefault();
   const id = document.getElementById("banco-empresa-id").value;
   const isPadrao = document.getElementById("banco-is-padrao").checked;
@@ -2752,13 +2757,14 @@ function salvarEmpresaBanco(e) {
     mostrarToast("Empresa cadastrada!");
   }
 
+  await supabase.from('empresas').upsert(dados);
   renderizarBancoEmpresas();
   atualizarDatalistsContrato(); // Atualiza as sugestões no form de contrato
   fecharModal("modal-form-empresa-banco");
 }
 
 // ATUALIZADO: para lidar com Edição e Aditivos
-function salvarContrato(e) {
+async function salvarContrato(e) {
   e.preventDefault();
   const id = document.getElementById("contrato-id").value;
   const parentId = document.getElementById("contrato-parentId").value;
@@ -2838,6 +2844,8 @@ function salvarContrato(e) {
     db.contratos.push(contratoData);
   }
 
+  // Salva no banco de dados na nuvem
+  await supabase.from('contratos').upsert(contratoData);
   renderizarContratos();
   fecharModal("modal-contrato");
   atualizarStatsExternos();
@@ -2853,7 +2861,7 @@ function salvarContrato(e) {
   resetarFormularioContrato();
 }
 
-function salvarPagamento(e) {
+async function salvarPagamento(e) {
   e.preventDefault();
   const contratoId = document.getElementById("pagamento-contrato-id").value;
   const pagamentoId = document.getElementById("pagamento-id").value;
@@ -2929,6 +2937,8 @@ function salvarPagamento(e) {
     mostrarToast("Pagamento adicionado!");
   }
 
+  // Atualiza apenas a coluna 'pagamentos' deste contrato na nuvem
+  await supabase.from('contratos').update({ pagamentos: contrato.pagamentos }).eq('id', contrato.id);
   renderizarContratos(); // Atualiza o card com o novo valor pago
 
   // ATUALIZADO: para re-renderizar o modal PAI
@@ -2950,7 +2960,7 @@ function salvarPagamento(e) {
   }
 }
 
-function salvarDetalheItem(e) {
+async function salvarDetalheItem(e) {
   e.preventDefault();
   const contratoId = document.getElementById("detalhe-contrato-id").value;
   const pagamentoId = document.getElementById("detalhe-pagamento-id").value;
@@ -2974,22 +2984,24 @@ function salvarDetalheItem(e) {
   }
 
   pagamento.detalhes.push(novoItem);
+  await supabase.from('contratos').update({ pagamentos: contrato.pagamentos }).eq('id', contrato.id);
   renderizarModalDetalhesPagamento(contratoId, pagamentoId);
 }
 
-function excluirPagamento(contratoId, pagamentoId) {
+async function excluirPagamento(contratoId, pagamentoId) {
   const contrato = db.contratos.find((c) => c.id === contratoId);
   if (!contrato) return;
 
   contrato.pagamentos = contrato.pagamentos.filter((p) => p.id !== pagamentoId);
 
+  await supabase.from('contratos').update({ pagamentos: contrato.pagamentos }).eq('id', contrato.id);
   renderizarContratos(); // Atualiza card
 
   // Re-renderiza o modal de visualização (a função já está no event listener)
   mostrarToast("Pagamento excluído");
 }
 
-function excluirItemDetalhe(contratoId, pagamentoId, itemId) {
+async function excluirItemDetalhe(contratoId, pagamentoId, itemId) {
   const contrato = db.contratos.find((c) => c.id === contratoId);
   if (!contrato) return;
   const pagamento = contrato.pagamentos.find((p) => p.id === pagamentoId);
@@ -2997,6 +3009,7 @@ function excluirItemDetalhe(contratoId, pagamentoId, itemId) {
 
   pagamento.detalhes = pagamento.detalhes.filter((item) => item.id !== itemId);
 
+  await supabase.from('contratos').update({ pagamentos: contrato.pagamentos }).eq('id', contrato.id);
   renderizarModalDetalhesPagamento(contratoId, pagamentoId);
 
   // Re-renderiza o modal de visualização (a função já está no event listener)
@@ -3006,31 +3019,27 @@ function excluirItemDetalhe(contratoId, pagamentoId, itemId) {
 
 async function carregarDados() {
   try {
-    const response = await fetch("dados.json");
-    if (!response.ok) {
-      throw new Error("Arquivo dados.json não encontrado ou inválido.");
-    }
-    const data = await response.json();
-    if (data && data.contratos) {
-      db = data;
-      mostrarToast("Dados carregados com sucesso!");
-      if (
-        (!data.empresas || data.empresas.length === 0) &&
-        data.contratos.length > 0
-      ) {
-        extrairEmpresasDeContratosExistentes(data.contratos);
-      }
-    }
+    // Busca tudo do Supabase
+    const { data: contratosData, error: errC } = await supabase.from('contratos').select('*');
+    const { data: empresasData, error: errE } = await supabase.from('empresas').select('*');
+
+    if (errC) throw errC;
+    if (errE) throw errE;
+
+    // Popula a memória do app
+    db.contratos = contratosData || [];
+    db.empresas = empresasData || [];
+
+    mostrarToast("Dados carregados com sucesso da Nuvem!");
+
   } catch (error) {
-    console.warn(error.message);
-    mostrarToast("Nenhum dado local encontrado. Começando do zero.", true);
+    console.error("Erro no Supabase:", error);
+    mostrarToast("Erro ao carregar dados do servidor.", true);
   } finally {
     document.body.classList.remove("loading");
-    // NOVA ORDEM: Primeiro popula o filtro, depois renderiza
     atualizarFiltroEntidades(); 
     renderizarContratos();
   }
-
   atualizarStatsExternos();
 }
 
