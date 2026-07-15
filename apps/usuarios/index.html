@@ -94,34 +94,99 @@
             </div>
         </div>
     </div>
-    <div id="editModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white dark:bg-slate-900 p-6 rounded-lg w-96 shadow-xl border border-slate-200 dark:border-slate-700">
-            <h2 class="text-lg font-bold mb-4 text-slate-900 dark:text-slate-100">Editar Perfil</h2>
+
+    <div id="editModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-lg w-full max-w-lg shadow-xl border border-slate-200 dark:border-slate-700 max-h-[90vh] flex flex-col">
             
-            <input type="hidden" id="editId">
-
-            <label class="block text-xs font-bold text-slate-500 mb-1">Alterar Foto (Opcional)</label>
-            <input id="editAvatar" type="file" accept="image/*" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-500 p-2 mb-3 rounded outline-none file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
-            
-            <label class="block text-xs font-bold text-slate-500 mb-1">Nome</label>
-            <input id="editName" type="text" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 mb-4 rounded outline-none focus:ring-2 focus:ring-blue-500">
-            
-            <label class="block text-xs font-bold text-slate-500 mb-1">E-mail</label>
-            <input id="editEmail" type="email" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 mb-3 rounded outline-none focus:ring-2 focus:ring-blue-500">
-
-            <label class="block text-xs font-bold text-slate-500 mb-1">Cargo</label>
-            <select id="editRole" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 mb-4 rounded outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="user">Usuário</option>
-                <option value="admin">Administrador</option>
-            </select>
-
-            <label class="block text-xs font-bold text-slate-500 mb-1">Redefinir Senha (opcional)</label>
-            <input id="editPass" type="password" placeholder="Deixe em branco para não alterar" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 mb-6 rounded outline-none focus:ring-2 focus:ring-blue-500">
-
-            <div class="flex gap-2">
-                <button onclick="app.salvarEdicao()" id="btnUpdateUser" class="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">Atualizar</button>
-                <button onclick="document.getElementById('editModal').classList.add('hidden')" class="flex-1 bg-gray-300 dark:bg-slate-700 text-slate-800 dark:text-white py-2 rounded hover:bg-gray-400 dark:hover:bg-slate-600 transition">Cancelar</button>
+            <div class="p-6 pb-4 border-b border-slate-100 dark:border-slate-800">
+                <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100">Editar Perfil e Acessos</h2>
             </div>
+            
+            <div class="p-6 py-4 overflow-y-auto flex-1 space-y-4">
+                <input type="hidden" id="editId">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">Nome</label>
+                        <input id="editName" type="text" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">E-mail</label>
+                        <input id="editEmail" type="email" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Cargo / Função</label>
+                    <select id="editRole" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="user">Usuário Comum</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Alterar Foto (Opcional)</label>
+                    <input id="editAvatar" type="file" accept="image/*" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-500 p-[5px] rounded outline-none file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wide">Aplicações Permitidas</label>
+                    <div id="appsContainer" class="grid grid-cols-2 gap-2 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-not-allowed opacity-50">
+                            <input type="checkbox" checked disabled class="rounded text-blue-600 focus:ring-blue-500 bg-slate-200 dark:bg-slate-700">
+                            <span class="font-semibold">Home (Padrão)</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
+                            <input type="checkbox" name="app_permission" value="#dashboard" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
+                            Operacional
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
+                            <input type="checkbox" name="app_permission" value="#gerador" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
+                            Gerador de MSGs
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
+                            <input type="checkbox" name="app_permission" value="#contratos" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
+                            Contratos
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
+                            <input type="checkbox" name="app_permission" value="#legislacao" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
+                            Legislação
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
+                            <input type="checkbox" name="app_permission" value="#qualificacao" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
+                            Qualificação
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
+                            <input type="checkbox" name="app_permission" value="#regmap" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
+                            RegMap
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
+                            <input type="checkbox" name="app_permission" value="#demandas" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
+                            Demandas
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
+                            <input type="checkbox" name="app_permission" value="#conversor" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
+                            Conversor CSV
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
+                            <input type="checkbox" name="app_permission" value="#usuarios" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
+                            Gestão de Usuários
+                        </label>
+                    </div>
+                    <p class="text-[10px] text-slate-400 mt-1 italic">* Administradores possuem acesso automático a todas as ferramentas.</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Redefinir Senha (opcional)</label>
+                    <input id="editPass" type="password" placeholder="Deixe em branco para não alterar" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+            </div>
+
+            <div class="p-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex gap-3">
+                <button onclick="document.getElementById('editModal').classList.add('hidden')" class="flex-1 bg-gray-200 dark:bg-slate-800 text-slate-800 dark:text-white py-2.5 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-700 transition font-medium">Cancelar</button>
+                <button onclick="app.salvarEdicao()" id="btnUpdateUser" class="flex-1 bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 transition font-medium shadow-md">Salvar Alterações</button>
+            </div>
+            
         </div>
     </div>
 
@@ -138,6 +203,40 @@
             <p id="confirmMessage" class="text-sm text-gray-500 mb-6 font-medium">
                 Tem certeza que deseja fazer isso?
             </p>
+
+            <div id="approveAppsSection" class="hidden text-left mb-6">
+                <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">Acesso Inicial <span class="text-red-500">*</span></label>
+                <div class="grid grid-cols-2 gap-2 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 max-h-48 overflow-y-auto">
+                    <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-not-allowed opacity-50">
+                        <input type="checkbox" checked disabled class="rounded text-blue-600 bg-slate-200 dark:bg-slate-700">
+                        <span class="font-semibold">Home</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
+                        <input type="checkbox" name="approve_app_permission" value="#dashboard" class="rounded text-blue-600 focus:ring-blue-500"> Operacional
+                    </label>
+                    <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
+                        <input type="checkbox" name="approve_app_permission" value="#gerador" class="rounded text-blue-600 focus:ring-blue-500"> Gerador de MSGs
+                    </label>
+                    <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
+                        <input type="checkbox" name="approve_app_permission" value="#contratos" class="rounded text-blue-600 focus:ring-blue-500"> Contratos
+                    </label>
+                    <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
+                        <input type="checkbox" name="approve_app_permission" value="#legislacao" class="rounded text-blue-600 focus:ring-blue-500"> Legislação
+                    </label>
+                    <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
+                        <input type="checkbox" name="approve_app_permission" value="#qualificacao" class="rounded text-blue-600 focus:ring-blue-500"> Qualificação
+                    </label>
+                    <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
+                        <input type="checkbox" name="approve_app_permission" value="#regmap" class="rounded text-blue-600 focus:ring-blue-500"> RegMap
+                    </label>
+                    <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
+                        <input type="checkbox" name="approve_app_permission" value="#demandas" class="rounded text-blue-600 focus:ring-blue-500"> Demandas
+                    </label>
+                    <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
+                        <input type="checkbox" name="approve_app_permission" value="#conversor" class="rounded text-blue-600 focus:ring-blue-500"> Conversor CSV
+                    </label>
+                </div>
+            </div>
 
             <div class="flex gap-3">
                 <button onclick="app.fecharConfirmacao()" class="flex-1 px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-white font-medium rounded-lg transition-colors">

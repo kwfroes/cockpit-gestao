@@ -89,7 +89,11 @@ const app = {
         // Avatar Padrão (Silhueta) se não houver foto
         const defaultAvatar = 'https://ui-avatars.com/api/?background=cbd5e1&color=475569&name=';
 
-        tbody.innerHTML = data.map(u => `
+        tbody.innerHTML = data.map(u => {
+            // Converte o array de apps em string JSON segura para passar no botão HTML
+            const appsJsonString = encodeURIComponent(JSON.stringify(u.allowed_apps || ["#home"]));
+
+            return `
             <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors ${u.status === 'inativo' ? 'opacity-60 bg-red-50 dark:bg-red-900/10' : ''}">
                 <td class="p-4 flex items-center gap-3">
                     <img src="${u.avatar_url || defaultAvatar + (u.name || 'U')}" class="w-10 h-10 rounded-full object-cover shadow-sm border border-slate-200 dark:border-slate-700">
@@ -113,8 +117,7 @@ const app = {
                 </td>
 
                 <td class="p-4 text-right">
-                <!-- Botão Editar -->
-                <button onclick="app.abrirEdicao('${u.id}', '${u.name}', '${u.email}', '${u.role}')"
+                <button onclick="app.abrirEdicao('${u.id}', '${u.name}', '${u.email}', '${u.role}', '${appsJsonString}')"
                     class="text-blue-500 hover:text-blue-700 mr-3"
                     title="Editar Usuário">
 
@@ -134,13 +137,11 @@ const app = {
 
                 </button>
 
-                <!-- Botão Ativar/Inativar -->
                 <button onclick="app.alternarStatus('${u.id}', '${u.status || 'ativo'}')"
                     class="${u.status === 'inativo' ? 'text-green-500 hover:text-green-700' : 'text-red-500 hover:text-red-700'}"
                     title="${u.status === 'inativo' ? 'Ativar Usuário' : 'Inativar Usuário'}">
                         ${u.status === 'inativo'
                             ? `
-                        <!-- Play (Ativar) -->
                         <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path d="M3 12L3 18.9671C3 21.2763 5.53435 22.736 7.59662 21.6145L10.7996 19.8727M3 8L3 5.0329C3 2.72368 5.53435 1.26402 7.59661 2.38548L20.4086 9.35258C22.5305 10.5065 22.5305 13.4935 20.4086 14.6474L14.0026 18.131"
@@ -150,7 +151,6 @@ const app = {
                         </svg>
                         `
                         : `
-                        <!-- Pause (Inativar) -->
                         <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path d="M2 18C2 19.8856 2 20.8284 2.58579 21.4142C3.17157 22 4.11438 22 6 22C7.88562 22 8.82843 22 9.41421 21.4142C10 20.8284 10 19.8856 10 18V6C10 4.11438 10 3.17157 9.41421 2.58579C8.82843 2 7.88562 2 6 2C4.11438 2 3.17157 2 2.58579 2.58579C2 3.17157 2 4.11438 2 6V14"
@@ -168,21 +168,61 @@ const app = {
                 </button>
                 </td>
             </tr>
-        `).join('');
+            `;
+        }).join('');
     },
 
     // 3. ABRIR MODAL DE EDIÇÃO
-    abrirEdicao(id, name, email, role) {
+    abrirEdicao(id, name, email, role, encodedApps) {
         document.getElementById('editId').value = id;
         document.getElementById('editName').value = name;
         document.getElementById('editEmail').value = email !== 'undefined' ? email : '';
         document.getElementById('editRole').value = role;
         document.getElementById('editPass').value = '';
-        document.getElementById('editAvatar').value = ''; // Limpa o input de arquivo
+        document.getElementById('editAvatar').value = '';
+
+        // Tratamento da array de aplicativos
+        let userApps = ["#home"];
+        if (encodedApps) {
+            try {
+                userApps = JSON.parse(decodeURIComponent(encodedApps));
+            } catch (e) { console.error("Erro lendo apps", e); }
+        }
+
+        // Marca/Desmarca as caixas de seleção
+        const checkboxes = document.querySelectorAll('input[name="app_permission"]');
+        checkboxes.forEach(cb => {
+            cb.checked = userApps.includes(cb.value);
+            // Se o usuário já for admin, bloqueia os checkboxes visualmente
+            if (role === 'admin') {
+                cb.disabled = true;
+                cb.parentElement.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                cb.disabled = false;
+                cb.parentElement.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        });
+
+        // Evento: Se o admin mudar o select de "User" para "Admin", congela as checkboxes
+        document.getElementById('editRole').onchange = (e) => {
+            const isAdmin = e.target.value === 'admin';
+            checkboxes.forEach(cb => {
+                if (isAdmin) {
+                    cb.checked = true;
+                    cb.disabled = true;
+                    cb.parentElement.classList.add('opacity-50', 'cursor-not-allowed');
+                } else {
+                    cb.checked = userApps.includes(cb.value); // Volta ao estado salvo
+                    cb.disabled = false;
+                    cb.parentElement.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            });
+        };
+
         document.getElementById('editModal').classList.remove('hidden');
     },
 
-    async salvarEdicao() {
+async salvarEdicao() {
         const btn = document.getElementById('btnUpdateUser');
         const id = document.getElementById('editId').value;
         const name = document.getElementById('editName').value.trim();
@@ -190,22 +230,42 @@ const app = {
         const role = document.getElementById('editRole').value;
         const password = document.getElementById('editPass').value.trim();
 
+        // 1. Recolhe todos os checkboxes marcados
+        let allowed_apps = ["#home"]; 
+        
+        if (role === 'admin') {
+            // Se virar Admin (ou continuar Admin), recebe o pacote completo
+            allowed_apps = ['#home', '#dashboard', '#gerador', '#contratos', '#legislacao', '#qualificacao', '#regmap', '#demandas', '#conversor', '#usuarios'];
+        } else {
+            // Se for User (ou rebaixado para User), pega os marcados e mescla garantindo a Home
+            const checkedBoxes = Array.from(document.querySelectorAll('input[name="app_permission"]:checked'));
+            const customApps = checkedBoxes.map(cb => cb.value);
+            // O "new Set" garante que não terá duplicatas
+            allowed_apps = [...new Set(["#home", ...customApps])]; 
+        }
+
         btn.disabled = true;
         btn.textContent = "Atualizando...";
 
         try {
             const avatarUrl = await this.uploadAvatar('editAvatar');
 
+            // 2. Prepara o Payload enviando o 'allowed_apps' no bloco 'metadata'
             const payload = { 
                 acao: 'editar', 
                 idUsuario: id, 
                 email: email !== '' ? email : undefined,
-                metadata: { name: name, role: role } 
+                metadata: { 
+                    name: name, 
+                    role: role,
+                    allowed_apps: allowed_apps // AGORA A EDGE FUNCTION VAI LER ISSO!
+                } 
             };
 
             if (avatarUrl) payload.avatar_url = avatarUrl;
             if (password !== '') payload.password = password;
 
+            // 3. Chama a Edge Function que agora faz todo o trabalho duro e seguro
             const { error } = await supabase.functions.invoke('gerenciar-usuarios', { body: payload });
 
             if (error) throw error;
@@ -217,7 +277,7 @@ const app = {
             this.showToast("Erro: " + err.message, "error");
         } finally {
             btn.disabled = false;
-            btn.textContent = "Atualizar";
+            btn.textContent = "Salvar Alterações";
         }
     },
 
@@ -279,6 +339,7 @@ const app = {
     fecharConfirmacao() {
         const modal = document.getElementById('confirmStatusModal');
         const content = document.getElementById('confirmStatusContent');
+        const appsSection = document.getElementById('approveAppsSection');
         
         modal.classList.add('opacity-0');
         content.classList.remove('scale-100', 'opacity-100');
@@ -286,6 +347,9 @@ const app = {
         
         setTimeout(() => {
             modal.classList.add('hidden');
+            // Oculta a seção de apps e restaura a largura original do modal
+            if (appsSection) appsSection.classList.add('hidden');
+            content.classList.replace('max-w-md', 'max-w-sm');
         }, 300);
     },
 
@@ -485,8 +549,11 @@ const app = {
         const content = document.getElementById('confirmStatusContent');
         const btnConfirm = document.getElementById('btnConfirmAction');
         const iconDiv = document.getElementById('confirmIcon');
+        const appsSection = document.getElementById('approveAppsSection');
 
-        // Visual Verde (Aprovação)
+        // Alarga o modal para caber a grade de opções
+        content.classList.replace('max-w-sm', 'max-w-md');
+
         document.getElementById('confirmTitle').textContent = "Aprovar Acesso?";
         iconDiv.className = "w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4";
         iconDiv.innerHTML = '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
@@ -496,13 +563,32 @@ const app = {
         
         document.getElementById('confirmMessage').textContent = `Liberar o acesso para "${nome}"? A senha provisória será 123456.`;
 
-        // Ação real ao confirmar
+        // Mostra as opções de apps e desmarca todas por precaução
+        appsSection.classList.remove('hidden');
+        document.querySelectorAll('input[name="approve_app_permission"]').forEach(cb => cb.checked = false);
+
         btnConfirm.onclick = async () => {
+            // Validação de segurança: Exige pelo menos um app
+            const checkedBoxes = Array.from(document.querySelectorAll('input[name="approve_app_permission"]:checked'));
+            if (checkedBoxes.length === 0) {
+                this.showToast("Selecione pelo menos um aplicativo além da Home!", "error");
+                return; 
+            }
+
+            const customApps = checkedBoxes.map(cb => cb.value);
+            const allowed_apps = ["#home", ...customApps];
+
             btnConfirm.textContent = "Aprovando...";
             btnConfirm.disabled = true;
             try {
                 const { error } = await supabase.functions.invoke('gerenciar-usuarios', {
-                    body: { acao: 'aprovar', idPedido: id, email: email, name: nome }
+                    body: { 
+                        acao: 'aprovar', 
+                        idPedido: id, 
+                        email: email, 
+                        name: nome,
+                        allowed_apps: allowed_apps // Enviando as permissões para o backend
+                    }
                 });
 
                 if (error) throw error;
@@ -519,7 +605,6 @@ const app = {
             }
         };
 
-        // Exibe o modal com animação
         modal.classList.remove('hidden');
         setTimeout(() => {
             modal.classList.remove('opacity-0');
