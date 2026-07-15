@@ -1,3 +1,10 @@
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const supabaseUrl = 'https://whnzeysvqbtuecxmthht.supabase.co';
+const supabaseKey = 'sb_publishable_Gw4cFK56R9kms2ogg50UqA_ZhHi79qw';
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+
 let familyData = [];
 let cnaeDictionary = [];
 let relacionadosDict = [];
@@ -57,38 +64,74 @@ window.addEventListener("message", (event) => {
 // --- INICIALIZAÇÃO ---
 async function initApp() {
     try {
-        // Carrega ambos os arquivos em paralelo para ganhar velocidade
-        const [respFamilies, respCnaes, respDocs, respRamos, respDescRamos] = await Promise.all([
-            fetch('qualificacao_tecnica.json'),
+        // 1. Função auxiliar que burla o limite e busca TUDO paginando automaticamente
+        const fetchAllQualificacoes = async () => {
+            let allData = [];
+            let from = 0;
+            const step = 1000;
+            
+            while (true) {
+                const { data, error } = await supabase
+                    .from('qualificacao_tecnica')
+                    .select('*')
+                    .order('familia', { ascending: true })
+                    .range(from, from + step - 1); // Ex: 0-999, 1000-1999...
+                
+                if (error) throw error;
+                
+                allData.push(...data);
+                
+                // Se vieram menos de 1000, significa que acabou de ler o banco
+                if (data.length < step) break; 
+                
+                from += step;
+            }
+            return { data: allData, error: null };
+        };
+
+        // Passamos a nossa função paginada em vez do .select() simples
+        const supaPromise = fetchAllQualificacoes();
+
+        // 2. Disparamos a busca do banco e de TODOS os JSONs em paralelo!
+        const [supaResult, respCnaes, respDocs, respRamos, respDescRamos, respRelacionados] = await Promise.all([
+            supaPromise,
             fetch('cnae.json'),
             fetch('../gerador/docs-qual-tec.json').catch(() => null),
             fetch('./archives/ramos_classificados.json').catch(() => null),
-            fetch('./archives/descricao_ramos.json').catch(() => null)
+            fetch('./archives/descricao_ramos.json').catch(() => null),
+            fetch('relacionados_dictionary.json').catch(() => null)
         ]);
 
-        if (respRamos && respRamos.ok) {
-            window.ramosDictionary = await respRamos.json();
-        }
+        // Verificação de erro do Supabase
+        const { data: supaData, error: supaError } = supaResult;
+        if (supaError) throw supaError;
 
-        if (respDescRamos && respDescRamos.ok) {
-            descricoesRamos = await respDescRamos.json();
-        }
+        // 3. Mapeia as colunas do banco (agora com as 1119 famílias garantidas)
+        familyData = supaData.map(item => ({
+            "Família": item.familia,
+            "Descrição": item.descricao,
+            "Tipo": item.tipo,
+            "Terceirizado": item.terceirizado,
+            "Documentos Exigidos": item.documentos_exigidos || [],
+            "Documentos Elegíveis": item.documentos_elegiveis || [],
+            "CNAEs": item.cnaes || [],
+            "Ramo": item.ramo || {}
+        }));
 
-        // Validação rigorosa: se qualquer um falhar, interrompe o fluxo
-        if (!respFamilies.ok || !respCnaes.ok) {
-            throw new Error("Falha ao carregar os arquivos de dados.");
-        }
+        // 4. Processa os retornos e converte para JSON
+        if (respRamos && respRamos.ok) window.ramosDictionary = await respRamos.json();
+        if (respDescRamos && respDescRamos.ok) descricoesRamos = await respDescRamos.json();
+        if (respRelacionados && respRelacionados.ok) relacionadosDict = await respRelacionados.json(); // <-- Processado aqui
+        if (!respCnaes.ok) throw new Error("Falha ao carregar dicionário CNAE local.");
 
-        familyData = await respFamilies.json();
         cnaeDictionary = await respCnaes.json();
-        const respRelacionados = await fetch('relacionados_dictionary.json');
-        relacionadosDict = await respRelacionados.json();
 
+        // 5. Sincroniza CNAEs conhecidos
         const cnaesConhecidos = new Set(cnaeDictionary.map(c => c.CNAE));
         familyData.forEach(familia => {
             if (familia.CNAEs) {
                 familia.CNAEs.forEach(c => {
-                    if (!cnaesConhecidos.has(c.codigo)) {
+                    if (c && c.codigo && !cnaesConhecidos.has(c.codigo)) {
                         cnaeDictionary.push({
                             "CNAE": c.codigo,
                             "DESCRIÇÃO": c.descricao
@@ -104,17 +147,15 @@ async function initApp() {
             populateDocsDatalist();
         }
         
-        // Inicializa a interface com todos os dados prontos
         applyFilters();
-        updateDatalist(); // Importante se houver busca dinâmica
+        updateDatalist(); 
         checkWelcomeModal();
         enviarStatsParaHome();
 
     } catch (err) {
         console.error("Erro crítico na inicialização:", err);
-        // Feedback visual para o usuário não achar que o app travou
-        grid.innerHTML = `<p class="col-span-full text-center py-20 text-gray-600">
-            Erro ao carregar dados locais. Verifique a conexão ou os arquivos JSON.
+        grid.innerHTML = `<p class="col-span-full text-center py-20 text-red-500 font-bold">
+            Erro ao carregar dados. Verifique sua conexão.
         </p>`;
     }
 }
@@ -329,7 +370,7 @@ function renderDocList(title, list, colorClass) {
 }
 
 // --- FORMULÁRIO E CNAE ---
-function addCnaeRow(codigo = '', descricao = '') {
+window.addCnaeRow = function(codigo = '', descricao = '') {
     const container = document.getElementById('cnae-rows-container');
     const div = document.createElement('div');
     // Adicionei 'relative' para o dropdown de sugestões flutuar corretamente
@@ -510,107 +551,122 @@ window.openFamilyForm = (index = null) => {
 
 window.closeFamilyForm = () => document.getElementById('family-form-modal').classList.add('hidden');
 
-document.getElementById('family-form').onsubmit = (e) => {
+document.getElementById('family-form').onsubmit = async (e) => {
     e.preventDefault();
-    const index = document.getElementById('edit-index').value;
+    
+    // Adiciona "Salvando..." no botão para evitar duplo clique
+    const btnSubmit = e.target.querySelector('button[type="submit"]');
+    const originalBtnText = btnSubmit.innerHTML;
+    btnSubmit.innerHTML = "Salvando...";
+    btnSubmit.disabled = true;
 
-    const cnaeMap = new Map();
-    document.querySelectorAll('#cnae-rows-container > .cnae-row').forEach(row => {
-        const c = row.querySelector('.cnae-code').value.trim();
-        const d = row.querySelector('.cnae-desc').value.trim();
-        
-        if (c && !cnaeMap.has(c)) {
-            cnaeMap.set(c, { codigo: c, descricao: d });
-        }
-    });
-
-    const cnaes = Array.from(cnaeMap.values());
-
-    // Exige a inclusão de ao menos um CNAE
-    if (cnaes.length === 0) {
-        showError("CNAE Obrigatório", "É necessário incluir ao menos um CNAE válido para salvar esta família.");
-        if (document.querySelectorAll('#cnae-rows-container > div').length === 0) {
-            addCnaeRow();
-        }
-        return;
-    }
-
-    const docsExigidos = Array.from(document.querySelectorAll('#container-docs-exigidos .doc-name-value')).map(span => span.textContent);
-    const docsElegiveis = Array.from(document.querySelectorAll('#container-docs-elegiveis .doc-name-value')).map(span => span.textContent);
-
-    const codigoFamilia = document.getElementById('f-codigo').value;
-    let ramoData = null;
-
-    if (index !== "") {
-        ramoData = familyData[index].Ramo || null;
-    } else {
-        const prefixo = codigoFamilia.split('.')[0];
-        const ramoEncontrado = ramosDictionary.find(r => r.codigo.toString() === prefixo);
-        if (ramoEncontrado) {
-            ramoData = { codigo: ramoEncontrado.codigo, nome: ramoEncontrado.nome };
-        }
-    }
-
-    const payload = {
-        "Família": codigoFamilia,
-        "Descrição": document.getElementById('f-desc').value,
-        "Tipo": document.getElementById('f-tipo').value,
-        "Terceirizado": document.getElementById('f-terceirizado').checked ? "Sim" : "Não",
-        "Documentos Exigidos": docsExigidos,
-        "Documentos Elegíveis": docsElegiveis,
-        "CNAEs": cnaes,
-        "Ramo": ramoData
-    };
-
-    // --- SALVAMENTO DOS DADOS ---
-    if (index !== "") {
-        familyData[index] = payload;
-        lastEditedIndex = parseInt(index);
-    } else {
-        familyData.unshift(payload);
-        lastEditedIndex = 0;
-    }
-
-    setTimeout(() => { lastEditedIndex = null; }, 2500);
-
-    // --- 1. REPLICAÇÃO EM MASSA ---
-    if (document.getElementById('f-replicate').checked) {
-        const destinos = document.getElementById('f-destinos').value
-            .split(/[,; ]+/)
-            .filter(s => s.trim() !== "");
-
-        destinos.forEach(cod => {
-            const familiaAlvo = familyData.find(f => f.Família.toString() === cod);
-            if (familiaAlvo && familiaAlvo.Família !== codigoFamilia) {
-                if (!familiaAlvo.CNAEs) familiaAlvo.CNAEs = [];
-                cnaes.forEach(novoCnae => {
-                    if (!familiaAlvo.CNAEs.some(ex => ex.codigo === novoCnae.codigo)) {
-                        familiaAlvo.CNAEs.push(novoCnae);
-                    }
-                });
+    try {
+        const index = document.getElementById('edit-index').value;
+        const cnaeMap = new Map();
+        document.querySelectorAll('#cnae-rows-container > .cnae-row').forEach(row => {
+            const c = row.querySelector('.cnae-code').value.trim();
+            const d = row.querySelector('.cnae-desc').value.trim();
+            if (c && !cnaeMap.has(c)) {
+                cnaeMap.set(c, { codigo: c, descricao: d });
             }
         });
-    }
 
-    // --- 2. ATUALIZA DICIONÁRIO DE CNAES ---
-    cnaes.forEach(cnaeSalvo => {
-        const existe = cnaeDictionary.find(c => c.CNAE === cnaeSalvo.codigo);
-        if (!existe) {
-            cnaeDictionary.push({
-                "CNAE": cnaeSalvo.codigo,
-                "DESCRIÇÃO": cnaeSalvo.descricao
+        const cnaes = Array.from(cnaeMap.values());
+        if (cnaes.length === 0) {
+            showError("CNAE Obrigatório", "É necessário incluir ao menos um CNAE válido.");
+            if (document.querySelectorAll('#cnae-rows-container > div').length === 0) addCnaeRow();
+            return;
+        }
+
+        const docsExigidos = Array.from(document.querySelectorAll('#container-docs-exigidos .doc-name-value')).map(span => span.textContent);
+        const docsElegiveis = Array.from(document.querySelectorAll('#container-docs-elegiveis .doc-name-value')).map(span => span.textContent);
+        const codigoFamilia = document.getElementById('f-codigo').value;
+        
+        let ramoData = null;
+        if (index !== "") {
+            ramoData = familyData[index].Ramo || null;
+        } else {
+            const prefixo = codigoFamilia.split('.')[0];
+            const ramoEncontrado = ramosDictionary.find(r => r.codigo.toString() === prefixo);
+            if (ramoEncontrado) ramoData = { codigo: ramoEncontrado.codigo, nome: ramoEncontrado.nome };
+        }
+
+        const payload = {
+            "Família": codigoFamilia,
+            "Descrição": document.getElementById('f-desc').value,
+            "Tipo": document.getElementById('f-tipo').value,
+            "Terceirizado": document.getElementById('f-terceirizado').checked ? "Sim" : "Não",
+            "Documentos Exigidos": docsExigidos,
+            "Documentos Elegíveis": docsElegiveis,
+            "CNAEs": cnaes,
+            "Ramo": ramoData
+        };
+
+        // Salva na memória RAM para a tela atualizar rápido
+        if (index !== "") {
+            familyData[index] = payload;
+            lastEditedIndex = parseInt(index);
+        } else {
+            familyData.unshift(payload);
+            lastEditedIndex = 0;
+        }
+        setTimeout(() => { lastEditedIndex = null; }, 2500);
+
+        // --- PREPARA PARA O SUPABASE (Inclui Replicação) ---
+        let familiasParaSalvar = [payload];
+
+        if (document.getElementById('f-replicate').checked) {
+            const destinos = document.getElementById('f-destinos').value.split(/[,; ]+/).filter(s => s.trim() !== "");
+            destinos.forEach(cod => {
+                const familiaAlvo = familyData.find(f => f.Família.toString() === cod);
+                if (familiaAlvo && familiaAlvo.Família !== codigoFamilia) {
+                    if (!familiaAlvo.CNAEs) familiaAlvo.CNAEs = [];
+                    cnaes.forEach(novoCnae => {
+                        if (!familiaAlvo.CNAEs.some(ex => ex.codigo === novoCnae.codigo)) {
+                            familiaAlvo.CNAEs.push(novoCnae);
+                        }
+                    });
+                    familiasParaSalvar.push(familiaAlvo);
+                }
             });
         }
-    });
 
-    // --- 3. ATUALIZAÇÃO DO GRID E UI ---
-    // Se for edição (index não vazio), passa false para manter a página atual.
-    // Se for novo (index vazio), passa true para voltar à página 1.
-    applyFilters(index === ""); 
+        // Converte as famílias afetadas para o padrão minúsculo do Supabase
+        const supaBatch = familiasParaSalvar.map(f => ({
+            familia: f["Família"],
+            descricao: f["Descrição"],
+            tipo: f["Tipo"],
+            terceirizado: f["Terceirizado"],
+            documentos_exigidos: f["Documentos Exigidos"],
+            documentos_elegiveis: f["Documentos Elegíveis"],
+            cnaes: f["CNAEs"],
+            ramo: f["Ramo"]
+        }));
 
-    updateDatalist();
-    closeFamilyForm();
-    enviarStatsParaHome();
+        // Envia o lote inteiro pro banco
+        const { error } = await supabase.from('qualificacao_tecnica').upsert(supaBatch);
+        if (error) throw error;
+
+        // Atualiza dicionário de CNAEs caso tenha um novo
+        cnaes.forEach(cnaeSalvo => {
+            if (!cnaeDictionary.find(c => c.CNAE === cnaeSalvo.codigo)) {
+                cnaeDictionary.push({ "CNAE": cnaeSalvo.codigo, "DESCRIÇÃO": cnaeSalvo.descricao });
+            }
+        });
+
+        applyFilters(index === ""); 
+        updateDatalist();
+        closeFamilyForm();
+        enviarStatsParaHome();
+        showToast("Dados salvos com sucesso!");
+
+    } catch (err) {
+        console.error(err);
+        showError("Erro do Banco de Dados", "Não foi possível salvar as informações no Supabase.");
+    } finally {
+        btnSubmit.innerHTML = originalBtnText;
+        btnSubmit.disabled = false;
+    }
 };
 
 // --- REPLICAÇÃO E SUGESTÕES ---
@@ -1778,15 +1834,8 @@ window.gerarRelatorioPDF = () => {
     if (typeof showToast === 'function') window.showToast("Download do relatório concluído com sucesso!", "success");
 };
 
-window.vincularCnaesEmLote = () => {
-    // 1. Captura os checkboxes selecionados
+window.vincularCnaesEmLote = async () => {
     const checkboxes = document.querySelectorAll('.cnae-checkbox-vincular:checked');
-    if (checkboxes.length === 0) {
-        if (typeof showError === 'function') showError("Atenção", "Selecione ao menos um CNAE na lista para vincular.");
-        return;
-    }
-
-    // 2. Captura e limpa os códigos de famílias informados
     const inputFamilias = document.getElementById('vincular-familias-input').value;
     const familiasAlvo = inputFamilias.split(/[,;]+/).map(f => f.trim()).filter(f => f);
 
@@ -1795,58 +1844,78 @@ window.vincularCnaesEmLote = () => {
         return;
     }
 
-    // 3. Monta o array de CNAEs selecionados no formato esperado pelo banco
-    const cnaesSelecionados = Array.from(checkboxes).map(cb => ({
-        codigo: cb.value,
-        descricao: cb.getAttribute('data-desc')
-    }));
+    const btnSave = document.querySelector('#modal-vinculo-cnaes button.bg-blue-600');
+    const originalBtnText = btnSave.innerHTML;
+    btnSave.innerHTML = "Salvando...";
+    btnSave.disabled = true;
 
-    let familiasAtualizadas = 0;
+    try {
+        const cnaesSelecionados = Array.from(checkboxes).map(cb => ({
+            codigo: cb.value,
+            descricao: cb.getAttribute('data-desc')
+        }));
 
-    // 4. Varre as famílias alvo e insere os CNAEs (evitando duplicidade)
-    familiasAlvo.forEach(cod => {
-        const familia = familyData.find(f => f.Família.toString() === cod);
-        
-        if (familia) {
-            // Garante que o array CNAEs existe na família
-            if (!familia.CNAEs) familia.CNAEs = [];
-            
-            let adicionadoNestaFamilia = false;
+        let familiasAtualizadas = 0;
+        let familiasParaSupa = []; // Guarda as afetadas para subir pro banco
 
-            cnaesSelecionados.forEach(novoCnae => {
-                // Checa se o CNAE já não existe nesta família
-                if (!familia.CNAEs.some(c => c.codigo === novoCnae.codigo)) {
-                    familia.CNAEs.push(novoCnae);
-                    adicionadoNestaFamilia = true;
+        familiasAlvo.forEach(cod => {
+            const familia = familyData.find(f => f.Família.toString() === cod);
+            if (familia) {
+                if (!familia.CNAEs) familia.CNAEs = [];
+                let adicionadoNestaFamilia = false;
 
-                    // Atualiza também o dicionário global de CNAEs por segurança
-                    if (!cnaeDictionary.some(c => c.CNAE === novoCnae.codigo)) {
-                        cnaeDictionary.push({ "CNAE": novoCnae.codigo, "DESCRIÇÃO": novoCnae.descricao });
+                cnaesSelecionados.forEach(novoCnae => {
+                    if (!familia.CNAEs.some(c => c.codigo === novoCnae.codigo)) {
+                        familia.CNAEs.push(novoCnae);
+                        adicionadoNestaFamilia = true;
+                        if (!cnaeDictionary.some(c => c.CNAE === novoCnae.codigo)) {
+                            cnaeDictionary.push({ "CNAE": novoCnae.codigo, "DESCRIÇÃO": novoCnae.descricao });
+                        }
                     }
+                });
+
+                if (adicionadoNestaFamilia) {
+                    familiasAtualizadas++;
+                    familiasParaSupa.push(familia);
                 }
-            });
+            }
+        });
 
-            if (adicionadoNestaFamilia) familiasAtualizadas++;
+        if (familiasAtualizadas > 0) {
+            // Sincroniza em lote com o Supabase
+            const supaBatch = familiasParaSupa.map(f => ({
+                familia: f["Família"],
+                descricao: f["Descrição"],
+                tipo: f["Tipo"],
+                terceirizado: f["Terceirizado"],
+                documentos_exigidos: f["Documentos Exigidos"],
+                documentos_elegiveis: f["Documentos Elegíveis"],
+                cnaes: f["CNAEs"],
+                ramo: f["Ramo"]
+            }));
+
+            const { error } = await supabase.from('qualificacao_tecnica').upsert(supaBatch);
+            if (error) throw error;
+
+            if (typeof showToast === 'function') {
+                showToast(`${cnaesSelecionados.length} CNAE(s) vinculado(s) a ${familiasAtualizadas} família(s)!`);
+            }
+            
+            document.querySelectorAll('.cnae-checkbox-vincular').forEach(cb => cb.checked = false);
+            if (typeof applyFilters === 'function') applyFilters(false);
+            if (typeof enviarStatsParaHome === 'function') enviarStatsParaHome();
+            
+            fecharModalVinculoCnaes();
+        } else {
+            if (typeof showError === 'function') showError("Erro no Vínculo", "Nenhuma família encontrada. Verifique os códigos (Ex: 01.01).");
         }
-    });
-
-    // 5. Feedback Visual e Atualização de Tela
-    if (familiasAtualizadas > 0) {
-        if (typeof showToast === 'function') {
-            showToast(`${cnaesSelecionados.length} CNAE(s) vinculado(s) a ${familiasAtualizadas} família(s) com sucesso!`);
-        }
-        
-        // Limpa os inputs e checkboxes
-        document.getElementById('vincular-familias-input').value = '';
-        checkboxes.forEach(cb => cb.checked = false);
-
-        // Atualiza a grid principal no fundo
-        if (typeof applyFilters === 'function') applyFilters(false);
-        if (typeof enviarStatsParaHome === 'function') enviarStatsParaHome();
-
-    } else {
-        if (typeof showError === 'function') {
-            showError("Erro no Vínculo", "Nenhuma família encontrada com os códigos informados. Verifique se digitou a numeração exata (Ex: 01.01).");
+    } catch (err) {
+        console.error(err);
+        showError("Erro do Banco de Dados", "Falha ao sincronizar o vínculo com o Supabase.");
+    } finally {
+        if(btnSave) {
+            btnSave.innerHTML = originalBtnText;
+            btnSave.disabled = false;
         }
     }
 };
@@ -2182,6 +2251,54 @@ observerDinamico.observe(document.body, { childList: true });
 // Roda uma vez no início para garantir que já trave caso o modal de Boas-Vindas esteja aberto
 gerenciarRolagemDoFundo();
 
+// ==========================================
+// SCRIPT TEMPORÁRIO DE MIGRAÇÃO
+// ==========================================
+window.migrarDadosParaSupabase = async function() {
+    console.log("Iniciando migração...");
+
+    try {
+        // 1. Busca o seu arquivo JSON local
+        const response = await fetch('qualificacao_tecnica.json');
+        const jsonOriginal = await response.json();
+
+        // 2. Mapeia as chaves do JSON para o nome exato das colunas no Supabase
+        const payload = jsonOriginal.map(item => ({
+            familia: item["Família"],
+            descricao: item["Descrição"],
+            tipo: item["Tipo"],
+            terceirizado: item["Terceirizado"],
+            documentos_exigidos: item["Documentos Exigidos"] || [],
+            documentos_elegiveis: item["Documentos Elegíveis"] || [],
+            cnaes: item["CNAEs"] || [],
+            ramo: item["Ramo"] || {}
+        }));
+
+        // 3. Insere no Supabase em pequenos lotes (batch) de 100 em 100
+        // Isso evita sobrecarregar a rede ou dar timeout na API
+        for (let i = 0; i < payload.length; i += 100) {
+            const lote = payload.slice(i, i + 100);
+            
+            const { error } = await supabase
+                .from('qualificacao_tecnica')
+                .upsert(lote);
+
+            if (error) {
+                console.error(`Erro ao inserir lote ${i}:`, error);
+                alert("Erro na migração! Veja o console.");
+                return;
+            } else {
+                console.log(`Lote de ${i} a ${i + lote.length} inserido com sucesso!`);
+            }
+        }
+
+        console.log("🎉 Migração concluída com sucesso!");
+        alert("Todos os dados do JSON foram enviados para o Supabase!");
+
+    } catch (err) {
+        console.error("Erro geral na migração:", err);
+    }
+}
 
 
 // Inicia o App

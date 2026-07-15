@@ -204,14 +204,18 @@ async function generateCaptcha() {
 
   // --- Lógica de Sessão ---
 
-  async function checkSession() {
+async function checkSession() {
       const { data: { session }, error } = await supabase.auth.getSession();
 
       if (session) {
           const user = session.user;
           
-          // ADICIONAMOS A BUSCA PELA TRAVA: precisa_trocar_senha
-          const { data: profile } = await supabase.from('profiles').select('name, role, avatar_url, apelido, precisa_trocar_senha').eq('id', user.id).single();
+          // Adicionamos 'allowed_apps' na busca do perfil
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('name, role, avatar_url, apelido, precisa_trocar_senha, allowed_apps')
+            .eq('id', user.id)
+            .single();
           
           sessionStorage.setItem("cockpit_auth_token", "valid");
           sessionStorage.setItem("cockpit_user_email", user.email);
@@ -219,18 +223,21 @@ async function generateCaptcha() {
           sessionStorage.setItem("cockpit_user_role", profile?.role || user.user_metadata?.role || "user");
           sessionStorage.setItem("cockpit_user_apelido", profile?.apelido || "");
           
+          // Salva a lista de apps permitidos na sessão do navegador
+          const userApps = profile?.allowed_apps || ["#home"];
+          sessionStorage.setItem("cockpit_allowed_apps", JSON.stringify(userApps));
+          
           if (profile?.avatar_url) {
               sessionStorage.setItem("cockpit_user_avatar", profile.avatar_url);
           } else {
               sessionStorage.removeItem("cockpit_user_avatar");
           }
           
-          // A MÁGICA DO BLOQUEIO:
           if (profile?.precisa_trocar_senha) {
               document.getElementById("forcedPasswordModal").classList.remove("hidden");
           } else {
               unlockInterface();
-              applyPermissions();
+              applyPermissions(); // Aplica a ocultação baseada na lista salva
               updateUserMenu();
               updateUserAvatarVisuals();
               navigate(window.location.hash || "#home");
@@ -283,13 +290,22 @@ if (loginForm) {
     } else {
           // SUCESSO!
           const user = data.user;
-          const { data: profile } = await supabase.from('profiles').select('name, role, avatar_url, apelido, precisa_trocar_senha').eq('id', user.id).single();
+          // Buscamos 'allowed_apps' no login também
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('name, role, avatar_url, apelido, precisa_trocar_senha, allowed_apps')
+            .eq('id', user.id)
+            .single();
           
           sessionStorage.setItem("cockpit_auth_token", "valid");
           sessionStorage.setItem("cockpit_user_email", user.email);
           sessionStorage.setItem("cockpit_user_realname", profile?.name || user.user_metadata?.name || user.email.split('@')[0]);
-          sessionStorage.setItem("cockpit_user_role", profile?.role || user.user_metadata?.role || "admin");
+          sessionStorage.setItem("cockpit_user_role", profile?.role || user.user_metadata?.role || "user");
           sessionStorage.setItem("cockpit_user_apelido", profile?.apelido || "");
+
+          // Armazena a lista de apps permitidos na sessão
+          const userApps = profile?.allowed_apps || ["#home"];
+          sessionStorage.setItem("cockpit_allowed_apps", JSON.stringify(userApps));
 
           if (profile?.avatar_url) {
               sessionStorage.setItem("cockpit_user_avatar", profile.avatar_url);
@@ -297,12 +313,11 @@ if (loginForm) {
               sessionStorage.removeItem("cockpit_user_avatar");
           }
 
-          // A MÁGICA DO BLOQUEIO AO LOGAR:
           if (profile?.precisa_trocar_senha) {
               document.getElementById("forcedPasswordModal").classList.remove("hidden");
           } else {
               loginError.classList.add("hidden");
-              aplicarPermissoesDeMenu();
+              applyPermissions(); // Oculta os itens do menu
               updateUserMenu();
               updateUserAvatarVisuals();
               unlockInterface();
@@ -418,7 +433,7 @@ if (loginForm) {
     "#contratos": "apps/contratos/index.html",
     "#conversor": "apps/conversor/index.html",
     "#legislacao": "apps/legislacao/index.html",
-    "#matrix": "apps/matrix/index.html",
+    "#demandas": "apps/demandas/index.html",
     "#qualificacao": "apps/qualificacao/index.html",
     "#regmap": "apps/regmap/index.html",
     "#usuarios": "apps/usuarios/index.html",
@@ -524,12 +539,19 @@ if (loginForm) {
     // SEGURANÇA EXTRA: Se tentar navegar sem login, para tudo.
     if (sessionStorage.getItem("cockpit_auth_token") !== "valid") return;
 
-    // --- PROTEÇÃO DE ROTA (NOVA) ---
-    // Se tentar acessar o conversor sem ser admin, bloqueia e joga para Home
-    if (hash === "#conversor" || hash === "#matrix" || hash === "#usuarios") {
+    // --- PROTEÇÃO DE ROTA GRANULAR ---
+    if (hash !== "#home") {
       const role = sessionStorage.getItem("cockpit_user_role");
-      if (role !== "admin") {
-        showError("Acesso Negado: Você não acesso à essa função. ");
+      let allowedApps = [];
+      try {
+        allowedApps = JSON.parse(sessionStorage.getItem("cockpit_allowed_apps")) || ["#home"];
+      } catch(e) {
+        allowedApps = ["#home"];
+      }
+
+      // Se não for admin E a rota requisitada não estiver na lista de permitidas
+      if (role !== "admin" && !allowedApps.includes(hash)) {
+        showError("Acesso Negado: Você não possui autorização para este aplicativo.");
         navigate("#home");
         return;
       }
@@ -833,53 +855,51 @@ async function performLogout() {
     });
   }
 
-  // --- Lógica de Permissões (Visual "Apagado") ---
+// --- Lógica de Permissões (Ocultar links restritos) ---
   function applyPermissions() {
     const role = sessionStorage.getItem("cockpit_user_role");
-
-    // Seleciona o link do conversor
-    const conversorLink = document.querySelector('a[href="#conversor"]');
-    const matrixLink = document.querySelector('a[href="#matrix"]');
-    const usuariosLink = document.querySelector('a[href="#usuarios"]');
-
-    // Lógica para o Conversor
-      if (conversorLink) {
-        if (role === "admin") {
-          conversorLink.classList.remove("opacity-30", "cursor-not-allowed");
-          conversorLink.title = "Conversor CSV";
-        } else {
-          conversorLink.classList.add("opacity-30", "cursor-not-allowed");
-          conversorLink.title = "Acesso exclusivo para Administradores";
-        }
-      }
-
-      // Lógica para a Matriz Eisenhower
-      if (matrixLink) {
-        if (role === "admin") {
-          // Admin: Acesso liberado
-          matrixLink.classList.remove("opacity-30", "cursor-not-allowed");
-          matrixLink.title = "Matriz Eisenhower";
-        } else {
-          // User: Acesso bloqueado visualmente
-          matrixLink.classList.add("opacity-30", "cursor-not-allowed");
-          matrixLink.title = "Acesso exclusivo para Administradores";
-          
-          // Opcional: desabilitar cliques completamente
-          // matrixLink.style.pointerEvents = 'none';
-        }
-      }
-
-      // Lógica para a Gestão de Usuários 
-      if (usuariosLink) {
-        if (role === "admin") {
-          usuariosLink.classList.remove("opacity-30", "cursor-not-allowed");
-          usuariosLink.title = "Gestão de Usuários";
-        } else {
-          usuariosLink.classList.add("opacity-30", "cursor-not-allowed");
-          usuariosLink.title = "Acesso exclusivo para Administradores";
-        }
-      }
+    
+    // 1. Obtém as permissões de aplicativos salvos. Se falhar, assume apenas a '#home'
+    let allowedApps = [];
+    try {
+      const storedApps = sessionStorage.getItem("cockpit_allowed_apps");
+      allowedApps = storedApps ? JSON.parse(storedApps) : ["#home"];
+    } catch (e) {
+      allowedApps = ["#home"];
     }
+
+    // 2. Mapeia todos os elementos de links da Sidebar de forma dinâmica
+    const menuLinks = [
+      { element: document.querySelector('a[href="#dashboard"]'), route: "#dashboard" },
+      { element: document.querySelector('a[href="#gerador"]'), route: "#gerador" },
+      { element: document.querySelector('a[href="#contratos"]'), route: "#contratos" },
+      { element: document.querySelector('a[href="#legislacao"]'), route: "#legislacao" },
+      { element: document.querySelector('a[href="#qualificacao"]'), route: "#qualificacao" },
+      { element: document.querySelector('a[href="#regmap"]'), route: "#regmap" },
+      { element: document.querySelector('a[href="#demandas"]'), route: "#demandas" },
+      { element: document.querySelector('a[href="#conversor"]'), route: "#conversor" },
+      { element: document.querySelector('a[href="#usuarios"]'), route: "#usuarios" }
+    ];
+
+    // 3. Varre e esconde usando a classe do Tailwind "hidden"
+    menuLinks.forEach(item => {
+      if (item.element) {
+        // Regra de Ouro: Admins vêem tudo. Usuários comuns só vêem se a rota estiver listada no allowedApps.
+        if (role === "admin" || allowedApps.includes(item.route)) {
+          item.element.classList.remove("hidden");
+        } else {
+          item.element.classList.add("hidden");
+        }
+      }
+    });
+  }
+
+  // Sincroniza a chamada legada para não causar erros de carregamento
+  function aplicarPermissoesDeMenu() {
+    applyPermissions();
+  }
+  window.aplicarPermissoesDeMenu = aplicarPermissoesDeMenu;
+
   // =========================================================
   // SISTEMA DE SOLICITAÇÃO & MODAIS DE SUCESSO
   // =========================================================
@@ -1595,23 +1615,24 @@ async function performLogout() {
     });
   }
 
-  function aplicarPermissoesDeMenu() {
-      const role = sessionStorage.getItem("cockpit_user_role");
-      const linkMatriz = document.querySelector('a[href="#matrix"]');
-      const linkConversor = document.querySelector('a[href="#conversor"]');
-      
-      const rotasRestritas = [linkMatriz, linkConversor];
 
-      rotasRestritas.forEach(link => {
-          if (link) {
-              if (role === "admin") {
-                  link.classList.remove("opacity-50", "cursor-not-allowed");
-              } else {
-                  link.classList.add("opacity-50", "cursor-not-allowed");
-              }
-          }
-      });
-  }
+  // Aguarda o app filho pedir os dados
+  window.addEventListener("message", (event) => {
+    // É uma boa prática verificar a origem por segurança
+    if (event.data === "GET_USER_DATA") {
+        const userData = {
+            name: sessionStorage.getItem("cockpit_user_realname"),
+            role: sessionStorage.getItem("cockpit_user_role"),
+            apelido: sessionStorage.getItem("cockpit_user_apelido")
+        };
+        
+        // Envia os dados para o iframe
+        event.source.postMessage({
+            type: "USER_DATA_RESPONSE",
+            payload: userData
+        }, event.origin);
+    }
+  });
 
   // Executa imediatamente na inicialização da página para checar o estado atual
   aplicarPermissoesDeMenu();

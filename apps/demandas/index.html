@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Demandas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: { extend: { colors: { slate: { 850: "#1e293b" } } } }
+        };
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; }
+        .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-300 p-6">
+    
+    <div class="max-w-6xl mx-auto flex flex-col h-full">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-800 dark:text-white">Gestão de Demandas</h1>
+                <p class="text-sm text-slate-500">Acompanhamento e controle de atividades</p>
+            </div>
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <button onclick="document.getElementById('dropdown-notificacoes').classList.toggle('hidden')" class="relative p-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-500 hover:text-blue-600 transition-colors shadow-sm">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                            <span id="badge-notificacoes" class="hidden absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold flex items-center justify-center rounded-full shadow-md"></span>
+                        </button>
+                        
+                        <div id="dropdown-notificacoes" class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 z-50 overflow-hidden">
+                            <div class="p-3 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50">
+                                <span class="font-bold text-sm text-slate-700 dark:text-slate-200">Histórico de Ações</span>
+                                <button onclick="marcarNotificacoesLidas()" class="text-[10px] text-blue-600 hover:underline">Marcar como lidas</button>
+                            </div>
+                            <div id="lista-notificacoes" class="max-h-64 overflow-y-auto p-2 space-y-1 custom-scrollbar">
+                                </div>
+                        </div>
+                    </div>
+
+                    <button onclick="abrirModalDemanda()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-bold shadow-md transition-all flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        Nova Demanda
+                    </button>
+                </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6 flex flex-col md:flex-row gap-4">
+            <input type="text" id="search-input" placeholder="Buscar por título, ID ou responsável..." class="flex-1 p-2 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-800 outline-none focus:border-blue-500 text-sm">
+            
+            <select id="filter-status" class="p-2 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-800 outline-none text-sm">
+                <option value="">Demandas Ativas</option>
+                <option value="Pendente">Pendente</option>
+                <option value="Em Andamento">Em Andamento</option>
+                <option value="Concluído">Concluído</option>
+            </select>
+
+            <select id="filter-prioridade" class="p-2 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-800 outline-none text-sm">
+                <option value="">Todas as Prioridades</option>
+                <option value="Baixa">Baixa</option>
+                <option value="Média">Média</option>
+                <option value="Alta">Alta</option>
+                <option value="Urgente">Urgente</option>
+            </select>
+        </div>
+
+        <div id="demandas-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 custom-scrollbar overflow-y-auto pb-10">
+            </div>
+    </div>
+
+    <div id="modal-demanda" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col border border-slate-200 dark:border-slate-700">
+            <div class="p-5 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/80">
+                <h3 id="modal-title" class="text-lg font-bold">Nova Demanda</h3>
+                <button onclick="fecharModalDemanda()" class="text-slate-400 hover:text-red-500"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+            </div>
+            
+            <form id="form-demanda" class="p-5 overflow-y-auto custom-scrollbar flex-1 space-y-4">
+                <input type="hidden" id="f-id">
+                
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Título da Demanda *</label>
+                    <input type="text" id="f-titulo" required class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none focus:border-blue-500 text-sm">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Atribuir a (Responsável)</label>
+                        <select id="f-responsavel" class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none text-sm">
+                            <option value="">Sem atribuição no momento</option>
+                            </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Prazo Limite</label>
+                        <input type="date" id="f-prazo" class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none text-sm [color-scheme:light_dark]">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Status</label>
+                        <select id="f-status" class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none text-sm">
+                            <option value="Pendente">Pendente</option>
+                            <option value="Em Andamento">Em Andamento</option>
+                            <option value="Concluído">Concluído</option>
+                            <option value="Cancelado">Cancelado</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Prioridade</label>
+                        <select id="f-prioridade" class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none text-sm">
+                            <option value="Baixa">Baixa</option>
+                            <option value="Média">Média</option>
+                            <option value="Alta">Alta</option>
+                            <option value="Urgente">Urgente</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Descrição Detalhada</label>
+                    <textarea id="f-descricao" rows="4" class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none focus:border-blue-500 text-sm"></textarea>
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Observações / Histórico (Opcional)</label>
+                    <textarea id="f-obs" rows="2" class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none focus:border-blue-500 text-sm" placeholder="Anotações de acompanhamento..."></textarea>
+                </div>
+            </form>
+
+            <div class="p-5 border-t border-slate-200 dark:border-slate-700 flex justify-end gap-3 bg-slate-50 dark:bg-slate-800/80">
+                <button type="button" onclick="fecharModalDemanda()" class="px-5 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 font-bold rounded-lg transition-colors">Cancelar</button>
+                <button type="button" onclick="salvarDemanda()" id="btn-save" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors shadow-md">Salvar Demanda</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-confirmacao" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[200] flex items-center justify-center p-4 animate-fade-in">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-sm p-6 flex flex-col border border-slate-200 dark:border-slate-700 animate-scale-up">
+            <div class="flex items-center gap-4 mb-4">
+                <div id="confirm-icon" class="w-12 h-12 rounded-full flex items-center justify-center shrink-0"></div>
+                <h3 id="confirm-title" class="text-lg font-bold text-slate-800 dark:text-white">Confirmação</h3>
+            </div>
+            <p id="confirm-message" class="text-sm text-slate-600 dark:text-slate-300 mb-6 leading-relaxed"></p>
+            <div class="flex justify-end gap-3">
+                <button onclick="fecharModalConfirmacao()" class="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 font-bold rounded-lg transition-colors text-sm">Cancelar</button>
+                <button id="btn-confirm-action" class="px-5 py-2 text-white font-bold rounded-lg transition-colors text-sm shadow-md">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="fixed bottom-6 right-6 z-[300] flex flex-col gap-3 pointer-events-none"></div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

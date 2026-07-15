@@ -6,6 +6,29 @@ if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("./sw.js");
 }
 
+let userNameFromParent = ""; // Variável global que guardará o apelido/nome
+let lastIndex = -1;
+
+// 1. Pede os dados ao Pai assim que o script carregar
+if (window.parent) {
+  window.parent.postMessage("GET_USER_DATA", "*");
+}
+
+// 2. Recepciona a resposta do Pai
+window.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "USER_DATA_RESPONSE") {
+    const { name, apelido } = event.data.payload;
+    // Prioriza o apelido. Se não tiver, pega o primeiro nome.
+    userNameFromParent = apelido || (name ? name.split(" ")[0] : "");
+    
+    // Fallback/Cache local
+    if (userNameFromParent) {
+      localStorage.setItem("cockpit_username", userNameFromParent);
+    }
+    updateTime(); // Força atualização visual imediata ao receber
+  }
+});
+
 // --- LISTENERS DE TEMA (DARK MODE) ---
 function applyTheme(theme) {
   if (theme === "dark") {
@@ -184,7 +207,7 @@ const dontShow = localStorage.getItem("dontShowWelcomeCockpit");
     const now = new Date();
     const hour = now.getHours();
 
-    // Data por extenso
+    // [PRESERVADO] Data por extenso
     const optionsDate = {
       weekday: "long",
       year: "numeric",
@@ -193,12 +216,12 @@ const dontShow = localStorage.getItem("dontShowWelcomeCockpit");
     };
     const dateStr = now.toLocaleDateString("pt-BR", optionsDate);
 
-    // Capitalizar primeira letra (ex: "Sábado" em vez de "sábado")
+    // [PRESERVADO] Capitalizar primeira letra
     if (dateEl) {
       dateEl.textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
     }
 
-    // Hora com segundos
+    // [PRESERVADO] Hora com segundos
     const timeStr = now.toLocaleTimeString("pt-BR", {
       hour: "2-digit",
       minute: "2-digit",
@@ -208,15 +231,35 @@ const dontShow = localStorage.getItem("dontShowWelcomeCockpit");
       timeEl.textContent = timeStr;
     }
 
-    // Saudação baseada na hora
-    if (greetingEl) {
-      let greeting = "Olá";
-      if (hour >= 5 && hour < 12) greeting = "Bom dia";
-      else if (hour >= 12 && hour < 18) greeting = "Boa tarde";
-      else greeting = "Boa noite";
-      greetingEl.innerHTML = `${greeting}, <span class="font-bold">${userName}</span>.`;
-    }
+  if (greetingEl) {
+    const activeName = userNameFromParent || localStorage.getItem("cockpit_username") || "pessoa";
 
+    const frases = [
+      `Olá, <span class="font-bold">${activeName}</span>! Como vamos hoje?`,
+      `Bom dia, <span class="font-bold">${activeName}</span>. Pronto para o trabalho?`,
+      `Tudo bem, <span class="font-bold">${activeName}</span>? O que faremos hoje?`,
+      `Olá, <span class="font-bold">${activeName}</span>. Vamos começar?`
+    ];
+
+    // Alterna a frase a cada 8 segundos
+    const index = Math.floor(now.getSeconds() / 10) % frases.length;
+
+    // Só faz a transição se o índice da frase realmente mudou
+    if (index !== lastIndex) {
+      lastIndex = index;
+
+      // 1. Inicia o Fade-out (esconde a frase antiga)
+      greetingEl.classList.add("opacity-0");
+
+      // 2. Aguarda o tempo do fade-out (300ms) para trocar o texto e iniciar o Fade-in
+      setTimeout(() => {
+        greetingEl.innerHTML = frases[index];
+        greetingEl.classList.remove("opacity-0"); // Fade-in (revela a nova frase)
+      }, 300); 
+    }
+  }
+
+    // [PRESERVADO] Background dinâmico
     updateDynamicBackground(hour);
   }
 
