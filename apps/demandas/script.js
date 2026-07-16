@@ -325,6 +325,7 @@ window.carregarNotificacoes = async () => {
     const lista = document.getElementById('lista-notificacoes');
     const badge = document.getElementById('badge-notificacoes');
     const nNaoLidas = data.filter(n => !n.lida).length;
+    
 
     if (nNaoLidas > 0) {
         badge.textContent = nNaoLidas;
@@ -345,6 +346,8 @@ window.carregarNotificacoes = async () => {
             <p class="text-[9px] text-slate-400 mt-1">${new Date(n.data_criacao).toLocaleString('pt-BR')}</p>
         </div>
     `).join('');
+
+
 };
 
 window.marcarNotificacoesLidas = async () => {
@@ -417,6 +420,8 @@ window.configurarRealtimeNotificacoes = () => {
                 console.log("Conectado ao canal de notificações em tempo real.");
             }
         });
+
+
 };
 
 window.registrarVisualizacao = async (demanda) => {

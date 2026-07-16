@@ -352,6 +352,28 @@
       </div>
 
       <div class="flex items-center gap-4">
+
+        <div class="relative flex items-center justify-center mr-2">
+            <button id="btn-global-notifications" onclick="toggleNotificationsModal()" class="p-2 text-slate-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors relative focus:outline-none rounded-full hover:bg-slate-100 dark:hover:bg-slate-800" title="Ver Notificações">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                </svg>
+                <span id="badge-sino-global" class="hidden absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[9px] font-bold flex items-center justify-center rounded-full border-2 border-white dark:border-slate-900 shadow-sm transition-all duration-300 transform scale-0">0</span>
+            </button>
+
+            <div id="notificationsModal" class="hidden absolute top-full right-0 mt-2 w-80 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 p-0 z-50 transform origin-top-right transition-all duration-200 opacity-0 scale-95 overflow-hidden flex flex-col">
+                <div class="p-3 border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50 flex justify-between items-center">
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Notificações</span>
+                    <button onclick="fetchGlobalNotifications()" class="text-blue-500 hover:text-blue-700 p-1" title="Atualizar">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    </button>
+                </div>
+                <div id="notificationsList" class="max-h-[70vh] overflow-y-auto p-2 space-y-1">
+                    <p class="text-xs text-center text-gray-400 py-6">Carregando...</p>
+                </div>
+            </div>
+        </div>
+
         <div class="relative hidden sm:block">
           <button
             id="weatherTrigger"
@@ -600,6 +622,10 @@
             </g>
           </svg>
           Gestão de Demandas
+
+          <span id="badge-menu-demandas" class="hidden bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-md transition-all duration-300">
+              0
+          </span>
         </a>
 
         <a

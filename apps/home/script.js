@@ -2,12 +2,139 @@
  * apps/home/script.js
  */
 
+// Importa o Supabase direto na Home
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const supabaseUrl = 'https://whnzeysvqbtuecxmthht.supabase.co';
+const supabaseKey = 'sb_publishable_Gw4cFK56R9kms2ogg50UqA_ZhHi79qw'; // Substitua pela sua chave anon
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+// ==========================================================
+// MÓDULO DE NAVEGAÇÃO DINÂMICA
+// ==========================================================
+
+const APP_REGISTRY = {
+    '#dashboard': {
+        id: '#dashboard',
+        titulo: 'Dashboard Operacional',
+        icone: '<svg class="w-5 h-5" viewBox="0 0 16 16" fill="currentColor"><path d="M15 1H1V7H3.38197L4.88196 4L7.11803 4L10 9.76393L11.382 7H15V1Z"/><path d="M15 9H12.618L11.118 12L8.88197 12L6 6.23607L4.61803 9H1V15H15V9Z"/></svg>',
+        corHover: 'hover:border-blue-500',
+        corIcone: 'text-blue-500 bg-blue-50 dark:bg-blue-900/30'
+    },
+    '#gerador': {
+        id: '#gerador',
+        titulo: 'Gerador de Mensagens',
+        icone: '<svg class="w-5 h-5" viewBox="0 0 16 16" fill="currentColor"><path d="M0 5.3585V14H16V5.35849L8 10.3585L0 5.3585Z" /><path d="M16 3V2H0V3L8 8L16 3Z" /></svg>',
+        corHover: 'hover:border-indigo-500',
+        corIcone: 'text-indigo-500 bg-indigo-50 dark:bg-indigo-900/30'
+    },
+    '#contratos': {
+        id: '#contratos',
+        titulo: 'Contratos Públicos',
+        icone: '<svg class="w-5 h-5" viewBox="0 0 16 16" fill="currentColor"><path d="M7 0H2V16H14V7H7V0Z" /><path d="M9 0V5H14L9 0Z" /></svg>',
+        corHover: 'hover:border-emerald-500',
+        corIcone: 'text-emerald-500 bg-emerald-50 dark:bg-emerald-900/30'
+    },
+    '#legislacao': {
+        id: '#legislacao',
+        titulo: 'Atos Normativos',
+        icone: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 212.858 212.858" fill="currentColor" class="w-5 h-5"><path d="M161.913,165.442h-41.357V37.333h52.499c-6.2,10.32-21.994,38.5-21.994,58.008 c0,15.853,12.685,28.75,28.26,28.75c15.581,0,28.26-12.897,28.26-28.75 c0-18.37-15.983-47.543-22.071-58.008h18.778V25.216h-83.731V0H92.308v25.216H8.582v12.117 h18.689c-6.203,10.32-21.994,38.5-21.994,58.008c0,15.853,12.678,28.75,28.259,28.75 c15.587,0,28.259-12.897,28.259-28.75c0-18.37-15.98-47.543-22.08-58.008h52.585v128.109H50.944v19.163H8.576v28.253h195.705 v-28.253h-42.368V165.442z M198.087,90.802h-37.533c1.938-15.416,12.749-35.831,18.713-46.092 C185.172,55.184,196.03,76.045,198.087,90.802z M52.301,90.802H14.768c1.941-15.416,12.752-35.843,18.716-46.092 C39.4,55.184,50.256,76.039,52.301,90.802z"/></svg>',
+        corHover: 'hover:border-amber-500',
+        corIcone: 'text-amber-500 bg-amber-50 dark:bg-amber-900/30'
+    },
+    '#qualificacao': {
+        id: '#qualificacao',
+        titulo: 'Qualificação Técnica',
+        icone: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9 12l2 2 4-4"></path></svg>',
+        corHover: 'hover:border-cyan-500',
+        corIcone: 'text-cyan-500 bg-cyan-50 dark:bg-cyan-900/30'
+    },
+    '#regmap': {
+        id: '#regmap',
+        titulo: 'RegMap',
+        icone: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>',
+        corHover: 'hover:border-fuchsia-500',
+        corIcone: 'text-fuchsia-500 bg-fuchsia-50 dark:bg-fuchsia-900/30'
+    },
+    '#demandas': {
+        id: '#demandas',
+        titulo: 'Gestão de Demandas',
+        icone: '<svg class="w-5 h-5" viewBox="0 0 512 512" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><g><path d="M277.785,370.582c46.892-8.902,83.894-45.906,92.797-92.797h27.422v-43.574h-27.422c-8.9-46.894-45.902-83.894-92.797-92.797v-27.422h-43.574v27.426c-46.89,8.898-83.894,45.902-92.795,92.793h-27.422v43.574h27.424c8.9,46.89,45.902,83.894,92.793,92.793v27.426h43.574V370.582z M234.211,296.934v43.859c-30.822-7.93-55.078-32.184-63.008-63.008h43.859v-43.574h-43.859c7.93-30.824,32.184-55.078,63.008-63.008v43.859h43.574v-43.859c30.824,7.93,55.08,32.184,63.01,63.008h-43.859v43.574h43.857c-7.93,30.824-32.185,55.078-63.008,63.008v-43.859H234.211z"/><path d="M487.344,234.211C476.988,123.426,388.57,35.008,277.785,24.656V0h-43.574v24.656C123.426,35.008,35.01,123.426,24.656,234.211H0v43.574h24.656C35.01,388.57,123.426,476.988,234.211,487.34V512h43.574v-24.66c110.785-10.352,199.203-98.77,209.558-209.555H512v-43.574H487.344z M234.211,421.219v19.668C148.924,430.898,81.1,363.074,71.109,277.785h19.67v-43.574h-19.67c9.99-85.289,77.815-153.113,163.102-163.102v19.668h43.574V71.109c85.289,9.988,153.113,77.813,163.104,163.102h-19.67v43.574h19.67c-9.99,85.289-77.814,153.113-163.104,163.102v-19.668H234.211z"/></g></svg>',
+        corHover: 'hover:border-rose-500',
+        corIcone: 'text-rose-500 bg-rose-50 dark:bg-rose-900/30'
+    },
+    '#conversor': {
+        id: '#conversor',
+        titulo: 'Conversor CSV',
+        icone: '<svg class="w-5 h-5" viewBox="0 0 16 16" fill="currentColor"><path d="M10 8H9V4.8198L5.15728 4.05126C4.98683 4.01717 4.81343 4 4.63961 4C3.18179 4 2 5.18179 2 6.63961V9H0V6.63961C0 4.07722 2.07722 2 4.63961 2C4.94514 2 5.24992 2.03018 5.54951 2.0901L9 2.7802V0H10L14 4L10 8Z"/><path d="M16 7V9.36039C16 11.9228 13.9228 14 11.3604 14C11.0549 14 10.7501 13.9698 10.4505 13.9099L7 13.2198V16H6L2 12L6 8H7V11.1802L10.8427 11.9487C11.0132 11.9828 11.1866 12 11.3604 12C12.8182 12 14 10.8182 14 9.36039V7H16Z"/></svg>',
+        corHover: 'hover:border-orange-500',
+        corIcone: 'text-orange-500 bg-orange-50 dark:bg-orange-900/30'
+    },
+    '#usuarios': {
+        id: '#usuarios',
+        titulo: 'Gerenciar Usuários',
+        icone: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>',
+        corHover: 'hover:border-purple-500',
+        corIcone: 'text-purple-500 bg-purple-50 dark:bg-purple-900/30'
+    }
+};
+
+function renderDynamicMenu() {
+    const menuContainer = document.getElementById('dynamic-nav-menu');
+    if (!menuContainer) return;
+
+    // Pega as permissões que foram salvas no login
+    const role = sessionStorage.getItem("cockpit_user_role");
+    let allowedApps = [];
+    
+    try {
+        allowedApps = JSON.parse(sessionStorage.getItem("cockpit_allowed_apps") || '[]');
+    } catch (e) { console.error("Erro ao ler apps permitidos"); }
+
+    let html = '';
+
+    Object.keys(APP_REGISTRY).forEach(appKey => {
+        // Se for admin OU se o usuário tiver acesso
+        if (role === 'admin' || allowedApps.includes(appKey)) {
+            const app = APP_REGISTRY[appKey];
+            
+            // Desenha um botão estilo "App Icon", usando a propriedade title="" para exibir o nome ao passar o mouse
+            html += `
+                <div data-route="${app.id}" title="${app.titulo}" 
+                     class="cursor-pointer group bg-white dark:bg-slate-800 rounded-xl w-14 h-14 flex items-center justify-center border border-gray-100 dark:border-slate-700 shadow-sm transition-all duration-300 ${app.corHover} hover:shadow-md hover:-translate-y-1 relative">
+                    
+                    <div class="${app.corIcone} w-10 h-10 rounded-lg flex items-center justify-center transition-colors">
+                        ${app.icone}
+                    </div>
+
+                </div>
+            `;
+        }
+    });
+
+    menuContainer.innerHTML = html;
+
+    // Reanexa os eventos de clique para navegação via parent
+    document.querySelectorAll('#dynamic-nav-menu [data-route]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (window.parent) window.parent.location.hash = btn.getAttribute('data-route');
+        });
+    });
+}
+
+// Chame isso logo após o DOMContentLoaded
+document.addEventListener("DOMContentLoaded", () => {
+    renderDynamicMenu();
+});
+
+
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("./sw.js");
 }
 
 let userNameFromParent = ""; // Variável global que guardará o apelido/nome
 let lastIndex = -1;
+let currentUserId = null;
 
 // 1. Pede os dados ao Pai assim que o script carregar
 if (window.parent) {
@@ -17,15 +144,22 @@ if (window.parent) {
 // 2. Recepciona a resposta do Pai
 window.addEventListener("message", (event) => {
   if (event.data && event.data.type === "USER_DATA_RESPONSE") {
-    const { name, apelido } = event.data.payload;
+    const { name, apelido, id } = event.data.payload;
     // Prioriza o apelido. Se não tiver, pega o primeiro nome.
     userNameFromParent = apelido || (name ? name.split(" ")[0] : "");
+    currentUserId = id || null;
     
     // Fallback/Cache local
     if (userNameFromParent) {
       localStorage.setItem("cockpit_username", userNameFromParent);
     }
-    updateTime(); // Força atualização visual imediata ao receber
+    if (id) {
+      sessionStorage.setItem("cockpit_user_id", id); // cache
+    }
+    if (window.updateTime) {
+        window.updateTime(); 
+        fetchRadarData();
+    }
   }
 });
 
@@ -167,15 +301,17 @@ const dontShow = localStorage.getItem("dontShowWelcomeCockpit");
     modal.classList.add("hidden");
   }
 
-  function saveName() {
-    const newName = input.value.trim();
-    if (newName) {
-      userName = newName;
-      localStorage.setItem("cockpit_username", userName);
-      updateTime(); // Atualiza a saudação na hora
-      closeNameModal();
-    }
-  }
+  window.closeNameModal = closeNameModal;
+
+  window.saveName = function() { 
+      const newName = input.value.trim();
+      if (newName) {
+        userName = newName; // Certifique-se de que userName está definido no escopo correto
+        localStorage.setItem("cockpit_username", userName);
+        window.updateTime(); 
+        closeNameModal();
+      }
+    };
 
   // 4. Eventos
   btnSave.onclick = saveName;
@@ -203,7 +339,7 @@ const dontShow = localStorage.getItem("dontShowWelcomeCockpit");
   }
   // --- FIM: Modal de Nome ---
 
-  function updateTime() {
+  window.updateTime = function() {
     const now = new Date();
     const hour = now.getHours();
 
@@ -232,6 +368,11 @@ const dontShow = localStorage.getItem("dontShowWelcomeCockpit");
     }
 
   if (greetingEl) {
+    // Garante que o elemento tenha as classes necessárias para transição suave
+    if (!greetingEl.classList.contains('transition-opacity')) {
+      greetingEl.classList.add('transition-opacity', 'duration-500');
+    }
+
     const activeName = userNameFromParent || localStorage.getItem("cockpit_username") || "pessoa";
 
     const frases = [
@@ -241,21 +382,21 @@ const dontShow = localStorage.getItem("dontShowWelcomeCockpit");
       `Olá, <span class="font-bold">${activeName}</span>. Vamos começar?`
     ];
 
-    // Alterna a frase a cada 8 segundos
+    // Alterna a frase a cada 10 segundos
     const index = Math.floor(now.getSeconds() / 10) % frases.length;
 
     // Só faz a transição se o índice da frase realmente mudou
     if (index !== lastIndex) {
       lastIndex = index;
 
-      // 1. Inicia o Fade-out (esconde a frase antiga)
+      // 1. Inicia o Fade-out (esmaece para transparente)
       greetingEl.classList.add("opacity-0");
 
-      // 2. Aguarda o tempo do fade-out (300ms) para trocar o texto e iniciar o Fade-in
+      // 2. Aguarda o término do fade-out (500ms) para alterar o texto e iniciar o Fade-in
       setTimeout(() => {
         greetingEl.innerHTML = frases[index];
-        greetingEl.classList.remove("opacity-0"); // Fade-in (revela a nova frase)
-      }, 300); 
+        greetingEl.classList.remove("opacity-0"); // Fade-in suave
+      }, 500); 
     }
   }
 
@@ -264,8 +405,8 @@ const dontShow = localStorage.getItem("dontShowWelcomeCockpit");
   }
 
   // Atualiza a cada segundo e roda imediatamente
-  setInterval(updateTime, 1000);
-  updateTime();
+  setInterval(window.updateTime, 1000);
+  window.updateTime();
 
   // --- 2. Lógica de Navegação ---
   // Seleciona todos os elementos que tenham o atributo 'data-route'
@@ -283,7 +424,7 @@ const dontShow = localStorage.getItem("dontShowWelcomeCockpit");
  
 });
 
-function closeWelcomeModalCockpit() {
+window.closeWelcomeModalCockpit = function() {
     const modal = document.getElementById("welcomeModalCockpit");
     if (modal) {
         modal.classList.add("hidden");
@@ -449,10 +590,117 @@ function renderStats() {
   container.innerHTML = html;
 }
 
+// ==========================================================
+// MÓDULO DE RADARES (Busca Direta no Supabase)
+// ==========================================================
+
+async function fetchRadarData() {
+    //const userName = sessionStorage.getItem("cockpit_user_realname");
+    const userId =
+      currentUserId ||
+      sessionStorage.getItem("cockpit_user_id");
+    const containerDemandas = document.getElementById('radar-demandas-list');
+    const containerContratos = document.getElementById('radar-contratos-list');
+    const badgeDemandas = document.getElementById('badge-demandas-home');
+    const badgeContratos = document.getElementById('badge-contratos-home');
+
+
+    // 1. BUSCA DE DEMANDAS
+    try {
+        // Usa estritamente o NOME REAL para a busca no banco de dados
+        const userRealName = sessionStorage.getItem("cockpit_user_realname");
+        
+        if (!userRealName) return;
+
+        const { data: demandas, error } = await supabase
+            .from('demandas')
+            .select('id, titulo, prazo_limite, status, responsavel_nome, solicitante_nome')
+            .or(`responsavel_nome.eq."${userRealName}",solicitante_nome.eq."${userRealName}"`) 
+            .neq('status', 'Concluído')
+            .neq('status', 'Cancelado')
+            .not('prazo_limite', 'is', null);
+
+        if (!error && demandas) {
+            const hoje = new Date(); 
+            hoje.setHours(0,0,0,0);
+            
+            // Filtra e ordena por prazo
+            const lista = demandas.map(d => {
+                const prazo = new Date(d.prazo_limite + "T12:00:00Z");
+                const diff = Math.ceil((prazo - hoje) / (1000 * 60 * 60 * 24));
+                return { ...d, diff };
+            }).filter(d => d.diff <= 7).sort((a, b) => a.diff - b.diff);
+
+            badgeDemandas.textContent = lista.length;
+            containerDemandas.innerHTML = lista.length > 0 
+                ? lista.map(d => {
+                    // Verifica se a demanda está com você usando o nome real
+                    const isMinha = d.responsavel_nome === userRealName;
+                    const quemFaz = isMinha ? '' : `<span class="block mt-1 text-[9px] font-bold text-slate-500 uppercase bg-white/50 px-1 py-0.5 rounded inline-block">👤 Com: ${d.responsavel_nome || 'Ninguém'}</span>`;
+                    
+                    const corBorda = d.diff < 0 ? 'border-red-500 bg-red-50' : (d.diff === 0 ? 'border-red-400 bg-red-50/50' : 'border-blue-500 bg-blue-50');
+                    const textoPrazo = d.diff < 0 ? `Atrasada há ${Math.abs(d.diff)} dias` : (d.diff === 0 ? 'Vence HOJE' : `Vence em ${d.diff} dias`);
+
+                    return `
+                    <div class="p-3 border-l-4 ${corBorda} rounded-r-lg mb-1">
+                        <p class="font-bold text-[11px] text-gray-800 break-all">${d.titulo}</p>
+                        <p class="text-[10px] text-gray-600 mt-1">${textoPrazo}</p>
+                        ${quemFaz}
+                    </div>
+                `}).join('')
+                : '<p class="text-center text-sm text-gray-400 py-4 flex flex-col items-center gap-2"><span class="text-2xl">✅</span> Tudo em dia!</p>';
+        }
+    } catch (e) { console.error("Erro ao buscar demandas", e); }
+
+    // 2. BUSCA DE CONTRATOS (Vencimento próximo)
+    try {
+        // Exemplo: Buscar contratos com data fim próxima (ajuste o nome da tabela/coluna conforme seu banco)
+        const { data: contratos, error } = await supabase
+            .from('contratos')
+            .select('id, numeroContrato, dataFim')
+            .not('dataFim', 'is', null)
+            .is('parentId', null);
+
+        if (!error && contratos) {
+            const hoje = new Date();
+            const vencendo = contratos.filter(c => {
+                const fim = new Date(c.dataFim + "T12:00:00Z");
+                const diff = Math.ceil((fim - hoje) / (1000 * 60 * 60 * 24));
+                return diff <= 90 && diff >= 0; // Vence em 90 dias
+            });
+
+            badgeContratos.textContent = vencendo.length;
+            containerContratos.innerHTML = vencendo.length > 0
+                ? vencendo.map(c => `
+                    <div class="p-3 border-l-4 border-emerald-500 bg-emerald-50 rounded-r-lg">
+                        <p class="font-bold text-xs text-gray-800">${c.numeroContrato}</p>
+                        <p class="text-[10px] text-gray-600 mt-1">Vence em ${Math.ceil((new Date(c.dataFim) - hoje)/(1000*60*60*24))} dias</p>
+                    </div>
+                `).join('')
+                : '<p class="text-center text-sm text-gray-400 py-4">Nenhum vencimento próximo.</p>';
+        }
+    } catch (e) { console.error("Erro ao buscar contratos", e); }
+}
+
+
+//let userName = localStorage.getItem("cockpit_username") || "";
+
 // 4. Inicialização e Atualização
 document.addEventListener("DOMContentLoaded", () => {
   // Renderiza imediatamente
   renderStats();
+  renderDynamicMenu();
+    
+    // ATIVAÇÃO DOS RADARES
+  fetchRadarData(); 
+  setInterval(fetchRadarData, 60000); // Atualiza os radares a cada 1 minuto
+
+  // Força a coleta e atualização de dados reais com segurança
+  setTimeout(() => {
+    forceUpdateContratos();
+    forceUpdateGerador();
+    forceUpdateQualificacao();
+  }, 300);
 
   // Atualiza a cada 5 segundos (para pegar mudanças salvas em outras abas/apps)
   setInterval(renderStats, 5000);
