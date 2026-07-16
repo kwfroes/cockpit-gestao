@@ -205,48 +205,64 @@ async function generateCaptcha() {
   // --- Lógica de Sessão ---
 
 async function checkSession() {
-      const { data: { session }, error } = await supabase.auth.getSession();
+    const { data: { session }, error } = await supabase.auth.getSession();
 
-      if (session) {
-          const user = session.user;
-          
-          // Adicionamos 'allowed_apps' na busca do perfil
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('name, role, avatar_url, apelido, precisa_trocar_senha, allowed_apps')
-            .eq('id', user.id)
-            .single();
-          
-          sessionStorage.setItem("cockpit_auth_token", "valid");
-          sessionStorage.setItem("cockpit_user_email", user.email);
-          sessionStorage.setItem("cockpit_user_realname", profile?.name || user.user_metadata?.name || user.email.split('@')[0]);
-          sessionStorage.setItem("cockpit_user_role", profile?.role || user.user_metadata?.role || "user");
-          sessionStorage.setItem("cockpit_user_apelido", profile?.apelido || "");
-          
-          // Salva a lista de apps permitidos na sessão do navegador
-          const userApps = profile?.allowed_apps || ["#home"];
-          sessionStorage.setItem("cockpit_allowed_apps", JSON.stringify(userApps));
-          
-          if (profile?.avatar_url) {
-              sessionStorage.setItem("cockpit_user_avatar", profile.avatar_url);
-          } else {
-              sessionStorage.removeItem("cockpit_user_avatar");
-          }
-          
-          if (profile?.precisa_trocar_senha) {
-              document.getElementById("forcedPasswordModal").classList.remove("hidden");
-          } else {
-              unlockInterface();
-              applyPermissions(); // Aplica a ocultação baseada na lista salva
-              updateUserMenu();
-              updateUserAvatarVisuals();
-              navigate(window.location.hash || "#home");
-          }
-      } else {
-          frame.src = "about:blank";
-          generateCaptcha();
-      }
-  }
+    if (session) {
+        const user = session.user;
+        
+        // Adicionamos 'allowed_apps' na busca do perfil
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('name, role, avatar_url, apelido, precisa_trocar_senha, allowed_apps')
+          .eq('id', user.id)
+          .single();
+        
+        sessionStorage.setItem("cockpit_auth_token", "valid");
+        sessionStorage.setItem("cockpit_user_email", user.email);
+        sessionStorage.setItem("cockpit_user_realname", profile?.name || user.user_metadata?.name || user.email.split('@')[0]);
+        sessionStorage.setItem("cockpit_user_role", profile?.role || user.user_metadata?.role || "user");
+        sessionStorage.setItem("cockpit_user_apelido", profile?.apelido || "");
+        
+        // Salva a lista de apps permitidos na sessão do navegador
+        const userApps = profile?.allowed_apps || ["#home"];
+        sessionStorage.setItem("cockpit_allowed_apps", JSON.stringify(userApps));
+        
+        if (profile?.avatar_url) {
+            sessionStorage.setItem("cockpit_user_avatar", profile.avatar_url);
+        } else {
+            sessionStorage.removeItem("cockpit_user_avatar");
+        }
+        
+        if (profile?.precisa_trocar_senha) {
+            document.getElementById("forcedPasswordModal").classList.remove("hidden");
+        } else {
+            unlockInterface();
+            applyPermissions(); // Aplica a ocultação baseada na lista salva
+            updateUserMenu();
+            updateUserAvatarVisuals();
+            navigate(window.location.hash || "#home");
+
+            // ==========================================
+            // INICIALIZA AS NOTIFICAÇÕES GLOBAIS
+            // ==========================================
+            fetchGlobalNotifications(); 
+            
+            // Cria o loop de 2 em 2 minutos (salvando na janela para não duplicar)
+            if (!window.cockpitNotifInterval) {
+                window.cockpitNotifInterval = setInterval(fetchGlobalNotifications, 120000);
+            }
+        }
+    } else {
+        frame.src = "about:blank";
+        generateCaptcha();
+        
+        // Limpa o loop se o usuário deslogar/perder a sessão
+        if (window.cockpitNotifInterval) {
+            clearInterval(window.cockpitNotifInterval);
+            window.cockpitNotifInterval = null;
+        }
+    }
+}
 
   function unlockInterface() {
     if (loginOverlay) {
@@ -625,10 +641,13 @@ if (loginForm) {
   });
 
   window.addEventListener("popstate", () => {
-    // Proteção no botão Voltar do navegador
-    if (sessionStorage.getItem("cockpit_auth_token") === "valid") {
-      navigate(window.location.hash || defaultHash);
-    }
+      // Proteção no botão Voltar do navegador
+      if (sessionStorage.getItem("cockpit_auth_token") === "valid") {
+          navigate(window.location.hash || defaultHash);
+          
+          // Apenas atualiza a notificação ao mudar de tela (sem criar loops!)
+          fetchGlobalNotifications();
+      }
   });
 
   // --- INICIALIZAÇÃO ---
@@ -1621,6 +1640,7 @@ async function performLogout() {
     // É uma boa prática verificar a origem por segurança
     if (event.data === "GET_USER_DATA") {
         const userData = {
+            id: sessionStorage.getItem("cockpit_user_id"),
             name: sessionStorage.getItem("cockpit_user_realname"),
             role: sessionStorage.getItem("cockpit_user_role"),
             apelido: sessionStorage.getItem("cockpit_user_apelido")
@@ -1632,6 +1652,326 @@ async function performLogout() {
             payload: userData
         }, event.origin);
     }
+  });
+
+  // Objeto que armazena a quantidade de notificações de cada app do Cockpit
+const globalNotificationState = {
+    demandas: 0
+    // No futuro, se houver 'contratos': 0, etc.
+};
+
+// Escuta as mensagens dos iframes filhos
+window.addEventListener("message", (event) => {
+    if (event.data && event.data.type === "UPDATE_NOTIFICATIONS") {
+        const { appName, count } = event.data;
+        
+        // 1. Atualiza o estado daquele app específico
+        globalNotificationState[appName] = count;
+        
+        // 2. Atualiza a Badge do Menu Lateral (se existir)
+        const menuBadge = document.getElementById(`badge-menu-${appName}`);
+        if (menuBadge) {
+            menuBadge.textContent = count;
+            if (count > 0) {
+                menuBadge.classList.remove('hidden');
+            } else {
+                menuBadge.classList.add('hidden');
+            }
+        }
+
+        // 3. Atualiza o Sino Global (Soma de todos os apps)
+        const totalNotificacoes = Object.values(globalNotificationState).reduce((a, b) => a + b, 0);
+        const sinoBadge = document.getElementById('badge-sino-global');
+        
+        if (sinoBadge) {
+            sinoBadge.textContent = totalNotificacoes;
+            if (totalNotificacoes > 0) {
+                sinoBadge.classList.remove('hidden', 'scale-0');
+                sinoBadge.classList.add('scale-100');
+                // Faz o sino dar um "pulo" rápido para chamar atenção
+                const btnSino = document.getElementById('btn-global-notifications');
+                btnSino.classList.add('animate-bounce');
+                setTimeout(() => btnSino.classList.remove('animate-bounce'), 1000);
+            } else {
+                sinoBadge.classList.remove('scale-100');
+                sinoBadge.classList.add('scale-0');
+                setTimeout(() => sinoBadge.classList.add('hidden'), 300);
+            }
+        }
+    }
+});
+
+
+
+  // --- SISTEMA GLOBAL DE NOTIFICAÇÕES ---
+
+  // 1. Função para abrir/fechar o modal do sino
+  window.toggleNotificationsModal = function() {
+      const modal = document.getElementById("notificationsModal");
+      if (!modal) return;
+      
+      const isHidden = modal.classList.contains("hidden");
+      if (isHidden) {
+          modal.classList.remove("hidden");
+          // Busca os dados mais recentes ao abrir
+          fetchGlobalNotifications();
+          setTimeout(() => {
+              modal.classList.remove("opacity-0", "scale-95");
+              modal.classList.add("opacity-100", "scale-100");
+          }, 10);
+      } else {
+          modal.classList.remove("opacity-100", "scale-100");
+          modal.classList.add("opacity-0", "scale-95");
+          setTimeout(() => modal.classList.add("hidden"), 200);
+      }
+  };
+
+  // 2. Função para buscar os dados no Supabase
+  window.fetchGlobalNotifications = async function() {
+      const role = sessionStorage.getItem('cockpit_user_role');
+      const userName = sessionStorage.getItem('cockpit_user_realname');
+      
+      if (!userName) return; // Não faz nada se não estiver logado
+
+      try {
+          let totalNotificacoes = 0;
+          let htmlList = "";
+
+          // Consulta 1: Logs de Demandas (Para o usuário atual que não foram lidas)
+          const { data: demandasData, error: errDemandas } = await supabase
+              .from('demandas_logs')
+              .select('*')
+              .eq('destinatario_nome', userName)
+              .eq('lida', false)
+              .order('data_criacao', { ascending: false });
+
+          if (!errDemandas && demandasData && demandasData.length > 0) {
+              totalNotificacoes += demandasData.length;
+              
+              // Cria um cabeçalho e lista os itens de demandas
+              htmlList += `<div class="px-2 pt-2 pb-1 text-[10px] font-bold text-blue-500 uppercase">Demandas (${demandasData.length})</div>`;
+              
+              demandasData.forEach(notif => {
+                  const dataFormatada = new Date(notif.data_criacao).toLocaleString('pt-BR');
+                  htmlList += `
+                      <div onclick="app.navigate('#demandas'); toggleNotificationsModal();" class="cursor-pointer p-2 rounded-lg bg-blue-50 dark:bg-slate-700/50 hover:bg-blue-100 dark:hover:bg-slate-600 text-xs transition-colors mb-1 border-l-2 border-blue-500">
+                          <p class="font-bold text-slate-800 dark:text-slate-200">${notif.ator_nome}</p>
+                          <p class="text-slate-600 dark:text-slate-300 mt-0.5 line-clamp-2">${notif.mensagem}</p>
+                          <p class="text-[9px] text-slate-400 mt-1">${dataFormatada}</p>
+                      </div>`;
+              });
+          }
+
+          // Consulta 2: Pedidos de Acesso (Apenas se for Admin)
+          if (role === 'admin') {
+              const { data: usuariosData, error: errUsuarios } = await supabase
+                  .from('pedidos_acesso')
+                  .select('*')
+                  .eq('status', 'pendente')
+                  .order('created_at', { ascending: false });
+
+              if (!errUsuarios && usuariosData && usuariosData.length > 0) {
+                  totalNotificacoes += usuariosData.length;
+                  
+                  htmlList += `<div class="px-2 pt-3 pb-1 text-[10px] font-bold text-green-500 uppercase mt-2 border-t border-slate-100 dark:border-slate-700">Novos Usuários (${usuariosData.length})</div>`;
+                  
+                  usuariosData.forEach(user => {
+                      const dataFormatada = new Date(user.created_at).toLocaleDateString('pt-BR');
+                      htmlList += `
+                          <div onclick="app.navigate('#usuarios'); toggleNotificationsModal();" class="cursor-pointer p-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/10 hover:bg-emerald-100 dark:hover:bg-emerald-900/20 text-xs transition-colors mb-1 border-l-2 border-emerald-500">
+                              <p class="font-bold text-slate-800 dark:text-slate-200">${user.nome} solicitou acesso</p>
+                              <p class="text-slate-600 dark:text-slate-400 mt-0.5">${user.email}</p>
+                              <p class="text-[9px] text-slate-400 mt-1">${dataFormatada}</p>
+                          </div>`;
+                  });
+              }
+          }
+
+        // CONSULTA 3: ALERTA DE VENCIMENTO DE CONTRATOS
+        // --------------------------------------------------------
+        // Só busca se o usuário tiver permissão para ver contratos (Admin ou listado no allowed_apps)
+        const allowedApps = JSON.parse(sessionStorage.getItem("cockpit_allowed_apps") || '[]');
+        if (role === 'admin' || allowedApps.includes('#contratos')) {
+            
+            const { data: contratosData, error: errContratos } = await supabase
+                .from('contratos')
+                .select('id, parentId, dataFim, processoSei, numeroContrato');
+
+            if (!errContratos && contratosData && contratosData.length > 0) {
+                const hoje = new Date();
+                hoje.setHours(0, 0, 0, 0);
+
+                const datasFimReais = {};
+                const infoContratos = {};
+
+                // 1. Agrupa os contratos e aditivos para achar a data de término real
+                contratosData.forEach(c => {
+                    const paiId = c.parentId || c.id;
+                    const dataFim = c.dataFim ? new Date(c.dataFim + "T00:00:00") : null;
+
+                    // Salva os dados do contrato principal para exibição
+                    if (!c.parentId) {
+                        infoContratos[paiId] = c.processoSei || c.numeroContrato || 'Contrato Sem Nome';
+                    }
+
+                    // Encontra a maior data de fim (considerando aditivos de prazo)
+                    if (dataFim) {
+                        if (!datasFimReais[paiId] || dataFim > datasFimReais[paiId]) {
+                            datasFimReais[paiId] = dataFim;
+                        }
+                    }
+                });
+
+                let alertasContratosHTML = "";
+                let qtdContratosVencendo = 0;
+
+                // 2. Verifica a regra de negócio (90 dias)
+                for (const [id, dataFimReal] of Object.entries(datasFimReais)) {
+                    const diffTime = dataFimReal - hoje;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                    // Regra: Vence em até 90 dias (mas ainda não venceu)
+                    if (diffDays >= 0 && diffDays <= 90) {
+                        qtdContratosVencendo++;
+                        totalNotificacoes++; // Soma na badge vermelha global do sino
+
+                        let nivelAlerta = diffDays <= 30 ? 'text-red-600 bg-red-50 border-red-500' : 'text-orange-600 bg-orange-50 border-orange-400';
+                        let icone = diffDays <= 30 ? '🚨' : '⚠️';
+                        let acao = diffDays <= 30 ? 'Urgente: Renovar' : 'Iniciar Renovação';
+
+                        // AS DUAS LINHAS QUE FALTARAM ESTÃO AQUI:
+                        const dataExibicao = new Date(dataFimReal);
+                        dataExibicao.setDate(dataExibicao.getDate() - 1);
+
+                        alertasContratosHTML += `
+                            <div onclick="app.navigate('#contratos'); toggleNotificationsModal();" class="cursor-pointer p-2 rounded-lg hover:brightness-95 text-xs transition-colors mb-1 border-l-2 ${nivelAlerta}">
+                                <div class="flex justify-between items-start gap-2">
+                                    <p class="font-bold text-[10px] break-all leading-tight mt-0.5">${icone} ${infoContratos[id]}</p>
+                                    <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider bg-white/50 shrink-0">${acao}</span>
+                                </div>
+                                <p class="mt-1 opacity-90 font-medium">Vence em ${diffDays} dias (${dataExibicao.toLocaleDateString('pt-BR')})</p>
+                            </div>`;
+                    }
+                }
+
+                // 3. Adiciona na lista final se houver alertas
+                if (qtdContratosVencendo > 0) {
+                    htmlList += `<div class="px-2 pt-3 pb-1 text-[10px] font-bold text-orange-500 uppercase mt-2 border-t border-slate-100 dark:border-slate-700">Contratos a Vencer (${qtdContratosVencendo})</div>`;
+                    htmlList += alertasContratosHTML;
+                }
+            }
+        }
+
+        // --------------------------------------------------------
+        // CONSULTA 4: ALERTAS DE PRAZOS DE DEMANDAS (MINHAS E DELEGADAS)
+        // --------------------------------------------------------
+        // O '.or' busca demandas onde você é o responsável OU o solicitante
+        const { data: demandasPrazo, error: errPrazo } = await supabase
+            .from('demandas')
+            .select('id, titulo, prazo_limite, prioridade, responsavel_nome, solicitante_nome')
+            .or(`responsavel_nome.eq."${userName}",solicitante_nome.eq."${userName}"`)
+            .neq('status', 'Concluído')
+            .neq('status', 'Cancelado')
+            .not('prazo_limite', 'is', null);
+
+        if (!errPrazo && demandasPrazo && demandasPrazo.length > 0) {
+            const hojeDemandas = new Date();
+            hojeDemandas.setHours(0, 0, 0, 0);
+            
+            let alertasDemandasHTML = "";
+            let qtdDemandasVencendo = 0;
+
+            demandasPrazo.forEach(d => {
+                const dataPrazo = new Date(d.prazo_limite + "T12:00:00Z"); 
+                dataPrazo.setHours(0, 0, 0, 0);
+                
+                const diffTime = dataPrazo - hojeDemandas;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                // Dispara o radar apenas se atrasou ou faltam 7 dias (ou menos)
+                if (diffDays <= 7) {
+                    qtdDemandasVencendo++;
+                    totalNotificacoes++; 
+
+                    // Verifica com quem está a demanda para exibir no card
+                    const isMinha = d.responsavel_nome === userName;
+                    const quemFaz = isMinha ? 'Você' : (d.responsavel_nome || 'Ninguém');
+                    const labelDelegada = isMinha ? '' : `<span class="block mt-1.5 text-[9px] text-slate-500 uppercase font-bold bg-white/40 dark:bg-black/20 inline-block px-1.5 py-0.5 rounded shadow-sm border border-slate-200/50">👤 Com: ${quemFaz}</span>`;
+
+                    let nivelAlerta = '';
+                    let icone = '';
+                    let textoPrazo = '';
+
+                    // Matriz de cores e urgência
+                    if (diffDays < 0) {
+                        nivelAlerta = 'text-red-700 bg-red-100 border-red-600 shadow-[0_0_10px_rgba(239,68,68,0.2)]';
+                        icone = '❌';
+                        textoPrazo = `Atrasada há ${Math.abs(diffDays)} dia(s)`;
+                    } else if (diffDays === 0) {
+                        nivelAlerta = 'text-red-600 bg-red-50 border-red-500 font-bold';
+                        icone = '⏰';
+                        textoPrazo = 'Vence HOJE';
+                    } else if (diffDays <= 3) {
+                        nivelAlerta = 'text-orange-600 bg-orange-50 border-orange-400';
+                        icone = '⚠️';
+                        textoPrazo = `Vence em ${diffDays} dias`;
+                    } else { 
+                        nivelAlerta = 'text-blue-600 bg-blue-50 border-blue-400';
+                        icone = '📅';
+                        textoPrazo = `Vence em ${diffDays} dias`;
+                    }
+
+                    alertasDemandasHTML += `
+                        <div onclick="app.navigate('#demandas'); toggleNotificationsModal();" class="cursor-pointer p-2 rounded-lg hover:brightness-95 text-xs transition-all mb-1 border-l-4 ${nivelAlerta}">
+                            <div class="flex justify-between items-start gap-2">
+                                <p class="font-bold text-[11px] break-all leading-tight mt-0.5">${icone} ${d.titulo}</p>
+                                <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider bg-white/60 shrink-0">${d.prioridade}</span>
+                            </div>
+                            <p class="mt-1 opacity-90 font-medium">${textoPrazo} (${dataPrazo.toLocaleDateString('pt-BR')})</p>
+                            ${labelDelegada}
+                        </div>`;
+                }
+            });
+
+            if (qtdDemandasVencendo > 0) {
+                htmlList += `<div class="px-2 pt-3 pb-1 text-[10px] font-bold text-red-500 uppercase mt-2 border-t border-slate-100 dark:border-slate-700">Prazos de Demandas (${qtdDemandasVencendo})</div>`;
+                htmlList += alertasDemandasHTML;
+            }
+        }
+
+          // 3. Atualiza a Interface
+          const listContainer = document.getElementById("notificationsList");
+          const sinoBadge = document.getElementById("badge-sino-global");
+
+          if (totalNotificacoes > 0) {
+              listContainer.innerHTML = htmlList;
+              
+              sinoBadge.textContent = totalNotificacoes > 99 ? '99+' : totalNotificacoes;
+              sinoBadge.classList.remove('hidden', 'scale-0');
+              sinoBadge.classList.add('scale-100');
+          } else {
+              listContainer.innerHTML = '<div class="text-center py-8"><span class="text-2xl mb-2 block">🎉</span><p class="text-xs text-slate-500 font-medium">Tudo limpo por aqui!<br>Você não tem novas notificações.</p></div>';
+              
+              sinoBadge.classList.remove('scale-100');
+              sinoBadge.classList.add('scale-0');
+              setTimeout(() => sinoBadge.classList.add('hidden'), 300);
+          }
+
+      } catch (error) {
+          console.error("Erro ao carregar notificações globais:", error);
+      }
+  };
+
+  // Fechar o modal se clicar fora dele
+  document.addEventListener('click', function(event) {
+      const modal = document.getElementById('notificationsModal');
+      const btn = document.getElementById('btn-global-notifications');
+      
+      if (modal && !modal.classList.contains('hidden')) {
+          if (!modal.contains(event.target) && !btn.contains(event.target)) {
+              toggleNotificationsModal();
+          }
+      }
   });
 
   // Executa imediatamente na inicialização da página para checar o estado atual

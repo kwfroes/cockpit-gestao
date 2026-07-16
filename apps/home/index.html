@@ -125,205 +125,67 @@
       </div>
     </section>
 
-    <main
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-5xl mx-auto w-full flex-grow"
-    >
-      <div
-        data-route="#dashboard"
-        class="nav-card card group bg-white dark:bg-slate-800 dark:border-slate-700 hover:border-[var(--primary-500)] border border-transparent relative overflow-hidden transition-colors"
-      >
-        <div
-          class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
-        >
-          <svg class="w-24 h-24" viewBox="0 0 24 24" fill="currentColor">
-            <path
-              d="M15 1H1V7H3.38197L4.88196 4L7.11803 4L10 9.76393L11.382 7H15V1Z"
-            />
-            <path
-              d="M15 9H12.618L11.118 12L8.88197 12L6 6.23607L4.61803 9H1V15H15V9Z"
-            />
-          </svg>
-        </div>
-        <div class="flex items-center gap-4 mb-3">
-          <div
-            class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-[var(--primary-600)] dark:text-blue-400"
-          >
-            <svg
-              class="w-8 h-8"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-              ></path>
-            </svg>
+<!-- MAIN CONTENT: RADARES -->
+    <main class="max-w-5xl mx-auto w-full flex-grow mb-10 relative">
+      
+      <!-- 1. Removido o 'items-start' daqui para permitir um grid simétrico -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Radar de Demandas -->
+        <!-- 2. Adicionada a classe h-[380px] para fixar a altura do card -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 flex flex-col overflow-hidden h-[380px] transition-all duration-300 hover:scale-[1.03] hover:shadow-xl hover:border-blue-300 dark:hover:border-blue-500 hover:z-10">
+          
+          <!-- O shrink-0 garante que o cabeçalho nunca seja esmagado -->
+          <div class="p-4 border-b border-gray-100 dark:border-slate-700 bg-gray-50/50 dark:bg-slate-800/50 flex justify-between items-center shrink-0">
+            <h3 class="font-bold text-gray-800 dark:text-white flex items-center gap-2">
+              <span class="p-1.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-lg">📋</span> 
+              Minhas Demandas e Equipe
+            </h3>
+            <span id="badge-demandas-home" class="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded-full">0</span>
           </div>
-          <h2 class="text-xl font-bold text-gray-800 dark:text-white">
-            Dashboard Operacional
-          </h2>
+          
+          <!-- 3. Removido o max-h-[300px]. Agora o 'flex-1' preenche automaticamente o restante dos 380px do card pai -->
+          <div id="radar-demandas-list" class="p-2 flex-1 overflow-y-auto space-y-2">
+            <p class="text-center text-sm text-gray-400 py-10">Buscando demandas...</p>
+          </div>
         </div>
-        <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-          Transforme montanhas de CSVs em um painel vivo. Acompanhe KPIs, tempos
-          de análise e produtividade da equipe em tempo real.
-        </p>
+
+        <!-- Radar de Contratos -->
+        <!-- 2. Adicionada a classe h-[380px] para fixar a altura do card -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 flex flex-col overflow-hidden h-[380px] transition-all duration-300 hover:scale-[1.03] hover:shadow-xl hover:border-emerald-300 dark:hover:border-emerald-500 hover:z-10">
+          
+          <!-- O shrink-0 garante que o cabeçalho nunca seja esmagado -->
+          <div class="p-4 border-b border-gray-100 dark:border-slate-700 bg-gray-50/50 dark:bg-slate-800/50 flex justify-between items-center shrink-0">
+            <h3 class="font-bold text-gray-800 dark:text-white flex items-center gap-2">
+              <span class="p-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 rounded-lg">📄</span> 
+              Radar de Contratos
+            </h3>
+            <span id="badge-contratos-home" class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-1 rounded-full">0</span>
+          </div>
+          
+          <!-- 3. Removido o max-h-[300px]. O 'flex-1' cuida do preenchimento -->
+          <div id="radar-contratos-list" class="p-2 flex-1 overflow-y-auto space-y-2">
+            <p class="text-center text-sm text-gray-400 py-10">Buscando contratos...</p>
+          </div>
+        </div>
+
       </div>
 
-      <div
-        data-route="#gerador"
-        class="nav-card card group bg-white dark:bg-slate-800 dark:border-slate-700 hover:border-indigo-600 border border-transparent relative overflow-hidden transition-colors"
-      >
-        <div
-          class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
-        >
-          <svg class="w-24 h-24" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M0 5.3585V14H16V5.35849L8 10.3585L0 5.3585Z" />
-            <path d="M16 3V2H0V3L8 8L16 3Z" />
-          </svg>
-        </div>
-        <div class="flex items-center gap-4 mb-3">
-          <div
-            class="p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg text-indigo-600 dark:text-indigo-400 transition-colors"
-          >
-            <svg
-              class="w-8 h-8"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-              ></path>
-            </svg>
-          </div>
-          <h2 class="text-xl font-bold text-gray-800 dark:text-white">
-            Gerador de Mensagens
-          </h2>
-        </div>
-        <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-          Atalho para geração de textos padronizados. Crie mensagens
-          profissionais com autocompletar e mantenha o histórico organizado.
-        </p>
-      </div>
-
-      <div
-        data-route="#contratos"
-        class="nav-card card group bg-white dark:bg-slate-800 dark:border-slate-700 hover:border-emerald-600 border border-transparent relative overflow-hidden transition-colors"
-      >
-        <div
-          class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
-        >
-          <svg class="w-24 h-24" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M7 0H2V16H14V7H7V0Z" />
-            <path d="M9 0V5H14L9 0Z" />
-          </svg>
-        </div>
-        <div class="flex items-center gap-4 mb-3">
-          <div
-            class="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg text-emerald-600 dark:text-emerald-400 transition-colors"
-          >
-            <svg
-              class="w-8 h-8"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              ></path>
-            </svg>
-          </div>
-          <h2 class="text-xl font-bold text-gray-800 dark:text-white">
-            Contratos Públicos
-          </h2>
-        </div>
-        <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-          Hub central para contratos, aditivos e pagamentos. Controle financeiro
-          visual e alertas de prazos sem planilhas complexas.
-        </p>
-      </div>
-
-      <div
-        data-route="#legislacao"
-        class="nav-card card group bg-white dark:bg-slate-800 dark:border-slate-700 hover:border-amber-600 border border-transparent relative overflow-hidden transition-colors"
-      >
-        <div
-          class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
-        >
-          <svg
-            class="w-24 h-24"
-            viewBox="0 0 16 16"
-            fill="currentColor"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M15.81 9l-2.47-4.93 0.83-0.15c0.239-0.044 0.418-0.251 0.418-0.5 0-0.281-0.227-0.508-0.508-0.508-0.032 0-0.063 0.003-0.093 0.009l-0.777 0.14c-0.993-0.755-2.25-1.21-3.613-1.21-0.21 0-0.418 0.011-0.623 0.032-0.036-0.5-0.457-0.882-0.967-0.882h-0.008c-0.552 0-1 0.448-1 1v0.2c-1.714 0.336-3.151 1.327-4.066 2.697l-0.754 0.153c-0.257 0.024-0.457 0.239-0.457 0.5 0 0.277 0.225 0.502 0.502 0.502 0.016 0 0.032-0.001 0.047-0.002h0.088l0.35-0.05-2.52 5H0c0 1.1 1.34 2 3 2s3-0.9 3-2h-0.19L3.25 5.88h0.1c0.172-0.031 0.311-0.144 0.379-0.297 0.021-0.093 0.701-1.583 3.271-2.363v10.78h-1v1h-2v1h8v-1h-2v-1h-1V2.88c0.201-0.031 0.434-0.049 0.67-0.049 1.152 0 2.205 0.419 3.016 1.114l-2.49 5.06h-0.19c0 1.1 1.34 2 3 2s3-0.9 3-2h-0.19zM5 11H1l2-3.94zM11 9l2-3.94L15 9z"
-            />
-          </svg>
-        </div>
-        <div class="flex items-center gap-4 mb-3">
-          <div
-            class="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-lg text-amber-600 dark:text-amber-400 transition-colors"
-          >
-            <svg
-              class="w-8 h-8"
-              viewBox="0 0 48 48"
-              fill="currentColor"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M46,25,38,5.7h0A38.3,38.3,0,0,0,24,3,38.3,38.3,0,0,0,10,5.7h0L2,25v2a8,8,0,0,0,16,0V25L11.6,10l.3-.8A34.3,34.3,0,0,1,22,7.1V41H15a2,2,0,0,0,0,4H33a2,2,0,0,0,0-4H26V7.1A34.3,34.3,0,0,1,36.1,9.2l.3.8L30,25v2a8,8,0,0,0,16,0V25ZM14.2,25h-9L10,14.3ZM38,14.3,42.2,25h-9Z"
-              />
-            </svg>
-          </div>
-          <h2 class="text-xl font-bold text-gray-800 dark:text-white">
-            Atos Normativos
-          </h2>
-        </div>
-        <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-          Centralize atos normativos em um ambiente focado. Crie, formate e
-          exporte normas com facilidade para PDF ou texto.
-        </p>
-      </div>
     </main>
 
-    <footer class="mt-10 border-t pt-6 text-center">
-      <p
-        class="text-sm text-gray-400 dark:text-white mb-4 uppercase font-bold tracking-wider"
-      >
+    <!-- DOCK DE ATALHOS LATERAIS -->
+    <div id="dynamic-nav-menu" class="fixed top-24 right-4 md:right-6 z-50 flex flex-col gap-3"></div>
+
+<footer class="mt-6 border-t pt-4 text-center pb-4">
+      <p class="text-xs text-gray-400 dark:text-white mb-2 uppercase font-bold tracking-wider">
         Acesso Externo Rápido
       </p>
       <div class="flex justify-center gap-4">
-        <a
-          href="https://www.cadastrodefornecedores.saeb.ba.gov.br/loginrestrito"
-          target="_blank"
-          class="px-4 py-2 bg-white dark:bg-slate-800 dark:border-slate-600 border rounded-lg text-sm text-gray-600 dark:text-gray-300 hover:text-[var(--primary-600)] hover:border-[var(--primary-600)] transition shadow-sm flex items-center gap-2"
-        >
-          <img
-            src="https://comprasnet.ba.gov.br/sites/default/files/banner-caf-digital_comprasnet.jpg"
-            class="w-30 h-6 rounded-sm object-cover"
-          />
-          <span class="hidden md:inline">CAF Digital</span>
+        <a href="https://www.cadastrodefornecedores.saeb.ba.gov.br/loginrestrito" target="_blank" class="px-4 py-2 bg-white dark:bg-slate-800 dark:border-slate-600 border rounded-lg text-sm text-gray-600 dark:text-gray-300 hover:text-[var(--primary-600)] hover:border-[var(--primary-600)] transition shadow-sm flex items-center gap-2">
+          <img src="https://comprasnet.ba.gov.br/sites/default/files/banner-caf-digital_comprasnet.jpg" class="w-30 h-5 rounded-sm object-cover"> <span class="hidden md:inline">CAF Digital</span>
         </a>
-        <a
-          href="https://www.comprasnetadm.ba.gov.br/Home/Login"
-          target="_blank"
-          class="px-4 py-2 bg-white dark:bg-slate-800 dark:border-slate-600 border rounded-lg text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 hover:border-blue-600 transition shadow-sm flex items-center gap-2"
-        >
-          <img
-            src="https://comprasnet.ba.gov.br/sites/all/modules/secom_bar/images/logomarca.png"
-            class="w-30 h-6 object-contain"
-          />
-          <span class="hidden md:inline">Comprasnet</span>
+        <a href="https://www.comprasnetadm.ba.gov.br/Home/Login" target="_blank" class="px-4 py-2 bg-white dark:bg-slate-800 dark:border-slate-600 border rounded-lg text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 hover:border-blue-600 transition shadow-sm flex items-center gap-2">
+          <img src="https://comprasnet.ba.gov.br/sites/all/modules/secom_bar/images/logomarca.png" class="w-30 h-5 object-contain"> <span class="hidden md:inline">Comprasnet</span>
         </a>
       </div>
     </footer>
@@ -478,7 +340,7 @@
                     <span class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">Não mostrar novamente</span>
                 </label>
                 
-                <button onclick="closeWelcomeModalCockpit()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all shadow-lg active:scale-95">
+                <button onclick="window.closeWelcomeModalCockpit()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all shadow-lg active:scale-95">
                     Entendi e Explorar o Cockpit
                 </button>
             </div>
@@ -486,6 +348,6 @@
     </div>
 </div>
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
   </body>
 </html>
