@@ -128,14 +128,23 @@ function renderDemandas() {
 
         // BOTÃO DE EXCLUIR APARECE APENAS PARA ADMIN
         const btnExcluir = currentUserRole === 'admin' ? `
-            <button class="text-slate-400 hover:text-red-500 p-1" onclick="event.stopPropagation(); excluirDemanda('${d.id}')" title="Excluir (Admin)">
+            <button class="text-slate-400 hover:text-red-500 p-1 transition-colors" onclick="event.stopPropagation(); excluirDemanda('${d.id}')" title="Excluir (Admin)">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
             </button>
         ` : '';
 
+        // NOVO: Botão de Editar visível para quem vê o card
+        const btnEditar = `
+            <button class="text-slate-400 hover:text-blue-500 p-1 transition-colors" onclick="event.stopPropagation(); abrirModalDemanda('${d.id}')" title="Editar Demanda">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+            </button>
+        `;
+
         const card = document.createElement('div');
         card.className = `bg-white dark:bg-slate-900 p-5 rounded-xl border ${isAtrasado ? 'border-red-300 dark:border-red-800/50 shadow-[0_0_15px_rgba(239,68,68,0.1)]' : 'border-slate-200 dark:border-slate-800'} shadow-sm hover:shadow-md transition-shadow flex flex-col animate-fade-in cursor-pointer group`;
-        card.onclick = () => abrirModalDemanda(d.id);
+        
+        // AGORA O CLIQUE NO CARD ABRE A VISUALIZAÇÃO
+        card.onclick = () => abrirModalVisualizacao(d.id); 
 
         card.innerHTML = `
             <div class="flex justify-between items-start mb-2">
@@ -150,7 +159,7 @@ function renderDemandas() {
             <h3 class="font-bold text-slate-800 dark:text-white leading-tight mb-2 group-hover:text-blue-600 transition-colors">${d.titulo}</h3>
             <p class="text-xs text-slate-500 line-clamp-2 mb-4 flex-1">${d.descricao || 'Sem descrição.'}</p>
             
-            <div class="grid grid-cols-2 gap-2 text-xs border-t dark:border-slate-800 pt-3">
+            <div class="grid grid-cols-2 gap-2 text-xs border-t border-slate-200 dark:border-slate-800 pt-3">
                 <div>
                     <p class="text-slate-400 uppercase text-[9px] font-bold">Solicitante</p>
                     <p class="font-medium text-slate-700 dark:text-slate-300 truncate" title="${d.solicitante_nome}">${d.solicitante_nome}</p>
@@ -160,13 +169,19 @@ function renderDemandas() {
                     <p class="font-medium text-slate-700 dark:text-slate-300 truncate" title="${d.responsavel_nome || 'Não atribuído'}">${d.responsavel_nome || 'Ninguém'}</p>
                 </div>
             </div>
-            <div class="mt-3 text-xs flex items-center justify-between">
-                <span class="${isAtrasado ? 'text-red-500 font-bold' : 'text-slate-500'}">Prazo: ${prazo}</span>
-                ${btnExcluir}
+            
+            <div class="mt-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-3">
+                <span class="text-xs ${isAtrasado ? 'text-red-500 font-bold' : 'text-slate-500'}">Prazo: ${prazo}</span>
+                
+                <!-- CONTAINER COM OS BOTÕES DE AÇÃO -->
+                <div class="flex gap-1 bg-slate-50 dark:bg-slate-800/50 rounded-lg p-0.5 border border-slate-200 dark:border-slate-700">
+                    ${btnEditar}
+                    ${btnExcluir}
+                </div>
             </div>
             
             ${precisaDarCiente ? `
-                <div class="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800">
+                <div class="mt-3">
                 <button onclick="event.stopPropagation(); solicitarCiente('${d.id}', '${d.solicitante_nome}')" class="w-full py-2 bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-600 dark:hover:text-white font-bold rounded-lg transition-all text-xs uppercase tracking-wider shadow-sm">
                     Dar Ciente
                 </button>
@@ -651,4 +666,84 @@ window.toggleSubdemanda = async (id, status) => {
     await supabase.from('sub_demandas').update({ concluido: status }).eq('id', id);
     // Atualiza a lista visualmente
     carregarSubdemandas(document.getElementById('f-id').value);
+};
+
+window.abrirModalVisualizacao = async (id) => {
+    const d = demandas.find(x => x.id === id);
+    if (!d) return;
+
+    // Dispara a leitura se for o responsável
+    if (d.responsavel_nome === currentUserName && !d.visualizado_em) {
+        registrarVisualizacao(d);
+    }
+
+    // Preenche dados principais
+    document.getElementById('vis-titulo').textContent = d.titulo;
+    document.getElementById('vis-solicitante').textContent = d.solicitante_nome;
+    document.getElementById('vis-responsavel').textContent = d.responsavel_nome || 'Sem atribuição';
+    document.getElementById('vis-prazo').textContent = d.prazo_limite ? new Date(d.prazo_limite + 'T12:00:00Z').toLocaleDateString('pt-BR') : 'Sem prazo definido';
+    document.getElementById('vis-descricao').textContent = d.descricao || 'Nenhuma descrição detalhada fornecida.';
+    document.getElementById('vis-obs').textContent = d.observacoes || 'Nenhuma observação registrada.';
+
+    // Cores dinâmicas para Status e Prioridade
+    const statusEl = document.getElementById('vis-status');
+    statusEl.textContent = d.status;
+    statusEl.className = `inline-block mt-1 px-2.5 py-1 rounded text-[10px] font-black uppercase tracking-wider ${
+        d.status === 'Pendente' ? 'bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-300' :
+        d.status === 'Em Andamento' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-400' :
+        d.status === 'Concluído' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400' :
+        'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-400'
+    }`;
+
+    const prioColors = {
+        'Baixa': 'text-slate-500', 'Média': 'text-blue-500', 'Alta': 'text-orange-500', 'Urgente': 'text-red-600 font-bold'
+    };
+    document.getElementById('vis-prioridade').textContent = d.prioridade;
+    document.getElementById('vis-prioridade').className = `font-medium text-sm ${prioColors[d.prioridade]}`;
+
+    // Conectar botão de edição
+    document.getElementById('btn-vis-editar').onclick = () => {
+        fecharModalVisualizacao();
+        abrirModalDemanda(d.id);
+    };
+
+    // Buscar e renderizar Subdemandas (Apenas visualização)
+    const listaSub = document.getElementById('vis-subdemandas');
+    listaSub.innerHTML = '<p class="text-xs text-slate-400 animate-pulse">Carregando passos...</p>';
+    
+    const { data } = await supabase.from('sub_demandas').select('*').eq('demanda_id', id);
+    
+    if (!data || data.length === 0) {
+        listaSub.innerHTML = '<p class="text-xs text-slate-500 italic p-3 bg-slate-50 dark:bg-slate-900/50 rounded-lg">Nenhum passo cadastrado para esta demanda.</p>';
+    } else {
+        listaSub.innerHTML = data.map(s => {
+            const prazoFmt = s.prazo ? new Date(s.prazo + 'T12:00:00Z').toLocaleDateString('pt-BR') : '';
+            return `
+                <div class="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <!-- Ícone de Check customizado -->
+                    <div class="w-5 h-5 rounded flex shrink-0 items-center justify-center ${s.concluido ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 text-transparent'}">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                    </div>
+                    
+                    <span class="flex-1 text-sm ${s.concluido ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-700 dark:text-slate-200 font-medium'}">
+                        ${s.titulo}
+                    </span>
+                    
+                    <div class="flex flex-col items-end gap-1">
+                        ${prazoFmt ? `<span class="text-[10px] text-slate-400 flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg> ${prazoFmt}</span>` : ''}
+                        <span class="text-[10px] bg-blue-50 border border-blue-100 dark:border-blue-900/30 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded-full font-bold truncate max-w-[120px]">
+                            ${s.responsavel_nome || 'Sem resp.'}
+                        </span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // Exibe o modal
+    document.getElementById('modal-visualizacao').classList.remove('hidden');
+};
+
+window.fecharModalVisualizacao = () => {
+    document.getElementById('modal-visualizacao').classList.add('hidden');
 };
