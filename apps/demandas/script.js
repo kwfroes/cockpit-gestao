@@ -6,6 +6,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Estado Global
 let demandas = [];
+let tempSubDemandas = [];
 let perfisUsuarios = [];
 const currentUserRole = sessionStorage.getItem('cockpit_user_role') || 'user';
 const currentUserName = sessionStorage.getItem('cockpit_user_realname') || 'Usuário';
@@ -51,9 +52,10 @@ async function carregarUsuarios() {
 
     perfisUsuarios = data;
     const select = document.getElementById('f-responsavel');
+    const selectSub = document.getElementById('nova-sub-responsavel');
     data.forEach(user => {
         select.innerHTML += `<option value="${user.id}">${user.name}</option>`;
-    });
+        selectSub.innerHTML += `<option value="${user.id}">${user.name}</option>`;    });
 }
 
 async function fetchDemandas() {
@@ -195,27 +197,40 @@ window.abrirModalDemanda = (id = null) => {
             document.getElementById('f-prioridade').value = d.prioridade;
             document.getElementById('f-prazo').value = d.prazo_limite || '';
             document.getElementById('f-obs').value = d.observacoes || '';
-            
+
+            carregarSubdemandas(id);
+
+            document.getElementById('container-subdemandas').classList.remove('hidden');
             // Setar o select do responsável
             if(d.responsavel_id) document.getElementById('f-responsavel').value = d.responsavel_id;
         }
     } else {
         document.getElementById('modal-title').textContent = 'Nova Demanda';
+        document.getElementById('container-subdemandas').classList.remove('hidden');
+        
+        // Zera o array de memória e limpa a tela de subdemandas anteriores
+        tempSubDemandas = [];
+        renderTempSubdemandas();
     }
 
     modal.classList.remove('hidden');
 }
 
-window.fecharModalDemanda = () => document.getElementById('modal-demanda').classList.add('hidden');
+window.fecharModalDemanda = () => {
+    document.getElementById('modal-demanda').classList.add('hidden');
+    tempSubDemandas = []; // <--- Isso limpa a memória ao fechar!
+};
+
 
 window.salvarDemanda = async () => {
     const btn = document.getElementById('btn-save');
     const originalText = btn.textContent;
+    const id = document.getElementById('f-id').value; // Pegamos o ID aqui
+
     btn.textContent = 'Salvando...';
     btn.disabled = true;
 
     try {
-        const id = document.getElementById('f-id').value;
         const respSelect = document.getElementById('f-responsavel');
         const respId = respSelect.value || null;
         const respNome = respSelect.value ? respSelect.options[respSelect.selectedIndex].text : null;
@@ -232,36 +247,97 @@ window.salvarDemanda = async () => {
             data_atualizacao: new Date().toISOString()
         };
 
-        // Regra: Se é nova demanda, grava quem solicitou
-        if (!id) {
-            payload.solicitante_nome = currentUserName;
-        }
-
         if (!payload.titulo) throw new Error("O título é obrigatório.");
 
-        let reqError;
-        if (id) {
-            const { error } = await supabase.from('demandas').update(payload).eq('id', id);
-            reqError = error;
+        let idFinal = id;
+
+        // --- BLOCO ÚNICO DE SALVAMENTO ---
+        if (!id) {
+            // CRIANDO NOVA
+            payload.solicitante_nome = currentUserName;
+            const { data, error } = await supabase.from('demandas').insert([payload]).select();
+            if (error) throw error;
+            idFinal = data[0].id;
+
+            // Log de atribuição
+            if (respNome) {
+                await supabase.from('demandas_logs').insert([{
+                    demanda_id: idFinal,
+                    ator_nome: currentUserName,
+                    destinatario_nome: respNome,
+                    mensagem: `Atribuiu uma nova demanda para você: "${payload.titulo}"`
+                }]);
+            }
         } else {
-            const { error } = await supabase.from('demandas').insert([payload]);
-            reqError = error;
+            // ATUALIZANDO EXISTENTE
+            const { error } = await supabase.from('demandas').update(payload).eq('id', id);
+            if (error) throw error;
         }
 
-        if (reqError) throw reqError;
+        // --- SINCRONIZAÇÃO DE SUBDEMANDAS (Lógica Upsert Separada) ---
+        if (tempSubDemandas.length > 0) {
+            
+            // 1. Separa os itens em duas listas (Existentes vs Novos)
+            const paraAtualizar = [];
+            const paraInserir = [];
 
-        // SE FOR UMA NOVA DEMANDA E TIVER RESPONSÁVEL ATRIBUÍDO
-        if (!id && respNome) {
-            await supabase.from('demandas_logs').insert([{
-                demanda_id: payload.id, // Em insert simples isso pode não retornar, ajustar se necessário
-                ator_nome: currentUserName,
-                destinatario_nome: respNome,
-                mensagem: `Atribuiu uma nova demanda para você: "${payload.titulo}"`
-            }]);
+            tempSubDemandas.forEach(s => {
+                const item = {
+                    demanda_id: idFinal,
+                    titulo: s.titulo,
+                    prazo: s.prazo || null,
+                    responsavel_id: s.responsavel_id || null,
+                    responsavel_nome: s.responsavel_nome || null,
+                    concluido: s.concluido || false
+                };
+                
+                if (s.id) {
+                    item.id = s.id; // Se tem ID, vai para a lista de atualização
+                    paraAtualizar.push(item);
+                } else {
+                    paraInserir.push(item); // Se não tem ID, vai para a lista de novos passos
+                }
+            });
+
+            // 2. Envia as atualizações (sem disparar e-mails repetidos)
+            if (paraAtualizar.length > 0) {
+                const { error: errUp } = await supabase.from('sub_demandas').upsert(paraAtualizar);
+                if (errUp) {
+                    console.error("Erro no Upsert:", errUp);
+                    throw new Error("Erro ao atualizar as subdemandas existentes.");
+                }
+            }
+
+            // 3. Envia os novos passos (o banco fará o INSERT e disparará o e-mail)
+            if (paraInserir.length > 0) {
+                const { error: errIn } = await supabase.from('sub_demandas').insert(paraInserir);
+                if (errIn) {
+                    console.error("Erro no Insert:", errIn);
+                    throw new Error("Erro ao inserir os novos passos.");
+                }
+            }
+
+            // 4. Limpeza: Deleta do banco os passos que o usuário excluiu na tela (clicou no X)
+            const idsAtuais = tempSubDemandas.filter(s => s.id).map(s => s.id);
+            if (idsAtuais.length > 0) {
+                await supabase.from('sub_demandas')
+                    .delete()
+                    .eq('demanda_id', idFinal)
+                    .not('id', 'in', `(${idsAtuais.join(',')})`);
+            } else {
+                await supabase.from('sub_demandas').delete().eq('demanda_id', idFinal).not('id', 'is', null);
+            }
+            
+        } else {
+            // Se a lista está totalmente vazia, deleta tudo
+            await supabase.from('sub_demandas').delete().eq('demanda_id', idFinal);
         }
-
+        // ==========================================
+        // MANTENHA ESTA PARTE INTACTA
+        // ==========================================
         fecharModalDemanda();
-        await fetchDemandas(); // Recarrega os dados
+        await fetchDemandas(); 
+        showToast("Demanda salva com sucesso!");
 
     } catch (err) {
         alert(err.message || "Erro ao salvar a demanda.");
@@ -519,4 +595,60 @@ window.solicitarCiente = (idDemanda, solicitanteNome) => {
             showToast("Demanda iniciada e solicitante notificado!");
         }
     );
+};
+
+// Carrega do banco para a memória apenas ao abrir o modal
+async function carregarSubdemandas(demandaId) {
+    const { data } = await supabase.from('sub_demandas').select('*').eq('demanda_id', demandaId);
+    tempSubDemandas = data || []; 
+    renderTempSubdemandas();
+}
+
+// Apenas adiciona ao array, sem salvar no banco agora
+window.adicionarSubdemanda = () => {
+    const titulo = document.getElementById('nova-sub-titulo').value;
+    const prazo = document.getElementById('nova-sub-prazo').value;
+    const selectResp = document.getElementById('nova-sub-responsavel');
+    
+    // Captura ID e Nome do select
+    const respId = selectResp.value || null;
+    const respNome = selectResp.value ? selectResp.options[selectResp.selectedIndex].text : null;
+
+    if (!titulo) return showToast("Digite o título do passo", "error");
+
+    tempSubDemandas.push({ 
+        titulo, 
+        prazo: prazo || null, 
+        responsavel_id: respId,      // Salva o ID na memória
+        responsavel_nome: respNome,  // Mantém o nome para exibir na tela
+        concluido: false 
+    });
+    
+    // Limpa os campos após adicionar
+    document.getElementById('nova-sub-titulo').value = '';
+    document.getElementById('nova-sub-prazo').value = '';
+    selectResp.value = '';
+    
+    renderTempSubdemandas();
+};
+
+// Renderiza a interface a partir da memória
+function renderTempSubdemandas() {
+    const lista = document.getElementById('lista-subdemandas');
+    lista.innerHTML = tempSubDemandas.map((s, index) => `
+        <div class="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700">
+            <input type="checkbox" ${s.concluido ? 'checked' : ''} onchange="tempSubDemandas[${index}].concluido = this.checked">
+            <span class="flex-1 text-xs">${s.titulo}</span>
+            <span class="text-[10px] text-slate-400 dark:text-slate-500">${s.prazo || ''}</span>
+            <span class="text-[10px] bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 px-1 rounded">${s.responsavel_nome || ''}</span>
+            <button type="button" onclick="tempSubDemandas.splice(${index}, 1); renderTempSubdemandas()" class="text-red-500 font-bold px-2">x</button>
+        </div>
+    `).join('');
+}
+
+// 3. Marcar como concluído
+window.toggleSubdemanda = async (id, status) => {
+    await supabase.from('sub_demandas').update({ concluido: status }).eq('id', id);
+    // Atualiza a lista visualmente
+    carregarSubdemandas(document.getElementById('f-id').value);
 };

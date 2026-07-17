@@ -127,6 +127,22 @@
                     <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Descrição Detalhada</label>
                     <textarea id="f-descricao" rows="4" class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none focus:border-blue-500 text-sm"></textarea>
                 </div>
+
+                <!-- Seção de Subdemandas -->
+                <div id="container-subdemandas" class="hidden mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-3">Subdemandas (Passos)</label>
+                    
+                    <div id="lista-subdemandas" class="space-y-2 mb-4"></div>
+
+                    <div class="flex gap-2">
+                        <input type="text" id="nova-sub-titulo" placeholder="Novo passo..." class="flex-1 p-2 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 text-sm">
+                        <input type="date" id="nova-sub-prazo" class="p-2 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 text-sm">
+                        <select id="nova-sub-responsavel" class="p-2 border rounded-lg dark:bg-slate-900 text-sm">
+                            <option value="">Responsável</option>
+                        </select>
+                        <button type="button" onclick="adicionarSubdemanda()" class="bg-slate-800 dark:bg-slate-700 text-white px-3 rounded-lg hover:bg-slate-900">+</button>
+                    </div>
+                </div>
                 
                 <div>
                     <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Observações / Histórico (Opcional)</label>

@@ -204,65 +204,82 @@ async function generateCaptcha() {
 
   // --- Lógica de Sessão ---
 
-async function checkSession() {
-    const { data: { session }, error } = await supabase.auth.getSession();
+  async function checkSession() {
+      const { data: { session }, error } = await supabase.auth.getSession();
 
-    if (session) {
-        const user = session.user;
-        
-        // Adicionamos 'allowed_apps' na busca do perfil
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('name, role, avatar_url, apelido, precisa_trocar_senha, allowed_apps')
-          .eq('id', user.id)
-          .single();
-        
-        sessionStorage.setItem("cockpit_auth_token", "valid");
-        sessionStorage.setItem("cockpit_user_email", user.email);
-        sessionStorage.setItem("cockpit_user_realname", profile?.name || user.user_metadata?.name || user.email.split('@')[0]);
-        sessionStorage.setItem("cockpit_user_role", profile?.role || user.user_metadata?.role || "user");
-        sessionStorage.setItem("cockpit_user_apelido", profile?.apelido || "");
-        
-        // Salva a lista de apps permitidos na sessão do navegador
-        const userApps = profile?.allowed_apps || ["#home"];
-        sessionStorage.setItem("cockpit_allowed_apps", JSON.stringify(userApps));
-        
-        if (profile?.avatar_url) {
-            sessionStorage.setItem("cockpit_user_avatar", profile.avatar_url);
-        } else {
-            sessionStorage.removeItem("cockpit_user_avatar");
-        }
-        
-        if (profile?.precisa_trocar_senha) {
-            document.getElementById("forcedPasswordModal").classList.remove("hidden");
-        } else {
-            unlockInterface();
-            applyPermissions(); // Aplica a ocultação baseada na lista salva
-            updateUserMenu();
-            updateUserAvatarVisuals();
-            navigate(window.location.hash || "#home");
+      if (session) {
+          const user = session.user;
+          
+          // Adicionamos 'allowed_apps' na busca do perfil
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('name, role, avatar_url, apelido, precisa_trocar_senha, allowed_apps')
+            .eq('id', user.id)
+            .single();
+          
+          sessionStorage.setItem("cockpit_auth_token", "valid");
+          sessionStorage.setItem("cockpit_user_email", user.email);
+          sessionStorage.setItem("cockpit_user_realname", profile?.name || user.user_metadata?.name || user.email.split('@')[0]);
+          sessionStorage.setItem("cockpit_user_role", profile?.role || user.user_metadata?.role || "user");
+          sessionStorage.setItem("cockpit_user_apelido", profile?.apelido || "");
+          
+          // Salva a lista de apps permitidos na sessão do navegador
+          const userApps = profile?.allowed_apps || ["#home"];
+          sessionStorage.setItem("cockpit_allowed_apps", JSON.stringify(userApps));
+          
+          if (profile?.avatar_url) {
+              sessionStorage.setItem("cockpit_user_avatar", profile.avatar_url);
+          } else {
+              sessionStorage.removeItem("cockpit_user_avatar");
+          }
+          
+          if (profile?.precisa_trocar_senha) {
+              document.getElementById("forcedPasswordModal").classList.remove("hidden");
+          } else {
+              unlockInterface();
+              applyPermissions(); // Aplica a ocultação baseada na lista salva
+              updateUserMenu();
+              updateUserAvatarVisuals();
+              navigate(window.location.hash || "#home");
 
-            // ==========================================
-            // INICIALIZA AS NOTIFICAÇÕES GLOBAIS
-            // ==========================================
-            fetchGlobalNotifications(); 
-            
-            // Cria o loop de 2 em 2 minutos (salvando na janela para não duplicar)
-            if (!window.cockpitNotifInterval) {
-                window.cockpitNotifInterval = setInterval(fetchGlobalNotifications, 120000);
-            }
-        }
-    } else {
-        frame.src = "about:blank";
-        generateCaptcha();
-        
-        // Limpa o loop se o usuário deslogar/perder a sessão
-        if (window.cockpitNotifInterval) {
-            clearInterval(window.cockpitNotifInterval);
-            window.cockpitNotifInterval = null;
-        }
-    }
-}
+              // ==========================================
+              // INICIALIZA AS NOTIFICAÇÕES GLOBAIS E REALTIME
+              // ==========================================
+              
+              // 1. Pede permissão nativa do Windows/Mac para exibir notificações
+              if ("Notification" in window && Notification.permission === "default") {
+                  Notification.requestPermission();
+              }
+
+              // 2. Busca o status inicial do sininho
+              fetchGlobalNotifications(); 
+              
+              // 3. LIGA O ESPIÃO EM TEMPO REAL (NOVIDADE AQUI!)
+              if (typeof startDemandasListener === "function") {
+                  startDemandasListener(); 
+              }
+              
+              // 4. Cria o loop de segurança de 2 em 2 minutos
+              if (!window.cockpitNotifInterval) {
+                  window.cockpitNotifInterval = setInterval(fetchGlobalNotifications, 120000);
+              }
+          }
+      } else {
+          frame.src = "about:blank";
+          generateCaptcha();
+          
+          // Limpa o loop se o usuário deslogar/perder a sessão
+          if (window.cockpitNotifInterval) {
+              clearInterval(window.cockpitNotifInterval);
+              window.cockpitNotifInterval = null;
+          }
+          
+          // Desliga o espião de notificações ao sair
+          if (window.demandasChannel) {
+              window.demandasChannel.unsubscribe();
+          }
+      }
+  }
 
   function unlockInterface() {
     if (loginOverlay) {
@@ -340,6 +357,21 @@ if (loginForm) {
               navigate(window.location.hash || "#home");
           }
       }
+      if (profile?.precisa_trocar_senha) {
+              document.getElementById("forcedPasswordModal").classList.remove("hidden");
+          } else {
+              loginError.classList.add("hidden");
+              applyPermissions(); 
+              updateUserMenu();
+              updateUserAvatarVisuals();
+              unlockInterface();
+              
+              // Adicione estas duas linhas antes do 'navigate'
+              fetchGlobalNotifications(); 
+              startDemandasListener(); 
+              
+              navigate(window.location.hash || "#home");
+          }
 
       btn.textContent = "Entrar no Sistema";
       btn.disabled = false;
@@ -1052,61 +1084,47 @@ async function performLogout() {
     });
   }
 
-  // 2. Form RESET SENHA (ATUALIZADO PARA SUPABASE)
+  // 2. Form RESET SENHA (VIA EDGE FUNCTION DE GERAÇÃO)
   const resForm = document.getElementById("resetForm");
   if (resForm) {
     resForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       
       const email = document.getElementById("resEmail").value.trim().toLowerCase();
-      const rawPass = document.getElementById("resNewPass").value;
-      const confirmPass = document.getElementById("resConfirm").value;
+      const btn = document.getElementById("btnSubmitReset");
 
-      // --- VALIDAÇÃO DE IGUALDADE ---
-      if (rawPass !== confirmPass) {
-        showError("A confirmação de senha está incorreta.");
-        return;
-      }
-
-      // Verifica se o usuário está logado no sistema
-      const isLoggedIn = sessionStorage.getItem("cockpit_auth_token") === "valid";
+      btn.textContent = "Enviando...";
+      btn.disabled = true;
 
       try {
-        if (isLoggedIn) {
-          // 1. USUÁRIO LOGADO: Altera a própria senha diretamente no banco
-          const { error } = await supabase.auth.updateUser({ 
-              password: rawPass 
-          });
-          
-          if (error) throw error;
+        // Dispara a requisição para a Edge Function
+        const { data, error } = await supabase.functions.invoke('gerenciar-usuarios', {
+            body: { acao: 'recuperar_senha', email: email }
+        });
 
-          closeRequestModals();
-          showSuccess(
-            "Senha Atualizada!",
-            "Sua nova senha foi salva com sucesso e já está valendo."
-          );
-        } else {
-          // 2. USUÁRIO DESLOGADO (Esqueceu a senha na tela de login)
-          // O Supabase ignora a senha digitada aqui e envia um e-mail com link seguro
-          const { error } = await supabase.auth.resetPasswordForEmail(email);
-          
-          if (error) throw error;
+        // Se o back-end retornar erro (ex: e-mail não encontrado na base)
+        if (error) throw error;
 
-          closeRequestModals();
-          showSuccess(
-            "E-mail Enviado!",
-            "Verifique a caixa de entrada do e-mail informado para redefinir sua senha."
-          );
-        }
-        
+        closeRequestModals();
+        showSuccess(
+          "Senha Enviada!",
+          "Verifique a caixa de entrada do seu e-mail. Uma nova senha temporária foi gerada."
+        );
         resForm.reset();
         
       } catch (err) {
-        console.error("Erro no Supabase:", err);
-        showError("Não foi possível alterar a senha: " + err.message);
+        console.error("Erro na recuperação:", err);
+        // Tenta capturar a mensagem limpa enviada pela Edge Function
+        let msgErro = "Não foi possível recuperar a senha.";
+        if (err instanceof Error) msgErro = err.message;
+        
+        showError(msgErro);
+      } finally {
+        btn.textContent = "Enviar Nova Senha";
+        btn.disabled = false;
       }
     });
-  }
+   }
 
   // =========================================================
   // LOGICA DO MENU DE PERFIL (SIDEBAR)
@@ -1700,6 +1718,59 @@ window.addEventListener("message", (event) => {
         }
     }
 });
+
+  // ==========================================================
+  // MÓDULO: ESCUTA ATIVA DE DEMANDAS (REALTIME)
+  // ==========================================================
+  function startDemandasListener() {
+    const userRealName = sessionStorage.getItem("cockpit_user_realname");
+    
+    if (!userRealName) return;
+
+    // Remove inscrições antigas para evitar duplicidade de notificações se o usuário deslogar/logar
+    if (window.demandasChannel) {
+        window.demandasChannel.unsubscribe();
+    }
+
+    console.log("📡 Iniciando escuta em tempo real para demandas de:", userRealName);
+
+    // Inscreve o App Pai no canal de alterações da tabela Demandas
+    window.demandasChannel = supabase
+        .channel('custom-demandas-updates')
+        .on(
+            'postgres_changes',
+            {
+                event: 'UPDATE', // Escuta apenas edições (mudanças de status, prazos, etc)
+                schema: 'public',
+                table: 'demandas',
+            },
+            (payload) => {
+                const novaDemanda = payload.new;
+
+                // Verifica se a alteração diz respeito a você (Responsável OU Solicitante)
+                if (novaDemanda.responsavel_nome === userRealName || novaDemanda.solicitante_nome === userRealName) {
+                    
+                    // 1. Dispara uma notificação no Desktop/Celular
+                    if ("Notification" in window && Notification.permission === "granted") {
+                        new Notification(`Demanda Atualizada!`, {
+                            body: `A demanda "${novaDemanda.titulo}" agora está: ${novaDemanda.status}`,
+                            icon: "icons/android-chrome-192x192.png", // Seu ícone do Cockpit
+                            silent: false
+                        });
+                    }
+
+                    // 2. Atualiza os dados do Sininho Global silenciosamente
+                    if (typeof window.fetchGlobalNotifications === "function") {
+                        window.fetchGlobalNotifications();
+                    }
+                    
+                    console.log(`🔔 Notificação de Realtime disparada: ${novaDemanda.titulo}`);
+                }
+            }
+        )
+        .subscribe();
+  }
+  window.startDemandasListener = startDemandasListener;
 
 
 
