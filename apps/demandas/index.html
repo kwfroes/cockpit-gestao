@@ -157,6 +157,76 @@
         </div>
     </div>
 
+    <!-- Modal de Visualização (NOVO) -->
+    <div id="modal-visualizacao" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col border border-slate-200 dark:border-slate-700">
+            <div class="p-5 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/80">
+                <h3 class="text-lg font-bold text-slate-800 dark:text-white" id="vis-titulo">Detalhes da Demanda</h3>
+                <button onclick="fecharModalVisualizacao()" class="text-slate-400 hover:text-red-500 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <div class="p-5 overflow-y-auto custom-scrollbar flex-1 space-y-6 text-sm">
+                <!-- Grid de Informações -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
+                    <div class="col-span-2 md:col-span-1">
+                        <p class="text-[10px] uppercase font-bold text-slate-500 mb-1">Status</p>
+                        <span id="vis-status" class="inline-block px-2 py-1 rounded text-[10px] font-black uppercase tracking-wider"></span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase font-bold text-slate-500 mb-1">Prioridade</p>
+                        <p class="font-bold text-sm" id="vis-prioridade"></p>
+                    </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <p class="text-[10px] uppercase font-bold text-slate-500 mb-1">Prazo Limite</p>
+                        <p class="font-medium text-slate-800 dark:text-slate-200" id="vis-prazo"></p>
+                    </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <p class="text-[10px] uppercase font-bold text-slate-500 mb-1">Solicitante</p>
+                        <p class="font-medium text-slate-800 dark:text-slate-200 truncate" id="vis-solicitante"></p>
+                    </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <p class="text-[10px] uppercase font-bold text-slate-500 mb-1">Responsável</p>
+                        <p class="font-medium text-blue-600 dark:text-blue-400 truncate" id="vis-responsavel"></p>
+                    </div>
+                </div>
+
+                <!-- Textos Longos -->
+                <div>
+                    <p class="text-[10px] uppercase font-bold text-slate-500 mb-2 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
+                        Descrição Detalhada
+                    </p>
+                    <div class="p-3.5 bg-slate-50 dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 whitespace-pre-wrap text-slate-700 dark:text-slate-300 leading-relaxed" id="vis-descricao"></div>
+                </div>
+
+                <!-- Subdemandas -->
+                <div>
+                    <p class="text-[10px] uppercase font-bold text-slate-500 mb-2 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                        Passos / Subdemandas
+                    </p>
+                    <div id="vis-subdemandas" class="space-y-2"></div>
+                </div>
+
+                <!-- Observações -->
+                <div>
+                    <p class="text-[10px] uppercase font-bold text-slate-500 mb-2">Observações / Histórico</p>
+                    <div class="p-3 bg-yellow-50/50 dark:bg-yellow-900/10 rounded-lg border border-yellow-200 dark:border-yellow-900/30 whitespace-pre-wrap text-slate-600 dark:text-slate-400 italic" id="vis-obs"></div>
+                </div>
+            </div>
+
+            <div class="p-5 border-t border-slate-200 dark:border-slate-700 flex justify-end gap-3 bg-slate-50 dark:bg-slate-800/80">
+                <button type="button" onclick="fecharModalVisualizacao()" class="px-5 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 font-bold rounded-lg transition-colors">Fechar</button>
+                <button type="button" id="btn-vis-editar" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors shadow-md flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                    Editar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div id="modal-confirmacao" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[200] flex items-center justify-center p-4 animate-fade-in">
         <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-sm p-6 flex flex-col border border-slate-200 dark:border-slate-700 animate-scale-up">
             <div class="flex items-center gap-4 mb-4">
