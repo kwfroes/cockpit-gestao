@@ -198,7 +198,7 @@
               onclick="openResetModal()"
               class="hover:text-blue-600 transition underline"
             >
-              Alterar senha
+              Esqueci minha senha
             </button>
           </div>
         </form>
@@ -1009,117 +1009,26 @@
         <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-1">
           Solicitar Nova Senha
         </h3>
-        <p class="text-xs text-gray-500 mb-4">O admin validará seu e-mail.</p>
 
-        <form id="resetForm" class="space-y-3">
-          <div class="flex flex-col items-center mb-4">
-            <div
-              class="relative group cursor-pointer"
-              onclick="document.getElementById('resAvatarInput').click()"
-            >
-              <img
-                id="resAvatarPreview"
-                src=""
-                class="w-20 h-20 rounded-full object-cover border-2 border-indigo-100 hidden"
-              />
-              <div
-                id="resAvatarPlaceholder"
-                class="w-20 h-20 rounded-full bg-indigo-50 dark:bg-slate-700 dark:border-slate-500 flex items-center justify-center border-2 border-dashed border-indigo-200 text-indigo-300 group-hover:border-indigo-400 group-hover:text-indigo-500 transition-colors"
-              >
-                <svg
-                  class="w-8 h-8"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  ></path>
-                </svg>
-              </div>
-              <div
-                class="absolute bottom-0 right-0 bg-indigo-600 text-white rounded-full p-1 shadow-md border-2 border-white"
-              >
-                <svg
-                  class="w-3 h-3"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 4v16m8-8H4"
-                  ></path>
-                </svg>
-              </div>
-            </div>
-            <p class="text-[10px] text-gray-400 mt-2">
-              Atualizar foto (Opcional)
+          <form id="resetForm" class="space-y-4 mt-4">
+            <p class="text-xs text-gray-500 mb-4 text-center">
+              Digite seu e-mail cadastrado. O sistema gerará uma nova senha e a enviará para você.
             </p>
             <input
-              type="file"
-              id="resAvatarInput"
-              accept="image/*"
-              class="hidden"
-            />
-          </div>
-
-          <input
-            type="text"
-            id="resUser"
-            placeholder="Seu Usuário"
-            class="w-full px-3 py-2 border rounded text-sm outline-none dark:bg-slate-900 dark:text-white dark:border-slate-600 dark:placeholder-gray-500 focus:border-blue-500"
-            required
-          />
-          <input
-            type="email"
-            id="resEmail"
-            placeholder="Seu E-mail Cadastrado"
-            class="w-full px-3 py-2 border rounded text-sm outline-none dark:bg-slate-900 dark:text-white dark:border-slate-600 dark:placeholder-gray-500 focus:border-blue-500"
-            required
-          />
-          <div class="space-y-3">
-            <input
-              type="password"
-              id="resNewPass"
-              placeholder="Nova Senha"
-              class="w-full px-3 py-2 border rounded text-sm outline-none dark:bg-slate-900 dark:text-white dark:border-slate-600 dark:placeholder-gray-500 focus:border-blue-500 transition-colors"
+              type="email"
+              id="resEmail"
+              placeholder="Seu E-mail Cadastrado"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm outline-none dark:bg-slate-900 dark:text-white dark:border-slate-600 dark:placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
               required
             />
-            <input
-              type="password"
-              id="resConfirm"
-              placeholder="Confirme a Nova Senha"
-              class="w-full px-3 py-2 border rounded text-sm outline-none dark:bg-slate-900 dark:text-white dark:border-slate-600 dark:placeholder-gray-500 focus:border-blue-500"
-              required
-            />
-            <div
-              class="h-1.5 w-full bg-gray-200 rounded-full mt-2 overflow-hidden"
+            <button
+              type="submit"
+              id="btnSubmitReset"
+              class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg transition-colors shadow-lg shadow-indigo-500/30 mt-2"
             >
-              <div
-                id="resStrengthBar"
-                class="h-full w-0 bg-red-500 transition-all duration-300"
-              ></div>
-            </div>
-            <p
-              id="resStrengthText"
-              class="text-[10px] text-gray-400 mt-1 text-right"
-            >
-              Digite a senha...
-            </p>
-          </div>
-          <button
-            type="submit"
-            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded transition shadow"
-          >
-            📄 Gerar Arquivo de Troca
-          </button>
-        </form>
+              Enviar Nova Senha
+            </button>
+          </form>
       </div>
     </div>
 
