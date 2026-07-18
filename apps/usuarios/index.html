@@ -18,8 +18,7 @@
     <div class="max-w-4xl mx-auto">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Gerenciar Usuários</h1>
-            <button onclick="document.getElementById('modal').classList.remove('hidden')" 
-                    class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium shadow-md transition-colors">
+            <button onclick="app.abrirNovoUsuario()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium shadow-md transition-colors">
                 + Novo Usuário
             </button>
         </div>
@@ -27,6 +26,9 @@
         <div class="flex gap-4 border-b border-gray-200 dark:border-slate-800 mb-6">
             <button onclick="app.mudarAba('usuarios')" id="tabUsuarios" class="px-4 py-3 font-bold text-blue-600 border-b-2 border-blue-600 transition-colors">
                 Usuários Ativos
+            </button>
+            <button onclick="app.mudarAba('inativos')" id="tabInativos" class="px-4 py-3 font-bold text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 border-b-2 border-transparent transition-colors">
+                Usuários Inativos
             </button>
             <button onclick="app.mudarAba('pendentes')" id="tabPendentes" class="px-4 py-3 font-bold text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 border-b-2 border-transparent transition-colors flex items-center gap-2">
                 Solicitações Pendentes
@@ -50,6 +52,22 @@
             </table>
         </div>
 
+        <div id="containerInativos" class="hidden bg-white dark:bg-slate-900 rounded-xl shadow overflow-hidden mb-6">
+            <table class="w-full text-left">
+                <thead class="bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 uppercase text-sm">
+                    <tr>
+                        <th class="p-4 text-center">Nome</th>
+                        <th class="p-4 text-center">E-mail</th>
+                        <th class="p-4 text-center">Cargo</th>
+                        <th class="p-4 text-center">Status</th>
+                        <th class="p-4 text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="inativosTableBody" class="divide-y divide-gray-200 dark:divide-slate-800">
+                </tbody>
+            </table>
+        </div>
+
         <div id="containerPendentes" class="hidden bg-white dark:bg-slate-900 rounded-xl shadow overflow-hidden">
             <table class="w-full text-left">
                 <thead class="bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 uppercase text-sm">
@@ -66,31 +84,88 @@
         </div>
     </div>
 
-    <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white dark:bg-slate-900 p-6 rounded-lg w-96 shadow-xl border border-slate-200 dark:border-slate-700">
-            <h2 class="text-lg font-bold mb-4 text-slate-900 dark:text-slate-100">Adicionar Usuário</h2>
+    <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-lg w-full max-w-lg shadow-xl border border-slate-200 dark:border-slate-700 max-h-[90vh] flex flex-col">
+            <div class="p-6 pb-4 border-b border-slate-100 dark:border-slate-800">
+                <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100">Adicionar Novo Usuário</h2>
+            </div>
+            
+            <div class="p-6 py-4 overflow-y-auto flex-1 space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Foto de Perfil (Opcional)</label>
+                    <input id="newAvatar" type="file" accept="image/*" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-500 p-[5px] rounded outline-none file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">Nome</label>
+                        <input id="newName" type="text" placeholder="Kevin Fróes" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">E-mail</label>
+                        <input id="newEmail" type="email" placeholder="E-mail de acesso" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Nível de Acesso</label>
+                    <select id="newRole" onchange="app.handleNewRoleChange(this.value)" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="user">Usuário Comum</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
 
-            <label class="block text-xs font-bold text-slate-500 mb-1">Foto de Perfil (Opcional)</label>
-            <input id="newAvatar" type="file" accept="image/*" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-500 p-2 mb-3 rounded outline-none file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
-            
-            <label class="block text-xs font-bold text-slate-500 mb-1">Nome</label>
-            <input id="newName" type="text" placeholder="Kevin Fróes" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 mb-3 rounded outline-none focus:ring-2 focus:ring-blue-500">
-            
-            <label class="block text-xs font-bold text-slate-500 mb-1">E-mail</label>
-            <input id="newEmail" type="email" placeholder="E-mail de acesso" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 mb-3 rounded outline-none focus:ring-2 focus:ring-blue-500">
-            
-            <label class="block text-xs font-bold text-slate-500 mb-1">Senha (Mínimo 6 caracteres)</label>
-            <input id="newPass" type="password" placeholder="Senha provisória" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 mb-3 rounded outline-none focus:ring-2 focus:ring-blue-500">
-            
-            <label class="block text-xs font-bold text-slate-500 mb-1">Nível de Acesso</label>
-            <select id="newRole" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 mb-6 rounded outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="user">Usuário Comum</option>
-                <option value="admin">Administrador</option>
-            </select>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wide">Aplicações Permitidas</label>
+                    <div class="grid grid-cols-2 gap-2 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-not-allowed opacity-50">
+                            <input type="checkbox" checked disabled class="rounded text-blue-600 bg-slate-200 dark:bg-slate-700">
+                            <span class="font-semibold">Home (Padrão)</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
+                            <input type="checkbox" name="new_app_permission" value="#dashboard" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
+                            Operacional
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
+                            <input type="checkbox" name="new_app_permission" value="#gerador" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
+                            Gerador de MSGs
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
+                            <input type="checkbox" name="new_app_permission" value="#contratos" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
+                            Contratos
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
+                            <input type="checkbox" name="new_app_permission" value="#legislacao" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
+                            Legislação
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
+                            <input type="checkbox" name="new_app_permission" value="#qualificacao" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
+                            Qualificação
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
+                            <input type="checkbox" name="new_app_permission" value="#regmap" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
+                            RegMap
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-not-allowed opacity-50">
+                            <input type="checkbox" checked disabled class="rounded text-blue-600 bg-slate-200 dark:bg-slate-700">
+                            <span class="font-semibold">Demandas (Padrão)</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
+                            <input type="checkbox" name="new_app_permission" value="#conversor" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
+                            Conversor CSV
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
+                            <input type="checkbox" name="new_app_permission" value="#usuarios" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
+                            Gestão de Usuários
+                        </label>
+                    </div>
+                    <p class="text-[10px] text-slate-400 mt-1 italic">* Administradores possuem acesso automático a todas as ferramentas.</p>
+                </div>
+            </div>
 
-            <div class="flex gap-2">
-                <button onclick="app.salvarUsuario()" id="btnSaveUser" class="flex-1 bg-green-600 text-white py-2 rounded hover:bg-green-700 transition">Salvar</button>
-                <button onclick="document.getElementById('modal').classList.add('hidden')" class="flex-1 bg-gray-300 dark:bg-slate-700 text-slate-800 dark:text-white py-2 rounded hover:bg-gray-400 dark:hover:bg-slate-600 transition">Cancelar</button>
+            <div class="p-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex gap-3">
+                <button onclick="document.getElementById('modal').classList.add('hidden')" class="flex-1 bg-gray-200 dark:bg-slate-800 text-slate-800 dark:text-white py-2.5 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-700 transition font-medium">Cancelar</button>
+                <button onclick="app.salvarUsuario()" id="btnSaveUser" class="flex-1 bg-green-600 text-white py-2.5 rounded-lg hover:bg-green-700 transition font-medium shadow-md">Criar Usuário</button>
             </div>
         </div>
     </div>
@@ -160,9 +235,9 @@
                             <input type="checkbox" name="app_permission" value="#regmap" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
                             RegMap
                         </label>
-                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
-                            <input type="checkbox" name="app_permission" value="#demandas" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
-                            Demandas
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-not-allowed opacity-50">
+                            <input type="checkbox" checked disabled class="rounded text-blue-600 focus:ring-blue-500 bg-slate-200 dark:bg-slate-700">
+                            <span class="font-semibold">Demandas (Padrão)</span>
                         </label>
                         <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
                             <input type="checkbox" name="app_permission" value="#conversor" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
@@ -229,8 +304,9 @@
                     <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
                         <input type="checkbox" name="approve_app_permission" value="#regmap" class="rounded text-blue-600 focus:ring-blue-500"> RegMap
                     </label>
-                    <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
-                        <input type="checkbox" name="approve_app_permission" value="#demandas" class="rounded text-blue-600 focus:ring-blue-500"> Demandas
+                    <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-not-allowed opacity-50">
+                        <input type="checkbox" checked disabled class="rounded text-blue-600 bg-slate-200 dark:bg-slate-700">
+                        <span class="font-semibold">Demandas (Padrão)</span>
                     </label>
                     <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
                         <input type="checkbox" name="approve_app_permission" value="#conversor" class="rounded text-blue-600 focus:ring-blue-500"> Conversor CSV
