@@ -1,4 +1,4 @@
-const CACHE_NAME = "cockpit-cache-v6";
+const CACHE_NAME = "cockpit-cache-v9.0.3";
 const ASSETS_TO_CACHE = [
   "./", // A raiz
   "./index.html", // O HTML
