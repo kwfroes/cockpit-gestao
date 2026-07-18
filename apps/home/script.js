@@ -528,75 +528,129 @@ function renderStats() {
   const container = document.getElementById("stats-section");
   if (!container) return;
 
-  // Tenta ler do LocalStorage (Fallback / Cache)
-  // Se não existir, assume objeto vazio para não quebrar
-  const stats = {
-    contratos: JSON.parse(localStorage.getItem("stats_contratos") || "{}"),
-    gerador: JSON.parse(localStorage.getItem("stats_gerador") || "{}"),
-    dashboard: JSON.parse(localStorage.getItem("stats_dashboard") || "{}"),
-    familias: JSON.parse(localStorage.getItem("stats_familias") || "{}"),
-    //conversor: JSON.parse(localStorage.getItem("stats_conversor") || "{}"),
-  };
+  const role = sessionStorage.getItem("cockpit_user_role");
+  const userRealName = sessionStorage.getItem("cockpit_user_realname");
 
-  // Definição dos Dados dos Cards
-  const cardsData = [
-    {
-      ...STATS_CONFIG.dashboard,
-      principal: (stats.dashboard.solicitacoes || 0).toLocaleString("pt-BR"),
-      label: "Análises",
-      sub: `${(stats.dashboard.indeferidas || 0).toLocaleString(
-        "pt-BR",
-      )} indeferidas`,
-    },
-    {
-      ...STATS_CONFIG.gerador,
-      principal: (stats.gerador.mensagens || 0).toLocaleString("pt-BR"),
-      label: "Geradas",
-      sub: `${stats.gerador.percentualDeferidas || 0}% deferidas`,
-    },
-    {
-      ...STATS_CONFIG.contratos,
-      principal: (stats.contratos.ativos || 0).toLocaleString("pt-BR"),
-      label: "Ativos",
-      // Lógica especial: Se houver contratos a vencer, destaca em vermelho
-      subHtml:
-        stats.contratos.vencendo > 0
-          ? `<span class="text-red-600 font-bold text-xs flex items-center gap-1">
-             ⚠️ ${stats.contratos.vencendo} a vencer 
-             <span class="text-gray-400 font-medium ml-1 text-[10px]">• ${
-               stats.contratos.qtdPagamentos || 0
-             } pagamentos</span>
-           </span>`
-          : `<span class="text-gray-400 text-xs">
-             ${formatMoneyCompact(stats.contratos.valorTotal || 0)} 
-             <span class="mx-1 text-gray-300">•</span> 
-             ${stats.contratos.qtdPagamentos || 0} pagamentos
-           </span>`,
-    },
-    {
-      id: "stats-card-familias", // ID para o clique
-      ...STATS_CONFIG.familias,
-      principal: (stats.familias.total || 0).toLocaleString("pt-BR"),
-      label: "Famílias",
-      sub: `${stats.familias.cnaesUnicos || 0} CNAEs únicos • ${stats.familias.percentualComCnae || 0}% vinculadas`,    },
-    //{
-    //  ...STATS_CONFIG.conversor,
-    //  principal: stats.conversor.merges || 0,
-    //  label: "Processados",
-    //  sub: "CSVs integrados",
-    //},
-  ];
+  let cardsData = [];
 
-  // Construção do HTML
+  if (role === 'admin') {
+      // --- LÓGICA 100% ORIGINAL PARA ADMINS ---
+      const stats = {
+        contratos: JSON.parse(localStorage.getItem("stats_contratos") || "{}"),
+        gerador: JSON.parse(localStorage.getItem("stats_gerador") || "{}"),
+        dashboard: JSON.parse(localStorage.getItem("stats_dashboard") || "{}"),
+        familias: JSON.parse(localStorage.getItem("stats_familias") || "{}"),
+      };
+
+      cardsData = [
+        {
+          ...STATS_CONFIG.dashboard,
+          principal: (stats.dashboard.solicitacoes || 0).toLocaleString("pt-BR"),
+          label: "Análises",
+          sub: `${(stats.dashboard.indeferidas || 0).toLocaleString("pt-BR")} indeferidas`,
+        },
+        {
+          ...STATS_CONFIG.gerador,
+          principal: (stats.gerador.mensagens || 0).toLocaleString("pt-BR"),
+          label: "Geradas",
+          sub: `${stats.gerador.percentualDeferidas || 0}% deferidas`,
+        },
+        {
+          ...STATS_CONFIG.contratos,
+          principal: (stats.contratos.ativos || 0).toLocaleString("pt-BR"),
+          label: "Ativos",
+          subHtml: stats.contratos.vencendo > 0
+              ? `<span class="text-red-600 font-bold text-xs flex items-center gap-1">
+                 ⚠️ ${stats.contratos.vencendo} a vencer 
+                 <span class="text-gray-400 font-medium ml-1 text-[10px]">• ${stats.contratos.qtdPagamentos || 0} pagamentos</span>
+               </span>`
+              : `<span class="text-gray-400 text-xs">
+                 ${formatMoneyCompact(stats.contratos.valorTotal || 0)} 
+                 <span class="mx-1 text-gray-300">•</span> 
+                 ${stats.contratos.qtdPagamentos || 0} pagamentos
+               </span>`,
+        },
+        {
+          id: "stats-card-familias", 
+          ...STATS_CONFIG.familias,
+          principal: (stats.familias.total || 0).toLocaleString("pt-BR"),
+          label: "Famílias",
+          sub: `${stats.familias.cnaesUnicos || 0} CNAEs únicos • ${stats.familias.percentualComCnae || 0}% vinculadas`,
+        }
+      ];
+
+  } else {
+      // --- NOVA LÓGICA EXCLUSIVA PARA USUÁRIOS COMUNS ---
+      const todasDemandas = JSON.parse(localStorage.getItem("cache_demandas_usuario") || "[]");
+      const hoje = new Date();
+      hoje.setHours(0, 0, 0, 0); 
+      const mesAtual = hoje.getMonth();
+      
+      const minhasDemandas = todasDemandas.filter(d => d.responsavel_nome === userRealName);
+      const pendentes = minhasDemandas.filter(d => d.status !== 'Concluído' && d.status !== 'Cancelado');
+      
+      const atrasadas = pendentes.filter(d => {
+          if (!d.prazo_limite) return false;
+          const prazo = new Date(d.prazo_limite + "T12:00:00Z");
+          return prazo < hoje; 
+      });
+
+      const concluidasMes = minhasDemandas.filter(d => {
+          if (d.status !== 'Concluído' || !d.data_conclusao) return false;
+          const dataConc = new Date(d.data_conclusao + "T12:00:00Z");
+          return dataConc.getMonth() === mesAtual && dataConc.getFullYear() === hoje.getFullYear();
+      });
+
+      const taxaConclusao = minhasDemandas.length > 0 
+          ? Math.round((concluidasMes.length / minhasDemandas.length) * 100) 
+          : 0;
+
+      cardsData = [
+        {
+            titulo: "Pendentes",
+            principal: pendentes.length,
+            label: "Na fila",
+            cor: "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 border-blue-100 dark:border-blue-800",
+            hoverBorder: "hover:border-blue-400",
+            icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>`,
+            sub: "Atribuições atuais"
+        },
+        {
+            titulo: "Atrasadas",
+            principal: atrasadas.length,
+            label: "Prioridade",
+            cor: "text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 border-red-100 dark:border-red-800",
+            hoverBorder: "hover:border-red-400",
+            icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`,
+            sub: "Necessitam atenção"
+        },
+        {
+            titulo: "Concluídas",
+            principal: concluidasMes.length,
+            label: "Este mês",
+            cor: "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border-emerald-100 dark:border-emerald-800",
+            hoverBorder: "hover:border-emerald-400",
+            icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`,
+            sub: "Entregas realizadas"
+        },
+        {
+            titulo: "Performance",
+            principal: taxaConclusao + "%",
+            label: "Eficiência",
+            cor: "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 border-amber-100 dark:border-amber-800",
+            hoverBorder: "hover:border-amber-400",
+            icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>`,
+            sub: "Taxa global de conclusão"
+        }
+      ];
+  }
+
+  // --- CONSTRUÇÃO DO HTML (CÓDIGO ORIGINAL INTOCADO) ---
   let html = `<div class="grid grid-cols-1 md:grid-cols-4 gap-6">`;
 
   cardsData.forEach((card) => {
-    // 1. Define o cursor (apenas Famílias é clicável)
     const cursorClass = card.id ? "cursor-pointer" : "cursor-default";
-
-    // 2. Define a borda hover (agora todos têm a sua cor específica)
     const hoverBorderClass = card.hoverBorder || "hover:border-gray-300";
-
     const idAttr = card.id ? `id="${card.id}"` : "";
 
     html += `
@@ -668,17 +722,29 @@ async function fetchRadarData() {
         if (tituloDemandas) tituloDemandas.innerHTML = '<span class="p-1.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-lg flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 6H5c-.553 0-1-.448-1-1s.447-1 1-1h3c.553 0 1 .448 1 1s-.447 1-1 1zM13 10H5c-.553 0-1-.448-1-1s.447-1 1-1h8c.553 0 1 .448 1 1s-.447 1-1 1zM13 14H5c-.553 0-1-.448-1-1s.447-1 1-1h8c.553 0 1 .448 1 1s-.447 1-1 1z"/><path d="M18 2v8c0 .55-.45 1-1 1s-1-.45-1-1V2.5c0-.28-.22-.5-.5-.5h-13c-.28 0-.5.22-.5.5v19c0 .28.22.5.5.5h13c.28 0 .5-.22.5-.5V21c0-.55.45-1 1-1s1 .45 1 1v1c0 1.1-.9 2-2 2H2c-1.1 0-2-.9-2-2V2C0 .9.9 0 2 0h14c1.1 0 2 .9 2 2z"/><path d="M23.87 11.882c.31.54.045 1.273-.595 1.643l-9.65 5.57c-.084.05-.176.086-.265.11l-2.656.66c-.37.092-.72-.035-.88-.314-.162-.278-.09-.65.17-.913l1.907-1.958c.063-.072.137-.123.214-.167.004-.01.012-.015.012-.015l9.65-5.57c.64-.37 1.408-.234 1.72.305l.374.65z"/></svg></span> Minhas Demandas';
     }
 
-    // 1. BUSCA DE DEMANDAS (Comum para ambos os casos)
+// 1. BUSCA DE DEMANDAS (Comum para ambos os casos)
     try {
-        const { data: demandas, error } = await supabase
+        // Retiramos os filtros .neq() e .not() do banco para trazer o bolo todo (necessário para as métricas)
+        // Adicionado 'data_conclusao' no select
+        const { data: demandasTotais, error } = await supabase
             .from('demandas')
-            .select('id, titulo, prazo_limite, status, responsavel_nome, solicitante_nome')
-            .or(`responsavel_nome.eq."${userRealName}",solicitante_nome.eq."${userRealName}"`) 
-            .neq('status', 'Concluído')
-            .neq('status', 'Cancelado')
-            .not('prazo_limite', 'is', null);
+            .select('id, titulo, prazo_limite, status, responsavel_nome, solicitante_nome, data_conclusao')
+            .or(`responsavel_nome.eq."${userRealName}",solicitante_nome.eq."${userRealName}"`); 
 
-        if (!error && demandas) {
+        if (!error && demandasTotais) {
+            // SALVA NO CACHE PARA O DASHBOARD PESSOAL LER
+            localStorage.setItem("cache_demandas_usuario", JSON.stringify(demandasTotais));
+            
+            // Chama o renderStats para atualizar os cards imediatamente com os dados frescos
+            renderStats();
+
+            // Refazemos o filtro localmente apenas para popular os radares (ignorando concluídos e cancelados)
+            const demandas = demandasTotais.filter(d => 
+                d.status !== 'Concluído' && 
+                d.status !== 'Cancelado' && 
+                d.prazo_limite !== null
+            );
+
             const hoje = new Date(); 
             hoje.setHours(0,0,0,0);
             
@@ -704,6 +770,7 @@ async function fetchRadarData() {
                 return { ...d, diff };
             }).filter(d => d.diff <= 7).sort((a, b) => a.diff - b.diff);
 
+            
             // Popula as listas de acordo com a permissão
             if (temAcessoContratos) {
                 // Modo 1: Usuário COM acesso a contratos (Mostra tudo no Card 1)
@@ -716,6 +783,7 @@ async function fetchRadarData() {
                 const listaMinhas = listaBase.filter(d => d.responsavel_nome === userRealName);
                 const listaAtribuidas = listaBase.filter(d => d.solicitante_nome === userRealName && d.responsavel_nome !== userRealName);
 
+                
                 // Card: Minhas
                 badgeDemandas.textContent = listaMinhas.length;
                 containerDemandas.innerHTML = listaMinhas.length > 0 

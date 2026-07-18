@@ -69,10 +69,13 @@ const app = {
         }
     },
 
-    // 1. LISTAR USUÁRIOS
+// 1. LISTAR USUÁRIOS E SEPARAR POR STATUS
     async carregarUsuarios() {
-        const tbody = document.getElementById('userTableBody');
-        tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-slate-500">Carregando...</td></tr>';
+        const tbodyAtivos = document.getElementById('userTableBody');
+        const tbodyInativos = document.getElementById('inativosTableBody');
+        
+        tbodyAtivos.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-slate-500">Carregando...</td></tr>';
+        if (tbodyInativos) tbodyInativos.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-slate-500">Carregando...</td></tr>';
         
         const { data, error } = await supabase.from('profiles').select('*').order('name', { ascending: true });
 
@@ -82,96 +85,84 @@ const app = {
         }
 
         if (data.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-slate-500">Nenhum usuário encontrado.</td></tr>';
+            tbodyAtivos.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-slate-500">Nenhum usuário encontrado no sistema.</td></tr>';
+            if (tbodyInativos) tbodyInativos.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-slate-500">Nenhum usuário inativo encontrado.</td></tr>';
             return;
         }
 
-        // Avatar Padrão (Silhueta) se não houver foto
         const defaultAvatar = 'https://ui-avatars.com/api/?background=cbd5e1&color=475569&name=';
+        const meuEmail = sessionStorage.getItem("cockpit_user_email");
 
-        tbody.innerHTML = data.map(u => {
-            // Converte o array de apps em string JSON segura para passar no botão HTML
-            const appsJsonString = encodeURIComponent(JSON.stringify(u.allowed_apps || ["#home"]));
+        // Separa os arrays
+        const usuariosAtivos = data.filter(u => u.status !== 'inativo');
+        const usuariosInativos = data.filter(u => u.status === 'inativo');
+
+        // Função auxiliar para gerar as linhas da tabela (para não repetir código)
+        const renderRow = (u) => {
+            const appsJsonString = encodeURIComponent(JSON.stringify(u.allowed_apps || ["#home", "#demandas"]));
+            const isMe = u.email === meuEmail;
+            const isInativo = u.status === 'inativo';
 
             return `
-            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors ${u.status === 'inativo' ? 'opacity-60 bg-red-50 dark:bg-red-900/10' : ''}">
+            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors ${isInativo ? 'opacity-70 bg-gray-50 dark:bg-slate-800/30' : ''}">
                 <td class="p-4 flex items-center gap-3">
                     <img src="${u.avatar_url || defaultAvatar + (u.name || 'U')}" class="w-10 h-10 rounded-full object-cover shadow-sm border border-slate-200 dark:border-slate-700">
                     <span class="text-slate-800 dark:text-slate-200 font-bold">${u.name || 'Sem nome'}</span>
                 </td>
-                
                 <td class="p-4 text-slate-600 dark:text-slate-400 font-medium">
                     ${u.email || '<span class="text-xs opacity-50 italic">Sem e-mail</span>'}
                 </td>
-                
                 <td class="p-4 text-center">
                     <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${u.role === 'admin' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' : 'bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-400'}">
                         ${u.role}
                     </span>
                 </td>
-
                 <td class="p-4 text-center">
-                    <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${u.status === 'inativo' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'}">
-                        ${u.status === 'inativo' ? 'Inativo' : 'Ativo'}
+                    <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${isInativo ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'}">
+                        ${isInativo ? 'Inativo' : 'Ativo'}
                     </span>
                 </td>
-
                 <td class="p-4 text-right">
-                <button onclick="app.abrirEdicao('${u.id}', '${u.name}', '${u.email}', '${u.role}', '${appsJsonString}')"
-                    class="text-blue-500 hover:text-blue-700 mr-3"
-                    title="Editar Usuário">
-
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 3C7.74882 3 5.62323 3 4.30256 4.31802C3.298 5.32056 3.05755 6.78787 3 9.3M21 9.3C20.9424 6.78787 20.702 5.32056 19.6974 4.31802C18.8789 3.50116 17.7513 3.19056 16 3.07246M21 14.7C20.9424 17.2121 20.702 18.6794 19.6974 19.682C18.3768 21 16.2512 21 12 21C7.74882 21 5.62323 21 4.30256 19.682C3.29801 18.6794 3.05756 17.2121 3 14.7"
-                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                        <path d="M8 8H16"
-                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                        <path d="M12 16L12 8"
-                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                        <path d="M22 12H20"
-                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                        <path d="M4 12H2"
-                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    </svg>
-
-                </button>
-
-                <button onclick="app.alternarStatus('${u.id}', '${u.status || 'ativo'}')"
-                    class="${u.status === 'inativo' ? 'text-green-500 hover:text-green-700' : 'text-red-500 hover:text-red-700'}"
-                    title="${u.status === 'inativo' ? 'Ativar Usuário' : 'Inativar Usuário'}">
-                        ${u.status === 'inativo'
-                            ? `
-                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 12L3 18.9671C3 21.2763 5.53435 22.736 7.59662 21.6145L10.7996 19.8727M3 8L3 5.0329C3 2.72368 5.53435 1.26402 7.59661 2.38548L20.4086 9.35258C22.5305 10.5065 22.5305 13.4935 20.4086 14.6474L14.0026 18.131"
-                                stroke="currentColor"
-                                stroke-width="1.5"
-                                stroke-linecap="round"/>
+                    <button onclick="app.abrirEdicao('${u.id}', '${u.name}', '${u.email}', '${u.role}', '${appsJsonString}')"
+                        class="text-blue-500 hover:text-blue-700 mr-3" title="Editar Usuário">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 3C7.74882 3 5.62323 3 4.30256 4.31802C3.298 5.32056 3.05755 6.78787 3 9.3M21 9.3C20.9424 6.78787 20.702 5.32056 19.6974 4.31802C18.8789 3.50116 17.7513 3.19056 16 3.07246M21 14.7C20.9424 17.2121 20.702 18.6794 19.6974 19.682C18.3768 21 16.2512 21 12 21C7.74882 21 5.62323 21 4.30256 19.682C3.29801 18.6794 3.05756 17.2121 3 14.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M8 8H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M12 16L12 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M22 12H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M4 12H2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                         </svg>
-                        `
-                        : `
-                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path d="M2 18C2 19.8856 2 20.8284 2.58579 21.4142C3.17157 22 4.11438 22 6 22C7.88562 22 8.82843 22 9.41421 21.4142C10 20.8284 10 19.8856 10 18V6C10 4.11438 10 3.17157 9.41421 2.58579C8.82843 2 7.88562 2 6 2C4.11438 2 3.17157 2 2.58579 2.58579C2 3.17157 2 4.11438 2 6V14"
-                                stroke="currentColor"
-                                stroke-width="1.5"
-                                stroke-linecap="round"/>
-                            <path d="M22 6C22 4.11438 22 3.17157 21.4142 2.58579C20.8284 2 19.8856 2 18 2C16.1144 2 15.1716 2 14.5858 2.58579C14 3.17157 14 4.11438 14 6V18C14 19.8856 14 20.8284 14.5858 21.4142C15.1716 22 16.1144 22 18 22C19.8856 22 20.8284 22 21.4142 21.4142C22 20.8284 22 19.8856 22 18V10"
-                                stroke="currentColor"
-                                stroke-width="1.5"
-                                stroke-linecap="round"/>
-                        </svg>
-                        `
-                    }
+                    </button>
 
-                </button>
+                    <button onclick="${isMe ? `app.showToast('Segurança: Você não pode alterar o seu próprio status.', 'error')` : `app.alternarStatus('${u.id}', '${u.status || 'ativo'}')`}"
+                        class="${isInativo ? 'text-green-500 hover:text-green-700' : 'text-red-500 hover:text-red-700'} ${isMe ? 'opacity-30 cursor-not-allowed' : ''}"
+                        title="${isMe ? 'Proteção de Conta Ativa' : (isInativo ? 'Ativar Usuário' : 'Inativar Usuário')}">
+                            ${isInativo 
+                                ? `<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12L3 18.9671C3 21.2763 5.53435 22.736 7.59662 21.6145L10.7996 19.8727M3 8L3 5.0329C3 2.72368 5.53435 1.26402 7.59661 2.38548L20.4086 9.35258C22.5305 10.5065 22.5305 13.4935 20.4086 14.6474L14.0026 18.131" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`
+                                : `<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 18C2 19.8856 2 20.8284 2.58579 21.4142C3.17157 22 4.11438 22 6 22C7.88562 22 8.82843 22 9.41421 21.4142C10 20.8284 10 19.8856 10 18V6C10 4.11438 10 3.17157 9.41421 2.58579C8.82843 2 7.88562 2 6 2C4.11438 2 3.17157 2 2.58579 2.58579C2 3.17157 2 4.11438 2 6V14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M22 6C22 4.11438 22 3.17157 21.4142 2.58579C20.8284 2 19.8856 2 18 2C16.1144 2 15.1716 2 14.5858 2.58579C14 3.17157 14 4.11438 14 6V18C14 19.8856 14 20.8284 14.5858 21.4142C15.1716 22 16.1144 22 18 22C19.8856 22 20.8284 22 21.4142 21.4142C22 20.8284 22 19.8856 22 18V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`
+                            }
+                    </button>
                 </td>
             </tr>
             `;
-        }).join('');
-    },
+        };
 
+        // Injeta os HTMLs
+        if (usuariosAtivos.length > 0) {
+            tbodyAtivos.innerHTML = usuariosAtivos.map(renderRow).join('');
+        } else {
+            tbodyAtivos.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-slate-500">Nenhum usuário ativo no momento.</td></tr>';
+        }
+
+        if (tbodyInativos) {
+            if (usuariosInativos.length > 0) {
+                tbodyInativos.innerHTML = usuariosInativos.map(renderRow).join('');
+            } else {
+                tbodyInativos.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-slate-500">Nenhum usuário inativo. A base está limpa!</td></tr>';
+            }
+        }
+    },
+    
     // 3. ABRIR MODAL DE EDIÇÃO
     abrirEdicao(id, name, email, role, encodedApps) {
         document.getElementById('editId').value = id;
@@ -182,7 +173,7 @@ const app = {
         document.getElementById('editAvatar').value = '';
 
         // Tratamento da array de aplicativos
-        let userApps = ["#home"];
+        let userApps = ["#home", "#demandas"]; // Valor padrão se não houver apps salvos
         if (encodedApps) {
             try {
                 userApps = JSON.parse(decodeURIComponent(encodedApps));
@@ -231,7 +222,7 @@ async salvarEdicao() {
         const password = document.getElementById('editPass').value.trim();
 
         // 1. Recolhe todos os checkboxes marcados
-        let allowed_apps = ["#home"]; 
+        let allowed_apps = ["#home", "#demandas"]; 
         
         if (role === 'admin') {
             // Se virar Admin (ou continuar Admin), recebe o pacote completo
@@ -241,7 +232,7 @@ async salvarEdicao() {
             const checkedBoxes = Array.from(document.querySelectorAll('input[name="app_permission"]:checked'));
             const customApps = checkedBoxes.map(cb => cb.value);
             // O "new Set" garante que não terá duplicatas
-            allowed_apps = [...new Set(["#home", ...customApps])]; 
+            allowed_apps = [...new Set(["#home", "#demandas", ...customApps])]; 
         }
 
         btn.disabled = true;
@@ -307,10 +298,14 @@ async salvarEdicao() {
 
         document.getElementById('confirmMessage').textContent = `Tem certeza que deseja ${acaoTexto} este usuário?`;
 
+        // 1. TRAVA DE SEGURANÇA: Garante que o botão sempre nasça destravado ao abrir
+        btnConfirm.disabled = false;
+
         // Atrela a execução real ao botão de confirmar do Modal
         btnConfirm.onclick = async () => {
             btnConfirm.textContent = "Aguarde...";
             btnConfirm.disabled = true;
+            
             try {
                 const { error } = await supabase.functions.invoke('gerenciar-usuarios', {
                     body: { acao: 'status', idUsuario: id, status: novoStatus }
@@ -324,6 +319,9 @@ async salvarEdicao() {
             } catch (err) {
                 this.fecharConfirmacao();
                 this.showToast("Erro: " + err.message, "error");
+            } finally {
+                // 2. CORREÇÃO: Destrava o botão independentemente de dar certo ou erro!
+                btnConfirm.disabled = false;
             }
         };
 
@@ -353,47 +351,88 @@ async salvarEdicao() {
         }, 300);
     },
 
-    // 2. ADICIONAR USUÁRIO
+// 2A. ABRIR MODAL LIMPANDO CACHES ANTIGOS
+    abrirNovoUsuario() {
+        document.getElementById('newName').value = '';
+        document.getElementById('newEmail').value = '';
+        document.getElementById('newAvatar').value = '';
+        document.getElementById('newRole').value = 'user';
+        this.handleNewRoleChange('user'); // Reseta os checkboxes
+        document.getElementById('modal').classList.remove('hidden');
+    },
+
+    // 2B. GERENCIA CONGELAMENTO DOS CHECKBOXES SE FOR ADMIN
+    handleNewRoleChange(role) {
+        const checkboxes = document.querySelectorAll('input[name="new_app_permission"]');
+        const isAdmin = role === 'admin';
+        
+        checkboxes.forEach(cb => {
+            if (isAdmin) {
+                cb.checked = true;
+                cb.disabled = true;
+                cb.parentElement.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                cb.checked = false; 
+                cb.disabled = false;
+                cb.parentElement.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        });
+    },
+
+// 2C. ADICIONAR USUÁRIO
     async salvarUsuario() {
         const btn = document.getElementById('btnSaveUser');
         const name = document.getElementById('newName').value.trim();
         const email = document.getElementById('newEmail').value.trim();
-        const password = document.getElementById('newPass').value.trim();
         const role = document.getElementById('newRole').value;
 
-        if (!name || !email || !password) {
-            this.showToast("Preencha o nome, e-mail e senha!", "error");
+        // A senha não é mais necessária aqui no front-end!
+        if (!name || !email) {
+            this.showToast("Preencha o nome e o e-mail do usuário!", "error");
             return;
         }
 
         btn.disabled = true;
-        btn.textContent = "Salvando...";
+        btn.textContent = "Criando e Enviando E-mail...";
 
         try {
-            // Faz o upload da imagem e pega a URL (se houver arquivo selecionado)
             const avatarUrl = await this.uploadAvatar('newAvatar');
 
+            // Ler apps permitidos baseados nos checkboxes
+            let allowed_apps = ["#home", "#demandas"];
+            if (role === 'admin') {
+                allowed_apps = ['#home', '#dashboard', '#gerador', '#contratos', '#legislacao', '#qualificacao', '#regmap', '#demandas', '#conversor', '#usuarios'];
+            } else {
+                const checkedBoxes = Array.from(document.querySelectorAll('input[name="new_app_permission"]:checked'));
+                const customApps = checkedBoxes.map(cb => cb.value);
+                allowed_apps = [...new Set(["#home", "#demandas", ...customApps])];
+            }
+            
+            // O Payload agora é idêntico ao de "aprovar", delegando a senha para a Edge Function
             const { error } = await supabase.functions.invoke('gerenciar-usuarios', {
-                body: { acao: 'criar', email, password, avatar_url: avatarUrl, metadata: { role: role, name: name } }
+                body: { 
+                    acao: 'criar', 
+                    email: email, 
+                    avatar_url: avatarUrl, 
+                    metadata: { 
+                        role: role, 
+                        name: name,
+                        allowed_apps: allowed_apps 
+                    } 
+                }
             });
 
             if (error) throw error;
 
-            this.showToast("Usuário criado com sucesso!");
+            this.showToast("Usuário criado e e-mail enviado com sucesso!");
             document.getElementById('modal').classList.add('hidden');
-            
-            // Limpa os campos
-            document.getElementById('newName').value = '';
-            document.getElementById('newEmail').value = '';
-            document.getElementById('newPass').value = '';
-            document.getElementById('newAvatar').value = '';
             
             await this.carregarUsuarios();
         } catch (err) {
             this.showToast("Erro: " + err.message, "error");
         } finally {
             btn.disabled = false;
-            btn.textContent = "Salvar";
+            btn.textContent = "Criar Usuário";
         }
     },
 
@@ -462,24 +501,41 @@ async salvarEdicao() {
         }, 'image/jpeg', 0.8);
     },
 
-    // --- FUNÇÕES DA NOVA ABA DE APROVAÇÃO ---
+    // --- FUNÇÕES DA NOVA ABA DE APROVAÇÃO E INATIVOS ---
 
     mudarAba(aba) {
         const tabUsuarios = document.getElementById('tabUsuarios');
+        const tabInativos = document.getElementById('tabInativos');
         const tabPendentes = document.getElementById('tabPendentes');
+        
         const contUsuarios = document.getElementById('containerUsuarios');
+        const contInativos = document.getElementById('containerInativos');
         const contPendentes = document.getElementById('containerPendentes');
 
+        // Reseta todos os botões para o estado "desativado/cinza"
+        const resetClass = "px-4 py-3 font-bold text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 border-b-2 border-transparent transition-colors flex items-center gap-2";
+        tabUsuarios.className = resetClass;
+        tabInativos.className = resetClass;
+        tabPendentes.className = resetClass;
+
+        // Esconde todos os containers
+        contUsuarios.classList.add('hidden');
+        contInativos.classList.add('hidden');
+        contPendentes.classList.add('hidden');
+
+        // Classe para o botão ativo (azul com borda)
+        const activeClass = "px-4 py-3 font-bold text-blue-600 border-b-2 border-blue-600 transition-colors flex items-center gap-2";
+
+        // Aplica o estado ativo na aba clicada
         if (aba === 'usuarios') {
-            tabUsuarios.className = "px-4 py-3 font-bold text-blue-600 border-b-2 border-blue-600 transition-colors";
-            tabPendentes.className = "px-4 py-3 font-bold text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 border-b-2 border-transparent transition-colors flex items-center gap-2";
+            tabUsuarios.className = activeClass;
             contUsuarios.classList.remove('hidden');
-            contPendentes.classList.add('hidden');
-        } else {
-            tabPendentes.className = "px-4 py-3 font-bold text-blue-600 border-b-2 border-blue-600 transition-colors flex items-center gap-2";
-            tabUsuarios.className = "px-4 py-3 font-bold text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 border-b-2 border-transparent transition-colors";
+        } else if (aba === 'inativos') {
+            tabInativos.className = activeClass;
+            contInativos.classList.remove('hidden');
+        } else if (aba === 'pendentes') {
+            tabPendentes.className = activeClass;
             contPendentes.classList.remove('hidden');
-            contUsuarios.classList.add('hidden');
         }
     },
 
@@ -561,22 +617,16 @@ async salvarEdicao() {
         btnConfirm.className = "flex-1 px-4 py-2 font-medium rounded-lg text-white shadow-md transition-colors bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/30";
         btnConfirm.textContent = "Sim, Aprovar";
         
-        document.getElementById('confirmMessage').textContent = `Liberar o acesso para "${nome}"? A senha provisória será 123456.`;
+        document.getElementById('confirmMessage').textContent = `Liberar o acesso para "${nome}"? A senha provisória será gerada e enviada por e-mail.`;
 
         // Mostra as opções de apps e desmarca todas por precaução
         appsSection.classList.remove('hidden');
         document.querySelectorAll('input[name="approve_app_permission"]').forEach(cb => cb.checked = false);
 
-        btnConfirm.onclick = async () => {
-            // Validação de segurança: Exige pelo menos um app
+            btnConfirm.onclick = async () => {
             const checkedBoxes = Array.from(document.querySelectorAll('input[name="approve_app_permission"]:checked'));
-            if (checkedBoxes.length === 0) {
-                this.showToast("Selecione pelo menos um aplicativo além da Home!", "error");
-                return; 
-            }
-
             const customApps = checkedBoxes.map(cb => cb.value);
-            const allowed_apps = ["#home", ...customApps];
+            const allowed_apps = ["#home", "#demandas", ...customApps]; // Força o envio do demandas
 
             btnConfirm.textContent = "Aprovando...";
             btnConfirm.disabled = true;

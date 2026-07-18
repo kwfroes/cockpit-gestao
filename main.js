@@ -210,12 +210,21 @@ async function generateCaptcha() {
       if (session) {
           const user = session.user;
           
-          // Adicionamos 'allowed_apps' na busca do perfil
+          // 1. Adicionamos 'status' na busca do perfil
           const { data: profile } = await supabase
             .from('profiles')
-            .select('name, role, avatar_url, apelido, precisa_trocar_senha, allowed_apps')
+            .select('name, role, avatar_url, apelido, precisa_trocar_senha, allowed_apps, status')
             .eq('id', user.id)
             .single();
+            
+          // 2. BLOQUEIO DE INATIVO NA SESSÃO (Impede o acesso ao recarregar a página)
+          if (profile?.status === 'inativo') {
+              await supabase.auth.signOut(); // Desloga do Supabase
+              sessionStorage.clear();        // Limpa a memória
+              frame.src = "about:blank";     // Limpa a tela
+              if (typeof generateCaptcha === "function") generateCaptcha();
+              return; // Interrompe a execução aqui, não deixa criar a sessão local
+          }
           
           sessionStorage.setItem("cockpit_auth_token", "valid");
           sessionStorage.setItem("cockpit_user_email", user.email);
@@ -320,62 +329,63 @@ if (loginForm) {
         console.log("O SUPABASE DISSE:", error); // Adicione isso antes do showError
           showError("Credenciais inválidas ou usuário não encontrado.");
           generateCaptcha();
-    } else {
-          // SUCESSO!
-          const user = data.user;
-          // Buscamos 'allowed_apps' no login também
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('name, role, avatar_url, apelido, precisa_trocar_senha, allowed_apps')
-            .eq('id', user.id)
-            .single();
-          
-          sessionStorage.setItem("cockpit_auth_token", "valid");
-          sessionStorage.setItem("cockpit_user_email", user.email);
-          sessionStorage.setItem("cockpit_user_realname", profile?.name || user.user_metadata?.name || user.email.split('@')[0]);
-          sessionStorage.setItem("cockpit_user_role", profile?.role || user.user_metadata?.role || "user");
-          sessionStorage.setItem("cockpit_user_apelido", profile?.apelido || "");
+        } else {
+        // SUCESSO NO AUTH! (E-mail e senha estão certos)
+        const user = data.user;
+        
+        // 1. Buscamos 'allowed_apps' e 'status' no login também
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('name, role, avatar_url, apelido, precisa_trocar_senha, allowed_apps, status')
+          .eq('id', user.id)
+          .single();
+        
+        // 2. BLOQUEIO DE INATIVO NO LOGIN
+        if (profile?.status === 'inativo') {
+            await supabase.auth.signOut(); // Desloga imediatamente para segurança
+            showError("Acesso Bloqueado: Este usuário foi inativado pelo Administrador.");
+            generateCaptcha();
+            btn.textContent = "Entrar no Sistema";
+            btn.disabled = false;
+            return; // 🛑 INTERROMPE AQUI! Não deixa entrar.
+        }
 
-          // Armazena a lista de apps permitidos na sessão
-          const userApps = profile?.allowed_apps || ["#home"];
-          sessionStorage.setItem("cockpit_allowed_apps", JSON.stringify(userApps));
+        // 3. Se for ativo, segue a vida normal:
+        sessionStorage.setItem("cockpit_auth_token", "valid");
+        sessionStorage.setItem("cockpit_user_email", user.email);
+        sessionStorage.setItem("cockpit_user_realname", profile?.name || user.user_metadata?.name || user.email.split('@')[0]);
+        sessionStorage.setItem("cockpit_user_role", profile?.role || user.user_metadata?.role || "user");
+        sessionStorage.setItem("cockpit_user_apelido", profile?.apelido || "");
 
-          if (profile?.avatar_url) {
-              sessionStorage.setItem("cockpit_user_avatar", profile.avatar_url);
-          } else {
-              sessionStorage.removeItem("cockpit_user_avatar");
-          }
+        const userApps = profile?.allowed_apps || ["#home"];
+        sessionStorage.setItem("cockpit_allowed_apps", JSON.stringify(userApps));
 
-          if (profile?.precisa_trocar_senha) {
-              document.getElementById("forcedPasswordModal").classList.remove("hidden");
-          } else {
-              loginError.classList.add("hidden");
-              applyPermissions(); // Oculta os itens do menu
-              updateUserMenu();
-              updateUserAvatarVisuals();
-              unlockInterface();
-              navigate(window.location.hash || "#home");
-          }
-      }
-      if (profile?.precisa_trocar_senha) {
-              document.getElementById("forcedPasswordModal").classList.remove("hidden");
-          } else {
-              loginError.classList.add("hidden");
-              applyPermissions(); 
-              updateUserMenu();
-              updateUserAvatarVisuals();
-              unlockInterface();
-              
-              // Adicione estas duas linhas antes do 'navigate'
-              fetchGlobalNotifications(); 
-              startDemandasListener(); 
-              
-              navigate(window.location.hash || "#home");
-          }
+        if (profile?.avatar_url) {
+            sessionStorage.setItem("cockpit_user_avatar", profile.avatar_url);
+        } else {
+            sessionStorage.removeItem("cockpit_user_avatar");
+        }
 
-      btn.textContent = "Entrar no Sistema";
-      btn.disabled = false;
-    });
+        // 4. Lógica limpa (sem duplicação)
+        if (profile?.precisa_trocar_senha) {
+            document.getElementById("forcedPasswordModal").classList.remove("hidden");
+        } else {
+            loginError.classList.add("hidden");
+            applyPermissions(); 
+            updateUserMenu();
+            updateUserAvatarVisuals();
+            unlockInterface();
+            
+            fetchGlobalNotifications(); 
+            if (typeof startDemandasListener === "function") startDemandasListener(); 
+            
+            navigate(window.location.hash || "#home");
+        }
+    }
+
+    btn.textContent = "Entrar no Sistema";
+    btn.disabled = false;
+  });
   }
 
   // =========================================================
