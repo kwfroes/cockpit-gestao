@@ -103,9 +103,13 @@ const app = {
             const isMe = u.email === meuEmail;
             const isInativo = u.status === 'inativo';
             const coord = u.coordenacao || '-';
-            const badgeResp = u.responsavel ? `<span class="ml-1 px-1.5 py-0.5 bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 rounded text-[9px] uppercase font-bold" title="Responsável pela Coordenação">Resp</span>` : '';
             const safeCoord = encodeURIComponent(u.coordenacao || '');
             const isResp = u.responsavel ? 'true' : 'false';
+
+            // Define a cor da badge mantendo a coesão com as colunas de Cargo e Status
+            const coordBadgeClass = u.responsavel 
+                ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' 
+                : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400';
 
             return `
             <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors ${isInativo ? 'opacity-70 bg-gray-50 dark:bg-slate-800/30' : ''}">
@@ -121,8 +125,13 @@ const app = {
                         ${u.role}
                     </span>
                 </td>
-                <td class="p-4 text-center text-slate-600 dark:text-slate-400 text-sm font-medium">
-                    ${coord} ${badgeResp}
+                <td class="p-4 text-center">
+                    ${coord !== '-' 
+                        ? `<span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider cursor-default ${coordBadgeClass}" title="${u.responsavel ? 'Responsável pela Coordenação' : 'Membro da Equipe'}">
+                            ${coord}
+                        </span>`
+                        : `<span class="text-slate-400 dark:text-slate-600 text-xs">-</span>`
+                    }
                 </td>
                 <td class="p-4 text-center">
                     <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${isInativo ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'}">
