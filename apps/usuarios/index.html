@@ -18,12 +18,16 @@
     <div class="max-w-4xl mx-auto">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Gerenciar Usuários</h1>
-            <button onclick="app.abrirNovoUsuario()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium shadow-md transition-colors">
-                + Novo Usuário
+            <button onclick="app.abrirNovoUsuario()" class="bg-blue-600 text-white px-2 py-2 rounded-lg hover:bg-blue-700 font-medium shadow-md transition-colors flex items-center justify-center">
+                <!-- O "+" fica um pouco maior no celular (text-xl) e volta ao normal no desktop -->
+                <span class="text-xl sm:text-base leading-none sm:mr-1">+</span>
+                
+                <!-- O texto fica oculto (hidden) no celular e visível (inline) no desktop (sm:) -->
+                <span class="hidden sm:inline">Novo Usuário</span>
             </button>
         </div>
 
-        <div class="flex gap-4 border-b border-gray-200 dark:border-slate-800 mb-6">
+        <div class="flex gap-4 border-b border-gray-200 dark:border-slate-800 mb-6 overflow-x-auto whitespace-nowrap">
             <button onclick="app.mudarAba('usuarios')" id="tabUsuarios" class="px-4 py-3 font-bold text-blue-600 border-b-2 border-blue-600 transition-colors">
                 Usuários Ativos
             </button>
@@ -37,12 +41,14 @@
         </div>
 
         <div id="containerUsuarios" class="bg-white dark:bg-slate-900 rounded-xl shadow overflow-hidden">
-            <table class="w-full text-left">
+            <div class="overflow-x-auto w-full">
+            <table class="w-full text-left whitespace-nowrap min-w-max md:min-w-full">
                 <thead class="bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 uppercase text-sm">
                     <tr>
                         <th class="p-4 text-center">Nome</th>
                         <th class="p-4 text-center">E-mail</th>
                         <th class="p-4 text-center">Cargo</th>
+                        <th class="p-4 text-center">Coordenação</th>
                         <th class="p-4 text-center">Status</th>
                         <th class="p-4 text-center">Ações</th>
                     </tr>
@@ -50,15 +56,17 @@
                 <tbody id="userTableBody" class="divide-y divide-gray-200 dark:divide-slate-800">
                 </tbody>
             </table>
-        </div>
+        </div></div>
 
         <div id="containerInativos" class="hidden bg-white dark:bg-slate-900 rounded-xl shadow overflow-hidden mb-6">
-            <table class="w-full text-left">
+            <div class="overflow-x-auto w-full">
+            <table class="w-full text-left whitespace-nowrap min-w-max md:min-w-full">
                 <thead class="bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 uppercase text-sm">
                     <tr>
                         <th class="p-4 text-center">Nome</th>
                         <th class="p-4 text-center">E-mail</th>
                         <th class="p-4 text-center">Cargo</th>
+                        <th class="p-4 text-center">Coordenação</th>
                         <th class="p-4 text-center">Status</th>
                         <th class="p-4 text-center">Ações</th>
                     </tr>
@@ -66,10 +74,11 @@
                 <tbody id="inativosTableBody" class="divide-y divide-gray-200 dark:divide-slate-800">
                 </tbody>
             </table>
-        </div>
+        </div></div>
 
         <div id="containerPendentes" class="hidden bg-white dark:bg-slate-900 rounded-xl shadow overflow-hidden">
-            <table class="w-full text-left">
+            <div class="overflow-x-auto w-full">
+            <table class="w-full text-left whitespace-nowrap min-w-max md:min-w-full">
                 <thead class="bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 uppercase text-sm">
                     <tr>
                         <th class="p-4 text-left">Nome</th>
@@ -81,7 +90,7 @@
                 <tbody id="pendentesTableBody" class="divide-y divide-gray-200 dark:divide-slate-800">
                 </tbody>
             </table>
-        </div>
+        </div></div>
     </div>
 
     <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -113,6 +122,17 @@
                         <option value="user">Usuário Comum</option>
                         <option value="admin">Administrador</option>
                     </select>
+                </div>
+
+                <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">Coordenação</label>
+                        <input id="newCoordenacao" type="text" placeholder="Ex: CGCF" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                <div class="mt-2 mb-4">
+                    <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer w-max">
+                        <input id="newResponsavel" type="checkbox" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900 w-4 h-4">
+                        <span class="font-bold">Responsável pela Coordenação</span>
+                    </label>
                 </div>
 
                 <div>
@@ -200,6 +220,17 @@
                 </div>
 
                 <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">Coordenação</label>
+                        <input id="editCoordenacao" type="text" placeholder="Ex: CGCF" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                <div class="mt-2 mb-4">
+                    <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer w-max">
+                        <input id="editResponsavel" type="checkbox" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900 w-4 h-4">
+                        <span class="font-bold">Responsável pela Coordenação</span>
+                    </label>
+                </div>
+
+                <div>
                     <label class="block text-xs font-bold text-slate-500 mb-1">Alterar Foto (Opcional)</label>
                     <input id="editAvatar" type="file" accept="image/*" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-500 p-[5px] rounded outline-none file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
                 </div>
@@ -280,6 +311,16 @@
             </p>
 
             <div id="approveAppsSection" class="hidden text-left mb-6">
+                <div class="mb-4 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+                <label class="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wide">Coordenação</label>
+                <input id="approveCoordenacao" type="text" placeholder="Ex: CGCF" class="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500 mb-3">
+                
+                <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer w-max">
+                    <input id="approveResponsavel" type="checkbox" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900 w-4 h-4">
+                    <span class="font-bold">Responsável pela Coordenação</span>
+                </label>
+            </div>
+            
                 <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">Acesso Inicial <span class="text-red-500">*</span></label>
                 <div class="grid grid-cols-2 gap-2 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 max-h-48 overflow-y-auto">
                     <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-not-allowed opacity-50">

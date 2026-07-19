@@ -74,8 +74,8 @@ const app = {
         const tbodyAtivos = document.getElementById('userTableBody');
         const tbodyInativos = document.getElementById('inativosTableBody');
         
-        tbodyAtivos.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-slate-500">Carregando...</td></tr>';
-        if (tbodyInativos) tbodyInativos.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-slate-500">Carregando...</td></tr>';
+        tbodyAtivos.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-slate-500">Carregando...</td></tr>';
+        if (tbodyInativos) tbodyInativos.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-slate-500">Carregando...</td></tr>';
         
         const { data, error } = await supabase.from('profiles').select('*').order('name', { ascending: true });
 
@@ -85,8 +85,8 @@ const app = {
         }
 
         if (data.length === 0) {
-            tbodyAtivos.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-slate-500">Nenhum usuário encontrado no sistema.</td></tr>';
-            if (tbodyInativos) tbodyInativos.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-slate-500">Nenhum usuário inativo encontrado.</td></tr>';
+            tbodyAtivos.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-slate-500">Nenhum usuário encontrado no sistema.</td></tr>';
+            if (tbodyInativos) tbodyInativos.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-slate-500">Nenhum usuário inativo encontrado.</td></tr>';
             return;
         }
 
@@ -102,6 +102,10 @@ const app = {
             const appsJsonString = encodeURIComponent(JSON.stringify(u.allowed_apps || ["#home", "#demandas"]));
             const isMe = u.email === meuEmail;
             const isInativo = u.status === 'inativo';
+            const coord = u.coordenacao || '-';
+            const badgeResp = u.responsavel ? `<span class="ml-1 px-1.5 py-0.5 bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 rounded text-[9px] uppercase font-bold" title="Responsável pela Coordenação">Resp</span>` : '';
+            const safeCoord = encodeURIComponent(u.coordenacao || '');
+            const isResp = u.responsavel ? 'true' : 'false';
 
             return `
             <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors ${isInativo ? 'opacity-70 bg-gray-50 dark:bg-slate-800/30' : ''}">
@@ -117,13 +121,16 @@ const app = {
                         ${u.role}
                     </span>
                 </td>
+                <td class="p-4 text-center text-slate-600 dark:text-slate-400 text-sm font-medium">
+                    ${coord} ${badgeResp}
+                </td>
                 <td class="p-4 text-center">
                     <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${isInativo ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'}">
                         ${isInativo ? 'Inativo' : 'Ativo'}
                     </span>
                 </td>
                 <td class="p-4 text-right">
-                    <button onclick="app.abrirEdicao('${u.id}', '${u.name}', '${u.email}', '${u.role}', '${appsJsonString}')"
+                    <button onclick="app.abrirEdicao('${u.id}', '${u.name}', '${u.email}', '${u.role}', '${appsJsonString}', '${safeCoord}', ${isResp})"
                         class="text-blue-500 hover:text-blue-700 mr-3" title="Editar Usuário">
                         <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 3C7.74882 3 5.62323 3 4.30256 4.31802C3.298 5.32056 3.05755 6.78787 3 9.3M21 9.3C20.9424 6.78787 20.702 5.32056 19.6974 4.31802C18.8789 3.50116 17.7513 3.19056 16 3.07246M21 14.7C20.9424 17.2121 20.702 18.6794 19.6974 19.682C18.3768 21 16.2512 21 12 21C7.74882 21 5.62323 21 4.30256 19.682C3.29801 18.6794 3.05756 17.2121 3 14.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -164,13 +171,15 @@ const app = {
     },
     
     // 3. ABRIR MODAL DE EDIÇÃO
-    abrirEdicao(id, name, email, role, encodedApps) {
+    abrirEdicao(id, name, email, role, encodedApps, encodedCoord, isResp) {
         document.getElementById('editId').value = id;
         document.getElementById('editName').value = name;
         document.getElementById('editEmail').value = email !== 'undefined' ? email : '';
         document.getElementById('editRole').value = role;
         document.getElementById('editPass').value = '';
         document.getElementById('editAvatar').value = '';
+        document.getElementById('editCoordenacao').value = encodedCoord && encodedCoord !== 'undefined' ? decodeURIComponent(encodedCoord) : '';
+        document.getElementById('editResponsavel').checked = (isResp === true || isResp === 'true');
 
         // Tratamento da array de aplicativos
         let userApps = ["#home", "#demandas"]; // Valor padrão se não houver apps salvos
@@ -220,6 +229,8 @@ async salvarEdicao() {
         const email = document.getElementById('editEmail').value.trim();
         const role = document.getElementById('editRole').value;
         const password = document.getElementById('editPass').value.trim();
+        const coordenacao = document.getElementById('editCoordenacao').value.trim();
+        const responsavel = document.getElementById('editResponsavel').checked;
 
         // 1. Recolhe todos os checkboxes marcados
         let allowed_apps = ["#home", "#demandas"]; 
@@ -249,7 +260,9 @@ async salvarEdicao() {
                 metadata: { 
                     name: name, 
                     role: role,
-                    allowed_apps: allowed_apps // AGORA A EDGE FUNCTION VAI LER ISSO!
+                    allowed_apps: allowed_apps, 
+                    coordenacao: coordenacao, 
+                    responsavel: responsavel 
                 } 
             };
 
@@ -358,6 +371,8 @@ async salvarEdicao() {
         document.getElementById('newAvatar').value = '';
         document.getElementById('newRole').value = 'user';
         this.handleNewRoleChange('user'); // Reseta os checkboxes
+        document.getElementById('newCoordenacao').value = '';
+        document.getElementById('newResponsavel').checked = false;
         document.getElementById('modal').classList.remove('hidden');
     },
 
@@ -385,6 +400,8 @@ async salvarEdicao() {
         const name = document.getElementById('newName').value.trim();
         const email = document.getElementById('newEmail').value.trim();
         const role = document.getElementById('newRole').value;
+        const coordenacao = document.getElementById('newCoordenacao').value.trim();
+        const responsavel = document.getElementById('newResponsavel').checked;
 
         // A senha não é mais necessária aqui no front-end!
         if (!name || !email) {
@@ -417,7 +434,9 @@ async salvarEdicao() {
                     metadata: { 
                         role: role, 
                         name: name,
-                        allowed_apps: allowed_apps 
+                        allowed_apps: allowed_apps ,
+                        coordenacao: coordenacao, // Novo
+                        responsavel: responsavel  // Novo
                     } 
                 }
             });
@@ -623,10 +642,16 @@ async salvarEdicao() {
         appsSection.classList.remove('hidden');
         document.querySelectorAll('input[name="approve_app_permission"]').forEach(cb => cb.checked = false);
 
+            document.getElementById('approveCoordenacao').value = '';
+            document.getElementById('approveResponsavel').checked = false;
+
             btnConfirm.onclick = async () => {
             const checkedBoxes = Array.from(document.querySelectorAll('input[name="approve_app_permission"]:checked'));
             const customApps = checkedBoxes.map(cb => cb.value);
             const allowed_apps = ["#home", "#demandas", ...customApps]; // Força o envio do demandas
+
+            const coordenacao = document.getElementById('approveCoordenacao').value.trim();
+            const responsavel = document.getElementById('approveResponsavel').checked;
 
             btnConfirm.textContent = "Aprovando...";
             btnConfirm.disabled = true;
@@ -637,7 +662,9 @@ async salvarEdicao() {
                         idPedido: id, 
                         email: email, 
                         name: nome,
-                        allowed_apps: allowed_apps // Enviando as permissões para o backend
+                        allowed_apps: allowed_apps, // Enviando as permissões para o backend
+                        coordenacao: coordenacao, // Envia para a Edge
+                        responsavel: responsavel
                     }
                 });
 
