@@ -48,6 +48,9 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                         Nova Demanda
                     </button>
+                    <button onclick="abrirModalRecorrencias()" class="bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 px-4 py-2.5 rounded-lg font-bold shadow-sm transition-all flex items-center gap-2 text-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    </button>
                 </div>
         </div>
 
@@ -89,6 +92,13 @@
                     <input type="text" id="f-titulo" required class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none focus:border-blue-500 text-sm">
                 </div>
 
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Coordenação da Demanda *</label>
+                    <select id="f-coordenacao" required class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none text-sm">
+                        <option value="">Selecione a coordenação</option>
+                    </select>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Atribuir a (Responsável)</label>
@@ -121,6 +131,11 @@
                             <option value="Urgente">Urgente</option>
                         </select>
                     </div>
+                </div>
+
+                <div id="container-conclusao" class="hidden">
+                    <label class="block text-xs font-bold text-emerald-600 uppercase mb-1">Resumo da Conclusão *</label>
+                    <textarea id="f-resumo-conclusao" rows="3" class="w-full p-2.5 border border-emerald-300 dark:border-emerald-700 rounded-lg dark:bg-slate-900 outline-none focus:border-emerald-500 text-sm" placeholder="O que foi entregue/resolvido nesta demanda?"></textarea>
                 </div>
 
                 <div>
@@ -177,6 +192,10 @@
                     <div>
                         <p class="text-[10px] uppercase font-bold text-slate-500 mb-1">Prioridade</p>
                         <p class="font-bold text-sm" id="vis-prioridade"></p>
+                    </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <p class="text-[10px] uppercase font-bold text-slate-500 mb-1">Coordenação</p>
+                        <p class="font-medium text-slate-800 dark:text-slate-200 truncate" id="vis-coordenacao"></p>
                     </div>
                     <div class="col-span-2 md:col-span-1">
                         <p class="text-[10px] uppercase font-bold text-slate-500 mb-1">Prazo Limite</p>
@@ -237,6 +256,83 @@
             <div class="flex justify-end gap-3">
                 <button onclick="fecharModalConfirmacao()" class="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 font-bold rounded-lg transition-colors text-sm">Cancelar</button>
                 <button id="btn-confirm-action" class="px-5 py-2 text-white font-bold rounded-lg transition-colors text-sm shadow-md">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Demandas Recorrentes -->
+    <div id="modal-recorrencias" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[70] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col border border-slate-200 dark:border-slate-700">
+            <div class="p-5 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/80">
+                <h3 class="text-lg font-bold">Gestão de Demandas Recorrentes</h3>
+                <button onclick="document.getElementById('modal-recorrencias').classList.add('hidden')" class="text-slate-400 hover:text-red-500"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+            </div>
+            
+            <div class="p-5 overflow-y-auto custom-scrollbar flex-1 flex flex-col md:flex-row gap-6">
+                <!-- Formulário de Nova Regra -->
+                <form id="form-recorrencia" class="w-full md:w-1/2 space-y-4">
+                    <h4 class="font-bold text-sm text-blue-600 mb-2">Criar Nova Automação</h4>
+                    
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Título Base *</label>
+                        <input type="text" id="r-titulo" required class="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Descrição / Instruções</label>
+                        <textarea id="r-descricao" rows="3" class="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none focus:border-blue-500 text-sm" placeholder="Detalhes do que deve ser feito..."></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Atribuir a (Responsável Padrão)</label>
+                        <select id="r-responsavel" class="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none text-sm">
+                            <option value="">Sem atribuição automática</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Frequência *</label>
+                            <select id="r-frequencia" onchange="alternarCampoDia()" class="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none text-sm">
+                                <option value="Mensal">Mensal</option>
+                                <option value="Semanal">Semanal</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Campo visível quando for Mensal -->
+                        <div id="container-mensal">
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Dia do Mês *</label>
+                            <input type="number" id="r-dia-mensal" min="1" max="31" placeholder="Ex: 5" class="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none text-sm">
+                            <p class="text-[9px] text-slate-400 mt-1">Digite um dia de 1 a 31</p>
+                        </div>
+
+                        <!-- Campo visível quando for Semanal (inicia oculto com 'hidden') -->
+                        <div id="container-semanal" class="hidden">
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Dia da Semana *</label>
+                            <select id="r-dia-semanal" class="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none text-sm">
+                                <option value="1">Segunda-feira</option>
+                                <option value="2">Terça-feira</option>
+                                <option value="3">Quarta-feira</option>
+                                <option value="4">Quinta-feira</option>
+                                <option value="5">Sexta-feira</option>
+                                <option value="6">Sábado</option>
+                                <option value="7">Domingo</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="button" onclick="salvarRecorrencia()" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors shadow-md text-sm mt-2">
+                        Salvar Automação
+                    </button>
+                </form>
+
+                <!-- Lista de Regras Ativas -->
+                <div class="w-full md:w-1/2 border-t md:border-t-0 md:border-l border-slate-200 dark:border-slate-700 pt-4 md:pt-0 md:pl-6">
+                    <h4 class="font-bold text-sm text-slate-700 dark:text-slate-300 mb-3">Automações Ativas</h4>
+                    <div id="lista-recorrencias" class="space-y-3 custom-scrollbar">
+                        <!-- Preenchido via JS -->
+                    </div>
+                </div>
             </div>
         </div>
     </div>

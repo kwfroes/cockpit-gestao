@@ -2251,54 +2251,6 @@ observerDinamico.observe(document.body, { childList: true });
 // Roda uma vez no início para garantir que já trave caso o modal de Boas-Vindas esteja aberto
 gerenciarRolagemDoFundo();
 
-// ==========================================
-// SCRIPT TEMPORÁRIO DE MIGRAÇÃO
-// ==========================================
-window.migrarDadosParaSupabase = async function() {
-    console.log("Iniciando migração...");
-
-    try {
-        // 1. Busca o seu arquivo JSON local
-        const response = await fetch('qualificacao_tecnica.json');
-        const jsonOriginal = await response.json();
-
-        // 2. Mapeia as chaves do JSON para o nome exato das colunas no Supabase
-        const payload = jsonOriginal.map(item => ({
-            familia: item["Família"],
-            descricao: item["Descrição"],
-            tipo: item["Tipo"],
-            terceirizado: item["Terceirizado"],
-            documentos_exigidos: item["Documentos Exigidos"] || [],
-            documentos_elegiveis: item["Documentos Elegíveis"] || [],
-            cnaes: item["CNAEs"] || [],
-            ramo: item["Ramo"] || {}
-        }));
-
-        // 3. Insere no Supabase em pequenos lotes (batch) de 100 em 100
-        // Isso evita sobrecarregar a rede ou dar timeout na API
-        for (let i = 0; i < payload.length; i += 100) {
-            const lote = payload.slice(i, i + 100);
-            
-            const { error } = await supabase
-                .from('qualificacao_tecnica')
-                .upsert(lote);
-
-            if (error) {
-                console.error(`Erro ao inserir lote ${i}:`, error);
-                alert("Erro na migração! Veja o console.");
-                return;
-            } else {
-                console.log(`Lote de ${i} a ${i + lote.length} inserido com sucesso!`);
-            }
-        }
-
-        console.log("🎉 Migração concluída com sucesso!");
-        alert("Todos os dados do JSON foram enviados para o Supabase!");
-
-    } catch (err) {
-        console.error("Erro geral na migração:", err);
-    }
-}
 
 
 // Inicia o App

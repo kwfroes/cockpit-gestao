@@ -9,6 +9,8 @@ const supabaseUrl = 'https://whnzeysvqbtuecxmthht.supabase.co';
 const supabaseKey = 'sb_publishable_Gw4cFK56R9kms2ogg50UqA_ZhHi79qw'; // Substitua pela sua chave anon
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+window.supabase = supabase;
+
 // ==========================================================
 // MÓDULO DE NAVEGAÇÃO DINÂMICA
 // ==========================================================
@@ -723,81 +725,97 @@ async function fetchRadarData() {
     }
 
 // 1. BUSCA DE DEMANDAS (Comum para ambos os casos)
-    try {
-        // Retiramos os filtros .neq() e .not() do banco para trazer o bolo todo (necessário para as métricas)
-        // Adicionado 'data_conclusao' no select
-        const { data: demandasTotais, error } = await supabase
-            .from('demandas')
+try {
+    const [{ data: comoResp, error: errResp }, { data: comoSol, error: errSol }] = await Promise.all([
+        supabase.from('demandas')
             .select('id, titulo, prazo_limite, status, responsavel_nome, solicitante_nome, data_conclusao')
-            .or(`responsavel_nome.eq."${userRealName}",solicitante_nome.eq."${userRealName}"`); 
+            .eq('responsavel_nome', userRealName),
+        supabase.from('demandas')
+            .select('id, titulo, prazo_limite, status, responsavel_nome, solicitante_nome, data_conclusao')
+            .eq('solicitante_nome', userRealName),
+    ]);
 
-        if (!error && demandasTotais) {
-            // SALVA NO CACHE PARA O DASHBOARD PESSOAL LER
-            localStorage.setItem("cache_demandas_usuario", JSON.stringify(demandasTotais));
-            
-            // Chama o renderStats para atualizar os cards imediatamente com os dados frescos
-            renderStats();
+    const error = errResp || errSol;
 
-            // Refazemos o filtro localmente apenas para popular os radares (ignorando concluídos e cancelados)
-            const demandas = demandasTotais.filter(d => 
-                d.status !== 'Concluído' && 
-                d.status !== 'Cancelado' && 
-                d.prazo_limite !== null
-            );
+    if (!error) {
+        // Unifica os resultados e remove duplicatas (caso seja criador e responsável ao mesmo tempo)
+        const demandasTotais = [...(comoResp || []), ...(comoSol || [])]
+            .filter((d, i, arr) => arr.findIndex(x => x.id === d.id) === i);
 
-            const hoje = new Date(); 
-            hoje.setHours(0,0,0,0);
-            
-            // Função auxiliar de renderização HTML
-            const renderHtmlDemanda = (d, mostrarComQuem) => {
-                const isMinha = d.responsavel_nome === userRealName;
-                const quemFaz = (!isMinha && mostrarComQuem) ? `<span class="block mt-1 text-[9px] font-bold text-slate-500 uppercase bg-white/50 px-1 py-0.5 rounded inline-block">👤 Com: ${d.responsavel_nome || 'Ninguém'}</span>` : '';
-                const corBorda = d.diff < 0 ? 'border-red-500 bg-red-50' : (d.diff === 0 ? 'border-red-400 bg-red-50/50' : 'border-blue-500 bg-blue-50');
-                const textoPrazo = d.diff < 0 ? `Atrasada há ${Math.abs(d.diff)} dias` : (d.diff === 0 ? 'Vence HOJE' : `Vence em ${d.diff} dias`);
-                
-                return `
-                <div class="p-3 border-l-4 ${corBorda} rounded-r-lg mb-1">
-                    <p class="font-bold text-[11px] text-gray-800 break-all">${d.titulo}</p>
-                    <p class="text-[10px] text-gray-600 mt-1">${textoPrazo}</p>
-                    ${quemFaz}
-                </div>`;
-            };
+        // SALVA NO CACHE PARA O DASHBOARD PESSOAL LER
+        localStorage.setItem("cache_demandas_usuario", JSON.stringify(demandasTotais));
 
-            // Calcula os dias (diff) e ordena
-            const listaBase = demandas.map(d => {
-                const prazo = new Date(d.prazo_limite + "T12:00:00Z");
-                const diff = Math.ceil((prazo - hoje) / (1000 * 60 * 60 * 24));
-                return { ...d, diff };
-            }).filter(d => d.diff <= 7).sort((a, b) => a.diff - b.diff);
+        // Chama o renderStats para atualizar os cards imediatamente com os dados frescos
+        renderStats();
 
-            
-            // Popula as listas de acordo com a permissão
-            if (temAcessoContratos) {
-                // Modo 1: Usuário COM acesso a contratos (Mostra tudo no Card 1)
-                badgeDemandas.textContent = listaBase.length;
-                containerDemandas.innerHTML = listaBase.length > 0 
-                    ? listaBase.map(d => renderHtmlDemanda(d, true)).join('')
-                    : '<div class="flex flex-col items-center justify-center py-6 text-gray-400"><svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-emerald-500 mb-2 opacity-80" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10S2 17.514 2 12 6.486 2 12 2m0-2C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z"/><path d="M10.5 16.5c-.42 0-.82-.176-1.094-.484l-2.963-2.97c-.274-.26-.443-.653-.443-1.06 0-.405.17-.798.462-1.078.482-.513 1.557-.55 2.113.037l1.925 1.93 4.943-4.958c.52-.55 1.575-.57 2.132.02.256.242.425.634.425 1.04 0 .402-.164.79-.45 1.068l-5.993 6.012c-.238.267-.637.443-1.057.443z"/></svg><span class="text-sm font-medium">Tudo em dia!</span></div>'
-            } else {
-                // Modo 2: Usuário SEM acesso a contratos (Divide as demandas)
-                const listaMinhas = listaBase.filter(d => d.responsavel_nome === userRealName);
-                const listaAtribuidas = listaBase.filter(d => d.solicitante_nome === userRealName && d.responsavel_nome !== userRealName);
+        // Refazemos o filtro localmente apenas para popular os radares (ignorando concluídos e cancelados)
+        const demandas = demandasTotais.filter(d => 
+            d.status !== 'Concluído' && 
+            d.status !== 'Cancelado' && 
+            d.prazo_limite !== null
+        );
 
-                
-                // Card: Minhas
-                badgeDemandas.textContent = listaMinhas.length;
-                containerDemandas.innerHTML = listaMinhas.length > 0 
-                    ? listaMinhas.map(d => renderHtmlDemanda(d, false)).join('')
-                    : '<div class="flex flex-col items-center justify-center py-6 text-gray-400"><svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-emerald-500 mb-2 opacity-80" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10S2 17.514 2 12 6.486 2 12 2m0-2C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z"/><path d="M10.5 16.5c-.42 0-.82-.176-1.094-.484l-2.963-2.97c-.274-.26-.443-.653-.443-1.06 0-.405.17-.798.462-1.078.482-.513 1.557-.55 2.113.037l1.925 1.93 4.943-4.958c.52-.55 1.575-.57 2.132.02.256.242.425.634.425 1.04 0 .402-.164.79-.45 1.068l-5.993 6.012c-.238.267-.637.443-1.057.443z"/></svg><span class="text-sm font-medium">Tudo em dia!</span></div>'
-                
-                // Card: Atribuídas
-                badgeAtribuidas.textContent = listaAtribuidas.length;
-                containerAtribuidas.innerHTML = listaAtribuidas.length > 0 
-                    ? listaAtribuidas.map(d => renderHtmlDemanda(d, true)).join('')
-                    : '<div class="flex flex-col items-center justify-center py-6 text-gray-400"><svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-emerald-500 mb-2 opacity-80" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10S2 17.514 2 12 6.486 2 12 2m0-2C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z"/><path d="M10.5 16.5c-.42 0-.82-.176-1.094-.484l-2.963-2.97c-.274-.26-.443-.653-.443-1.06 0-.405.17-.798.462-1.078.482-.513 1.557-.55 2.113.037l1.925 1.93 4.943-4.958c.52-.55 1.575-.57 2.132.02.256.242.425.634.425 1.04 0 .402-.164.79-.45 1.068l-5.993 6.012c-.238.267-.637.443-1.057.443z"/></svg><span class="text-sm font-medium">Tudo em dia!</span></div>';
-            }
+        const hoje = new Date(); 
+        hoje.setHours(0,0,0,0);
+
+        // Função auxiliar de renderização HTML
+        const renderHtmlDemanda = (d, mostrarComQuem) => {
+            const isMinha = d.responsavel_nome === userRealName;
+            const quemFaz = (!isMinha && mostrarComQuem) ? `<span class="block mt-1 text-[9px] font-bold text-slate-500 uppercase bg-white/50 px-1 py-0.5 rounded inline-block">👤 Com: ${d.responsavel_nome || 'Ninguém'}</span>` : '';
+            const corBorda = d.diff < 0 ? 'border-red-500 bg-red-50' : (d.diff === 0 ? 'border-red-400 bg-red-50/50' : 'border-blue-500 bg-blue-50');
+            const textoPrazo = d.diff < 0 ? `Atrasada há ${Math.abs(d.diff)} dias` : (d.diff === 0 ? 'Vence HOJE' : `Vence em ${d.diff} dias`);
+
+            return `
+            <div class="p-3 border-l-4 ${corBorda} rounded-r-lg mb-1">
+                <p class="font-bold text-[11px] text-gray-800 break-all">${d.titulo}</p>
+                <p class="text-[10px] text-gray-600 mt-1">${textoPrazo}</p>
+                ${quemFaz}
+            </div>`;
+        };
+
+        // Calcula os dias (diff) e ordena
+        const listaBase = demandas.map(d => {
+            const prazo = new Date(d.prazo_limite + "T12:00:00Z");
+            const diff = Math.ceil((prazo - hoje) / (1000 * 60 * 60 * 24));
+            return { ...d, diff };
+        }).filter(d => d.diff <= 7).sort((a, b) => a.diff - b.diff);
+
+        // Popula as listas de acordo com a permissão
+        if (temAcessoContratos) {
+            // Modo 1: Usuário COM acesso a contratos (Mostra tudo no Card 1)
+            badgeDemandas.textContent = listaBase.length;
+            containerDemandas.innerHTML = listaBase.length > 0 
+                ? listaBase.map(d => renderHtmlDemanda(d, true)).join('')
+                : '<div class="flex flex-col items-center justify-center py-6 text-gray-400"><svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-emerald-500 mb-2 opacity-80" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10S2 17.514 2 12 6.486 2 12 2m0-2C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z"/><path d="M10.5 16.5c-.42 0-.82-.176-1.094-.484l-2.963-2.97c-.274-.26-.443-.653-.443-1.06 0-.405.17-.798.462-1.078.482-.513 1.557-.55 2.113.037l1.925 1.93 4.943-4.958c.52-.55 1.575-.57 2.132.02.256.242.425.634.425 1.04 0 .402-.164.79-.45 1.068l-5.993 6.012c-.238.267-.637.443-1.057.443z"/></svg><span class="text-sm font-medium">Tudo em dia!</span></div>';
+        } else {
+            // Modo 2: Usuário SEM acesso a contratos (Divide as demandas)
+            const listaMinhas = listaBase.filter(d => d.responsavel_nome === userRealName);
+            const listaAtribuidas = listaBase.filter(d => d.solicitante_nome === userRealName && d.responsavel_nome !== userRealName);
+
+            // Card: Minhas
+            badgeDemandas.textContent = listaMinhas.length;
+            containerDemandas.innerHTML = listaMinhas.length > 0 
+                ? listaMinhas.map(d => renderHtmlDemanda(d, false)).join('')
+                : '<div class="flex flex-col items-center justify-center py-6 text-gray-400"><svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-emerald-500 mb-2 opacity-80" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10S2 17.514 2 12 6.486 2 12 2m0-2C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z"/><path d="M10.5 16.5c-.42 0-.82-.176-1.094-.484l-2.963-2.97c-.274-.26-.443-.653-.443-1.06 0-.405.17-.798.462-1.078.482-.513 1.557-.55 2.113.037l1.925 1.93 4.943-4.958c.52-.55 1.575-.57 2.132.02.256.242.425.634.425 1.04 0 .402-.164.79-.45 1.068l-5.993 6.012c-.238.267-.637.443-1.057.443z"/></svg><span class="text-sm font-medium">Tudo em dia!</span></div>';
+
+            // Card: Atribuídas
+            badgeAtribuidas.textContent = listaAtribuidas.length;
+            containerAtribuidas.innerHTML = listaAtribuidas.length > 0 
+                ? listaAtribuidas.map(d => renderHtmlDemanda(d, true)).join('')
+                : '<div class="flex flex-col items-center justify-center py-6 text-gray-400"><svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-emerald-500 mb-2 opacity-80" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10S2 17.514 2 12 6.486 2 12 2m0-2C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z"/><path d="M10.5 16.5c-.42 0-.82-.176-1.094-.484l-2.963-2.97c-.274-.26-.443-.653-.443-1.06 0-.405.17-.798.462-1.078.482-.513 1.557-.55 2.113.037l1.925 1.93 4.943-4.958c.52-.55 1.575-.57 2.132.02.256.242.425.634.425 1.04 0 .402-.164.79-.45 1.068l-5.993 6.012c-.238.267-.637.443-1.057.443z"/></svg><span class="text-sm font-medium">Tudo em dia!</span></div>';
         }
-    } catch (e) { console.error("Erro ao buscar demandas", e); }
+    } else {
+        console.error("Erro ao buscar demandas:", error);
+        const msgErro = '<p class="text-center text-sm text-red-400 py-10">Erro ao carregar demandas.<br><span class="text-[10px] opacity-70">Tente recarregar a página.</span></p>';
+        if (containerDemandas) containerDemandas.innerHTML = msgErro;
+        if (containerAtribuidas) containerAtribuidas.innerHTML = msgErro;
+    }
+} catch (e) {
+    console.error("Erro ao buscar demandas", e);
+    const msgErro = '<p class="text-center text-sm text-red-400 py-10">Erro ao carregar demandas.</p>';
+    if (containerDemandas) containerDemandas.innerHTML = msgErro;
+    if (containerAtribuidas) containerAtribuidas.innerHTML = msgErro;
+}
 
     // 2. BUSCA DE CONTRATOS (Executa apenas se tiver acesso, poupando o banco de dados)
     if (temAcessoContratos) {
