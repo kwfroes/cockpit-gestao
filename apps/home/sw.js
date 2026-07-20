@@ -1,9 +1,8 @@
-const CACHE_NAME = "cockpit-cache-v9.0.3";
+const CACHE_NAME = "cockpit-cache-v9.0.4";
 const ASSETS_TO_CACHE = [
   "./", // A raiz
   "./index.html", // O HTML
   "./script.js", // O cérebro
-  "./qualificacao_tecnica.json", // Os dados (importante!)
   "./manifest.json",
   // Adicione aqui qualquer CSS externo ou imagem que vc use localmente
 ];

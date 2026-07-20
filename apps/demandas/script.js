@@ -6,8 +6,10 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Estado Global
 let demandas = [];
-let tempSubDemandas = [];
+window.tempSubDemandas = [];
 let perfisUsuarios = [];
+let currentUserCoord = '';
+let isUserCoordManager = false;
 const currentUserRole = sessionStorage.getItem('cockpit_user_role') || 'user';
 const currentUserName = sessionStorage.getItem('cockpit_user_realname') || 'Usuário';
 
@@ -38,10 +40,12 @@ async function initApp() {
     configurarRealtimeNotificacoes();
 }
 
+
+
 async function carregarUsuarios() {
     const { data, error } = await supabase
         .from('profiles')
-        .select('id, name')
+        .select('id, name, coordenacao, responsavel')
         .eq('status', 'ativo')
         .order('name');
         
@@ -51,11 +55,41 @@ async function carregarUsuarios() {
     }
 
     perfisUsuarios = data;
+
+    // Identifica os dados do usuário logado
+    const myProfile = perfisUsuarios.find(u => u.name === currentUserName);
+    if (myProfile) {
+        currentUserCoord = myProfile.coordenacao || '';
+        isUserCoordManager = myProfile.responsavel || false;
+    }
+
     const select = document.getElementById('f-responsavel');
     const selectSub = document.getElementById('nova-sub-responsavel');
+    const selectCoord = document.getElementById('f-coordenacao');
+
+    // Limpa as opções anteriores
+    select.innerHTML = '<option value="">Sem atribuição no momento</option>';
+    selectSub.innerHTML = '<option value="">Responsável</option>';
+    selectCoord.innerHTML = '<option value="">Selecione a coordenação</option>';
+
+    // Cria um conjunto para guardar as coordenações sem repeti-las
+    const coordUnicas = new Set();
+
     data.forEach(user => {
+        // 1. Popula os selects de responsáveis normalmente
         select.innerHTML += `<option value="${user.id}">${user.name}</option>`;
-        selectSub.innerHTML += `<option value="${user.id}">${user.name}</option>`;    });
+        selectSub.innerHTML += `<option value="${user.id}">${user.name}</option>`;
+        
+        // 2. Guarda a coordenação no Set (apenas se ela for válida)
+        if (user.coordenacao && user.coordenacao.trim() !== '' && user.coordenacao !== '-') {
+            coordUnicas.add(user.coordenacao.trim());
+        }
+    });
+
+    // 3. Converte o Set de volta para Array, organiza em ordem alfabética e popula o dropdown
+    Array.from(coordUnicas).sort().forEach(coord => {
+        selectCoord.innerHTML += `<option value="${coord}">${coord}</option>`;
+    });
 }
 
 async function fetchDemandas() {
@@ -64,9 +98,16 @@ async function fetchDemandas() {
         .select('*')
         .order('data_criacao', { ascending: false });
 
-    // Regra de Negócio: Usuário comum vê apenas criadas por ele ou atribuídas a ele
+    // Regra de Acesso: Usuário comum ou Responsável de Coordenação
     if (currentUserRole !== 'admin') {
-        query = query.or(`solicitante_nome.eq."${currentUserName}",responsavel_nome.eq."${currentUserName}"`);
+        let stringFiltro = `solicitante_nome.eq."${currentUserName}",responsavel_nome.eq."${currentUserName}"`;
+        
+        // Se for responsável por uma coordenação, também vê todas daquela coordenação
+        if (isUserCoordManager && currentUserCoord) {
+            stringFiltro += `,coordenacao.eq."${currentUserCoord}"`;
+        }
+        
+        query = query.or(stringFiltro);
     }
 
     const { data, error } = await query;
@@ -80,6 +121,21 @@ async function fetchDemandas() {
     demandas = data;
     renderDemandas();
 }
+
+function toggleCampoConclusao() {
+    const status = document.getElementById('f-status').value;
+    const container = document.getElementById('container-conclusao');
+    const campo = document.getElementById('f-resumo-conclusao');
+    if (status === 'Concluído') {
+        container.classList.remove('hidden');
+        campo.required = true;
+    } else {
+        container.classList.add('hidden');
+        campo.required = false;
+    }
+}
+document.getElementById('f-status').addEventListener('change', toggleCampoConclusao);
+
 
 function renderDemandas() {
     const grid = document.getElementById('demandas-grid');
@@ -212,6 +268,8 @@ window.abrirModalDemanda = (id = null) => {
             document.getElementById('f-prioridade').value = d.prioridade;
             document.getElementById('f-prazo').value = d.prazo_limite || '';
             document.getElementById('f-obs').value = d.observacoes || '';
+            document.getElementById('f-coordenacao').value = d.coordenacao || '';
+            document.getElementById('f-resumo-conclusao').value = d.resumo_conclusao || ''; 
 
             carregarSubdemandas(id);
 
@@ -224,16 +282,17 @@ window.abrirModalDemanda = (id = null) => {
         document.getElementById('container-subdemandas').classList.remove('hidden');
         
         // Zera o array de memória e limpa a tela de subdemandas anteriores
-        tempSubDemandas = [];
+        window.tempSubDemandas = [];
         renderTempSubdemandas();
     }
 
+    toggleCampoConclusao();
     modal.classList.remove('hidden');
 }
 
 window.fecharModalDemanda = () => {
     document.getElementById('modal-demanda').classList.add('hidden');
-    tempSubDemandas = []; // <--- Isso limpa a memória ao fechar!
+    window.tempSubDemandas = []; // <--- Isso limpa a memória ao fechar!
 };
 
 
@@ -259,8 +318,33 @@ window.salvarDemanda = async () => {
             responsavel_nome: respNome,
             prazo_limite: document.getElementById('f-prazo').value || null,
             observacoes: document.getElementById('f-obs').value.trim(),
+            coordenacao: document.getElementById('f-coordenacao').value.trim(), 
             data_atualizacao: new Date().toISOString()
         };
+
+        // --- NOVO: regras de conclusão ---
+        const demandaExistente = id ? demandas.find(x => x.id === id) : null;
+        const statusAnterior = demandaExistente ? demandaExistente.status : null;
+
+        if (payload.status === 'Concluído') {
+            const resumo = document.getElementById('f-resumo-conclusao').value.trim();
+            if (!resumo) {
+                showToast("Preencha o resumo da conclusão para salvar.", "error");
+                btn.textContent = originalText;
+                btn.disabled = false;
+                return;
+            }
+            payload.resumo_conclusao = resumo;
+
+            // Mantém a data original se já estava concluída; senão, marca agora
+            payload.data_conclusao = (statusAnterior === 'Concluído' && demandaExistente.data_conclusao)
+                ? demandaExistente.data_conclusao
+                : new Date().toISOString().split('T')[0];
+        } else {
+            // Se foi reaberta (saiu de Concluído), limpa os campos de conclusão
+            payload.resumo_conclusao = null;
+            payload.data_conclusao = null;
+        }
 
         if (!payload.titulo) throw new Error("O título é obrigatório.");
 
@@ -289,6 +373,28 @@ window.salvarDemanda = async () => {
             if (error) throw error;
         }
 
+        // === NOVA LÓGICA DE NOTIFICAÇÃO PARA COORDENADORES ===
+        if (payload.coordenacao) {
+            // Encontra quem são os responsáveis pela coordenação desta demanda
+            const coordManagers = perfisUsuarios.filter(u => 
+                u.coordenacao === payload.coordenacao && 
+                u.responsavel === true && 
+                u.name !== currentUserName // Evita que o usuário notifique a si mesmo
+            );
+
+            if (coordManagers.length > 0) {
+                const acaoTxt = !id ? "Nova demanda criada" : "Demanda atualizada";
+                const logsManagers = coordManagers.map(manager => ({
+                    demanda_id: idFinal,
+                    ator_nome: currentUserName,
+                    destinatario_nome: manager.name,
+                    mensagem: `${acaoTxt} na sua coordenação (${payload.coordenacao}): "${payload.titulo}"`
+                }));
+                
+                await supabase.from('demandas_logs').insert(logsManagers);
+            }
+        }
+
         // --- SINCRONIZAÇÃO DE SUBDEMANDAS (Lógica Upsert Separada) ---
         if (tempSubDemandas.length > 0) {
             
@@ -307,33 +413,34 @@ window.salvarDemanda = async () => {
                 };
                 
                 if (s.id) {
-                    item.id = s.id; // Se tem ID, vai para a lista de atualização
+                    item.id = s.id;
                     paraAtualizar.push(item);
                 } else {
-                    paraInserir.push(item); // Se não tem ID, vai para a lista de novos passos
+                    paraInserir.push(item);
                 }
             });
 
-            // 2. Envia as atualizações (sem disparar e-mails repetidos)
+            // Cria a lista de IDs a serem protegidos da exclusão
+            let idsAtuais = tempSubDemandas.filter(s => s.id).map(s => s.id);
+
+            // 2. Envia as atualizações
             if (paraAtualizar.length > 0) {
                 const { error: errUp } = await supabase.from('sub_demandas').upsert(paraAtualizar);
-                if (errUp) {
-                    console.error("Erro no Upsert:", errUp);
-                    throw new Error("Erro ao atualizar as subdemandas existentes.");
-                }
+                if (errUp) throw new Error("Erro ao atualizar as subdemandas existentes.");
             }
 
-            // 3. Envia os novos passos (o banco fará o INSERT e disparará o e-mail)
+            // 3. Envia os novos passos (AGORA COM .select() PARA PEGAR OS IDs)
             if (paraInserir.length > 0) {
-                const { error: errIn } = await supabase.from('sub_demandas').insert(paraInserir);
-                if (errIn) {
-                    console.error("Erro no Insert:", errIn);
-                    throw new Error("Erro ao inserir os novos passos.");
+                const { data: dadosInseridos, error: errIn } = await supabase.from('sub_demandas').insert(paraInserir).select();
+                if (errIn) throw new Error("Erro ao inserir os novos passos.");
+                
+                // Protege os itens recém-criados adicionando seus novos IDs na lista de manter
+                if (dadosInseridos) {
+                    dadosInseridos.forEach(item => idsAtuais.push(item.id));
                 }
             }
 
-            // 4. Limpeza: Deleta do banco os passos que o usuário excluiu na tela (clicou no X)
-            const idsAtuais = tempSubDemandas.filter(s => s.id).map(s => s.id);
+            // 4. Limpeza: Deleta apenas o que não está na lista protegida (idsAtuais)
             if (idsAtuais.length > 0) {
                 await supabase.from('sub_demandas')
                     .delete()
@@ -650,13 +757,13 @@ window.adicionarSubdemanda = () => {
 // Renderiza a interface a partir da memória
 function renderTempSubdemandas() {
     const lista = document.getElementById('lista-subdemandas');
-    lista.innerHTML = tempSubDemandas.map((s, index) => `
+    lista.innerHTML = window.tempSubDemandas.map((s, index) => `
         <div class="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700">
-            <input type="checkbox" ${s.concluido ? 'checked' : ''} onchange="tempSubDemandas[${index}].concluido = this.checked">
+            <input type="checkbox" ${s.concluido ? 'checked' : ''} onchange="window.tempSubDemandas[${index}].concluido = this.checked">
             <span class="flex-1 text-xs">${s.titulo}</span>
             <span class="text-[10px] text-slate-400 dark:text-slate-500">${s.prazo || ''}</span>
             <span class="text-[10px] bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 px-1 rounded">${s.responsavel_nome || ''}</span>
-            <button type="button" onclick="tempSubDemandas.splice(${index}, 1); renderTempSubdemandas()" class="text-red-500 font-bold px-2">x</button>
+            <button type="button" onclick="window.tempSubDemandas.splice(${index}, 1); renderTempSubdemandas()" class="text-red-500 font-bold px-2">x</button>
         </div>
     `).join('');
 }
@@ -684,6 +791,7 @@ window.abrirModalVisualizacao = async (id) => {
     document.getElementById('vis-prazo').textContent = d.prazo_limite ? new Date(d.prazo_limite + 'T12:00:00Z').toLocaleDateString('pt-BR') : 'Sem prazo definido';
     document.getElementById('vis-descricao').textContent = d.descricao || 'Nenhuma descrição detalhada fornecida.';
     document.getElementById('vis-obs').textContent = d.observacoes || 'Nenhuma observação registrada.';
+    document.getElementById('vis-coordenacao').textContent = d.coordenacao || 'Não informada';
 
     // Cores dinâmicas para Status e Prioridade
     const statusEl = document.getElementById('vis-status');
@@ -746,4 +854,152 @@ window.abrirModalVisualizacao = async (id) => {
 
 window.fecharModalVisualizacao = () => {
     document.getElementById('modal-visualizacao').classList.add('hidden');
+};
+
+// Adicione estas funções no final do seu script.js
+
+window.abrirModalRecorrencias = () => {
+    document.getElementById('modal-recorrencias').classList.remove('hidden');
+    
+    // Como os usuários já foram carregados no initApp() na variável global 'perfisUsuarios',
+    // nós só precisamos popular o select novo aqui:
+    const selectResp = document.getElementById('r-responsavel');
+    selectResp.innerHTML = '<option value="">Sem atribuição automática</option>';
+    
+    perfisUsuarios.forEach(user => {
+        selectResp.innerHTML += `<option value="${user.id}">${user.name}</option>`;
+    });
+
+    
+    alternarCampoDia();
+    carregarRecorrencias();
+};
+
+window.carregarRecorrencias = async () => {
+    const lista = document.getElementById('lista-recorrencias');
+    lista.innerHTML = '<p class="text-xs text-slate-500">Carregando...</p>';
+
+    const { data, error } = await supabase
+        .from('demandas_recorrentes')
+        .select('*')
+        .order('data_criacao', { ascending: false });
+
+    if (error) {
+        lista.innerHTML = '<p class="text-xs text-red-500">Erro ao carregar automações.</p>';
+        return;
+    }
+
+    if (data.length === 0) {
+        lista.innerHTML = '<p class="text-xs text-slate-500 italic">Nenhuma automação cadastrada.</p>';
+        return;
+    }
+
+    lista.innerHTML = data.map(r => `
+        <div class="p-3 bg-slate-50 dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 flex justify-between items-center">
+            <div>
+                <p class="font-bold text-sm text-slate-800 dark:text-white line-clamp-1" title="${r.titulo}">${r.titulo}</p>
+                <p class="text-[10px] text-slate-500 mt-1 uppercase font-bold tracking-wider">
+                    ${r.frequencia} • ${(() => {
+                        if (r.frequencia === 'Mensal') return `Todo dia ${r.dia_geracao}`;
+                        const dias = {1: 'Segunda-feira', 2: 'Terça-feira', 3: 'Quarta-feira', 4: 'Quinta-feira', 5: 'Sexta-feira', 6: 'Sábado', 7: 'Domingo'};
+                        return `Toda ${dias[r.dia_geracao]}`;
+                    })()}
+                </p>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="alternarStatusRecorrencia('${r.id}', ${!r.ativo})" class="text-[10px] px-2 py-1 rounded font-bold ${r.ativo ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-500'}">
+                    ${r.ativo ? 'Ativo' : 'Pausado'}
+                </button>
+                <button onclick="excluirRecorrencia('${r.id}')" class="text-slate-400 hover:text-red-500 p-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                </button>
+            </div>
+        </div>
+    `).join('');
+};
+
+window.alternarCampoDia = () => {
+    const freq = document.getElementById('r-frequencia').value;
+    if (freq === 'Mensal') {
+        document.getElementById('container-mensal').classList.remove('hidden');
+        document.getElementById('container-semanal').classList.add('hidden');
+    } else {
+        document.getElementById('container-mensal').classList.add('hidden');
+        document.getElementById('container-semanal').classList.remove('hidden');
+    }
+};
+
+window.salvarRecorrencia = async () => {
+    const titulo = document.getElementById('r-titulo').value.trim();
+    const descricao = document.getElementById('r-descricao').value.trim();
+    const frequencia = document.getElementById('r-frequencia').value;
+
+    // Define a variável 'dia' apenas uma vez e busca do input correto
+    let dia;
+    if (frequencia === 'Mensal') {
+        dia = document.getElementById('r-dia-mensal').value;
+    } else {
+        dia = document.getElementById('r-dia-semanal').value;
+    }
+    
+    // Captura os dados do responsável selecionado
+    const selectResp = document.getElementById('r-responsavel');
+    const respId = selectResp.value || null;
+    const respNome = selectResp.value ? selectResp.options[selectResp.selectedIndex].text : null;
+
+    if (!titulo || !dia) {
+        showToast("Preencha o título e o dia de geração.", "error");
+        return;
+    }
+
+    const payload = {
+        titulo: titulo,
+        descricao: descricao,
+        frequencia: frequencia,
+        dia_geracao: parseInt(dia),
+        responsavel_id: respId,
+        responsavel_nome: respNome,
+        ativo: true,
+        coordenacao: currentUserCoord 
+    };
+
+    const { error } = await supabase.from('demandas_recorrentes').insert([payload]);
+
+    if (error) {
+        showToast("Erro ao criar automação.", "error");
+        console.error(error);
+    } else {
+        showToast("Automação criada com sucesso!");
+        document.getElementById('form-recorrencia').reset();
+
+        // Retorna a interface para o estado inicial após salvar
+        document.getElementById('r-frequencia').value = 'Mensal';
+        alternarCampoDia();
+
+        carregarRecorrencias();
+    }
+};
+
+window.alternarStatusRecorrencia = async (id, novoStatus) => {
+    await supabase.from('demandas_recorrentes').update({ ativo: novoStatus }).eq('id', id);
+    carregarRecorrencias();
+};
+
+window.excluirRecorrencia = (id) => {
+    abrirModalConfirmacao(
+        "Excluir Automação",
+        "Tem certeza que deseja excluir esta automação? As demandas já geradas não serão afetadas, mas o sistema deixará de gerar novas.",
+        "danger",
+        async () => {
+            const { error } = await supabase.from('demandas_recorrentes').delete().eq('id', id);
+            
+            if (error) {
+                showToast("Erro ao excluir automação.", "error");
+                console.error(error);
+            } else {
+                showToast("Automação excluída com sucesso!");
+                carregarRecorrencias();
+            }
+        }
+    );
 };

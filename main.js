@@ -101,7 +101,94 @@ async function generateCaptcha() {
   const userInput = document.getElementById("userInput");
   const passwordInput = document.getElementById("passwordInput");
   const loginError = document.getElementById("loginError");
-  const frame = document.getElementById("appFrame"); // Referência ao iframe
+
+
+  // =========================================================
+  // GESTÃO DE ABAS E MULTI-IFRAMES
+  // =========================================================
+  const appContainer = document.getElementById("appContainer");
+  const tabBar = document.getElementById("tabBar");
+  const openFrames = {}; // Guarda os iframes abertos: { "#dashboard": iframeElement }
+
+  function renderTabs() {
+    if (!tabBar) return;
+    tabBar.innerHTML = "";
+    
+    const openHashes = Object.keys(openFrames);
+    if (openHashes.length === 0 || (openHashes.length === 1 && openHashes[0] === "#home")) {
+        tabBar.classList.add("hidden"); // Esconde a barra se só tiver a home ou nada
+        return;
+    }
+    
+    tabBar.classList.remove("hidden");
+
+    openHashes.forEach(hash => {
+        if (hash === "#home") return; // Não cria aba visual para a Home
+
+        // Busca o nome do app baseando-se no menu lateral
+        const link = document.querySelector(`aside a[href="${hash}"]`);
+        const title = link
+        ? (link.dataset.title || link.textContent.trim())
+        : hash;
+
+        const isAtiva = window.location.hash === hash;
+
+        const tab = document.createElement("div");
+        tab.className = `px-4 py-2 border-r border-slate-200 dark:border-slate-700 cursor-pointer flex items-center gap-2 text-sm transition-colors group select-none ${
+            isAtiva 
+            ? "bg-slate-100 dark:bg-slate-900 font-bold text-blue-600 dark:text-blue-400 border-b-2 border-b-blue-600" 
+            : "bg-white dark:bg-slate-800 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700"
+        }`;
+
+        // Texto que clica e navega
+        const span = document.createElement("span");
+        span.textContent = title;
+        span.className = "whitespace-nowrap";
+        span.onclick = () => {
+            history.pushState(null, null, hash);
+            navigate(hash);
+        };
+
+        // Botão de fechar (X)
+        const closeBtn = document.createElement("button");
+        closeBtn.innerHTML = "✕";
+        closeBtn.className = "text-[10px] ml-2 w-5 h-5 flex items-center justify-center rounded-full text-slate-400 hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-900/30 transition-colors";
+        closeBtn.onclick = (e) => {
+            e.stopPropagation();
+            closeTab(hash);
+        };
+
+        tab.appendChild(span);
+        tab.appendChild(closeBtn);
+        tabBar.appendChild(tab);
+    });
+  }
+
+  function closeTab(hash) {
+      if (openFrames[hash]) {
+          appContainer.removeChild(openFrames[hash]);
+          delete openFrames[hash];
+      }
+      
+      const remainingHashes = Object.keys(openFrames).filter(h => h !== "#home");
+      if (remainingHashes.length > 0) {
+          // Vai para a última aba aberta
+          const lastHash = remainingHashes[remainingHashes.length - 1];
+          history.pushState(null, null, lastHash);
+          navigate(lastHash);
+      } else {
+          // Se fechou tudo, volta pra home
+          history.pushState(null, null, "#home");
+          navigate("#home");
+      }
+  }
+
+  // Função utilitária para limpar tudo ao deslogar
+  function clearAllApps() {
+      if (appContainer) appContainer.innerHTML = "";
+      for (let key in openFrames) delete openFrames[key];
+      renderTabs();
+  }
 
   // =========================================================
   // INICIALIZAÇÃO DO SUPABASE
@@ -221,7 +308,7 @@ async function generateCaptcha() {
           if (profile?.status === 'inativo') {
               await supabase.auth.signOut(); // Desloga do Supabase
               sessionStorage.clear();        // Limpa a memória
-              frame.src = "about:blank";     // Limpa a tela
+              clearAllApps();     // Limpa a tela
               if (typeof generateCaptcha === "function") generateCaptcha();
               return; // Interrompe a execução aqui, não deixa criar a sessão local
           }
@@ -274,7 +361,7 @@ async function generateCaptcha() {
               }
           }
       } else {
-          frame.src = "about:blank";
+          clearAllApps();
           generateCaptcha();
           
           // Limpa o loop se o usuário deslogar/perder a sessão
@@ -594,7 +681,6 @@ if (loginForm) {
   }
 
   function navigate(hash) {
-    // SEGURANÇA EXTRA: Se tentar navegar sem login, para tudo.
     if (sessionStorage.getItem("cockpit_auth_token") !== "valid") return;
 
     // --- PROTEÇÃO DE ROTA GRANULAR ---
@@ -607,7 +693,6 @@ if (loginForm) {
         allowedApps = ["#home"];
       }
 
-      // Se não for admin E a rota requisitada não estiver na lista de permitidas
       if (role !== "admin" && !allowedApps.includes(hash)) {
         showError("Acesso Negado: Você não possui autorização para este aplicativo.");
         navigate("#home");
@@ -617,56 +702,56 @@ if (loginForm) {
 
     const route = routes[hash] || routes[defaultHash];
 
-    // Só atualiza o src se for diferente (evita flash desnecessário)
-    if (!frame.src.endsWith(route)) {
-      frame.src = route;
+    // 1. Esconde TODOS os iframes abertos
+    Object.values(openFrames).forEach(iframe => {
+        iframe.style.display = "none";
+    });
+
+    // 2. Verifica se o iframe do app já existe
+    if (openFrames[hash]) {
+        // Se existe, apenas mostra ele de novo (mantendo o estado intacto!)
+        openFrames[hash].style.display = "block";
+    } else {
+        // Se não existe, cria o iframe, injeta no HTML e salva na lista
+        const newIframe = document.createElement("iframe");
+        newIframe.src = route;
+        newIframe.style.width = "100%";
+        newIframe.style.height = "100%";
+        newIframe.style.backgroundColor = "transparent";
+        newIframe.allowFullscreen = true;
+        newIframe.style.border = "none";
+
+        newIframe.addEventListener("load", () => {
+            const currentTheme = document.documentElement.classList.contains("dark") ? "dark" : "light";
+            if (newIframe.contentWindow) {
+                newIframe.contentWindow.postMessage({ type: "THEME_CHANGE", theme: currentTheme }, "*");
+            }
+        });
+        
+        appContainer.appendChild(newIframe);
+        openFrames[hash] = newIframe;
     }
 
+    // Atualiza menu e abas visuais
     updateActiveLink(hash);
+    renderTabs();
 
-    // --- NOVA LÓGICA DO FLOATING LINKS ---
+    // --- LÓGICA DO FLOATING LINKS E SIDEBAR ---
     if (window.innerWidth >= 768) {
-      // Ajustes de layout existentes...
       if (hash === "#home") {
         sidebar.classList.remove("md:translate-x-0");
         mainContent.classList.remove("md:ml-64");
         if (menuButton) menuButton.classList.remove("rotate-90");
-
-        // NA HOME: Esconde totalmente o elemento (nem a seta aparece)
         if (floatingLinks) floatingLinks.classList.add("hidden");
       } else {
         sidebar.classList.add("md:translate-x-0");
         mainContent.classList.add("md:ml-64");
         if (menuButton) menuButton.classList.add("rotate-90");
-
-        // NOS APPS:
         if (floatingLinks) {
-          // 1. Garante que o elemento existe no DOM (remove display:none)
           floatingLinks.classList.remove("hidden");
-
-          // 2. Garante que começa fechado visualmente
           floatingLinks.classList.add("translate-x-full");
-
-          // 3. Pequeno delay para animar a entrada automática
-          setTimeout(() => {
-            openFloating(); // Abre a gaveta
-          }, 800);
+          setTimeout(() => openFloating(), 800);
         }
-      }
-    }
-
-    // Ajuste de Layout (Full width na Home)
-    if (window.innerWidth >= 768) {
-      if (hash === "#home") {
-        sidebar.classList.remove("md:translate-x-0");
-        mainContent.classList.remove("md:ml-64");
-        if (menuButton) menuButton.classList.remove("rotate-90");
-        if (floatingLinks) floatingLinks.style.display = "none";
-      } else {
-        sidebar.classList.add("md:translate-x-0");
-        mainContent.classList.add("md:ml-64");
-        if (menuButton) menuButton.classList.add("rotate-90");
-        if (floatingLinks) floatingLinks.style.display = "";
       }
     }
   }
@@ -873,7 +958,7 @@ async function performLogout() {
       localStorage.clear(); // O Supabase gerencia a persistência agora, podemos limpar tudo
 
       // 3. Limpa Iframe e esconde Modal
-      frame.src = "about:blank";
+      clearAllApps();
       hideLogoutModal();
 
       // 4. Mostra a Tela de Login
@@ -1640,27 +1725,26 @@ async function performLogout() {
 
   // 3. A "PORTA ABERTA": Avisa o iframe sobre a mudança
   function broadcastTheme(theme) {
-    const frame = document.getElementById("appFrame");
-    // Verifica se o iframe existe e tem conteúdo
-    if (frame && frame.contentWindow) {
-      // Envia mensagem segura. Se o app filho não tiver o script receptor, nada acontece (sem erro).
-      frame.contentWindow.postMessage(
+  Object.values(openFrames).forEach(iframe => {
+    if (iframe && iframe.contentWindow) {
+      iframe.contentWindow.postMessage(
         { type: "THEME_CHANGE", theme: theme },
-        "*",
+        "*"
       );
     }
+  });
   }
 
   // 4. Garantir que o iframe receba o tema assim que carregar a página
-  const frameEl = document.getElementById("appFrame");
-  if (frameEl) {
-    frameEl.addEventListener("load", () => {
-      const currentTheme = document.documentElement.classList.contains("dark")
-        ? "dark"
-        : "light";
-      broadcastTheme(currentTheme);
-    });
-  }
+  //const frameEl = document.getElementById("appFrame");
+  //if (frameEl) {
+  //  frameEl.addEventListener("load", () => {
+  //    const currentTheme = document.documentElement.classList.contains("dark")
+ //       ? "dark"
+  //      : "light";
+  //    broadcastTheme(currentTheme);
+  //  });
+//  }
 
 
   // Aguarda o app filho pedir os dados
