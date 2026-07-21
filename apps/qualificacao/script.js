@@ -26,24 +26,69 @@ const typeFilter = document.getElementById('filter-type');
 const terceirizadoFilter = document.getElementById('filter-terceirizado');
 
 // ==========================================
-// CONTROLO DE ACESSO POR PERFIL (USER / ADMIN)
+// CONTROLO DE ACESSO POR PERFIL (USER / ADMIN / GESTOR CGCF)
 // ==========================================
 function applyFamilyRoleRestrictions() {
     const role = sessionStorage.getItem("cockpit_user_role");
-    
-    // Se não for admin, injeta o CSS para ocultar a classe admin-only
+    const coordenacao = sessionStorage.getItem("cockpit_user_coordenacao");
+    const isResponsavel = sessionStorage.getItem("cockpit_user_responsavel") === "true";
+
+    let cssRules = "";
+
+    // 1. Regra para botões exclusivos de Admin (Ex: Editar, Apagar)
     if (role !== "admin") {
+        cssRules += `\n.admin-only { display: none !important; }`;
+    }
+
+    // 2. Regra para botões de Gestão da CGCF (Permite Admin como bypass de segurança)
+    const isGestorCGCF = (coordenacao === "CGCF" && isResponsavel) || role === "admin";
+    
+    if (!isGestorCGCF) {
+        cssRules += `\n.cgcf-manager-only { display: none !important; }`;
+    }
+
+    // Injeta as regras de ocultação no cabeçalho do documento
+    if (cssRules !== "") {
         const style = document.createElement("style");
         style.id = "role-restrictions-style";
-        style.innerHTML = `
-            .admin-only { 
-                display: none !important; 
-            }
-        `;
+        style.innerHTML = cssRules;
         document.head.appendChild(style);
     }
 }
 applyFamilyRoleRestrictions(); // Executa imediatamente
+
+
+// [...] (Mantenha o restante do seu código intacto até chegar na função abaixo)
+
+
+// ==========================================
+// LÓGICA DO PAINEL DE VALIDAÇÃO (ADMIN / GESTOR CGCF)
+// ==========================================
+window.carregarContadorSugestoes = async () => {
+    const role = sessionStorage.getItem("cockpit_user_role");
+    const coordenacao = sessionStorage.getItem("cockpit_user_coordenacao");
+    const isResponsavel = sessionStorage.getItem("cockpit_user_responsavel") === "true";
+
+    const isGestorCGCF = (coordenacao === "CGCF" && isResponsavel) || role === "admin";
+
+    // Só busca no banco se for Gestor da CGCF ou Admin
+    if (!isGestorCGCF) return;
+
+    const badge = document.getElementById('badge-sugestoes');
+    if (!badge) return;
+
+    const { count, error } = await supabase
+        .from('sugestoes_cnae_familia')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'pendente');
+
+    if (!error && count > 0) {
+        badge.innerText = count;
+        badge.classList.remove('hidden');
+    } else {
+        badge.classList.add('hidden');
+    }
+};
 
 // --- LISTENERS DE TEMA (DARK MODE EM TEMPO REAL) ---
 function applyTheme(theme) {
@@ -258,7 +303,7 @@ grid.innerHTML = '';
                         </svg>
                     </button>
                     
-                    <button onclick="event.stopPropagation(); openFamilyForm(${indexInMain})" class="text-slate-400 hover:text-blue-500 transition-colors p-1 admin-only" title="Editar Família">
+                    <button onclick="event.stopPropagation(); openFamilyForm(${indexInMain})" class="text-slate-400 hover:text-blue-500 transition-colors p-1 cgcf-manager-only" title="Editar Família">
                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M20.8477 1.87868C19.6761 0.707109 17.7766 0.707105 16.605 1.87868L2.44744 16.0363C2.02864 16.4551 1.74317 16.9885 1.62702 17.5692L1.03995 20.5046C0.760062 21.904 1.9939 23.1379 3.39334 22.858L6.32868 22.2709C6.90945 22.1548 7.44285 21.8693 7.86165 21.4505L22.0192 7.29289C23.1908 6.12132 23.1908 4.22183 22.0192 3.05025L20.8477 1.87868ZM18.0192 3.29289C18.4098 2.90237 19.0429 2.90237 19.4335 3.29289L20.605 4.46447C20.9956 4.85499 20.9956 5.48815 20.605 5.87868L17.9334 8.55027L15.3477 5.96448L18.0192 3.29289ZM13.9334 7.3787L3.86165 17.4505C3.72205 17.5901 3.6269 17.7679 3.58818 17.9615L3.00111 20.8968L5.93645 20.3097C6.13004 20.271 6.30784 20.1759 6.44744 20.0363L16.5192 9.96448L13.9334 7.3787Z" fill="currentColor"/>
                         </svg>
@@ -1834,6 +1879,9 @@ window.gerarRelatorioPDF = () => {
     if (typeof showToast === 'function') window.showToast("Download do relatório concluído com sucesso!", "success");
 };
 
+// ==========================================
+// MUDANÇA: FLUXO DE SUGESTÃO DE VÍNCULO
+// ==========================================
 window.vincularCnaesEmLote = async () => {
     const checkboxes = document.querySelectorAll('.cnae-checkbox-vincular:checked');
     const inputFamilias = document.getElementById('vincular-familias-input').value;
@@ -1846,8 +1894,11 @@ window.vincularCnaesEmLote = async () => {
 
     const btnSave = document.querySelector('#modal-vinculo-cnaes button.bg-blue-600');
     const originalBtnText = btnSave.innerHTML;
-    btnSave.innerHTML = "Salvando...";
+    btnSave.innerHTML = "Enviando Sugestão...";
     btnSave.disabled = true;
+
+    // Captura o usuário logado (Ajuste a key caso seja diferente no seu sessionStorage)
+    const currentUser = sessionStorage.getItem("cockpit_user_realname") || "Usuário do Sistema";
 
     try {
         const cnaesSelecionados = Array.from(checkboxes).map(cb => ({
@@ -1855,70 +1906,241 @@ window.vincularCnaesEmLote = async () => {
             descricao: cb.getAttribute('data-desc')
         }));
 
-        let familiasAtualizadas = 0;
-        let familiasParaSupa = []; // Guarda as afetadas para subir pro banco
+        let sugestoesCriadas = 0;
 
-        familiasAlvo.forEach(cod => {
-            const familia = familyData.find(f => f.Família.toString() === cod);
-            if (familia) {
-                if (!familia.CNAEs) familia.CNAEs = [];
-                let adicionadoNestaFamilia = false;
+        for (let cod of familiasAlvo) {
+            for (let cnae of cnaesSelecionados) {
+                // 1. Verifica se já existe uma sugestão PENDENTE para este par
+                const { data: existente, error: findError } = await supabase
+                    .from('sugestoes_cnae_familia')
+                    .select('*')
+                    .eq('familia_codigo', cod)
+                    .eq('cnae_codigo', cnae.codigo)
+                    .eq('status', 'pendente')
+                    .maybeSingle(); // maybeSingle não quebra se não encontrar
 
-                cnaesSelecionados.forEach(novoCnae => {
-                    if (!familia.CNAEs.some(c => c.codigo === novoCnae.codigo)) {
-                        familia.CNAEs.push(novoCnae);
-                        adicionadoNestaFamilia = true;
-                        if (!cnaeDictionary.some(c => c.CNAE === novoCnae.codigo)) {
-                            cnaeDictionary.push({ "CNAE": novoCnae.codigo, "DESCRIÇÃO": novoCnae.descricao });
-                        }
+                if (existente) {
+                    // 2. Se existe, incrementa a quantidade e adiciona o usuário (se não estiver na lista)
+                    let usuariosArr = existente.usuarios_sugeriram.split(', ');
+                    if (!usuariosArr.includes(currentUser)) {
+                        usuariosArr.push(currentUser);
                     }
-                });
-
-                if (adicionadoNestaFamilia) {
-                    familiasAtualizadas++;
-                    familiasParaSupa.push(familia);
+                    
+                    await supabase.from('sugestoes_cnae_familia').update({
+                        quantidade: existente.quantidade + 1,
+                        usuarios_sugeriram: usuariosArr.join(', '),
+                        updated_at: new Date().toISOString()
+                    }).eq('id', existente.id);
+                    sugestoesCriadas++;
+                } else {
+                    // 3. Se não existe, cria a sugestão do zero
+                    await supabase.from('sugestoes_cnae_familia').insert([{
+                        familia_codigo: cod,
+                        cnae_codigo: cnae.codigo,
+                        cnae_descricao: cnae.descricao,
+                        quantidade: 1,
+                        usuarios_sugeriram: currentUser,
+                        status: 'pendente'
+                    }]);
+                    sugestoesCriadas++;
                 }
             }
-        });
-
-        if (familiasAtualizadas > 0) {
-            // Sincroniza em lote com o Supabase
-            const supaBatch = familiasParaSupa.map(f => ({
-                familia: f["Família"],
-                descricao: f["Descrição"],
-                tipo: f["Tipo"],
-                terceirizado: f["Terceirizado"],
-                documentos_exigidos: f["Documentos Exigidos"],
-                documentos_elegiveis: f["Documentos Elegíveis"],
-                cnaes: f["CNAEs"],
-                ramo: f["Ramo"]
-            }));
-
-            const { error } = await supabase.from('qualificacao_tecnica').upsert(supaBatch);
-            if (error) throw error;
-
-            if (typeof showToast === 'function') {
-                showToast(`${cnaesSelecionados.length} CNAE(s) vinculado(s) a ${familiasAtualizadas} família(s)!`);
-            }
-            
-            document.querySelectorAll('.cnae-checkbox-vincular').forEach(cb => cb.checked = false);
-            if (typeof applyFilters === 'function') applyFilters(false);
-            if (typeof enviarStatsParaHome === 'function') enviarStatsParaHome();
-            
-            fecharModalVinculoCnaes();
-        } else {
-            if (typeof showError === 'function') showError("Erro no Vínculo", "Nenhuma família encontrada. Verifique os códigos (Ex: 01.01).");
         }
+
+        if (sugestoesCriadas > 0) {
+            if (typeof showToast === 'function') {
+                showToast("Sugestão de vínculo enviada para análise!");
+            }
+            document.querySelectorAll('.cnae-checkbox-vincular').forEach(cb => cb.checked = false);
+            fecharModalVinculoCnaes();
+            carregarContadorSugestoes(); // Atualiza o badge se o admin estiver logado
+        }
+
     } catch (err) {
         console.error(err);
-        showError("Erro do Banco de Dados", "Falha ao sincronizar o vínculo com o Supabase.");
+        showError("Erro", "Falha ao enviar sugestão de relacionamento.");
     } finally {
-        if(btnSave) {
+        if (btnSave) {
             btnSave.innerHTML = originalBtnText;
             btnSave.disabled = false;
         }
     }
 };
+
+// ==========================================
+// LÓGICA DO PAINEL DE VALIDAÇÃO (ADMIN)
+// ==========================================
+
+window.carregarContadorSugestoes = async () => {
+    // Só roda se for admin
+    if (sessionStorage.getItem("cockpit_user_role") !== "admin") return;
+
+    const badge = document.getElementById('badge-sugestoes');
+    if (!badge) return;
+
+    const { count, error } = await supabase
+        .from('sugestoes_cnae_familia')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'pendente');
+
+    if (!error && count > 0) {
+        badge.innerText = count;
+        badge.classList.remove('hidden');
+    } else {
+        badge.classList.add('hidden');
+    }
+};
+
+window.abrirModalSugestoesAdmin = async () => {
+    document.getElementById('modal-validar-sugestoes').classList.remove('hidden');
+    const container = document.getElementById('lista-sugestoes-admin');
+    container.innerHTML = `<p class="text-center py-8 text-slate-500 animate-pulse">Carregando sugestões pendentes...</p>`;
+
+    const { data: sugestoes, error } = await supabase
+        .from('sugestoes_cnae_familia')
+        .select('*')
+        .eq('status', 'pendente')
+        .order('quantidade', { ascending: false });
+
+    if (error) {
+        container.innerHTML = `<p class="text-center py-8 text-red-500">Erro ao buscar dados do banco.</p>`;
+        return;
+    }
+
+    if (sugestoes.length === 0) {
+        container.innerHTML = `
+            <div class="text-center p-8 bg-white dark:bg-slate-800 rounded-xl border border-dashed dark:border-slate-700">
+                <p class="text-slate-500 dark:text-slate-400">Nenhuma sugestão de vínculo pendente no momento.</p>
+            </div>`;
+        return;
+    }
+
+    // Usamos o .map() com chaves {} para poder executar a busca antes de retornar o HTML
+    container.innerHTML = sugestoes.map(sug => {
+        
+        // Busca a família correspondente na memória do app para pegar a descrição
+        const familiaEncontrada = familyData.find(f => f.Família.toString() === sug.familia_codigo);
+        const descricaoFamilia = familiaEncontrada ? familiaEncontrada.Descrição : "Descrição não encontrada";
+
+        return `
+        <div id="sugestao-${sug.id}" class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row justify-between items-center gap-4 shadow-sm hover:shadow-md transition-all">
+            <div class="flex-1">
+                <div class="flex items-center gap-3 mb-1">
+                    <span class="bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider shadow-sm">
+                        Família ${sug.familia_codigo}
+                    </span>
+                    <span class="bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-sm">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        ${sug.quantidade} ${sug.quantidade > 1 ? 'Sugestões' : 'Sugestão'}
+                    </span>
+                </div>
+                
+                <!-- NOVA LINHA: Descrição da Família -->
+                <div class="mb-3 text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wide">
+                    ${descricaoFamilia}
+                </div>
+                
+                <div class="mb-1">
+                    <span class="text-blue-600 dark:text-blue-400 font-mono font-bold text-sm">${sug.cnae_codigo}</span>
+                    <span class="text-slate-700 dark:text-slate-300 text-sm ml-1">${sug.cnae_descricao}</span>
+                </div>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400">
+                    <strong>Sugerido por:</strong> ${sug.usuarios_sugeriram}
+                </p>
+            </div>
+            
+            <div class="flex gap-2 shrink-0">
+                <button onclick="processarSugestao('${sug.id}', 'rejeitar')" class="p-2 text-red-500 bg-red-50 hover:bg-red-500 hover:text-white dark:bg-red-900/20 dark:hover:bg-red-600 rounded-lg transition-colors border border-red-100 dark:border-red-800" title="Rejeitar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <button onclick="processarSugestao('${sug.id}', 'aprovar', '${sug.familia_codigo}', '${sug.cnae_codigo}', '${sug.cnae_descricao}')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider rounded-lg transition-colors shadow-md flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Aprovar
+                </button>
+            </div>
+        </div>
+        `;
+    }).join('');
+};
+
+window.fecharModalSugestoesAdmin = () => {
+    document.getElementById('modal-validar-sugestoes').classList.add('hidden');
+    carregarContadorSugestoes(); // Atualiza contador ao fechar
+};
+
+window.processarSugestao = async (id, acao, codFamilia = null, codCnae = null, descCnae = null) => {
+    const card = document.getElementById(`sugestao-${id}`);
+    if (card) card.style.opacity = '0.5';
+
+    try {
+        if (acao === 'aprovar') {
+            // 1. Pega a família atual no array em memória
+            const indexFamilia = familyData.findIndex(f => f.Família.toString() === codFamilia);
+            
+            if (indexFamilia !== -1) {
+                let familiaInfo = familyData[indexFamilia];
+                if (!familiaInfo.CNAEs) familiaInfo.CNAEs = [];
+
+                // Se o CNAE ainda não existe nesta família, insere
+                if (!familiaInfo.CNAEs.some(c => c.codigo === codCnae)) {
+                    familiaInfo.CNAEs.push({ codigo: codCnae, descricao: descCnae });
+                    
+                    // 2. Atualiza no Supabase (Tabela Qualificacao)
+                    const payloadSupa = {
+                        familia: familiaInfo["Família"],
+                        descricao: familiaInfo["Descrição"],
+                        tipo: familiaInfo["Tipo"],
+                        terceirizado: familiaInfo["Terceirizado"],
+                        documentos_exigidos: familiaInfo["Documentos Exigidos"],
+                        documentos_elegiveis: familiaInfo["Documentos Elegíveis"],
+                        cnaes: familiaInfo.CNAEs,
+                        ramo: familiaInfo["Ramo"]
+                    };
+                    const { error: updError } = await supabase.from('qualificacao_tecnica').upsert([payloadSupa]);
+                    if (updError) throw updError;
+
+                    // Atualiza dicionário de CNAE global se necessário
+                    if (!cnaeDictionary.some(c => c.CNAE === codCnae)) {
+                        cnaeDictionary.push({ "CNAE": codCnae, "DESCRIÇÃO": descCnae });
+                    }
+                }
+            } else {
+                showError("Erro", `A família ${codFamilia} não foi encontrada na base local.`);
+                if (card) card.style.opacity = '1';
+                return;
+            }
+        }
+
+        // 3. Atualiza o status da sugestão
+        const novoStatus = acao === 'aprovar' ? 'aprovado' : 'rejeitado';
+        await supabase.from('sugestoes_cnae_familia').update({ status: novoStatus }).eq('id', id);
+
+        // Remove o card da UI e mostra aviso
+        if (card) {
+            card.style.transform = 'translateX(20px)';
+            card.style.opacity = '0';
+            setTimeout(() => card.remove(), 300);
+        }
+        showToast(acao === 'aprovar' ? "Sugestão aprovada e vínculo realizado!" : "Sugestão rejeitada.");
+        
+        // Atualiza a grid no fundo
+        if (acao === 'aprovar') {
+            applyFilters(false);
+            enviarStatsParaHome();
+        }
+
+    } catch (err) {
+        console.error(err);
+        showError("Erro", "Houve uma falha ao processar a sugestão.");
+        if (card) card.style.opacity = '1';
+    }
+};
+
+// Dispara a contagem do badge ao iniciar a tela
+document.addEventListener('DOMContentLoaded', () => {
+    // Dá um timeout rápido para garantir que o cliente Supabase esteja ok
+    setTimeout(carregarContadorSugestoes, 1500); 
+});
 
 window.abrirModalVinculoCnaes = () => {
     // 1. Verifica se selecionou algo antes de abrir a tela
@@ -1977,66 +2199,6 @@ window.abrirModalVinculoCnaes = () => {
 window.fecharModalVinculoCnaes = () => {
     const m = document.getElementById('modal-vinculo-cnaes');
     if (m) m.remove();
-};
-
-window.vincularCnaesEmLote = () => {
-    const checkboxes = document.querySelectorAll('.cnae-checkbox-vincular:checked');
-    const inputFamilias = document.getElementById('vincular-familias-input').value;
-    const familiasAlvo = inputFamilias.split(/[,;]+/).map(f => f.trim()).filter(f => f);
-
-    if (familiasAlvo.length === 0) {
-        if (typeof showError === 'function') showError("Atenção", "Informe ao menos um código de família.");
-        return;
-    }
-
-    const cnaesSelecionados = Array.from(checkboxes).map(cb => ({
-        codigo: cb.value,
-        descricao: cb.getAttribute('data-desc')
-    }));
-
-    let familiasAtualizadas = 0;
-
-    familiasAlvo.forEach(cod => {
-        const familia = familyData.find(f => f.Família.toString() === cod);
-        
-        if (familia) {
-            if (!familia.CNAEs) familia.CNAEs = [];
-            let adicionadoNestaFamilia = false;
-
-            cnaesSelecionados.forEach(novoCnae => {
-                if (!familia.CNAEs.some(c => c.codigo === novoCnae.codigo)) {
-                    familia.CNAEs.push(novoCnae);
-                    adicionadoNestaFamilia = true;
-
-                    if (!cnaeDictionary.some(c => c.CNAE === novoCnae.codigo)) {
-                        cnaeDictionary.push({ "CNAE": novoCnae.codigo, "DESCRIÇÃO": novoCnae.descricao });
-                    }
-                }
-            });
-
-            if (adicionadoNestaFamilia) familiasAtualizadas++;
-        }
-    });
-
-    if (familiasAtualizadas > 0) {
-        if (typeof showToast === 'function') {
-            showToast(`${cnaesSelecionados.length} CNAE(s) vinculado(s) a ${familiasAtualizadas} família(s)!`);
-        }
-        
-        // Limpa os checkboxes desmarcando tudo
-        document.querySelectorAll('.cnae-checkbox-vincular').forEach(cb => cb.checked = false);
-
-        // Atualiza a grid principal no fundo e as estatísticas
-        if (typeof applyFilters === 'function') applyFilters(false);
-        if (typeof enviarStatsParaHome === 'function') enviarStatsParaHome();
-
-        // Destrói o modal após o sucesso
-        fecharModalVinculoCnaes();
-    } else {
-        if (typeof showError === 'function') {
-            showError("Erro no Vínculo", "Nenhuma família encontrada. Verifique se digitou a numeração exata (Ex: 01.01).");
-        }
-    }
 };
 
 // Função para salvar no localStorage

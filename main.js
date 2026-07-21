@@ -300,7 +300,7 @@ async function generateCaptcha() {
           // 1. Adicionamos 'status' na busca do perfil
           const { data: profile } = await supabase
             .from('profiles')
-            .select('name, role, avatar_url, apelido, precisa_trocar_senha, allowed_apps, status')
+            .select('name, role, avatar_url, apelido, precisa_trocar_senha, allowed_apps, status, coordenacao, responsavel')
             .eq('id', user.id)
             .single();
             
@@ -318,6 +318,8 @@ async function generateCaptcha() {
           sessionStorage.setItem("cockpit_user_realname", profile?.name || user.user_metadata?.name || user.email.split('@')[0]);
           sessionStorage.setItem("cockpit_user_role", profile?.role || user.user_metadata?.role || "user");
           sessionStorage.setItem("cockpit_user_apelido", profile?.apelido || "");
+          sessionStorage.setItem("cockpit_user_coordenacao", profile?.coordenacao || "");
+          sessionStorage.setItem("cockpit_user_responsavel", profile?.responsavel ?? false);
           
           // Salva a lista de apps permitidos na sessão do navegador
           const userApps = profile?.allowed_apps || ["#home"];
@@ -423,7 +425,7 @@ if (loginForm) {
         // 1. Buscamos 'allowed_apps' e 'status' no login também
         const { data: profile } = await supabase
           .from('profiles')
-          .select('name, role, avatar_url, apelido, precisa_trocar_senha, allowed_apps, status')
+          .select('name, role, avatar_url, apelido, precisa_trocar_senha, allowed_apps, status, coordenacao, responsavel')
           .eq('id', user.id)
           .single();
         
@@ -443,6 +445,8 @@ if (loginForm) {
         sessionStorage.setItem("cockpit_user_realname", profile?.name || user.user_metadata?.name || user.email.split('@')[0]);
         sessionStorage.setItem("cockpit_user_role", profile?.role || user.user_metadata?.role || "user");
         sessionStorage.setItem("cockpit_user_apelido", profile?.apelido || "");
+        sessionStorage.setItem("cockpit_user_coordenacao", profile?.coordenacao || "");
+        sessionStorage.setItem("cockpit_user_responsavel", profile?.responsavel ?? false);
 
         const userApps = profile?.allowed_apps || ["#home"];
         sessionStorage.setItem("cockpit_allowed_apps", JSON.stringify(userApps));
@@ -1895,6 +1899,10 @@ window.addEventListener("message", (event) => {
   window.fetchGlobalNotifications = async function() {
       const role = sessionStorage.getItem('cockpit_user_role');
       const userName = sessionStorage.getItem('cockpit_user_realname');
+
+      const coordenacao = sessionStorage.getItem("cockpit_user_coordenacao");
+      const isResponsavel = sessionStorage.getItem("cockpit_user_responsavel") === "true";
+      const isGestorCGCF = (coordenacao === "CGCF" && isResponsavel) || role === "admin";
       
       if (!userName) return; // Não faz nada se não estiver logado
 
@@ -2103,6 +2111,44 @@ window.addEventListener("message", (event) => {
                 htmlList += alertasDemandasHTML;
             }
         }
+
+        // --------------------------------------------------------
+        // CONSULTA 5: SUGESTÕES DE VÍNCULO CNAE x FAMÍLIA
+        // --------------------------------------------------------
+        // Só busca e exibe se o usuário for o Gestor da CGCF ou Admin
+        if (isGestorCGCF) {
+            const { data: sugestoesData, error: errSugestoes } = await supabase
+                .from('sugestoes_cnae_familia')
+                .select('familia_codigo, cnae_codigo, quantidade, usuarios_sugeriram, created_at')
+                .eq('status', 'pendente')
+                .order('created_at', { ascending: false });
+
+            if (!errSugestoes && sugestoesData && sugestoesData.length > 0) {
+                totalNotificacoes += sugestoesData.length;
+                
+                htmlList += `<div class="px-2 pt-3 pb-1 text-[10px] font-bold text-purple-500 uppercase mt-2 border-t border-slate-100 dark:border-slate-700">Sugestões de Vínculo (${sugestoesData.length})</div>`;
+                
+                sugestoesData.forEach(sug => {
+                    const dataFormatada = new Date(sug.created_at).toLocaleDateString('pt-BR');
+                    // Pega apenas o primeiro nome de quem sugeriu para não quebrar o layout se houver muitos
+                    const primeiroSugeridor = sug.usuarios_sugeriram.split(',')[0]; 
+
+                    htmlList += `
+                        <div onclick="app.navigate('#qualificacao'); toggleNotificationsModal();" class="cursor-pointer p-2 rounded-lg bg-purple-50 dark:bg-purple-900/10 hover:bg-purple-100 dark:hover:bg-purple-900/20 text-xs transition-colors mb-1 border-l-2 border-purple-500">
+                            <div class="flex justify-between items-start">
+                                <p class="font-bold text-slate-800 dark:text-slate-200">Família ${sug.familia_codigo}</p>
+                                <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-sm bg-purple-200 text-purple-800 dark:bg-purple-800 dark:text-purple-200 shadow-sm shrink-0">
+                                    ${sug.quantidade} Sugestão(ões)
+                                </span>
+                            </div>
+                            <p class="text-slate-600 dark:text-slate-300 mt-0.5">Novo CNAE: <span class="font-mono">${sug.cnae_codigo}</span></p>
+                            <p class="text-[9px] text-slate-400 mt-1">${dataFormatada} • Por: ${primeiroSugeridor}</p>
+                        </div>`;
+                });
+            }
+        }
+
+        
 
           // 3. Atualiza a Interface
           const listContainer = document.getElementById("notificationsList");
