@@ -12,6 +12,7 @@ let currentUserCoord = '';
 let isUserCoordManager = false;
 const currentUserRole = sessionStorage.getItem('cockpit_user_role') || 'user';
 const currentUserName = sessionStorage.getItem('cockpit_user_realname') || 'Usuário';
+let recorrenciaEditandoId = null;
 
 // Listeners Base
 document.addEventListener("DOMContentLoaded", initApp);
@@ -898,15 +899,18 @@ window.carregarRecorrencias = async () => {
         <div class="p-3 bg-slate-50 dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 flex justify-between items-center">
             <div>
                 <p class="font-bold text-sm text-slate-800 dark:text-white line-clamp-1" title="${r.titulo}">${r.titulo}</p>
-                <p class="text-[10px] text-slate-500 mt-1 uppercase font-bold tracking-wider">
-                    ${r.frequencia} • ${(() => {
-                        if (r.frequencia === 'Mensal') return `Todo dia ${r.dia_geracao}`;
-                        const dias = {1: 'Segunda-feira', 2: 'Terça-feira', 3: 'Quarta-feira', 4: 'Quinta-feira', 5: 'Sexta-feira', 6: 'Sábado', 7: 'Domingo'};
-                        return `Toda ${dias[r.dia_geracao]}`;
-                    })()}
-                </p>
+                    <p class="text-[10px] text-slate-500 mt-1 uppercase font-bold tracking-wider">
+                        ${r.frequencia} • ${(() => {
+                            if (r.frequencia === 'Mensal') return `Todo dia ${r.dia_geracao}`;
+                            const dias = {1: 'Segunda-feira', 2: 'Terça-feira', 3: 'Quarta-feira', 4: 'Quinta-feira', 5: 'Sexta-feira', 6: 'Sábado', 7: 'Domingo'};
+                            return `Toda ${dias[r.dia_geracao]}`;
+                        })()} • Prazo: ${r.prazo_dias} dia(s)
+                    </p>
             </div>
             <div class="flex gap-2">
+                <button onclick="editarRecorrencia('${r.id}')" class="text-slate-400 hover:text-blue-500 p-1" title="Editar">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                </button>
                 <button onclick="alternarStatusRecorrencia('${r.id}', ${!r.ativo})" class="text-[10px] px-2 py-1 rounded font-bold ${r.ativo ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-500'}">
                     ${r.ativo ? 'Ativo' : 'Pausado'}
                 </button>
@@ -933,16 +937,15 @@ window.salvarRecorrencia = async () => {
     const titulo = document.getElementById('r-titulo').value.trim();
     const descricao = document.getElementById('r-descricao').value.trim();
     const frequencia = document.getElementById('r-frequencia').value;
+    const prazoDias = document.getElementById('r-prazo-dias').value;
 
-    // Define a variável 'dia' apenas uma vez e busca do input correto
     let dia;
     if (frequencia === 'Mensal') {
         dia = document.getElementById('r-dia-mensal').value;
     } else {
         dia = document.getElementById('r-dia-semanal').value;
     }
-    
-    // Captura os dados do responsável selecionado
+
     const selectResp = document.getElementById('r-responsavel');
     const respId = selectResp.value || null;
     const respNome = selectResp.value ? selectResp.options[selectResp.selectedIndex].text : null;
@@ -951,31 +954,39 @@ window.salvarRecorrencia = async () => {
         showToast("Preencha o título e o dia de geração.", "error");
         return;
     }
+    if (!prazoDias || parseInt(prazoDias) < 1) {
+        showToast("Informe o prazo em dias para conclusão da demanda.", "error");
+        return;
+    }
 
     const payload = {
         titulo: titulo,
         descricao: descricao,
         frequencia: frequencia,
         dia_geracao: parseInt(dia),
+        prazo_dias: parseInt(prazoDias),
         responsavel_id: respId,
         responsavel_nome: respNome,
-        ativo: true,
-        coordenacao: currentUserCoord 
+        coordenacao: currentUserCoord
     };
 
-    const { error } = await supabase.from('demandas_recorrentes').insert([payload]);
+    let error;
+
+    if (recorrenciaEditandoId) {
+        // MODO EDIÇÃO: mantém o campo "ativo" como estava, não sobrescreve
+        ({ error } = await supabase.from('demandas_recorrentes').update(payload).eq('id', recorrenciaEditandoId));
+    } else {
+        // MODO CRIAÇÃO
+        payload.ativo = true;
+        ({ error } = await supabase.from('demandas_recorrentes').insert([payload]));
+    }
 
     if (error) {
-        showToast("Erro ao criar automação.", "error");
+        showToast(recorrenciaEditandoId ? "Erro ao atualizar automação." : "Erro ao criar automação.", "error");
         console.error(error);
     } else {
-        showToast("Automação criada com sucesso!");
-        document.getElementById('form-recorrencia').reset();
-
-        // Retorna a interface para o estado inicial após salvar
-        document.getElementById('r-frequencia').value = 'Mensal';
-        alternarCampoDia();
-
+        showToast(recorrenciaEditandoId ? "Automação atualizada com sucesso!" : "Automação criada com sucesso!");
+        resetarFormularioRecorrencia();
         carregarRecorrencias();
     }
 };
@@ -1002,4 +1013,51 @@ window.excluirRecorrencia = (id) => {
             }
         }
     );
+};
+
+window.resetarFormularioRecorrencia = () => {
+    document.getElementById('form-recorrencia').reset();
+    document.getElementById('r-frequencia').value = 'Mensal';
+    alternarCampoDia();
+    recorrenciaEditandoId = null;
+
+    const btnSalvar = document.querySelector('#form-recorrencia button[onclick="salvarRecorrencia()"]');
+    btnSalvar.textContent = 'Salvar Automação';
+    document.querySelector('#form-recorrencia h4').textContent = 'Criar Nova Automação';
+};
+
+window.editarRecorrencia = (id) => {
+    // Como já temos os dados carregados em memória via carregarRecorrencias,
+    // buscamos novamente do banco para garantir dados atualizados
+    supabase.from('demandas_recorrentes').select('*').eq('id', id).single()
+        .then(({ data: r, error }) => {
+            if (error || !r) {
+                showToast("Erro ao carregar automação para edição.", "error");
+                return;
+            }
+
+            recorrenciaEditandoId = r.id;
+
+            document.getElementById('r-titulo').value = r.titulo || '';
+            document.getElementById('r-descricao').value = r.descricao || '';
+            document.getElementById('r-frequencia').value = r.frequencia;
+            document.getElementById('r-prazo-dias').value = r.prazo_dias || '';
+            document.getElementById('r-responsavel').value = r.responsavel_id || '';
+
+            alternarCampoDia();
+
+            if (r.frequencia === 'Mensal') {
+                document.getElementById('r-dia-mensal').value = r.dia_geracao;
+            } else {
+                document.getElementById('r-dia-semanal').value = r.dia_geracao;
+            }
+
+            // Ajusta o botão e o título do formulário para indicar modo edição
+            const btnSalvar = document.querySelector('#form-recorrencia button[onclick="salvarRecorrencia()"]');
+            btnSalvar.textContent = 'Atualizar Automação';
+            document.querySelector('#form-recorrencia h4').textContent = 'Editando Automação';
+
+            // Rola até o formulário (útil em telas menores)
+            document.getElementById('form-recorrencia').scrollIntoView({ behavior: 'smooth' });
+        });
 };
