@@ -2006,6 +2006,192 @@ async function exportPDF(overrideAnalyst = null) {
         doc.text(doc.splitTextToSize(notaEquipe, PAGE_WIDTH), MARGIN_LEFT, currentY);
 
         // =========================================================================
+        // SEÇÃO DEDICADA: PERFORMANCE MENSAL (Com Média Diária e Notas Explicativas)
+        // =========================================================================
+        doc.addPage();
+        currentY = 20;
+        doc.setFontSize(16);
+        doc.setTextColor(41, 128, 186);
+        doc.text("Performance Mensal", MARGIN_LEFT, currentY);
+
+        // Helper para calcular a quantidade de dias úteis de um determinado mês
+        function getDiasUteisMes(year, monthIdx) {
+            const daysInMonth = new Date(year, monthIdx + 1, 0).getDate();
+            const calculatedMap = getCalculatedHolidays(year);
+            let diasUteis = 0;
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const currentDate = new Date(year, monthIdx, d);
+                const dayOfWeek = currentDate.getDay();
+                if (dayOfWeek === 0 || dayOfWeek === 6) continue; // Pula fins de semana
+
+                const yyyy = currentDate.getFullYear();
+                const mm = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+                const dd = currentDate.getDate().toString().padStart(2, "0");
+                const yyyy_mm_dd = `${yyyy}-${mm}-${dd}`;
+                const dd_mm = `${mm}-${dd}`;
+
+                const isFixed = FIXED_HOLIDAYS.has(dd_mm);
+                const isMovable = movableHolidays.has(yyyy_mm_dd) || calculatedMap.has(yyyy_mm_dd);
+
+                if (!isFixed && !isMovable) {
+                    diasUteis++;
+                }
+            }
+            return diasUteis > 0 ? diasUteis : 1;
+        }
+
+        // Helper para formatar milissegundos ou dias em texto amigável
+        function formatarTempoMedioAmigavel(diasMedios) {
+            if (diasMedios === null || isNaN(diasMedios) || diasMedios <= 0) {
+                return "< 1 hora";
+            }
+
+            const totalMinutos = Math.round(diasMedios * 24 * 60);
+            const totalHoras = Math.floor(totalMinutos / 60);
+            const minutos = totalMinutos % 60;
+            const dias = Math.floor(totalHoras / 24);
+            const horasRestantes = totalHoras % 24;
+
+            if (dias > 0) {
+                return horasRestantes > 0 ? `${dias}d ${horasRestantes}h` : `${dias}d`;
+            }
+            if (totalHoras > 0) {
+                return minutos > 0 ? `${totalHoras}h ${minutos}m` : `${totalHoras}h`;
+            }
+            return `${totalMinutos}m`;
+        }
+
+        // Helper para agrupar solicitações por Mês/Ano e calcular métricas
+        function gerarLinhasPerformanceMensal(dataSet) {
+            const grouped = {};
+
+            dataSet.forEach(row => {
+                if (!row._dataAnalise) return;
+                const yyyy = row._dataAnalise.getFullYear();
+                const mm = (row._dataAnalise.getMonth() + 1).toString().padStart(2, "0");
+                const key = `${yyyy}-${mm}`;
+
+                if (!grouped[key]) {
+                    grouped[key] = {
+                        year: yyyy,
+                        monthIdx: row._dataAnalise.getMonth(),
+                        deferida: 0,
+                        deferidaParcial: 0,
+                        indeferida: 0,
+                        total: 0,
+                        tempos: []
+                    };
+                }
+
+                const sit = row["Situação Solicitação"];
+                if (sit === "Deferida") grouped[key].deferida++;
+                else if (sit === "Deferida Parcial") grouped[key].deferidaParcial++;
+                else if (sit === "Indeferida") grouped[key].indeferida++;
+
+                grouped[key].total++;
+
+                if (row._tempoAnalise !== null && row._tempoAnalise >= 0) {
+                    grouped[key].tempos.push(row._tempoAnalise);
+                }
+            });
+
+            const monthNames = [
+                "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+                "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+            ];
+
+            return Object.keys(grouped).sort().map(key => {
+                const item = grouped[key];
+                const diasUteis = getDiasUteisMes(item.year, item.monthIdx);
+                const mediaDiaria = (item.total / diasUteis).toFixed(1).replace('.', ',');
+                
+                const mediaDias = item.tempos.length > 0 ? stats.mean(item.tempos) : 0;
+                const tempoFormatado = formatarTempoMedioAmigavel(mediaDias);
+
+                return [
+                    `${monthNames[item.monthIdx]}/${item.year}`,
+                    item.deferida.toLocaleString('pt-BR'),
+                    item.deferidaParcial.toLocaleString('pt-BR'),
+                    item.indeferida.toLocaleString('pt-BR'),
+                    item.total.toLocaleString('pt-BR'),
+                    mediaDiaria,
+                    tempoFormatado
+                ];
+            });
+        }
+
+        currentY += 8;
+        doc.setFontSize(12);
+        doc.setTextColor(60);
+
+        if (analistaFiltro === 'all') {
+            // 1. NENHUM ANALISTA SELECIONADO: EXIBE SOMENTE A TABELA GERAL (EQUIPE)
+            doc.text("Análise Geral (Todos os Analistas)", MARGIN_LEFT, currentY);
+
+            const linhasGeral = gerarLinhasPerformanceMensal(equipeNoPeriodo);
+
+            doc.autoTable({
+                startY: currentY + 4,
+                head: [["Mês", "Deferida", "Deferida Parcial", "Indeferida", "Total", "Média Diária", "Tempo Médio"]],
+                body: linhasGeral.length > 0 ? linhasGeral : [["-", "0", "0", "0", "0", "0,0", "0,0 dias"]],
+                theme: "striped",
+                headStyles: { fillColor: [41, 128, 186] },
+                styles: { fontSize: 8.5, cellPadding: 2.5 },
+                columnStyles: {
+                    0: { halign: 'left' },
+                    1: { halign: 'center' },
+                    2: { halign: 'center' },
+                    3: { halign: 'center' },
+                    4: { halign: 'center' },
+                    5: { halign: 'center' },
+                    6: { halign: 'center' }
+                },
+                margin: { left: MARGIN_LEFT }
+            });
+        } else {
+            // 2. ANALISTA ESPECÍFICO SELECIONADO: EXIBE SOMENTE A TABELA INDIVIDUAL
+            doc.text(`Análise Individual (${analistaFiltro})`, MARGIN_LEFT, currentY);
+
+            const dadosAnalistaIndividual = equipeNoPeriodo.filter(row => row["Usuario Analista"] === analistaFiltro);
+            const linhasIndividual = gerarLinhasPerformanceMensal(dadosAnalistaIndividual);
+
+            doc.autoTable({
+                startY: currentY + 4,
+                head: [["Mês", "Deferida", "Deferida Parcial", "Indeferida", "Total", "Média Diária", "Tempo Médio"]],
+                body: linhasIndividual.length > 0 ? linhasIndividual : [["-", "0", "0", "0", "0", "0,0", "0,0 dias"]],
+                theme: "grid",
+                headStyles: { fillColor: [70, 70, 70] },
+                styles: { fontSize: 8.5, cellPadding: 2.5 },
+                columnStyles: {
+                    0: { halign: 'left' },
+                    1: { halign: 'center' },
+                    2: { halign: 'center' },
+                    3: { halign: 'center' },
+                    4: { halign: 'center' },
+                    5: { halign: 'center' },
+                    6: { halign: 'center' }
+                },
+                margin: { left: MARGIN_LEFT }
+            });
+        }
+
+        // =========================================================================
+        // OBSERVAÇÕES E NOTAS EXPLICATIVAS ABAIXO DA TABELA
+        // =========================================================================
+        currentY = doc.lastAutoTable.finalY + 8;
+        doc.setFontSize(8.5);
+        doc.setTextColor(100);
+
+        const obsTexto = "Notas Explicativas:\n" +
+            "• Tempo Médio: Tempo decorrido entre a solicitação e a análise, exibido em formato  de dias, horas ou minutos, considerando apenas dias úteis.\n" +
+            "• Média Diária: Calculada com base no total de análises concluídas dividido pelo número de dias úteis do mês.";
+
+        const obsLinhas = doc.splitTextToSize(obsTexto, PAGE_WIDTH);
+        doc.text(obsLinhas, MARGIN_LEFT, currentY);
+
+
+        // =========================================================================
         // PÁGINA 4: PERFIL DAS SOLICITAÇÕES
         // =========================================================================
         doc.addPage();
@@ -2100,7 +2286,7 @@ async function exportPDF(overrideAnalyst = null) {
             doc.setPage(i);
             doc.setFontSize(8);
             doc.setTextColor(150);
-            doc.text(`CAF Digital - Relatório de Performance Operacional | Página ${i} de ${pageCount}`, MARGIN_LEFT, 288);
+            doc.text(`Relatório de Performance Operacional | Página ${i} de ${pageCount}`, MARGIN_LEFT, 288);
         }
 
         doc.save(`${safeFileName}.pdf`);

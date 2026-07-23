@@ -760,6 +760,12 @@ if (loginForm) {
     }
   }
 
+  // ADICIONE ESTE BLOCO LOGO ABAIXO DA FUNÇÃO ACIMA:
+  window.appNavigate = function(hash) {
+    history.pushState(null, null, hash);
+    navigate(hash);
+  };
+
   // Listeners de Navegação
   links.forEach((link) => {
     link.addEventListener("click", (e) => {
@@ -1927,7 +1933,7 @@ window.addEventListener("message", (event) => {
               demandasData.forEach(notif => {
                   const dataFormatada = new Date(notif.data_criacao).toLocaleString('pt-BR');
                   htmlList += `
-                      <div onclick="app.navigate('#demandas'); toggleNotificationsModal();" class="cursor-pointer p-2 rounded-lg bg-blue-50 dark:bg-slate-700/50 hover:bg-blue-100 dark:hover:bg-slate-600 text-xs transition-colors mb-1 border-l-2 border-blue-500">
+                      <div onclick="appNavigate('#demandas'); toggleNotificationsModal();" class="cursor-pointer p-2 rounded-lg bg-blue-50 dark:bg-slate-700/50 hover:bg-blue-100 dark:hover:bg-slate-600 text-xs transition-colors mb-1 border-l-2 border-blue-500">
                           <p class="font-bold text-slate-800 dark:text-slate-200">${notif.ator_nome}</p>
                           <p class="text-slate-600 dark:text-slate-300 mt-0.5 line-clamp-2">${notif.mensagem}</p>
                           <p class="text-[9px] text-slate-400 mt-1">${dataFormatada}</p>
@@ -1951,7 +1957,7 @@ window.addEventListener("message", (event) => {
                   usuariosData.forEach(user => {
                       const dataFormatada = new Date(user.created_at).toLocaleDateString('pt-BR');
                       htmlList += `
-                          <div onclick="app.navigate('#usuarios'); toggleNotificationsModal();" class="cursor-pointer p-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/10 hover:bg-emerald-100 dark:hover:bg-emerald-900/20 text-xs transition-colors mb-1 border-l-2 border-emerald-500">
+                          <div onclick="appNavigate('#usuarios'); toggleNotificationsModal();" class="cursor-pointer p-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/10 hover:bg-emerald-100 dark:hover:bg-emerald-900/20 text-xs transition-colors mb-1 border-l-2 border-emerald-500">
                               <p class="font-bold text-slate-800 dark:text-slate-200">${user.nome} solicitou acesso</p>
                               <p class="text-slate-600 dark:text-slate-400 mt-0.5">${user.email}</p>
                               <p class="text-[9px] text-slate-400 mt-1">${dataFormatada}</p>
@@ -2017,7 +2023,7 @@ window.addEventListener("message", (event) => {
                         dataExibicao.setDate(dataExibicao.getDate() - 1);
 
                         alertasContratosHTML += `
-                            <div onclick="app.navigate('#contratos'); toggleNotificationsModal();" class="cursor-pointer p-2 rounded-lg hover:brightness-95 text-xs transition-colors mb-1 border-l-2 ${nivelAlerta}">
+                            <div onclick="appNavigate('#contratos'); toggleNotificationsModal();" class="cursor-pointer p-2 rounded-lg hover:brightness-95 text-xs transition-colors mb-1 border-l-2 ${nivelAlerta}">
                                 <div class="flex justify-between items-start gap-2">
                                     <p class="font-bold text-[10px] break-all leading-tight mt-0.5">${icone} ${infoContratos[id]}</p>
                                     <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider bg-white/50 shrink-0">${acao}</span>
@@ -2095,7 +2101,7 @@ window.addEventListener("message", (event) => {
                     }
 
                     alertasDemandasHTML += `
-                        <div onclick="app.navigate('#demandas'); toggleNotificationsModal();" class="cursor-pointer p-2 rounded-lg hover:brightness-95 text-xs transition-all mb-1 border-l-4 ${nivelAlerta}">
+                        <div onclick="appNavigate('#demandas'); toggleNotificationsModal();" class="cursor-pointer p-2 rounded-lg hover:brightness-95 text-xs transition-all mb-1 border-l-4 ${nivelAlerta}">
                             <div class="flex justify-between items-start gap-2">
                                 <p class="font-bold text-[11px] break-all leading-tight mt-0.5">${icone} ${d.titulo}</p>
                                 <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider bg-white/60 shrink-0">${d.prioridade}</span>
@@ -2134,7 +2140,7 @@ window.addEventListener("message", (event) => {
                     const primeiroSugeridor = sug.usuarios_sugeriram.split(',')[0]; 
 
                     htmlList += `
-                        <div onclick="app.navigate('#qualificacao'); toggleNotificationsModal();" class="cursor-pointer p-2 rounded-lg bg-purple-50 dark:bg-purple-900/10 hover:bg-purple-100 dark:hover:bg-purple-900/20 text-xs transition-colors mb-1 border-l-2 border-purple-500">
+                        <div onclick="appNavigate('#qualificacao'); toggleNotificationsModal();" class="cursor-pointer p-2 rounded-lg bg-purple-50 dark:bg-purple-900/10 hover:bg-purple-100 dark:hover:bg-purple-900/20 text-xs transition-colors mb-1 border-l-2 border-purple-500">
                             <div class="flex justify-between items-start">
                                 <p class="font-bold text-slate-800 dark:text-slate-200">Família ${sug.familia_codigo}</p>
                                 <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-sm bg-purple-200 text-purple-800 dark:bg-purple-800 dark:text-purple-200 shadow-sm shrink-0">

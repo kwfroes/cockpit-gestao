@@ -196,6 +196,20 @@ window.addEventListener("message", (event) => {
     if (window.updateTime) {
         window.updateTime(); 
         fetchRadarData();
+}
+
+    // --- NOVA LÓGICA: Verifica o banco ---
+    // Se o apelido veio nulo ou vazio do Supabase, forçamos o modal
+    if (!apelido || apelido.trim() === "") {
+        if (window.openNameModal) {
+            // Se o DOM já carregou, esconde o botão "Cancelar" e abre o modal
+            const btnCancel = document.getElementById("btnCancelName");
+            if (btnCancel) btnCancel.style.display = "none"; 
+            window.openNameModal();
+        } else {
+            // Se o DOM ainda está carregando, salva uma flag para abrir logo em seguida
+            window.forceNameModal = true; 
+        }
     }
   }
 });
@@ -338,17 +352,54 @@ const dontShow = localStorage.getItem("dontShowWelcomeCockpit");
     modal.classList.add("hidden");
   }
 
+  window.openNameModal = openNameModal;
   window.closeNameModal = closeNameModal;
 
-  window.saveName = function() { 
-      const newName = input.value.trim();
-      if (newName) {
-        userName = newName; // Certifique-se de que userName está definido no escopo correto
-        localStorage.setItem("cockpit_username", userName);
-        window.updateTime(); 
-        closeNameModal();
-      }
-    };
+  window.saveName = async function() { 
+        const newName = input.value.trim();
+        if (newName) {
+          userName = newName; 
+          
+          // 1. Mantém o salvamento local para acesso rápido da UI
+          localStorage.setItem("cockpit_username", userName);
+
+          // Atualiza também a sessionStorage para refletir na saudação imediatamente
+          sessionStorage.setItem("cockpit_user_apelido", newName);
+          userNameFromParent = newName; // Atualiza a variável global em memória
+          
+          // 2. Pega o e-mail do usuário direto do sessionStorage que o seu login já salva
+          const userEmail = sessionStorage.getItem("cockpit_user_email");
+          
+          console.log("Tentando salvar apelido para o e-mail:", userEmail);
+          
+          // 3. Envia o apelido para o Supabase filtrando pelo e-mail
+          if (userEmail) {
+              try {
+                  const { error } = await window.supabase
+                      .from('profiles')
+                      .update({ apelido: newName }) // Atualiza a coluna 'apelido'
+                      .eq('email', userEmail); // Usa o e-mail como filtro de segurança
+                      
+                  if (error) {
+                      console.error("Erro ao salvar apelido no Supabase:", error.message);
+                  } else {
+                      console.log("Apelido salvo com sucesso no banco via e-mail!");
+                  }
+              } catch (err) {
+                  console.error("Falha na comunicação com o banco:", err);
+              }
+          } else {
+              console.error("Erro crítico: Nenhum e-mail de usuário encontrado na sessão.");
+          }
+
+          // 4. Atualiza a interface e fecha o modal
+          closeNameModal();
+
+          if (window.updateTime) {
+              window.updateTime();
+          }
+        }
+   };
 
   // 4. Eventos
   btnSave.onclick = saveName;
@@ -361,19 +412,21 @@ const dontShow = localStorage.getItem("dontShowWelcomeCockpit");
 
   // Configura o clique na saudação para abrir o modal
   if (greetingEl) {
-    greetingEl.style.cursor = "pointer";
-    greetingEl.title = "Clique para alterar seu nome";
-    greetingEl.onclick = openNameModal;
-  }
+      greetingEl.style.cursor = "pointer";
+      greetingEl.title = "Clique para alterar seu nome";
+      greetingEl.onclick = () => {
+        btnCancel.style.display = "inline-block"; // Permite cancelar se abriu por querer
+        openNameModal();
+      };
+    }
 
   // Se não tiver nome salvo, abre o modal automaticamente ao iniciar
-  if (!userName) {
-    // Esconde o botão cancelar na primeira vez (obrigatório)
-    btnCancel.style.display = "none";
-    openNameModal();
-  } else {
-    btnCancel.style.display = "inline-block";
-  }
+  if (window.forceNameModal) {
+      btnCancel.style.display = "none";
+      openNameModal();
+    } else {
+      btnCancel.style.display = "inline-block";
+    }
   // --- FIM: Modal de Nome ---
 
   window.updateTime = function() {
@@ -412,11 +465,24 @@ const dontShow = localStorage.getItem("dontShowWelcomeCockpit");
 
     const activeName = userNameFromParent || localStorage.getItem("cockpit_username") || "pessoa";
 
+    // --- NOVA LÓGICA DE SAUDAÇÃO POR HORÁRIO ---
+    let saudacaoTempo = "Bom dia";
+    if (hour >= 12 && hour < 18) {
+        saudacaoTempo = "Boa tarde";
+    } else if (hour >= 18 || hour < 5) { 
+        saudacaoTempo = "Boa noite";
+    }
+
     const frases = [
       `Olá, <span class="font-bold">${activeName}</span>! Como vamos hoje?`,
-      `Bom dia, <span class="font-bold">${activeName}</span>. Pronto para o trabalho?`,
+      `${saudacaoTempo}, <span class="font-bold">${activeName}</span>. Pronto para o trabalho?`,
       `Tudo bem, <span class="font-bold">${activeName}</span>? O que faremos hoje?`,
-      `Olá, <span class="font-bold">${activeName}</span>. Vamos começar?`
+      `${saudacaoTempo}, <span class="font-bold">${activeName}</span>. Vamos começar?`,
+      `${saudacaoTempo}, <span class="font-bold">${activeName}</span>. O Cockpit está pronto para você.`,
+      `E aí, <span class="font-bold">${activeName}</span>? Vamos focar nas demandas.`,
+      `Que bom ver você por aqui, <span class="font-bold">${activeName}</span>. ${saudacaoTempo}!`,
+      `Olá, <span class="font-bold">${activeName}</span>. Sistemas operacionais e atualizados.`,
+      `${saudacaoTempo}! Tudo preparado para a jornada, <span class="font-bold">${activeName}</span>?`
     ];
 
     // Alterna a frase a cada 10 segundos
@@ -532,131 +598,179 @@ function renderStats() {
 
   const role = sessionStorage.getItem("cockpit_user_role");
   const userRealName = sessionStorage.getItem("cockpit_user_realname");
+  
+  // Coleta os novos dados de gestão do sessionStorage
+  const coordenacao = sessionStorage.getItem("cockpit_user_coordenacao") || "";
+  const isResponsavel = sessionStorage.getItem("cockpit_user_responsavel") === "true";
+  const isGestorCGCF = (coordenacao === "CGCF" && isResponsavel) || role === "admin";
+
+  const todasDemandas = JSON.parse(localStorage.getItem("cache_demandas_usuario") || "[]");
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0); 
+  const mesAtual = hoje.getMonth();
+
+  // ==========================================
+  // VISÃO 1: MINHAS DEMANDAS (Usuário Comum)
+  // ==========================================
+  const minhasDemandas = todasDemandas.filter(d => d.responsavel_nome === userRealName);
+  const pendentes = minhasDemandas.filter(d => d.status !== 'Concluído' && d.status !== 'Cancelado');
+  
+  const atrasadas = pendentes.filter(d => {
+      if (!d.prazo_limite) return false;
+      return new Date(d.prazo_limite + "T12:00:00Z") < hoje; 
+  });
+
+  const concluidasMes = minhasDemandas.filter(d => {
+      if (d.status !== 'Concluído' || !d.data_conclusao) return false;
+      const dataConc = new Date(d.data_conclusao + "T12:00:00Z");
+      return dataConc.getMonth() === mesAtual && dataConc.getFullYear() === hoje.getFullYear();
+  });
+
+  const taxaConclusao = minhasDemandas.length > 0 
+      ? Math.round((concluidasMes.length / minhasDemandas.length) * 100) : 0;
+
+  const userCardsData = [
+    {
+        titulo: "Pendentes", principal: pendentes.length, label: "Na fila",
+        cor: "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 border-blue-100",
+        icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>`,
+        sub: "Atribuições atuais"
+    },
+    {
+        titulo: "Atrasadas", principal: atrasadas.length, label: "Prioridade",
+        cor: "text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 border-red-100",
+        icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`,
+        sub: "Necessitam atenção"
+    },
+    {
+        titulo: "Concluídas", principal: concluidasMes.length, label: "Este mês",
+        cor: "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border-emerald-100",
+        icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`,
+        sub: "Entregas realizadas"
+    },
+    {
+        titulo: "Performance", principal: taxaConclusao + "%", label: "Eficiência",
+        cor: "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 border-amber-100",
+        icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>`,
+        sub: "Taxa global de conclusão"
+    }
+  ];
+
+  // ==========================================
+  // VISÃO 2: EQUIPE (Coordenadores)
+  // ==========================================
+  // Filtra demandas que o gestor solicitou, mas estão com outras pessoas da equipe
+  const delegadas = todasDemandas.filter(d => d.solicitante_nome === userRealName && d.responsavel_nome !== userRealName);
+  const eqPendentes = delegadas.filter(d => d.status !== 'Concluído' && d.status !== 'Cancelado');
+  
+  const eqAtrasadas = eqPendentes.filter(d => {
+      if (!d.prazo_limite) return false;
+      return new Date(d.prazo_limite + "T12:00:00Z") < hoje; 
+  });
+
+  const eqConcluidas = delegadas.filter(d => {
+      if (d.status !== 'Concluído' || !d.data_conclusao) return false;
+      const dataConc = new Date(d.data_conclusao + "T12:00:00Z");
+      return dataConc.getMonth() === mesAtual && dataConc.getFullYear() === hoje.getFullYear();
+  });
+
+  const eqTaxa = delegadas.length > 0 ? Math.round((eqConcluidas.length / delegadas.length) * 100) : 0;
+
+  const equipeCardsData = [
+    {
+        titulo: "Delegações", principal: eqPendentes.length, label: "Na Equipe",
+        cor: "text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-900/30 border-violet-100",
+        icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>`,
+        sub: "Demandas distribuídas"
+    },
+    {
+        titulo: "Gargalos", principal: eqAtrasadas.length, label: "Prioridade",
+        cor: "text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/30 border-rose-100",
+        icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`,
+        sub: "Atrasos na coordenação"
+    },
+    {
+        titulo: "Entregas", principal: eqConcluidas.length, label: "Este mês",
+        cor: "text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-900/30 border-teal-100",
+        icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>`,
+        sub: "Produção da equipe"
+    },
+    {
+        titulo: "Produtividade", principal: eqTaxa + "%", label: "Eficiência",
+        cor: "text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/30 border-orange-100",
+        icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>`,
+        sub: "Taxa de resolução"
+    }
+  ];
+
+  // ==========================================
+  // VISÃO 3: GERENCIAL (Admins)
+  // ==========================================
+  const statsAdmin = {
+      contratos: JSON.parse(localStorage.getItem("stats_contratos") || "{}"),
+      gerador: JSON.parse(localStorage.getItem("stats_gerador") || "{}"),
+      dashboard: JSON.parse(localStorage.getItem("stats_dashboard") || "{}"),
+      familias: JSON.parse(localStorage.getItem("stats_familias") || "{}"),
+  };
+
+  const adminCardsData = [
+    {
+      ...STATS_CONFIG.dashboard,
+      principal: (statsAdmin.dashboard.solicitacoes || 0).toLocaleString("pt-BR"),
+      label: "Análises",
+      sub: `${(statsAdmin.dashboard.indeferidas || 0).toLocaleString("pt-BR")} indeferidas`,
+    },
+    {
+      ...STATS_CONFIG.gerador,
+      principal: (statsAdmin.gerador.mensagens || 0).toLocaleString("pt-BR"),
+      label: "Geradas",
+      sub: `${statsAdmin.gerador.percentualDeferidas || 0}% deferidas`,
+    },
+    {
+      ...STATS_CONFIG.contratos,
+      principal: (statsAdmin.contratos.ativos || 0).toLocaleString("pt-BR"),
+      label: "Ativos",
+      subHtml: statsAdmin.contratos.vencendo > 0
+          ? `<span class="text-red-600 font-bold text-xs flex items-center gap-1">⚠️ ${statsAdmin.contratos.vencendo} a vencer</span>`
+          : `<span class="text-gray-400 text-xs">${formatMoneyCompact(statsAdmin.contratos.valorTotal || 0)}</span>`,
+    },
+    {
+      id: "stats-card-familias", 
+      ...STATS_CONFIG.familias,
+      principal: (statsAdmin.familias.total || 0).toLocaleString("pt-BR"),
+      label: "Famílias",
+      sub: `${statsAdmin.familias.cnaesUnicos || 0} CNAEs únicos`,
+    }
+  ];
+
+  // ==========================================
+  // LÓGICA DO INTERRUPTOR (TOGGLE)
+  // ==========================================
+  // Define quais visões este usuário tem direito de ver
+  let visoesPermitidas = ['demandas'];
+  if (isGestorCGCF || isResponsavel) visoesPermitidas.unshift('equipe'); 
+  if (role === 'admin') visoesPermitidas.unshift('gerencial');
+
+  // Estado inicial
+  if (!window.currentDashboardView) window.currentDashboardView = visoesPermitidas[0];
 
   let cardsData = [];
+  if (window.currentDashboardView === 'gerencial') cardsData = adminCardsData;
+  else if (window.currentDashboardView === 'equipe') cardsData = equipeCardsData;
+  else cardsData = userCardsData;
 
-  if (role === 'admin') {
-      // --- LÓGICA 100% ORIGINAL PARA ADMINS ---
-      const stats = {
-        contratos: JSON.parse(localStorage.getItem("stats_contratos") || "{}"),
-        gerador: JSON.parse(localStorage.getItem("stats_gerador") || "{}"),
-        dashboard: JSON.parse(localStorage.getItem("stats_dashboard") || "{}"),
-        familias: JSON.parse(localStorage.getItem("stats_familias") || "{}"),
-      };
-
-      cardsData = [
-        {
-          ...STATS_CONFIG.dashboard,
-          principal: (stats.dashboard.solicitacoes || 0).toLocaleString("pt-BR"),
-          label: "Análises",
-          sub: `${(stats.dashboard.indeferidas || 0).toLocaleString("pt-BR")} indeferidas`,
-        },
-        {
-          ...STATS_CONFIG.gerador,
-          principal: (stats.gerador.mensagens || 0).toLocaleString("pt-BR"),
-          label: "Geradas",
-          sub: `${stats.gerador.percentualDeferidas || 0}% deferidas`,
-        },
-        {
-          ...STATS_CONFIG.contratos,
-          principal: (stats.contratos.ativos || 0).toLocaleString("pt-BR"),
-          label: "Ativos",
-          subHtml: stats.contratos.vencendo > 0
-              ? `<span class="text-red-600 font-bold text-xs flex items-center gap-1">
-                 ⚠️ ${stats.contratos.vencendo} a vencer 
-                 <span class="text-gray-400 font-medium ml-1 text-[10px]">• ${stats.contratos.qtdPagamentos || 0} pagamentos</span>
-               </span>`
-              : `<span class="text-gray-400 text-xs">
-                 ${formatMoneyCompact(stats.contratos.valorTotal || 0)} 
-                 <span class="mx-1 text-gray-300">•</span> 
-                 ${stats.contratos.qtdPagamentos || 0} pagamentos
-               </span>`,
-        },
-        {
-          id: "stats-card-familias", 
-          ...STATS_CONFIG.familias,
-          principal: (stats.familias.total || 0).toLocaleString("pt-BR"),
-          label: "Famílias",
-          sub: `${stats.familias.cnaesUnicos || 0} CNAEs únicos • ${stats.familias.percentualComCnae || 0}% vinculadas`,
-        }
-      ];
-
-  } else {
-      // --- NOVA LÓGICA EXCLUSIVA PARA USUÁRIOS COMUNS ---
-      const todasDemandas = JSON.parse(localStorage.getItem("cache_demandas_usuario") || "[]");
-      const hoje = new Date();
-      hoje.setHours(0, 0, 0, 0); 
-      const mesAtual = hoje.getMonth();
-      
-      const minhasDemandas = todasDemandas.filter(d => d.responsavel_nome === userRealName);
-      const pendentes = minhasDemandas.filter(d => d.status !== 'Concluído' && d.status !== 'Cancelado');
-      
-      const atrasadas = pendentes.filter(d => {
-          if (!d.prazo_limite) return false;
-          const prazo = new Date(d.prazo_limite + "T12:00:00Z");
-          return prazo < hoje; 
-      });
-
-      const concluidasMes = minhasDemandas.filter(d => {
-          if (d.status !== 'Concluído' || !d.data_conclusao) return false;
-          const dataConc = new Date(d.data_conclusao + "T12:00:00Z");
-          return dataConc.getMonth() === mesAtual && dataConc.getFullYear() === hoje.getFullYear();
-      });
-
-      const taxaConclusao = minhasDemandas.length > 0 
-          ? Math.round((concluidasMes.length / minhasDemandas.length) * 100) 
-          : 0;
-
-      cardsData = [
-        {
-            titulo: "Pendentes",
-            principal: pendentes.length,
-            label: "Na fila",
-            cor: "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 border-blue-100 dark:border-blue-800",
-            hoverBorder: "hover:border-blue-400",
-            icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>`,
-            sub: "Atribuições atuais"
-        },
-        {
-            titulo: "Atrasadas",
-            principal: atrasadas.length,
-            label: "Prioridade",
-            cor: "text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 border-red-100 dark:border-red-800",
-            hoverBorder: "hover:border-red-400",
-            icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`,
-            sub: "Necessitam atenção"
-        },
-        {
-            titulo: "Concluídas",
-            principal: concluidasMes.length,
-            label: "Este mês",
-            cor: "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border-emerald-100 dark:border-emerald-800",
-            hoverBorder: "hover:border-emerald-400",
-            icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`,
-            sub: "Entregas realizadas"
-        },
-        {
-            titulo: "Performance",
-            principal: taxaConclusao + "%",
-            label: "Eficiência",
-            cor: "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 border-amber-100 dark:border-amber-800",
-            hoverBorder: "hover:border-amber-400",
-            icone: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>`,
-            sub: "Taxa global de conclusão"
-        }
-      ];
-  }
-
-  // --- CONSTRUÇÃO DO HTML (CÓDIGO ORIGINAL INTOCADO) ---
-  let html = `<div class="grid grid-cols-1 md:grid-cols-4 gap-6">`;
+  // ==========================================
+  // CONSTRUÇÃO DO HTML E ANIMAÇÕES
+  // ==========================================
+let html = `<div id="stats-grid" class="grid grid-cols-1 md:grid-cols-4 gap-6 transform transition-all duration-300 ease-in-out opacity-100 translate-x-0">`;
 
   cardsData.forEach((card) => {
     const cursorClass = card.id ? "cursor-pointer" : "cursor-default";
-    const hoverBorderClass = card.hoverBorder || "hover:border-gray-300";
+    const hoverBorder = "hover:border-gray-300";
     const idAttr = card.id ? `id="${card.id}"` : "";
 
     html += `
-      <div ${idAttr} class="bg-white dark:bg-slate-800 dark:border-slate-700 p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition-all duration-200 hover:scale-[1.10] hover:z-10 ${cursorClass} ${hoverBorderClass}">
+      <div ${idAttr} class="bg-white dark:bg-slate-800 dark:border-slate-700 p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition-all duration-200 hover:scale-[1.10] hover:z-10 ${cursorClass} ${hoverBorder}">
         <div class="flex items-start justify-between mb-2">
            <div class="p-2 rounded-lg border ${card.cor}">
              ${card.icone}
@@ -676,10 +790,99 @@ function renderStats() {
       </div>
     `;
   });
-
   html += `</div>`;
+
+  // --- INDICADOR DE NAVEGAÇÃO (BOLINHAS) ---
+  if (visoesPermitidas.length > 1) {
+      const nomesVisoes = {
+          'gerencial': 'Visão Geral',
+          'equipe': 'Visão da Equipe',
+          'demandas': 'Minhas Demandas'
+      };
+
+      let bolinhasHtml = '';
+      
+      // Cria uma bolinha para cada visão permitida
+      visoesPermitidas.forEach(visao => {
+          const isAtiva = window.currentDashboardView === visao;
+          
+          // Se estiver ativa, vira uma pílula azul. Se inativa, bolinha cinza.
+          const baseClasses = "transition-all duration-300 rounded-full focus:outline-none";
+          const stateClasses = isAtiva 
+              ? "w-4 h-1.5 bg-blue-500" 
+              : "w-1.5 h-1.5 bg-gray-300 dark:bg-slate-600 hover:bg-gray-400 dark:hover:bg-slate-500 cursor-pointer";
+              
+          bolinhasHtml += `
+              <button onclick="toggleDashboardView('${visao}')" 
+                      class="${baseClasses} ${stateClasses}" 
+                      title="${nomesVisoes[visao]}">
+              </button>
+          `;
+      });
+
+      html += `
+      <div class="flex flex-col items-center mt-6">
+          <div class="flex justify-center gap-1.5 mb-1.5">
+              ${bolinhasHtml}
+          </div>
+          <span class="text-[9px] uppercase font-bold tracking-widest text-gray-400 dark:text-gray-500 transition-all duration-300">
+              ${nomesVisoes[window.currentDashboardView]}
+          </span>
+      </div>
+      `;
+  }
+
   container.innerHTML = html;
 }
+
+// --- 5. FUNÇÃO GLOBAL DE ANIMAÇÃO DE TROCA (COM DIREÇÃO IDA/VOLTA) ---
+window.toggleDashboardView = function(targetView) {
+    if (window.currentDashboardView === targetView) return;
+
+    const grid = document.getElementById("stats-grid");
+    
+    if (grid) {
+        // 1. LÓGICA DE DIREÇÃO: Descobre se estamos indo para frente ou para trás
+        const ordem = ['gerencial', 'equipe', 'demandas'];
+        const indexAtual = ordem.indexOf(window.currentDashboardView);
+        const indexAlvo = ordem.indexOf(targetView);
+        
+        // Se o índice alvo for maior, vai para frente. Se for menor, vai para trás.
+        const indoParaFrente = indexAlvo > indexAtual;
+        
+        // Define as posições (Tailwind) com base na direção
+        // -translate-x-8 = Esquerda / translate-x-8 = Direita
+        const classeSaida = indoParaFrente ? "-translate-x-8" : "translate-x-8";
+        const classeEntrada = indoParaFrente ? "translate-x-8" : "-translate-x-8";
+
+        // 2. ANIMAÇÃO DE SAÍDA
+        grid.classList.remove("opacity-100", "translate-x-0");
+        grid.classList.add("opacity-0", classeSaida);
+
+        setTimeout(() => {
+            window.currentDashboardView = targetView;
+            renderStats();
+
+            const newGrid = document.getElementById("stats-grid");
+            if (newGrid) {
+                // 3. PREPARAÇÃO (Invisível): Coloca os cards do lado oposto
+                // Limpamos todas as possibilidades de translate antes de aplicar a nova
+                newGrid.classList.remove("transition-all", "duration-300", "ease-in-out", "opacity-100", "translate-x-0", "-translate-x-8", "translate-x-8");
+                newGrid.classList.add("opacity-0", classeEntrada);
+                
+                void newGrid.offsetWidth; // O famoso "reflow"
+
+                // 4. ANIMAÇÃO DE ENTRADA: Vem deslizando para o centro
+                newGrid.classList.add("transition-all", "duration-300", "ease-in-out");
+                newGrid.classList.remove("opacity-0", classeEntrada);
+                newGrid.classList.add("opacity-100", "translate-x-0");
+            }
+        }, 300);
+    } else {
+        window.currentDashboardView = targetView;
+        renderStats();
+    }
+};
 
 // ==========================================================
 // MÓDULO DE RADARES (Busca Direta no Supabase)
