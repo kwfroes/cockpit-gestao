@@ -13,15 +13,19 @@ const app = {
     currentFileInputId: null, // Sabe se veio de 'newAvatar' ou 'editAvatar'
 
     async init() {
-        this.loadTheme();
         this.setupGlobalEvents();
+        this.loadTheme();
         await this.carregarUsuarios();
         await this.carregarPendentes();
     },
 
     loadTheme() {
-        this.theme = localStorage.getItem("cockpit_theme") || "light";
-        document.documentElement.classList.toggle("dark", this.theme === "dark");
+    this.theme = localStorage.getItem("cockpit_theme") || "light";
+    if (this.theme === "dark") {
+        document.documentElement.classList.add("dark");
+    } else {
+        document.documentElement.classList.remove("dark");
+    }
     },
 
     setupGlobalEvents() {
