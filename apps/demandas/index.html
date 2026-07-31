@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Demandas</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <script>
         tailwind.config = {
             darkMode: "class",
@@ -79,9 +81,23 @@
 
     <div id="modal-demanda" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col border border-slate-200 dark:border-slate-700">
+            
+            <!-- CABEÇALHO DO MODAL (Corrigido) -->
             <div class="p-5 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/80">
-                <h3 id="modal-title" class="text-lg font-bold">Nova Demanda</h3>
-                <button onclick="fecharModalDemanda()" class="text-slate-400 hover:text-red-500"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                <div class="flex items-center gap-4">
+                    <h3 id="modal-title" class="text-lg font-bold">Nova Demanda</h3>
+                    
+                    <!-- NOVO BOTÃO: Configurar Lembretes -->
+                    <button type="button" id="btn-config-lembretes" onclick="window.abrirModalLembretes(document.getElementById('f-id').value)" class="hidden items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 dark:text-blue-400 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 rounded-md transition-colors border border-blue-200 dark:border-blue-800/50">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                        Lembretes
+                    </button>
+                </div>
+                
+                <!-- BOTÃO FECHAR MODAL (X) -->
+                <button type="button" onclick="window.fecharModalDemanda()" class="text-slate-400 hover:text-red-500 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
             </div>
             
             <form id="form-demanda" class="p-5 overflow-y-auto custom-scrollbar flex-1 space-y-4">
@@ -92,23 +108,56 @@
                     <input type="text" id="f-titulo" required class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none focus:border-blue-500 text-sm">
                 </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Coordenação da Demanda *</label>
-                    <select id="f-coordenacao" required class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none text-sm">
-                        <option value="">Selecione a coordenação</option>
-                    </select>
-                </div>
-
+                <!-- Bloco de Setor Principal e Adicionais -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Atribuir a (Responsável)</label>
-                        <select id="f-responsavel" class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none text-sm">
-                            <option value="">Sem atribuição no momento</option>
-                            </select>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Setor Principal *</label>
+                        <select id="f-coordenacao" required class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none text-sm">
+                            <option value="">Selecione o setor principal</option>
+                        </select>
                     </div>
+
+                    <!-- Componente: Setores Adicionais -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Setor(es) Adicionais</label>
+                        <div class="relative">
+                            <button type="button" onclick="document.getElementById('menu-setores').classList.toggle('hidden')" class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none text-sm text-left flex justify-between items-center transition-colors">
+                                <span id="btn-text-setores" class="truncate text-slate-600 dark:text-slate-400">Nenhum selecionado</span>
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div id="menu-setores" class="hidden absolute z-[60] w-full mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-48 overflow-y-auto custom-scrollbar p-2">
+                                <div id="lista-setores-sec" class="flex flex-col gap-1"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bloco de Responsáveis e Prazo -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Responsável Principal</label>
+                        <select id="f-responsavel" class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none text-sm">
+                            <option value="">Sem atribuição</option>
+                        </select>
+                    </div>
+
+                    <!-- Componente: Responsáveis Adicionais -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Responsável(eis) Adicionais</label>
+                        <div class="relative">
+                            <button type="button" onclick="document.getElementById('menu-resps').classList.toggle('hidden')" class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none text-sm text-left flex justify-between items-center transition-colors">
+                                <span id="btn-text-resps" class="truncate text-slate-600 dark:text-slate-400">Nenhum selecionado</span>
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div id="menu-resps" class="hidden absolute z-[60] w-full mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-48 overflow-y-auto custom-scrollbar p-2">
+                                <div id="lista-resps-sec" class="flex flex-col gap-1"></div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div>
                         <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Prazo Limite</label>
-                        <input type="date" id="f-prazo" class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none text-sm [color-scheme:light_dark]">
+                        <input type="date" id="f-prazo" class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg bg-slate-100 dark:bg-slate-900 outline-none text-sm [color-scheme:light_dark]">
                     </div>
                 </div>
 
@@ -149,13 +198,33 @@
                     
                     <div id="lista-subdemandas" class="space-y-2 mb-4"></div>
 
-                    <div class="flex gap-2">
-                        <input type="text" id="nova-sub-titulo" placeholder="Novo passo..." class="flex-1 p-2 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 text-sm">
-                        <input type="date" id="nova-sub-prazo" class="p-2 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 text-sm">
-                        <select id="nova-sub-responsavel" class="p-2 border rounded-lg dark:bg-slate-900 text-sm">
-                            <option value="">Responsável</option>
-                        </select>
-                        <button type="button" onclick="adicionarSubdemanda()" class="bg-slate-800 dark:bg-slate-700 text-white px-3 rounded-lg hover:bg-slate-900">+</button>
+                    <div class="flex flex-wrap gap-2 items-end bg-slate-50 dark:bg-slate-900/40 p-3 rounded-lg border border-slate-200 dark:border-slate-800">
+                        <div class="flex-1 min-w-[180px]">
+                            <span class="block text-[9px] uppercase font-bold text-slate-500 mb-1">Novo Passo</span>
+                            <input type="text" id="nova-sub-titulo" placeholder="Título do passo..." class="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 text-sm">
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[9px] uppercase font-bold text-slate-500 mb-1">Data Atrib.</span>
+                            <input type="date" id="nova-sub-atribuicao" class="p-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-slate-100 dark:bg-slate-900 text-sm [color-scheme:light_dark]">
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[9px] uppercase font-bold text-slate-500 mb-1">Prazo Limite</span>
+                            <input type="date" id="nova-sub-prazo" class="p-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-slate-100 dark:bg-slate-900 text-sm [color-scheme:light_dark]">
+                        </div>
+                        <div>
+                            <span class="block text-[9px] uppercase font-bold text-slate-500 mb-1">Responsável</span>
+                            <select id="nova-sub-responsavel" class="p-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-slate-100 dark:bg-slate-900 text-sm">
+                                <option value="">Responsável</option>
+                            </select>
+                        </div>
+                        <div>
+                            <!-- CAMPO INVISÍVEL DE OBS AUXILIAR PARA A FUNÇÃO ADICIONAR -->
+                            <input type="hidden" id="nova-sub-obs" value="">
+                            <button type="button" onclick="adicionarSubdemanda()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors shadow-sm flex items-center gap-1.5 h-[38px]" title="Adicionar Passo">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                Adicionar
+                            </button>
+                        </div>
                     </div>
                 </div>
                 
@@ -236,12 +305,24 @@
                 </div>
             </div>
 
-            <div class="p-5 border-t border-slate-200 dark:border-slate-700 flex justify-end gap-3 bg-slate-50 dark:bg-slate-800/80">
-                <button type="button" onclick="fecharModalVisualizacao()" class="px-5 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 font-bold rounded-lg transition-colors">Fechar</button>
-                <button type="button" id="btn-vis-editar" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors shadow-md flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                    Editar
-                </button>
+            <div class="p-5 border-t border-slate-200 dark:border-slate-700 flex flex-wrap justify-between gap-3 bg-slate-50 dark:bg-slate-800/80">
+                <div class="flex gap-2">
+                    <button type="button" id="btn-vis-excel" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg transition-colors shadow-md text-sm flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        Excel
+                    </button>
+                    <button type="button" id="btn-vis-pdf" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition-colors shadow-md text-sm flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                        PDF
+                    </button>
+                </div>
+                <div class="flex gap-2">
+                    <button type="button" onclick="fecharModalVisualizacao()" class="px-5 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 font-bold rounded-lg transition-colors">Fechar</button>
+                    <button type="button" id="btn-vis-editar" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors shadow-md flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                        Editar
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -340,6 +421,118 @@
                         <!-- Preenchido via JS -->
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Inserir Observação no Passo -->
+    <div id="modal-sub-obs" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[90] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md flex flex-col border border-slate-200 dark:border-slate-700 animate-scale-up">
+            <div class="p-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/80 rounded-t-xl">
+                <h3 class="text-md font-bold text-slate-800 dark:text-white">Observação do Passo</h3>
+                <button type="button" onclick="fecharModalObsSub()" class="text-slate-400 hover:text-red-500"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+            </div>
+            <div class="p-4">
+                <input type="hidden" id="sub-obs-index">
+                <textarea id="sub-obs-texto" rows="4" class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none focus:border-blue-500 text-sm" placeholder="Detalhes, impedimentos, links ou informações adicionais para este passo..."></textarea>
+            </div>
+            <div class="p-4 border-t border-slate-200 dark:border-slate-700 flex justify-end gap-3 bg-slate-50 dark:bg-slate-800/80 rounded-b-xl">
+                <button type="button" onclick="fecharModalObsSub()" class="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 font-bold rounded-lg transition-colors text-sm">Cancelar</button>
+                <button type="button" onclick="salvarObsSub()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors shadow-md text-sm">Salvar Observação</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Configuração de Lembretes -->
+    <div id="modal-lembretes" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col border border-slate-200 dark:border-slate-700">
+            <div class="p-5 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
+                <h4 class="font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                    Configurar Lembretes
+                </h4>
+                <button onclick="window.fecharModalLembretes()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto space-y-5">
+                <input type="hidden" id="lembrete-demanda-id">
+                
+                <!-- Ativar Lembretes -->
+                <label class="flex items-center gap-3 cursor-pointer">
+                    <input type="checkbox" id="lembrete-ativo" onchange="window.toggleLembreteOptions()" class="w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                    <span class="font-bold text-slate-700 dark:text-slate-200">Ativar Lembretes para esta Demanda</span>
+                </label>
+
+                <div id="lembrete-opcoes" class="hidden space-y-4 pt-2 border-t border-slate-100 dark:border-slate-800">
+                    
+                    <!-- Tipo de Lembrete -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Tipo de Disparo</label>
+                        <select id="lembrete-tipo" onchange="window.toggleLembreteTipo()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm dark:bg-slate-800 dark:border-slate-700 dark:text-white">
+                            <option value="intervalado">Dias Específicos (Intervalado)</option>
+                            <option value="continuo">Todos os dias (Contínuo)</option>
+                        </select>
+                    </div>
+
+                    <!-- Opção: Intervalado -->
+                    <div id="box-intervalado" class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">Avisar quando faltar:</label>
+                        <div class="flex gap-4">
+                            <label class="flex items-center gap-2 text-sm"><input type="checkbox" value="7" class="cb-dias rounded border-slate-300"> 7 dias</label>
+                            <label class="flex items-center gap-2 text-sm"><input type="checkbox" value="5" class="cb-dias rounded border-slate-300"> 5 dias</label>
+                            <label class="flex items-center gap-2 text-sm"><input type="checkbox" value="3" class="cb-dias rounded border-slate-300"> 3 dias</label>
+                            <label class="flex items-center gap-2 text-sm"><input type="checkbox" value="1" class="cb-dias rounded border-slate-300"> 1 dia</label>
+                        </div>
+                    </div>
+
+                    <!-- Opção: Contínuo -->
+                    <div id="box-continuo" class="hidden">
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Começar a avisar faltando:</label>
+                        <div class="flex items-center gap-2">
+                            <input type="number" id="lembrete-inicio-continuo" min="1" max="30" value="7" class="w-20 p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-center dark:bg-slate-800 dark:border-slate-700 dark:text-white">
+                            <span class="text-sm text-slate-600 dark:text-slate-300">dias para o prazo final.</span>
+                        </div>
+                    </div>
+
+                    <!-- Audiência -->
+                    <div class="pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Quem deve ser lembrado?</label>
+                        <div class="space-y-3">
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <input type="checkbox" id="alvo-principal" checked disabled class="mt-0.5 w-4 h-4 text-blue-600 rounded border-slate-300 opacity-70">
+                                <div>
+                                    <span class="block text-sm font-bold text-slate-700 dark:text-slate-200">Responsável Principal</span>
+                                    <span class="block text-[11px] text-slate-500">Recebe alertas baseados no prazo limite da demanda.</span>
+                                </div>
+                            </label>
+                            
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <input type="checkbox" id="alvo-secundarios" class="mt-0.5 w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                                <div>
+                                    <span class="block text-sm font-bold text-slate-700 dark:text-slate-200">Responsáveis Secundários</span>
+                                    <span class="block text-[11px] text-slate-500">Também recebem alertas do prazo limite da demanda.</span>
+                                </div>
+                            </label>
+
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <input type="checkbox" id="alvo-subdemandas" class="mt-0.5 w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
+                                <div>
+                                    <span class="block text-sm font-bold text-slate-700 dark:text-slate-200">Responsáveis por Subdemandas</span>
+                                    <span class="block text-[11px] text-slate-500">Recebem alertas isolados baseados no prazo do seu próprio passo.</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-5 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-3 bg-slate-50 dark:bg-slate-800/50">
+                <button onclick="window.fecharModalLembretes()" class="px-5 py-2.5 text-sm font-bold text-slate-600 hover:text-slate-800 dark:text-slate-300 dark:hover:text-white transition-colors">Cancelar</button>
+                <button id="btn-salvar-lembrete" onclick="window.salvarConfigLembrete()" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg shadow transition-colors flex items-center gap-2">
+                    Salvar Regras
+                </button>
             </div>
         </div>
     </div>

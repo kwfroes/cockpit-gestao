@@ -68,28 +68,56 @@ async function carregarUsuarios() {
     const selectSub = document.getElementById('nova-sub-responsavel');
     const selectCoord = document.getElementById('f-coordenacao');
 
-    // Limpa as opções anteriores
-    select.innerHTML = '<option value="">Sem atribuição no momento</option>';
-    selectSub.innerHTML = '<option value="">Responsável</option>';
-    selectCoord.innerHTML = '<option value="">Selecione a coordenação</option>';
+    // NOVOS IDs DOS CHECKBOXES
+    const listaSetores = document.getElementById('lista-setores-sec');
+    const listaResps = document.getElementById('lista-resps-sec');
+
+    // 1. Limpa as opções anteriores dos selects principais
+    if(select) select.innerHTML = '<option value="">Sem atribuição no momento</option>';
+    if(selectSub) selectSub.innerHTML = '<option value="">Responsável</option>';
+    if(selectCoord) selectCoord.innerHTML = '<option value="">Selecione o setor principal</option>';
+    
+    // Limpa as listas dos checkboxes customizados de forma segura
+    if (listaSetores) listaSetores.innerHTML = '';
+    if (listaResps) listaResps.innerHTML = '';
 
     // Cria um conjunto para guardar as coordenações sem repeti-las
     const coordUnicas = new Set();
 
     data.forEach(user => {
-        // 1. Popula os selects de responsáveis normalmente
-        select.innerHTML += `<option value="${user.id}">${user.name}</option>`;
-        selectSub.innerHTML += `<option value="${user.id}">${user.name}</option>`;
+        // 2. Popula os selects normais
+        if(select) select.innerHTML += `<option value="${user.id}">${user.name}</option>`;
+        if(selectSub) selectSub.innerHTML += `<option value="${user.id}">${user.name}</option>`;
         
-        // 2. Guarda a coordenação no Set (apenas se ela for válida)
+        // Popula os checkboxes de Responsáveis Secundários (com trava de segurança)
+        if (listaResps) {
+            listaResps.innerHTML += `
+                <label class="flex items-center gap-2 p-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 rounded cursor-pointer transition-colors text-sm text-slate-700 dark:text-slate-200">
+                    <input type="checkbox" value="${user.id}" data-name="${user.name}" class="cb-resp rounded border-slate-300 text-blue-600 focus:ring-blue-500" onchange="atualizarLabelMultiplo('lista-resps-sec', 'btn-text-resps')">
+                    <span>${user.name}</span>
+                </label>
+            `;
+        }
+        
+        // 3. Guarda a coordenação no Set (apenas se ela for válida)
         if (user.coordenacao && user.coordenacao.trim() !== '' && user.coordenacao !== '-') {
             coordUnicas.add(user.coordenacao.trim());
         }
     });
 
-    // 3. Converte o Set de volta para Array, organiza em ordem alfabética e popula o dropdown
+    // 4. Converte o Set de volta para Array, organiza em ordem alfabética e popula os setores
     Array.from(coordUnicas).sort().forEach(coord => {
-        selectCoord.innerHTML += `<option value="${coord}">${coord}</option>`;
+        if(selectCoord) selectCoord.innerHTML += `<option value="${coord}">${coord}</option>`;
+        
+        // Popula os checkboxes de Setores Secundários (com trava de segurança)
+        if (listaSetores) {
+            listaSetores.innerHTML += `
+                <label class="flex items-center gap-2 p-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 rounded cursor-pointer transition-colors text-sm text-slate-700 dark:text-slate-200">
+                    <input type="checkbox" value="${coord}" class="cb-setor rounded border-slate-300 text-blue-600 focus:ring-blue-500" onchange="atualizarLabelMultiplo('lista-setores-sec', 'btn-text-setores')">
+                    <span>${coord}</span>
+                </label>
+            `;
+        }
     });
 }
 
@@ -252,11 +280,14 @@ function renderDemandas() {
 window.abrirModalDemanda = (id = null) => {
     const modal = document.getElementById('modal-demanda');
     const form = document.getElementById('form-demanda');
+    const btnLembretes = document.getElementById('btn-config-lembretes');
     form.reset();
     document.getElementById('f-id').value = '';
 
     if (id) {
         const d = demandas.find(x => x.id === id);
+        btnLembretes.classList.remove('hidden');
+        btnLembretes.classList.add('flex');
         if (d) {
             if (d.responsavel_nome === currentUserName && !d.visualizado_em) {
                 registrarVisualizacao(d);
@@ -272,17 +303,51 @@ window.abrirModalDemanda = (id = null) => {
             document.getElementById('f-coordenacao').value = d.coordenacao || '';
             document.getElementById('f-resumo-conclusao').value = d.resumo_conclusao || ''; 
 
+            // --- LÓGICA DE CHECKBOXES (Substitui os selects antigos) ---
+            // 1. Desmarca todos os checkboxes primeiro
+            document.querySelectorAll('.cb-setor, .cb-resp').forEach(cb => cb.checked = false);
+
+            // 2. Preenche Setores Adicionais
+            if (d.setor_secundario) {
+                const setores = d.setor_secundario.split(';');
+                document.querySelectorAll('.cb-setor').forEach(cb => {
+                    if (setores.includes(cb.value)) cb.checked = true;
+                });
+            }
+            
+            // 3. Preenche Responsáveis Adicionais
+            if (d.responsavel_secundario_id) {
+                const resps = d.responsavel_secundario_id.split(';');
+                document.querySelectorAll('.cb-resp').forEach(cb => {
+                    if (resps.includes(cb.value)) cb.checked = true;
+                });
+            }
+
+            // 4. Atualiza o texto dos botões após marcar
+            if (typeof atualizarLabelMultiplo === 'function') {
+                atualizarLabelMultiplo('lista-setores-sec', 'btn-text-setores');
+                atualizarLabelMultiplo('lista-resps-sec', 'btn-text-resps');
+            }
+            // --- FIM DA LÓGICA DE CHECKBOXES ---
+
             carregarSubdemandas(id);
 
             document.getElementById('container-subdemandas').classList.remove('hidden');
-            // Setar o select do responsável
             if(d.responsavel_id) document.getElementById('f-responsavel').value = d.responsavel_id;
         }
     } else {
         document.getElementById('modal-title').textContent = 'Nova Demanda';
         document.getElementById('container-subdemandas').classList.remove('hidden');
+        btnLembretes.classList.add('hidden');
+        btnLembretes.classList.remove('flex');
         
-        // Zera o array de memória e limpa a tela de subdemandas anteriores
+        // Limpa os checkboxes e os botões ao criar Nova Demanda
+        document.querySelectorAll('.cb-setor, .cb-resp').forEach(cb => cb.checked = false);
+        if (typeof atualizarLabelMultiplo === 'function') {
+            atualizarLabelMultiplo('lista-setores-sec', 'btn-text-setores');
+            atualizarLabelMultiplo('lista-resps-sec', 'btn-text-resps');
+        }
+
         window.tempSubDemandas = [];
         renderTempSubdemandas();
     }
@@ -310,6 +375,15 @@ window.salvarDemanda = async () => {
         const respId = respSelect.value || null;
         const respNome = respSelect.value ? respSelect.options[respSelect.selectedIndex].text : null;
 
+        // Capturando Múltiplos Setores (Checkboxes)
+        const checkedSetores = Array.from(document.querySelectorAll('.cb-setor:checked'));
+        const setorSecValores = checkedSetores.length > 0 ? checkedSetores.map(cb => cb.value).join(';') : null;
+
+        // Capturando Múltiplos Responsáveis (Checkboxes)
+        const checkedResps = Array.from(document.querySelectorAll('.cb-resp:checked'));
+        const respSecIds = checkedResps.length > 0 ? checkedResps.map(cb => cb.value).join(';') : null;
+        const respSecNomes = checkedResps.length > 0 ? checkedResps.map(cb => cb.getAttribute('data-name')).join(';') : null;
+
         const payload = {
             titulo: document.getElementById('f-titulo').value.trim(),
             descricao: document.getElementById('f-descricao').value.trim(),
@@ -320,7 +394,10 @@ window.salvarDemanda = async () => {
             prazo_limite: document.getElementById('f-prazo').value || null,
             observacoes: document.getElementById('f-obs').value.trim(),
             coordenacao: document.getElementById('f-coordenacao').value.trim(), 
-            data_atualizacao: new Date().toISOString()
+            data_atualizacao: new Date().toISOString(),
+            setor_secundario: setorSecValores,
+            responsavel_secundario_id: respSecIds,
+            responsavel_secundario_nome: respSecNomes,
         };
 
         // --- NOVO: regras de conclusão ---
@@ -410,6 +487,8 @@ window.salvarDemanda = async () => {
                     prazo: s.prazo || null,
                     responsavel_id: s.responsavel_id || null,
                     responsavel_nome: s.responsavel_nome || null,
+                    observacao: s.observacao || null,
+                    data_atribuicao: s.data_atribuicao || null,
                     concluido: s.concluido || false
                 };
                 
@@ -731,9 +810,10 @@ async function carregarSubdemandas(demandaId) {
 window.adicionarSubdemanda = () => {
     const titulo = document.getElementById('nova-sub-titulo').value;
     const prazo = document.getElementById('nova-sub-prazo').value;
+    const atribuicao = document.getElementById('nova-sub-atribuicao').value; // Novo
     const selectResp = document.getElementById('nova-sub-responsavel');
+    const observacao = document.getElementById('nova-sub-obs').value; 
     
-    // Captura ID e Nome do select
     const respId = selectResp.value || null;
     const respNome = selectResp.value ? selectResp.options[selectResp.selectedIndex].text : null;
 
@@ -741,33 +821,56 @@ window.adicionarSubdemanda = () => {
 
     tempSubDemandas.push({ 
         titulo, 
-        prazo: prazo || null, 
-        responsavel_id: respId,      // Salva o ID na memória
-        responsavel_nome: respNome,  // Mantém o nome para exibir na tela
+        prazo: prazo || null,
+        data_atribuicao: atribuicao || null, // Novo
+        responsavel_id: respId,      
+        responsavel_nome: respNome,  
+        observacao: observacao || null, 
         concluido: false 
     });
     
-    // Limpa os campos após adicionar
     document.getElementById('nova-sub-titulo').value = '';
     document.getElementById('nova-sub-prazo').value = '';
+    document.getElementById('nova-sub-atribuicao').value = '';
+    document.getElementById('nova-sub-obs').value = '';
     selectResp.value = '';
     
     renderTempSubdemandas();
 };
 
-// Renderiza a interface a partir da memória
-function renderTempSubdemandas() {
+// Renderiza a interface a partir da memória (Agora anexada ao window)
+window.renderTempSubdemandas = () => {
     const lista = document.getElementById('lista-subdemandas');
     lista.innerHTML = window.tempSubDemandas.map((s, index) => `
-        <div class="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700">
-            <input type="checkbox" ${s.concluido ? 'checked' : ''} onchange="window.tempSubDemandas[${index}].concluido = this.checked">
-            <span class="flex-1 text-xs">${s.titulo}</span>
-            <span class="text-[10px] text-slate-400 dark:text-slate-500">${s.prazo || ''}</span>
-            <span class="text-[10px] bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 px-1 rounded">${s.responsavel_nome || ''}</span>
-            <button type="button" onclick="window.tempSubDemandas.splice(${index}, 1); renderTempSubdemandas()" class="text-red-500 font-bold px-2">x</button>
+        <div class="flex flex-col gap-1 p-2 bg-slate-50 dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700">
+            <div class="flex items-center gap-2">
+                <input type="checkbox" ${s.concluido ? 'checked' : ''} onchange="window.tempSubDemandas[${index}].concluido = this.checked">
+                <span class="flex-1 text-xs font-bold ${s.concluido ? 'line-through text-slate-400' : 'text-slate-700 dark:text-slate-200'}">${s.titulo}</span>
+                <span class="text-[10px] text-slate-500" title="Data de Atribuição">Atr: ${s.data_atribuicao ? new Date(s.data_atribuicao + 'T12:00:00Z').toLocaleDateString('pt-BR') : '-'}</span>
+                <span class="text-[10px] font-bold ${window.analisarPrazo(s.prazo).tailwind}" title="Prazo">Prz: ${s.prazo ? new Date(s.prazo + 'T12:00:00Z').toLocaleDateString('pt-BR') : '-'}</span>
+                <span class="text-[10px] bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 px-1.5 py-0.5 rounded truncate max-w-[80px]">${s.responsavel_nome || ''}</span>
+                
+                <!-- Ícone de Mais (+) para abrir Modal de Observação -->
+                <button type="button" onclick="window.abrirModalObsSub(${index})" class="text-blue-500 hover:text-blue-700 hover:bg-blue-100 dark:hover:bg-slate-700 p-1 rounded transition-colors" title="Adicionar/Editar Observação">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                </button>
+
+                <!-- Ícone de Lixeira (Corrigido com window.renderTempSubdemandas) -->
+                <button type="button" onclick="window.tempSubDemandas.splice(${index}, 1); window.renderTempSubdemandas()" class="text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-slate-700 p-1 rounded transition-colors" title="Remover Passo">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                </button>
+            </div>
+            
+            <!-- Observação: Truncada para 1 linha, expande ao clicar -->
+            ${s.observacao ? `
+                <div class="mt-1 ml-6 pl-2 border-l-2 border-blue-300 dark:border-blue-700 text-[10px] text-slate-500 cursor-pointer hover:text-slate-700 dark:hover:text-slate-300 transition-colors" 
+                     onclick="this.querySelector('p').classList.toggle('line-clamp-1')" title="Clique para expandir/recolher">
+                    <p class="line-clamp-1 italic whitespace-pre-wrap">${s.observacao}</p>
+                </div>
+            ` : ''}
         </div>
     `).join('');
-}
+};
 
 // 3. Marcar como concluído
 window.toggleSubdemanda = async (id, status) => {
@@ -788,11 +891,27 @@ window.abrirModalVisualizacao = async (id) => {
     // Preenche dados principais
     document.getElementById('vis-titulo').textContent = d.titulo;
     document.getElementById('vis-solicitante').textContent = d.solicitante_nome;
-    document.getElementById('vis-responsavel').textContent = d.responsavel_nome || 'Sem atribuição';
-    document.getElementById('vis-prazo').textContent = d.prazo_limite ? new Date(d.prazo_limite + 'T12:00:00Z').toLocaleDateString('pt-BR') : 'Sem prazo definido';
+    
     document.getElementById('vis-descricao').textContent = d.descricao || 'Nenhuma descrição detalhada fornecida.';
     document.getElementById('vis-obs').textContent = d.observacoes || 'Nenhuma observação registrada.';
-    document.getElementById('vis-coordenacao').textContent = d.coordenacao || 'Não informada';
+    
+    document.getElementById('vis-coordenacao').innerHTML = `
+        <span class="font-bold">${d.coordenacao || '-'}</span>
+        ${d.setor_secundario ? `<br>${d.setor_secundario.split(';').join('<br>')}` : ''}
+    `;
+
+    document.getElementById('vis-responsavel').innerHTML = `
+        <span class="font-bold">${d.responsavel_nome || '-'}</span>
+        ${d.responsavel_secundario_nome ? `<br>${d.responsavel_secundario_nome.split(';').join('<br>')}` : ''}
+    `;
+
+    const statusPrazo = window.analisarPrazo(d.prazo_limite);
+    document.getElementById('vis-prazo').innerHTML = `
+        <span class="${statusPrazo.tailwind} font-bold">${d.prazo_limite ? new Date(d.prazo_limite + 'T12:00:00Z').toLocaleDateString('pt-BR') : 'Sem prazo'}</span>
+    `;
+    
+    document.getElementById('btn-vis-pdf').onclick = () => exportarDemandaPDF(d, data);
+    document.getElementById('btn-vis-excel').onclick = () => exportarDemandaExcel(d, data);
 
     // Cores dinâmicas para Status e Prioridade
     const statusEl = document.getElementById('vis-status');
@@ -826,24 +945,35 @@ window.abrirModalVisualizacao = async (id) => {
         listaSub.innerHTML = '<p class="text-xs text-slate-500 italic p-3 bg-slate-50 dark:bg-slate-900/50 rounded-lg">Nenhum passo cadastrado para esta demanda.</p>';
     } else {
         listaSub.innerHTML = data.map(s => {
-            const prazoFmt = s.prazo ? new Date(s.prazo + 'T12:00:00Z').toLocaleDateString('pt-BR') : '';
+            const atribFmt = s.data_atribuicao ? new Date(s.data_atribuicao + 'T12:00:00Z').toLocaleDateString('pt-BR') : '-';
+            const prazoFmt = s.prazo ? new Date(s.prazo + 'T12:00:00Z').toLocaleDateString('pt-BR') : '-';
+            const corPrazo = window.analisarPrazo(s.prazo).tailwind;
+
             return `
-                <div class="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
-                    <!-- Ícone de Check customizado -->
-                    <div class="w-5 h-5 rounded flex shrink-0 items-center justify-center ${s.concluido ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 text-transparent'}">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                    </div>
-                    
-                    <span class="flex-1 text-sm ${s.concluido ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-700 dark:text-slate-200 font-medium'}">
-                        ${s.titulo}
-                    </span>
-                    
-                    <div class="flex flex-col items-end gap-1">
-                        ${prazoFmt ? `<span class="text-[10px] text-slate-400 flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg> ${prazoFmt}</span>` : ''}
-                        <span class="text-[10px] bg-blue-50 border border-blue-100 dark:border-blue-900/30 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded-full font-bold truncate max-w-[120px]">
-                            ${s.responsavel_nome || 'Sem resp.'}
+                <div class="flex flex-col gap-2 p-3 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <div class="w-5 h-5 rounded flex shrink-0 items-center justify-center ${s.concluido ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 text-transparent'}">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                        
+                        <span class="flex-1 text-sm ${s.concluido ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-700 dark:text-slate-200 font-medium'}">
+                            ${s.titulo}
                         </span>
+                        
+                        <div class="flex flex-col items-end gap-1">
+                            <span class="text-[9px] text-slate-400">Atribuído: ${atribFmt}</span>
+                            <span class="text-[10px] ${corPrazo} flex items-center gap-1 font-bold">Prazo: ${prazoFmt}</span>
+                            <span class="text-[10px] bg-blue-50 border border-blue-100 dark:border-blue-900/30 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded-full font-bold truncate max-w-[120px]">
+                                ${s.responsavel_nome || 'Sem resp.'}
+                            </span>
+                        </div>
                     </div>
+                    
+                    ${s.observacao ? `
+                        <div class="ml-8 mt-1 p-2.5 bg-yellow-50/60 dark:bg-yellow-900/10 rounded-md border border-yellow-200/60 dark:border-yellow-900/30">
+                            <p class="text-xs text-slate-700 dark:text-slate-300 whitespace-pre-wrap">${s.observacao}</p>
+                        </div>
+                    ` : ''}
                 </div>
             `;
         }).join('');
@@ -1060,4 +1190,299 @@ window.editarRecorrencia = (id) => {
             // Rola até o formulário (útil em telas menores)
             document.getElementById('form-recorrencia').scrollIntoView({ behavior: 'smooth' });
         });
+};
+
+// Funções do Modal de Observação de Subdemanda
+window.abrirModalObsSub = (index) => {
+    const obsAtual = window.tempSubDemandas[index].observacao || '';
+    document.getElementById('sub-obs-index').value = index;
+    document.getElementById('sub-obs-texto').value = obsAtual;
+    document.getElementById('modal-sub-obs').classList.remove('hidden');
+    document.getElementById('sub-obs-texto').focus();
+};
+
+window.fecharModalObsSub = () => {
+    document.getElementById('modal-sub-obs').classList.add('hidden');
+};
+
+window.salvarObsSub = () => {
+    const index = document.getElementById('sub-obs-index').value;
+    const texto = document.getElementById('sub-obs-texto').value.trim();
+    window.tempSubDemandas[index].observacao = texto || null;
+    fecharModalObsSub();
+    renderTempSubdemandas(); // Atualiza a tela para mostrar o texto inserido
+};
+
+window.exportarDemandaExcel = (demanda, subdemandas) => {
+    // Cria uma estrutura de linhas (Array de Arrays) para montar um relatório visual em uma única aba
+    const linhas = [
+        ["RELATÓRIO INDIVIDUAL DE DEMANDA"],
+        [], // Linha em branco
+        ["INFORMAÇÕES GERAIS"],
+        ["Título", demanda.titulo],
+        ["Status", demanda.status],
+        ["Prioridade", demanda.prioridade],
+        ["Coordenação", demanda.coordenacao || "-"],
+        ["Solicitante", demanda.solicitante_nome],
+        ["Responsável", demanda.responsavel_nome || "Sem atribuição"],
+        ["Prazo Limite", demanda.prazo_limite ? new Date(demanda.prazo_limite + 'T12:00:00Z').toLocaleDateString('pt-BR') : "-"],
+        ["Descrição", demanda.descricao || "-"],
+        ["Observações Gerais", demanda.observacoes || "-"],
+        ["Resumo da Conclusão", demanda.resumo_conclusao || "-"],
+        [], // Linha em branco
+        ["PASSOS E SUBDEMANDAS"],
+        ["Título do Passo", "Responsável", "Prazo", "Status", "Observação"] // Cabeçalho da tabela de passos
+    ];
+
+    // Adiciona os passos abaixo do cabeçalho
+    if (subdemandas && subdemandas.length > 0) {
+        subdemandas.forEach(s => {
+            linhas.push([
+                s.titulo,
+                s.responsavel_nome || "-",
+                s.prazo ? new Date(s.prazo + 'T12:00:00Z').toLocaleDateString('pt-BR') : "-",
+                s.concluido ? "Concluído" : "Pendente",
+                s.observacao || "-"
+            ]);
+        });
+    } else {
+        linhas.push(["Nenhum passo cadastrado para esta demanda.", "", "", "", ""]);
+    }
+
+    // Cria a planilha e injeta as linhas
+    const ws = XLSX.utils.aoa_to_sheet(linhas);
+
+    // Ajusta a largura das colunas para facilitar a leitura no Excel
+    ws['!cols'] = [
+        { wch: 30 }, // Coluna A (Título do Passo / Chaves)
+        { wch: 30 }, // Coluna B (Responsável / Valores)
+        { wch: 15 }, // Coluna C (Prazo)
+        { wch: 15 }, // Coluna D (Status)
+        { wch: 60 }  // Coluna E (Observação)
+    ];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Relatório da Demanda");
+
+    // Formata o nome do arquivo e dispara o download
+    const nomeArquivo = `Demanda_${demanda.titulo.substring(0, 20).replace(/[^a-zA-Z0-9]/g, '_')}.xlsx`;
+    XLSX.writeFile(wb, nomeArquivo);
+    showToast("Relatório Excel gerado com sucesso!");
+};
+
+window.analisarPrazo = (dataStr) => {
+    if (!dataStr) return { tailwind: 'text-slate-400', hex: '#94a3b8', label: 'Sem prazo' };
+    
+    const hoje = new Date();
+    hoje.setHours(0,0,0,0);
+    
+    const prazo = new Date(dataStr + 'T12:00:00Z');
+    prazo.setHours(0,0,0,0);
+    
+    const diffDias = Math.floor((prazo - hoje) / (1000 * 60 * 60 * 24));
+    
+    if (diffDias < 0) return { tailwind: 'text-red-600 font-black', hex: '#dc2626', label: 'Atrasado' };
+    if (diffDias <= 3) return { tailwind: 'text-orange-500 font-bold', hex: '#f97316', label: 'Urgente' };
+    return { tailwind: 'text-emerald-600 font-medium', hex: '#059669', label: 'No Prazo' };
+};
+
+window.exportarDemandaPDF = (demanda, subdemandas) => {
+    const divExport = document.createElement('div');
+    divExport.style.padding = '30px';
+    divExport.style.fontFamily = 'Arial, sans-serif';
+    divExport.style.color = '#333';
+    
+    const corPrincipal = window.analisarPrazo(demanda.prazo_limite).hex;
+
+    let htmlContent = `
+        <h2 style="color: #1e293b; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">Relatório de Demanda</h2>
+        <p><strong>Título:</strong> ${demanda.titulo}</p>
+        <div style="display: flex; gap: 20px; margin-bottom: 15px;">
+            <p><strong>Status:</strong> ${demanda.status}</p>
+            <p><strong>Prioridade:</strong> ${demanda.prioridade}</p>
+            <p><strong>Setor(es):</strong> ${demanda.coordenacao || '-'} ${demanda.setor_secundario ? ', ' + demanda.setor_secundario.split(';').join(', ') : ''}</p>
+        </div>
+        <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+            <p><strong>Solicitante:</strong> ${demanda.solicitante_nome}</p>
+            <p><strong>Responsável(eis):</strong> ${demanda.responsavel_nome || '-'} ${demanda.responsavel_secundario_nome ? ', ' + demanda.responsavel_secundario_nome.split(';').join(', ') : ''}</p>
+            <p><strong>Prazo Limite:</strong> <span style="color: ${corPrincipal}; font-weight: bold;">${demanda.prazo_limite ? new Date(demanda.prazo_limite + 'T12:00:00Z').toLocaleDateString('pt-BR') : '-'}</span></p>
+        </div>
+        
+        <h4 style="margin-bottom: 5px;">Descrição</h4>
+        <p style="background: #f8fafc; padding: 10px; border-radius: 5px; font-size: 14px;">${demanda.descricao || 'Sem descrição.'}</p>
+        
+        <h4 style="margin-top: 20px; margin-bottom: 5px;">Observações Gerais</h4>
+        <p style="background: #fefce8; padding: 10px; border-radius: 5px; font-size: 14px;">${demanda.observacoes || 'Sem observações.'}</p>
+        
+        <h3 style="margin-top: 30px; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">Passos (Subdemandas)</h3>
+    `;
+
+    if (subdemandas && subdemandas.length > 0) {
+        htmlContent += `<ul style="list-style-type: none; padding: 0;">`;
+        subdemandas.forEach(s => {
+            const corPrazoSub = window.analisarPrazo(s.prazo).hex;
+            htmlContent += `
+                <li style="margin-bottom: 10px; padding: 10px; border: 1px solid #e2e8f0; border-radius: 5px;">
+                    <strong style="${s.concluido ? 'text-decoration: line-through; color: #94a3b8;' : ''}">${s.titulo}</strong> 
+                    (${s.concluido ? 'Concluído' : 'Pendente'})<br>
+                    <span style="font-size: 12px; color: #64748b;">Resp: ${s.responsavel_nome || '-'} | Atribuição: ${s.data_atribuicao ? new Date(s.data_atribuicao + 'T12:00:00Z').toLocaleDateString('pt-BR') : '-'} | Prazo: <span style="color: ${corPrazoSub}; font-weight: bold;">${s.prazo ? new Date(s.prazo + 'T12:00:00Z').toLocaleDateString('pt-BR') : '-'}</span></span>
+                    ${s.observacao ? `<br><span style="font-size: 13px; font-style: italic; color: #475569;">Obs: ${s.observacao}</span>` : ''}
+                </li>
+            `;
+        });
+        htmlContent += `</ul>`;
+    } else {
+        htmlContent += `<p style="font-size: 14px; color: #64748b;">Nenhum passo cadastrado.</p>`;
+    }
+
+    divExport.innerHTML = htmlContent;
+
+    const opt = {
+        margin:       10,
+        filename:     `Demanda_${demanda.titulo.substring(0, 15).replace(/\s/g, '_')}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(divExport).save().then(() => showToast("PDF gerado!"));
+};
+
+// Atualiza o texto do botão do dropdown múltiplo
+window.atualizarLabelMultiplo = (containerId, btnId) => {
+    const container = document.getElementById(containerId);
+    const checked = Array.from(container.querySelectorAll('input:checked'));
+    const btn = document.getElementById(btnId);
+    
+    if (checked.length === 0) {
+        btn.textContent = 'Nenhum selecionado';
+        btn.classList.add('text-slate-600', 'dark:text-slate-400');
+    } else if (checked.length === 1) {
+        btn.textContent = checked[0].nextElementSibling.textContent;
+        btn.classList.remove('text-slate-600', 'dark:text-slate-400');
+    } else {
+        btn.textContent = `${checked.length} selecionados`;
+        btn.classList.remove('text-slate-600', 'dark:text-slate-400');
+    }
+};
+
+// Fecha os dropdowns customizados se clicar fora deles
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('#menu-setores') && !e.target.closest('button[onclick*="menu-setores"]')) {
+        document.getElementById('menu-setores')?.classList.add('hidden');
+    }
+    if (!e.target.closest('#menu-resps') && !e.target.closest('button[onclick*="menu-resps"]')) {
+        document.getElementById('menu-resps')?.classList.add('hidden');
+    }
+});
+
+window.abrirModalLembretes = async (demandaId) => {
+    const demanda = demandas.find(d => d.id === demandaId);
+    if (!demanda) return;
+
+    document.getElementById('lembrete-demanda-id').value = demandaId;
+    
+    // Configuração Default com a nova estrutura de Alvos
+    let config = { 
+        ativo: false, 
+        tipo: "intervalado", 
+        dias_intervalo: [7, 3, 1], 
+        dia_inicio_continuo: 7, 
+        alvos: { principal: true, secundarios: false, subdemandas: false } 
+    };
+
+    if (demanda.config_lembretes) {
+        let savedConfig = typeof demanda.config_lembretes === 'string' ? JSON.parse(demanda.config_lembretes) : demanda.config_lembretes;
+        
+        // Compatibilidade com a versão anterior (Migração silenciosa)
+        if (!savedConfig.alvos) {
+            savedConfig.alvos = { 
+                principal: true, 
+                secundarios: savedConfig.notificar_secundarios || false, 
+                subdemandas: false 
+            };
+        }
+        config = { ...config, ...savedConfig };
+    }
+
+    // Preenche o formulário
+    document.getElementById('lembrete-ativo').checked = config.ativo || false;
+    document.getElementById('lembrete-tipo').value = config.tipo || 'intervalado';
+    document.getElementById('lembrete-inicio-continuo').value = config.dia_inicio_continuo || 7;
+    
+    // Checkboxes de Alvos
+    document.getElementById('alvo-secundarios').checked = config.alvos.secundarios;
+    document.getElementById('alvo-subdemandas').checked = config.alvos.subdemandas;
+
+    // Checkboxes de intervalo
+    const cbs = document.querySelectorAll('.cb-dias');
+    cbs.forEach(cb => {
+        cb.checked = config.dias_intervalo && config.dias_intervalo.includes(parseInt(cb.value));
+    });
+
+    window.toggleLembreteOptions();
+    window.toggleLembreteTipo();
+
+    document.getElementById('modal-lembretes').classList.remove('hidden');
+};
+
+window.salvarConfigLembrete = async () => {
+    const demandaId = document.getElementById('lembrete-demanda-id').value;
+    const btn = document.getElementById('btn-salvar-lembrete');
+    
+    const ativo = document.getElementById('lembrete-ativo').checked;
+    const tipo = document.getElementById('lembrete-tipo').value;
+    const dia_inicio_continuo = parseInt(document.getElementById('lembrete-inicio-continuo').value);
+    
+    const alvos = {
+        principal: true, // O principal é obrigatório se o lembrete estiver ativo
+        secundarios: document.getElementById('alvo-secundarios').checked,
+        subdemandas: document.getElementById('alvo-subdemandas').checked
+    };
+    
+    const dias_intervalo = Array.from(document.querySelectorAll('.cb-dias:checked')).map(cb => parseInt(cb.value));
+
+    const novaConfig = { ativo, tipo, dias_intervalo, dia_inicio_continuo, alvos };
+
+    btn.disabled = true;
+    btn.textContent = 'Salvando...';
+
+    const { error } = await supabase
+        .from('demandas')
+        .update({ config_lembretes: novaConfig })
+        .eq('id', demandaId);
+
+    btn.disabled = false;
+    btn.textContent = 'Salvar Regras';
+
+    if (error) {
+        window.showToast("Erro ao salvar configuração", "error");
+        console.error(error);
+    } else {
+        window.showToast("Lembretes configurados!");
+        window.fecharModalLembretes();
+        await fetchDemandas(); 
+    }
+};
+
+window.fecharModalLembretes = () => {
+    document.getElementById('modal-lembretes').classList.add('hidden');
+};
+
+window.toggleLembreteOptions = () => {
+    const isAtivo = document.getElementById('lembrete-ativo').checked;
+    const boxOpcoes = document.getElementById('lembrete-opcoes');
+    if (isAtivo) boxOpcoes.classList.remove('hidden');
+    else boxOpcoes.classList.add('hidden');
+};
+
+window.toggleLembreteTipo = () => {
+    const tipo = document.getElementById('lembrete-tipo').value;
+    if (tipo === 'continuo') {
+        document.getElementById('box-continuo').classList.remove('hidden');
+        document.getElementById('box-intervalado').classList.add('hidden');
+    } else {
+        document.getElementById('box-continuo').classList.add('hidden');
+        document.getElementById('box-intervalado').classList.remove('hidden');
+    }
 };

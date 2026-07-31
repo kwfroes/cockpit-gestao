@@ -3,6 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Força o Tailwind a respeitar a classe "dark" na tag <html>
+        tailwind.config = {
+            darkMode: 'class',
+        };
+    </script>
     <script>
         // Verificação de segurança padrão do Cockpit
         (function () {

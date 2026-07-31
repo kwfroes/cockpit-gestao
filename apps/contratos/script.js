@@ -1457,6 +1457,17 @@ function renderizarModalVisualizar(contratoId) {
   // Pega os aditivos
   const aditivos = db.contratos.filter((c) => c.parentId === contratoPai.id);
 
+  // Adicionar dentro da função renderizarModalVisualizar
+  const btnConsumo = document.getElementById("btn-exportar-historico-consumo");
+  if (btnConsumo) {
+      const novoBtnConsumo = btnConsumo.cloneNode(true);
+      btnConsumo.parentNode.replaceChild(novoBtnConsumo, btnConsumo);
+      
+      novoBtnConsumo.addEventListener("click", () => {
+          exportarHistoricoConsumoPDF(contratoPai.id);
+      });
+  }
+
   // Agrega pagamentos
   let pagamentos = [
     ...(contratoPai.pagamentos || []).map((p) => ({
@@ -4490,3 +4501,200 @@ document.getElementById("btn-confirmar-novo-doc").addEventListener("click", func
         input.classList.add("border-red-500");
     }
 });
+
+
+function exportarHistoricoConsumoPDF(contratoPaiId) {
+  const contratoPai = db.contratos.find((c) => c.id === contratoPaiId);
+  if (!contratoPai) {
+    mostrarToast("Erro: Contrato não encontrado", true);
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: "p", unit: "mm", format: "a4" });
+
+  const aditivos = db.contratos.filter((c) => c.parentId === contratoPai.id);
+
+  // Unifica todos os pagamentos (Pai + Aditivos)
+  let pagamentos = [
+    ...(contratoPai.pagamentos || []).map((p) => ({
+      ...p,
+      origemContratoId: contratoPai.id,
+    })),
+  ];
+
+  aditivos.forEach((ad) => {
+    if (ad.pagamentos && ad.pagamentos.length > 0) {
+      pagamentos = pagamentos.concat(
+        ad.pagamentos.map((p) => ({
+          ...p,
+          origemContratoId: ad.id,
+        }))
+      );
+    }
+  });
+
+  // Agrupa os pagamentos por Ano de Competência
+  const pagamentosPorAno = {};
+
+  pagamentos.forEach((p) => {
+    if (!p.periodoAte) return;
+    const ano = new Date(p.periodoAte + "T00:00:00").getFullYear();
+    if (!pagamentosPorAno[ano]) pagamentosPorAno[ano] = [];
+    pagamentosPorAno[ano].push(p);
+  });
+
+  // --- TÍTULO E CABEÇALHO DO PDF ---
+  doc.setFontSize(14);
+  doc.setFont("helvetica", "bold");
+  doc.text("Histórico de Consumo Contratual", 14, 15);
+  
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "normal");
+
+  const nomeEmpresa = typeof contratoPai.empresa === 'object' ? contratoPai.empresa.nome : contratoPai.empresa;
+  doc.text(`Contrato: ${contratoPai.numeroContrato || "N/A"} - ${nomeEmpresa || "N/A"}`, 14, 21);
+  
+
+  // Inserção do Objeto do Contrato com quebra automática de linha (splitTextToSize)
+  const textoObjeto = `Objeto: ${contratoPai.objeto || "N/A"}`;
+  const objetoLinhas = doc.splitTextToSize(textoObjeto, 180); // 180mm de largura máxima
+  doc.text(objetoLinhas, 14, 31);
+
+  doc.text(`Processo: ${contratoPai.processoSei || "N/A"}`, 14, 26);
+
+  // Calcula a posição inicial da primeira tabela com base no tamanho do objeto
+  let startY = 32 + (objetoLinhas.length * 4);
+
+  const nomesMeses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+  const anosOrdenados = Object.keys(pagamentosPorAno).sort((a, b) => a - b);
+
+  anosOrdenados.forEach((ano) => {
+    const listaPagamentosAno = pagamentosPorAno[ano];
+
+    // Ordena os pagamentos por mês
+    listaPagamentosAno.sort((a, b) => new Date(a.periodoAte + "T00:00:00") - new Date(b.periodoAte + "T00:00:00"));
+
+    const tableBody = [];
+    let totalAno = 0;
+    const rowGroupMap = []; // Controle de zebra/alternância de cores
+
+    listaPagamentosAno.forEach((pag, indexPagamento) => {
+      const dataRef = new Date(pag.periodoAte + "T00:00:00");
+      const mesAbrev = nomesMeses[dataRef.getMonth()];
+      const anoAbrev = String(ano).substring(2);
+      const competencia = `${mesAbrev}/${anoAbrev}`;
+
+      const hoje = new Date();
+      hoje.setHours(0, 0, 0, 0);
+      const dataPagto = pag.data ? new Date(pag.data + "T00:00:00") : null;
+      const statusStr = (dataPagto && dataPagto > hoje) ? "PROGRAMADO" : "PAGO";
+
+      if (pag.detalhes && pag.detalhes.length > 0) {
+        const qtdItens = pag.detalhes.length;
+
+        pag.detalhes.forEach((item, idx) => {
+          const valorItem = (parseFloat(item.quantidade) || 0) * (parseFloat(item.valorUnitario) || 0);
+          totalAno += valorItem;
+
+          const descStr = item.descricao ? `${item.descricao} (${item.quantidade}x)` : "Item não especificado";
+
+          if (idx === 0) {
+            // PRIMEIRA LINHA DO MÊS: Define o rowSpan para mesclar as colunas repetidas
+            tableBody.push([
+              { content: competencia, rowSpan: qtdItens, styles: { valign: 'middle', halign: 'center' } },
+              { content: pag.notaFiscal || "---", rowSpan: qtdItens, styles: { valign: 'middle', halign: 'center' } },
+              descStr,
+              formatCurrency(valorItem),
+              { content: statusStr, rowSpan: qtdItens, styles: { valign: 'middle', halign: 'center' } },
+              { content: pag.processoPagamentoSei || "---", rowSpan: qtdItens, styles: { valign: 'middle', halign: 'center' } }
+            ]);
+          } else {
+            // LINHAS SUBSEQUENTES: Passa apenas as colunas de Item e Valor (as outras estão mescladas)
+            tableBody.push([
+              descStr,
+              formatCurrency(valorItem)
+            ]);
+          }
+
+          rowGroupMap.push(indexPagamento);
+        });
+      } else {
+        // CASO NÃO TENHA DETALHAMENTO DE ITENS
+        const valPago = parseFloat(pag.valorPago) || 0;
+        totalAno += valPago;
+
+        tableBody.push([
+          { content: competencia, styles: { halign: 'center' } },
+          { content: pag.notaFiscal || "---", styles: { halign: 'center' } },
+          "Consumo Global / Não Detalhado",
+          formatCurrency(valPago),
+          { content: statusStr, styles: { halign: 'center' } },
+          { content: pag.processoPagamentoSei || "---", styles: { halign: 'center' } }
+        ]);
+
+        rowGroupMap.push(indexPagamento);
+      }
+    });
+
+    // Linha de Total do Ano
+    tableBody.push([
+      { content: "TOTAL " + ano, colSpan: 3, styles: { fontStyle: "bold", halign: "right" } },
+      { content: formatCurrency(totalAno), styles: { fontStyle: "bold" } },
+      "",
+      ""
+    ]);
+    rowGroupMap.push(-1);
+
+    // Desenha a Tabela com Células Mescladas + Cores Alternadas por Bloco
+    doc.autoTable({
+      head: [[`Ano: ${ano}`, "Nº Nota Fiscal", "Descrição / Item", "Valor", "Status", "Nº Processo Pagto"]],
+      body: tableBody,
+      startY: startY,
+      theme: "grid",
+      headStyles: { fillColor: [51, 65, 85], fontSize: 8, halign: 'center' },
+      bodyStyles: { fontSize: 8 },
+      columnStyles: {
+        0: { cellWidth: 22 },
+        1: { cellWidth: 25 },
+        2: { cellWidth: 55 },
+        3: { cellWidth: 28 },
+        4: { cellWidth: 22 },
+        5: { cellWidth: 38 }
+      },
+      didParseCell: function (data) {
+        if (data.section === "body") {
+          const rowIndex = data.row.index;
+          const groupIndex = rowGroupMap[rowIndex];
+
+          // Destaque para a linha de Total do Ano
+          if (groupIndex === -1) {
+            data.cell.styles.fillColor = [226, 232, 240];
+            return;
+          }
+
+          // Alterna a cor de fundo por bloco de mês/pagamento
+          if (groupIndex % 2 === 0) {
+            data.cell.styles.fillColor = [255, 255, 255]; // Branco
+          } else {
+            data.cell.styles.fillColor = [241, 245, 249]; // Sombreado Claro (Slate-100)
+          }
+        }
+      }
+    });
+
+    startY = doc.autoTable.previous.finalY + 8;
+  });
+
+  // Rodapé com numeração de páginas
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(8);
+    doc.setTextColor(150);
+    doc.text(`Página ${i}/${pageCount}`, 190, 287);
+  }
+
+  doc.save(`Historico_Consumo_${contratoPai.numeroContrato || "Contrato"}.pdf`);
+  mostrarToast("Histórico de consumo gerado!");
+}
