@@ -13,11 +13,23 @@ let isUserCoordManager = false;
 const currentUserRole = sessionStorage.getItem('cockpit_user_role') || 'user';
 const currentUserName = sessionStorage.getItem('cockpit_user_realname') || 'Usuário';
 let recorrenciaEditandoId = null;
+let historicoCarregado = false; 
 
 // Listeners Base
 document.addEventListener("DOMContentLoaded", initApp);
 document.getElementById('search-input').addEventListener('input', renderDemandas);
-document.getElementById('filter-status').addEventListener('change', renderDemandas);
+document.getElementById('filter-status').addEventListener('change', async (e) => {
+    // Se o usuário quer ver os concluídos e o banco ainda não os baixou
+    if (e.target.value === 'Concluído' && !historicoCarregado) {
+        // Exibe o Toast para ele saber que o sistema está trabalhando
+        if (typeof showToast === 'function') showToast("Carregando histórico completo...", "info");
+        
+        // Carrega todas as demandas da história
+        await fetchDemandas(true); 
+    } else {
+        renderDemandas();
+    }
+});
 document.getElementById('filter-prioridade').addEventListener('change', renderDemandas);
 
 // Theme Listener do Cockpit
@@ -121,11 +133,16 @@ async function carregarUsuarios() {
     });
 }
 
-async function fetchDemandas() {
+async function fetchDemandas(carregarTodas = false) {
     let query = supabase
         .from('demandas')
         .select('*')
         .order('data_criacao', { ascending: false });
+
+    // LÓGICA DE LAZY LOADING: Traz apenas o que importa no dia a dia
+    if (!carregarTodas) {
+        query = query.neq('status', 'Concluído').neq('status', 'Cancelado').limit(150);
+    }
 
     // Regra de Acesso: Usuário comum ou Responsável de Coordenação
     if (currentUserRole !== 'admin') {
@@ -148,6 +165,7 @@ async function fetchDemandas() {
     }
 
     demandas = data;
+    historicoCarregado = carregarTodas;
     renderDemandas();
 }
 
