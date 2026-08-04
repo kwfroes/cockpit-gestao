@@ -19,6 +19,8 @@ let selectedSug = new Set();
 let lastEditedIndex = null;
 let ramosDictionary = [];
 let descricoesRamos = [];
+let sugestoesCarregadas = [];
+let iaLoteEmAndamento = false;
 
 const grid = document.getElementById('family-grid');
 const searchInput = document.getElementById('search-family');
@@ -1309,8 +1311,6 @@ window.analisarFornecedor = async (event) => {
 
 // --- FUNÇÕES AUXILIARES DE INTERFACE ---
 
-// --- FUNÇÕES AUXILIARES DE INTERFACE ---
-
 function exibirModalResultadoAnalise(resultado) {
     window.resultadoAnaliseAtual = resultado;
     const modalAntigo = document.getElementById('modal-analise-cnpj');
@@ -1318,7 +1318,7 @@ function exibirModalResultadoAnalise(resultado) {
 
     const cnaesPdfNumericos = resultado.cnaes.map(cnae => cnae.replace(/\D/g, ''));
 
-    // 1. Constrói o HTML das Famílias
+    // 1. Constrói o HTML das Famílias (CNAEs agrupados dentro da Família)
     let familiasHtml = '';
     if (resultado.familiasHabilitadas.length > 0) {
         familiasHtml = resultado.familiasHabilitadas.map(fam => {
@@ -1329,8 +1329,6 @@ function exibirModalResultadoAnalise(resultado) {
 
             const todosCnaesString = (fam.CNAEs || []).map(c => c.codigo).join(' ');
             const termoBusca = `${fam['Família']} ${fam['Descrição']} ${todosCnaesString}`.toLowerCase();
-            
-            // Criamos um ID único para cada família (ex: "list-01-00") para o JavaScript saber quem abrir
             const uniqueId = fam['Família'].replace(/\./g, '-');
 
             return `
@@ -1362,32 +1360,63 @@ function exibirModalResultadoAnalise(resultado) {
             </div>`;
         }).join('');
     } else {
-        familiasHtml = `<div class="p-6 text-center text-slate-500 dark:text-slate-400 italic bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">Nenhuma família compatível com os CNAEs deste fornecedor.</div>`;
+        familiasHtml = `<div class="p-6 text-center text-slate-500 dark:text-slate-400 italic bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">Nenhuma família compatível com os CNAEs informados.</div>`;
     }
 
+    // 2. Constrói o HTML da Lista de TODOS os CNAEs cruzados com Famílias
+    let cnaesRelacionadosCount = 0;
 
-    // 2. Constrói o HTML da Lista de TODOS os CNAEs com Checkboxes e o Botão Flutuante
-    let cnaesHtml = resultado.cnaesDetalhados.map(cnae => `
-        <label class="cnae-card p-3 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 flex flex-row items-center justify-between gap-3 mb-2 shadow-sm transition-all hover:border-blue-400 cursor-pointer" data-search="${cnae.codigo} ${cnae.descricao.toLowerCase()}">
-            <div class="flex flex-row items-center gap-3 flex-1">
-                <input type="checkbox" class="cnae-checkbox-vincular w-4 h-4 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-slate-800 dark:bg-slate-700 dark:border-slate-600" value="${cnae.codigo}" data-desc="${cnae.descricao}">
-                <div class="flex flex-col">
-                    <span class="text-blue-600 dark:text-blue-400 font-mono font-bold text-sm mb-1">${cnae.codigo}</span>
-                    <span class="text-slate-700 dark:text-slate-300 text-sm leading-tight">${cnae.descricao}</span>
+    let cnaesHtml = resultado.cnaesDetalhados.map(cnae => {
+        const cnaeNum = cnae.codigo.replace(/\D/g, '');
+        
+        // Procura quais famílias contêm este CNAE
+        const familiasDoCnae = resultado.familiasHabilitadas.filter(fam => 
+            (fam.CNAEs || []).some(c => c.codigo.replace(/\D/g, '') === cnaeNum)
+        );
+        
+        if (familiasDoCnae.length > 0) cnaesRelacionadosCount++;
+
+        // Renderiza as tags das famílias vinculadas
+        const tagsFamilias = familiasDoCnae.map(f => 
+            `<span class="inline-block bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-400 px-2 py-0.5 rounded text-[10px] font-bold mr-1 mb-1 shadow-sm border border-teal-200 dark:border-teal-800" title="${f['Descrição']}">Família ${f['Família']}</span>`
+        ).join('');
+
+        const familiasListHtml = familiasDoCnae.length > 0 
+            ? `<div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-700 w-full">
+                  <div class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Famílias Relacionadas:</div>
+                  <div class="flex flex-wrap">${tagsFamilias}</div>
+               </div>`
+            : `<div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-700 w-full">
+                  <span class="text-[10px] text-red-400 dark:text-red-400 italic font-medium flex items-center gap-1">
+                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                      Nenhuma família vinculada
+                  </span>
+               </div>`;
+
+        return `
+        <label class="cnae-card p-3 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 flex flex-col items-start gap-2 mb-2 shadow-sm transition-all hover:border-blue-400 cursor-pointer" data-search="${cnae.codigo} ${cnae.descricao.toLowerCase()}">
+            <div class="flex flex-row items-start justify-between gap-3 w-full">
+                <div class="flex flex-row items-start gap-3 flex-1">
+                    <input type="checkbox" class="cnae-checkbox-vincular mt-1 w-4 h-4 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-slate-800 dark:bg-slate-700 dark:border-slate-600" value="${cnae.codigo}" data-desc="${cnae.descricao}">
+                    <div class="flex flex-col">
+                        <span class="text-blue-600 dark:text-blue-400 font-mono font-bold text-sm mb-0.5">${cnae.codigo}</span>
+                        <span class="text-slate-700 dark:text-slate-300 text-xs leading-tight">${cnae.descricao}</span>
+                    </div>
                 </div>
+                
+                <button type="button" onclick="event.stopPropagation(); event.preventDefault(); reabrirBuscaIbgeDireto('${cnae.codigo}')" 
+                    class="p-1.5 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-md transition-colors shrink-0" 
+                    title="Ver detalhes completos do CNAE no IBGE">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
             </div>
-            
-            <button type="button" onclick="event.stopPropagation(); event.preventDefault(); reabrirBuscaIbgeDireto('${cnae.codigo}')" 
-                class="p-2 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors shrink-0" 
-                title="Ver detalhes completos do CNAE no IBGE">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
-            </button>
-        </label>
-    `).join('');
+            ${familiasListHtml}
+        </label>`;
+    }).join('');
 
-    // Adiciona o Botão Flutuante (Sticky) logo abaixo da lista
+    // Adiciona o Botão Flutuante (Sticky) de vincular
     cnaesHtml += `
         <div class="sticky bottom-4 flex justify-end pointer-events-none mt-4 mr-2">
             <button type="button" onclick="abrirModalVinculoCnaes()" 
@@ -1400,7 +1429,12 @@ function exibirModalResultadoAnalise(resultado) {
         </div>
     `;
 
-    // 3. Monta o Modal com o Sistema de Abas Integrado
+    // 3. Monta o Modal e o Relatório Visual de Taxa de Relacionamento
+    const isManual = resultado.cnpj === "N/A";
+    const percentual = resultado.cnaesDetalhados.length > 0 
+        ? Math.round((cnaesRelacionadosCount / resultado.cnaesDetalhados.length) * 100) 
+        : 0;
+
     const modal = document.createElement('div');
     modal.id = 'modal-analise-cnpj';
     modal.className = 'fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fade-in';
@@ -1411,7 +1445,7 @@ function exibirModalResultadoAnalise(resultado) {
             <div class="flex justify-between items-center p-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 shrink-0">
                 <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
                     <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                    Análise de Comprovante CNPJ
+                    ${isManual ? 'Análise de Múltiplos CNAEs' : 'Análise de Comprovante CNPJ'}
                 </h3>
                 <button onclick="document.getElementById('modal-analise-cnpj').remove()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -1421,11 +1455,27 @@ function exibirModalResultadoAnalise(resultado) {
             <div class="p-4 overflow-y-auto flex-1 flex flex-col gap-4 custom-scrollbar">
                 
                 <div class="bg-slate-100 dark:bg-slate-900/50 p-4 rounded-lg border border-slate-200 dark:border-slate-700 shrink-0">
-                    <div class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Empresa Identificada</div>
+                    <div class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">${isManual ? 'Origem da Análise' : 'Empresa Identificada'}</div>
                     <div class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-1">${resultado.razaoSocial}</div>
+                    ${!isManual ? `
                     <div class="text-sm font-mono text-slate-600 dark:text-slate-300 flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path></svg>
                         CNPJ: ${resultado.cnpj}
+                    </div>` : ''}
+
+                    <!-- RESUMO ESTATÍSTICO DA ANÁLISE -->
+                    <div class="mt-4 flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-100 dark:border-blue-800/50 shadow-sm">
+                        <div class="flex flex-col">
+                            <span class="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest">Taxa de Relacionamento</span>
+                            <span class="text-sm font-bold text-slate-800 dark:text-slate-200 mt-0.5">
+                                ${cnaesRelacionadosCount} de ${resultado.cnaesDetalhados.length} CNAEs encontrados nas famílias.
+                            </span>
+                        </div>
+                        <div class="text-right flex flex-col items-end">
+                            <span class="text-2xl font-black ${percentual === 100 ? 'text-emerald-600 dark:text-emerald-400' : (percentual >= 50 ? 'text-blue-600 dark:text-blue-400' : 'text-amber-600 dark:text-amber-400')}">
+                                ${percentual}%
+                            </span>
+                        </div>
                     </div>
                 </div>
 
@@ -1439,10 +1489,10 @@ function exibirModalResultadoAnalise(resultado) {
 
                 <div class="flex border-b border-slate-200 dark:border-slate-700 shrink-0">
                     <button id="tab-btn-familias" onclick="switchTabAnalise('familias')" class="px-4 py-2 border-b-2 border-amber-500 text-amber-600 dark:text-amber-400 font-bold text-sm transition-all">
-                        Famílias Possíveis (${resultado.familiasHabilitadas.length})
+                        Visão por Famílias (${resultado.familiasHabilitadas.length})
                     </button>
                     <button id="tab-btn-cnaes" onclick="switchTabAnalise('cnaes')" class="px-4 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 font-medium text-sm transition-all">
-                        Todos os CNAEs (${resultado.cnaes.length})
+                        Visão por CNAEs (${resultado.cnaes.length})
                     </button>
                 </div>
 
@@ -1456,31 +1506,37 @@ function exibirModalResultadoAnalise(resultado) {
                 </div>
             </div>
 
-            <div class="p-4 border-t border-slate-200 dark:border-slate-700 flex justify-end gap-3 bg-slate-50 dark:bg-slate-800/80 shrink-0">
-
-                <button onclick="document.getElementById('upload-cnpj').click()" class="px-4 py-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors font-medium flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                        Próxima
+            <div class="p-4 border-t border-slate-200 dark:border-slate-700 flex flex-wrap justify-end gap-2 bg-slate-50 dark:bg-slate-800/80 shrink-0">
+                ${!isManual ? `
+                <button onclick="document.getElementById('upload-cnpj').click()" class="px-3 py-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors font-medium flex items-center gap-1.5 text-xs">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                    Próximo PDF
+                </button>` : ''}
+                
+                <!-- MODELO 1: RELATÓRIO SINTÉTICO / EXECUTIVO -->
+                <button onclick="gerarRelatorioPDF('sintetico')" class="px-3 py-2 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 rounded-lg transition-colors font-medium flex items-center gap-1.5 text-xs border border-emerald-200 dark:border-emerald-800/50" title="Gera um relatório sintético contendo apenas as famílias habilitadas">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Relatório Executivo
                 </button>
 
-                <button onclick="gerarRelatorioPDF()" class="px-3 py-2 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 rounded-lg transition-colors font-medium flex items-center gap-1.5 text-sm border border-emerald-200 dark:border-emerald-800/50">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                        Relatório
+                <!-- MODELO 2: RELATÓRIO COMPLETO / AUDITORIA -->
+                <button onclick="gerarRelatorioPDF('completo')" class="px-3 py-2 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-colors font-medium flex items-center gap-1.5 text-xs border border-indigo-200 dark:border-indigo-800/50" title="Gera o relatório de auditoria completo com detalhamento individual de cada CNAE">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Relatório Completo
                 </button>
 
-                <button onclick="document.getElementById('modal-analise-cnpj').remove()" class="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors font-medium">
+                <button onclick="document.getElementById('modal-analise-cnpj').remove()" class="px-3 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors font-medium text-xs">
                     Fechar
                 </button>
                 
                 ${resultado.familiasHabilitadas.length > 0 ? `
                 <button onclick="aplicarFiltroDeAnalise('${resultado.familiasHabilitadas.map(f => f['Família']).join(',')}')" 
-                        class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-all shadow-md hover:shadow-lg font-medium flex items-center gap-2">
+                        class="px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-all shadow-md hover:shadow-lg font-medium flex items-center gap-1.5 text-xs">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
-                    Filtrar Grid Principal
+                    Filtrar Grid
                 </button>
                 ` : ''}
             </div>
-        </div>
     `;
 
     document.body.appendChild(modal);
@@ -1657,12 +1713,19 @@ window.abrirModalPreAnalise = () => {
     document.body.appendChild(modal);
 };
 
-// --- GERAÇÃO DE RELATÓRIO PDF ---
-window.gerarRelatorioPDF = () => {
+// --- GERAÇÃO DE RELATÓRIO PDF (MODELOS SINTÉTICO E COMPLETO) ---
+window.gerarRelatorioPDF = (tipoModelo = 'sintetico') => {
     const resultado = window.resultadoAnaliseAtual;
     if (!resultado) return;
 
-    if (typeof showToast === 'function') window.showToast("Gerando relatório oficial, aguarde...", "info");
+    const isCompleto = tipoModelo === 'completo';
+    const tituloRelatorio = isCompleto 
+        ? "RELATÓRIO DE QUALIFICAÇÃO TÉCNICA - DETALHADO" 
+        : "RELATÓRIO DE QUALIFICAÇÃO TÉCNICA - EXECUTIVO";
+
+    if (typeof showToast === 'function') {
+        showToast(`Gerando ${isCompleto ? 'Relatório Completo' : 'Relatório Executivo'}, aguarde...`, "info");
+    }
 
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
@@ -1673,7 +1736,7 @@ window.gerarRelatorioPDF = () => {
     const contentW = pageW - marginL - marginR;
     let y = 20;
 
-    // --- Helpers ---
+    // --- Helpers Internos para Controle de Página e Quebra de Linha ---
     const checkPage = (neededSpace = 10) => {
         if (y + neededSpace > 270) {
             doc.addPage();
@@ -1681,7 +1744,7 @@ window.gerarRelatorioPDF = () => {
         }
     };
 
-    const drawLine = (x1, y1, x2, y2, r = 0, g = 0, b = 0) => {
+    const drawLine = (x1, y1, x2, y2, r = 200, g = 200, b = 200) => {
         doc.setDrawColor(r, g, b);
         doc.line(x1, y1, x2, y2);
     };
@@ -1701,15 +1764,15 @@ window.gerarRelatorioPDF = () => {
     };
 
     // ==========================================
-    // CABEÇALHO
+    // CABEÇALHO GERAL
     // ==========================================
     doc.setFillColor(44, 62, 80);
     doc.rect(marginL, y, contentW, 18, 'F');
 
-    writeText('RELATÓRIO DE QUALIFICAÇÃO TÉCNICA', pageW / 2, y + 7, {
-        size: 13, style: 'bold', color: [255, 255, 255], align: 'center'
+    writeText(tituloRelatorio, pageW / 2, y + 7, {
+        size: 11, style: 'bold', color: [255, 255, 255], align: 'center'
     });
-    writeText('Análise Automatizada de Comprovante de Situação Cadastral', pageW / 2, y + 13, {
+    writeText('Cruzamento de Compatibilidade CNAE x Famílias Comprasnet.BA', pageW / 2, y + 13, {
         size: 8, style: 'normal', color: [180, 200, 220], align: 'center'
     });
     y += 24;
@@ -1718,148 +1781,198 @@ window.gerarRelatorioPDF = () => {
     writeText(`Emissão: ${dataAtual} via Cockpit Gestão`, pageW / 2, y, {
         size: 8, color: [120, 120, 120], align: 'center'
     });
-    y += 10;
-
-    // ==========================================
-    // SEÇÃO 1 — IDENTIFICAÇÃO DO FORNECEDOR
-    // ==========================================
-    doc.setFillColor(230, 236, 245);
-    doc.rect(marginL, y, contentW, 7, 'F');
-    writeText('1. IDENTIFICAÇÃO DO FORNECEDOR', marginL + 3, y + 5, {
-        size: 9, style: 'bold', color: [44, 62, 80]
-    });
-    y += 11;
-
-    const campos = [
-        ['Razão Social:', resultado.razaoSocial],
-        ['CNPJ:', resultado.cnpj],
-        ['Total de CNAEs:', `${resultado.cnaes.length} extraídos do documento`],
-    ];
-
-    campos.forEach(([label, valor]) => {
-        checkPage(7);
-        writeText(label, marginL, y, { size: 9, style: 'bold', color: [60, 60, 60] });
-        writeText(valor, marginL + 35, y, { size: 9, color: [0, 0, 0] });
-        y += 7;
-    });
-
-    y += 4;
-    drawLine(marginL, y, marginL + contentW, y, 200, 200, 200);
     y += 8;
 
     // ==========================================
-    // SEÇÃO 2 — CNAEs EXTRAÍDOS
+    // SEÇÃO 1 — IDENTIFICAÇÃO E ESTATÍSTICA
     // ==========================================
     doc.setFillColor(230, 236, 245);
     doc.rect(marginL, y, contentW, 7, 'F');
-    writeText('2. CNAEs EXTRAÍDOS DO COMPROVANTE', marginL + 3, y + 5, {
-        size: 9, style: 'bold', color: [44, 62, 80]
-    });
-    y += 11;
-
-    if (resultado.cnaesDetalhados && resultado.cnaesDetalhados.length > 0) {
-        resultado.cnaesDetalhados.forEach((item, idx) => {
-            checkPage(8);
-            const bgColor = idx % 2 === 0 ? [248, 250, 252] : [255, 255, 255];
-            doc.setFillColor(...bgColor);
-            doc.rect(marginL, y - 4, contentW, 7, 'F');
-            writeText(item.codigo, marginL + 2, y, { size: 8, style: 'bold', color: [30, 80, 160] });
-            const descLines = writeText(item.descricao || '', marginL + 28, y, {
-                size: 8, color: [50, 50, 50], maxWidth: contentW - 30
-            });
-            y += Math.max(descLines * 5, 7);
-        });
-    } else {
-        writeText('Nenhum CNAE extraído.', marginL, y, { size: 9, color: [150, 150, 150], style: 'italic' });
-        y += 7;
-    }
-
-    y += 4;
-    drawLine(marginL, y, marginL + contentW, y, 200, 200, 200);
-    y += 8;
-
-    // ==========================================
-    // SEÇÃO 3 — FAMÍLIAS HABILITADAS
-    // ==========================================
-    doc.setFillColor(230, 236, 245);
-    doc.rect(marginL, y, contentW, 7, 'F');
-    writeText('3. FAMÍLIAS POSSÍVEIS', marginL + 3, y + 5, {
+    writeText('1. IDENTIFICAÇÃO E TAXA DE RELACIONAMENTO', marginL + 3, y + 5, {
         size: 9, style: 'bold', color: [44, 62, 80]
     });
     y += 11;
 
     const cnaesPdfNumericos = resultado.cnaes.map(c => c.replace(/\D/g, ''));
+    let cnaesRelacionadosCount = 0;
+    resultado.cnaesDetalhados.forEach(c => {
+        const cNum = c.codigo.replace(/\D/g, '');
+        if (resultado.familiasHabilitadas.some(f => (f.CNAEs || []).some(fc => fc.codigo.replace(/\D/g, '') === cNum))) {
+            cnaesRelacionadosCount++;
+        }
+    });
 
-    if (resultado.familiasHabilitadas && resultado.familiasHabilitadas.length > 0) {
-        resultado.familiasHabilitadas.forEach((fam) => {
-            checkPage(20);
+    const totalCnaes = resultado.cnaesDetalhados.length;
+    const percentual = totalCnaes > 0 ? Math.round((cnaesRelacionadosCount / totalCnaes) * 100) : 0;
 
-            // Cabeçalho da família
-            doc.setFillColor(44, 62, 80);
-            doc.rect(marginL, y - 4, contentW, 8, 'F');
-            writeText(
-                `Família ${fam['Família']} — ${fam['Descrição']}`,
-                marginL + 3, y + 1,
-                { size: 9, style: 'bold', color: [255, 255, 255], maxWidth: contentW - 6 }
-            );
-            y += 9;
+    const campos = [
+        ['Razão Social / Origem:', resultado.razaoSocial],
+        ['CNPJ / Identificador:', resultado.cnpj],
+        ['Total de CNAEs Analisados:', `${totalCnaes} subclasse(s)`],
+        ['CNAEs Encontrados em Famílias:', `${cnaesRelacionadosCount} de ${totalCnaes} (${percentual}% dos CNAES estão relacionados)`],
+        ['Famílias Possíveis:', `${resultado.familiasHabilitadas.length} família(s) do catálogo`]
+    ];
 
-            const cnaesCompativeis = (fam.CNAEs || []).filter(c =>
-                cnaesPdfNumericos.includes(c.codigo.replace(/\D/g, ''))
-            );
+    campos.forEach(([label, valor]) => {
+        checkPage(7);
+        writeText(label, marginL, y, { size: 8, style: 'bold', color: [60, 60, 60] });
+        writeText(valor, marginL + 48, y, { size: 8, color: [0, 0, 0] });
+        y += 6;
+    });
 
-            if (cnaesCompativeis.length > 0) {
-                writeText(`CNAEs compatíveis (${cnaesCompativeis.length}):`, marginL + 3, y, {
-                    size: 8, style: 'bold', color: [80, 80, 80]
-                });
-                y += 6;
+    y += 3;
+    drawLine(marginL, y, marginL + contentW, y);
+    y += 7;
 
-                cnaesCompativeis.forEach((c, idx) => {
-                    checkPage(8);
-                    const bgColor = idx % 2 === 0 ? [240, 247, 255] : [255, 255, 255];
-                    doc.setFillColor(...bgColor);
-                    doc.rect(marginL + 3, y - 3.5, contentW - 6, 6.5, 'F');
-                    writeText(`• ${c.codigo}`, marginL + 5, y, { size: 8, style: 'bold', color: [30, 80, 160] });
-                    const descLines = writeText(c.descricao || '', marginL + 25, y, {
-                        size: 8, color: [50, 50, 50], maxWidth: contentW - 28
+    if (!isCompleto) {
+        // ==========================================
+        // MODELO SINTÉTICO (Foco nas Famílias Habilitadas)
+        // ==========================================
+        doc.setFillColor(230, 236, 245);
+        doc.rect(marginL, y, contentW, 7, 'F');
+        writeText(`2. FAMÍLIAS HABILITADAS (${resultado.familiasHabilitadas.length})`, marginL + 3, y + 5, {
+            size: 9, style: 'bold', color: [44, 62, 80]
+        });
+        y += 11;
+
+        if (resultado.familiasHabilitadas && resultado.familiasHabilitadas.length > 0) {
+            resultado.familiasHabilitadas.forEach((fam) => {
+                checkPage(20);
+
+                doc.setFillColor(44, 62, 80);
+                doc.rect(marginL, y - 4, contentW, 7, 'F');
+                writeText(
+                    `Família ${fam['Família']} — ${fam['Descrição']}`,
+                    marginL + 3, y + 1,
+                    { size: 8, style: 'bold', color: [255, 255, 255], maxWidth: contentW - 6 }
+                );
+                y += 8;
+
+                const cnaesCompativeis = (fam.CNAEs || []).filter(c =>
+                    cnaesPdfNumericos.includes(c.codigo.replace(/\D/g, ''))
+                );
+
+                if (cnaesCompativeis.length > 0) {
+                    cnaesCompativeis.forEach((c, idx) => {
+                        checkPage(7);
+                        const bgColor = idx % 2 === 0 ? [245, 248, 255] : [255, 255, 255];
+                        doc.setFillColor(...bgColor);
+                        doc.rect(marginL + 2, y - 3.5, contentW - 4, 6, 'F');
+                        writeText(`• ${c.codigo}`, marginL + 4, y, { size: 8, style: 'bold', color: [30, 80, 160] });
+                        const descLines = writeText(c.descricao || '', marginL + 25, y, {
+                            size: 8, color: [50, 50, 50], maxWidth: contentW - 28
+                        });
+                        y += Math.max(descLines * 4.5, 6);
                     });
-                    y += Math.max(descLines * 5, 6);
+                } else {
+                    writeText('Sem detalhamento de CNAEs.', marginL + 4, y, { size: 8, color: [150, 150, 150], style: 'italic' });
+                    y += 5;
+                }
+                y += 4;
+            });
+        } else {
+            doc.setFillColor(255, 243, 205);
+            doc.rect(marginL, y - 3, contentW, 10, 'F');
+            writeText('⚠ Nenhuma família de contratação compatível identificada.', marginL + 3, y + 3, {
+                size: 8, style: 'italic', color: [150, 100, 0]
+            });
+            y += 12;
+        }
+    } else {
+        // ==========================================
+        // MODELO COMPLETO (Foco na Auditoria CNAE x Família x Documentos)
+        // ==========================================
+        doc.setFillColor(230, 236, 245);
+        doc.rect(marginL, y, contentW, 7, 'F');
+        writeText(`2. DETALHAMENTO DE TODOS OS CNAEs ANALISADOS`, marginL + 3, y + 5, {
+            size: 9, style: 'bold', color: [44, 62, 80]
+        });
+        y += 11;
+
+        resultado.cnaesDetalhados.forEach((item) => {
+            checkPage(15);
+            const cNum = item.codigo.replace(/\D/g, '');
+            const famsVinculadas = resultado.familiasHabilitadas.filter(f => 
+                (f.CNAEs || []).some(fc => fc.codigo.replace(/\D/g, '') === cNum)
+            );
+
+            // 1. Cabeçalho do CNAE e quebra dinâmica da descrição
+            doc.setFillColor(248, 250, 252);
+            doc.rect(marginL, y - 4, contentW, 8, 'F');
+            writeText(`CNAE ${item.codigo}`, marginL + 2, y + 1.5, { size: 8, style: 'bold', color: [30, 80, 160] });
+            const descLines = writeText(item.descricao || '', marginL + 28, y + 1.5, { size: 8, color: [50, 50, 50], maxWidth: contentW - 30 });
+            y += Math.max(descLines * 4.5, 6) + 3;
+
+            // 2. Lista as Famílias vinculadas a este CNAE
+            if (famsVinculadas.length > 0) {
+                famsVinculadas.forEach(f => {
+                    checkPage(12);
+                    const famText = `» Família ${f['Família']} - ${f['Descrição']}`;
+                    const famLines = writeText(famText, marginL + 5, y, { size: 8, style: 'bold', color: [44, 62, 80], maxWidth: contentW - 10 });
+                    y += (famLines * 4.5) + 1;
+
+                    // 3. Exibe a Qualificação Técnica (Exigidos e Elegíveis) para esta família
+                    const exigidos = f['Documentos Exigidos'] || f['DOCUMENTOS EXIGIDOS'] || [];
+                    const elegiveis = f['Documentos Elegíveis'] || f['DOCUMENTOS ELEGÍVEIS'] || [];
+
+                    if (exigidos.length > 0 || elegiveis.length > 0) {
+                        
+                        // Lista Documentos Exigidos (em Vermelho)
+                        if (exigidos.length > 0) {
+                            exigidos.forEach(docName => {
+                                checkPage(6);
+                                const docLines = writeText(`• Exigido: ${docName}`, marginL + 10, y, { size: 7.5, color: [200, 50, 50], maxWidth: contentW - 15 });
+                                y += (docLines * 4.5);
+                            });
+                        }
+                        
+                        // Lista Documentos Elegíveis (em Verde/Esmeralda)
+                        if (elegiveis.length > 0) {
+                            elegiveis.forEach(docName => {
+                                checkPage(6);
+                                const docLines = writeText(`• Elegível: ${docName}`, marginL + 10, y, { size: 7.5, color: [16, 122, 87], maxWidth: contentW - 15 });
+                                y += (docLines * 4.5);
+                            });
+                        }
+                        
+                        y += 2;
+                    } else {
+                        checkPage(6);
+                        writeText(`• Sem exigência de qualificação técnica específica.`, marginL + 10, y, { size: 7.5, color: [100, 100, 100], style: 'italic' });
+                        y += 5;
+                    }
                 });
             } else {
-                writeText('Nenhum CNAE compatível identificado nesta família.', marginL + 3, y, {
-                    size: 8, color: [150, 150, 150], style: 'italic'
-                });
-                y += 6;
+                checkPage(6);
+                writeText('Este CNAE ainda não foi mapeado para vinculação', marginL + 5, y, { size: 7.5, color: [200, 50, 50], style: 'italic' });
+                y += 5;
             }
-            y += 5;
+
+            // Linha separadora de CNAEs
+            y += 2;
+            drawLine(marginL, y, marginL + contentW, y, 235, 235, 235);
+            y += 6;
         });
-    } else {
-        doc.setFillColor(255, 243, 205);
-        doc.rect(marginL, y - 3, contentW, 12, 'F');
-        writeText('⚠ Nenhuma família compatível identificada com os CNAEs extraídos.', marginL + 3, y + 4, {
-            size: 9, style: 'italic', color: [150, 100, 0]
-        });
-        y += 14;
     }
 
     // ==========================================
-    // RODAPÉ — ASSINATURA
+    // RODAPÉ E ASSINATURA GERAL
     // ==========================================
-    checkPage(30);
-    y += 10;
+    checkPage(25);
+    y += 6;
     drawLine(marginL, y, marginL + contentW, y, 180, 180, 180);
     y += 8;
 
     const assinW = 80;
     const assinX = (pageW - assinW) / 2;
     drawLine(assinX, y, assinX + assinW, y, 0, 0, 0);
-    y += 5;
+    y += 4;
     writeText('Analista Responsável', pageW / 2, y, {
-        size: 9, style: 'bold', color: [0, 0, 0], align: 'center'
+        size: 8, style: 'bold', color: [0, 0, 0], align: 'center'
     });
-    y += 5;
+    y += 4;
     writeText('Coordenação de Gestão do Cadastro de Fornecedores', pageW / 2, y, {
-        size: 8, color: [100, 100, 100], align: 'center'
+        size: 7, color: [100, 100, 100], align: 'center'
     });
 
     // Numeração de páginas
@@ -1874,9 +1987,15 @@ window.gerarRelatorioPDF = () => {
         });
     }
 
-    // Salva
-    doc.save(`Qualificacao_${resultado.cnpj.replace(/\D/g, '')}.pdf`);
-    if (typeof showToast === 'function') window.showToast("Download do relatório concluído com sucesso!", "success");
+    // Nome de arquivo dinâmico conforme a origem da análise
+    const idNome = resultado.cnpj !== "N/A" ? resultado.cnpj.replace(/\D/g, '') : "Pesquisa_Manual";
+    const nomeArquivo = `Qualificacao_${idNome}_${isCompleto ? 'Completo' : 'Executivo'}.pdf`;
+    
+    doc.save(nomeArquivo);
+    
+    if (typeof showToast === 'function') {
+        showToast(`Relatório ${isCompleto ? 'Completo' : 'Executivo'} baixado com sucesso!`, "success");
+    }
 };
 
 // ==========================================
@@ -2000,12 +2119,15 @@ window.abrirModalSugestoesAdmin = async () => {
         .from('sugestoes_cnae_familia')
         .select('*')
         .eq('status', 'pendente')
+        .order('gemini_score', { ascending: false, nullsFirst: false })
         .order('quantidade', { ascending: false });
 
     if (error) {
         container.innerHTML = `<p class="text-center py-8 text-red-500">Erro ao buscar dados do banco.</p>`;
         return;
     }
+
+    sugestoesCarregadas = sugestoes; 
 
     if (sugestoes.length === 0) {
         container.innerHTML = `
@@ -2016,40 +2138,80 @@ window.abrirModalSugestoesAdmin = async () => {
     }
 
     // Usamos o .map() com chaves {} para poder executar a busca antes de retornar o HTML
-    container.innerHTML = sugestoes.map(sug => {
-        
-        // Busca a família correspondente na memória do app para pegar a descrição
+container.innerHTML = sugestoes.map(sug => {
         const familiaEncontrada = familyData.find(f => f.Família.toString() === sug.familia_codigo);
         const descricaoFamilia = familiaEncontrada ? familiaEncontrada.Descrição : "Descrição não encontrada";
 
+        // --- Lógica de Cores da Badge do Gemini ---
+        let geminiBadgeHtml = '';
+        if (sug.gemini_score !== null && sug.gemini_score !== undefined) {
+            let colorClass = 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400 border-red-200 dark:border-red-800';
+            if (sug.gemini_score >= 8) {
+                colorClass = 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800';
+            } else if (sug.gemini_score >= 4) {
+                colorClass = 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400 border-amber-200 dark:border-amber-800';
+            }
+
+            geminiBadgeHtml = `
+            <div class="mt-3 p-2.5 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-700 flex flex-col gap-1">
+                <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider border shadow-sm ${colorClass}">
+                        🤖 Score IA: ${sug.gemini_score}/10
+                    </span>
+                </div>
+                <span class="text-xs text-slate-600 dark:text-slate-400 leading-tight">
+                    ${sug.gemini_justificativa}
+                </span>
+            </div>`;
+        }
+
         return `
         <div id="sugestao-${sug.id}" class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row justify-between items-center gap-4 shadow-sm hover:shadow-md transition-all">
-            <div class="flex-1">
+            <div class="flex-1 w-full">
                 <div class="flex items-center gap-3 mb-1">
                     <span class="bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider shadow-sm">
                         Família ${sug.familia_codigo}
                     </span>
-                    <span class="bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-sm">
+                    <span class="bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-sm">
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                         ${sug.quantidade} ${sug.quantidade > 1 ? 'Sugestões' : 'Sugestão'}
                     </span>
+                    ${(sug.gemini_score === null || sug.gemini_score === undefined) ? `
+                    <button type="button" id="btn-ia-${sug.id}" data-id="${sug.id}"
+                        onclick="analisarUmaSugestao(this)"
+                        class="bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-400 hover:bg-violet-200 dark:hover:bg-violet-900/70 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-sm transition-colors border border-violet-200 dark:border-violet-800"
+                        title="Analisar lote de até 8 sugestões com IA (respeita limite de taxa)">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        IA
+                    </button>` : ''}
                 </div>
                 
-                <!-- NOVA LINHA: Descrição da Família -->
                 <div class="mb-3 text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wide">
                     ${descricaoFamilia}
                 </div>
                 
-                <div class="mb-1">
+                <div class="mb-1 flex items-center gap-1">
                     <span class="text-blue-600 dark:text-blue-400 font-mono font-bold text-sm">${sug.cnae_codigo}</span>
                     <span class="text-slate-700 dark:text-slate-300 text-sm ml-1">${sug.cnae_descricao}</span>
+                    <button type="button" onclick="event.stopPropagation(); reabrirBuscaIbgeDireto('${sug.cnae_codigo}')"
+                        class="p-1 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-md transition-colors shrink-0"
+                        title="Ver detalhes completos do CNAE no IBGE">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </button>
                 </div>
-                <p class="text-[10px] text-slate-500 dark:text-slate-400">
+                
+                <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-1">
                     <strong>Sugerido por:</strong> ${sug.usuarios_sugeriram}
                 </p>
+                ${sug.motivo ? `<p class="text-[10px] text-slate-500 dark:text-slate-400 mt-1 italic">⚙️ Motor Local: ${sug.motivo}</p>` : ''}
+                
+                <!-- INJEÇÃO DA BADGE DO GEMINI AQUI -->
+                ${geminiBadgeHtml}
             </div>
             
-            <div class="flex gap-2 shrink-0">
+            <div class="flex gap-2 shrink-0 self-start sm:self-center mt-3 sm:mt-0">
                 <button onclick="processarSugestao('${sug.id}', 'rejeitar')" class="p-2 text-red-500 bg-red-50 hover:bg-red-500 hover:text-white dark:bg-red-900/20 dark:hover:bg-red-600 rounded-lg transition-colors border border-red-100 dark:border-red-800" title="Rejeitar">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
@@ -2067,6 +2229,88 @@ window.fecharModalSugestoesAdmin = () => {
     document.getElementById('modal-validar-sugestoes').classList.add('hidden');
     carregarContadorSugestoes(); // Atualiza contador ao fechar
 };
+
+// ==========================================
+// ANÁLISE DE IA EM LOTE (clicar em 1 analisa até 8, respeitando RPM)
+// ==========================================
+const TAMANHO_LOTE_IA = 8;
+const CONCORRENCIA_LOTE_IA = 3;
+const SVG_SPINNER_IA = `<svg class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+const SVG_RAIO_IA = `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>`;
+
+window.analisarUmaSugestao = async (btn) => {
+    if (iaLoteEmAndamento) {
+        if (typeof showToast === 'function') showToast('Já tem um lote de IA rodando — aguarde terminar.');
+        return;
+    }
+    iaLoteEmAndamento = true;
+
+    try {
+        const idClicado = btn.dataset.id;
+        const semAnalise = sugestoesCarregadas.filter(s =>
+            (s.gemini_score === null || s.gemini_score === undefined) && document.getElementById(`btn-ia-${s.id}`)
+        );
+        const lote = [
+            semAnalise.find(s => s.id === idClicado),
+            ...semAnalise.filter(s => s.id !== idClicado),
+        ].filter(Boolean).slice(0, TAMANHO_LOTE_IA);
+
+        if (typeof showToast === 'function') showToast(`Analisando ${lote.length} sugestões com IA...`);
+
+        lote.forEach(s => {
+            const b = document.getElementById(`btn-ia-${s.id}`);
+            if (b) { b.disabled = true; b.innerHTML = `${SVG_SPINNER_IA} IA`; }
+        });
+
+        let sucesso = 0;
+        const processarUm = async (sug) => {
+            const b = document.getElementById(`btn-ia-${sug.id}`);
+            try {
+                const fam = familyData.find(f => f.Família.toString() === sug.familia_codigo);
+                const descFamilia = fam ? fam.Descrição : '';
+                const resultado = await window.analisarSugestaoIndividual(sug.id, descFamilia, sug.cnae_descricao);
+                inserirBadgeIA(sug.id, resultado.score, resultado.justificativa);
+                sug.gemini_score = resultado.score;
+                if (b) b.remove();
+                sucesso++;
+            } catch (err) {
+                console.error('Falha ao analisar sugestão', sug.id, err);
+                if (b) { b.disabled = false; b.innerHTML = `${SVG_RAIO_IA} IA`; }
+            }
+        };
+
+        for (let i = 0; i < lote.length; i += CONCORRENCIA_LOTE_IA) {
+            await Promise.all(lote.slice(i, i + CONCORRENCIA_LOTE_IA).map(processarUm));
+        }
+
+        if (typeof showToast === 'function') showToast(`IA concluiu ${sucesso} de ${lote.length} sugestões.`);
+    } finally {
+        iaLoteEmAndamento = false;
+    }
+};
+
+// Insere a badge de score no card já renderizado, sem recarregar a lista inteira
+function inserirBadgeIA(id, score, justificativa) {
+    const card = document.getElementById(`sugestao-${id}`);
+    if (!card) return;
+
+    let colorClass = 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400 border-red-200 dark:border-red-800';
+    if (score >= 8) colorClass = 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800';
+    else if (score >= 4) colorClass = 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400 border-amber-200 dark:border-amber-800';
+
+    const badgeHtml = `
+    <div class="mt-3 p-2.5 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-700 flex flex-col gap-1 animate-fade-in">
+        <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider border shadow-sm ${colorClass}">
+                🤖 Score IA: ${score}/10
+            </span>
+        </div>
+        <span class="text-xs text-slate-600 dark:text-slate-400 leading-tight">${justificativa}</span>
+    </div>`;
+
+    const coluna = card.querySelector('.flex-1.w-full');
+    if (coluna) coluna.insertAdjacentHTML('beforeend', badgeHtml);
+}
 
 window.processarSugestao = async (id, acao, codFamilia = null, codCnae = null, descCnae = null) => {
     const card = document.getElementById(`sugestao-${id}`);
@@ -2201,27 +2445,107 @@ window.fecharModalVinculoCnaes = () => {
     if (m) m.remove();
 };
 
-// Função para salvar no localStorage
+// Função para salvar no localStorage 
 function salvarHistoricoAnalise(resultado) {
     let historico = JSON.parse(localStorage.getItem('cockpit_cnpj_history') || '[]');
     historico = historico.filter(h => h.cnpj !== resultado.cnpj);
+    
+    // Salva já limpando qualquer lixo que tenha vindo do PDF
+    const cnaesLimpos = resultado.cnaes.filter(c => c && typeof c === 'string' && c.replace(/\D/g, '').length === 7);
+
     historico.unshift({
         cnpj: resultado.cnpj,
         razaoSocial: resultado.razaoSocial,
         data: new Date().getTime(),
-        resultado: resultado
+        cnaesBrutos: cnaesLimpos 
     });
+    
     localStorage.setItem('cockpit_cnpj_history', JSON.stringify(historico.slice(0, 3)));
 }
 
-// Função para reabrir uma análise salva
-window.reabrirAnalise = (cnpj) => {
+// Função para reabrir uma análise salva (ATUALIZADA COM SANITIZAÇÃO)
+window.reabrirAnalise = async (cnpj) => {
     const historico = JSON.parse(localStorage.getItem('cockpit_cnpj_history') || '[]');
     const item = historico.find(h => h.cnpj === cnpj);
+    
     if (item) {
         const modalPre = document.getElementById('modal-pre-analise');
         if (modalPre) modalPre.remove();
-        exibirModalResultadoAnalise(item.resultado);
+        
+        if (typeof showToast === 'function') showToast("Reanalisando CNPJ com as regras atuais...", "info");
+
+        // Tenta buscar no formato novo (cnaesBrutos) ou resgatar do formato antigo (resultado.cnaes)
+        let cnaesBrutos = [];
+        if (item.cnaesBrutos && item.cnaesBrutos.length > 0) {
+            cnaesBrutos = item.cnaesBrutos;
+        } else if (item.resultado && item.resultado.cnaes && item.resultado.cnaes.length > 0) {
+            cnaesBrutos = item.resultado.cnaes;
+        }
+
+        // --- A MÁGICA DA LIMPEZA (SANITIZAÇÃO) ---
+        // 1. Remove vazios e strings que não contenham 7 números
+        // 2. Padroniza a formatação para evitar duplicatas ou bugs
+        let cnaesUnicos = cnaesBrutos.filter(c => {
+            if (!c || typeof c !== 'string') return false;
+            return c.replace(/\D/g, '').length === 7;
+        }).map(val => {
+            const num = val.replace(/\D/g, '');
+            return num.substring(0, 4) + '-' + num.substring(4, 5) + '/' + num.substring(5, 7);
+        });
+
+        // Remove duplicatas exatas
+        cnaesUnicos = [...new Set(cnaesUnicos)];
+
+        if (cnaesUnicos.length === 0) {
+            if (typeof showError === 'function') showError("Aviso", "Não foi possível recuperar CNAEs válidos deste histórico. Faça o upload do PDF novamente.");
+            return;
+        }
+
+        const cnaesDetalhados = [];
+
+        // 1. Refaz a busca das descrições 
+        for (const codigo of cnaesUnicos) {
+            let cnaeLocal = cnaeDictionary.find(c => c.CNAE === codigo);
+            
+            if (cnaeLocal) {
+                cnaesDetalhados.push({ codigo: cnaeLocal.CNAE, descricao: cnaeLocal.DESCRIÇÃO });
+            } else {
+                try {
+                    const cleanCode = codigo.replace(/\D/g, '');
+                    const response = await fetch(`https://servicodados.ibge.gov.br/api/v2/cnae/subclasses/${cleanCode}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        const cnaeIbge = Array.isArray(data) ? data[0] : data;
+                        if (cnaeIbge && cnaeIbge.descricao) {
+                            cnaesDetalhados.push({ codigo: codigo, descricao: cnaeIbge.descricao });
+                            cnaeDictionary.push({ "CNAE": codigo, "DESCRIÇÃO": cnaeIbge.descricao });
+                        }
+                    } else {
+                        cnaesDetalhados.push({ codigo: codigo, descricao: "Descrição não encontrada no IBGE" });
+                    }
+                } catch (e) {
+                    cnaesDetalhados.push({ codigo: codigo, descricao: "Erro ao buscar descrição" });
+                }
+            }
+        }
+
+        // 2. Refaz o cruzamento com as Famílias ATUAIS renderizadas na memória
+        const codigosApenasNumeros = cnaesUnicos.map(c => c.replace(/\D/g, ''));
+        const familiasHabilitadas = familyData.filter(fam => {
+            if (!fam.CNAEs || fam.CNAEs.length === 0) return false;
+            return fam.CNAEs.some(cnaeFam => codigosApenasNumeros.includes(cnaeFam.codigo.replace(/\D/g, '')));
+        });
+
+        // 3. Reconstrói o objeto resultado perfeitamente limpo e atualizado
+        const resultadoAtualizado = {
+            cnpj: item.cnpj,
+            razaoSocial: item.razaoSocial,
+            cnaes: cnaesUnicos,
+            cnaesDetalhados: cnaesDetalhados,
+            familiasHabilitadas: familiasHabilitadas
+        };
+
+        exibirModalResultadoAnalise(resultadoAtualizado);
     }
 };
 
@@ -2405,6 +2729,120 @@ idsEstaticos.forEach(id => {
         observerEstatico.observe(el, { attributes: true, attributeFilter: ['class'] });
     }
 });
+
+window.abrirModalPesquisaManual = () => {
+    document.getElementById('input-cnaes-manuais').value = '';
+    document.getElementById('modal-pesquisa-manual').classList.remove('hidden');
+    setTimeout(() => document.getElementById('input-cnaes-manuais').focus(), 100);
+};
+
+window.processarPesquisaManual = async () => {
+    const rawText = document.getElementById('input-cnaes-manuais').value;
+    
+    // 1. Extrair e formatar CNAEs do texto colado
+    // Pega sequências de 7 números e formata para XXXX-X/XX
+    const matches = rawText.replace(/\D/g, '').match(/.{1,7}/g) || [];
+    if (matches.length === 0) {
+        showError("Atenção", "Nenhum CNAE válido de 7 dígitos encontrado.");
+        return;
+    }
+
+    const cnaesUnicos = [...new Set(matches)].map(val => 
+        val.substring(0, 4) + '-' + val.substring(4, 5) + '/' + val.substring(5, 7)
+    );
+
+    if (typeof showToast === 'function') showToast("Buscando descrições e cruzando dados...", "info");
+    
+    document.getElementById('modal-pesquisa-manual').classList.add('hidden');
+
+    const cnaesDetalhados = [];
+
+    // 2. Buscar Descrição de cada CNAE (Local ou API IBGE)
+    for (const codigo of cnaesUnicos) {
+        // Tenta achar na base local primeiro (já carregada no cnaeDictionary)
+        let cnaeLocal = cnaeDictionary.find(c => c.CNAE === codigo);
+        
+        if (cnaeLocal) {
+            cnaesDetalhados.push({ codigo: cnaeLocal.CNAE, descricao: cnaeLocal.DESCRIÇÃO });
+        } else {
+            // Se não achar, busca no IBGE (reaproveitando sua lógica existente)
+            try {
+                const cleanCode = codigo.replace(/\D/g, '');
+                const response = await fetch(`https://servicodados.ibge.gov.br/api/v2/cnae/subclasses/${cleanCode}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const item = Array.isArray(data) ? data[0] : data;
+                    if (item && item.descricao) {
+                        cnaesDetalhados.push({ codigo: codigo, descricao: item.descricao });
+                        // Alimenta a base local em memória
+                        cnaeDictionary.push({ "CNAE": codigo, "DESCRIÇÃO": item.descricao });
+                    }
+                } else {
+                    cnaesDetalhados.push({ codigo: codigo, descricao: "Descrição não encontrada no IBGE" });
+                }
+            } catch (e) {
+                cnaesDetalhados.push({ codigo: codigo, descricao: "Erro ao buscar descrição" });
+            }
+        }
+    }
+
+    // 3. Cruzar os CNAEs com as Famílias existentes na base
+    const codigosApenasNumeros = cnaesUnicos.map(c => c.replace(/\D/g, ''));
+    
+    const familiasHabilitadas = familyData.filter(fam => {
+        if (!fam.CNAEs || fam.CNAEs.length === 0) return false;
+        
+        // Verifica se algum CNAE da família bate com os CNAEs pesquisados
+        return fam.CNAEs.some(cnaeFam => {
+            const codFamNum = cnaeFam.codigo.replace(/\D/g, '');
+            return codigosApenasNumeros.includes(codFamNum);
+        });
+    });
+
+    // 4. Montar o Objeto de Resultado no formato que seu Modal existente espera
+    const resultadoMock = {
+        cnpj: "N/A",
+        razaoSocial: "Pesquisa de Múltiplos CNAEs",
+        cnaes: cnaesUnicos, // Apenas os códigos
+        cnaesDetalhados: cnaesDetalhados, // Array de objetos {codigo, descricao}
+        familiasHabilitadas: familiasHabilitadas // Famílias que deram match
+    };
+
+    // 5. Exibir o Modal Reaproveitado!
+    exibirModalResultadoAnalise(resultadoMock);
+};
+
+window.processarArquivoCSV = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const conteudoCsv = e.target.result;
+        
+        // Pega o conteúdo atual do textarea
+        const textarea = document.getElementById('input-cnaes-manuais');
+        const conteudoAtual = textarea.value.trim();
+        
+        // Concatena o conteúdo do CSV com o que já estiver no textarea
+        // Isso permite que o usuário cole alguns e faça upload de outros juntos
+        textarea.value = conteudoAtual ? `${conteudoAtual}\n${conteudoCsv}` : conteudoCsv;
+        
+        if (typeof showToast === 'function') {
+            showToast("CSV carregado! Verifique os CNAEs no campo e clique em Analisar.");
+        }
+        
+        // Limpa o input de arquivo para permitir novo upload do mesmo arquivo, se necessário
+        event.target.value = '';
+    };
+
+    reader.onerror = () => {
+        if (typeof showError === 'function') showError("Erro na leitura", "Não foi possível ler o arquivo CSV.");
+    };
+
+    // Lê como texto
+    reader.readAsText(file);
+};
 
 // 2. Observador de Modais Dinâmicos (Vigia APENAS elementos sendo injetados/removidos direto no body)
 const observerDinamico = new MutationObserver(gerenciarRolagemDoFundo);
