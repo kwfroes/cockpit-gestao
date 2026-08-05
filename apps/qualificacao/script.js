@@ -21,6 +21,11 @@ let ramosDictionary = [];
 let descricoesRamos = [];
 let sugestoesCarregadas = [];
 let iaLoteEmAndamento = false;
+let itensFamiliaCodigoAtual = null;
+let itensFamiliaPage = 1;
+let itensFamiliaTermoBusca = '';
+let itensFamiliaDebounceTimer = null;
+const ITENS_FAMILIA_POR_PAGINA = 20;
 
 const grid = document.getElementById('family-grid');
 const searchInput = document.getElementById('search-family');
@@ -1326,6 +1331,10 @@ function exibirModalResultadoAnalise(resultado) {
                 if (!c || !c.codigo) return false;
                 return cnaesPdfNumericos.includes(c.codigo.replace(/\D/g, ''));
             });
+            const cnaesNaoEncontrados = (fam.CNAEs || []).filter(c => {
+                if (!c || !c.codigo) return false;
+                return !cnaesPdfNumericos.includes(c.codigo.replace(/\D/g, ''));
+            });
 
             const todosCnaesString = (fam.CNAEs || []).map(c => c.codigo).join(' ');
             const termoBusca = `${fam['Família']} ${fam['Descrição']} ${todosCnaesString}`.toLowerCase();
@@ -1356,6 +1365,27 @@ function exibirModalResultadoAnalise(resultado) {
                             </div>
                         `).join('')}
                     </div>
+                    ${cnaesNaoEncontrados.length > 0 ? `
+                    <div class="text-[10px] font-bold text-amber-600 dark:text-amber-400 mt-4 mb-2 uppercase tracking-wider flex items-center gap-1">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        Não encontrados neste comprovante:
+                    </div>
+                    <div class="grid grid-cols-1 gap-2">
+                        ${cnaesNaoEncontrados.map(c => `
+                            <div class="bg-amber-50 dark:bg-amber-900/10 p-2.5 rounded border border-amber-100 dark:border-amber-900/40 shadow-sm flex items-center justify-between gap-2">
+                                <div class="flex flex-col min-w-0">
+                                    <span class="text-amber-700 dark:text-amber-400 font-mono font-bold text-xs mb-0.5">${c.codigo}</span>
+                                    <span class="text-slate-600 dark:text-slate-300 text-xs leading-snug">${c.descricao}</span>
+                                </div>
+                                <button type="button" data-familia="${fam['Família']}" data-cnae="${c.codigo}" data-desc="${c.descricao}"
+                                    onclick="event.stopPropagation(); abrirConfirmacaoRemocao(this)"
+                                    class="shrink-0 p-1.5 text-red-500 hover:text-white hover:bg-red-500 bg-red-50 dark:bg-red-900/20 rounded-md transition-colors"
+                                    title="Sugerir remoção deste CNAE da família">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>` : ''}
                 </div>
             </div>`;
         }).join('');
@@ -1553,6 +1583,123 @@ window.toggleCnaeList = (id) => {
     } else {
         list.classList.add('hidden');
         icon.classList.remove('rotate-180'); // Gira a setinha para baixo
+    }
+};
+
+// ==========================================
+// SUGESTÃO DE REMOÇÃO — via análise de comprovante CNPJ
+// (CNAE vinculado à família mas ausente no comprovante do fornecedor)
+// ==========================================
+window.abrirConfirmacaoRemocao = (btn) => {
+    const familiaCodigo = btn.dataset.familia;
+    const cnaeCodigo = btn.dataset.cnae;
+    const cnaeDesc = btn.dataset.desc;
+
+    const modalAntigo = document.getElementById('modal-confirmar-remocao');
+    if (modalAntigo) modalAntigo.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'modal-confirmar-remocao';
+    modal.className = 'fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-[170] flex items-center justify-center p-4 animate-fade-in';
+    modal.innerHTML = `
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md p-6 flex flex-col gap-4 border border-slate-200 dark:border-slate-700 animate-scale-up">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-full flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                </div>
+                <h3 class="text-base font-bold text-slate-800 dark:text-slate-100">Sugerir remoção de CNAE</h3>
+            </div>
+
+            <div class="bg-slate-50 dark:bg-slate-900/50 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between gap-2 mb-1">
+                    <span class="text-blue-600 dark:text-blue-400 font-mono font-bold text-xs">${cnaeCodigo}</span>
+                    <button type="button" onclick="document.getElementById('modal-confirmar-remocao').remove(); reabrirBuscaIbgeDireto('${cnaeCodigo}')"
+                        class="text-[10px] text-indigo-600 dark:text-indigo-400 hover:underline font-bold uppercase tracking-wider flex items-center gap-1 shrink-0">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        Ver no IBGE
+                    </button>
+                </div>
+                <p class="text-xs text-slate-600 dark:text-slate-300">${cnaeDesc}</p>
+                <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-2">Família ${familiaCodigo} — não encontrado no comprovante desta análise.</p>
+            </div>
+
+            <label class="flex items-start gap-2 cursor-pointer">
+                <input type="checkbox" id="check-verificou-cnae" onchange="document.getElementById('btn-confirmar-remocao').disabled = !this.checked"
+                    class="mt-0.5 rounded text-red-600 w-4 h-4 shrink-0">
+                <span class="text-xs text-slate-600 dark:text-slate-300">
+                    Confirmo que verifiquei as especificações deste CNAE (atividades/observações no IBGE) antes de sugerir a remoção.
+                </span>
+            </label>
+
+            <div class="flex justify-end gap-3 pt-2 border-t border-slate-100 dark:border-slate-700">
+                <button type="button" onclick="document.getElementById('modal-confirmar-remocao').remove()"
+                    class="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 text-xs font-bold uppercase rounded-lg transition-colors">
+                    Cancelar
+                </button>
+                <button type="button" id="btn-confirmar-remocao" disabled data-familia="${familiaCodigo}" data-cnae="${cnaeCodigo}" data-desc="${cnaeDesc}"
+                    onclick="confirmarSugestaoRemocao(this)"
+                    class="px-5 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-bold uppercase rounded-lg transition-colors shadow-md">
+                    Confirmar Sugestão de Remoção
+                </button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+};
+
+window.confirmarSugestaoRemocao = async (btn) => {
+    const familiaCodigo = btn.dataset.familia;
+    const cnaeCodigo = btn.dataset.cnae;
+    const cnaeDesc = btn.dataset.desc;
+    const originalHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = 'Enviando...';
+
+    const currentUser = sessionStorage.getItem("cockpit_user_realname") || "Usuário do Sistema";
+
+    try {
+        // Mesma lógica de dedup/incremento que vincularCnaesEmLote já usa pra adição
+        const { data: existente } = await supabase
+            .from('sugestoes_cnae_familia')
+            .select('*')
+            .eq('familia_codigo', familiaCodigo)
+            .eq('cnae_codigo', cnaeCodigo)
+            .eq('acao', 'remover')
+            .eq('status', 'pendente')
+            .maybeSingle();
+
+        if (existente) {
+            let usuariosArr = existente.usuarios_sugeriram.split(', ');
+            if (!usuariosArr.includes(currentUser)) usuariosArr.push(currentUser);
+            const { error } = await supabase.from('sugestoes_cnae_familia').update({
+                quantidade: existente.quantidade + 1,
+                usuarios_sugeriram: usuariosArr.join(', '),
+                updated_at: new Date().toISOString()
+            }).eq('id', existente.id);
+            if (error) throw error;
+        } else {
+            const { error } = await supabase.from('sugestoes_cnae_familia').insert([{
+                familia_codigo: familiaCodigo,
+                cnae_codigo: cnaeCodigo,
+                cnae_descricao: cnaeDesc,
+                quantidade: 1,
+                usuarios_sugeriram: currentUser,
+                status: 'pendente',
+                origem: 'usuario',
+                acao: 'remover',
+                motivo: `Analista verificou as especificações do CNAE e sugeriu remoção via análise de comprovante CNPJ (CNAE não encontrado no documento).`,
+            }]);
+            if (error) throw error;
+        }
+
+        if (typeof showToast === 'function') showToast('Sugestão de remoção enviada para análise!');
+        document.getElementById('modal-confirmar-remocao').remove();
+        if (typeof carregarContadorSugestoes === 'function') carregarContadorSugestoes();
+    } catch (err) {
+        console.error(err);
+        if (typeof showError === 'function') showError('Erro', 'Falha ao enviar sugestão de remoção.');
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
     }
 };
 
@@ -2090,26 +2237,6 @@ window.vincularCnaesEmLote = async () => {
 // LÓGICA DO PAINEL DE VALIDAÇÃO (ADMIN)
 // ==========================================
 
-window.carregarContadorSugestoes = async () => {
-    // Só roda se for admin
-    if (sessionStorage.getItem("cockpit_user_role") !== "admin") return;
-
-    const badge = document.getElementById('badge-sugestoes');
-    if (!badge) return;
-
-    const { count, error } = await supabase
-        .from('sugestoes_cnae_familia')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'pendente');
-
-    if (!error && count > 0) {
-        badge.innerText = count;
-        badge.classList.remove('hidden');
-    } else {
-        badge.classList.add('hidden');
-    }
-};
-
 window.abrirModalSugestoesAdmin = async () => {
     document.getElementById('modal-validar-sugestoes').classList.remove('hidden');
     const container = document.getElementById('lista-sugestoes-admin');
@@ -2172,10 +2299,22 @@ container.innerHTML = sugestoes.map(sug => {
                     <span class="bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider shadow-sm">
                         Família ${sug.familia_codigo}
                     </span>
+                    ${sug.acao === 'remover' ? `
+                    <span class="bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-sm border border-red-200 dark:border-red-800">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        REMOÇÃO
+                    </span>` : ''}
                     <span class="bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-sm">
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                         ${sug.quantidade} ${sug.quantidade > 1 ? 'Sugestões' : 'Sugestão'}
                     </span>
+                    <button type="button" onclick="event.stopPropagation(); abrirModalItensFamilia('${sug.familia_codigo}')"
+                        class="p-1.5 text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-md transition-colors shrink-0"
+                        title="Ver itens de compra desta família">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </button>
                     ${(sug.gemini_score === null || sug.gemini_score === undefined) ? `
                     <button type="button" id="btn-ia-${sug.id}" data-id="${sug.id}"
                         onclick="analisarUmaSugestao(this)"
@@ -2215,9 +2354,9 @@ container.innerHTML = sugestoes.map(sug => {
                 <button onclick="processarSugestao('${sug.id}', 'rejeitar')" class="p-2 text-red-500 bg-red-50 hover:bg-red-500 hover:text-white dark:bg-red-900/20 dark:hover:bg-red-600 rounded-lg transition-colors border border-red-100 dark:border-red-800" title="Rejeitar">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
-                <button onclick="processarSugestao('${sug.id}', 'aprovar', '${sug.familia_codigo}', '${sug.cnae_codigo}', '${sug.cnae_descricao}')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider rounded-lg transition-colors shadow-md flex items-center gap-2">
+                <button onclick="processarSugestao('${sug.id}', 'aprovar', '${sug.familia_codigo}', '${sug.cnae_codigo}', '${sug.cnae_descricao}', '${sug.acao || 'adicionar'}')" class="px-4 py-2 ${sug.acao === 'remover' ? 'bg-red-600 hover:bg-red-700' : 'bg-emerald-600 hover:bg-emerald-700'} text-white text-xs font-bold uppercase tracking-wider rounded-lg transition-colors shadow-md flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                    Aprovar
+                    ${sug.acao === 'remover' ? 'Aprovar Remoção' : 'Aprovar'}
                 </button>
             </div>
         </div>
@@ -2231,10 +2370,9 @@ window.fecharModalSugestoesAdmin = () => {
 };
 
 // ==========================================
-// ANÁLISE DE IA EM LOTE (clicar em 1 analisa até 8, respeitando RPM)
+// ANÁLISE DE IA EM LOTE (clicar em 1 analisa até 20, numa única requisição)
 // ==========================================
-const TAMANHO_LOTE_IA = 8;
-const CONCORRENCIA_LOTE_IA = 3;
+const TAMANHO_LOTE_IA = 20;  // 1 chamada à Edge Function pra esse tanto — não gasta RPM extra
 const SVG_SPINNER_IA = `<svg class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
 const SVG_RAIO_IA = `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>`;
 
@@ -2255,38 +2393,189 @@ window.analisarUmaSugestao = async (btn) => {
             ...semAnalise.filter(s => s.id !== idClicado),
         ].filter(Boolean).slice(0, TAMANHO_LOTE_IA);
 
-        if (typeof showToast === 'function') showToast(`Analisando ${lote.length} sugestões com IA...`);
+        if (typeof showToast === 'function') showToast(`Analisando ${lote.length} sugestões com IA (1 requisição)...`);
 
         lote.forEach(s => {
             const b = document.getElementById(`btn-ia-${s.id}`);
             if (b) { b.disabled = true; b.innerHTML = `${SVG_SPINNER_IA} IA`; }
         });
 
-        let sucesso = 0;
-        const processarUm = async (sug) => {
-            const b = document.getElementById(`btn-ia-${sug.id}`);
-            try {
-                const fam = familyData.find(f => f.Família.toString() === sug.familia_codigo);
-                const descFamilia = fam ? fam.Descrição : '';
-                const resultado = await window.analisarSugestaoIndividual(sug.id, descFamilia, sug.cnae_descricao);
-                inserirBadgeIA(sug.id, resultado.score, resultado.justificativa);
-                sug.gemini_score = resultado.score;
-                if (b) b.remove();
-                sucesso++;
-            } catch (err) {
-                console.error('Falha ao analisar sugestão', sug.id, err);
-                if (b) { b.disabled = false; b.innerHTML = `${SVG_RAIO_IA} IA`; }
-            }
-        };
+        const itens = lote.map(sug => {
+            const fam = familyData.find(f => f.Família.toString() === sug.familia_codigo);
+            return { id: sug.id, familia: fam ? fam.Descrição : '', cnae: sug.cnae_descricao };
+        });
 
-        for (let i = 0; i < lote.length; i += CONCORRENCIA_LOTE_IA) {
-            await Promise.all(lote.slice(i, i + CONCORRENCIA_LOTE_IA).map(processarUm));
+        let sucesso = 0;
+        try {
+            const resultados = await window.analisarLoteSugestoes(itens);
+            const porId = new Map(resultados.map(r => [String(r.id), r]));
+
+            lote.forEach(sug => {
+                const b = document.getElementById(`btn-ia-${sug.id}`);
+                const r = porId.get(String(sug.id));
+                if (r && r.score !== null && r.score !== undefined) {
+                    inserirBadgeIA(sug.id, r.score, r.justificativa);
+                    sug.gemini_score = r.score;
+                    if (b) b.remove();
+                    sucesso++;
+                } else if (b) {
+                    b.disabled = false;
+                    b.innerHTML = `${SVG_RAIO_IA} IA`;
+                }
+            });
+        } catch (err) {
+            console.error('Falha no lote de IA:', err);
+            lote.forEach(sug => {
+                const b = document.getElementById(`btn-ia-${sug.id}`);
+                if (b) { b.disabled = false; b.innerHTML = `${SVG_RAIO_IA} IA`; }
+            });
+            if (typeof showError === 'function') showError('Erro na IA', err.message || 'Falha ao analisar o lote. Tente novamente.');
         }
 
         if (typeof showToast === 'function') showToast(`IA concluiu ${sucesso} de ${lote.length} sugestões.`);
     } finally {
         iaLoteEmAndamento = false;
     }
+};
+
+// Busca o arquivo de itens só na primeira vez
+
+window.abrirModalItensFamilia = async (codigoFamilia) => {
+    let modal = document.getElementById('modal-itens-familia');
+    if (modal) modal.remove();
+
+    const familiaInfo = familyData.find(f => f.Família.toString() === codigoFamilia);
+    const descFamilia = familiaInfo ? familiaInfo.Descrição : '';
+
+    modal = document.createElement('div');
+    modal.id = 'modal-itens-familia';
+    modal.className = 'fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-[160] flex items-center justify-center p-4 animate-fade-in';
+    modal.innerHTML = `
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-lg max-h-[85vh] flex flex-col overflow-hidden animate-scale-up border border-slate-200 dark:border-slate-700">
+            <div class="flex justify-between items-center p-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 shrink-0">
+                <div>
+                    <div class="inline-block px-2 py-0.5 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 font-mono font-bold text-xs rounded mb-1">
+                        Família ${codigoFamilia}
+                    </div>
+                    <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">${descFamilia}</h3>
+                </div>
+                <button onclick="document.getElementById('modal-itens-familia').remove()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors shrink-0">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="p-4 flex flex-col gap-3 flex-1 overflow-hidden">
+                <input type="text" id="itens-familia-busca" oninput="filtrarItensFamilia(this.value)"
+                    placeholder="Buscar item por código ou descrição..."
+                    class="w-full px-3 py-2 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none text-slate-700 dark:text-slate-300 shrink-0">
+                <p id="itens-familia-contador" class="text-[10px] text-slate-400 dark:text-slate-500 shrink-0"></p>
+                <div id="itens-familia-lista" class="flex flex-col gap-1.5 overflow-y-auto flex-1">
+                    <p class="text-center text-sm text-slate-500 dark:text-slate-400 py-8 animate-pulse">Carregando itens...</p>
+                </div>
+                <div id="itens-familia-paginacao" class="hidden items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-700 shrink-0">
+                    <button type="button" onclick="mudarPaginaItensFamilia(-1)"
+                        class="px-3 py-1.5 text-xs font-bold uppercase rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
+                        Anterior
+                    </button>
+                    <span id="itens-familia-pagina-label" class="text-[10px] text-slate-400 dark:text-slate-500"></span>
+                    <button type="button" onclick="mudarPaginaItensFamilia(1)"
+                        class="px-3 py-1.5 text-xs font-bold uppercase rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
+                        Próxima
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    itensFamiliaCodigoAtual = codigoFamilia;
+    itensFamiliaPage = 1;
+    itensFamiliaTermoBusca = '';
+    await renderItensFamiliaLista();
+};
+
+// Só troca a lista + paginação — o input de busca nunca é recriado, então não perde foco ao digitar
+async function renderItensFamiliaLista() {
+    const lista = document.getElementById('itens-familia-lista');
+    const contador = document.getElementById('itens-familia-contador');
+    const paginacao = document.getElementById('itens-familia-paginacao');
+    const paginaLabel = document.getElementById('itens-familia-pagina-label');
+    if (!lista) return;
+
+    lista.innerHTML = `<p class="text-center text-sm text-slate-500 dark:text-slate-400 py-8 animate-pulse">Carregando...</p>`;
+
+    const inicio = (itensFamiliaPage - 1) * ITENS_FAMILIA_POR_PAGINA;
+    const fim = inicio + ITENS_FAMILIA_POR_PAGINA - 1;
+
+    let query = supabase
+        .from('itens_por_familia')
+        .select('item_codigo, descricao', { count: 'exact' })
+        .eq('familia_codigo', itensFamiliaCodigoAtual);
+
+    // remove caracteres que quebrariam a sintaxe de filtro do PostgREST
+    const termoLimpo = itensFamiliaTermoBusca.trim().replace(/[,()%]/g, '');
+    if (termoLimpo) {
+        query = query.or(`descricao.ilike.%${termoLimpo}%,item_codigo.ilike.%${termoLimpo}%`);
+    }
+
+    const { data, count, error } = await query
+        .order('item_codigo', { ascending: true })
+        .range(inicio, fim);
+
+    if (error) {
+        console.error(error);
+        lista.innerHTML = `<p class="text-center text-sm text-red-500 py-8">Erro ao buscar itens desta família.</p>`;
+        return;
+    }
+
+    const total = count || 0;
+    const totalPaginas = Math.ceil(total / ITENS_FAMILIA_POR_PAGINA) || 1;
+    if (itensFamiliaPage > totalPaginas) itensFamiliaPage = totalPaginas;
+
+    if (contador) {
+        contador.textContent = itensFamiliaTermoBusca
+            ? `${total} resultado${total === 1 ? '' : 's'} para essa busca`
+            : `${total} item${total === 1 ? '' : 's'} cadastrado${total === 1 ? '' : 's'}`;
+    }
+
+    lista.innerHTML = (data && data.length > 0)
+        ? data.map(({ item_codigo, descricao }) => `
+            <div class="p-2.5 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-700 text-xs">
+                <div class="font-mono text-[10px] text-slate-400 dark:text-slate-500 mb-0.5">${item_codigo}</div>
+                <div class="text-slate-700 dark:text-slate-300 leading-snug">${descricao}</div>
+            </div>`).join('')
+        : `<p class="text-center text-sm text-slate-400 dark:text-slate-500 italic py-8">
+            ${total === 0 && !itensFamiliaTermoBusca ? 'Nenhum item cadastrado para esta família.' : 'Nenhum resultado encontrado para essa busca.'}
+           </p>`;
+
+    if (paginacao) {
+        if (totalPaginas > 1) {
+            paginacao.classList.remove('hidden');
+            paginacao.classList.add('flex');
+            const btns = paginacao.querySelectorAll('button');
+            btns[0].disabled = itensFamiliaPage === 1;
+            btns[1].disabled = itensFamiliaPage === totalPaginas;
+            if (paginaLabel) paginaLabel.textContent = `Página ${itensFamiliaPage} de ${totalPaginas}`;
+        } else {
+            paginacao.classList.add('hidden');
+            paginacao.classList.remove('flex');
+        }
+    }
+}
+
+// Debounce de 300ms — antes filtrava a cada tecla (era grátis, tudo em memória);
+// agora cada busca é uma consulta ao banco, então espera parar de digitar.
+window.filtrarItensFamilia = (valor) => {
+    clearTimeout(itensFamiliaDebounceTimer);
+    itensFamiliaDebounceTimer = setTimeout(() => {
+        itensFamiliaTermoBusca = valor;
+        itensFamiliaPage = 1;
+        renderItensFamiliaLista();
+    }, 300);
+};
+
+window.mudarPaginaItensFamilia = (delta) => {
+    itensFamiliaPage += delta;
+    renderItensFamiliaLista();
 };
 
 // Insere a badge de score no card já renderizado, sem recarregar a lista inteira
@@ -2312,12 +2601,12 @@ function inserirBadgeIA(id, score, justificativa) {
     if (coluna) coluna.insertAdjacentHTML('beforeend', badgeHtml);
 }
 
-window.processarSugestao = async (id, acao, codFamilia = null, codCnae = null, descCnae = null) => {
+window.processarSugestao = async (id, decisao, codFamilia = null, codCnae = null, descCnae = null, tipoAcao = 'adicionar') => {
     const card = document.getElementById(`sugestao-${id}`);
     if (card) card.style.opacity = '0.5';
 
     try {
-        if (acao === 'aprovar') {
+        if (decisao === 'aprovar') {
             // 1. Pega a família atual no array em memória
             const indexFamilia = familyData.findIndex(f => f.Família.toString() === codFamilia);
             
@@ -2325,10 +2614,16 @@ window.processarSugestao = async (id, acao, codFamilia = null, codCnae = null, d
                 let familiaInfo = familyData[indexFamilia];
                 if (!familiaInfo.CNAEs) familiaInfo.CNAEs = [];
 
-                // Se o CNAE ainda não existe nesta família, insere
-                if (!familiaInfo.CNAEs.some(c => c.codigo === codCnae)) {
-                    familiaInfo.CNAEs.push({ codigo: codCnae, descricao: descCnae });
-                    
+                const cnaeJaExiste = familiaInfo.CNAEs.some(c => c.codigo === codCnae);
+                const precisaSalvar = tipoAcao === 'remover' ? cnaeJaExiste : !cnaeJaExiste;
+
+                if (precisaSalvar) {
+                    if (tipoAcao === 'remover') {
+                        familiaInfo.CNAEs = familiaInfo.CNAEs.filter(c => c.codigo !== codCnae);
+                    } else {
+                        familiaInfo.CNAEs.push({ codigo: codCnae, descricao: descCnae });
+                    }
+
                     // 2. Atualiza no Supabase (Tabela Qualificacao)
                     const payloadSupa = {
                         familia: familiaInfo["Família"],
@@ -2343,8 +2638,8 @@ window.processarSugestao = async (id, acao, codFamilia = null, codCnae = null, d
                     const { error: updError } = await supabase.from('qualificacao_tecnica').upsert([payloadSupa]);
                     if (updError) throw updError;
 
-                    // Atualiza dicionário de CNAE global se necessário
-                    if (!cnaeDictionary.some(c => c.CNAE === codCnae)) {
+                    // Atualiza dicionário de CNAE global se necessário (só faz sentido pra adição)
+                    if (tipoAcao !== 'remover' && !cnaeDictionary.some(c => c.CNAE === codCnae)) {
                         cnaeDictionary.push({ "CNAE": codCnae, "DESCRIÇÃO": descCnae });
                     }
                 }
@@ -2356,7 +2651,7 @@ window.processarSugestao = async (id, acao, codFamilia = null, codCnae = null, d
         }
 
         // 3. Atualiza o status da sugestão
-        const novoStatus = acao === 'aprovar' ? 'aprovado' : 'rejeitado';
+        const novoStatus = decisao === 'aprovar' ? 'aprovado' : 'rejeitado';
         await supabase.from('sugestoes_cnae_familia').update({ status: novoStatus }).eq('id', id);
 
         // Remove o card da UI e mostra aviso
@@ -2625,6 +2920,62 @@ window.buscarCnaeIbge = async () => {
     }
 };
 
+// Remove acento e baixa a caixa — usado na busca de Atividades Relacionadas do IBGE
+function normalizarTexto(t) {
+    return (t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
+// Separa o texto de "observacoes" da API em 3 blocos: compreende / compreende ainda / não compreende
+function parseObservacoesIbge(observacoes) {
+    const vazio = { compreende: [], compreendeAinda: [], naoCompreende: [] };
+    if (!observacoes || observacoes.length === 0) return vazio;
+
+    const textoCompleto = observacoes.join(' ');
+    const regexCabecalhos = /Esta subclasse (compreende ainda|n[aã]o compreende|compreende)/gi;
+    const blocos = [];
+    let match;
+    let ultimaPos = null;
+    let ultimoTipo = null;
+
+    while ((match = regexCabecalhos.exec(textoCompleto)) !== null) {
+        if (ultimaPos !== null) {
+            blocos.push({ tipo: ultimoTipo, texto: textoCompleto.slice(ultimaPos, match.index) });
+        }
+        const cap = match[1].toLowerCase();
+        ultimoTipo = cap.includes('ainda') ? 'compreendeAinda' : (cap.includes('ao') || cap.includes('ão')) ? 'naoCompreende' : 'compreende';
+        ultimaPos = match.index + match[0].length;
+    }
+    if (ultimaPos !== null) {
+        blocos.push({ tipo: ultimoTipo, texto: textoCompleto.slice(ultimaPos) });
+    }
+
+    const resultado = { compreende: [], compreendeAinda: [], naoCompreende: [] };
+    blocos.forEach(b => {
+        const itens = b.texto.split(/\s-\s/).map(s => s.trim()).filter(Boolean);
+        resultado[b.tipo].push(...itens);
+    });
+    return resultado;
+}
+
+// Monta um bloco colorido (título + lista) — usado 3x, uma por categoria
+function renderBlocoObservacoes(escapeHtml, titulo, itens, corTitulo) {
+    if (!itens || itens.length === 0) return '';
+    return `
+    <div class="mb-3">
+        <p class="text-[10px] font-black uppercase tracking-widest mb-1.5 ${corTitulo}">${titulo}</p>
+        <ul class="list-disc pl-5 text-xs text-slate-700 dark:text-slate-300 space-y-1">
+            ${itens.map(txt => `<li data-search="${normalizarTexto(txt)}">${linkificarCnaesNoTexto(escapeHtml(txt))}</li>`).join('')}
+        </ul>
+    </div>`;
+}
+
+function linkificarCnaesNoTexto(textoEscapado) {
+    return textoEscapado.replace(/\((\d{4}-\d\/\d{2})\)/g, (match, codigo) => {
+        return `(<a href="javascript:void(0)" onclick="event.stopPropagation(); reabrirBuscaIbgeDireto('${codigo}')"
+            class="text-indigo-600 dark:text-indigo-400 underline decoration-dotted hover:text-indigo-800 dark:hover:text-indigo-300 font-mono font-semibold">${codigo}</a>)`;
+    });
+}
+
 function renderResultadoIbge(item, container) {
     const escapeHtml = (str) => {
         const div = document.createElement('div');
@@ -2637,14 +2988,48 @@ function renderResultadoIbge(item, container) {
     const divisao = grupo.divisao || {};
     const secao = divisao.secao || {};
 
+const temAtividades = item.atividades && item.atividades.length > 0;
+    const temObservacoes = item.observacoes && item.observacoes.length > 0;
+
     let atividadesHtml = '';
-    if (item.atividades && item.atividades.length > 0) {
+    if (temAtividades || temObservacoes) {
         atividadesHtml = `
         <div class="mt-4 pt-4 border-t dark:border-slate-700">
-            <h4 class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Atividades Relacionadas</h4>
-            <ul class="list-disc pl-5 text-xs text-slate-700 dark:text-slate-300 space-y-1">
-                ${item.atividades.map(a => `<li>${escapeHtml(a)}</li>`).join('')}
+            <div class="flex items-center gap-1 mb-3 border-b border-slate-200 dark:border-slate-700">
+                <button type="button" id="aba-ibge-atividades" onclick="trocarAbaIbge('atividades')"
+                    class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border-b-2 border-indigo-500 text-indigo-600 dark:text-indigo-400 transition-colors">
+                    Atividades (${(item.atividades || []).length})
+                </button>
+                <button type="button" id="aba-ibge-observacoes" onclick="trocarAbaIbge('observacoes')"
+                    class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border-b-2 border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">
+                    Observações (${(item.observacoes || []).length})
+                </button>
+            </div>
+            <input type="text" id="ibge-atividades-busca" oninput="filtrarAtividadesIbge(this)"
+                placeholder="Buscar..."
+                class="w-full mb-2 px-3 py-1.5 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-700 dark:text-slate-300">
+            <p id="ibge-atividades-contador" class="text-[10px] text-slate-400 dark:text-slate-500 mb-1"></p>
+
+            <ul id="ibge-lista-atividades" class="list-disc pl-5 text-xs text-slate-700 dark:text-slate-300 space-y-1">
+                ${(item.atividades || []).map(a => `<li data-search="${normalizarTexto(a)}">${linkificarCnaesNoTexto(escapeHtml(a))}</li>`).join('')}
             </ul>
+            <div id="ibge-lista-observacoes" class="hidden">
+                ${(() => {
+                    const partes = parseObservacoesIbge(item.observacoes);
+                    const temEstruturado = partes.compreende.length || partes.compreendeAinda.length || partes.naoCompreende.length;
+                    if (temEstruturado) {
+                        return renderBlocoObservacoes(escapeHtml, 'Compreende', partes.compreende, 'text-emerald-600 dark:text-emerald-400')
+                             + renderBlocoObservacoes(escapeHtml, 'Compreende Ainda', partes.compreendeAinda, 'text-blue-600 dark:text-blue-400')
+                             + renderBlocoObservacoes(escapeHtml, 'Não Compreende', partes.naoCompreende, 'text-red-600 dark:text-red-400');
+                    }
+                    // Modo de segurança: se o texto não seguir o padrão esperado, mostra bruto em vez de sumir com a informação
+                    return `<ul class="list-disc pl-5 text-xs text-slate-700 dark:text-slate-300 space-y-1">
+                        ${(item.observacoes || []).map(o => `<li data-search="${normalizarTexto(o)}">${linkificarCnaesNoTexto(escapeHtml(o))}</li>`).join('')}
+                    </ul>`;
+                })()}
+            </div>
+
+            <p id="ibge-atividades-vazio" class="hidden text-xs text-slate-400 dark:text-slate-500 italic py-2"></p>
         </div>`;
     }
 
@@ -2663,6 +3048,61 @@ function renderResultadoIbge(item, container) {
         </div>
         ${atividadesHtml}
     </div>`;
+};
+
+// Troca entre as abas "Atividades" e "Observações" dentro do modal do IBGE
+window.trocarAbaIbge = (aba) => {
+    const mapa = { atividades: 'ibge-lista-atividades', observacoes: 'ibge-lista-observacoes' };
+    Object.entries(mapa).forEach(([nome, listaId]) => {
+        const lista = document.getElementById(listaId);
+        const botao = document.getElementById(`aba-ibge-${nome}`);
+        if (!lista || !botao) return;
+        const ativo = nome === aba;
+        lista.classList.toggle('hidden', !ativo);
+        botao.classList.toggle('border-indigo-500', ativo);
+        botao.classList.toggle('text-indigo-600', ativo);
+        botao.classList.toggle('dark:text-indigo-400', ativo);
+        botao.classList.toggle('border-transparent', !ativo);
+        botao.classList.toggle('text-slate-400', !ativo);
+        botao.classList.toggle('dark:text-slate-500', !ativo);
+    });
+    const input = document.getElementById('ibge-atividades-busca');
+    if (input) filtrarAtividadesIbge(input);
+};
+
+// Filtra a lista da aba ativa (Atividades ou Observações) dentro do modal do IBGE
+window.filtrarAtividadesIbge = (input) => {
+    const termo = normalizarTexto(input.value.trim());
+    const listaAtiva = document.querySelector('#ibge-lista-atividades:not(.hidden), #ibge-lista-observacoes:not(.hidden)');
+    const contador = document.getElementById('ibge-atividades-contador');
+    const vazio = document.getElementById('ibge-atividades-vazio');
+    if (!listaAtiva) return;
+
+    const rotulo = listaAtiva.id === 'ibge-lista-observacoes' ? 'observações' : 'atividades';
+    const rotuloSingular = listaAtiva.id === 'ibge-lista-observacoes' ? 'observação' : 'atividade';
+    const itens = listaAtiva.querySelectorAll('li');
+    let visiveis = 0;
+
+    itens.forEach(li => {
+        const bateu = li.getAttribute('data-search').includes(termo);
+        li.style.display = bateu ? '' : 'none';
+        if (bateu) visiveis++;
+    });
+
+    if (contador) {
+        contador.textContent = termo ? `${visiveis} de ${itens.length} ${rotulo}` : '';
+    }
+    if (vazio) {
+        if (itens.length === 0) {
+            vazio.textContent = `Nenhuma ${rotuloSingular} cadastrada para esta subclasse.`;
+            vazio.classList.remove('hidden');
+        } else if (visiveis === 0) {
+            vazio.textContent = `Nenhum resultado encontrado para essa busca.`;
+            vazio.classList.remove('hidden');
+        } else {
+            vazio.classList.add('hidden');
+        }
+    }
 };
 
 // Função para abrir os detalhes do CNAE diretamente a partir de um código pronto
@@ -2695,7 +3135,10 @@ const gerenciarRolagemDoFundo = () => {
     const modaisDinamicos = [
         'modal-analise-cnpj', 
         'modal-pre-analise', 
-        'modal-vinculo-cnaes'
+        'modal-vinculo-cnaes',
+        'modal-pesquisa-manual',
+        'modal-itens-familia',
+        'modal-confirmar-remocao'
     ];
 
     // Verifica se tem algum modal estático aberto (sem a classe hidden)
