@@ -2660,10 +2660,10 @@ window.processarSugestao = async (id, decisao, codFamilia = null, codCnae = null
             card.style.opacity = '0';
             setTimeout(() => card.remove(), 300);
         }
-        showToast(acao === 'aprovar' ? "Sugestão aprovada e vínculo realizado!" : "Sugestão rejeitada.");
+        showToast(decisao === 'aprovar' ? "Sugestão aprovada e vínculo realizado!" : "Sugestão rejeitada.");
         
         // Atualiza a grid no fundo
-        if (acao === 'aprovar') {
+        if (decisao === 'aprovar') {
             applyFilters(false);
             enviarStatsParaHome();
         }
