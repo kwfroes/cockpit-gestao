@@ -65,8 +65,10 @@ function applyFamilyRoleRestrictions() {
 applyFamilyRoleRestrictions(); // Executa imediatamente
 
 
-// [...] (Mantenha o restante do seu código intacto até chegar na função abaixo)
 
+function normalizarCodigoCnae(codigo) {
+    return (codigo || '').replace(/\D/g, '');
+}
 
 // ==========================================
 // LÓGICA DO PAINEL DE VALIDAÇÃO (ADMIN / GESTOR CGCF)
@@ -674,7 +676,7 @@ document.getElementById('family-form').onsubmit = async (e) => {
                 if (familiaAlvo && familiaAlvo.Família !== codigoFamilia) {
                     if (!familiaAlvo.CNAEs) familiaAlvo.CNAEs = [];
                     cnaes.forEach(novoCnae => {
-                        if (!familiaAlvo.CNAEs.some(ex => ex.codigo === novoCnae.codigo)) {
+                        if (!familiaAlvo.CNAEs.some(ex => normalizarCodigoCnae(ex.codigo) === normalizarCodigoCnae(novoCnae.codigo))) {
                             familiaAlvo.CNAEs.push(novoCnae);
                         }
                     });
@@ -2614,12 +2616,12 @@ window.processarSugestao = async (id, decisao, codFamilia = null, codCnae = null
                 let familiaInfo = familyData[indexFamilia];
                 if (!familiaInfo.CNAEs) familiaInfo.CNAEs = [];
 
-                const cnaeJaExiste = familiaInfo.CNAEs.some(c => c.codigo === codCnae);
+                const cnaeJaExiste = familiaInfo.CNAEs.some(c => normalizarCodigoCnae(c.codigo) === normalizarCodigoCnae(codCnae));
                 const precisaSalvar = tipoAcao === 'remover' ? cnaeJaExiste : !cnaeJaExiste;
 
                 if (precisaSalvar) {
                     if (tipoAcao === 'remover') {
-                        familiaInfo.CNAEs = familiaInfo.CNAEs.filter(c => c.codigo !== codCnae);
+                        familiaInfo.CNAEs = familiaInfo.CNAEs.filter(c => normalizarCodigoCnae(c.codigo) !== normalizarCodigoCnae(codCnae));
                     } else {
                         familiaInfo.CNAEs.push({ codigo: codCnae, descricao: descCnae });
                     }
@@ -2986,18 +2988,16 @@ function renderResultadoIbge(item, container) {
         div.textContent = str;
         return div.innerHTML;
     };
-
     const classe = item.classe || {};
     const grupo = classe.grupo || {};
     const divisao = grupo.divisao || {};
     const secao = divisao.secao || {};
 
-const temAtividades = item.atividades && item.atividades.length > 0;
-    const temObservacoes = item.observacoes && item.observacoes.length > 0;
+    const familiasVinculadas = familyData.filter(f =>
+        (f.CNAEs || []).some(c => normalizarCodigoCnae(c.codigo) === normalizarCodigoCnae(item.id))
+    );
 
-    let atividadesHtml = '';
-    if (temAtividades || temObservacoes) {
-        atividadesHtml = `
+    const abasHtml = `
         <div class="mt-4 pt-4 border-t dark:border-slate-700">
             <div class="flex items-center gap-1 mb-3 border-b border-slate-200 dark:border-slate-700">
                 <button type="button" id="aba-ibge-atividades" onclick="trocarAbaIbge('atividades')"
@@ -3008,6 +3008,10 @@ const temAtividades = item.atividades && item.atividades.length > 0;
                     class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border-b-2 border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">
                     Observações (${(item.observacoes || []).length})
                 </button>
+                <button type="button" id="aba-ibge-familias" onclick="trocarAbaIbge('familias')"
+                    class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border-b-2 border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">
+                    Famílias (${familiasVinculadas.length})
+                </button>
             </div>
             <input type="text" id="ibge-atividades-busca" oninput="filtrarAtividadesIbge(this)"
                 placeholder="Buscar..."
@@ -3017,6 +3021,7 @@ const temAtividades = item.atividades && item.atividades.length > 0;
             <ul id="ibge-lista-atividades" class="list-disc pl-5 text-xs text-slate-700 dark:text-slate-300 space-y-1">
                 ${(item.atividades || []).map(a => `<li data-search="${normalizarTexto(a)}">${linkificarCnaesNoTexto(escapeHtml(a))}</li>`).join('')}
             </ul>
+
             <div id="ibge-lista-observacoes" class="hidden">
                 ${(() => {
                     const partes = parseObservacoesIbge(item.observacoes);
@@ -3027,16 +3032,22 @@ const temAtividades = item.atividades && item.atividades.length > 0;
                              + renderBlocoObservacoes(escapeHtml, 'Não Compreende', partes.naoCompreende, 'text-red-600 dark:text-red-400')
                              + renderBlocoObservacoes(escapeHtml, 'Notas Complementares', partes.notasComplementares, 'text-slate-500 dark:text-slate-400');
                     }
-                    // Modo de segurança: se o texto não seguir o padrão esperado, mostra bruto em vez de sumir com a informação
                     return `<ul class="list-disc pl-5 text-xs text-slate-700 dark:text-slate-300 space-y-1">
                         ${(item.observacoes || []).map(o => `<li data-search="${normalizarTexto(o)}">${linkificarCnaesNoTexto(escapeHtml(o))}</li>`).join('')}
                     </ul>`;
                 })()}
             </div>
 
+            <ul id="ibge-lista-familias" class="hidden space-y-1.5">
+                ${familiasVinculadas.map(f => `
+                    <li data-search="${normalizarTexto(f.Família + ' ' + f.Descrição)}" class="bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 px-3 py-2 rounded-lg border border-emerald-200 dark:border-emerald-800 text-xs">
+                        <span class="font-mono font-bold">${f.Família}</span> — ${escapeHtml(f.Descrição)}
+                    </li>
+                `).join('')}
+            </ul>
+
             <p id="ibge-atividades-vazio" class="hidden text-xs text-slate-400 dark:text-slate-500 italic py-2"></p>
         </div>`;
-    }
 
     container.innerHTML = `
     <div class="bg-slate-50 dark:bg-slate-800/50 border dark:border-slate-700 rounded-xl p-5 shadow-sm animate-fade-in">
@@ -3051,13 +3062,13 @@ const temAtividades = item.atividades && item.atividades.length > 0;
             <p><strong class="text-slate-800 dark:text-slate-200 uppercase text-[10px] tracking-widest">Divisão:</strong> ${escapeHtml(divisao.id || '-')} — ${escapeHtml(divisao.descricao || '-')}</p>
             <p><strong class="text-slate-800 dark:text-slate-200 uppercase text-[10px] tracking-widest">Seção:</strong> ${escapeHtml(secao.id || '-')} — ${escapeHtml(secao.descricao || '-')}</p>
         </div>
-        ${atividadesHtml}
+        ${abasHtml}
     </div>`;
 };
 
 // Troca entre as abas "Atividades" e "Observações" dentro do modal do IBGE
 window.trocarAbaIbge = (aba) => {
-    const mapa = { atividades: 'ibge-lista-atividades', observacoes: 'ibge-lista-observacoes' };
+    const mapa = { atividades: 'ibge-lista-atividades', observacoes: 'ibge-lista-observacoes', familias: 'ibge-lista-familias' };
     Object.entries(mapa).forEach(([nome, listaId]) => {
         const lista = document.getElementById(listaId);
         const botao = document.getElementById(`aba-ibge-${nome}`);
@@ -3078,16 +3089,25 @@ window.trocarAbaIbge = (aba) => {
 // Filtra a lista da aba ativa (Atividades ou Observações) dentro do modal do IBGE
 window.filtrarAtividadesIbge = (input) => {
     const termo = normalizarTexto(input.value.trim());
-    const listaAtiva = document.querySelector('#ibge-lista-atividades:not(.hidden), #ibge-lista-observacoes:not(.hidden)');
+    const listaAtiva = document.querySelector('#ibge-lista-atividades:not(.hidden), #ibge-lista-observacoes:not(.hidden), #ibge-lista-familias:not(.hidden)');
     const contador = document.getElementById('ibge-atividades-contador');
     const vazio = document.getElementById('ibge-atividades-vazio');
     if (!listaAtiva) return;
 
-    const rotulo = listaAtiva.id === 'ibge-lista-observacoes' ? 'observações' : 'atividades';
-    const rotuloSingular = listaAtiva.id === 'ibge-lista-observacoes' ? 'observação' : 'atividade';
+    let rotulo, rotuloSingular, mensagemVazia;
+    if (listaAtiva.id === 'ibge-lista-observacoes') {
+        rotulo = 'observações'; rotuloSingular = 'observação';
+        mensagemVazia = 'Nenhuma observação cadastrada para esta subclasse.';
+    } else if (listaAtiva.id === 'ibge-lista-familias') {
+        rotulo = 'famílias'; rotuloSingular = 'família';
+        mensagemVazia = 'Nenhuma família usa este CNAE ainda.';
+    } else {
+        rotulo = 'atividades'; rotuloSingular = 'atividade';
+        mensagemVazia = 'Nenhuma atividade cadastrada para esta subclasse.';
+    }
+
     const itens = listaAtiva.querySelectorAll('li');
     let visiveis = 0;
-
     itens.forEach(li => {
         const bateu = li.getAttribute('data-search').includes(termo);
         li.style.display = bateu ? '' : 'none';
@@ -3099,10 +3119,10 @@ window.filtrarAtividadesIbge = (input) => {
     }
     if (vazio) {
         if (itens.length === 0) {
-            vazio.textContent = `Nenhuma ${rotuloSingular} cadastrada para esta subclasse.`;
+            vazio.textContent = mensagemVazia;
             vazio.classList.remove('hidden');
         } else if (visiveis === 0) {
-            vazio.textContent = `Nenhum resultado encontrado para essa busca.`;
+            vazio.textContent = 'Nenhum resultado encontrado para essa busca.';
             vazio.classList.remove('hidden');
         } else {
             vazio.classList.add('hidden');
@@ -3186,23 +3206,25 @@ window.abrirModalPesquisaManual = () => {
 
 window.processarPesquisaManual = async () => {
     const rawText = document.getElementById('input-cnaes-manuais').value;
-    
-    // 1. Extrair e formatar CNAEs do texto colado
-    // Pega sequências de 7 números e formata para XXXX-X/XX
     const matches = rawText.replace(/\D/g, '').match(/.{1,7}/g) || [];
     if (matches.length === 0) {
         showError("Atenção", "Nenhum CNAE válido de 7 dígitos encontrado.");
         return;
     }
-
     const cnaesUnicos = [...new Set(matches)].map(val => 
         val.substring(0, 4) + '-' + val.substring(4, 5) + '/' + val.substring(5, 7)
     );
 
-    if (typeof showToast === 'function') showToast("Buscando descrições e cruzando dados...", "info");
-    
     document.getElementById('modal-pesquisa-manual').classList.add('hidden');
 
+    // 1 código só -> direto pro detalhe rico do IBGE (mesma experiência da Consulta CNAE de hoje)
+    if (cnaesUnicos.length === 1) {
+        reabrirBuscaIbgeDireto(cnaesUnicos[0]);
+        return;
+    }
+
+    // 2+ códigos -> segue o cruzamento com famílias, como já era
+    if (typeof showToast === 'function') showToast("Buscando descrições e cruzando dados...", "info");
     const cnaesDetalhados = [];
 
     // 2. Buscar Descrição de cada CNAE (Local ou API IBGE)

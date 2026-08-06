@@ -1,7 +1,9 @@
 // --- VARIÁVEIS DE ESTADO ---
 let db;
-let encryptionKey = null;
-let titleClickCount = 0;
+const supabaseClientCaf = window.supabase.createClient(
+  "https://whnzeysvqbtuecxmthht.supabase.co",
+  "sb_publishable_Gw4cFK56R9kms2ogg50UqA_ZhHi79qw",
+);
 
 // --- GESTÃO DE TEMA ---
 function applyTheme(theme) {
@@ -23,8 +25,8 @@ document.addEventListener("DOMContentLoaded", function () {
    */
   const APP_AUTHOR = "Kevin Fróes";
   const APP_NAME = "Gerador de Mensagens";
-  const APP_VERSION = "3.1.0";
-  const APP_VERSION_DATE = "04/12/2025";
+  const APP_VERSION = "4.0.0";
+  const APP_VERSION_DATE = "06/08/2026";
 
   // --- ELEMENTOS DO DOM ---
   /**
@@ -34,14 +36,11 @@ document.addEventListener("DOMContentLoaded", function () {
    * @description Armazena referências a inputs, modais e botões em variáveis globais.
    */
   const dbName = "CafDatabase";
-  const dbVersion = 7;
-  const dbStatus = document.getElementById("db-status");
-  const familyDbStatus = document.getElementById("family-db-status");
+  const dbVersion = 8;
   const cnpjInputForDb = document.getElementById("cnpj");
   const companyNameInputForDb = document.getElementById("companyName");
   const companyNameResults = document.getElementById("companyNameResults");
   const cnpjStatusSpan = document.getElementById("cnpj-status");
-  const appTitle = document.getElementById("appTitle");
   const dbModal = document.getElementById("dbModal");
   const openDbModalBtn = document.getElementById("openDbModalBtn");
   const closeDbModalBtn = document.getElementById("closeDbModalBtn");
@@ -51,23 +50,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const exportModal = document.getElementById("exportModal");
   const confirmExportBtn = document.getElementById("confirmExportBtn");
   const cancelExportBtn = document.getElementById("cancelExportBtn");
-  const passwordModal = document.getElementById("passwordModal");
-  const passwordForm = document.getElementById("passwordForm");
-  const masterPasswordInput = document.getElementById("masterPassword");
-  const keepLoggedInCheckbox = document.getElementById("keepLoggedIn");
-  const passwordPromptMessage = document.getElementById(
-    "passwordPromptMessage",
-  );
-  const logoutBtn = document.getElementById("logoutBtn");
-  const csvFileInput = document.getElementById("csvFileInput");
-  const loadCsvBtn = document.getElementById("loadCsvBtn");
-  const loginBtn = document.getElementById("loginBtn");
-  const csvFileInputLabel = document.getElementById("csvFileInputLabel");
-  const familyCsvFileInput = document.getElementById("familyCsvFileInput");
-  const loadFamilyCsvBtn = document.getElementById("loadFamilyCsvBtn");
-  const familyCsvFileInputLabel = document.getElementById(
-    "familyCsvFileInputLabel",
-  );
   const historySearchCnpj = document.getElementById("historySearchCnpj");
   const historyStartDate = document.getElementById("historyStartDate");
   const historyEndDate = document.getElementById("historyEndDate");
@@ -337,161 +319,6 @@ document.addEventListener("DOMContentLoaded", function () {
     return v;
   }
 
-  // --- LÓGICA DE CRIPTOGRAFIA ---
-
-  /**
-   * @functionality 100
-   * @category 1xx: Criptografia e Segurança
-   * @name Implementação de Criptografia AES-GCM com PBKDF2
-   * @description Deriva chaves de senha via PBKDF2 e prepara para criptografia AES-GCM.
-   */
-  async function deriveKey(password, salt) {
-    const encoder = new TextEncoder();
-    const keyMaterial = await crypto.subtle.importKey(
-      "raw",
-      encoder.encode(password),
-      { name: "PBKDF2" },
-      false,
-      ["deriveKey"],
-    );
-    return crypto.subtle.deriveKey(
-      { name: "PBKDF2", salt: salt, iterations: 100000, hash: "SHA-256" },
-      keyMaterial,
-      { name: "AES-GCM", length: 256 },
-      true,
-      ["encrypt", "decrypt"],
-    );
-  }
-
-  /**
-   * @functionality 100
-   * @category 1xx: Criptografia e Segurança
-   * @name Implementação de Criptografia AES-GCM com PBKDF2
-   * @description Criptografa dados com AES-GCM (IV aleatório). Corrige stack overflow processando em chunks.
-   */
-  async function encryptData(text, key) {
-    const encoder = new TextEncoder();
-    const iv = crypto.getRandomValues(new Uint8Array(12));
-    const encryptedContent = await crypto.subtle.encrypt(
-      { name: "AES-GCM", iv: iv },
-      key,
-      encoder.encode(text),
-    );
-    const encryptedBytes = new Uint8Array(encryptedContent);
-    const finalData = new Uint8Array(iv.length + encryptedBytes.length);
-    finalData.set(iv);
-    finalData.set(encryptedBytes, iv.length);
-
-    let binaryString = "";
-    const CHUNK_SIZE = 8192;
-    for (let i = 0; i < finalData.length; i += CHUNK_SIZE) {
-      const chunk = finalData.subarray(i, i + CHUNK_SIZE);
-      binaryString += String.fromCharCode.apply(null, chunk);
-    }
-    return btoa(binaryString);
-  }
-
-  /**
-   * @functionality 100
-   * @category 1xx: Criptografia e Segurança
-   * @name Implementação de Criptografia AES-GCM com PBKDF2
-   * @description Descriptografa dados com AES-GCM.
-   */
-  async function decryptData(encryptedText, key) {
-    const binaryString = atob(encryptedText);
-    const encryptedDataWithIv = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
-      encryptedDataWithIv[i] = binaryString.charCodeAt(i);
-    }
-
-    const iv = encryptedDataWithIv.slice(0, 12);
-    const encryptedContent = encryptedDataWithIv.slice(12);
-    const decryptedContent = await crypto.subtle.decrypt(
-      { name: "AES-GCM", iv: iv },
-      key,
-      encryptedContent,
-    );
-    const decoder = new TextDecoder();
-    return decoder.decode(decryptedContent);
-  }
-
-  // --- LÓGICA DE AUTENTICAÇÃO E SESSÃO ---
-
-  /**
-   * @functionality 101
-   * @category 1xx: Criptografia e Segurança
-   * @name Mecanismo de Derivação e Armazenamento de Chave de Sessão no Navegador
-   * @description Importa/exporta chaves JWK para localStorage/sessionStorage, com fallback para senha mestra. Suporta "manter conectado".
-   */
-  async function handlePasswordSubmit(event) {
-    event.preventDefault();
-    const password = masterPasswordInput.value;
-    if (!password) return;
-
-    showToast("Processando senha...", "info");
-
-    try {
-      const salt = new TextEncoder().encode("caf-app-salt");
-      const key = await deriveKey(password, salt);
-
-      encryptionKey = key;
-
-      const exportableKey = await crypto.subtle.exportKey("jwk", key);
-
-      if (keepLoggedInCheckbox.checked) {
-        localStorage.setItem("encryptionKey", JSON.stringify(exportableKey));
-      } else {
-        sessionStorage.setItem("encryptionKey", JSON.stringify(exportableKey));
-      }
-
-      passwordModal.classList.add("hidden");
-      masterPasswordInput.value = "";
-      logoutBtn.classList.remove("hidden");
-      loginBtn.classList.add("hidden");
-
-      initializeAppLogic();
-    } catch (e) {
-      showToast("Erro ao processar a senha.", "error");
-    }
-  }
-
-  /**
-   * @functionality 403
-   * @category 4xx: UI/UX e Interações
-   * @name Logout e Limpeza de Sessão com Recarregamento de Página
-   * @description Remove chaves de storage e recarrega para resetar estado.
-   */
-  function handleLogout() {
-    localStorage.removeItem("encryptionKey");
-    sessionStorage.removeItem("encryptionKey");
-    location.reload();
-  }
-
-  /**
-   * @functionality 101
-   * @category 1xx: Criptografia e Segurança
-   * @name Mecanismo de Derivação e Armazenamento de Chave de Sessão no Navegador
-   * @description Recupera a chave JWK do localStorage ou sessionStorage e a importa para uso.
-   */
-  async function getStoredKey() {
-    const keyData =
-      localStorage.getItem("encryptionKey") ||
-      sessionStorage.getItem("encryptionKey");
-    if (!keyData) return null;
-
-    try {
-      const jwk = JSON.parse(keyData);
-      return await crypto.subtle.importKey(
-        "jwk",
-        jwk,
-        { name: "AES-GCM" },
-        true,
-        ["encrypt", "decrypt"],
-      );
-    } catch (e) {
-      return null;
-    }
-  }
 
   // --- LÓGICA DE HASH E VERIFICAÇÃO DE ATUALIZAÇÃO ---
 
@@ -573,199 +400,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  /**
-   * @functionality 102
-   * @category 1xx: Criptografia e Segurança
-   * @name Cálculo de Hash SHA-256 para Detecção de Mudanças em Backups
-   * @description Gera hash hexadecimal de strings JSON para comparação remota/local.
-   */
-  async function calculateHash(text) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(text);
-    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join("");
-    return hashHex;
-  }
-
-  /**
-   * @functionality 207
-   * @category 2xx: Banco de Dados e Persistência
-   * @name Armazenamento e Recuperação de Hash Local em Store de Metadados
-   * @description Recupera hash de backups no store 'metadata' para verificações.
-   */
-  function getLocalHash() {
-    return new Promise((resolve) => {
-      if (!db) return resolve(null);
-      const transaction = db.transaction(["metadata"], "readonly");
-      const store = transaction.objectStore("metadata");
-      const request = store.get("backup_hash");
-      request.onsuccess = () =>
-        resolve(request.result ? request.result.value : null);
-      request.onerror = () => resolve(null);
-    });
-  }
-
-  /**
-   * @functionality 207
-   * @category 2xx: Banco de Dados e Persistência
-   * @name Armazenamento e Recuperação de Hash Local em Store de Metadados
-   * @description Salva hash de backups no store 'metadata' para verificações.
-   */
-  function saveLocalHash(hash) {
-    return new Promise((resolve, reject) => {
-      if (!db) return reject("DB not available");
-      const transaction = db.transaction(["metadata"], "readwrite");
-      const store = transaction.objectStore("metadata");
-      const request = store.put({ id: "backup_hash", value: hash });
-      request.onsuccess = () => resolve();
-      request.onerror = (e) => reject(e.target.error);
-    });
-  }
-
-  /**
-   * @functionality 202
-   * @category 2xx: Banco de Dados e Persistência
-   * @name Verificação Automática de Atualizações via Hash SHA-256 de Backup Criptografado
-   * @description Fetch backup.json, descriptografa, compara hashes locais/remotos e importa se difere.
-   */
-  async function checkForUpdates() {
-    if (!encryptionKey) return;
-
-    try {
-      const response = await fetch("backup.json");
-      if (!response.ok) {
-        console.warn(
-          "Arquivo de backup central não encontrado. Pulando verificação automática.",
-        );
-        const localHash = await getLocalHash();
-        if (!localHash) {
-          showToast('Arquivo "backup.json" não encontrado na pasta.', "error");
-        }
-        return;
-      }
-
-      const encryptedText = await response.text();
-
-      const jsonText = await decryptData(encryptedText, encryptionKey);
-
-      const remoteHash = await calculateHash(jsonText);
-      const localHash = await getLocalHash();
-
-      if (remoteHash !== localHash) {
-        if (localHash === null) {
-          showToast(
-            "Base de dados inicial encontrada. Carregando...",
-            "info",
-            8000,
-          );
-        } else {
-          showToast(
-            "Nova base de dados encontrada. Atualizando...",
-            "info",
-            8000,
-          );
-        }
-        const data = JSON.parse(jsonText);
-        await processImportData(data, remoteHash);
-      }
-    } catch (error) {
-      console.error("Falha na verificação de atualização:", error);
-      showToast("Falha ao verificar/descriptografar base de dados.", "error");
-      handleLogout();
-    }
-  }
-
-  // --- LÓGICA DO MODO ADMIN ---
-
-  /**
-   * @functionality 410
-   * @name Atualização de Estado dos Controles de Admin
-   * @description Habilita/desabilita todas as funcionalidades de admin (exportação e upload de CSV)
-   */
-  function updateAdminControlsState() {
-    const isAdmin = sessionStorage.getItem("adminModeUnlocked") === "true";
-
-    // Controles de Exportação
-    const exportCompanies = document.getElementById("exportCompanies");
-    const exportFamilies = document.getElementById("exportFamilies");
-
-    [exportCompanies, exportFamilies].forEach((checkbox) => {
-      checkbox.disabled = !isAdmin;
-      const label = checkbox.closest("label");
-      if (isAdmin) {
-        label.classList.remove("opacity-50", "cursor-not-allowed");
-        label.title = "";
-      } else {
-        label.classList.add("opacity-50", "cursor-not-allowed");
-        label.title = "Opção disponível apenas no Modo Admin.";
-      }
-    });
-
-    const exportHistory = document.getElementById("exportHistory");
-    const exportContacts = document.getElementById("exportContacts");
-
-    if (isAdmin) {
-      exportCompanies.checked = true;
-      exportFamilies.checked = true;
-      exportHistory.checked = false;
-      exportContacts.checked = false;
-    } else {
-      exportCompanies.checked = false;
-      exportFamilies.checked = false;
-      exportHistory.checked = true;
-      exportContacts.checked = true;
-    }
-
-    // Controles de Upload de CSV
-    const csvControls = [
-      { input: csvFileInput, btn: loadCsvBtn, label: csvFileInputLabel },
-      {
-        input: familyCsvFileInput,
-        btn: loadFamilyCsvBtn,
-        label: familyCsvFileInputLabel,
-      },
-    ];
-
-    csvControls.forEach((control) => {
-      control.input.disabled = !isAdmin;
-      control.btn.disabled = !isAdmin;
-      if (isAdmin) {
-        [control.input, control.btn, control.label].forEach((el) =>
-          el.classList.remove("opacity-50", "cursor-not-allowed"),
-        );
-      } else {
-        [control.input, control.btn, control.label].forEach((el) =>
-          el.classList.add("opacity-50", "cursor-not-allowed"),
-        );
-      }
-    });
-  }
-  /**
-   * @functionality 104
-   * @category 1xx: Criptografia e Segurança
-   * @name Ativação de Modo Admin via Contador de Cliques com Persistência em SessionStorage
-   * @description Desbloqueia exportações completas após 7 cliques no título; atualiza UI de checkboxes.
-   * @functionality 105
-   * @name Timeout de Contador de Cliques no Título para Ativação Admin
-   * @description Reseta titleClickCount após 2s para evitar ativações acidentais.
-   */
-  function setupAdminModeToggle() {
-    appTitle.addEventListener("click", () => {
-      titleClickCount++;
-      if (titleClickCount >= 7) {
-        sessionStorage.setItem("adminModeUnlocked", "true");
-        showToast("Modo Admin Ativado!", "success");
-        updateAdminControlsState(); // Atualiza todos os controles de admin
-        titleClickCount = 0;
-      }
-      setTimeout(() => {
-        titleClickCount = 0;
-      }, 2000);
-    });
-  }
 
   // --- INICIALIZAÇÃO E LÓGICA DO BANCO DE DADOS ---
 
@@ -776,23 +410,15 @@ document.addEventListener("DOMContentLoaded", function () {
    * @description Chama checkForUpdates e checkDbStatus após login ou bootstrapping.
    */
   async function initializeAppLogic() {
-    try {
-      await checkForUpdates();
-      checkDbStatus("companies", dbStatus, "registros");
-      checkDbStatus("families", familyDbStatus, "famílias");
-
-      renderContactsList();
-      await checkForBackupReminder();
-
-      showToast("Base de dados carregada!", "success");
-    } catch (error) {
-      // Se checkForUpdates ou outro passo falhar, o erro já foi
-      // mostrado em um toast. Vamos garantir que o toast de erro apareça.
-      hideToast(); // Esconde o "Carregando..." se ainda estiver lá
-      showToast("Falha ao carregar a base de dados.", "error");
-      console.error("Erro em initializeAppLogic:", error);
+      try {
+        await renderContactsList(); // Adicionado await para evitar descompasso
+        await checkForBackupReminder();
+        // O app agora inicia silenciosamente e rápido!
+      } catch (error) {
+        showToast("Erro ao carregar os dados locais.", "error");
+        console.error("Erro em initializeAppLogic:", error);
+      }
     }
-  }
 
   /**
    * @functionality 504
@@ -801,7 +427,6 @@ document.addEventListener("DOMContentLoaded", function () {
    * @description Compara o último backup pessoal com o período configurado e exibe o modal se vencido.
    */
   async function checkForBackupReminder() {
-    if (!encryptionKey) return; // Só verifica se estiver logado
 
     try {
       const periodMs = Number(await getBackupReminderPeriod());
@@ -829,130 +454,46 @@ document.addEventListener("DOMContentLoaded", function () {
    * @description Altera texto do modal baseado em presença de backup.json.
    */
   async function initDb() {
-    const request = indexedDB.open(dbName, dbVersion);
+      const request = indexedDB.open(dbName, dbVersion);
 
-    request.onupgradeneeded = function (event) {
-      db = event.target.result;
-      if (!db.objectStoreNames.contains("companies"))
-        db.createObjectStore("companies", { keyPath: "cnpj" });
-      if (!db.objectStoreNames.contains("families"))
-        db.createObjectStore("families", { keyPath: "id" });
-      if (!db.objectStoreNames.contains("metadata"))
-        db.createObjectStore("metadata", { keyPath: "id" });
-      if (!db.objectStoreNames.contains("history")) {
-        const historyStore = db.createObjectStore("history", {
-          keyPath: "id",
-          autoIncrement: true,
-        });
-        historyStore.createIndex("timestamp", "timestamp", { unique: false });
-      }
-
-      if (!db.objectStoreNames.contains("contacts")) {
-        const contactsStore = db.createObjectStore("contacts", {
-          keyPath: "id",
-          autoIncrement: true,
-        });
-        contactsStore.createIndex("name", "name", { unique: false });
-      }
-    };
-
-    request.onsuccess = async function (event) {
-      db = event.target.result;
-
-      encryptionKey = await getStoredKey();
-
-      if (encryptionKey) {
-        // --- ESTÁ LOGADO ---
-        logoutBtn.classList.remove("hidden");
-        loginBtn.classList.add("hidden");
-
-        // 1. Mostra o toast persistente (duração 0)
-        showToast("Carregando base de dados...", "info", 8000);
-
-        try {
-          // 2. Aguarda a inicialização (que vai lidar com os toasts)
-          await initializeAppLogic();
-          atualizarStatsExternos();
-        } catch (error) {
-          // Este catch é para erros no PRÓPRIO initializeAppLogic
-          hideToast(); // Esconde o "Carregando..."
-          showToast("Erro crítico na inicialização.", "error");
-          console.error("Erro fatal em initDb:", error);
-        }
-      } else {
-        // --- NÃO ESTÁ LOGADO ---
-        logoutBtn.classList.add("hidden");
-        loginBtn.classList.remove("hidden");
-
-        // Prepara a mensagem do modal, mas não o abre
-        try {
-          const response = await fetch("backup.json");
-          if (response.ok) {
-            passwordPromptMessage.textContent =
-              "Uma base de dados central foi encontrada. Por favor, insira a senha mestra para acessá-la.";
-          } else {
-            passwordPromptMessage.textContent =
-              "Por favor, insira a senha mestra para descriptografar e carregar os dados."; // Mensagem padrão
-            console.log(
-              "Nenhum backup central encontrado. Iniciando em modo de bootstrapping.",
-            );
-          }
-        } catch (error) {
-          passwordPromptMessage.textContent =
-            "Por favor, insira a senha mestra para descriptografar e carregar os dados."; // Mensagem padrão
-          console.log(
-            "Não foi possível acessar o backup central. Iniciando em modo offline/bootstrapping.",
-          );
+      request.onupgradeneeded = function (event) {
+        db = event.target.result;
+        if (!db.objectStoreNames.contains("metadata"))
+          db.createObjectStore("metadata", { keyPath: "id" });
+        if (!db.objectStoreNames.contains("history")) {
+          const historyStore = db.createObjectStore("history", {
+            keyPath: "id",
+            autoIncrement: true,
+          });
+          historyStore.createIndex("timestamp", "timestamp", { unique: false });
         }
 
-        // Não chame initializeAppLogic() aqui, pois ele será chamado
-        // dentro de handlePasswordSubmit() após o login bem-sucedido.
-      }
-    };
-
-    request.onerror = function (event) {
-      showToast("Erro crítico ao acessar o banco de dados local.", "error");
-    };
-  }
-
-  /**
-   * @functionality 206
-   * @category 2xx: Banco de Dados e Persistência
-   * @name Contador de Registros e Exibição de Status de DB com Timestamps
-   * @description Conta itens em stores e mostra contagem + última atualização via metadados.
-   */
-  function checkDbStatus(storeName, statusElement, label) {
-    if (!db) return;
-    try {
-      const transaction = db.transaction([storeName], "readonly");
-      const objectStore = transaction.objectStore(storeName);
-      const countRequest = objectStore.count();
-
-      countRequest.onsuccess = function () {
-        const count = countRequest.result;
-        if (count > 0) {
-          const metaTransaction = db.transaction(["metadata"], "readonly");
-          const metaStore = metaTransaction.objectStore("metadata");
-          const timestampRequest = metaStore.get(`${storeName}_last_updated`);
-
-          timestampRequest.onsuccess = function () {
-            let statusText = `${count} ${label} carregadas.`;
-            if (timestampRequest.result) {
-              statusText += `<br>Última atualização: ${timestampRequest.result.value}`;
-            }
-            statusElement.innerHTML = statusText;
-            statusElement.className = "text-green-600 text-xs text-center";
-          };
-        } else {
-          statusElement.textContent = `Nenhum registro de ${label}.`;
-          statusElement.className = "text-yellow-600 text-sm";
+        if (!db.objectStoreNames.contains("contacts")) {
+          const contactsStore = db.createObjectStore("contacts", {
+            keyPath: "id",
+            autoIncrement: true,
+          });
+          contactsStore.createIndex("name", "name", { unique: false });
         }
       };
-    } catch (e) {
-      statusElement.textContent = "Erro ao verificar base de dados.";
-      statusElement.className = "text-red-600";
+
+      request.onsuccess = async function (event) {
+            db = event.target.result;
+
+            try {
+              await initializeAppLogic();
+              atualizarStatsExternos();
+            } catch (error) {
+              showToast("Erro crítico na inicialização.", "error");
+              console.error("Erro fatal em initDb:", error);
+            }
+          };
+
+      request.onerror = function (event) {
+        showToast("Erro crítico ao acessar o banco de dados local.", "error");
+      };
     }
-  }
+
 
   /**
    * @functionality 201
@@ -961,10 +502,7 @@ document.addEventListener("DOMContentLoaded", function () {
    * @description Lê ISO-8859-1, parseia linhas (companyParser/familyParser), limpa store e atualiza metadados com timestamp.
    */
   function loadCsvToDB(file, storeName, statusElement, parser) {
-    if (!encryptionKey) {
-      showToast("Por favor, faça login antes de carregar dados.", "error");
-      return;
-    }
+
     if (!file) {
       alert("Por favor, selecione um arquivo CSV.");
       return;
@@ -987,23 +525,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       transaction.oncomplete = function () {
-        const metaTransaction = db.transaction(["metadata"], "readwrite");
-        const metaStore = metaTransaction.objectStore("metadata");
-        const now = new Date();
-        const timestamp = now.toLocaleString("pt-BR", {
-          dateStyle: "short",
-          timeStyle: "medium",
-        });
-        metaStore.put({ id: `${storeName}_last_updated`, value: timestamp });
-
-        metaTransaction.oncomplete = function () {
-          checkDbStatus(
-            storeName,
-            statusElement,
-            storeName === "companies" ? "registros" : "famílias",
-          );
-          showToast(`Base de ${storeName} carregada com sucesso!`, "success");
-        };
+          showToast(`Contatos carregados com sucesso!`, "success");
       };
       transaction.onerror = function () {
         statusElement.textContent = "Erro ao salvar dados.";
@@ -1023,89 +545,46 @@ document.addEventListener("DOMContentLoaded", function () {
    * @name Download de Arquivo de Backup com Blob e URL Temporária
    * @description Cria Blob criptografado e trigger download via hidden.
    */
-  async function processExport(options) {
-    if (!db) {
-      showToast("Banco de dados não está pronto.", "error");
-      return;
-    }
-
-    if (!encryptionKey) {
-      passwordPromptMessage.textContent =
-        "Esta é a primeira exportação. Crie a senha mestra para proteger o novo arquivo de backup.";
-      keepLoggedInCheckbox.checked = true;
-      passwordModal.classList.remove("hidden");
-
-      passwordForm.addEventListener(
-        "submit",
-        () => {
-          showToast(
-            "Senha criada! Por favor, clique em Exportar novamente para gerar o arquivo.",
-            "info",
-          );
-        },
-        { once: true },
-      );
-
-      return;
-    }
-
-    try {
-      const storesToExport = [];
-      if (options.includeCompanies) storesToExport.push("companies");
-      if (options.includeFamilies) storesToExport.push("families");
-      if (options.includeHistory) {
-        storesToExport.push("history");
-      }
-      if (options.includeContacts) {
-        storesToExport.push("contacts");
-      }
-      if (storesToExport.length === 0) {
-        showToast("Nenhum dado selecionado para exportar.", "error");
+  async function processExport() {
+      if (!db) {
+        showToast("Banco de dados não está pronto.", "error");
         return;
       }
-      storesToExport.push("metadata");
 
-      const exportObj = {};
-      const transaction = db.transaction(storesToExport, "readonly");
-      for (const storeName of storesToExport) {
-        const store = transaction.objectStore(storeName);
-        const allRecords = await new Promise((resolve, reject) => {
-          store.getAll().onsuccess = (e) => resolve(e.target.result);
-          store.getAll().onerror = (e) => reject(e.target.error);
-        });
-        exportObj[storeName] = allRecords;
-      }
+      try {
+        const storesToExport = ["history", "contacts", "metadata"];
+        const exportObj = {};
+        const transaction = db.transaction(storesToExport, "readonly");
+        
+        for (const storeName of storesToExport) {
+          const store = transaction.objectStore(storeName);
+          const allRecords = await new Promise((resolve, reject) => {
+            store.getAll().onsuccess = (e) => resolve(e.target.result);
+            store.getAll().onerror = (e) => reject(e.target.error);
+          });
+          exportObj[storeName] = allRecords;
+        }
 
-      const jsonString = JSON.stringify(exportObj, null, 2);
-      const encryptedText = await encryptData(jsonString, encryptionKey);
+        const jsonString = JSON.stringify(exportObj, null, 2);
+        // Salva direto como JSON puro e legível
+        const blob = new Blob([jsonString], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
 
-      const blob = new Blob([encryptedText], { type: "text/plain" });
-      const url = URL.createObjectURL(blob);
-
-      let filename = "backup.json";
-      let toastMessage =
-        'Backup de sincronização exportado como "backup.json"!';
-
-      if (options.includeHistory || options.includeContacts) {
         const date = new Date().toISOString().slice(0, 10);
-        filename = `full_backup_${date}.json`;
-        toastMessage = `Backup pessoal completo exportado como "${filename}"!`;
-      } else {
-        const newHash = await calculateHash(jsonString);
-        await saveLocalHash(newHash);
+        const filename = `full_backup_${date}.json`;
+        
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        showToast(`Backup pessoal exportado como "${filename}"!`, "success");
+      } catch (error) {
+        console.error("Erro ao exportar:", error);
+        showToast("Falha ao exportar o backup.", "error");
       }
-
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = filename;
-      a.click();
-      URL.revokeObjectURL(url);
-      showToast(toastMessage, "success");
-    } catch (error) {
-      console.error("Erro ao exportar:", error);
-      showToast("Falha ao exportar o backup.", "error");
     }
-  }
 
   /**
    * @functionality 208
@@ -1113,41 +592,37 @@ document.addEventListener("DOMContentLoaded", function () {
    * @name Processamento de Importação de Backup com Merge e Atualização de Hash
    * @description Descriptografa JSON, insere/atualiza stores e salva novo hash local.
    */
-  function processImportData(data, fileHash) {
-    return new Promise((resolve, reject) => {
-      const storesToImport = Object.keys(data);
-      if (storesToImport.length === 0) {
-        showToast("Arquivo de backup inválido ou vazio.", "error");
-        return reject("Arquivo inválido");
-      }
+  function processImportData(data) {
+      return new Promise((resolve, reject) => {
+        const storesToImport = Object.keys(data);
+        if (storesToImport.length === 0) {
+          showToast("Arquivo de backup inválido ou vazio.", "error");
+          return reject("Arquivo inválido");
+        }
 
-      const transaction = db.transaction(storesToImport, "readwrite");
-      transaction.oncomplete = () => {
-        saveLocalHash(fileHash).then(() => {
+        const transaction = db.transaction(storesToImport, "readwrite");
+        transaction.oncomplete = () => {
           showToast("Dados restaurados com sucesso!", "success");
-          checkDbStatus("companies", dbStatus, "registros");
-          checkDbStatus("families", familyDbStatus, "famílias");
           renderContactsList();
           resolve();
-        });
-      };
-      transaction.onerror = (err) => {
-        console.error("Erro na transação de importação:", err);
-        showToast("Erro ao restaurar os dados.", "error");
-        reject(err);
-      };
+        };
+        transaction.onerror = (err) => {
+          console.error("Erro na transação de importação:", err);
+          showToast("Erro ao restaurar os dados.", "error");
+          reject(err);
+        };
 
-      for (const storeName of storesToImport) {
-        if (db.objectStoreNames.contains(storeName)) {
-          const store = transaction.objectStore(storeName);
-          store.clear();
-          data[storeName].forEach((record) => {
-            store.put(record);
-          });
+        for (const storeName of storesToImport) {
+          if (db.objectStoreNames.contains(storeName)) {
+            const store = transaction.objectStore(storeName);
+            store.clear();
+            data[storeName].forEach((record) => {
+              store.put(record);
+            });
+          }
         }
-      }
-    });
-  }
+      });
+    }
 
   /**
    * @functionality 409
@@ -1156,37 +631,31 @@ document.addEventListener("DOMContentLoaded", function () {
    * @description Lê arquivo, descriptografa e processa via processImportData.
    */
   async function importDatabase(event) {
-    const file = event.target.files[0];
-    if (!file || !encryptionKey) {
-      if (!encryptionKey)
-        showToast("Por favor, faça login antes de importar.", "error");
-      return;
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const importStatus = document.getElementById("importStatus");
+      const importLabel = document.getElementById("importDbLabel");
+      const exportBtn = document.getElementById("exportDbBtn");
+
+      importStatus.textContent = "Importando... Por favor, aguarde.";
+      importLabel.classList.add("opacity-50", "cursor-not-allowed");
+      exportBtn.disabled = true;
+
+      try {
+        const jsonText = await file.text();
+        const data = JSON.parse(jsonText); // Lê e converte o JSON puro direto
+        await processImportData(data);
+      } catch (error) {
+        console.error("Erro ao importar manualmente:", error);
+        showToast("Falha ao ler o backup. Arquivo inválido.", "error");
+      } finally {
+        event.target.value = "";
+        importStatus.textContent = "";
+        importLabel.classList.remove("opacity-50", "cursor-not-allowed");
+        exportBtn.disabled = false;
+      }
     }
-
-    const importStatus = document.getElementById("importStatus");
-    const importLabel = document.getElementById("importDbLabel");
-    const exportBtn = document.getElementById("exportDbBtn");
-
-    importStatus.textContent = "Importando... Por favor, aguarde.";
-    importLabel.classList.add("opacity-50", "cursor-not-allowed");
-    exportBtn.disabled = true;
-
-    try {
-      const encryptedText = await file.text();
-      const jsonText = await decryptData(encryptedText, encryptionKey);
-      const data = JSON.parse(jsonText);
-      const fileHash = await calculateHash(jsonText);
-      await processImportData(data, fileHash);
-    } catch (error) {
-      console.error("Erro ao importar manualmente:", error);
-      showToast("Falha ao ler ou descriptografar o backup.", "error");
-    } finally {
-      event.target.value = "";
-      importStatus.textContent = "";
-      importLabel.classList.remove("opacity-50", "cursor-not-allowed");
-      exportBtn.disabled = false;
-    }
-  }
 
   // --- LÓGICA DO HISTÓRICO ---
 
@@ -1421,11 +890,7 @@ document.addEventListener("DOMContentLoaded", function () {
    * @description Orquestra a busca, processamento e renderização dos dados.
    */
   async function renderDashboard() {
-    if (!db || !encryptionKey) {
-      showToast("Banco de dados não disponível ou não logado.", "error");
-      return;
-    }
-
+ 
     // Mostra feedback de carregamento
     topDocsList.innerHTML =
       '<p class="text-gray-500 text-center">Processando...</p>';
@@ -1867,42 +1332,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // ---XX LÓGICA PRINCIPAL DA APLICAÇÃO XX---
 
   /**
-   * @functionality 204
-   * @category 2xx: Banco de Dados e Persistência
-   * @name Parsing de CSV para Empresas com Delimitador ';;' e Codificação ISO-8859-1
-   * @description Extrai CNPJ e nome de linhas CSV, ignora headers e linhas vazias.
-   */
-  const companyParser = (line) => {
-    const parts = line.split(";;");
-    if (parts.length >= 2) {
-      const cnpj = parts[0].trim().replace(/\D/g, "");
-      const razaoSocial = parts[1]?.trim();
-      const dataCadastro = parts[2]?.trim() || "";
-      const tipoCadastro = parts[3]?.trim() || "";
-
-      if (cnpj && razaoSocial)
-        return { cnpj, razaoSocial, dataCadastro, tipoCadastro };
-    }
-    return null;
-  };
-
-  /**
-   * @functionality 205
-   * @category 2xx: Banco de Dados e Persistência
-   * @name Parsing de CSV para Famílias com Mapeamento de ID e Descrição
-   * @description Extrai ID e descrição de famílias de linhas CSV delimitadas por ';;'.
-   */
-  const familyParser = (line) => {
-    const parts = line.split(";;");
-    if (parts.length >= 3) {
-      const id = parts[0]?.trim();
-      const description = parts[2]?.trim();
-      if (id && description) return { id, description };
-    }
-    return null;
-  };
-
-  /**
    * @functionality 205.5
    * @category 2xx: Banco de Dados e Persistência
    * @name Parsing de CSV para Contatos Pessoais
@@ -1925,77 +1354,66 @@ document.addEventListener("DOMContentLoaded", function () {
    * @name Busca e Preenchimento Automático de Dados de Empresa via IndexedDB
    * @description Consulta store 'companies' por CNPJ formatado, popula nome da empresa e exibe status de validação.
    */
-  function searchCnpj(doc) {
-    companyNameResults.innerHTML = ""; //limpa lista de sugestões
-    if (!encryptionKey) {
-      showToast("Por favor, faça login para usar a base de dados.", "error");
-      return;
-    }
-    const cleanedDoc = doc.replace(/\D/g, "");
-    if ((cleanedDoc.length !== 11 && cleanedDoc.length !== 14) || !db) {
-      companyNameInputForDb.value = "";
-      cnpjStatusSpan.textContent = "";
-      return;
-    }
-
-    cnpjStatusSpan.textContent = "Buscando...";
-    cnpjStatusSpan.className = "text-gray-500";
-
-    const transaction = db.transaction(["companies"], "readonly");
-    const objectStore = transaction.objectStore("companies");
-    const request = objectStore.get(cleanedDoc);
-
-    request.onsuccess = function (event) {
-      if (request.result) {
-        // 1. Preenche os dados básicos da empresa (sempre que encontrar)
-        companyNameInputForDb.value = request.result.razaoSocial;
-        registrationDateInput.value = request.result.dataCadastro || "--";
-
-        // 2. Verifica se TEM um tipo de cadastro (CRC, CRS, etc.)
-        if (
-          request.result.tipoCadastro &&
-          request.result.tipoCadastro.toLowerCase() !== "null"
-        ) {
-          const tipo = request.result.tipoCadastro.trim().toUpperCase();
-          if (tipo === "CRC") {
-            registrationTypeInput.value = "CRC";
-          } else if (tipo === "CRS") {
-            registrationTypeInput.value = "CRS";
-          } else if (tipo === "CANDIDATO") {
-            registrationTypeInput.value = "Candidato";
-          } else {
-            registrationTypeInput.value = "CRC"; // Padrão se não reconhecer
-          }
-
-          // Status VERDE (Cadastro completo)
-          cnpjStatusSpan.textContent = "Encontrado";
-          cnpjStatusSpan.className = "text-green-600";
-        } else {
-          // 3. NÃO TEM tipo de cadastro (o campo é nulo ou vazio)
-
-          // Define o tipo de cadastro como padrão no formulário
-          registrationTypeInput.value = "CRC";
-
-          // Status AMARELO (Conforme solicitado)
-          cnpjStatusSpan.textContent = "Encontrado (Sem cadastro)";
-          cnpjStatusSpan.className = "text-yellow-600"; // Tailwind para amarelo
-        }
-      } else {
-        // 4. Bloco 'Não encontrado' (permanece o mesmo)
-        companyNameInputForDb.value = "";
-        registrationDateInput.value = "--";
-        registrationTypeInput.value = "CRC";
-        cnpjStatusSpan.textContent = "Não encontrado";
-        cnpjStatusSpan.className = "text-red-600";
-      }
-    };
-    request.onerror = function (event) {
-      cnpjStatusSpan.textContent = "Erro";
-      cnpjStatusSpan.className = "text-red-600";
-      registrationDateInput.value = "--";
-      registrationTypeInput.value = "CRC";
-    };
+let searchCnpjSeq = 0; // evita que uma resposta antiga sobrescreva uma mais nova
+async function searchCnpj(doc) {
+  companyNameResults.innerHTML = "";
+  const cleanedDoc = doc.replace(/\D/g, "");
+  if (cleanedDoc.length !== 11 && cleanedDoc.length !== 14) {
+    companyNameInputForDb.value = "";
+    cnpjStatusSpan.textContent = "";
+    return;
   }
+
+  cnpjStatusSpan.textContent = "Buscando...";
+  cnpjStatusSpan.className = "text-gray-500";
+
+  const mySeq = ++searchCnpjSeq;
+  const { data, error } = await supabaseClientCaf
+    .from("companies")
+    .select("razao_social, data_cadastro, tipo_cadastro")
+    .eq("cnpj", cleanedDoc)
+    .maybeSingle();
+  if (mySeq !== searchCnpjSeq) return;
+
+  if (error) {
+    cnpjStatusSpan.textContent = "Erro";
+    cnpjStatusSpan.className = "text-red-600";
+    registrationDateInput.value = "--";
+    registrationTypeInput.value = "CRC";
+    console.error("searchCnpj:", error.message);
+    return;
+  }
+
+  if (data) {
+    companyNameInputForDb.value = data.razao_social;
+    registrationDateInput.value = formatDate(data.data_cadastro) || "--";
+
+    if (data.tipo_cadastro) {
+      const tipo = data.tipo_cadastro.trim().toUpperCase();
+      if (tipo === "CRC") {
+        registrationTypeInput.value = "CRC";
+      } else if (tipo === "CRS") {
+        registrationTypeInput.value = "CRS";
+      } else if (tipo === "CANDIDATO") {
+        registrationTypeInput.value = "Candidato";
+      } else {
+        registrationTypeInput.value = "CRC";
+      }
+      cnpjStatusSpan.textContent = "Encontrado";
+      cnpjStatusSpan.className = "text-green-600";
+    } else {
+      registrationTypeInput.value = "CRC";
+      cnpjStatusSpan.textContent = "Encontrado (Sem cadastro)";
+      cnpjStatusSpan.className = "text-yellow-600";
+    }
+  } else {
+    companyNameInputForDb.value = "";
+    registrationDateInput.value = "--";
+    registrationTypeInput.value = "CRC";
+    cnpjStatusSpan.textContent = "Não encontrado";
+    cnpjStatusSpan.className = "text-red-600";
+  }
+}
 
   /**
    * @functionality 302.5
@@ -2003,36 +1421,42 @@ document.addEventListener("DOMContentLoaded", function () {
    * @name Sistema de Autocomplete para Busca de Empresas por Razão Social
    * @description Busca fuzzy (contains) em companies store via cursor, limita a 10 resultados.
    */
-  function searchCompanyByName(searchTerm) {
-    if (!encryptionKey) return; // Não mostra toast, para não poluir
-    companyNameResults.innerHTML = "";
-    if (searchTerm.length < 5 || !db) return; // Limite de 6 caracteres
+let searchCompanyByNameSeq = 0;
+async function searchCompanyByName(searchTerm) {
+  companyNameResults.innerHTML = "";
+  if (searchTerm.length < 5) return;
 
-    const transaction = db.transaction(["companies"], "readonly");
-    const store = transaction.objectStore("companies");
-    const request = store.openCursor();
-    const results = [];
-    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+  const mySeq = ++searchCompanyByNameSeq;
+  const { data, error } = await supabaseClientCaf
+    .from("companies")
+    .select("cnpj, razao_social, data_cadastro, tipo_cadastro")
+    .ilike("razao_social", `%${searchTerm}%`)
+    .limit(10);
+  if (mySeq !== searchCompanyByNameSeq) return;
 
-    request.onsuccess = function (event) {
-      const cursor = event.target.result;
-      if (cursor) {
-        if (
-          cursor.value.razaoSocial.toLowerCase().includes(lowerCaseSearchTerm)
-        ) {
-          results.push(cursor.value);
-        }
-        if (results.length < 10) {
-          // Limita a 10 resultados
-          cursor.continue();
-        } else {
-          displayCompanyNameResults(results); // Atingiu o limite
-        }
-      } else {
-        displayCompanyNameResults(results); // Fim do cursor
-      }
-    };
+  if (error) {
+    console.error("searchCompanyByName:", error.message);
+    cnpjStatusSpan.textContent = "Erro na busca";
+    cnpjStatusSpan.className = "text-red-600";
+    return;
   }
+
+  const results = (data || []).map((c) => ({
+    cnpj: c.cnpj,
+    razaoSocial: c.razao_social,
+    dataCadastro: formatDate(c.data_cadastro),
+    tipoCadastro: c.tipo_cadastro,
+  }));
+  displayCompanyNameResults(results);
+}
+function debounce(fn, delayMs) {
+  let timer = null;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), delayMs);
+  };
+}
+const debouncedSearchCompanyByName = debounce(searchCompanyByName, 300);
 
   /**
    * @functionality 302.6
@@ -2454,43 +1878,53 @@ document.addEventListener("DOMContentLoaded", function () {
    * @name Sistema de Autocomplete para Busca de Famílias na DB com Cursor Pagination
    * @description Busca fuzzy em families store via cursor, limita a 10 resultados, seleciona via click.
    */
-  function searchFamilies(searchTerm) {
-    if (!encryptionKey) {
-      showToast("Por favor, faça login para usar a base de dados.", "error");
-      return;
-    }
-    familyResults.innerHTML = "";
-    if (!searchTerm || !db) return;
+let searchFamiliesSeq = 0;
+async function searchFamilies(searchTerm) {
+  familyResults.innerHTML = "";
+  if (!searchTerm) return;
 
-    const transaction = db.transaction(["families"], "readonly");
-    const store = transaction.objectStore("families");
-    const request = store.openCursor();
-    const results = [];
+  const mySeq = ++searchFamiliesSeq;
+  
+  // Usando o .or() para buscar tanto na descrição quanto no código da família
+  const { data, error } = await supabaseClientCaf
+    .from("qualificacao_tecnica")
+    .select("familia, descricao")
+    .or(`descricao.ilike.%${searchTerm}%,familia.ilike.%${searchTerm}%`)
+    .limit(10);
+    
+  if (mySeq !== searchFamiliesSeq) return;
 
-    request.onsuccess = function (event) {
-      const cursor = event.target.result;
-      if (cursor) {
-        if (
-          cursor.value.description
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())
-        ) {
-          results.push(cursor.value);
-        }
-        cursor.continue();
-      } else {
-        displayFamilyResults(results.slice(0, 10));
-      }
-    };
+  if (error) {
+    console.error("searchFamilies:", error.message);
+    return;
   }
+  
+  displayFamilyResults((data || []).map((f) => ({ id: f.familia, description: f.descricao })));
+}
+
+function debounceFam(fn, ms) {
+  let t = null;
+  return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
+}
+const debouncedSearchFamilies = debounceFam(searchFamilies, 300);
 
   function displayFamilyResults(results) {
     familyResults.innerHTML = "";
+    
+    if (results.length === 0) {
+        familyResults.innerHTML = '<div class="p-3 text-sm text-gray-500 bg-white dark:bg-slate-800 border-b dark:border-slate-700">Nenhuma família encontrada.</div>';
+        return;
+    }
+
     results.forEach((family) => {
       const div = document.createElement("div");
-      div.textContent = family.description;
+      div.className = "p-3 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-sm bg-white dark:bg-slate-800 dark:text-white border-b dark:border-slate-700 transition-colors";
+      
+      // Melhoria de UX: Mostra o código e a descrição juntos na listagem
+      div.textContent = `${family.id} - ${family.description}`;
       div.dataset.id = family.id;
       div.dataset.description = family.description;
+      
       familyResults.appendChild(div);
     });
   }
@@ -2505,10 +1939,7 @@ document.addEventListener("DOMContentLoaded", function () {
    * @description Checa campos obrigatórios.
    */
   const generateMessage = () => {
-    if (!encryptionKey) {
-      showToast("Por favor, faça login para usar o aplicativo.", "error");
-      return;
-    }
+
     const companyName = companyNameInput.value.trim();
     const cnpj = cnpjInputForDb.value.trim();
     const analysisDate = formatDate(analysisDateInput.value);
@@ -2806,25 +2237,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
   confirmExportBtn.addEventListener("click", () => {
-    const options = {
-      includeCompanies: document.getElementById("exportCompanies").checked,
-      includeFamilies: document.getElementById("exportFamilies").checked,
-      includeHistory: document.getElementById("exportHistory").checked,
-      includeContacts: document.getElementById("exportContacts").checked,
-    };
-    processExport(options);
+    processExport();
     exportModal.classList.add("hidden");
   });
 
-  // Banco de Dados e Histórico
-  document.getElementById("loadCsvBtn").addEventListener("click", () => {
-    const file = document.getElementById("csvFileInput").files[0]; // <<< LINHA CORRIGIDA
-    loadCsvToDB(file, "companies", dbStatus, companyParser);
-  });
-  document.getElementById("loadFamilyCsvBtn").addEventListener("click", () => {
-    const file = document.getElementById("familyCsvFileInput").files[0]; // <<< LINHA CORRIGIDA
-    loadCsvToDB(file, "families", familyDbStatus, familyParser);
-  });
   /**
    * @functionality 301
    * @category 3xx: Geração de Mensagens e Formulários
@@ -2853,7 +2269,7 @@ document.addEventListener("DOMContentLoaded", function () {
     } else if (searchTerm.length >= 5) {
       cnpjStatusSpan.textContent = "Buscando..."; // Indica busca
       cnpjStatusSpan.className = "text-gray-500";
-      searchCompanyByName(searchTerm);
+      debouncedSearchCompanyByName(searchTerm);
     }
   });
 
@@ -2921,7 +2337,7 @@ document.addEventListener("DOMContentLoaded", function () {
    * @description Armazena ID e descrição em data-attributes para uso posterior.
    */
   familySearchInput.addEventListener("input", (e) =>
-    searchFamilies(e.target.value),
+    debouncedSearchFamilies(e.target.value),
   );
   familyResults.addEventListener("click", (e) => {
     if (e.target.tagName === "DIV") {
@@ -3057,13 +2473,6 @@ document.addEventListener("DOMContentLoaded", function () {
     );
   });
 
-  // Event Listeners de Autenticação
-  loginBtn.addEventListener("click", () => {
-    passwordModal.classList.remove("hidden");
-    masterPasswordInput.focus();
-  });
-  passwordForm.addEventListener("submit", handlePasswordSubmit);
-  logoutBtn.addEventListener("click", handleLogout);
 
   // Listeners do Modal de WhatsApp
   sendWppBtn.addEventListener("click", openWppModal);
@@ -3149,8 +2558,7 @@ document.addEventListener("DOMContentLoaded", function () {
   populateDocNames();
   initDb();
   renderFooter();
-  setupAdminModeToggle();
-  updateAdminControlsState(); // Define o estado inicial dos controles de admin
+
 
 
   // Mostra o modal de boas-vindas apenas na primeira vez
