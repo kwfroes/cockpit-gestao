@@ -2927,11 +2927,11 @@ function normalizarTexto(t) {
 
 // Separa o texto de "observacoes" da API em 3 blocos: compreende / compreende ainda / não compreende
 function parseObservacoesIbge(observacoes) {
-    const vazio = { compreende: [], compreendeAinda: [], naoCompreende: [] };
+    const vazio = { compreende: [], compreendeAinda: [], naoCompreende: [], notasComplementares: [] };
     if (!observacoes || observacoes.length === 0) return vazio;
 
     const textoCompleto = observacoes.join(' ');
-    const regexCabecalhos = /Esta subclasse (compreende ainda|n[aã]o compreende|compreende)/gi;
+    const regexCabecalhos = /Esta subclasse (compreende ainda|n[aã]o compreende|compreende)|Notas complementares/gi;
     const blocos = [];
     let match;
     let ultimaPos = null;
@@ -2941,15 +2941,19 @@ function parseObservacoesIbge(observacoes) {
         if (ultimaPos !== null) {
             blocos.push({ tipo: ultimoTipo, texto: textoCompleto.slice(ultimaPos, match.index) });
         }
-        const cap = match[1].toLowerCase();
-        ultimoTipo = cap.includes('ainda') ? 'compreendeAinda' : (cap.includes('ao') || cap.includes('ão')) ? 'naoCompreende' : 'compreende';
+        if (match[1]) {
+            const cap = match[1].toLowerCase();
+            ultimoTipo = cap.includes('ainda') ? 'compreendeAinda' : (cap.includes('ao') || cap.includes('ão')) ? 'naoCompreende' : 'compreende';
+        } else {
+            ultimoTipo = 'notasComplementares';
+        }
         ultimaPos = match.index + match[0].length;
     }
     if (ultimaPos !== null) {
         blocos.push({ tipo: ultimoTipo, texto: textoCompleto.slice(ultimaPos) });
     }
 
-    const resultado = { compreende: [], compreendeAinda: [], naoCompreende: [] };
+    const resultado = { compreende: [], compreendeAinda: [], naoCompreende: [], notasComplementares: [] };
     blocos.forEach(b => {
         const itens = b.texto.split(/\s-\s/).map(s => s.trim()).filter(Boolean);
         resultado[b.tipo].push(...itens);
@@ -3016,11 +3020,12 @@ const temAtividades = item.atividades && item.atividades.length > 0;
             <div id="ibge-lista-observacoes" class="hidden">
                 ${(() => {
                     const partes = parseObservacoesIbge(item.observacoes);
-                    const temEstruturado = partes.compreende.length || partes.compreendeAinda.length || partes.naoCompreende.length;
+                    const temEstruturado = partes.compreende.length || partes.compreendeAinda.length || partes.naoCompreende.length || partes.notasComplementares.length;
                     if (temEstruturado) {
                         return renderBlocoObservacoes(escapeHtml, 'Compreende', partes.compreende, 'text-emerald-600 dark:text-emerald-400')
                              + renderBlocoObservacoes(escapeHtml, 'Compreende Ainda', partes.compreendeAinda, 'text-blue-600 dark:text-blue-400')
-                             + renderBlocoObservacoes(escapeHtml, 'Não Compreende', partes.naoCompreende, 'text-red-600 dark:text-red-400');
+                             + renderBlocoObservacoes(escapeHtml, 'Não Compreende', partes.naoCompreende, 'text-red-600 dark:text-red-400')
+                             + renderBlocoObservacoes(escapeHtml, 'Notas Complementares', partes.notasComplementares, 'text-slate-500 dark:text-slate-400');
                     }
                     // Modo de segurança: se o texto não seguir o padrão esperado, mostra bruto em vez de sumir com a informação
                     return `<ul class="list-disc pl-5 text-xs text-slate-700 dark:text-slate-300 space-y-1">
