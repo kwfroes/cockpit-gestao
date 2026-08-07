@@ -296,29 +296,18 @@ window.onload = function () {
 
   // 2. Feriados Móveis (Carregados do JSON)
   let movableHolidays = new Map();
-
   async function loadHolidayJson() {
     try {
-      const response = await fetch("./feriados.json");
-      if (response.ok) {
-        const data = await response.json();
+      const { data, error } = await supabaseClient
+        .from("feriados")
+        .select("data, nome");
+      if (error) throw error;
 
-        movableHolidays.clear();
-
-        if (Array.isArray(data)) {
-          // Suporte legado: Array de strings ["2025-01-01"]
-          data.forEach((dateStr) =>
-            movableHolidays.set(dateStr, "Feriado Importado"),
-          );
-          console.log(`Carregados ${data.length} feriados (formato antigo).`);
-        } else {
-          // Novo formato: Objeto { "2025-01-01": "Carnaval" }
-          Object.entries(data).forEach(([k, v]) => movableHolidays.set(k, v));
-          console.log(`Carregados ${movableHolidays.size} feriados nomeados.`);
-        }
-      }
+      movableHolidays.clear();
+      (data || []).forEach((row) => movableHolidays.set(row.data, row.nome));
+      console.log(`Carregados ${movableHolidays.size} feriados nomeados.`);
     } catch (e) {
-      console.log("Arquivo feriados.json não encontrado. Usando apenas fixos.");
+      console.log("Erro ao carregar feriados do Supabase. Usando apenas fixos.", e);
     }
   }
   loadHolidayJson(); // Chama ao iniciar
@@ -3341,25 +3330,49 @@ async function exportPDF(overrideAnalyst = null) {
     });
   }
 
-  // 6. Botão Salvar e Baixar
+  async function syncFeriadosToSupabase(mapaFeriados) {
+    const { data: existentes, error: selError } = await supabaseClient
+      .from("feriados")
+      .select("data");
+    if (selError) throw selError;
+
+    const datasNovas = new Set(mapaFeriados.keys());
+    const datasParaApagar = (existentes || [])
+      .map((r) => r.data)
+      .filter((d) => !datasNovas.has(d));
+
+    if (datasParaApagar.length > 0) {
+      const { error: delError } = await supabaseClient
+        .from("feriados")
+        .delete()
+        .in("data", datasParaApagar);
+      if (delError) throw delError;
+    }
+
+    const linhas = [...mapaFeriados.entries()].map(([data, nome]) => ({ data, nome }));
+    if (linhas.length > 0) {
+      const { error: upsertError } = await supabaseClient
+        .from("feriados")
+        .upsert(linhas, { onConflict: "data" });
+      if (upsertError) throw upsertError;
+    }
+  }
+
   if (btnDownloadHolidays) {
-    btnDownloadHolidays.addEventListener("click", () => {
-      const objToExport = Object.fromEntries(tempHolidaysMap);
-      const jsonString = JSON.stringify(objToExport, null, 2);
-      const blob = new Blob([jsonString], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "feriados.json";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-
-      movableHolidays = tempHolidaysMap;
-      modalHolidays.classList.add("hidden");
-
-      alert("Lista atualizada! O Dashboard será recalculado agora.");
-      updateDashboard();
+    btnDownloadHolidays.addEventListener("click", async () => {
+      btnDownloadHolidays.disabled = true;
+      try {
+        await syncFeriadosToSupabase(tempHolidaysMap);
+        movableHolidays = new Map(tempHolidaysMap);
+        modalHolidays.classList.add("hidden");
+        alert("Feriados publicados no Supabase! O Dashboard será recalculado agora.");
+        updateDashboard();
+      } catch (err) {
+        console.error("Erro ao publicar feriados no Supabase:", err);
+        alert("Erro ao publicar feriados. Veja o console.");
+      } finally {
+        btnDownloadHolidays.disabled = false;
+      }
     });
   }
 
