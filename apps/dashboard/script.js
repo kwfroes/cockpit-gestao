@@ -1,13 +1,20 @@
 // Espera a página inteira carregar
 window.onload = function () {
 
+  const SUPABASE_URL = 'https://whnzeysvqbtuecxmthht.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_Gw4cFK56R9kms2ogg50UqA_ZhHi79qw'; // mesma chave pública do Cockpit
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const RELATORIOS_BUCKET = 'relatorios-caf';
+  const RETENTION_MONTHS = 26; // 25 meses fechados + o mês corrente em andamento
+
   function applyRoleRestrictions() {
       const role = sessionStorage.getItem("cockpit_user_role");
       
       if (role !== "admin") {
           // IDs de todos os botões/áreas que devem sumir para o User comum
           const elementsToHide = [
-              "btnFullReset", 
+              "btnGerenciadorMeses", 
               "btnAddCsv", 
               "btnOpenHolidays",
               "exportJsonButton", 
@@ -373,14 +380,9 @@ window.onload = function () {
     });
   }
 
-  // Ajuste no Auto-Load para mostrar botões se der certo
-// Ajuste no Auto-Load para animar a barra de progresso
+  // Carrega os dados publicados no Supabase Storage (bucket relatorios-caf),
+  // um mês por vez, em vez do antigo loop relatorio_p1..p10.json local.
   async function tryAutoLoadJson() {
-    let allRows = [];
-    let commonCols = null;
-    let filesLoaded = 0;
-    const maxParts = 10; // Limite de partes que o sistema tenta buscar
-
     // Elementos da nova interface de loading
     const progressBar = document.getElementById("loadingProgressBar");
     const percentageText = document.getElementById("loadingPercentage");
@@ -390,49 +392,43 @@ window.onload = function () {
     const btnFallback = document.getElementById("btnFallbackUpload");
 
     try {
-      // Tenta carregar do p1 ao p10
-      for (let i = 1; i <= maxParts; i++) {
-        if (loadingText) loadingText.textContent = `Carregando histórico (Parte ${i} de ${maxParts})...`;
-        
-        try {
-          const fileName = `relatorio_p${i}.json`;
-          const response = await fetch(fileName);
-          
-          if (!response.ok) {
-            // Se não encontrar o arquivo (ex: parou no p3), sai do loop
-            break; 
-          }
+      if (loadingText) loadingText.textContent = "Buscando meses publicados no Supabase...";
 
-          const part = await response.json();
-          
-          // Armazena as colunas e acumula as linhas
-          if (!commonCols) commonCols = part.cols;
-          allRows = allRows.concat(part.rows);
-          filesLoaded++;
-          
-          // Anima a barra (ex: 3 arquivos = 30%)
-          const progress = (filesLoaded / maxParts) * 100;
-          if (progressBar) progressBar.style.width = `${progress}%`;
-          if (percentageText) percentageText.textContent = `${Math.round(progress)}%`;
-          
-          // Pequeno delay estético para a barra não piscar rápido demais
-          await new Promise(resolve => setTimeout(resolve, 150));
+      const { data: files, error: listError } = await supabaseClient.storage
+        .from(RELATORIOS_BUCKET)
+        .list();
+      if (listError) throw listError;
 
-        } catch (e) {
-          break; // Erro silencioso (arquivo não existe)
-        }
+      const monthFiles = (files || [])
+        .filter((f) => /^\d{4}-\d{2}\.json$/.test(f.name))
+        .map((f) => ({ key: f.name.replace(".json", ""), updatedAt: f.updated_at }))
+        .sort((a, b) => a.key.localeCompare(b.key));
+
+      let allRawRows = [];
+
+      for (let i = 0; i < monthFiles.length; i++) {
+        const { key, updatedAt } = monthFiles[i];
+        const isMesCorrente = i === monthFiles.length - 1; // o mais recente ainda está em aberto
+
+        if (loadingText) loadingText.textContent = `Carregando ${key} (${i + 1} de ${monthFiles.length})...`;
+
+        const rows = isMesCorrente
+          ? await downloadMonthRaw(key)
+          : await downloadMonthRawCached(key, updatedAt);
+
+        allRawRows = allRawRows.concat(rows);
+
+        const progress = ((i + 1) / Math.max(monthFiles.length, 1)) * 100;
+        if (progressBar) progressBar.style.width = `${progress}%`;
+        if (percentageText) percentageText.textContent = `${Math.round(progress)}%`;
       }
 
-      if (filesLoaded > 0) {
-        // Enche a barra até 100% no final (já que pode ter achado apenas 5 arquivos)
+      if (allRawRows.length > 0) {
         if (progressBar) progressBar.style.width = "100%";
         if (percentageText) percentageText.textContent = "100%";
         if (loadingText) loadingText.textContent = "Processando os dados. Quase lá!";
 
-        // Reconstrói o objeto e processa
-        const fullOptimized = { cols: commonCols, rows: allRows };
-        const jsonRaw = restoreDataFromImport(fullOptimized);
-        allData = processRawData(jsonRaw); // Aqui ele já filtra pela Regra do RLS
+        allData = processRawData(allRawRows); // Aqui ele já filtra pela Regra do RLS
         filteredData = [...allData];
 
         // Espera meio segundo para o usuário ver o 100% antes de trocar de tela
@@ -483,8 +479,8 @@ window.onload = function () {
         }, 600);
 
       } else {
-        // CENÁRIO: Não encontrou nenhum JSON na pasta
-        if (loadingText) loadingText.textContent = "Nenhuma base local encontrada.";
+        // CENÁRIO: Nenhum mês publicado ainda no Supabase
+        if (loadingText) loadingText.textContent = "Nenhum mês publicado no Supabase ainda.";
         if (progressBar) progressBar.parentElement.classList.add("hidden");
         if (percentageText) percentageText.parentElement.classList.add("hidden");
         
@@ -492,8 +488,8 @@ window.onload = function () {
         if (btnFallback) btnFallback.classList.remove("hidden");
       }
     } catch (error) {
-      console.error("Erro crítico ao processar arquivos automáticos:", error);
-      if (loadingText) loadingText.textContent = "Erro ao iniciar o sistema.";
+      console.error("Erro crítico ao carregar dados do Supabase:", error);
+      if (loadingText) loadingText.textContent = "Erro ao buscar dados no Supabase.";
       if (btnFallback) btnFallback.classList.remove("hidden");
     }
   }
@@ -512,7 +508,16 @@ window.onload = function () {
   // --- NOVOS ELEMENTOS (Adicionar e Limpar) ---
   const addCsvInput = document.getElementById("addCsvInput");
   const btnAddCsv = document.getElementById("btnAddCsv");
-  const btnFullReset = document.getElementById("btnFullReset");
+
+  // --- GERENCIADOR DE MESES (Supabase) ---
+  const btnGerenciadorMeses = document.getElementById("btnGerenciadorMeses");
+  const monthManagerModal = document.getElementById("monthManagerModal");
+  const btnCloseMonthManager = document.getElementById("btnCloseMonthManager");
+  const xlsxInput = document.getElementById("xlsxInput");
+  const btnXlsxUpload = document.getElementById("btnXlsxUpload");
+  const btnMigrarAtual = document.getElementById("btnMigrarAtual");
+  const btnMigrarLocais = document.getElementById("btnMigrarLocais");
+  const monthManagerStatus = document.getElementById("monthManagerStatus");
 
   // 1. Lógica de ADICIONAR (Mesclar)
   if (btnAddCsv) {
@@ -528,9 +533,144 @@ window.onload = function () {
     });
   }
 
-  // 2. Lógica de RESET (Limpar Tudo - Lixeira)
-  if (btnFullReset) {
-    btnFullReset.addEventListener("click", resetApplication);
+  // Atualiza allData/filteredData e redesenha, sem reabrir a tela de loading
+  // nem re-registrar listeners (evita o problema de duplicar handlers que
+  // rodar tryAutoLoadJson() de novo, no meio de uma sessão, causaria).
+  async function refreshFromSupabase() {
+    const raw = await loadFromSupabase();
+    allData = processRawData(raw);
+    filteredData = [...allData];
+    if (typeof updateDateRangeBadge === "function") updateDateRangeBadge(allData);
+    if (typeof populateFilters === "function") populateFilters(allData);
+    if (typeof updateDashboard === "function") updateDashboard();
+    if (typeof atualizarStatsExternos === "function") atualizarStatsExternos();
+  }
+
+  // 2. Lógica do Gerenciador de Meses (Supabase)
+  if (btnGerenciadorMeses) {
+    btnGerenciadorMeses.addEventListener("click", () => {
+      monthManagerModal.classList.remove("hidden");
+    });
+  }
+
+  if (btnCloseMonthManager) {
+    btnCloseMonthManager.addEventListener("click", () => {
+      monthManagerModal.classList.add("hidden");
+    });
+  }
+
+  if (btnXlsxUpload) {
+    btnXlsxUpload.addEventListener("click", () => xlsxInput.click());
+  }
+
+  if (xlsxInput) {
+    xlsxInput.addEventListener("change", async () => {
+      const file = xlsxInput.files[0];
+      if (!file) return;
+
+      btnXlsxUpload.disabled = true;
+      btnMigrarAtual.disabled = true;
+
+      try {
+        const { results, ignoradasSemData } = await handleXlsxUpload(file, (msg) => {
+          if (monthManagerStatus) monthManagerStatus.textContent = msg;
+        });
+
+        const resumo = results
+          .map((r) => `${r.month}: ${r.total} linhas (${r.novos} novas)`)
+          .join(" · ");
+
+        if (monthManagerStatus) {
+          monthManagerStatus.textContent = `Publicado! ${resumo}${
+            ignoradasSemData > 0 ? ` — ${ignoradasSemData} linha(s) sem Data Análise ignorada(s)` : ""
+          }`;
+        }
+
+        await refreshFromSupabase();
+      } catch (err) {
+        console.error("Erro ao publicar xlsx:", err);
+        if (monthManagerStatus) monthManagerStatus.textContent = "Erro ao publicar. Veja o console.";
+      } finally {
+        btnXlsxUpload.disabled = false;
+        btnMigrarAtual.disabled = false;
+        xlsxInput.value = "";
+      }
+    });
+  }
+
+  if (btnMigrarAtual) {
+    btnMigrarAtual.addEventListener("click", async () => {
+      if (allData.length === 0) {
+        if (monthManagerStatus) monthManagerStatus.textContent = "Nada carregado na tela pra migrar.";
+        return;
+      }
+      if (!confirm(`Migrar ${allData.length} linhas já carregadas para o Supabase?`)) return;
+
+      btnXlsxUpload.disabled = true;
+      btnMigrarAtual.disabled = true;
+
+      try {
+        const { results, ignoradasSemData } = await publishMonthlyData(allData, (msg) => {
+          if (monthManagerStatus) monthManagerStatus.textContent = msg;
+        });
+
+        const resumo = results
+          .map((r) => `${r.month}: ${r.total} linhas (${r.novos} novas)`)
+          .join(" · ");
+
+        if (monthManagerStatus) {
+          monthManagerStatus.textContent = `Migração concluída! ${resumo}${
+            ignoradasSemData > 0 ? ` — ${ignoradasSemData} linha(s) sem Data Análise ignorada(s)` : ""
+          }`;
+        }
+      } catch (err) {
+        console.error("Erro na migração:", err);
+        if (monthManagerStatus) monthManagerStatus.textContent = "Erro na migração. Veja o console.";
+      } finally {
+        btnXlsxUpload.disabled = false;
+        btnMigrarAtual.disabled = false;
+      }
+    });
+  }
+
+  if (btnMigrarLocais) {
+    btnMigrarLocais.addEventListener("click", async () => {
+      if (!confirm("Isso vai ler relatorio_p1.json a p10.json (o que existir na pasta) e publicar tudo no Supabase. Pode demorar um pouco. Continuar?")) return;
+
+      btnXlsxUpload.disabled = true;
+      btnMigrarAtual.disabled = true;
+      btnMigrarLocais.disabled = true;
+
+      try {
+        const { results, ignoradasSemData, arquivosLidos } = await migrarJsonsLocais((msg) => {
+          if (monthManagerStatus) monthManagerStatus.textContent = msg;
+        });
+
+        if (arquivosLidos === 0) {
+          if (monthManagerStatus) monthManagerStatus.textContent = "Nenhum relatorio_pX.json encontrado na pasta.";
+          return;
+        }
+
+        const resumo = results
+          .map((r) => `${r.month}: ${r.total} linhas (${r.novos} novas)`)
+          .join(" · ");
+
+        if (monthManagerStatus) {
+          monthManagerStatus.textContent = `${arquivosLidos} arquivo(s) lido(s). ${resumo}${
+            ignoradasSemData > 0 ? ` — ${ignoradasSemData} linha(s) sem Data Análise ignorada(s)` : ""
+          }`;
+        }
+
+        await refreshFromSupabase();
+      } catch (err) {
+        console.error("Erro ao migrar jsons locais:", err);
+        if (monthManagerStatus) monthManagerStatus.textContent = "Erro na migração. Veja o console.";
+      } finally {
+        btnXlsxUpload.disabled = false;
+        btnMigrarAtual.disabled = false;
+        btnMigrarLocais.disabled = false;
+      }
+    });
   }
 
   // Função unificada de Reset
@@ -644,17 +784,10 @@ window.onload = function () {
 
   // --- 2. PROCESSAMENTO DE DADOS ---
 
-  function processRawData(data) {
-    // --- ADICIONADO PARA CONTROLE DE ACESSO ---
-    const role = sessionStorage.getItem("cockpit_user_role");
-    const csvName = sessionStorage.getItem("cockpit_csv_name") || sessionStorage.getItem("cockpit_user_realname");
-    // ------------------------------------------
-
-    // --- ADICIONADO PARA DEBUG ---
+    function addDerivedFields(data) {
     const rejectedRows = [];
-    // ---------------------------
 
-    let processedData = data.map((row) => {
+    const processedData = data.map((row) => {
         const dataSolicitacao = _native_safeParseDate(row["Data Solicitacao"]);
         const dataAnalise = _native_safeParseDate(row["Data Análise"]);
 
@@ -664,11 +797,9 @@ window.onload = function () {
             tempoAnalise = Math.floor(diffMs / (1000 * 60 * 60 * 24));
         }
 
-        // --- ADICIONADO PARA DEBUG ---
         if (!dataAnalise && row["Data Análise"]) {
             rejectedRows.push(row);
         }
-        // ---------------------------
 
         return {
             ...row,
@@ -686,18 +817,22 @@ window.onload = function () {
         };
     });
 
-    // --- ADICIONADO PARA DEBUG ---
-    console.warn(`[DEBUG] Linhas totais recebidas do CSV: ${data.length}`);
-    console.warn(
-        `[DEBUG] Linhas rejeitadas (Data Análise inválida, não-vazia): ${rejectedRows.length}`,
-    );
+    console.warn(`[DEBUG] Linhas totais recebidas: ${data.length}`);
+    console.warn(`[DEBUG] Linhas rejeitadas (Data Análise inválida, não-vazia): ${rejectedRows.length}`);
     if (rejectedRows.length > 0) {
-        console.warn(
-            "[DEBUG] Amostra de linhas rejeitadas (primeiras 20):",
-            rejectedRows.slice(0, 20),
-        );
+        console.warn("[DEBUG] Amostra de linhas rejeitadas (primeiras 20):", rejectedRows.slice(0, 20));
     }
-    // ---------------------------
+
+    return processedData;
+  }
+
+  function processRawData(data) {
+    const role = sessionStorage.getItem("cockpit_user_role");
+    const csvName = sessionStorage.getItem("cockpit_csv_name") || sessionStorage.getItem("cockpit_user_realname");
+
+    let processedData = addDerivedFields(data);
+
+      // ---------------------------
 
     // --------------------------------------------------------
     // GATEKEEPER DE DADOS
@@ -969,20 +1104,204 @@ window.onload = function () {
     });
   }
 
+  // =========================================================
+  // MOTOR DE PUBLICAÇÃO MENSAL — SUPABASE STORAGE
+  // =========================================================
+
+  async function downloadMonthRaw(monthKey) {
+    const { data, error } = await supabaseClient.storage
+      .from(RELATORIOS_BUCKET)
+      .download(`${monthKey}.json`);
+    if (error) return []; // mês ainda não existe
+    const text = await data.text();
+    return restoreDataFromImport(JSON.parse(text));
+  }
+
+  async function uploadMonthRaw(monthKey, rawRows) {
+    const optimized = optimizeDataForExport(rawRows);
+    const blob = new Blob([JSON.stringify(optimized)], { type: "application/json" });
+    const { error } = await supabaseClient.storage
+      .from(RELATORIOS_BUCKET)
+      .upload(`${monthKey}.json`, blob, { upsert: true, contentType: "application/json" });
+    if (error) throw error;
+  }
+
+  async function enforceRetention() {
+    const { data: files, error } = await supabaseClient.storage.from(RELATORIOS_BUCKET).list();
+    if (error || !files) return;
+
+    const monthKeys = files
+      .filter((f) => /^\d{4}-\d{2}\.json$/.test(f.name))
+      .map((f) => f.name.replace(".json", ""))
+      .sort();
+
+    const toDelete = monthKeys.slice(0, Math.max(0, monthKeys.length - RETENTION_MONTHS));
+    if (toDelete.length > 0) {
+      await supabaseClient.storage.from(RELATORIOS_BUCKET).remove(toDelete.map((k) => `${k}.json`));
+    }
+  }
+
+  // =========================================================
+  // CACHE LOCAL (IndexedDB) — evita rebaixar meses fechados
+  // toda vez que a página carrega (economiza egress do Supabase)
+  // =========================================================
+  const CACHE_DB_NAME = "cockpit_dashboard_cache";
+  const CACHE_STORE = "meses";
+
+  function openCacheDb() {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open(CACHE_DB_NAME, 1);
+      req.onupgradeneeded = () => {
+        req.result.createObjectStore(CACHE_STORE, { keyPath: "monthKey" });
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  async function getCachedMonth(monthKey) {
+    try {
+      const db = await openCacheDb();
+      return await new Promise((resolve, reject) => {
+        const tx = db.transaction(CACHE_STORE, "readonly");
+        const req = tx.objectStore(CACHE_STORE).get(monthKey);
+        req.onsuccess = () => resolve(req.result || null);
+        req.onerror = () => reject(req.error);
+      });
+    } catch (e) {
+      return null; // IndexedDB indisponível (ex: aba anônima) -> segue sem cache
+    }
+  }
+
+  async function setCachedMonth(monthKey, updatedAt, rawRows) {
+    try {
+      const db = await openCacheDb();
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction(CACHE_STORE, "readwrite");
+        tx.objectStore(CACHE_STORE).put({ monthKey, updatedAt, rawRows });
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      });
+    } catch (e) {
+      // Falha ao gravar não é crítica, só perde o ganho de egress dessa vez
+    }
+  }
+
+  // Usado só na LEITURA (dashboard). O downloadMonthRaw "puro" continua sendo
+  // usado pelo publishMonthlyData, que precisa sempre do dado fresco pra mesclar.
+  async function downloadMonthRawCached(monthKey, updatedAt) {
+    const cached = await getCachedMonth(monthKey);
+    if (cached && cached.updatedAt === updatedAt) {
+      return cached.rawRows; // veio do IndexedDB, sem egress
+    }
+    const rawRows = await downloadMonthRaw(monthKey);
+    await setCachedMonth(monthKey, updatedAt, rawRows);
+    return rawRows;
+  }
+
+  // Recebe linhas JÁ processadas (com _mesAnoAnalise), agrupa por mês,
+  // mescla com o que já está publicado e sobe. Usada tanto pela migração
+  // inicial (a partir do allData já carregado) quanto pelo motor de xlsx.
+  async function publishMonthlyData(processedRows, onProgress) {
+    const groups = {};
+    let ignoradasSemData = 0;
+
+    processedRows.forEach((row) => {
+      if (!row._mesAnoAnalise) { ignoradasSemData++; return; }
+      (groups[row._mesAnoAnalise] = groups[row._mesAnoAnalise] || []).push(row);
+    });
+
+    const results = [];
+    for (const key of Object.keys(groups).sort()) {
+      if (onProgress) onProgress(`Publicando ${key}...`);
+
+      const newRawObjs = restoreDataFromImport(optimizeDataForExport(groups[key]));
+      const existingRaw = await downloadMonthRaw(key);
+      const merged = mergeData(existingRaw, newRawObjs);
+
+      await uploadMonthRaw(key, merged);
+      results.push({ month: key, total: merged.length, novos: merged.length - existingRaw.length });
+    }
+
+    await enforceRetention();
+    return { results, ignoradasSemData };
+  }
+
+  // Migração única: lê os relatorio_p1..p10.json locais (mesmo padrão do antigo
+  // tryAutoLoadJson) e publica tudo no Supabase pelo mesmo motor do xlsx.
+  async function migrarJsonsLocais(onProgress) {
+    let allRows = [];
+    let commonCols = null;
+    const maxParts = 10;
+    let arquivosLidos = 0;
+
+    for (let i = 1; i <= maxParts; i++) {
+      if (onProgress) onProgress(`Lendo relatorio_p${i}.json...`);
+      try {
+        const response = await fetch(`relatorio_p${i}.json`);
+        if (!response.ok) break;
+        const part = await response.json();
+        if (!commonCols) commonCols = part.cols;
+        allRows = allRows.concat(part.rows);
+        arquivosLidos++;
+      } catch (e) {
+        break;
+      }
+    }
+
+    if (arquivosLidos === 0) {
+      return { results: [], ignoradasSemData: 0, arquivosLidos: 0 };
+    }
+
+    const rawRows = restoreDataFromImport({ cols: commonCols, rows: allRows });
+    const processedRows = addDerivedFields(rawRows);
+    const publishResult = await publishMonthlyData(processedRows, onProgress);
+    return { ...publishResult, arquivosLidos };
+  }
+
+  // Motor XLSX: lê o Excel nativo da fonte e publica direto no Supabase
+  async function handleXlsxUpload(file, onProgress) {
+    const buffer = await file.arrayBuffer();
+    const workbook = XLSX.read(buffer, { type: "array" });
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    // raw: false -> mantém as datas como texto "dd/MM/yyyy HH:mm:ss", igual ao CSV
+    const rawRows = XLSX.utils.sheet_to_json(sheet, { raw: false, defval: "" });
+
+    const processedRows = addDerivedFields(rawRows);
+    return publishMonthlyData(processedRows, onProgress);
+  }
+
+  // Carrega o dashboard direto do Storage (substitui o loop p1..p10 do tryAutoLoadJson)
+  async function loadFromSupabase() {
+    const { data: files, error } = await supabaseClient.storage.from(RELATORIOS_BUCKET).list();
+    if (error || !files || files.length === 0) return [];
+
+    const monthFiles = files
+      .filter((f) => /^\d{4}-\d{2}\.json$/.test(f.name))
+      .map((f) => ({ key: f.name.replace(".json", ""), updatedAt: f.updated_at }))
+      .sort((a, b) => a.key.localeCompare(b.key));
+
+    let allRawRows = [];
+    for (let i = 0; i < monthFiles.length; i++) {
+      const { key, updatedAt } = monthFiles[i];
+      const isMesCorrente = i === monthFiles.length - 1;
+      const rows = isMesCorrente
+        ? await downloadMonthRaw(key)
+        : await downloadMonthRawCached(key, updatedAt);
+      allRawRows = allRawRows.concat(rows);
+    }
+    return allRawRows;
+  }
+
   function mergeData(oldData, newData) {
-    // Cria um Set com assinaturas únicas dos dados antigos para verificação rápida
-    // Assinatura = concatenação de campos chave (Ex: Data + Solicitante + Protocolo)
+
     const existingSignatures = new Set(
-      oldData.map(
-        (item) =>
-          `${item["Data Solicitacao"]}|${item["Numero Protocolo"]}|${item["Nome Fornecedor"]}`,
-      ),
+      oldData.map((item) => String(item["IdSolicitacao"])),
     );
 
-    const uniqueNewData = newData.filter((item) => {
-      const signature = `${item["Data Solicitacao"]}|${item["Numero Protocolo"]}|${item["Nome Fornecedor"]}`;
-      return !existingSignatures.has(signature);
-    });
+    const uniqueNewData = newData.filter(
+      (item) => !existingSignatures.has(String(item["IdSolicitacao"])),
+    );
 
     console.log(
       `Merge: ${oldData.length} antigos + ${uniqueNewData.length} novos únicos.`,

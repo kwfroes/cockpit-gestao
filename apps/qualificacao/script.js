@@ -71,6 +71,304 @@ function normalizarCodigoCnae(codigo) {
 }
 
 // ==========================================
+// MOTOR LOCAL DE SUGESTÃO DE CNAE (mesma lógica validada do motor_cnae.js:
+// stopwords + fronteira de palavra + guarda de "exceto" + expansão só na
+// direção Principal -> Relacionadas — evita os bugs que já achamos e
+// corrigimos por lá: "de" em 89% dos CNAEs, "gas" escondido em "produtos",
+// "consultoria" puxando "publicidade" na direção reversa)
+// ==========================================
+const STOPWORDS_SUGESTAO_MODAL = new Set([
+    'de', 'da', 'do', 'das', 'dos', 'e', 'em', 'na', 'no', 'nas', 'nos',
+    'para', 'por', 'com', 'sem', 'outros', 'outras', 'outro', 'outra',
+    'nao', 'especificados', 'especificado', 'especializado', 'especializados',
+    'anteriormente', 'geral', 'gerais', 'uso', 'usos', 'diversos', 'diversas',
+    'exceto', 'inclusive', 'atividades', 'atividade', 'produtos', 'produto',
+    'comercio', 'servicos', 'servico', 'fabricacao', 'varejista', 'varejo',
+    'atacadista', 'atacado', 'a', 'o', 'os', 'as', 'ou', 'que', 'se',
+    'seu', 'sua', 'seus', 'suas',
+]);
+
+const SECOES_SERVICO_BLOQUEADAS_MODAL = new Set(['F', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U']);
+const PREFIXO_SERVICO_BLOQUEADO_MODAL = /^(servicos?\s+de|manutencao|reparacao|instalacao|montagem|assistencia\s+tecnica)\b/;
+
+function normalizarParaBuscaModal(t) {
+    return (t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
+function temPalavraModal(haystack, frase) {
+    if (!frase) return false;
+    const escaped = frase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return new RegExp(`\\b${escaped}\\b`).test(haystack);
+}
+
+// Tipo M (material) não pode receber CNAE de serviço — mesma regra do motor
+function candidatoBloqueadoModal(cnae, tipoFamilia) {
+    if (tipoFamilia !== 'M') return false;
+    if (cnae.SECAO && SECOES_SERVICO_BLOQUEADAS_MODAL.has(cnae.SECAO)) return true;
+    return PREFIXO_SERVICO_BLOQUEADO_MODAL.test(normalizarParaBuscaModal(cnae.DESCRIÇÃO));
+}
+
+function calcularSugestoesCnaeParaFamilia(familia, limite = 8) {
+    const norm = normalizarParaBuscaModal(familia.Descrição);
+    const palavras = norm.match(/[a-z]+/g) || [];
+    const termos = new Set(palavras.filter(w => !STOPWORDS_SUGESTAO_MODAL.has(w) && w.length > 2));
+
+    (relacionadosDict || []).forEach(item => {
+        const principal = normalizarParaBuscaModal(item.Principal);
+        if (temPalavraModal(norm, principal)) {
+            const relacionadas = normalizarParaBuscaModal(item.Relacionadas).split(', ').filter(Boolean);
+            relacionadas.forEach(r => termos.add(r));
+        }
+    });
+
+    const jaVinculados = new Set((familia.CNAEs || []).map(c => normalizarCodigoCnae(c.codigo)));
+
+    return cnaeDictionary
+        .filter(c => !jaVinculados.has(normalizarCodigoCnae(c.CNAE)))
+        .filter(c => !candidatoBloqueadoModal(c, familia.Tipo))
+        .map(cnae => {
+            const cnaeNormFull = normalizarParaBuscaModal(cnae.DESCRIÇÃO);
+            const cnaeNorm = cnaeNormFull.split(/\bexceto\b/)[0];
+            let score = 0;
+            termos.forEach(termo => {
+                if (temPalavraModal(cnaeNorm, termo)) score += 2;
+                if (cnaeNorm.startsWith(termo)) score += 3;
+            });
+            return { CNAE: cnae.CNAE, DESCRIÇÃO: cnae.DESCRIÇÃO, score };
+        })
+        .filter(c => c.score >= 4)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, limite);
+}
+
+function escapeAttrModal(str) {
+    return (str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+// ==========================================
+// MODAL DE DETALHE DA FAMÍLIA (substitui a expansão inline no card)
+// ==========================================
+window.abrirModalDetalheFamilia = (index) => {
+    const item = familyData[index];
+    if (!item) return;
+
+    let modal = document.getElementById('modal-detalhe-familia');
+    if (modal) modal.remove();
+
+    const isTerceirizado = item.Terceirizado === 'Sim';
+    const exigidos = item["Documentos Exigidos"] || item["DOCUMENTOS EXIGIDOS"] || [];
+    const elegiveis = item["Documentos Elegíveis"] || item["DOCUMENTOS ELEGÍVEIS"] || [];
+
+    modal = document.createElement('div');
+    modal.id = 'modal-detalhe-familia';
+    modal.className = 'fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-[130] flex items-center justify-center p-4 animate-fade-in';
+    modal.innerHTML = `
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl max-h-[88vh] flex flex-col overflow-hidden animate-scale-up border border-slate-200 dark:border-slate-700">
+            <div class="flex justify-between items-start p-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 shrink-0">
+                <div class="min-w-0">
+                    <div class="flex gap-2 mb-2">
+                        <span class="text-[9px] font-bold px-2 py-1 rounded ${item.Tipo === 'S' ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400' : 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400'} uppercase tracking-tighter">
+                            ${item.Tipo === 'S' ? 'Serviço' : 'Material'}
+                        </span>
+                        ${isTerceirizado ? `<span class="text-[9px] font-bold px-2 py-1 rounded bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 uppercase tracking-tighter">Terceirizado</span>` : ''}
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 leading-tight">${item.Descrição}</h3>
+                    <p class="text-xs font-mono text-slate-500 dark:text-slate-400 mt-1">Família ${item.Família}</p>
+                </div>
+                <div class="flex gap-1 shrink-0">
+                    <button onclick="abrirModalItensFamilia('${item.Família}')" class="text-slate-400 hover:text-purple-500 transition-colors p-1.5" title="Ver itens desta família">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                    </button>
+                    <button onclick="document.getElementById('modal-detalhe-familia').remove(); openFamilyForm(${index});" class="cgcf-manager-only text-slate-400 hover:text-blue-500 transition-colors p-1.5" title="Editar Família">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M20.8477 1.87868C19.6761 0.707109 17.7766 0.707105 16.605 1.87868L2.44744 16.0363C2.02864 16.4551 1.74317 16.9885 1.62702 17.5692L1.03995 20.5046C0.760062 21.904 1.9939 23.1379 3.39334 22.858L6.32868 22.2709C6.90945 22.1548 7.44285 21.8693 7.86165 21.4505L22.0192 7.29289C23.1908 6.12132 23.1908 4.22183 22.0192 3.05025L20.8477 1.87868ZM18.0192 3.29289C18.4098 2.90237 19.0429 2.90237 19.4335 3.29289L20.605 4.46447C20.9956 4.85499 20.9956 5.48815 20.605 5.87868L17.9334 8.55027L15.3477 5.96448L18.0192 3.29289ZM13.9334 7.3787L3.86165 17.4505C3.72205 17.5901 3.6269 17.7679 3.58818 17.9615L3.00111 20.8968L5.93645 20.3097C6.13004 20.271 6.30784 20.1759 6.44744 20.0363L16.5192 9.96448L13.9334 7.3787Z" fill="currentColor"/></svg>
+                    </button>
+                    <button onclick="document.getElementById('modal-detalhe-familia').remove()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-1.5">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-4 overflow-y-auto flex-1 flex flex-col gap-4 custom-scrollbar">
+                ${(exigidos.length > 0 || elegiveis.length > 0) ? `
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    ${renderDocList("Obrigatórios", exigidos, "text-red-500")}
+                    ${renderDocList("Elegíveis", elegiveis, "text-emerald-600")}
+                </div>` : ''}
+
+                <div class="border-t border-slate-200 dark:border-slate-700 pt-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <p class="text-[10px] font-bold text-blue-500 uppercase tracking-widest">CNAEs Relacionados</p>
+                        <button type="button" id="btn-sugerir-cnae-modal" onclick="rodarSugestaoCnaeModal(${index})"
+                            class="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            Sugerir CNAE
+                        </button>
+                    </div>
+                    <div id="lista-cnaes-familia-modal" class="space-y-1.5">
+                        ${(item.CNAEs || []).length > 0 ? item.CNAEs.map(c => `
+                        <div class="flex items-center justify-between gap-2 text-[11px] bg-slate-50 dark:bg-slate-850 p-2 rounded border dark:border-slate-800 dark:text-slate-300">
+                            <div onclick="copyToClipboard(event, '${c.codigo} | ${c.descricao}')" class="flex-1 cursor-copy min-w-0" title="Copiar CNAE">
+                                <span class="text-blue-600 dark:text-blue-400 font-bold">${c.codigo}</span>
+                                <span class="mx-1 text-slate-300">|</span>${c.descricao}
+                            </div>
+                            <button type="button" onclick="event.stopPropagation(); reabrirBuscaIbgeDireto('${c.codigo}')"
+                                class="shrink-0 p-1 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors" title="Ver detalhes no IBGE">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            </button>
+                        </div>
+                        `).join('') : '<p class="text-[10px] italic text-gray-500 dark:text-gray-400 text-center py-2">Nenhum CNAE cadastrado.</p>'}
+                    </div>
+                    <div id="sugestoes-cnae-modal-container" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+};
+
+window.rodarSugestaoCnaeModal = (index) => {
+    const item = familyData[index];
+    const btn = document.getElementById('btn-sugerir-cnae-modal');
+    const container = document.getElementById('sugestoes-cnae-modal-container');
+    if (!item || !container) return;
+    if (btn) btn.disabled = true;
+
+    const candidatos = calcularSugestoesCnaeParaFamilia(item, 8);
+
+    if (candidatos.length === 0) {
+        container.innerHTML = `<p class="text-[11px] italic text-slate-400 dark:text-slate-500 text-center py-2">O motor local não achou candidato claro pra essa descrição.</p>`;
+        if (btn) btn.disabled = false;
+        return;
+    }
+
+    container.innerHTML = `
+        <div class="bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-200 dark:border-emerald-800 rounded-lg p-3">
+            <div class="flex items-center justify-between mb-2">
+                <p class="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-widest">Candidatos do motor local</p>
+                <button type="button" onclick="analisarSugestoesModalComIA(${index})"
+                    class="text-[10px] font-bold uppercase tracking-wider text-violet-600 dark:text-violet-400 hover:underline flex items-center gap-1">
+                    🤖 Analisar com IA
+                </button>
+            </div>
+            <div id="lista-candidatos-modal" class="space-y-1.5">
+                ${candidatos.map((c, i) => `
+                <div id="candidato-modal-${i}" data-codigo="${c.CNAE}" data-descricao="${escapeAttrModal(c.DESCRIÇÃO)}" class="flex items-center justify-between gap-2 text-[11px] bg-white dark:bg-slate-800 p-2 rounded border border-slate-200 dark:border-slate-700">
+                    <div class="flex-1 min-w-0">
+                        <span class="text-blue-600 dark:text-blue-400 font-bold">${c.CNAE}</span>
+                        <span class="text-slate-400 dark:text-slate-500 mx-1">(score ${c.score})</span>
+                        <span class="text-slate-700 dark:text-slate-300">${c.DESCRIÇÃO}</span>
+                        <div class="ia-resultado-candidato"></div>
+                    </div>
+                    <button type="button" onclick="vincularCandidatoModal(${index}, ${i})"
+                        class="shrink-0 px-2 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold uppercase rounded transition-colors">
+                        Vincular
+                    </button>
+                </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+    if (btn) btn.disabled = false;
+};
+
+window.analisarSugestoesModalComIA = async (index) => {
+    const item = familyData[index];
+    const candidatosEls = document.querySelectorAll('#lista-candidatos-modal [id^="candidato-modal-"]');
+    if (!item || candidatosEls.length === 0) return;
+
+    const pares = Array.from(candidatosEls).map((el, i) => ({
+        id: i,
+        familia: item.Descrição,
+        cnae: el.dataset.descricao,
+        acao: 'adicionar'
+    }));
+
+    if (typeof showToast === 'function') showToast(`Analisando ${pares.length} candidatos com IA...`);
+
+    try {
+        const { data, error } = await supabase.functions.invoke('analisar-afinidade-cnae', { body: { pares } });
+        if (error) throw error;
+        if (!Array.isArray(data)) throw new Error('Resposta inesperada da IA.');
+
+        data.forEach(r => {
+            const el = document.getElementById(`candidato-modal-${r.id}`);
+            if (!el) return;
+            const alvo = el.querySelector('.ia-resultado-candidato');
+            if (!alvo) return;
+            let cor = 'text-red-600 dark:text-red-400';
+            if (r.score >= 8) cor = 'text-emerald-600 dark:text-emerald-400';
+            else if (r.score >= 4) cor = 'text-amber-600 dark:text-amber-400';
+            alvo.innerHTML = `<span class="block mt-1 ${cor} text-[10px]">🤖 IA: ${r.score}/10 — ${r.justificativa}</span>`;
+        });
+        if (typeof showToast === 'function') showToast('Análise da IA concluída.');
+    } catch (err) {
+        console.error(err);
+        if (typeof showError === 'function') showError('Erro na IA', err.message || 'Falha ao analisar com IA.');
+    }
+};
+
+window.vincularCandidatoModal = async (indexFamilia, indexCandidato) => {
+    const item = familyData[indexFamilia];
+    const linha = document.getElementById(`candidato-modal-${indexCandidato}`);
+    if (!item || !linha) return;
+
+    const codigo = linha.dataset.codigo;
+    const descricao = linha.dataset.descricao;
+
+    if (item.CNAEs && item.CNAEs.some(c => normalizarCodigoCnae(c.codigo) === normalizarCodigoCnae(codigo))) {
+        if (typeof showToast === 'function') showToast('Esse CNAE já está vinculado.');
+        return;
+    }
+
+    const btn = linha.querySelector('button');
+    if (btn) { btn.disabled = true; btn.textContent = '...'; }
+
+    try {
+        if (!item.CNAEs) item.CNAEs = [];
+        item.CNAEs.push({ codigo, descricao });
+
+        const payloadSupa = {
+            familia: item["Família"], descricao: item["Descrição"], tipo: item["Tipo"],
+            terceirizado: item["Terceirizado"], documentos_exigidos: item["Documentos Exigidos"],
+            documentos_elegiveis: item["Documentos Elegíveis"], cnaes: item.CNAEs, ramo: item["Ramo"]
+        };
+        const { error } = await supabase.from('qualificacao_tecnica').upsert([payloadSupa]);
+        if (error) throw error;
+
+        if (!cnaeDictionary.some(c => c.CNAE === codigo)) {
+            cnaeDictionary.push({ CNAE: codigo, DESCRIÇÃO: descricao });
+        }
+
+        if (typeof showToast === 'function') showToast('CNAE vinculado com sucesso!');
+        linha.remove();
+        applyFilters(false);
+        enviarStatsParaHome();
+
+        const listaTopo = document.getElementById('lista-cnaes-familia-modal');
+        if (listaTopo) {
+            const vazio = listaTopo.querySelector('p.italic');
+            if (vazio) vazio.remove();
+            listaTopo.insertAdjacentHTML('beforeend', `
+                <div class="flex items-center justify-between gap-2 text-[11px] bg-slate-50 dark:bg-slate-850 p-2 rounded border dark:border-slate-800 dark:text-slate-300">
+                    <div onclick="copyToClipboard(event, '${codigo} | ${descricao}')" class="flex-1 cursor-copy min-w-0" title="Copiar CNAE">
+                        <span class="text-blue-600 dark:text-blue-400 font-bold">${codigo}</span>
+                        <span class="mx-1 text-slate-300">|</span>${descricao}
+                    </div>
+                    <button type="button" onclick="event.stopPropagation(); reabrirBuscaIbgeDireto('${codigo}')"
+                        class="shrink-0 p-1 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors" title="Ver detalhes no IBGE">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </button>
+                </div>`);
+        }
+    } catch (err) {
+        console.error(err);
+        if (typeof showError === 'function') showError('Erro', 'Falha ao vincular o CNAE.');
+        item.CNAEs = item.CNAEs.filter(c => c.codigo !== codigo);
+        if (btn) { btn.disabled = false; btn.textContent = 'Vincular'; }
+    }
+};
+
+// ==========================================
 // LÓGICA DO PAINEL DE VALIDAÇÃO (ADMIN / GESTOR CGCF)
 // ==========================================
 window.carregarContadorSugestoes = async () => {
@@ -226,6 +524,10 @@ function applyFilters(resetPage = true) {
     const type = typeFilter.value;
     const onlyTerceirizado = terceirizadoFilter.checked;
 
+    const cnaeOperador = document.getElementById('filter-cnae-operador')?.value || '';
+    const cnaeValorRaw = document.getElementById('filter-cnae-valor')?.value;
+    const cnaeValor = cnaeValorRaw === '' || cnaeValorRaw === undefined ? null : parseInt(cnaeValorRaw, 10);
+
     filteredData = familyData.filter(item => {
         const exigidos = (item["Documentos Exigidos"] || item["DOCUMENTOS EXIGIDOS"] || []);
         const elegiveis = (item["Documentos Elegíveis"] || item["DOCUMENTOS ELEGÍVEIS"] || []);
@@ -234,13 +536,19 @@ function applyFilters(resetPage = true) {
         const textMatch = item.Família.toString().toLowerCase().includes(term) || 
                           item.Descrição.toLowerCase().includes(term) ||
                           allDocs.includes(term);
-
         const typeMatch = type === "" || item.Tipo === type;
         const terceirizadoMatch = !onlyTerceirizado || item.Terceirizado === "Sim";
 
-        return textMatch && typeMatch && terceirizadoMatch;
-    });
+        let cnaeMatch = true;
+        if (cnaeOperador && cnaeValor !== null && !isNaN(cnaeValor)) {
+            const qtdCnaes = (item.CNAEs || []).length;
+            if (cnaeOperador === 'lte') cnaeMatch = qtdCnaes <= cnaeValor;
+            else if (cnaeOperador === 'eq') cnaeMatch = qtdCnaes === cnaeValor;
+            else if (cnaeOperador === 'gte') cnaeMatch = qtdCnaes >= cnaeValor;
+        }
 
+        return textMatch && typeMatch && terceirizadoMatch && cnaeMatch;
+    });
     if (resetPage) {
         currentPage = 1;
     }
@@ -292,9 +600,9 @@ grid.innerHTML = '';
 
         const terceirizadoBadgeClasses = 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 dark:shadow-[0_0_10px_rgba(192,132,252,0.3)] dark:border dark:border-purple-500/50';
         
-        card.className = `relative bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border transition-all cursor-pointer group flex flex-col h-full animate-fade-in 
+        card.className = `relative bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border transition-all cursor-pointer group flex flex-col min-h-full animate-fade-in 
         ${isTerceirizado ? 'border-purple-200 dark:border-purple-900/40' : 'border-slate-200 dark:border-slate-800'} 
-        ${isHighlighted ? 'highlight-new border-blue-500 z-10' : 'hover:border-blue-400'}`;        
+        ${isHighlighted ? 'highlight-new border-blue-500 z-10' : 'hover:border-blue-400'}`;       
         
         card.innerHTML = `
             <div class="flex justify-between items-start mb-4">
@@ -364,20 +672,6 @@ grid.innerHTML = '';
                 ${renderDocList("Elegíveis", item["Documentos Elegíveis"] || item["DOCUMENTOS ELEGÍVEIS"], "text-emerald-600")}
             </div>
 
-            <div class="cnae-section hidden mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 animate-fade-in">
-                <p class="text-[9px] font-bold text-blue-500 uppercase mb-2">CNAEs Relacionados</p>
-                <div class="space-y-1.5">
-                    ${(item.CNAEs || []).length > 0 ? item.CNAEs.map(c => `
-                    <div onclick="copyToClipboard(event, '${c.codigo} | ${c.descricao}')" 
-                        class="text-[10px] bg-slate-50 dark:bg-slate-850 p-2 rounded border dark:border-slate-800 dark:text-slate-300 font-medium cursor-copy hover:border-blue-400 transition-all active:scale-95"
-                        title="Copiar CNAE">
-                        <span class="text-blue-600 dark:text-blue-400 font-bold">${c.codigo}</span> 
-                        <span class="mx-1 text-slate-300">|</span> 
-                        ${c.descricao}
-                    </div>
-                    `).join('') : '<p class="text-[10px] italic text-gray-600 dark:text-gray-400 text-center py-2">Nenhum CNAE cadastrado.</p>'}
-                </div>
-            </div>
             
             <div class="mt-6 flex justify-center border-t dark:border-slate-800 pt-3">
                 <span class="text-[8px] font-black uppercase tracking-widest transition-colors ${ (item.CNAEs || []).length > 0 ? 'text-blue-500 dark:text-blue-400' : 'text-gray-600 dark:text-gray-100' } group-hover:text-blue-600">
@@ -386,7 +680,7 @@ grid.innerHTML = '';
             </div>
         `;
 
-        card.onclick = () => card.querySelector('.cnae-section').classList.toggle('hidden');
+        card.onclick = () => abrirModalDetalheFamilia(indexInMain);
         grid.appendChild(card);
     });
 }
@@ -809,6 +1103,8 @@ window.exportFullBase = () => {
 searchInput.oninput = () => applyFilters(true);
 typeFilter.onchange = () => applyFilters(true);
 terceirizadoFilter.onchange = () => applyFilters(true);
+document.getElementById('filter-cnae-operador').onchange = () => applyFilters(true);
+document.getElementById('filter-cnae-valor').oninput = () => applyFilters(true);
 document.getElementById('btn-prev').onclick = () => { if(currentPage > 1) { currentPage--; renderGrid(); } };
 document.getElementById('btn-next').onclick = () => { if((currentPage * itemsPerPage) < filteredData.length) { currentPage++; renderGrid(); } };
 document.getElementById('f-replicate').onchange = (e) => {
@@ -3163,7 +3459,8 @@ const gerenciarRolagemDoFundo = () => {
         'modal-vinculo-cnaes',
         'modal-pesquisa-manual',
         'modal-itens-familia',
-        'modal-confirmar-remocao'
+        'modal-confirmar-remocao',
+        'modal-detalhe-familia'
     ];
 
     // Verifica se tem algum modal estático aberto (sem a classe hidden)

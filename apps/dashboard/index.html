@@ -88,6 +88,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
 
@@ -140,8 +142,8 @@
             </div>
         </div>
         
-        <button id="btnFallbackUpload" class="hidden mt-8 text-xs text-slate-500 hover:text-blue-600 underline transition-colors" onclick="document.getElementById('fileInput').click()">
-            Carregar arquivo CSV manualmente
+        <button id="btnFallbackUpload" class="hidden mt-8 text-xs text-slate-500 hover:text-blue-600 underline transition-colors" onclick="if (sessionStorage.getItem('cockpit_user_role') === 'admin') { document.getElementById('monthManagerModal').classList.remove('hidden'); } else { alert('Aguarde o administrador publicar o primeiro mês.'); }">
+            Publicar dados agora
         </button>
     </div>
 
@@ -196,11 +198,11 @@
             </button>
 
             <button
-              id="btnFullReset"
+              id="btnGerenciadorMeses"
               class="bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-gray-200 font-bold py-2 px-3 rounded-lg shadow"
-              title="Limpar tudo e começar do zero"
+              title="Gerenciar meses (Supabase)"
             >
-              🗑️
+              🗂️
             </button>
           </div>
         </header>
@@ -924,6 +926,33 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div id="monthManagerModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+      <div class="bg-white dark:bg-slate-800 rounded-lg shadow-xl w-full max-w-lg p-6 space-y-4">
+        <div class="flex justify-between items-center">
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white">Gerenciador de Meses</h3>
+          <button id="btnCloseMonthManager" class="text-gray-400 hover:text-gray-600">✕</button>
+        </div>
+
+        <div class="border border-dashed border-gray-300 dark:border-slate-600 rounded-lg p-4 text-center">
+          <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Subir Excel nativo do sistema (.xlsx)</p>
+          <input type="file" id="xlsxInput" accept=".xlsx" class="hidden" />
+          <button id="btnXlsxUpload" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
+            Selecionar arquivo
+          </button>
+        </div>
+
+        <button id="btnMigrarAtual" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg">
+          Migrar dados já carregados para o Supabase
+        </button>
+
+        <button id="btnMigrarLocais" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg">
+          Importar relatorio_p1..p10.json da pasta e migrar
+        </button>
+
+        <p id="monthManagerStatus" class="text-xs text-gray-500 dark:text-gray-400 min-h-[1rem]"></p>
+
+      </div>
     </div>
 
     <!-- 3. Arquivo de Script Local -->
