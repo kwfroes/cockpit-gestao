@@ -597,3 +597,36 @@ window.rodarMotorCNAE = async function () {
         if (btn) btn.disabled = false;
     }
 };
+
+// Exporta a função para poder ser usada no script.js
+export function calcularFamiliasParaCnae(cnaeCodigo, cnaeDescricao, familias, relacionadosDict) {
+    const sugestoes = [];
+    const cnaeNormFull = normalize(cnaeDescricao); // Usa o normalize que já existe no motor
+    const cnaeNorm = cnaeNormFull.split(/\bexceto\b/)[0];
+
+    familias.forEach(familia => {
+        // Ignora se já estiver vinculada
+        const jaVinculado = (familia.CNAEs || []).some(c => normDigits(c.codigo) === normDigits(cnaeCodigo));
+        if (jaVinculado) return;
+
+        // Aplica bloqueio Material x Serviço usando a função que já existe no motor
+        const cnaeObj = { CNAE: cnaeCodigo, DESCRIÇÃO: cnaeDescricao };
+        if (candidatoBloqueadoParaMaterial(cnaeObj, familia.Tipo)) return;
+
+        // Pega as palavras-chave (tokenização) usando a função nativa do motor
+        const termos = getTermosExpandidos(familia.Descrição, relacionadosDict);
+
+        // Calcula o Score
+        let score = 0;
+        termos.forEach(termo => {
+            if (hasWord(cnaeNorm, termo)) score += 2;
+            if (cnaeNorm.startsWith(termo)) score += 3;
+        });
+
+        if (score >= 4) {
+            sugestoes.push({ familia, score });
+        }
+    });
+
+    return sugestoes.sort((a, b) => b.score - a.score).slice(0, 10);
+}
