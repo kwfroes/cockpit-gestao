@@ -1,9 +1,6 @@
 // --- VARIÁVEIS DE ESTADO ---
 let db;
-const supabaseClientCaf = window.supabase.createClient(
-  "https://whnzeysvqbtuecxmthht.supabase.co",
-  "sb_publishable_Gw4cFK56R9kms2ogg50UqA_ZhHi79qw",
-);
+const supabaseClientCaf = window.supabaseClient;
 
 // --- GESTÃO DE TEMA ---
 function applyTheme(theme) {

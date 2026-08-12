@@ -1,8 +1,6 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+// import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-const supabaseUrl = 'https://whnzeysvqbtuecxmthht.supabase.co';
-const supabaseKey = 'sb_publishable_Gw4cFK56R9kms2ogg50UqA_ZhHi79qw';
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabase = window.supabaseClient;
 
 // Estado Global
 let demandas = [];

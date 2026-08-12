@@ -1,10 +1,4 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
-const supabaseUrl = 'https://whnzeysvqbtuecxmthht.supabase.co';
-const supabaseKey = 'sb_publishable_Gw4cFK56R9kms2ogg50UqA_ZhHi79qw';
-
-// Inicializa o banco de dados direto neste arquivo
-const supabase = createClient(supabaseUrl, supabaseKey);
+var supabase = window.supabaseClient;
 
 const app = {
     theme: 'light',

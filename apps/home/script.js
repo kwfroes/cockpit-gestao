@@ -2,14 +2,7 @@
  * apps/home/script.js
  */
 
-// Importa o Supabase direto na Home
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
-const supabaseUrl = 'https://whnzeysvqbtuecxmthht.supabase.co';
-const supabaseKey = 'sb_publishable_Gw4cFK56R9kms2ogg50UqA_ZhHi79qw'; // Substitua pela sua chave anon
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-window.supabase = supabase;
+var supabase = window.supabaseClient;
 
 // ==========================================================
 // MÓDULO DE NAVEGAÇÃO DINÂMICA

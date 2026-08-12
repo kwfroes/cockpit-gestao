@@ -193,9 +193,7 @@ async function generateCaptcha() {
   // =========================================================
   // INICIALIZAÇÃO DO SUPABASE
   // =========================================================
-  const supabaseUrl = 'https://whnzeysvqbtuecxmthht.supabase.co';
-  const supabaseKey = 'sb_publishable_Gw4cFK56R9kms2ogg50UqA_ZhHi79qw';
-  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+  const supabase = window.supabaseClient;
 
 
   // --- Funções de Criptografia ---
