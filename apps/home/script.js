@@ -368,7 +368,7 @@ const dontShow = localStorage.getItem("dontShowWelcomeCockpit");
           // 3. Envia o apelido para o Supabase filtrando pelo e-mail
           if (userEmail) {
               try {
-                  const { error } = await window.supabase
+                  const { error } = await supabase
                       .from('profiles')
                       .update({ apelido: newName }) // Atualiza a coluna 'apelido'
                       .eq('email', userEmail); // Usa o e-mail como filtro de segurança
