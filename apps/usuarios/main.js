@@ -35,6 +35,63 @@ const app = {
         document.getElementById('editAvatar').addEventListener('change', (e) => this.iniciarRecorte(e, 'editAvatar'));
     },
 
+    // --- LÓGICA DE HIERARQUIA SRL ---
+    hierarquiaData: null,
+
+    async carregarHierarquia() {
+        if (!this.hierarquiaData) {
+            const res = await fetch('../../assets/json/hierarquia_srl.json');
+            this.hierarquiaData = await res.json();
+        }
+        return this.hierarquiaData;
+    },
+
+    async popularDiretorias(pref) {
+        const data = await this.carregarHierarquia();
+        const select = document.getElementById(`${pref}Diretoria`);
+        select.innerHTML = '<option value="">Selecione...</option>';
+        data.superintendencia.subordinados.forEach(d => {
+            select.innerHTML += `<option value="${d.sigla}">${d.nome}</option>`;
+        });
+    },
+
+    async filtrarCoordenacoes(pref) {
+        const data = await this.carregarHierarquia();
+        const dirSigla = document.getElementById(`${pref}Diretoria`).value;
+        const coordSelect = document.getElementById(`${pref}Coordenacao`);
+        
+        coordSelect.innerHTML = '<option value="">Selecione...</option>';
+        coordSelect.disabled = !dirSigla;
+        
+        if (dirSigla) {
+            const dir = data.superintendencia.subordinados.find(s => s.sigla === dirSigla);
+            dir.subordinados.forEach(c => {
+                coordSelect.innerHTML += `<option value="${c.sigla}">${c.nome}</option>`;
+            });
+        }
+    },
+
+    async filtrarSetores(pref) {
+        const data = await this.carregarHierarquia();
+        const dirSigla = document.getElementById(`${pref}Diretoria`).value;
+        const coordSigla = document.getElementById(`${pref}Coordenacao`).value;
+        const setorSelect = document.getElementById(`${pref}Setor`);
+        
+        setorSelect.innerHTML = '<option value="">Nenhum</option>';
+        
+        const dir = data.superintendencia.subordinados.find(s => s.sigla === dirSigla);
+        const coord = dir.subordinados.find(c => c.sigla === coordSigla);
+        
+        if (coord && coord.subordinados) {
+            coord.subordinados.forEach(s => {
+                setorSelect.innerHTML += `<option value="${s.sigla}">${s.nome}</option>`;
+            });
+            setorSelect.disabled = false;
+        } else {
+            setorSelect.disabled = true;
+        }
+    },
+
     // FUNÇÃO AUXILIAR: UPLOAD DE IMAGEM
     async uploadAvatar() {
         // Se não houver imagem recortada na memória, não faz nada
@@ -178,14 +235,32 @@ const app = {
     },
     
     // 3. ABRIR MODAL DE EDIÇÃO
-    abrirEdicao(id, name, email, role, encodedApps, encodedCoord, isResp) {
+    async abrirEdicao(id, name, email, role, encodedApps, encodedCoord, isResp) {
         document.getElementById('editId').value = id;
         document.getElementById('editName').value = name;
         document.getElementById('editEmail').value = email !== 'undefined' ? email : '';
         document.getElementById('editRole').value = role;
-        document.getElementById('editPass').value = '';
-        document.getElementById('editAvatar').value = '';
-        document.getElementById('editCoordenacao').value = encodedCoord && encodedCoord !== 'undefined' ? decodeURIComponent(encodedCoord) : '';
+        
+        // 1. Popular os dropdowns primeiro
+        await this.popularDiretorias('edit');
+        
+        // 2. Parsear a hierarquia (Ex: "DSL/CGCF/SetorX")
+        const coordCompleta = encodedCoord && encodedCoord !== 'undefined' ? decodeURIComponent(encodedCoord) : '';
+        const partes = coordCompleta.split('/');
+        
+        // 3. Preencher e disparar os filtros para carregar as opções
+        if (partes.length >= 1) {
+            document.getElementById('editDiretoria').value = partes[0];
+            await this.filtrarCoordenacoes('edit');
+        }
+        if (partes.length >= 2) {
+            document.getElementById('editCoordenacao').value = partes[1];
+            await this.filtrarSetores('edit');
+        }
+        if (partes.length >= 3) {
+            document.getElementById('editSetor').value = partes[2];
+        }
+
         document.getElementById('editResponsavel').checked = (isResp === true || isResp === 'true');
 
         // Tratamento da array de aplicativos
@@ -229,68 +304,75 @@ const app = {
         document.getElementById('editModal').classList.remove('hidden');
     },
 
-async salvarEdicao() {
-        const btn = document.getElementById('btnUpdateUser');
-        const id = document.getElementById('editId').value;
-        const name = document.getElementById('editName').value.trim();
-        const email = document.getElementById('editEmail').value.trim();
-        const role = document.getElementById('editRole').value;
-        const password = document.getElementById('editPass').value.trim();
-        const coordenacao = document.getElementById('editCoordenacao').value.trim();
-        const responsavel = document.getElementById('editResponsavel').checked;
+    async salvarEdicao() {
+            const btn = document.getElementById('btnUpdateUser');
+            const id = document.getElementById('editId').value;
+            const name = document.getElementById('editName').value.trim();
+            const email = document.getElementById('editEmail').value.trim();
+            const role = document.getElementById('editRole').value;
+            const password = document.getElementById('editPass').value.trim();
+            const responsavel = document.getElementById('editResponsavel').checked;
+            
+            // Pegando os valores dos novos selects
+            const dir = document.getElementById('editDiretoria').value;
+            const coord = document.getElementById('editCoordenacao').value;
+            const setor = document.getElementById('editSetor').value;
+            
+            // Concatenando hierarquia na variável correta 'coordenacao'
+            const coordenacao = `${dir}/${coord}${setor && setor !== 'Nenhum' ? '/'+setor : ''}`;
 
-        // 1. Recolhe todos os checkboxes marcados
-        let allowed_apps = ["#home", "#demandas"]; 
-        
-        if (role === 'admin') {
-            // Se virar Admin (ou continuar Admin), recebe o pacote completo
-            allowed_apps = ['#home', '#dashboard', '#gerador', '#contratos', '#legislacao', '#qualificacao', '#regmap', '#demandas', '#conversor', '#usuarios'];
-        } else {
-            // Se for User (ou rebaixado para User), pega os marcados e mescla garantindo a Home
-            const checkedBoxes = Array.from(document.querySelectorAll('input[name="app_permission"]:checked'));
-            const customApps = checkedBoxes.map(cb => cb.value);
-            // O "new Set" garante que não terá duplicatas
-            allowed_apps = [...new Set(["#home", "#demandas", ...customApps])]; 
-        }
+            // 1. Recolhe todos os checkboxes marcados
+            let allowed_apps = ["#home", "#demandas"]; 
+            
+            if (role === 'admin') {
+                // Se virar Admin (ou continuar Admin), recebe o pacote completo
+                allowed_apps = ['#home', '#dashboard', '#gerador', '#contratos', '#legislacao', '#qualificacao', '#regmap', '#demandas', '#conversor', '#usuarios'];
+            } else {
+                // Se for User (ou rebaixado para User), pega os marcados e mescla garantindo a Home
+                const checkedBoxes = Array.from(document.querySelectorAll('input[name="app_permission"]:checked'));
+                const customApps = checkedBoxes.map(cb => cb.value);
+                // O "new Set" garante que não terá duplicatas
+                allowed_apps = [...new Set(["#home", "#demandas", ...customApps])]; 
+            }
 
-        btn.disabled = true;
-        btn.textContent = "Atualizando...";
+            btn.disabled = true;
+            btn.textContent = "Atualizando...";
 
-        try {
-            const avatarUrl = await this.uploadAvatar('editAvatar');
+            try {
+                const avatarUrl = await this.uploadAvatar('editAvatar');
 
-            // 2. Prepara o Payload enviando o 'allowed_apps' no bloco 'metadata'
-            const payload = { 
-                acao: 'editar', 
-                idUsuario: id, 
-                email: email !== '' ? email : undefined,
-                metadata: { 
-                    name: name, 
-                    role: role,
-                    allowed_apps: allowed_apps, 
-                    coordenacao: coordenacao, 
-                    responsavel: responsavel 
-                } 
-            };
+                // 2. Prepara o Payload enviando o 'allowed_apps' no bloco 'metadata'
+                const payload = { 
+                    acao: 'editar', 
+                    idUsuario: id, 
+                    email: email !== '' ? email : undefined,
+                    metadata: { 
+                        name: name, 
+                        role: role,
+                        allowed_apps: allowed_apps, 
+                        coordenacao: coordenacao, // Variável declarada corretamente acima
+                        responsavel: responsavel 
+                    } 
+                };
 
-            if (avatarUrl) payload.avatar_url = avatarUrl;
-            if (password !== '') payload.password = password;
+                if (avatarUrl) payload.avatar_url = avatarUrl;
+                if (password !== '') payload.password = password;
 
-            // 3. Chama a Edge Function que agora faz todo o trabalho duro e seguro
-            const { error } = await supabase.functions.invoke('gerenciar-usuarios', { body: payload });
+                // 3. Chama a Edge Function que agora faz todo o trabalho duro e seguro
+                const { error } = await supabase.functions.invoke('gerenciar-usuarios', { body: payload });
 
-            if (error) throw error;
+                if (error) throw error;
 
-            this.showToast("Usuário atualizado com sucesso!");
-            document.getElementById('editModal').classList.add('hidden');
-            await this.carregarUsuarios(); 
-        } catch (err) {
-            this.showToast("Erro: " + err.message, "error");
-        } finally {
-            btn.disabled = false;
-            btn.textContent = "Salvar Alterações";
-        }
-    },
+                this.showToast("Usuário atualizado com sucesso!");
+                document.getElementById('editModal').classList.add('hidden');
+                await this.carregarUsuarios(); 
+            } catch (err) {
+                this.showToast("Erro: " + err.message, "error");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Salvar Alterações";
+            }
+     },
 
     // 5. INATIVAR / ATIVAR USUÁRIO
     async alternarStatus(id, statusAtual) {
@@ -378,8 +460,19 @@ async salvarEdicao() {
         document.getElementById('newAvatar').value = '';
         document.getElementById('newRole').value = 'user';
         this.handleNewRoleChange('user'); // Reseta os checkboxes
-        document.getElementById('newCoordenacao').value = '';
         document.getElementById('newResponsavel').checked = false;
+        
+        // Popula as diretorias e reseta/trava os selects dependentes
+        this.popularDiretorias('new');
+        
+        const coordSelect = document.getElementById('newCoordenacao');
+        coordSelect.innerHTML = '<option value="">Selecione a diretoria...</option>';
+        coordSelect.disabled = true;
+        
+        const setorSelect = document.getElementById('newSetor');
+        setorSelect.innerHTML = '<option value="">Nenhum</option>';
+        setorSelect.disabled = true;
+
         document.getElementById('modal').classList.remove('hidden');
     },
 
@@ -401,66 +494,74 @@ async salvarEdicao() {
         });
     },
 
-// 2C. ADICIONAR USUÁRIO
+    // 2C. ADICIONAR USUÁRIO
     async salvarUsuario() {
-        const btn = document.getElementById('btnSaveUser');
-        const name = document.getElementById('newName').value.trim();
-        const email = document.getElementById('newEmail').value.trim();
-        const role = document.getElementById('newRole').value;
-        const coordenacao = document.getElementById('newCoordenacao').value.trim();
-        const responsavel = document.getElementById('newResponsavel').checked;
+            const btn = document.getElementById('btnSaveUser');
+            const name = document.getElementById('newName').value.trim();
+            const email = document.getElementById('newEmail').value.trim();
+            const role = document.getElementById('newRole').value;
+            const responsavel = document.getElementById('newResponsavel').checked;
 
-        // A senha não é mais necessária aqui no front-end!
-        if (!name || !email) {
-            this.showToast("Preencha o nome e o e-mail do usuário!", "error");
-            return;
-        }
+            // 1. Coleta os valores diretamente dos 3 selects do modal de NOVO usuário
+            const dir = document.getElementById('newDiretoria').value;
+            const coord = document.getElementById('newCoordenacao').value;
+            const setor = document.getElementById('newSetor').value;
+            
+            // 2. Junta tudo em um único texto (ex: "DSL/CGCF" ou "DSL/CSA/GESTAO_FROTA")
+            // Se o setor for vazio ou "Nenhum", ele ignora o setor para não salvar lixo
+            const coordenacao = `${dir}/${coord}${setor && setor !== 'Nenhum' ? '/'+setor : ''}`;
 
-        btn.disabled = true;
-        btn.textContent = "Criando e Enviando E-mail...";
-
-        try {
-            const avatarUrl = await this.uploadAvatar('newAvatar');
-
-            // Ler apps permitidos baseados nos checkboxes
-            let allowed_apps = ["#home", "#demandas"];
-            if (role === 'admin') {
-                allowed_apps = ['#home', '#dashboard', '#gerador', '#contratos', '#legislacao', '#qualificacao', '#regmap', '#demandas', '#conversor', '#usuarios'];
-            } else {
-                const checkedBoxes = Array.from(document.querySelectorAll('input[name="new_app_permission"]:checked'));
-                const customApps = checkedBoxes.map(cb => cb.value);
-                allowed_apps = [...new Set(["#home", "#demandas", ...customApps])];
+            // A senha não é mais necessária aqui no front-end!
+            if (!name || !email) {
+                this.showToast("Preencha o nome e o e-mail do usuário!", "error");
+                return;
             }
-            
-            // O Payload agora é idêntico ao de "aprovar", delegando a senha para a Edge Function
-            const { error } = await supabase.functions.invoke('gerenciar-usuarios', {
-                body: { 
-                    acao: 'criar', 
-                    email: email, 
-                    avatar_url: avatarUrl, 
-                    metadata: { 
-                        role: role, 
-                        name: name,
-                        allowed_apps: allowed_apps ,
-                        coordenacao: coordenacao, // Novo
-                        responsavel: responsavel  // Novo
-                    } 
+
+            btn.disabled = true;
+            btn.textContent = "Criando e Enviando E-mail...";
+
+            try {
+                const avatarUrl = await this.uploadAvatar('newAvatar');
+
+                // Ler apps permitidos baseados nos checkboxes
+                let allowed_apps = ["#home", "#demandas"];
+                if (role === 'admin') {
+                    allowed_apps = ['#home', '#dashboard', '#gerador', '#contratos', '#legislacao', '#qualificacao', '#regmap', '#demandas', '#conversor', '#usuarios'];
+                } else {
+                    const checkedBoxes = Array.from(document.querySelectorAll('input[name="new_app_permission"]:checked'));
+                    const customApps = checkedBoxes.map(cb => cb.value);
+                    allowed_apps = [...new Set(["#home", "#demandas", ...customApps])];
                 }
-            });
+                
+                // Envia para a Edge Function incluindo a coordenação montada
+                const { error } = await supabase.functions.invoke('gerenciar-usuarios', {
+                    body: { 
+                        acao: 'criar', 
+                        email: email, 
+                        avatar_url: avatarUrl, 
+                        metadata: { 
+                            role: role, 
+                            name: name,
+                            allowed_apps: allowed_apps,
+                            coordenacao: coordenacao, // Aqui vai a string unificada (Ex: "DSL/CGCF")
+                            responsavel: responsavel  
+                        } 
+                    }
+                });
 
-            if (error) throw error;
+                if (error) throw error;
 
-            this.showToast("Usuário criado e e-mail enviado com sucesso!");
-            document.getElementById('modal').classList.add('hidden');
-            
-            await this.carregarUsuarios();
-        } catch (err) {
-            this.showToast("Erro: " + err.message, "error");
-        } finally {
-            btn.disabled = false;
-            btn.textContent = "Criar Usuário";
-        }
-    },
+                this.showToast("Usuário criado e e-mail enviado com sucesso!");
+                document.getElementById('modal').classList.add('hidden');
+                
+                await this.carregarUsuarios();
+            } catch (err) {
+                this.showToast("Erro: " + err.message, "error");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Criar Usuário";
+            }
+        },
 
     showToast(msg, type = "success") {
         const toast = document.createElement('div');

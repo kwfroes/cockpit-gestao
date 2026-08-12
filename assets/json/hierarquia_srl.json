@@ -1,0 +1,105 @@
+{
+    "orgao": "SAEB",
+    "superintendencia": {
+        "id": "SAEB/SRL",
+        "sigla": "SRL",
+        "nome": "Superintendência de Recursos Logísticos",
+        "subordinados": [
+            {
+                "id": "SAEB/SRL/COE",
+                "sigla": "COE",
+                "nome": "Coordenação Executiva",
+                "subordinados": [
+                    {
+                        "id": "SAEB/SRL/COE/EXEC",
+                        "sigla": "EXEC",
+                        "nome": "Execução Orçamentária da SRL"
+                    }
+                ]
+            },
+            {
+                "id": "SAEB/SRL/DM",
+                "sigla": "DM",
+                "nome": "Diretoria de Material",
+                "subordinados": [
+                    {
+                        "id": "SAEB/SRL/DM/CGC",
+                        "sigla": "CGC",
+                        "nome": "Coordenação de Gestão de Compras"
+                    },
+                    {
+                        "id": "SAEB/SRL/DM/CMP",
+                        "sigla": "CMP",
+                        "nome": "Coordenação de Material Permanente"
+                    }
+                ]
+            },
+            {
+                "id": "SAEB/SRL/DS",
+                "sigla": "DS",
+                "nome": "Diretoria de Serviços",
+                "subordinados": [
+                    {
+                        "id": "SAEB/SRL/DS/CSA",
+                        "sigla": "CSA",
+                        "nome": "Coordenação de Serviços Auxiliares",
+                        "subordinados": [
+                            {
+                                "id": "SAEB/SRL/DS/CSA/GESTAO_CONSUMO",
+                                "sigla": "GCC",
+                                "nome": "Gestão Contas de Consumo"
+                            },
+                            {
+                                "id": "SAEB/SRL/DS/CSA/GESTAO_FROTA",
+                                "sigla": "GESTAO_FROTA",
+                                "nome": "Gestão de Frota"
+                            },
+                            {
+                                "id": "SAEB/SRL/DS/CSA/GESTAO_RP",
+                                "sigla": "GESTAO_RP",
+                                "nome": "Gestão Registro de Preços"
+                            },
+                            {
+                                "id": "SAEB/SRL/DS/CSA/NGV",
+                                "sigla": "NGV",
+                                "nome": "Núcleo de Gestão de Viagens"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "SAEB/SRL/DS/CSCCAB",
+                        "sigla": "CSCCAB",
+                        "nome": "Coordenação de Serviços Compartilhados do Centro Administrativo da Bahia"
+                    },
+                    {
+                        "id": "SAEB/SRL/DS/CST",
+                        "sigla": "CST",
+                        "nome": "Coordenação de Serviços Terceirizados"
+                    }
+                ]
+            },
+            {
+                "id": "SAEB/SRL/DSL",
+                "sigla": "DSL",
+                "nome": "Diretoria de Suporte Logística",
+                "subordinados": [
+                    {
+                        "id": "SAEB/SRL/DSL/CGCF",
+                        "sigla": "CGCF",
+                        "nome": "Coordenação da Gestão do Cadastro de Fornecedores"
+                    },
+                    {
+                        "id": "SAEB/SRL/DSL/CGSA",
+                        "sigla": "CGSA",
+                        "nome": "Coordenação de Gestão de Sistemas Administrativos"
+                    },
+                    {
+                        "id": "SAEB/SRL/DSL/CPRF",
+                        "sigla": "CPRF",
+                        "nome": "Coordenação de Processos de Regularidade de Fornecedores"
+                    }
+                ]
+            }
+        ]
+    }
+}

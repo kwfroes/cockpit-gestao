@@ -1,5 +1,3 @@
-// import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
 const supabase = window.supabaseClient;
 
 // Estado Global
@@ -94,12 +92,11 @@ async function carregarUsuarios() {
     // Cria um conjunto para guardar as coordenações sem repeti-las
     const coordUnicas = new Set();
 
+    // Substitua o trecho onde alimenta o `coordUnicas` em carregarUsuarios() por:
     data.forEach(user => {
-        // 2. Popula os selects normais
         if(select) select.innerHTML += `<option value="${user.id}">${user.name}</option>`;
         if(selectSub) selectSub.innerHTML += `<option value="${user.id}">${user.name}</option>`;
         
-        // Popula os checkboxes de Responsáveis Secundários (com trava de segurança)
         if (listaResps) {
             listaResps.innerHTML += `
                 <label class="flex items-center gap-2 p-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 rounded cursor-pointer transition-colors text-sm text-slate-700 dark:text-slate-200">
@@ -109,7 +106,7 @@ async function carregarUsuarios() {
             `;
         }
         
-        // 3. Guarda a coordenação no Set (apenas se ela for válida)
+        // Extrai e normaliza a coordenação hierárquica salva pelo novo formato (Diretoria/Coordenação/Setor)
         if (user.coordenacao && user.coordenacao.trim() !== '' && user.coordenacao !== '-') {
             coordUnicas.add(user.coordenacao.trim());
         }

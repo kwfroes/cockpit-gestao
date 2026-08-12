@@ -133,7 +133,26 @@
 
                 <div>
                         <label class="block text-xs font-bold text-slate-500 mb-1">Coordenação</label>
-                        <input id="newCoordenacao" type="text" placeholder="Ex: CGCF" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 mb-1">Diretoria</label>
+                                    <select id="newDiretoria" onchange="app.filtrarCoordenacoes('new')" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
+                                        <option value="">Selecione...</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 mb-1">Coordenação</label>
+                                    <select id="newCoordenacao" onchange="app.filtrarSetores('new')" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500" disabled>
+                                        <option value="">Selecione a diretoria...</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 mb-1">Setor</label>
+                                    <select id="newSetor" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500" disabled>
+                                        <option value="">Nenhum</option>
+                                    </select>
+                                </div>
+                            </div>
                     </div>
                 <div class="mt-2 mb-4">
                     <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer w-max">
@@ -227,8 +246,27 @@
                 </div>
 
                 <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-1">Coordenação</label>
-                        <input id="editCoordenacao" type="text" placeholder="Ex: CGCF" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 mb-1">Diretoria</label>
+                                    <select id="editDiretoria" onchange="app.filtrarCoordenacoes('edit')" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
+                                        <option value="">Selecione...</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 mb-1">Coordenação</label>
+                                    <select id="editCoordenacao" onchange="app.filtrarSetores('edit')" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500" disabled>
+                                        <option value="">Selecione a diretoria...</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 mb-1">Setor</label>
+                                    <select id="editSetor" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500" disabled>
+                                        <option value="">Nenhum</option>
+                                    </select>
+                                </div>
+                            </div>
                     </div>
                 <div class="mt-2 mb-4">
                     <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer w-max">
