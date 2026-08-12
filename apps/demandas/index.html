@@ -104,14 +104,14 @@
                 <input type="hidden" id="f-id">
                 
                 <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Título da Demanda *</label>
+                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Título da Demanda *</label>
                     <input type="text" id="f-titulo" required class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none focus:border-blue-500 text-sm">
                 </div>
 
                 <!-- Bloco de Setor Principal e Adicionais -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Setor Principal *</label>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Setor Principal *</label>
                         <select id="f-coordenacao" required class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none text-sm">
                             <option value="">Selecione o setor principal</option>
                         </select>
@@ -119,7 +119,7 @@
 
                     <!-- Componente: Setores Adicionais -->
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Setor(es) Adicionais</label>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Setor(es) Adicionais</label>
                         <div class="relative">
                             <button type="button" onclick="document.getElementById('menu-setores').classList.toggle('hidden')" class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none text-sm text-left flex justify-between items-center transition-colors">
                                 <span id="btn-text-setores" class="truncate text-slate-600 dark:text-slate-400">Nenhum selecionado</span>
@@ -133,9 +133,9 @@
                 </div>
 
                 <!-- Bloco de Responsáveis e Prazo -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Responsável Principal</label>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Responsável Principal</label>
                         <select id="f-responsavel" class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none text-sm">
                             <option value="">Sem atribuição</option>
                         </select>
@@ -143,7 +143,7 @@
 
                     <!-- Componente: Responsáveis Adicionais -->
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Responsável(eis) Adicionais</label>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Responsável(eis) Adicionais</label>
                         <div class="relative">
                             <button type="button" onclick="document.getElementById('menu-resps').classList.toggle('hidden')" class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none text-sm text-left flex justify-between items-center transition-colors">
                                 <span id="btn-text-resps" class="truncate text-slate-600 dark:text-slate-400">Nenhum selecionado</span>
@@ -154,16 +154,18 @@
                             </div>
                         </div>
                     </div>
+                </div>
 
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Prazo Limite</label>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Prazo Limite</label>
                         <input type="date" id="f-prazo" class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg bg-slate-100 dark:bg-slate-900 outline-none text-sm [color-scheme:light_dark]">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Status</label>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Status</label>
                         <select id="f-status" class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none text-sm">
                             <option value="Pendente">Pendente</option>
                             <option value="Em Andamento">Em Andamento</option>
@@ -172,7 +174,7 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Prioridade</label>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Prioridade</label>
                         <select id="f-prioridade" class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none text-sm">
                             <option value="Baixa">Baixa</option>
                             <option value="Média">Média</option>
@@ -183,36 +185,36 @@
                 </div>
 
                 <div id="container-conclusao" class="hidden">
-                    <label class="block text-xs font-bold text-emerald-600 uppercase mb-1">Resumo da Conclusão *</label>
+                    <label class="block text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase mb-1">Resumo da Conclusão *</label>
                     <textarea id="f-resumo-conclusao" rows="3" class="w-full p-2.5 border border-emerald-300 dark:border-emerald-700 rounded-lg dark:bg-slate-900 outline-none focus:border-emerald-500 text-sm" placeholder="O que foi entregue/resolvido nesta demanda?"></textarea>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Descrição Detalhada</label>
+                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Descrição Detalhada</label>
                     <textarea id="f-descricao" rows="4" class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none focus:border-blue-500 text-sm"></textarea>
                 </div>
 
                 <!-- Seção de Subdemandas -->
                 <div id="container-subdemandas" class="hidden mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-3">Subdemandas (Passos)</label>
+                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-3">Subdemandas (Passos)</label>
                     
                     <div id="lista-subdemandas" class="space-y-2 mb-4"></div>
 
                     <div class="flex flex-wrap gap-2 items-end bg-slate-50 dark:bg-slate-900/40 p-3 rounded-lg border border-slate-200 dark:border-slate-800">
                         <div class="flex-1 min-w-[180px]">
-                            <span class="block text-[9px] uppercase font-bold text-slate-500 mb-1">Novo Passo</span>
+                            <span class="block text-[9px] uppercase font-bold text-slate-500 dark:text-slate-400 mb-1">Novo Passo</span>
                             <input type="text" id="nova-sub-titulo" placeholder="Título do passo..." class="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 text-sm">
                         </div>
                         <div class="flex flex-col">
-                            <span class="text-[9px] uppercase font-bold text-slate-500 mb-1">Data Atrib.</span>
+                            <span class="text-[9px] uppercase font-bold text-slate-500 dark:text-slate-400 mb-1">Data Atrib.</span>
                             <input type="date" id="nova-sub-atribuicao" class="p-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-slate-100 dark:bg-slate-900 text-sm [color-scheme:light_dark]">
                         </div>
                         <div class="flex flex-col">
-                            <span class="text-[9px] uppercase font-bold text-slate-500 mb-1">Prazo Limite</span>
+                            <span class="text-[9px] uppercase font-bold text-slate-500 dark:text-slate-400 mb-1">Prazo Limite</span>
                             <input type="date" id="nova-sub-prazo" class="p-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-slate-100 dark:bg-slate-900 text-sm [color-scheme:light_dark]">
                         </div>
                         <div>
-                            <span class="block text-[9px] uppercase font-bold text-slate-500 mb-1">Responsável</span>
+                            <span class="block text-[9px] uppercase font-bold text-slate-500 dark:text-slate-400 mb-1">Responsável</span>
                             <select id="nova-sub-responsavel" class="p-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-slate-100 dark:bg-slate-900 text-sm">
                                 <option value="">Responsável</option>
                             </select>
@@ -229,7 +231,7 @@
                 </div>
                 
                 <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Observações / Histórico (Opcional)</label>
+                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Observações / Histórico (Opcional)</label>
                     <textarea id="f-obs" rows="2" class="w-full p-2.5 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 outline-none focus:border-blue-500 text-sm" placeholder="Anotações de acompanhamento..."></textarea>
                 </div>
             </form>
