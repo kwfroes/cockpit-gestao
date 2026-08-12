@@ -1,7 +1,5 @@
 // --- CONEXÃO SUPABASE ---
-var supabaseUrl = 'https://whnzeysvqbtuecxmthht.supabase.co';
-var supabaseKey = 'sb_publishable_Gw4cFK56R9kms2ogg50UqA_ZhHi79qw';
-var supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+var supabase = window.supabaseClient;
 
 // --- GESTÃO DE TEMA (DARK MODE) ---
 function applyTheme(theme) {

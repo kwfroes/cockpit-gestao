@@ -1,9 +1,7 @@
 // Espera a página inteira carregar
 window.onload = function () {
 
-  const SUPABASE_URL = 'https://whnzeysvqbtuecxmthht.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_Gw4cFK56R9kms2ogg50UqA_ZhHi79qw'; // mesma chave pública do Cockpit
-  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const supabaseClient = window.supabaseClient;
 
   const RELATORIOS_BUCKET = 'relatorios-caf';
   const RETENTION_MONTHS = 26; // 25 meses fechados + o mês corrente em andamento
