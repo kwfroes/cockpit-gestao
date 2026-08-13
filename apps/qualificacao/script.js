@@ -993,6 +993,11 @@ document.getElementById('family-form').onsubmit = async (e) => {
         const { error } = await supabase.from('qualificacao_tecnica').upsert(supaBatch);
         if (error) throw error;
 
+        enviarLogAoPai(index !== "" ? "EDITAR_FAMILIA" : "CRIAR_FAMILIA", {
+            familia_codigo: codigoFamilia,
+            replicado_para: document.getElementById('f-replicate').checked ? document.getElementById('f-destinos').value : "Nenhum"
+        });
+
         // Atualiza dicionário de CNAEs caso tenha um novo
         cnaes.forEach(cnaeSalvo => {
             if (!cnaeDictionary.find(c => c.CNAE === cnaeSalvo.codigo)) {
@@ -1601,6 +1606,7 @@ window.analisarFornecedor = async (event) => {
         salvarHistoricoAnalise(resultado);
         // Chama a função que constrói e exibe o modal
         exibirModalResultadoAnalise(resultado);
+        enviarLogAoPai("ANALISAR_COMPROVANTE_PDF", { cnpj: resultado.cnpj });
 
         // Reseta o input para permitir subir o mesmo arquivo de novo se necessário
         event.target.value = '';
@@ -1998,6 +2004,12 @@ window.confirmarSugestaoRemocao = async (btn) => {
 
         if (typeof showToast === 'function') showToast('Sugestão de remoção enviada para análise!');
         document.getElementById('modal-confirmar-remocao').remove();
+
+        enviarLogAoPai("SUGERIR_REMOCAO_CNAE", { 
+            familia_codigo: familiaCodigo,
+            cnae_codigo: cnaeCodigo
+        });
+
         if (typeof carregarContadorSugestoes === 'function') carregarContadorSugestoes();
     } catch (err) {
         console.error(err);
@@ -2317,6 +2329,7 @@ window.consultarCnpjApiDireta = async () => {
         exibirModalResultadoAnalise(resultadoApi);
 
         if (typeof showToast === 'function') showToast("Consulta realizada com sucesso via BrasilAPI!");
+        enviarLogAoPai("CONSULTAR_CNPJ_API", { cnpj: cnpjLimpo });
 
     } catch (err) {
         console.error(err);
@@ -2606,6 +2619,11 @@ window.gerarRelatorioPDF = (tipoModelo = 'sintetico') => {
     const nomeArquivo = `Qualificacao_${idNome}_${isCompleto ? 'Completo' : 'Executivo'}.pdf`;
     
     doc.save(nomeArquivo);
+
+    enviarLogAoPai("GERAR_RELATORIO_QUALIFICACAO", { 
+        tipo: isCompleto ? 'completo' : 'sintetico',
+        cnpj: resultado.cnpj
+    });
     
     if (typeof showToast === 'function') {
         showToast(`Relatório ${isCompleto ? 'Completo' : 'Executivo'} baixado com sucesso!`, "success");
@@ -2684,6 +2702,12 @@ window.vincularCnaesEmLote = async () => {
             if (typeof showToast === 'function') {
                 showToast("Sugestão de vínculo enviada para análise!");
             }
+
+            enviarLogAoPai("SUGERIR_VINCULO_CNAE", { 
+                quantidade_sugestoes: sugestoesCriadas,
+                familias_alvo: familiasAlvo
+            });
+
             document.querySelectorAll('.cnae-checkbox-vincular').forEach(cb => cb.checked = false);
             fecharModalVinculoCnaes();
             carregarContadorSugestoes(); // Atualiza o badge se o admin estiver logado
@@ -3134,6 +3158,12 @@ window.processarSugestao = async (id, decisao, codFamilia = null, codCnae = null
             applyFilters(false);
             enviarStatsParaHome();
         }
+
+        enviarLogAoPai("PROCESSAR_SUGESTAO_CNAE", { 
+            sugestao_id: id,
+            decisao: decisao,
+            acao_sugerida: tipoAcao
+        });
 
     } catch (err) {
         console.error(err);
@@ -3902,6 +3932,8 @@ window.vincularFamiliaAoCnaeIbge = async (familiaCodigo, cnaeCodigo, cnaeDescric
         enviarStatsParaHome();
         if (typeof showToast === 'function') showToast(`Família ${familiaCodigo} vinculada ao CNAE ${codigoFormatado}!`);
 
+        enviarLogAoPai("VINCULAR_CNAE_DIRETO", { familia_codigo: familiaCodigo, cnae_codigo: codigoFormatado });
+
     } catch (err) {
         console.error(err);
         if (typeof showError === 'function') showError("Erro", "Não foi possível salvar o vínculo no banco de dados.");
@@ -3937,6 +3969,8 @@ window.removerFamiliaDoCnaeIbge = async (familiaCodigo, cnaeCodigo) => {
         applyFilters(false);
         enviarStatsParaHome();
         if (typeof showToast === 'function') showToast(`Família ${familiaCodigo} desvinculada.`);
+
+        enviarLogAoPai("REMOVER_CNAE_DIRETO", { familia_codigo: familiaCodigo, cnae_codigo: cnaeCodigo });
 
     } catch (err) {
         console.error(err);
