@@ -5,6 +5,7 @@ const app = {
     cropperInstance: null, // Guarda a ferramenta de recorte
     croppedBlob: null,     // Guarda a imagem final comprimida
     currentFileInputId: null, // Sabe se veio de 'newAvatar' ou 'editAvatar'
+    logsData: [],
 
     async init() {
         this.setupGlobalEvents();
@@ -364,6 +365,15 @@ const app = {
                 if (error) throw error;
 
                 this.showToast("Usuário atualizado com sucesso!");
+                
+                // INJETE AQUI
+                enviarLogAoPai("EDITAR_USUARIO", { 
+                    alvo: email, 
+                    nova_role: role, 
+                    coordenacao: coordenacao,
+                    is_responsavel: responsavel 
+                });
+
                 document.getElementById('editModal').classList.add('hidden');
                 await this.carregarUsuarios(); 
             } catch (err) {
@@ -416,6 +426,11 @@ const app = {
                 if (error) throw error;
 
                 this.showToast(`Usuário ${novoStatus === 'ativo' ? 'ativado' : 'inativado'} com sucesso!`);
+
+                    enviarLogAoPai(novoStatus === 'inativo' ? "BLOQUEAR_ACESSO" : "DESBLOQUEAR_ACESSO", { 
+                    alvo_id: id 
+                    });
+
                 this.fecharConfirmacao();
                 await this.carregarUsuarios(); 
             } catch (err) {
@@ -552,6 +567,15 @@ const app = {
                 if (error) throw error;
 
                 this.showToast("Usuário criado e e-mail enviado com sucesso!");
+
+                    // INJETE AQUI
+                    enviarLogAoPai("CRIAR_USUARIO_MANUAL", { 
+                        alvo_email: email, 
+                        alvo_nome: name, 
+                        role_atribuida: role, 
+                        coordenacao: coordenacao 
+                    });
+
                 document.getElementById('modal').classList.add('hidden');
                 
                 await this.carregarUsuarios();
@@ -634,26 +658,28 @@ const app = {
         const tabUsuarios = document.getElementById('tabUsuarios');
         const tabInativos = document.getElementById('tabInativos');
         const tabPendentes = document.getElementById('tabPendentes');
+        const tabLogs = document.getElementById('tabLogs'); // NOVA ABA
         
         const contUsuarios = document.getElementById('containerUsuarios');
         const contInativos = document.getElementById('containerInativos');
         const contPendentes = document.getElementById('containerPendentes');
+        const contLogs = document.getElementById('containerLogs'); // NOVO CONTAINER
 
-        // Reseta todos os botões para o estado "desativado/cinza"
+        // Reseta todos
         const resetClass = "px-4 py-3 font-bold text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 border-b-2 border-transparent transition-colors flex items-center gap-2";
         tabUsuarios.className = resetClass;
         tabInativos.className = resetClass;
         tabPendentes.className = resetClass;
+        if (tabLogs) tabLogs.className = resetClass;
 
-        // Esconde todos os containers
         contUsuarios.classList.add('hidden');
         contInativos.classList.add('hidden');
         contPendentes.classList.add('hidden');
+        if (contLogs) contLogs.classList.add('hidden');
 
-        // Classe para o botão ativo (azul com borda)
         const activeClass = "px-4 py-3 font-bold text-blue-600 border-b-2 border-blue-600 transition-colors flex items-center gap-2";
 
-        // Aplica o estado ativo na aba clicada
+        // Aplica o estado ativo
         if (aba === 'usuarios') {
             tabUsuarios.className = activeClass;
             contUsuarios.classList.remove('hidden');
@@ -663,7 +689,110 @@ const app = {
         } else if (aba === 'pendentes') {
             tabPendentes.className = activeClass;
             contPendentes.classList.remove('hidden');
+        } else if (aba === 'logs') {
+            if (tabLogs) tabLogs.className = activeClass;
+            if (contLogs) contLogs.classList.remove('hidden');
+            this.carregarLogs(); // CARREGA OS LOGS AO CLICAR NA ABA
         }
+    },
+
+    async carregarLogs() {
+        const tbody = document.getElementById('logsTableBody');
+        if (!tbody) return;
+        
+        // Colspan alterado para 6
+        tbody.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-slate-500 animate-pulse">Consultando banco de dados de auditoria...</td></tr>';
+
+        // Traz os últimos 500 eventos para dar mais opções de filtro local
+        const { data, error } = await supabase
+            .from('sistema_logs')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(500);
+
+        if (error) {
+            this.showToast("Erro ao carregar logs", "error");
+            tbody.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-red-500">Erro de permissão ou conexão ao buscar logs.</td></tr>';
+            return;
+        }
+
+        this.logsData = data || [];
+
+        // Extrai os nomes de Apps dinamicamente e popula o Select
+        const appsUnicos = [...new Set(this.logsData.map(l => l.app_origem))].filter(Boolean);
+        const selectApp = document.getElementById('filterLogApp');
+        if (selectApp) {
+            const valAtual = selectApp.value;
+            selectApp.innerHTML = '<option value="">Todos os Apps</option>' + 
+                appsUnicos.map(app => `<option value="${app}">${app}</option>`).join('');
+            selectApp.value = valAtual;
+        }
+
+        this.renderLogs();
+    },
+
+    renderLogs() {
+        const tbody = document.getElementById('logsTableBody');
+        if (!tbody) return;
+
+        const busca = (document.getElementById('filterLogBusca')?.value || '').toLowerCase();
+        const appFiltro = document.getElementById('filterLogApp')?.value || '';
+        const periodoFiltro = document.getElementById('filterLogPeriodo')?.value || '7';
+
+        let dataLimite = new Date(0);
+        if (periodoFiltro !== 'todos') {
+            dataLimite = new Date();
+            dataLimite.setDate(dataLimite.getDate() - parseInt(periodoFiltro));
+            dataLimite.setHours(0, 0, 0, 0);
+        }
+
+        const filtrados = this.logsData.filter(log => {
+            const logData = new Date(log.created_at);
+            
+            if (logData < dataLimite) return false;
+            if (appFiltro && log.app_origem !== appFiltro) return false;
+
+            if (busca) {
+                const jsonText = log.detalhes ? JSON.stringify(log.detalhes).toLowerCase() : '';
+                const matchName = (log.usuario_nome || '').toLowerCase().includes(busca);
+                const matchEmail = (log.usuario_email || '').toLowerCase().includes(busca);
+                const matchAction = (log.acao || '').toLowerCase().includes(busca);
+                const matchJson = jsonText.includes(busca);
+
+                if (!matchName && !matchEmail && !matchAction && !matchJson) return false;
+            }
+
+            return true;
+        });
+
+        if (filtrados.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-slate-500 italic">Nenhum registro encontrado para os filtros atuais.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = filtrados.map(log => {
+            const dataHora = new Date(log.created_at).toLocaleString('pt-BR');
+            
+            const detalhesFormatados = Object.entries(log.detalhes || {}).map(([k, v]) => 
+                `<span class="font-semibold text-blue-600 dark:text-blue-400 capitalize">${k.replace(/_/g, ' ')}:</span> ${v}`
+            ).join(' <span class="text-slate-300 dark:text-slate-600 mx-1">|</span> ');
+
+            // Separado Nome e E-mail em duas TDs
+            return `
+            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors border-t border-slate-100 dark:border-slate-800/50">
+                <td class="p-4 text-slate-500 dark:text-slate-400 align-top">${dataHora}</td>
+                <td class="p-4 text-slate-800 dark:text-slate-200 font-bold align-top">${log.usuario_nome}</td>
+                <td class="p-4 text-slate-500 dark:text-slate-400 align-top">${log.usuario_email}</td>
+                <td class="p-4 text-center align-top">
+                    <span class="px-2 py-1 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[9px] font-black uppercase tracking-wider">${log.app_origem}</span>
+                </td>
+                <td class="p-4 font-bold text-slate-700 dark:text-slate-300 align-top">${log.acao.replace(/_/g, ' ')}</td>
+                <td class="p-4 text-slate-600 dark:text-slate-400 text-[11px] whitespace-normal min-w-[300px] leading-relaxed align-top">
+                    ${detalhesFormatados || '<span class="italic opacity-50">Sem detalhes adicionais</span>'}
+                </td>
+            </tr>
+            `;
+        }).join('');
     },
 
     async carregarPendentes() {
@@ -779,6 +908,13 @@ const app = {
                 if (error) throw error;
 
                 this.showToast("Acesso liberado com sucesso!");
+
+                    // INJETE AQUI (dentro do btnConfirm.onclick try)
+                    enviarLogAoPai("APROVAR_SOLICITACAO_ACESSO", { 
+                        alvo_email: email, 
+                        coordenacao_atribuida: coordenacao 
+                    });
+
                 this.fecharConfirmacao();
                 await this.carregarPendentes();
                 await this.carregarUsuarios();
@@ -826,6 +962,12 @@ const app = {
                 if (error) throw error;
 
                 this.showToast("Solicitação excluída.");
+
+                // INJETE AQUI (dentro do btnConfirm.onclick try)
+                enviarLogAoPai("REJEITAR_SOLICITACAO_ACESSO", { 
+                    alvo_id: id 
+                });
+
                 this.fecharConfirmacao();
                 await this.carregarPendentes();
             } catch (err) {
@@ -844,7 +986,26 @@ const app = {
             content.classList.add('scale-100', 'opacity-100');
         }, 10);
     },
+
+    
 };
+
+// Função padrão para jogar no JS dos apps filhos
+function enviarLogAoPai(acao, detalhes = {}) {
+    // Verifica se está rodando dentro do iframe do Cockpit
+    if (window.parent !== window) {
+        window.parent.postMessage({
+            type: "REGISTRAR_LOG",
+            payload: {
+                acao: acao,
+                detalhes: detalhes,
+                appOrigem: "GESTAO_USUARIOS"
+            }
+        }, "*");
+    } else {
+        console.warn("Log não enviado: rodando fora do iframe.", acao);
+    }
+}
 
 // Como o script é um type="module", precisamos pendurar o app no window
 // para que o HTML consiga enxergá-lo quando clicar no botão "onclick=app.salvarUsuario()"

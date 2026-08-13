@@ -45,6 +45,10 @@
                 Solicitações Pendentes
                 <span id="badgePendentes" class="hidden bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full shadow-sm">0</span>
             </button>
+            <button onclick="app.mudarAba('logs')" id="tabLogs" class="px-4 py-3 font-bold text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 border-b-2 border-transparent transition-colors flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                Auditoria de Logs
+            </button>
         </div>
 
         <div id="containerUsuarios" class="bg-white dark:bg-slate-900 rounded-xl shadow overflow-hidden">
@@ -98,6 +102,53 @@
                 </tbody>
             </table>
         </div></div>
+        <div id="containerLogs" class="hidden bg-white dark:bg-slate-900 rounded-xl shadow overflow-hidden mb-6 border border-slate-200 dark:border-slate-800">
+            <div class="p-4 border-b border-gray-200 dark:border-slate-800 flex justify-between items-center bg-gray-50 dark:bg-slate-800/50">
+                <h3 class="font-bold text-slate-800 dark:text-slate-200 text-sm uppercase tracking-wider">Trilha de Auditoria do Sistema</h3>
+                <button onclick="app.carregarLogs()" class="text-blue-500 hover:text-blue-700 bg-blue-50 dark:bg-blue-900/30 dark:hover:bg-blue-800 p-2 rounded-lg transition-colors flex items-center gap-2 text-xs font-bold" title="Atualizar Logs">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Atualizar
+                </button>
+            </div>
+            <div class="p-3 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 flex flex-col sm:flex-row gap-3">
+                <div class="relative flex-1">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                    <input type="text" id="filterLogBusca" oninput="app.renderLogs()" placeholder="Buscar usuário, ação ou detalhe..." 
+                        class="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-slate-700 dark:text-slate-200 transition-all">
+                </div>
+                
+                <select id="filterLogApp" onchange="app.renderLogs()" class="w-full sm:w-48 px-3 py-2 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-slate-700 dark:text-slate-200 cursor-pointer">
+                    <option value="">Todos os Apps</option>
+                    <!-- Preenchido via JS -->
+                </select>
+
+                <select id="filterLogPeriodo" onchange="app.renderLogs()" class="w-full sm:w-40 px-3 py-2 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-slate-700 dark:text-slate-200 cursor-pointer">
+                    <option value="7">Últimos 7 dias</option>
+                    <option value="1">Hoje</option>
+                    <option value="30">Últimos 30 dias</option>
+                    <option value="todos">Todo o período</option>
+                </select>
+            </div>
+            <div class="overflow-x-auto w-full max-h-[600px] overflow-y-auto custom-scrollbar">
+                <table class="w-full text-left whitespace-nowrap min-w-max md:min-w-full relative">
+                    <thead class="bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 uppercase text-[10px] sticky top-0 shadow-sm z-10">
+                        <tr>
+                            <th class="p-4 text-left w-32">Data / Hora</th>
+                            <th class="p-4 text-left w-48">Usuário</th>
+                            <th class="p-4 text-left">E-mail</th>
+                            <th class="p-4 text-center">App Origem</th>
+                            <th class="p-4 text-left">Ação Executada</th>
+                            <th class="p-4 text-left w-1/2">Detalhes</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logsTableBody" class="divide-y divide-gray-200 dark:divide-slate-700/50 text-xs">
+                        <!-- Renderizado via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">

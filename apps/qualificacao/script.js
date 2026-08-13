@@ -196,11 +196,21 @@ window.abrirModalDetalheFamilia = (index) => {
                 <div class="border-t border-slate-200 dark:border-slate-700 pt-4">
                     <div class="flex items-center justify-between mb-2">
                         <p class="text-[10px] font-bold text-blue-500 uppercase tracking-widest">CNAEs Relacionados</p>
-                        <button type="button" id="btn-sugerir-cnae-modal" onclick="rodarSugestaoCnaeModal(${index})"
-                            class="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                            Sugerir CNAE
-                        </button>
+                        <div class="flex items-center gap-3">
+                            <!-- NOVO BOTÃO: Visível para todos, envia para a fila de sugestões -->
+                            <button type="button" onclick="abrirModalSugerirCnaeUsuario(${index})"
+                                class="text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 transition-colors">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                Sugerir Vínculo
+                            </button>
+                            
+                            <!-- BOTÃO ATUAL: Restrito aos Gestores (Usa a classe cgcf-manager-only) -->
+                            <button type="button" id="btn-sugerir-cnae-modal" onclick="rodarSugestaoCnaeModal(${index})"
+                                class="cgcf-manager-only text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 transition-colors">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                Auto-Sugerir
+                            </button>
+                        </div>
                     </div>
                     <div id="lista-cnaes-familia-modal" class="space-y-1.5">
                         ${(item.CNAEs || []).length > 0 ? item.CNAEs.map(c => `
@@ -267,6 +277,139 @@ window.rodarSugestaoCnaeModal = (index) => {
         </div>
     `;
     if (btn) btn.disabled = false;
+};
+
+window.abrirModalSugerirCnaeUsuario = (index) => {
+    const item = familyData[index];
+    if (!item) return;
+
+    // Remove modal antigo se existir
+    const modalAntigo = document.getElementById('modal-sugerir-cnae-usuario');
+    if (modalAntigo) modalAntigo.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'modal-sugerir-cnae-usuario';
+    modal.className = 'fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[180] flex items-center justify-center p-4 animate-fade-in';
+    
+    modal.innerHTML = `
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-sm p-6 flex flex-col gap-4 border border-slate-200 dark:border-slate-700 animate-scale-up">
+            <div class="flex items-center justify-between">
+                <h3 class="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                    Sugerir Novo CNAE
+                </h3>
+                <button type="button" onclick="document.getElementById('modal-sugerir-cnae-usuario').remove()" class="text-slate-400 hover:text-red-500 text-lg transition-colors">✕</button>
+            </div>
+            
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+                Sua sugestão para a <strong>Família ${item.Família}</strong> será enviada para validação.
+            </p>
+
+            <div class="flex flex-col gap-2 relative cnae-row">
+                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Código CNAE</label>
+                <input type="text" id="input-sugestao-cnae-codigo" placeholder="0000-0/00" maxlength="10"
+                    onblur="normalizeCnaeInput(this)"
+                    class="cnae-code w-full p-2.5 text-sm border rounded-lg dark:bg-slate-900 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+
+                <input type="text" id="input-sugestao-cnae-desc" placeholder="A descrição será preenchida automaticamente..."
+                    readonly
+                    class="cnae-desc w-full p-2.5 text-xs border rounded-lg dark:bg-slate-900/50 dark:border-slate-700 text-slate-600 dark:text-slate-400 bg-slate-50 outline-none cursor-not-allowed">
+            </div>
+
+            <div class="flex justify-end gap-3 mt-3">
+                <button type="button" onclick="document.getElementById('modal-sugerir-cnae-usuario').remove()" class="px-4 py-2 text-xs font-bold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors uppercase">
+                    Cancelar
+                </button>
+                <button type="button" onclick="enviarSugestaoCnaeUsuario('${item.Família}')" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg shadow-md transition-colors uppercase">
+                    Enviar Sugestão
+                </button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    
+    // Foca no input assim que abrir
+    setTimeout(() => document.getElementById('input-sugestao-cnae-codigo').focus(), 100);
+};
+
+window.enviarSugestaoCnaeUsuario = async (familiaCodigo) => {
+    const codInput = document.getElementById('input-sugestao-cnae-codigo');
+    const descInput = document.getElementById('input-sugestao-cnae-desc');
+    
+    const cnaeCodigo = codInput.value.trim();
+    const cnaeDesc = descInput.value.trim();
+
+    // Validação básica
+    if (!cnaeCodigo || cnaeCodigo.length < 9 || !cnaeDesc || cnaeDesc.includes("não encontrado") || cnaeDesc.includes("Formato inválido")) {
+        if (typeof showError === 'function') showError("Atenção", "Informe um CNAE válido e aguarde o preenchimento automático da descrição antes de enviar.");
+        return;
+    }
+
+    const currentUser = sessionStorage.getItem("cockpit_user_realname") || "Usuário do Sistema";
+    const btn = document.querySelector('#modal-sugerir-cnae-usuario button.bg-blue-600');
+    const originalBtnText = btn.innerHTML;
+    
+    btn.innerHTML = 'Enviando...';
+    btn.disabled = true;
+
+    try {
+        // Verifica se já existe uma sugestão idêntica pendente
+        const { data: existente } = await supabase
+            .from('sugestoes_cnae_familia')
+            .select('*')
+            .eq('familia_codigo', familiaCodigo)
+            .eq('cnae_codigo', cnaeCodigo)
+            .eq('acao', 'adicionar')
+            .eq('status', 'pendente')
+            .maybeSingle();
+
+        if (existente) {
+            // Se existir, apenas incrementa e adiciona o nome do usuário
+            let usuariosArr = existente.usuarios_sugeriram.split(', ');
+            if (!usuariosArr.includes(currentUser)) usuariosArr.push(currentUser);
+
+            const { error } = await supabase.from('sugestoes_cnae_familia').update({
+                quantidade: existente.quantidade + 1,
+                usuarios_sugeriram: usuariosArr.join(', '),
+                updated_at: new Date().toISOString()
+            }).eq('id', existente.id);
+            
+            if (error) throw error;
+        } else {
+            // Cria uma nova sugestão pendente
+            const { error } = await supabase.from('sugestoes_cnae_familia').insert([{
+                familia_codigo: familiaCodigo,
+                cnae_codigo: cnaeCodigo,
+                cnae_descricao: cnaeDesc,
+                quantidade: 1,
+                usuarios_sugeriram: currentUser,
+                status: 'pendente',
+                origem: 'usuario',
+                acao: 'adicionar',
+                motivo: 'Sugestão manual inserida pelo usuário via modal de família.'
+            }]);
+            
+            if (error) throw error;
+        }
+
+        if (typeof showToast === 'function') showToast('Sugestão enviada para análise com sucesso!');
+        document.getElementById('modal-sugerir-cnae-usuario').remove();
+        
+        // Atualiza o badge vermelho para os admins, caso estejam na mesma tela
+        if (typeof carregarContadorSugestoes === 'function') carregarContadorSugestoes();
+
+        // Audita a ação
+        enviarLogAoPai("SUGERIR_VINCULO_MANUAL", {
+            familia_codigo: familiaCodigo,
+            cnae_codigo: cnaeCodigo
+        });
+
+    } catch (error) {
+        console.error(error);
+        if (typeof showError === 'function') showError("Erro", "Falha ao enviar sugestão de vínculo.");
+        btn.innerHTML = originalBtnText;
+        btn.disabled = false;
+    }
 };
 
 window.analisarSugestoesModalComIA = async (index) => {
@@ -3688,7 +3831,8 @@ const gerenciarRolagemDoFundo = () => {
         'modal-pesquisa-manual',
         'modal-itens-familia',
         'modal-confirmar-remocao',
-        'modal-detalhe-familia'
+        'modal-detalhe-familia',
+        'modal-sugerir-cnae-usuario'
     ];
 
     // Verifica se tem algum modal estático aberto (sem a classe hidden)
