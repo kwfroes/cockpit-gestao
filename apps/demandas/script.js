@@ -65,7 +65,6 @@ async function carregarUsuarios() {
 
     perfisUsuarios = data;
 
-    // Identifica os dados do usuário logado
     const myProfile = perfisUsuarios.find(u => u.name === currentUserName);
     if (myProfile) {
         currentUserCoord = myProfile.coordenacao || '';
@@ -75,57 +74,45 @@ async function carregarUsuarios() {
     const select = document.getElementById('f-responsavel');
     const selectSub = document.getElementById('nova-sub-responsavel');
     const selectCoord = document.getElementById('f-coordenacao');
-
-    // NOVOS IDs DOS CHECKBOXES
     const listaSetores = document.getElementById('lista-setores-sec');
     const listaResps = document.getElementById('lista-resps-sec');
 
-    // 1. Limpa as opções anteriores dos selects principais
-    if(select) select.innerHTML = '<option value="">Sem atribuição no momento</option>';
+    // 1. Limpa as opções e define estado de espera
+    if(select) select.innerHTML = '<option value="">Selecione o setor principal primeiro</option>';
     if(selectSub) selectSub.innerHTML = '<option value="">Responsável</option>';
     if(selectCoord) selectCoord.innerHTML = '<option value="">Selecione o setor principal</option>';
-    
-    // Limpa as listas dos checkboxes customizados de forma segura
-    if (listaSetores) listaSetores.innerHTML = '';
-    if (listaResps) listaResps.innerHTML = '';
+    if(listaSetores) listaSetores.innerHTML = '';
+    if(listaResps) listaResps.innerHTML = '<div class="p-2 text-xs text-slate-500">Selecione um setor adicional primeiro</div>';
 
-    // Cria um conjunto para guardar as coordenações sem repeti-las
     const coordUnicas = new Set();
 
-    // Substitua o trecho onde alimenta o `coordUnicas` em carregarUsuarios() por:
     data.forEach(user => {
-        if(select) select.innerHTML += `<option value="${user.id}">${user.name}</option>`;
+        // Apenas subdemandas carregam todos os usuários por padrão
         if(selectSub) selectSub.innerHTML += `<option value="${user.id}">${user.name}</option>`;
         
-        if (listaResps) {
-            listaResps.innerHTML += `
-                <label class="flex items-center gap-2 p-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 rounded cursor-pointer transition-colors text-sm text-slate-700 dark:text-slate-200">
-                    <input type="checkbox" value="${user.id}" data-name="${user.name}" class="cb-resp rounded border-slate-300 text-blue-600 focus:ring-blue-500" onchange="atualizarLabelMultiplo('lista-resps-sec', 'btn-text-resps')">
-                    <span>${user.name}</span>
-                </label>
-            `;
-        }
-        
-        // Extrai e normaliza a coordenação hierárquica salva pelo novo formato (Diretoria/Coordenação/Setor)
         if (user.coordenacao && user.coordenacao.trim() !== '' && user.coordenacao !== '-') {
             coordUnicas.add(user.coordenacao.trim());
         }
     });
 
-    // 4. Converte o Set de volta para Array, organiza em ordem alfabética e popula os setores
     Array.from(coordUnicas).sort().forEach(coord => {
         if(selectCoord) selectCoord.innerHTML += `<option value="${coord}">${coord}</option>`;
         
-        // Popula os checkboxes de Setores Secundários (com trava de segurança)
         if (listaSetores) {
+            // Adicionado "window.atualizarResponsaveisAdicionais()" no onchange
             listaSetores.innerHTML += `
                 <label class="flex items-center gap-2 p-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 rounded cursor-pointer transition-colors text-sm text-slate-700 dark:text-slate-200">
-                    <input type="checkbox" value="${coord}" class="cb-setor rounded border-slate-300 text-blue-600 focus:ring-blue-500" onchange="atualizarLabelMultiplo('lista-setores-sec', 'btn-text-setores')">
+                    <input type="checkbox" value="${coord}" class="cb-setor rounded border-slate-300 text-blue-600 focus:ring-blue-500" onchange="atualizarLabelMultiplo('lista-setores-sec', 'btn-text-setores'); window.atualizarResponsaveisAdicionais()">
                     <span>${coord}</span>
                 </label>
             `;
         }
     });
+
+    // 2. Conecta o filtro automático ao Setor Principal
+    if (selectCoord) {
+        selectCoord.addEventListener('change', window.atualizarResponsaveisPrincipais);
+    }
 }
 
 async function fetchDemandas(carregarTodas = false) {
@@ -313,14 +300,18 @@ window.abrirModalDemanda = (id = null) => {
             document.getElementById('f-prioridade').value = d.prioridade;
             document.getElementById('f-prazo').value = d.prazo_limite || '';
             document.getElementById('f-obs').value = d.observacoes || '';
+            
+            // Atribui o setor e FORÇA A ATUALIZAÇÃO DA LISTA DE RESPONSÁVEIS
             document.getElementById('f-coordenacao').value = d.coordenacao || '';
+            window.atualizarResponsaveisPrincipais();
+            
+            if(d.responsavel_id) document.getElementById('f-responsavel').value = d.responsavel_id;
+            
             document.getElementById('f-resumo-conclusao').value = d.resumo_conclusao || ''; 
 
-            // --- LÓGICA DE CHECKBOXES (Substitui os selects antigos) ---
-            // 1. Desmarca todos os checkboxes primeiro
+            // --- LÓGICA DE SETORES E RESPONSÁVEIS ADICIONAIS ---
             document.querySelectorAll('.cb-setor, .cb-resp').forEach(cb => cb.checked = false);
 
-            // 2. Preenche Setores Adicionais
             if (d.setor_secundario) {
                 const setores = d.setor_secundario.split(';');
                 document.querySelectorAll('.cb-setor').forEach(cb => {
@@ -328,7 +319,9 @@ window.abrirModalDemanda = (id = null) => {
                 });
             }
             
-            // 3. Preenche Responsáveis Adicionais
+            // FORÇA A ATUALIZAÇÃO DOS RESPONSÁVEIS ADICIONAIS ANTES DE MARCAR
+            window.atualizarResponsaveisAdicionais();
+            
             if (d.responsavel_secundario_id) {
                 const resps = d.responsavel_secundario_id.split(';');
                 document.querySelectorAll('.cb-resp').forEach(cb => {
@@ -336,17 +329,14 @@ window.abrirModalDemanda = (id = null) => {
                 });
             }
 
-            // 4. Atualiza o texto dos botões após marcar
             if (typeof atualizarLabelMultiplo === 'function') {
                 atualizarLabelMultiplo('lista-setores-sec', 'btn-text-setores');
                 atualizarLabelMultiplo('lista-resps-sec', 'btn-text-resps');
             }
-            // --- FIM DA LÓGICA DE CHECKBOXES ---
 
             carregarSubdemandas(id);
 
             document.getElementById('container-subdemandas').classList.remove('hidden');
-            if(d.responsavel_id) document.getElementById('f-responsavel').value = d.responsavel_id;
         }
     } else {
         document.getElementById('modal-title').textContent = 'Nova Demanda';
@@ -354,8 +344,12 @@ window.abrirModalDemanda = (id = null) => {
         btnLembretes.classList.add('hidden');
         btnLembretes.classList.remove('flex');
         
-        // Limpa os checkboxes e os botões ao criar Nova Demanda
         document.querySelectorAll('.cb-setor, .cb-resp').forEach(cb => cb.checked = false);
+        
+        // Zera os filtros em Nova Demanda
+        window.atualizarResponsaveisPrincipais();
+        window.atualizarResponsaveisAdicionais();
+
         if (typeof atualizarLabelMultiplo === 'function') {
             atualizarLabelMultiplo('lista-setores-sec', 'btn-text-setores');
             atualizarLabelMultiplo('lista-resps-sec', 'btn-text-resps');
@@ -547,12 +541,17 @@ window.salvarDemanda = async () => {
             // Se a lista está totalmente vazia, deleta tudo
             await supabase.from('sub_demandas').delete().eq('demanda_id', idFinal);
         }
-        // ==========================================
-        // MANTENHA ESTA PARTE INTACTA
-        // ==========================================
+
         fecharModalDemanda();
         await fetchDemandas(); 
         showToast("Demanda salva com sucesso!");
+
+        enviarLogAoPai(!id ? "CRIAR_DEMANDA" : "EDITAR_DEMANDA", {
+            demanda_id: idFinal,
+            titulo: payload.titulo,
+            status: payload.status,
+            responsavel: payload.responsavel_nome
+        });
 
     } catch (err) {
         alert(err.message || "Erro ao salvar a demanda.");
@@ -580,6 +579,7 @@ window.excluirDemanda = (id) => {
                 console.error(error);
             } else {
                 showToast("Demanda excluída com sucesso.");
+                enviarLogAoPai("EXCLUIR_DEMANDA", { demanda_id: id });
                 await fetchDemandas();
             }
         }
@@ -1129,6 +1129,10 @@ window.salvarRecorrencia = async () => {
         console.error(error);
     } else {
         showToast(recorrenciaEditandoId ? "Automação atualizada com sucesso!" : "Automação criada com sucesso!");
+        enviarLogAoPai(recorrenciaEditandoId ? "EDITAR_AUTOMACAO" : "CRIAR_AUTOMACAO", { 
+            titulo: payload.titulo, 
+            frequencia: payload.frequencia 
+        });
         resetarFormularioRecorrencia();
         carregarRecorrencias();
     }
@@ -1136,6 +1140,7 @@ window.salvarRecorrencia = async () => {
 
 window.alternarStatusRecorrencia = async (id, novoStatus) => {
     await supabase.from('demandas_recorrentes').update({ ativo: novoStatus }).eq('id', id);
+    enviarLogAoPai("ALTERAR_STATUS_AUTOMACAO", { automacao_id: id, status: novoStatus ? 'Ativo' : 'Pausado' });
     carregarRecorrencias();
 };
 
@@ -1152,6 +1157,7 @@ window.excluirRecorrencia = (id) => {
                 console.error(error);
             } else {
                 showToast("Automação excluída com sucesso!");
+                enviarLogAoPai("EXCLUIR_AUTOMACAO", { automacao_id: id });
                 carregarRecorrencias();
             }
         }
@@ -1281,6 +1287,7 @@ window.exportarDemandaExcel = (demanda, subdemandas) => {
     const nomeArquivo = `Demanda_${demanda.titulo.substring(0, 20).replace(/[^a-zA-Z0-9]/g, '_')}.xlsx`;
     XLSX.writeFile(wb, nomeArquivo);
     showToast("Relatório Excel gerado com sucesso!");
+    enviarLogAoPai("EXPORTAR_DEMANDA", { formato: "Excel", demanda_id: demanda.id });
 };
 
 window.analisarPrazo = (dataStr) => {
@@ -1359,6 +1366,8 @@ window.exportarDemandaPDF = (demanda, subdemandas) => {
     };
 
     html2pdf().set(opt).from(divExport).save().then(() => showToast("PDF gerado!"));
+    enviarLogAoPai("EXPORTAR_DEMANDA", { formato: "PDF", demanda_id: demanda.id });
+    
 };
 
 // Atualiza o texto do botão do dropdown múltiplo
@@ -1473,6 +1482,7 @@ window.salvarConfigLembrete = async () => {
         console.error(error);
     } else {
         window.showToast("Lembretes configurados!");
+        enviarLogAoPai("CONFIGURAR_LEMBRETES", { demanda_id: demandaId, lembrete_ativo: novaConfig.ativo });
         window.fecharModalLembretes();
         await fetchDemandas(); 
     }
@@ -1499,3 +1509,72 @@ window.toggleLembreteTipo = () => {
         document.getElementById('box-intervalado').classList.remove('hidden');
     }
 };
+
+// --- Filtros Dinâmicos de Responsáveis ---
+
+window.atualizarResponsaveisPrincipais = () => {
+    const setorSelecionado = document.getElementById('f-coordenacao').value;
+    const selectResp = document.getElementById('f-responsavel');
+    const valorAtual = selectResp.value;
+
+    if (!setorSelecionado) {
+        selectResp.innerHTML = '<option value="">Selecione o setor principal primeiro</option>';
+        return;
+    }
+
+    selectResp.innerHTML = '<option value="">Sem atribuição no momento</option>';
+    
+    // Filtra usuários que pertencem apenas ao setor principal selecionado
+    perfisUsuarios.filter(u => u.coordenacao === setorSelecionado).forEach(user => {
+        selectResp.innerHTML += `<option value="${user.id}">${user.name}</option>`;
+    });
+
+    // Tenta manter o usuário selecionado (útil durante edições)
+    if (valorAtual) selectResp.value = valorAtual;
+};
+
+window.atualizarResponsaveisAdicionais = () => {
+    const setoresSelecionados = Array.from(document.querySelectorAll('.cb-setor:checked')).map(cb => cb.value);
+    const listaResps = document.getElementById('lista-resps-sec');
+    
+    // Guarda os responsáveis que já estão marcados para não perder a seleção
+    const checksAtuais = Array.from(document.querySelectorAll('.cb-resp:checked')).map(cb => cb.value);
+
+    if (setoresSelecionados.length === 0) {
+        listaResps.innerHTML = '<div class="p-2 text-xs text-slate-500">Selecione um setor adicional primeiro</div>';
+        if (typeof atualizarLabelMultiplo === 'function') atualizarLabelMultiplo('lista-resps-sec', 'btn-text-resps');
+        return;
+    }
+
+    listaResps.innerHTML = '';
+    
+    // Filtra usuários que pertencem a qualquer um dos setores adicionais marcados
+    perfisUsuarios.filter(u => setoresSelecionados.includes(u.coordenacao)).forEach(user => {
+        const isChecked = checksAtuais.includes(user.id) ? 'checked' : '';
+        listaResps.innerHTML += `
+            <label class="flex items-center gap-2 p-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 rounded cursor-pointer transition-colors text-sm text-slate-700 dark:text-slate-200">
+                <input type="checkbox" value="${user.id}" data-name="${user.name}" class="cb-resp rounded border-slate-300 text-blue-600 focus:ring-blue-500" onchange="atualizarLabelMultiplo('lista-resps-sec', 'btn-text-resps')" ${isChecked}>
+                <span>${user.name}</span>
+            </label>
+        `;
+    });
+
+    if (typeof atualizarLabelMultiplo === 'function') atualizarLabelMultiplo('lista-resps-sec', 'btn-text-resps');
+};
+
+// Função padrão para jogar no JS dos apps filhos
+function enviarLogAoPai(acao, detalhes = {}) {
+    // Verifica se está rodando dentro do iframe do Cockpit
+    if (window.parent !== window) {
+        window.parent.postMessage({
+            type: "REGISTRAR_LOG",
+            payload: {
+                acao: acao,
+                detalhes: detalhes,
+                appOrigem: "GESTAO_DEMANDAS"
+            }
+        }, "*");
+    } else {
+        console.warn("Log não enviado: rodando fora do iframe.", acao);
+    }
+}

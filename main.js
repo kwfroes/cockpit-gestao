@@ -195,6 +195,31 @@ async function generateCaptcha() {
   // =========================================================
   const supabase = window.supabaseClient;
 
+  // =========================================================
+  // SISTEMA CENTRAL DE LOGS
+  // =========================================================
+  window.registrarLog = async function(acao, detalhes = {}, appOrigem = 'COCKPIT_PAI') {
+      try {
+          // Tenta pegar quem está logado pela sessão atual
+          const nome = sessionStorage.getItem("cockpit_user_realname") || "Usuário Desconhecido";
+          const email = sessionStorage.getItem("cockpit_user_email") || "Email Desconhecido";
+
+          const { error } = await supabase
+              .from('sistema_logs')
+              .insert([{
+                  usuario_nome: nome,
+                  usuario_email: email,
+                  acao: acao,
+                  app_origem: appOrigem,
+                  detalhes: detalhes
+              }]);
+
+          if (error) console.error("Erro ao registrar log silencioso:", error);
+      } catch (err) {
+          console.error("Falha na função de log:", err);
+      }
+  };
+
 
   // --- Funções de Criptografia ---
   async function sha256(message) {
@@ -414,6 +439,15 @@ if (loginForm) {
 
       if (error) {
         console.log("O SUPABASE DISSE:", error); // Adicione isso antes do showError
+
+          supabase.from('sistema_logs').insert([{
+          usuario_nome: "Tentativa de Acesso",
+          usuario_email: inputEmail,
+          acao: "LOGIN_FALHO",
+          app_origem: "COCKPIT_PAI",
+          detalhes: { erro: error.message }
+        }]);
+    
           showError("Credenciais inválidas ou usuário não encontrado.");
           generateCaptcha();
         } else {
@@ -454,6 +488,11 @@ if (loginForm) {
         } else {
             sessionStorage.removeItem("cockpit_user_avatar");
         }
+
+          window.registrarLog("LOGIN_SUCESSO", { 
+              metodo: "senha", 
+              role: profile?.role 
+          });
 
         // 4. Lógica limpa (sem duplicação)
         if (profile?.precisa_trocar_senha) {
@@ -755,6 +794,9 @@ if (loginForm) {
           setTimeout(() => openFloating(), 800);
         }
       }
+      if (hash !== "#home") {
+        window.registrarLog("ACESSO_APP", { app_destino: hash });
+      }
     }
   }
 
@@ -958,6 +1000,8 @@ if (loginForm) {
 
   // Função que executa o Logout Real
 async function performLogout() {
+
+      await window.registrarLog("LOGOUT", { motivo: "Saída manual do usuário" });
       // 1. Destrói a sessão no Supabase
       await supabase.auth.signOut();
       
@@ -1685,6 +1729,12 @@ async function performLogout() {
               document.getElementById('myProfileModal').classList.add('hidden');
               updateUserAvatarVisuals(); // Atualiza a bolinha no canto da tela
               updateUserMenu(); // Atualiza o menu de perfil
+
+              window.registrarLog("PERFIL_ATUALIZADO", { 
+                  trocou_senha: !!newPass, 
+                  trocou_avatar: !!newAvatarUrl,
+                  novo_apelido: apelido 
+              });
               
               showSuccess("Perfil Atualizado", "Suas alterações foram salvas com sucesso!");
 
@@ -1779,6 +1829,18 @@ const globalNotificationState = {
     demandas: 0
     // No futuro, se houver 'contratos': 0, etc.
 };
+
+// Escuta os pedidos de LOG vindos dos iframes filhos
+  window.addEventListener("message", (event) => {
+      if (event.data && event.data.type === "REGISTRAR_LOG") {
+          const { acao, detalhes, appOrigem } = event.data.payload;
+          
+          // Repassa para a função global que criamos
+          if (typeof window.registrarLog === "function") {
+              window.registrarLog(acao, detalhes, appOrigem);
+          }
+      }
+  });
 
 // Escuta as mensagens dos iframes filhos
 window.addEventListener("message", (event) => {

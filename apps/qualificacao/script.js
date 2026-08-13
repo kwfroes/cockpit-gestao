@@ -4035,6 +4035,23 @@ window.rodarMotorReverso = (cnaeCodigo, cnaeDescricao) => {
     }, 50);
 };
 
+// Função padrão para jogar no JS dos apps filhos
+function enviarLogAoPai(acao, detalhes = {}) {
+    // Verifica se está rodando dentro do iframe do Cockpit
+    if (window.parent !== window) {
+        window.parent.postMessage({
+            type: "REGISTRAR_LOG",
+            payload: {
+                acao: acao,
+                detalhes: detalhes,
+                appOrigem: "QUALIFICACAO_TECNICA"
+            }
+        }, "*");
+    } else {
+        console.warn("Log não enviado: rodando fora do iframe.", acao);
+    }
+}
+
 // 2. Observador de Modais Dinâmicos (Vigia APENAS elementos sendo injetados/removidos direto no body)
 const observerDinamico = new MutationObserver(gerenciarRolagemDoFundo);
 observerDinamico.observe(document.body, { childList: true });
