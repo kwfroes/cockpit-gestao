@@ -173,6 +173,14 @@
                         "Ficha de Inscrição - Municipio": "https://gpi07.cloud.el.com.br/ServerExec/acessoBase/?idPortal=fcfe02ce-6ae8-4278-8dae-9e220e91532b&idFunc=95c1ece1-3453-4e92-86ea-32b4bb36a0e4",
                         "Regularidade Municipal - Municipio": "https://gpi07.cloud.el.com.br/ServerExec/acessoBase/?idPortal=fcfe02ce-6ae8-4278-8dae-9e220e91532b&idFunc=95c1ece1-3453-4e92-86ea-32b4bb36a0e4"
                     }
+                },
+                {
+                    "Nome": "Belo Campo",
+                    "Tipo": "Polo Regional",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": "http://belocampo-ba.link3.com.br/l3-grp/Servicos.html"
+                    }
                 }
             ]
         },

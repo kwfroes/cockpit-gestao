@@ -794,11 +794,11 @@ if (loginForm) {
           setTimeout(() => openFloating(), 800);
         }
       }
+    }
       if (hash !== "#home") {
         window.registrarLog("ACESSO_APP", { app_destino: hash });
       }
     }
-  }
 
   // ADICIONE ESTE BLOCO LOGO ABAIXO DA FUNÇÃO ACIMA:
   window.appNavigate = function(hash) {

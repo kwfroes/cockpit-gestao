@@ -1977,8 +1977,11 @@ function exibirModalResultadoAnalise(resultado) {
                     <button id="tab-btn-cnaes" onclick="switchTabAnalise('cnaes')" class="px-4 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 font-medium text-sm transition-all">
                         Visão por CNAEs (${resultado.cnaes.length})
                     </button>
+                    <!-- NOVA ABA AQUI -->
+                    <button id="tab-btn-solicitacao" onclick="switchTabAnalise('solicitacao')" class="px-4 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 font-medium text-sm transition-all">
+                        Análise da Solicitação
+                    </button>
                 </div>
-
                 <div class="flex-1 overflow-y-auto">
                     <div id="tab-content-familias" class="space-y-1 block">
                         ${familiasHtml}
@@ -1986,6 +1989,61 @@ function exibirModalResultadoAnalise(resultado) {
                     <div id="tab-content-cnaes" class="space-y-1 hidden bg-slate-50 dark:bg-slate-900/30 p-2 rounded-lg border border-slate-100 dark:border-slate-800">
                         ${cnaesHtml}
                     </div>
+                        <div id="tab-content-solicitacao" class="hidden p-4 bg-slate-50 dark:bg-slate-900/30 rounded-lg border border-slate-100 dark:border-slate-800">
+                            
+                            <!-- TELA 1: CAMPO DE TEXTO E BOTÃO -->
+                            <div id="bloco-entrada-solicitacao" class="flex flex-col gap-3 animate-fade-in">
+                                <div>
+                                    <div class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Confrontar Lista de Famílias</div>
+                                    <p class="text-xs text-slate-600 dark:text-slate-400">Cole abaixo o texto com as famílias solicitadas (o sistema extrairá os códigos automaticamente):</p>
+                                </div>
+                                <textarea id="input-solicitacao-familias" rows="8" class="w-full p-4 text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-amber-500 shadow-inner custom-scrollbar" placeholder="Cole aqui seu texto desformatado...&#10;Ex:&#10;10.95 - ARMAMENTO - MISCELANEA *Nova Família&#10;spellcheck&#10;highlight_off"></textarea>
+                                <button onclick="processarSolicitacaoFamilias()" class="w-full py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm rounded-lg transition-all shadow-md flex items-center justify-center gap-2 mt-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                                    Analisar Solicitação
+                                </button>
+                            </div>
+
+                            <!-- TELA 2: RESULTADO EM SUB-ABAS -->
+                            <div id="bloco-resultado-solicitacao" class="hidden flex-col animate-fade-in h-full">
+                                
+                                <!-- Cabeçalho (Dashboard) -->
+                                <div class="flex justify-between items-center bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm shrink-0 mb-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex flex-col px-2"><span class="text-[10px] text-slate-500 uppercase font-bold">Solicitadas</span><span id="res-total" class="text-sm font-black text-blue-600 dark:text-blue-400">0</span></div>
+                                        <div class="w-px h-6 bg-slate-200 dark:bg-slate-700"></div>
+                                        <div class="flex flex-col px-2"><span class="text-[10px] text-slate-500 uppercase font-bold">Aprovadas</span><span id="res-aprovadas" class="text-sm font-black text-emerald-600 dark:text-emerald-400">0</span></div>
+                                        <div class="w-px h-6 bg-slate-200 dark:bg-slate-700"></div>
+                                        <div class="flex flex-col px-2"><span class="text-[10px] text-slate-500 uppercase font-bold">Reprovadas</span><span id="res-reprovadas" class="text-sm font-black text-red-600 dark:text-red-400">0</span></div>
+                                    </div>
+                                    <button onclick="voltarParaEdicaoSolicitacao()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-xs font-bold text-slate-600 dark:text-slate-300 rounded-lg transition-colors flex items-center gap-1.5 shadow-sm">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z"></path></svg>
+                                        Nova Análise
+                                    </button>
+                                </div>
+                                
+                                <!-- Botões de Sub-abas -->
+                                <div class="flex border-b border-slate-200 dark:border-slate-700 shrink-0 mb-3">
+                                    <button id="btn-subaba-aprovadas" onclick="alternarSubAbaSolicitacao('aprovadas')" class="flex-1 py-2 border-b-2 border-emerald-500 text-emerald-600 dark:text-emerald-400 font-bold text-xs uppercase tracking-wider transition-all flex justify-center items-center gap-2">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                        Com Cobertura (<span id="badge-aprovadas">0</span>)
+                                    </button>
+                                    <button id="btn-subaba-reprovadas" onclick="alternarSubAbaSolicitacao('reprovadas')" class="flex-1 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 transition-all font-bold text-xs uppercase tracking-wider flex justify-center items-center gap-2">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                        Sem Cobertura (<span id="badge-reprovadas">0</span>)
+                                    </button>
+                                </div>
+
+                                <!-- Conteúdo das Sub-abas (Ocupa 100% da largura) -->
+                                <div class="flex-1">
+                                    <div id="lista-aprovadas-solicitacao" class="block overflow-y-auto max-h-[45vh] custom-scrollbar flex flex-col gap-1.5 pr-1">
+                                    </div>
+                                    <div id="lista-reprovadas-solicitacao" class="hidden overflow-y-auto max-h-[45vh] custom-scrollbar flex flex-col gap-1.5 pr-1">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                 </div>
             </div>
 
@@ -2164,29 +2222,132 @@ window.confirmarSugestaoRemocao = async (btn) => {
 
 // Lógica de alternância das Abas
 window.switchTabAnalise = (tabId) => {
-    const btnFamilias = document.getElementById('tab-btn-familias');
-    const btnCnaes = document.getElementById('tab-btn-cnaes');
-    const contentFamilias = document.getElementById('tab-content-familias');
-    const contentCnaes = document.getElementById('tab-content-cnaes');
-
-    // Reseta o visual dos botões
-    btnFamilias.className = "px-4 py-2 border-b-2 font-medium text-sm transition-all " + 
-        (tabId === 'familias' ? "border-amber-500 text-amber-600 dark:text-amber-400 font-bold" : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300");
+    // Array com as 3 abas disponíveis
+    const tabs = ['familias', 'cnaes', 'solicitacao'];
     
-    btnCnaes.className = "px-4 py-2 border-b-2 font-medium text-sm transition-all " + 
-        (tabId === 'cnaes' ? "border-amber-500 text-amber-600 dark:text-amber-400 font-bold" : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300");
+    tabs.forEach(t => {
+        const btn = document.getElementById(`tab-btn-${t}`);
+        const content = document.getElementById(`tab-content-${t}`);
+        if (!btn || !content) return;
+        
+        if (t === tabId) {
+            content.classList.remove('hidden');
+            content.classList.add('block');
+            btn.className = "px-4 py-2 border-b-2 border-amber-500 text-amber-600 dark:text-amber-400 font-bold text-sm transition-all";
+        } else {
+            content.classList.add('hidden');
+            content.classList.remove('block');
+            btn.className = "px-4 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 font-medium text-sm transition-all";
+        }
+    });
+};
 
-    // Mostra/Oculta o conteúdo
-    if (tabId === 'familias') {
-        contentFamilias.classList.remove('hidden');
-        contentFamilias.classList.add('block');
-        contentCnaes.classList.remove('block');
-        contentCnaes.classList.add('hidden');
+window.processarSolicitacaoFamilias = () => {
+    const rawText = document.getElementById('input-solicitacao-familias').value;
+    
+    // Captura apenas "00.00"
+    const regex = /\b\d{2}\.\d{2}\b/g;
+    const matches = rawText.match(regex);
+    
+    if (!matches || matches.length === 0) {
+        if (typeof showToast === 'function') showToast("Nenhum código de família (00.00) encontrado no texto colado.");
+        return;
+    }
+
+    // Remove famílias duplicadas
+    const codigosSolicitados = [...new Set(matches)];
+    
+    const resultado = window.resultadoAnaliseAtual;
+    const habilitadas = resultado.familiasHabilitadas.map(f => f['Família'].toString());
+
+    const encontradas = [];
+    const naoEncontradas = [];
+
+    codigosSolicitados.forEach(codigo => {
+        const infoBase = familyData.find(f => f['Família'].toString() === codigo);
+        const descricao = infoBase ? infoBase.Descrição : "Descrição não encontrada no catálogo";
+        
+        if (habilitadas.includes(codigo)) {
+            encontradas.push({ codigo, descricao });
+        } else {
+            naoEncontradas.push({ codigo, descricao });
+        }
+    });
+
+    // 1. Atualiza os contadores do Dashboard
+    document.getElementById('res-total').textContent = codigosSolicitados.length;
+    document.getElementById('res-aprovadas').textContent = encontradas.length;
+    document.getElementById('res-reprovadas').textContent = naoEncontradas.length;
+    
+    // Atualiza os contadores dentro das próprias abas
+    document.getElementById('badge-aprovadas').textContent = encontradas.length;
+    document.getElementById('badge-reprovadas').textContent = naoEncontradas.length;
+
+    // 2. Constrói a lista verde
+    const listaVerde = document.getElementById('lista-aprovadas-solicitacao');
+    if (encontradas.length > 0) {
+        listaVerde.innerHTML = encontradas.map(f => `
+            <div class="flex items-center gap-3 p-3 bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-200/60 dark:border-emerald-800/50 rounded-lg shadow-sm text-sm">
+                <span class="font-mono font-black text-emerald-700 dark:text-emerald-400 shrink-0">${f.codigo}</span>
+                <span class="text-slate-700 dark:text-slate-300 leading-tight">${f.descricao}</span>
+            </div>
+        `).join('');
     } else {
-        contentCnaes.classList.remove('hidden');
-        contentCnaes.classList.add('block');
-        contentFamilias.classList.remove('block');
-        contentFamilias.classList.add('hidden');
+        listaVerde.innerHTML = `<div class="p-6 text-center text-slate-500 italic bg-slate-100 dark:bg-slate-800/50 rounded-lg border border-dashed border-slate-300 dark:border-slate-700">Nenhuma família solicitada possui cobertura neste CNPJ.</div>`;
+    }
+
+    // 3. Constrói a lista vermelha
+    const listaVermelha = document.getElementById('lista-reprovadas-solicitacao');
+    if (naoEncontradas.length > 0) {
+        listaVermelha.innerHTML = naoEncontradas.map(f => `
+            <div class="flex items-center gap-3 p-3 bg-red-50 dark:bg-red-900/10 border border-red-200/60 dark:border-red-800/50 rounded-lg shadow-sm text-sm">
+                <span class="font-mono font-black text-red-700 dark:text-red-400 shrink-0">${f.codigo}</span>
+                <span class="text-slate-700 dark:text-slate-300 leading-tight">${f.descricao}</span>
+            </div>
+        `).join('');
+    } else {
+        listaVermelha.innerHTML = `<div class="p-6 text-center text-emerald-600 italic bg-emerald-50 dark:bg-emerald-900/10 rounded-lg border border-dashed border-emerald-300 dark:border-emerald-800">Todas as famílias solicitadas foram aprovadas! 🎉</div>`;
+    }
+
+    // Troca as telas
+    document.getElementById('bloco-entrada-solicitacao').classList.add('hidden');
+    document.getElementById('bloco-entrada-solicitacao').classList.remove('flex');
+    
+    document.getElementById('bloco-resultado-solicitacao').classList.remove('hidden');
+    document.getElementById('bloco-resultado-solicitacao').classList.add('flex');
+    
+    // Força a aba verde a abrir por padrão
+    alternarSubAbaSolicitacao('aprovadas');
+};
+
+// Função para o botão "Nova Análise"
+window.voltarParaEdicaoSolicitacao = () => {
+    document.getElementById('bloco-resultado-solicitacao').classList.add('hidden');
+    document.getElementById('bloco-resultado-solicitacao').classList.remove('flex');
+    
+    document.getElementById('bloco-entrada-solicitacao').classList.remove('hidden');
+    document.getElementById('bloco-entrada-solicitacao').classList.add('flex');
+};
+
+// Função para alternar as Sub-Abas (Verde / Vermelho)
+window.alternarSubAbaSolicitacao = (aba) => {
+    const btnAprovadas = document.getElementById('btn-subaba-aprovadas');
+    const btnReprovadas = document.getElementById('btn-subaba-reprovadas');
+    const listaAprovadas = document.getElementById('lista-aprovadas-solicitacao');
+    const listaReprovadas = document.getElementById('lista-reprovadas-solicitacao');
+
+    if (aba === 'aprovadas') {
+        listaAprovadas.classList.remove('hidden');
+        listaReprovadas.classList.add('hidden');
+        
+        btnAprovadas.className = "flex-1 py-2 border-b-2 border-emerald-500 text-emerald-600 dark:text-emerald-400 font-bold text-xs uppercase tracking-wider transition-all flex justify-center items-center gap-2";
+        btnReprovadas.className = "flex-1 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 transition-all font-bold text-xs uppercase tracking-wider flex justify-center items-center gap-2";
+    } else {
+        listaReprovadas.classList.remove('hidden');
+        listaAprovadas.classList.add('hidden');
+        
+        btnReprovadas.className = "flex-1 py-2 border-b-2 border-red-500 text-red-600 dark:text-red-400 font-bold text-xs uppercase tracking-wider transition-all flex justify-center items-center gap-2";
+        btnAprovadas.className = "flex-1 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 transition-all font-bold text-xs uppercase tracking-wider flex justify-center items-center gap-2";
     }
 };
 
