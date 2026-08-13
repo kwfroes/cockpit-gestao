@@ -2291,11 +2291,11 @@ window.abrirModalPreAnalise = () => {
                 <h4 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2">Análise por Comprovante ou API</h4>
                 
                 <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">
-                    Anexe o PDF da Receita Federal ou utilize a consulta direta por CNPJ (exclusivo para administradores).
+                    Anexe o PDF da Receita Federal ou utilize a consulta direta por CNPJ, se disponível.
                 </p>
 
-                <!-- 🔒 CAMPO DE CONSULTA DIRETA POR CNPJ (ADMIN ONLY) -->
-                <div class="admin-only mb-5 p-3 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-700 text-left">
+                <!-- 🔒 CAMPO DE CONSULTA DIRETA POR CNPJ -->
+                <div class="mb-5 p-3 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-700 text-left">
                     <div class="flex justify-between items-center mb-1.5">
                         <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Consulta Direta via API</label>
                         <span id="contador-api-status" class="text-[10px] font-mono font-bold ${statusRate.permitido ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}">
