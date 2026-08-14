@@ -6,6 +6,7 @@ const app = {
     croppedBlob: null,     // Guarda a imagem final comprimida
     currentFileInputId: null, // Sabe se veio de 'newAvatar' ou 'editAvatar'
     logsData: [],
+    nomesDashboard: [],
 
     async init() {
         this.setupGlobalEvents();
@@ -129,7 +130,7 @@ const app = {
     async carregarUsuarios() {
         const tbodyAtivos = document.getElementById('userTableBody');
         const tbodyInativos = document.getElementById('inativosTableBody');
-        
+                
         tbodyAtivos.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-slate-500">Carregando...</td></tr>';
         if (tbodyInativos) tbodyInativos.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-slate-500">Carregando...</td></tr>';
         
@@ -161,6 +162,7 @@ const app = {
             const coord = u.coordenacao || '-';
             const safeCoord = encodeURIComponent(u.coordenacao || '');
             const isResp = u.responsavel ? 'true' : 'false';
+            const safeUserDash = encodeURIComponent(u.user_dash || '');
 
             // Define a cor da badge mantendo a coesão com as colunas de Cargo e Status
             const coordBadgeClass = u.responsavel 
@@ -195,7 +197,7 @@ const app = {
                     </span>
                 </td>
                 <td class="p-4 text-right">
-                    <button onclick="app.abrirEdicao('${u.id}', '${u.name}', '${u.email}', '${u.role}', '${appsJsonString}', '${safeCoord}', ${isResp})"
+                    <button onclick="app.abrirEdicao('${u.id}', '${u.name}', '${u.email}', '${u.role}', '${appsJsonString}', '${safeCoord}', ${isResp}, '${safeUserDash}')"
                         class="text-blue-500 hover:text-blue-700 mr-3" title="Editar Usuário">
                         <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 3C7.74882 3 5.62323 3 4.30256 4.31802C3.298 5.32056 3.05755 6.78787 3 9.3M21 9.3C20.9424 6.78787 20.702 5.32056 19.6974 4.31802C18.8789 3.50116 17.7513 3.19056 16 3.07246M21 14.7C20.9424 17.2121 20.702 18.6794 19.6974 19.682C18.3768 21 16.2512 21 12 21C7.74882 21 5.62323 21 4.30256 19.682C3.29801 18.6794 3.05756 17.2121 3 14.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -236,7 +238,7 @@ const app = {
     },
     
     // 3. ABRIR MODAL DE EDIÇÃO
-    async abrirEdicao(id, name, email, role, encodedApps, encodedCoord, isResp) {
+    async abrirEdicao(id, name, email, role, encodedApps, encodedCoord, isResp, encodedUserDash) {
         document.getElementById('editId').value = id;
         document.getElementById('editName').value = name;
         document.getElementById('editEmail').value = email !== 'undefined' ? email : '';
@@ -245,8 +247,13 @@ const app = {
         // 1. Popular os dropdowns primeiro
         await this.popularDiretorias('edit');
         
-        // 2. Parsear a hierarquia (Ex: "DSL/CGCF/SetorX")
+        // 2. Extrair as variáveis encodadas (INCLUINDO O USER DASH)
         const coordCompleta = encodedCoord && encodedCoord !== 'undefined' ? decodeURIComponent(encodedCoord) : '';
+        const userDashValue = encodedUserDash && encodedUserDash !== 'undefined' ? decodeURIComponent(encodedUserDash) : '';
+        
+        // Agora sim a variável existe e pode ser usada
+        await this.popularSelectUserDash('editUserDash', userDashValue);
+        
         const partes = coordCompleta.split('/');
         
         // 3. Preencher e disparar os filtros para carregar as opções
@@ -339,6 +346,7 @@ const app = {
             btn.disabled = true;
             btn.textContent = "Atualizando...";
 
+            const user_dash = document.getElementById('editUserDash').value;
             try {
                 const avatarUrl = await this.uploadAvatar('editAvatar');
 
@@ -352,7 +360,8 @@ const app = {
                         role: role,
                         allowed_apps: allowed_apps, 
                         coordenacao: coordenacao, // Variável declarada corretamente acima
-                        responsavel: responsavel 
+                        responsavel: responsavel,
+                        user_dash: user_dash
                     } 
                 };
 
@@ -488,6 +497,7 @@ const app = {
         setorSelect.innerHTML = '<option value="">Nenhum</option>';
         setorSelect.disabled = true;
 
+        this.popularSelectUserDash('newUserDash');
         document.getElementById('modal').classList.remove('hidden');
     },
 
@@ -547,7 +557,8 @@ const app = {
                     const customApps = checkedBoxes.map(cb => cb.value);
                     allowed_apps = [...new Set(["#home", "#demandas", ...customApps])];
                 }
-                
+
+                const user_dash = document.getElementById('newUserDash').value;
                 // Envia para a Edge Function incluindo a coordenação montada
                 const { error } = await supabase.functions.invoke('gerenciar-usuarios', {
                     body: { 
@@ -559,7 +570,8 @@ const app = {
                             name: name,
                             allowed_apps: allowed_apps,
                             coordenacao: coordenacao, // Aqui vai a string unificada (Ex: "DSL/CGCF")
-                            responsavel: responsavel  
+                            responsavel: responsavel,
+                            user_dash: user_dash
                         } 
                     }
                 });
@@ -882,6 +894,8 @@ const app = {
             document.getElementById('approveCoordenacao').value = '';
             document.getElementById('approveResponsavel').checked = false;
 
+            this.popularSelectUserDash('approveUserDash');
+
             btnConfirm.onclick = async () => {
             const checkedBoxes = Array.from(document.querySelectorAll('input[name="approve_app_permission"]:checked'));
             const customApps = checkedBoxes.map(cb => cb.value);
@@ -892,6 +906,7 @@ const app = {
 
             btnConfirm.textContent = "Aprovando...";
             btnConfirm.disabled = true;
+            const user_dash = document.getElementById('approveUserDash').value;
             try {
                 const { error } = await supabase.functions.invoke('gerenciar-usuarios', {
                     body: { 
@@ -901,7 +916,8 @@ const app = {
                         name: nome,
                         allowed_apps: allowed_apps, // Enviando as permissões para o backend
                         coordenacao: coordenacao, // Envia para a Edge
-                        responsavel: responsavel
+                        responsavel: responsavel,
+                        user_dash: user_dash
                     }
                 });
 
@@ -985,6 +1001,67 @@ const app = {
             content.classList.remove('scale-95', 'opacity-0');
             content.classList.add('scale-100', 'opacity-100');
         }, 10);
+    },
+
+    async carregarNomesDashboard() {
+        if (this.nomesDashboard.length > 0) return this.nomesDashboard;
+
+        try {
+            // 1. Lista os arquivos do bucket relatorios-caf
+            const { data: files, error } = await supabase.storage.from('relatorios-caf').list();
+            if (error) throw error;
+
+            // 2. Filtra os JSONs e pega APENAS o último (ex: 2026-12.json)
+            const monthFiles = (files || [])
+                .filter(f => /^\d{4}-\d{2}\.json$/.test(f.name))
+                .sort((a, b) => a.name.localeCompare(b.name));
+
+            if (monthFiles.length === 0) return [];
+
+            const lastFile = monthFiles[monthFiles.length - 1];
+
+            // 3. Faz o download exclusivamente do último mês
+            const { data: fileData, error: downloadError } = await supabase.storage
+                .from('relatorios-caf')
+                .download(lastFile.name);
+
+            if (downloadError) throw downloadError;
+
+            // 4. Converte e extrai os nomes únicos
+            const text = await fileData.text();
+            const json = JSON.parse(text);
+            
+            let uniqueNames = new Set();
+            
+            // O Dashboard exporta como matriz { cols: [...], rows: [...] }
+            if (json.cols && json.rows) {
+                const analystIndex = json.cols.indexOf("Usuario Analista");
+                if (analystIndex !== -1) {
+                    json.rows.forEach(row => {
+                        if (row[analystIndex]) uniqueNames.add(row[analystIndex]);
+                    });
+                }
+            }
+
+            this.nomesDashboard = [...uniqueNames].filter(Boolean).sort();
+            return this.nomesDashboard;
+        } catch (err) {
+            console.error("Erro ao puxar analistas do Storage:", err);
+            return [];
+        }
+    },
+
+    async popularSelectUserDash(selectId, selectedValue = '') {
+        const select = document.getElementById(selectId);
+        select.innerHTML = '<option value="">Carregando...</option>';
+        
+        const nomes = await this.carregarNomesDashboard();
+        
+        select.innerHTML = '<option value="">Não vincular</option>';
+        nomes.forEach(nome => {
+            const isSelected = (nome === selectedValue) ? 'selected' : '';
+            select.innerHTML += `<option value="${nome}" ${isSelected}>${nome}</option>`;
+        });
     },
 
     

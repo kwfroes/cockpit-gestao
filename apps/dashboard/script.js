@@ -815,11 +815,12 @@ window.onload = function () {
 
   function processRawData(data) {
     const role = sessionStorage.getItem("cockpit_user_role");
-    const csvName = sessionStorage.getItem("cockpit_csv_name") || sessionStorage.getItem("cockpit_user_realname");
+    
+    // --- 1. A NOVA CHAVE MESTRA ---
+    // Puxa a variável que o App Pai gravou no login
+    const userDash = sessionStorage.getItem("cockpit_user_dash");
 
     let processedData = addDerivedFields(data);
-
-      // ---------------------------
 
     // --------------------------------------------------------
     // GATEKEEPER DE DADOS
@@ -832,26 +833,33 @@ window.onload = function () {
         const normalizeString = (str) => {
             if (!str) return "";
             return str.toString()
-                      .normalize("NFD")               // Separa os acentos das letras
-                      .replace(/[\u0300-\u036f]/g, "") // Remove os acentos matematicamente
-                      .trim()                         // Remove espaços nas pontas
-                      .toLowerCase();                 // Tudo minúsculo
+                      .normalize("NFD")               
+                      .replace(/[\u0300-\u036f]/g, "") 
+                      .trim()                         
+                      .toLowerCase();                 
         };
 
-        const safeCsvName = normalizeString(csvName);
+        const safeUserDash = normalizeString(userDash);
 
-        if (safeCsvName === "todos") {
-            return processedData;
+        // --- 2. TRAVA DE SEGURANÇA TOTAL ---
+        // Se o Administrador esqueceu de vincular um nome do Dashboard ao usuário 
+        // lá na Gestão de Usuários (ou a sessão falhou), ele não vê NADA.
+        if (!safeUserDash || safeUserDash === "todos" || safeUserDash === "null") {
+            console.warn("Acesso bloqueado: Este usuário não possui um vínculo 'user_dash' configurado no cadastro.");
+            return []; 
         }
 
+        // --- 3. O FILTRO REAL ---
+        // Varre a base e só devolve as linhas que baterem com o vínculo
         return processedData.filter(row => {
             const rowAnalyst = normalizeString(row["Usuario Analista"]);
-            return rowAnalyst === safeCsvName;
+            return rowAnalyst === safeUserDash;
         });
     }
 
+    // Se for admin, passa direto e vê tudo
     return processedData;
-  }
+    }
 
   // --- NOVA FUNÇÃO: Badge de Período da Base ---
   function updateDateRangeBadge(data) {
@@ -929,7 +937,28 @@ window.onload = function () {
       }
     });
 
-    populateSelect("filterAnalyst", [...analysts].sort());
+  const role = sessionStorage.getItem("cockpit_user_role");
+    const filterAnalyst = document.getElementById("filterAnalyst");
+
+    if (role === "admin") {
+        // Admin vê todo mundo e pode clicar
+        populateSelect("filterAnalyst", [...analysts].sort());
+        filterAnalyst.disabled = false;
+        filterAnalyst.classList.remove("cursor-not-allowed", "opacity-70", "bg-gray-100", "dark:bg-slate-800");
+    } else {
+        // User vê apenas o seu nome e não pode clicar
+        // Pega o nome exato que sobrou no banco (para ficar bonito) ou o da sessão
+        const nomeExibicao = analysts.size > 0 ? [...analysts][0] : (sessionStorage.getItem("cockpit_user_dash") || "Sem vínculo");
+        
+        // Exibe o nome, mas o valor é 'all' para o filtro funcionar sem erros de acentuação
+        filterAnalyst.innerHTML = `<option value="all">${nomeExibicao}</option>`;
+        filterAnalyst.value = "all";
+        filterAnalyst.disabled = true;
+        
+        // Adiciona um visual de campo bloqueado
+        filterAnalyst.classList.add("cursor-not-allowed", "opacity-70", "bg-gray-100", "dark:bg-slate-800");
+    }
+
     populateSelect("filterSituation", [...situations].sort());
     populateSelect("filterUf", [...ufs].sort());
 
@@ -2284,20 +2313,31 @@ async function exportPDF(overrideAnalyst = null) {
         doc.setFontSize(11);
         doc.setTextColor(100);
 
+      const userRole = sessionStorage.getItem("cockpit_user_role");
         let notaEquipe = "";
+
         if (analistaFiltro !== 'all') {
             const indexNoRanking = teamData.findIndex(a => a.nome === analistaFiltro);
-            const posicao = indexNoRanking + 1;
             const dados = teamData[indexNoRanking];
 
             if (dados) {
-                notaEquipe = `Análise: O analista ${analistaFiltro} apresentou o ${posicao}º maior volume de conclusões, ` +
-                             `representando ${dados.participacao}% de participação em relação à equipe no período analisado. ` +
-                             `A média diária do analista foi de ${dados.media} solicitações, com o tempo médio de atendimento de ${dados.tempoMedioFormatado}.`;
+                if (userRole === "admin") {
+                    // Admin tirando relatório individual: Mostra ranking na equipe
+                    const posicao = indexNoRanking + 1;
+                    notaEquipe = `Análise: O analista ${analistaFiltro} apresentou o ${posicao}º maior volume de conclusões, ` +
+                                 `representando ${dados.participacao}% de participação em relação à equipe no período analisado. ` +
+                                 `A média diária do analista foi de ${dados.media} solicitações, com o tempo médio de atendimento de ${dados.tempoMedioFormatado}.`;
+                } else {
+                    // User comum tirando seu relatório: Foco na produtividade pessoal e constância
+                    const statusConsistencia = dados.desvio > 2.5 ? "apresentando variações de volume no dia a dia" : "mantendo um fluxo de entregas constante";
+                    notaEquipe = `Análise: No período selecionado, a sua operação registrou um total de ${dados.total} conclusões. ` +
+                                 `A média diária de produtividade foi de ${dados.media} solicitações, com um tempo médio de atendimento de ${dados.tempoMedioFormatado}, ${statusConsistencia}.`;
+                }
             } else {
-                notaEquipe = `Análise: O analista selecionado não possui registros para o período/filtros atuais.`;
+                notaEquipe = `Análise: Não há registros suficientes para o período ou filtros selecionados.`;
             }
         } else {
+            // Relatório Geral (Apenas Admin consegue chegar aqui)
             const topAnalyst = teamData[0] ? teamData[0].nome : "N/A";
             const topPart = teamData[0] ? teamData[0].participacao : "0";
             const listaDesvios = teamData.map(d => d.desvio);

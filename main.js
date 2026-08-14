@@ -323,7 +323,7 @@ async function generateCaptcha() {
           // 1. Adicionamos 'status' na busca do perfil
           const { data: profile } = await supabase
             .from('profiles')
-            .select('name, role, avatar_url, apelido, precisa_trocar_senha, allowed_apps, status, coordenacao, responsavel')
+            .select('name, role, avatar_url, apelido, precisa_trocar_senha, allowed_apps, status, coordenacao, responsavel, user_dash')
             .eq('id', user.id)
             .single();
             
@@ -343,6 +343,7 @@ async function generateCaptcha() {
           sessionStorage.setItem("cockpit_user_apelido", profile?.apelido || "");
           sessionStorage.setItem("cockpit_user_coordenacao", profile?.coordenacao || "");
           sessionStorage.setItem("cockpit_user_responsavel", profile?.responsavel ?? false);
+          sessionStorage.setItem("cockpit_user_dash", profile?.user_dash || "");
           
           // Salva a lista de apps permitidos na sessão do navegador
           const userApps = profile?.allowed_apps || ["#home"];
@@ -457,7 +458,7 @@ if (loginForm) {
         // 1. Buscamos 'allowed_apps' e 'status' no login também
         const { data: profile } = await supabase
           .from('profiles')
-          .select('name, role, avatar_url, apelido, precisa_trocar_senha, allowed_apps, status, coordenacao, responsavel')
+          .select('name, role, avatar_url, apelido, precisa_trocar_senha, allowed_apps, status, coordenacao, responsavel, user_dash')
           .eq('id', user.id)
           .single();
         
@@ -479,6 +480,7 @@ if (loginForm) {
         sessionStorage.setItem("cockpit_user_apelido", profile?.apelido || "");
         sessionStorage.setItem("cockpit_user_coordenacao", profile?.coordenacao || "");
         sessionStorage.setItem("cockpit_user_responsavel", profile?.responsavel ?? false);
+        sessionStorage.setItem("cockpit_user_dash", profile?.user_dash || "");
 
         const userApps = profile?.allowed_apps || ["#home"];
         sessionStorage.setItem("cockpit_allowed_apps", JSON.stringify(userApps));
