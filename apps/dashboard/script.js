@@ -3705,4 +3705,147 @@ function renderComparisonCharts(data) {
       URL.revokeObjectURL(url);
   };
 
+  const btnAbrirPreferenciasEl = document.getElementById("btnAbrirPreferencias");
+  if (btnAbrirPreferenciasEl) {
+      btnAbrirPreferenciasEl.addEventListener("click", abrirModalPreferencias);
+  }
+
+
+// ==========================================
+  // MODAL E PREFERÊNCIAS DE E-MAIL
+  // ==========================================
+  
+  async function abrirModalPreferencias() {
+      const role = sessionStorage.getItem("cockpit_user_role");
+      const textoAdmin = document.getElementById("textoAdminEmail");
+      const btnTestar = document.getElementById("btnTestarEmail"); 
+      
+      // Mostra/oculta texto explicativo e botão de teste baseado no perfil
+      if (role !== 'admin') {
+          if (textoAdmin) textoAdmin.style.display = 'none';
+          if (btnTestar) btnTestar.classList.add('hidden');
+      } else {
+          if (textoAdmin) textoAdmin.style.display = 'inline';
+          if (btnTestar) btnTestar.classList.remove('hidden');
+      }
+
+      // NOVO: Pega o ID verdadeiro diretamente da autenticação do Supabase
+      const { data: authData } = await supabaseClient.auth.getUser();
+      const userId = authData?.user?.id;
+      
+      if (userId) {
+          const { data, error } = await supabaseClient
+              .from('profiles')
+              .select('recebe_email_semanal, recebe_email_mensal')
+              .eq('id', userId)
+              .single();
+
+          if (data) {
+              const toggleSemanal = document.getElementById("toggleEmailSemanal");
+              const toggleMensal = document.getElementById("toggleEmailMensal");
+              
+              if (toggleSemanal) toggleSemanal.checked = data.recebe_email_semanal || false;
+              if (toggleMensal) toggleMensal.checked = data.recebe_email_mensal || false;
+          }
+      }
+
+      // Abre o modal
+      const modal = document.getElementById('modalPreferenciasEmail');
+      if (modal) modal.classList.remove('hidden');
+  }
+
+  document.getElementById("btnSalvarPreferencias").addEventListener("click", async () => {
+      const btn = document.getElementById("btnSalvarPreferencias");
+      btn.textContent = "Salvando...";
+
+      // NOVO: Pega o ID verdadeiro diretamente da autenticação
+      const { data: authData } = await supabaseClient.auth.getUser();
+      const userId = authData?.user?.id;
+
+      if (!userId) {
+          alert("❌ Erro: Usuário não autenticado no banco de dados.");
+          btn.textContent = "Salvar Preferências";
+          return;
+      }
+
+      const semanal = document.getElementById("toggleEmailSemanal").checked;
+      const mensal = document.getElementById("toggleEmailMensal").checked;
+
+      const { error } = await supabaseClient
+          .from('profiles')
+          .update({ recebe_email_semanal: semanal, recebe_email_mensal: mensal })
+          .eq('id', userId);
+
+      if (error) {
+          alert("Erro ao salvar preferências.");
+          console.error(error);
+      } else {
+          alert("Preferências atualizadas!");
+          document.getElementById('modalPreferenciasEmail').classList.add('hidden');
+      }
+      btn.textContent = "Salvar Preferências";
+  });
+
+  // --- INÍCIO DO EVENTO DO BOTÃO DE TESTE ---
+  const btnTestarEmailEl = document.getElementById("btnTestarEmail");
+  if (btnTestarEmailEl) {
+      btnTestarEmailEl.addEventListener("click", async () => {
+          const btn = btnTestarEmailEl;
+          const textoOriginal = btn.innerHTML;
+          btn.innerHTML = "⏳ Enviando...";
+          btn.disabled = true;
+
+          try {
+              // NOVO: Pega o ID verdadeiro do Admin logado
+              const { data: authData } = await supabaseClient.auth.getUser();
+              const userId = authData?.user?.id;
+
+              if (!userId) {
+                  alert("❌ Erro: Sessão expirada ou usuário não encontrado.");
+                  return;
+              }
+
+              const { data: profile, error: profileError } = await supabaseClient
+                  .from('profiles')
+                  .select('email, name')
+                  .eq('id', userId)
+                  .single();
+
+              if (profileError) {
+                  console.error("Erro ao buscar perfil:", profileError);
+                  alert("❌ Erro ao buscar seus dados no banco.");
+                  return;
+              }
+
+              if (!profile || !profile.email) {
+                  alert("❌ E-mail não encontrado no seu perfil.");
+                  return;
+              }
+
+              // Chama a Edge Function
+              const { data, error } = await supabaseClient.functions.invoke('envio-relatorios', {
+                  body: { 
+                      tipo: 'teste', 
+                      emailDestino: profile.email, 
+                      nomeDestino: profile.name 
+                  }
+              });
+
+              if (error) {
+                  console.error("Erro do Supabase Invoke:", error);
+                  throw new Error(error.message || "Erro desconhecido ao invocar a função");
+              }
+              
+              alert("✅ E-mail de teste disparado com sucesso! Verifique sua caixa de entrada.");
+          } catch (err) {
+              console.error("Erro completo no teste:", err);
+              alert("❌ Ocorreu um erro ao disparar o teste. Verifique o console do navegador.");
+          } finally {
+              btn.innerHTML = textoOriginal;
+              btn.disabled = false;
+          }
+      });
+  }
+  // --- FIM DO EVENTO DO BOTÃO DE TESTE ---
+
 }; // FECHA O window.onload
