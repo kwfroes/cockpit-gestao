@@ -3804,11 +3804,11 @@ const statusBadge = document.getElementById("telegramStatusBadge");
       if (modal) modal.classList.remove('hidden');
   }
 
-  document.getElementById("btnSalvarPreferencias").addEventListener("click", async () => {
+document.getElementById("btnSalvarPreferencias").addEventListener("click", async () => {
       const btn = document.getElementById("btnSalvarPreferencias");
       btn.textContent = "Salvando...";
 
-      // NOVO: Pega o ID verdadeiro diretamente da autenticação
+      // Pega o ID verdadeiro diretamente da autenticação
       const { data: authData } = await supabaseClient.auth.getUser();
       const userId = authData?.user?.id;
 
@@ -3839,6 +3839,17 @@ const statusBadge = document.getElementById("telegramStatusBadge");
       } else {
           alert("Preferências atualizadas!");
           document.getElementById('modalPreferenciasEmail').classList.add('hidden');
+
+          // --- NOVO: DISPARO IMEDIATO DE BOAS-VINDAS/CONFIRMAÇÃO ---
+          // Se o usuário ativou pelo menos UMA opção, mandamos o resumo.
+          if (semanalEmail || mensalEmail || semanalTelegram || mensalTelegram) {
+              supabaseClient.functions.invoke('envio-relatorios', {
+                  body: { 
+                      tipo: 'boas_vindas', 
+                      userId: userId 
+                  }
+              }).catch(err => console.error("Erro ao disparar boas-vindas:", err));
+          }
       }
       btn.textContent = "Salvar Preferências";
   });
