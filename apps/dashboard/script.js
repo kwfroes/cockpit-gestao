@@ -3733,21 +3733,71 @@ function renderComparisonCharts(data) {
       const { data: authData } = await supabaseClient.auth.getUser();
       const userId = authData?.user?.id;
       
-      if (userId) {
+if (userId) {
           const { data, error } = await supabaseClient
               .from('profiles')
-              .select('recebe_email_semanal, recebe_email_mensal')
+              .select('recebe_email_semanal, recebe_email_mensal, recebe_telegram_semanal, recebe_telegram_mensal, telegram_chat_id, email')
               .eq('id', userId)
               .single();
 
           if (data) {
-              const toggleSemanal = document.getElementById("toggleEmailSemanal");
-              const toggleMensal = document.getElementById("toggleEmailMensal");
+              document.getElementById("toggleEmailSemanal").checked = data.recebe_email_semanal || false;
+              document.getElementById("toggleEmailMensal").checked = data.recebe_email_mensal || false;
               
-              if (toggleSemanal) toggleSemanal.checked = data.recebe_email_semanal || false;
-              if (toggleMensal) toggleMensal.checked = data.recebe_email_mensal || false;
+              // Correção da variável com o nome correto:
+              document.getElementById("toggleTelegramSemanal").checked = data.recebe_telegram_semanal || false;
+              document.getElementById("toggleTelegramMensal").checked = data.recebe_telegram_mensal || false;
+
+const statusBadge = document.getElementById("telegramStatusBadge");
+              const statusText = document.getElementById("telegramStatusText");
+              const qrContainer = document.getElementById("qrcodeContainer");
+              const linkBtn = document.getElementById("telegramLinkBtn");
+
+              // Codificação Base64 para compatibilidade com o Telegram
+              const emailCodificado = btoa(data.email).replace(/=/g, '');
+              const botUrl = `https://t.me/kf_cockpit_bot?start=auth_${emailCodificado}`;
+
+              linkBtn.href = botUrl;
+
+              if (data.telegram_chat_id) {
+                  if (statusBadge) {
+                      statusBadge.textContent = "Conectado ✅";
+                      statusBadge.className = "text-[10px] px-2 py-0.5 rounded-full bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300 font-semibold";
+                  }
+                  statusText.textContent = "✅ Sua conta já está vinculada ao bot!";
+                  qrContainer.innerHTML = "";
+                  linkBtn.textContent = "Reconectar / Trocar Conta";
+              } else {
+                  if (statusBadge) {
+                      statusBadge.textContent = "Pendente";
+                      statusBadge.className = "text-[10px] px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300 font-semibold";
+                  }
+                  statusText.textContent = "Aponte a câmera e toque em 'Iniciar' no Telegram:";
+                  linkBtn.textContent = "Abrir no Telegram";
+
+                  // 1. Exibe o loader temporário
+                  qrContainer.innerHTML = `
+                      <div id="qrLoading" class="flex flex-col items-center justify-center h-[120px] w-[120px] bg-gray-50 dark:bg-slate-800 border rounded-lg border-gray-200 dark:border-slate-700">
+                          <div class="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mb-1"></div>
+                          <span class="text-[10px] text-gray-500 dark:text-gray-400 font-medium">Gerando QR...</span>
+                      </div>
+                  `;
+
+                  // 2. Renderiza a imagem e remove o loader no onload
+                  const imgQr = document.createElement("img");
+                  imgQr.src = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(botUrl)}`;
+                  imgQr.alt = "QR Code Telegram";
+                  imgQr.className = "rounded-lg shadow-sm hidden";
+                  imgQr.onload = () => {
+                      const loader = document.getElementById("qrLoading");
+                      if (loader) loader.remove();
+                      imgQr.classList.remove("hidden");
+                  };
+
+                  qrContainer.appendChild(imgQr);
+              }
+            }
           }
-      }
 
       // Abre o modal
       const modal = document.getElementById('modalPreferenciasEmail');
@@ -3768,12 +3818,19 @@ function renderComparisonCharts(data) {
           return;
       }
 
-      const semanal = document.getElementById("toggleEmailSemanal").checked;
-      const mensal = document.getElementById("toggleEmailMensal").checked;
+      const semanalEmail = document.getElementById("toggleEmailSemanal").checked;
+      const mensalEmail = document.getElementById("toggleEmailMensal").checked;
+      const semanalTelegram = document.getElementById("toggleTelegramSemanal").checked;
+      const mensalTelegram = document.getElementById("toggleTelegramMensal").checked;
 
       const { error } = await supabaseClient
           .from('profiles')
-          .update({ recebe_email_semanal: semanal, recebe_email_mensal: mensal })
+          .update({ 
+              recebe_email_semanal: semanalEmail, 
+              recebe_email_mensal: mensalEmail,
+              recebe_telegram_semanal: semanalTelegram,
+              recebe_telegram_mensal: mensalTelegram
+          })
           .eq('id', userId);
 
       if (error) {
@@ -3848,4 +3905,4 @@ function renderComparisonCharts(data) {
   }
   // --- FIM DO EVENTO DO BOTÃO DE TESTE ---
 
-}; // FECHA O window.onload
+};
