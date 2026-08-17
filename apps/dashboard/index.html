@@ -206,7 +206,7 @@
             <button
               id="btnAbrirPreferencias"
               class="bg-gray-50 dark:bg-slate-700 hover:bg-gray-600 text-white font-bold py-2 px-3 rounded-lg shadow"
-              title="Configurar Relatórios por E-mail"
+              title="Configurar Relatórios Regulares (E-mail e Telegram)"
             >
               ⚙️
             </button>
@@ -960,43 +960,74 @@
 
       </div>
     </div>
-    <div id="modalPreferenciasEmail" class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all border dark:border-slate-700 p-6">
+
+<div id="modalPreferenciasEmail" class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all border dark:border-slate-700 p-6 max-h-[90vh] overflow-y-auto">
         <div class="flex justify-between items-center mb-4 border-b dark:border-slate-700 pb-2">
-            <h3 class="text-xl font-bold text-gray-800 dark:text-white">Configurar Relatórios por E-mail</h3>
-            <button onclick="document.getElementById('modalPreferenciasEmail').classList.add('hidden')" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+            <h3 class="text-lg font-bold text-gray-800 dark:text-white">Preferências de Relatórios</h3>
+            <button onclick="document.getElementById('modalPreferenciasEmail').classList.add('hidden')" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
         </div>
         
-        <p class="text-sm text-gray-600 dark:text-gray-300 mb-6">
-            Escolha se deseja receber um resumo automático do seu desempenho <span id="textoAdminEmail" class="font-bold text-blue-600">(ou da equipe toda)</span> no seu e-mail corporativo.
+        <p class="text-xs text-gray-600 dark:text-gray-300 mb-4">
+            Configure o recebimento dos resumos operacionais <span id="textoAdminEmail" class="font-bold text-blue-600">(equipe geral)</span>.
         </p>
 
-        <div class="space-y-4">
-            <label class="flex items-center justify-between cursor-pointer p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg border border-gray-200 dark:border-slate-600">
-                <div>
-                    <span class="font-semibold text-gray-800 dark:text-white block">Resumo Semanal</span>
-                    <span class="text-xs text-gray-500 dark:text-gray-400">Toda segunda-feira</span>
-                </div>
-                <input type="checkbox" id="toggleEmailSemanal" class="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+        <!-- Seção 1: E-mail Corporativo -->
+        <div class="space-y-2 mb-4">
+            <span class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">✉️ E-mail</span>
+            
+            <label class="flex items-center justify-between cursor-pointer p-2.5 bg-gray-50 dark:bg-slate-700/50 rounded-lg border border-gray-200 dark:border-slate-600">
+                <span class="text-xs font-semibold text-gray-800 dark:text-white">Resumo Semanal (Segunda)</span>
+                <input type="checkbox" id="toggleEmailSemanal" class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
             </label>
 
-            <label class="flex items-center justify-between cursor-pointer p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg border border-gray-200 dark:border-slate-600">
-                <div>
-                    <span class="font-semibold text-gray-800 dark:text-white block">Fechamento Mensal</span>
-                    <span class="text-xs text-gray-500 dark:text-gray-400">1º dia útil do mês</span>
-                </div>
-                <input type="checkbox" id="toggleEmailMensal" class="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+            <label class="flex items-center justify-between cursor-pointer p-2.5 bg-gray-50 dark:bg-slate-700/50 rounded-lg border border-gray-200 dark:border-slate-600">
+                <span class="text-xs font-semibold text-gray-800 dark:text-white">Fechamento Mensal (1º dia útil)</span>
+                <input type="checkbox" id="toggleEmailMensal" class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
             </label>
         </div>
 
-            <button id="btnSalvarPreferencias" class="w-full mt-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all shadow-lg active:scale-95">
+        <!-- Seção 2: Telegram Colapsável -->
+        <div class="border-t dark:border-slate-700 pt-3">
+            <details class="group">
+                <summary class="flex items-center justify-between cursor-pointer list-none text-xs font-bold text-gray-700 dark:text-gray-200 py-1 select-none">
+                    <span class="flex items-center gap-1.5">
+                        <span>📱 Notificações via Telegram (em construção)</span>
+                        <span id="telegramStatusBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-gray-200 text-gray-600 dark:bg-slate-700 dark:text-gray-300 font-normal">Desconectado</span>
+                    </span>
+                    <span class="transition-transform group-open:rotate-180 text-gray-400">▾</span>
+                </summary>
+
+                <div class="space-y-2 mt-3 pl-1">
+                    <label class="flex items-center justify-between cursor-pointer p-2.5 bg-gray-50 dark:bg-slate-700/50 rounded-lg border border-gray-200 dark:border-slate-600">
+                        <span class="text-xs font-semibold text-gray-800 dark:text-white">Semanal no Telegram</span>
+                        <input type="checkbox" id="toggleTelegramSemanal" class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                    </label>
+
+                    <label class="flex items-center justify-between cursor-pointer p-2.5 bg-gray-50 dark:bg-slate-700/50 rounded-lg border border-gray-200 dark:border-slate-600">
+                        <span class="text-xs font-semibold text-gray-800 dark:text-white">Mensal no Telegram</span>
+                        <input type="checkbox" id="toggleTelegramMensal" class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                    </label>
+
+                    <div id="telegramConnectBox" class="hidden text-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 mt-2">
+                        <p class="text-[11px] text-blue-700 dark:text-blue-300 mb-2 font-medium" id="telegramStatusText">Aponte a câmera ou clique no link:</p>
+                        <div id="qrcodeContainer" class="flex justify-center mb-2"></div>
+                        <a id="telegramLinkBtn" href="#" target="_blank" class="text-xs bg-blue-600 text-white px-3 py-1.5 rounded font-bold inline-block hover:bg-blue-700 transition-all">Abrir no Telegram</a>
+                    </div>
+                </div>
+            </details>
+        </div>
+
+        <div class="mt-5 pt-3 border-t dark:border-slate-700 flex flex-col gap-2">
+            <button id="btnSalvarPreferencias" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-lg transition-all shadow-md active:scale-95">
                 Salvar Preferências
             </button>
-            <button id="btnTestarEmail" class="w-full mt-3 py-2 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-200 font-bold rounded-lg transition-all border border-gray-300 dark:border-slate-600 hidden">
-            ✉️ Enviar E-mail de Teste
+            <button id="btnTestarEmail" class="w-full py-2 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-200 font-bold text-xs rounded-lg transition-all border border-gray-300 dark:border-slate-600 hidden">
+                ✉️ Disparar Teste Geral (Últimos 7 Dias)
             </button>
         </div>
-      </div>
+    </div>
+</div>
 
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
