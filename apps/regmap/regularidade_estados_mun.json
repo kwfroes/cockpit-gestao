@@ -175,11 +175,27 @@
                     }
                 },
                 {
-                    "Nome": "Belo Campo",
+                    "Nome": "Tanque Novo",
                     "Tipo": "Polo Regional",
                     "Links": {
                         "Ficha de Inscrição - Municipio": "",
-                        "Regularidade Municipal - Municipio": "http://belocampo-ba.link3.com.br/l3-grp/Servicos.html"
+                        "Regularidade Municipal - Municipio": "https://tanquenovo-ba.link3.com.br/l3-grp/Servicos.html"
+                    }
+                },
+                {
+                    "Nome": "Euclides da Cunha",
+                    "Tipo": "Polo Regional",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": "https://fisco.net.br/portaldocontribuinte/euclidesdacunha"
+                    }
+                },
+                {
+                    "Nome": "Lauro de Freitas",
+                    "Tipo": "Polo Regional",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": "https://sistemas.sefaz.pmlf.ba.gov.br/webrun/form.jsp?sys=TR2&action=openform&formID=464568210&align=0&mode=-1&goto=-1&filter=&scrolling=no"
                     }
                 }
             ]
@@ -673,7 +689,7 @@
                     "Tipo": "Capital",
                     "Links": {
                         "Ficha de Inscrição - Municipio": "",
-                        "Regularidade Municipal - Municipio": ""
+                        "Regularidade Municipal - Municipio": "https://portalservicos.vitoria.es.gov.br/"
                     }
                 },
                 {

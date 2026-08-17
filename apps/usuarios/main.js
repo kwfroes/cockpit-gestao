@@ -163,6 +163,8 @@ const app = {
             const safeCoord = encodeURIComponent(u.coordenacao || '');
             const isResp = u.responsavel ? 'true' : 'false';
             const safeUserDash = encodeURIComponent(u.user_dash || '');
+            const isEmailAtivo = u.recebe_email_semanal ? 'true' : 'false';
+            const isTelegramAtivo = u.recebe_telegram_semanal ? 'true' : 'false';
 
             // Define a cor da badge mantendo a coesão com as colunas de Cargo e Status
             const coordBadgeClass = u.responsavel 
@@ -197,7 +199,7 @@ const app = {
                     </span>
                 </td>
                 <td class="p-4 text-right">
-                    <button onclick="app.abrirEdicao('${u.id}', '${u.name}', '${u.email}', '${u.role}', '${appsJsonString}', '${safeCoord}', ${isResp}, '${safeUserDash}')"
+                    <button onclick="app.abrirEdicao('${u.id}', '${u.name}', '${u.email}', '${u.role}', '${appsJsonString}', '${safeCoord}', ${isResp}, '${safeUserDash}', ${isEmailAtivo}, ${isTelegramAtivo})"
                         class="text-blue-500 hover:text-blue-700 mr-3" title="Editar Usuário">
                         <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 3C7.74882 3 5.62323 3 4.30256 4.31802C3.298 5.32056 3.05755 6.78787 3 9.3M21 9.3C20.9424 6.78787 20.702 5.32056 19.6974 4.31802C18.8789 3.50116 17.7513 3.19056 16 3.07246M21 14.7C20.9424 17.2121 20.702 18.6794 19.6974 19.682C18.3768 21 16.2512 21 12 21C7.74882 21 5.62323 21 4.30256 19.682C3.29801 18.6794 3.05756 17.2121 3 14.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -238,11 +240,13 @@ const app = {
     },
     
     // 3. ABRIR MODAL DE EDIÇÃO
-    async abrirEdicao(id, name, email, role, encodedApps, encodedCoord, isResp, encodedUserDash) {
+    async abrirEdicao(id, name, email, role, encodedApps, encodedCoord, isResp, encodedUserDash, isEmailAtivo, isTelegramAtivo) {
         document.getElementById('editId').value = id;
         document.getElementById('editName').value = name;
         document.getElementById('editEmail').value = email !== 'undefined' ? email : '';
         document.getElementById('editRole').value = role;
+        document.getElementById('editRecebeEmail').checked = isEmailAtivo;
+        document.getElementById('editRecebeTelegram').checked = isTelegramAtivo;
         
         // 1. Popular os dropdowns primeiro
         await this.popularDiretorias('edit');
@@ -320,6 +324,7 @@ const app = {
             const role = document.getElementById('editRole').value;
             const password = document.getElementById('editPass').value.trim();
             const responsavel = document.getElementById('editResponsavel').checked;
+            const recebeEmail = document.getElementById('editRecebeEmail').checked;
             
             // Pegando os valores dos novos selects
             const dir = document.getElementById('editDiretoria').value;
@@ -361,7 +366,9 @@ const app = {
                         allowed_apps: allowed_apps, 
                         coordenacao: coordenacao, // Variável declarada corretamente acima
                         responsavel: responsavel,
-                        user_dash: user_dash
+                        user_dash: user_dash,
+                        recebe_email_semanal: recebeEmail,
+                        recebe_email_mensal: recebeEmail
                     } 
                 };
 
@@ -372,6 +379,12 @@ const app = {
                 const { error } = await supabase.functions.invoke('gerenciar-usuarios', { body: payload });
 
                 if (error) throw error;
+
+                if (recebeEmail) {
+                    await supabase.functions.invoke('envio-relatorios', { 
+                        body: { tipo: 'boas_vindas', userId: id } 
+                    });
+                }
 
                 this.showToast("Usuário atualizado com sucesso!");
                 

@@ -3761,7 +3761,7 @@ const statusBadge = document.getElementById("telegramStatusBadge");
 
               if (data.telegram_chat_id) {
                   if (statusBadge) {
-                      statusBadge.textContent = "Conectado ✅";
+                      statusBadge.textContent = "Conectado";
                       statusBadge.className = "text-[10px] px-2 py-0.5 rounded-full bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300 font-semibold";
                   }
                   statusText.textContent = "✅ Sua conta já está vinculada ao bot!";
