@@ -3921,58 +3921,66 @@ async function verificarSincronizacaoBot() {
     const role = sessionStorage.getItem("cockpit_user_role");
     if (role !== "admin") return;
 
-    // Apenas sincroniza se o Dashboard carregou tudo (allData)
     if (!allData || allData.length === 0) return;
 
     try {
-        // Encontra a data mais recente do dashboard de forma segura sem estourar o Call Stack
-        const ultimaDataDashboard = allData.reduce((max, r) => {
-            const dt = r._dataAnalise instanceof Date ? r._dataAnalise.getTime() : 0;
-            return dt > max ? dt : max;
-        }, 0);
-
-        if (ultimaDataDashboard === 0) return;
-
-        const dataMaxObj = new Date(ultimaDataDashboard);
-        const chaveMesDashboard = `${dataMaxObj.getFullYear()}-${String(dataMaxObj.getMonth() + 1).padStart(2, '0')}`;
-
-        // Verifica qual é o mês mais recente cadastrado na tabela do BOT
-        const { data: ultimoRegistroBot } = await supabaseClient
+        // 1. CHECAGEM GLOBAL DE DATA (A sua ideia)
+        const { data: ultimaSync } = await supabaseClient
             .from('analises_bot_cache')
-            .select('mes_referencia')
-            .order('data_analise', { ascending: false })
+            .select('atualizado_em')
+            .order('atualizado_em', { ascending: false })
             .limit(1)
             .maybeSingle();
 
-        // Se o mês no dashboard for mais novo que o do bot, sincroniza!
-        if (!ultimoRegistroBot || ultimoRegistroBot.mes_referencia < chaveMesDashboard) {
-            console.log("🔄 Sincronização necessária detectada. Atualizando tabela do Bot...");
-            
-            // Reutilizamos a lógica de filtro de 3 meses
-            const hoje = new Date();
-            const dataCorte = new Date(hoje.getFullYear(), hoje.getMonth() - 2, 1);
-            
-            const dadosParaOBot = allData
-                .filter(row => row._dataAnalise && row._dataAnalise >= dataCorte)
-                .map(row => ({
-                    usuario_analista: row["Usuario Analista"] || "Não identificado",
-                    situacao_solicitacao: row["Situação Solicitação"] || "Desconhecida",
-                    data_solicitacao: row._dataSolicitacao && !isNaN(row._dataSolicitacao.getTime()) ? row._dataSolicitacao.toISOString().split('T')[0] : null,
-                    data_analise: row._dataAnalise && !isNaN(row._dataAnalise.getTime()) ? row._dataAnalise.toISOString().split('T')[0] : null,
-                    mes_referencia: row._mesAnoAnalise
-                }));
+        if (ultimaSync && ultimaSync.atualizado_em) {
+            // Compara usando a data local para evitar confusão de fuso horário
+            const dataUltimaSync = new Date(ultimaSync.atualizado_em).toLocaleDateString('pt-BR');
+            const dataHoje = new Date().toLocaleDateString('pt-BR');
 
-            await supabaseClient.from('analises_bot_cache').delete().gte('data_analise', '2000-01-01');
-            
-            // Reutiliza o envio em lotes para garantir estabilidade caso o volume seja grande
-            const loteTamanho = 1000;
-            for (let i = 0; i < dadosParaOBot.length; i += loteTamanho) {
-                const lote = dadosParaOBot.slice(i, i + loteTamanho);
-                await supabaseClient.from('analises_bot_cache').insert(lote);
+            if (dataUltimaSync === dataHoje) {
+                console.log("✅ O Bot já foi sincronizado hoje por um Administrador. Pulando etapa.");
+                return; // Sai da função imediatamente, economizando banda e processamento
             }
-            
-            console.log("✅ Tabela do Bot sincronizada automaticamente pelo Admin.");
         }
+
+        // 2. SE CHEGOU AQUI, É O PRIMEIRO ADMIN DO DIA FAZENDO A SINCRONIZAÇÃO
+        console.log("🔄 Primeira sincronização do dia! Atualizando tabela do Bot...");
+
+        const hoje = new Date();
+        const dataCorte = new Date(hoje.getFullYear(), hoje.getMonth() - 2, 1);
+        
+        const dadosDashboardRecentes = allData.filter(row => row._dataAnalise && row._dataAnalise >= dataCorte);
+        if (dadosDashboardRecentes.length === 0) return;
+
+        const agoraIso = new Date().toISOString(); // Marca exatamente a hora da sync
+        
+        const dadosParaOBot = dadosDashboardRecentes.map(row => ({
+            id: row.id, // OBRIGATÓRIO manter o ID para o Upsert funcionar
+            usuario_analista: row["Usuario Analista"] || "Não identificado",
+            situacao_solicitacao: row["Situação Solicitação"] || "Desconhecida",
+            data_solicitacao: row._dataSolicitacao && !isNaN(row._dataSolicitacao.getTime()) ? row._dataSolicitacao.toISOString().split('T')[0] : null,
+            data_analise: row._dataAnalise && !isNaN(row._dataAnalise.getTime()) ? row._dataAnalise.toISOString().split('T')[0] : null,
+            mes_referencia: row._mesAnoAnalise,
+            atualizado_em: agoraIso // Força a atualização da coluna nova
+        }));
+
+        // 3. ENVIO VIA UPSERT (Atualiza o que mudou, insere o que é novo)
+        const loteTamanho = 1000;
+        for (let i = 0; i < dadosParaOBot.length; i += loteTamanho) {
+            const lote = dadosParaOBot.slice(i, i + loteTamanho);
+            
+            const { error } = await supabaseClient
+                .from('analises_bot_cache')
+                .upsert(lote, { onConflict: 'id' });
+                
+            if (error) {
+                console.error("Erro no Upsert do lote:", error);
+                break;
+            }
+        }
+        
+        console.log("✅ Tabela do Bot sincronizada com sucesso para o dia de hoje.");
+        
     } catch (e) {
         console.error("Erro na sincronização automática do Bot:", e);
     }
