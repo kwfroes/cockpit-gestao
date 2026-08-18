@@ -3924,47 +3924,51 @@ async function verificarSincronizacaoBot() {
     if (!allData || allData.length === 0) return;
 
     try {
-        // 1. CHECAGEM GLOBAL DE DATA (A sua ideia)
-        const { data: ultimaSync } = await supabaseClient
-            .from('analises_bot_cache')
-            .select('atualizado_em')
-            .order('atualizado_em', { ascending: false })
-            .limit(1)
-            .maybeSingle();
-
-        if (ultimaSync && ultimaSync.atualizado_em) {
-            // Compara usando a data local para evitar confusão de fuso horário
-            const dataUltimaSync = new Date(ultimaSync.atualizado_em).toLocaleDateString('pt-BR');
-            const dataHoje = new Date().toLocaleDateString('pt-BR');
-
-            if (dataUltimaSync === dataHoje) {
-                console.log("✅ O Bot já foi sincronizado hoje por um Administrador. Pulando etapa.");
-                return; // Sai da função imediatamente, economizando banda e processamento
-            }
-        }
-
-        // 2. SE CHEGOU AQUI, É O PRIMEIRO ADMIN DO DIA FAZENDO A SINCRONIZAÇÃO
-        console.log("🔄 Primeira sincronização do dia! Atualizando tabela do Bot...");
-
         const hoje = new Date();
         const dataCorte = new Date(hoje.getFullYear(), hoje.getMonth() - 2, 1);
         
         const dadosDashboardRecentes = allData.filter(row => row._dataAnalise && row._dataAnalise >= dataCorte);
         if (dadosDashboardRecentes.length === 0) return;
 
-        const agoraIso = new Date().toISOString(); // Marca exatamente a hora da sync
+        const dataCorteIso = dataCorte.toISOString().split('T')[0];
+
+        // 1. CHECAGEM DE ASSINATURA: Pede ao banco apenas as contagens (usando head: true, o download é 0 bytes)
+        const { count: countTotal } = await supabaseClient
+            .from('analises_bot_cache')
+            .select('*', { count: 'exact', head: true })
+            .gte('data_analise', dataCorteIso);
+
+        const { count: countDeferidas } = await supabaseClient
+            .from('analises_bot_cache')
+            .select('*', { count: 'exact', head: true })
+            .gte('data_analise', dataCorteIso)
+            .eq('situacao_solicitacao', 'Deferida');
+
+        // 2. Calcula a assinatura local baseada na tela atual
+        const totalLocal = dadosDashboardRecentes.length;
+        const deferidasLocal = dadosDashboardRecentes.filter(r => r["Situação Solicitação"] === "Deferida").length;
+
+        // 3. A DECISÃO: Só sincroniza se houver real diferença nos dados
+        if (countTotal === totalLocal && countDeferidas === deferidasLocal) {
+            console.log("✅ Os dados do painel e do Bot estão idênticos. Sincronização ignorada.");
+            return; 
+        }
+
+        console.log(`🔄 Diferença detectada! Painel (Total: ${totalLocal}, Def: ${deferidasLocal}) vs Bot (Total: ${countTotal}, Def: ${countDeferidas}). Sincronizando...`);
+
+        const agoraIso = new Date().toISOString(); 
         
         const dadosParaOBot = dadosDashboardRecentes.map(row => ({
-            id: row.id, // OBRIGATÓRIO manter o ID para o Upsert funcionar
+            id: row.id, // OBRIGATÓRIO manter o ID para o Upsert
             usuario_analista: row["Usuario Analista"] || "Não identificado",
             situacao_solicitacao: row["Situação Solicitação"] || "Desconhecida",
             data_solicitacao: row._dataSolicitacao && !isNaN(row._dataSolicitacao.getTime()) ? row._dataSolicitacao.toISOString().split('T')[0] : null,
             data_analise: row._dataAnalise && !isNaN(row._dataAnalise.getTime()) ? row._dataAnalise.toISOString().split('T')[0] : null,
             mes_referencia: row._mesAnoAnalise,
-            atualizado_em: agoraIso // Força a atualização da coluna nova
+            atualizado_em: agoraIso 
         }));
 
-        // 3. ENVIO VIA UPSERT (Atualiza o que mudou, insere o que é novo)
+        // 4. ENVIO VIA UPSERT (Garante que não haverá duplicatas)
         const loteTamanho = 1000;
         for (let i = 0; i < dadosParaOBot.length; i += loteTamanho) {
             const lote = dadosParaOBot.slice(i, i + loteTamanho);
@@ -3979,11 +3983,9 @@ async function verificarSincronizacaoBot() {
             }
         }
         
-        console.log("✅ Tabela do Bot sincronizada com sucesso para o dia de hoje.");
+        console.log("✅ Tabela do Bot sincronizada com sucesso com os novos dados.");
         
     } catch (e) {
         console.error("Erro na sincronização automática do Bot:", e);
     }
 }
-
-};
