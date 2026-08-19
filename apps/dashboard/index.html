@@ -103,17 +103,13 @@
   <body
     class="min-h-screen bg-gray-100 dark:bg-slate-900 transition-colors duration-300"
   >
-    <header class="text-center mb-2">
-      <div
-        class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center"
-      >
-        <h1
-          class="text-3xl font-bold text-blue-700 dark:text-blue-400 cursor-pointer"
-        >
-          Dashboard de Análise Operacional
-        </h1>
-      </div>
-    </header>
+<header class="mb-4">
+  <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2 flex justify-start items-center">
+    <h1 class="text-3xl font-bold text-blue-700 dark:text-blue-400 cursor-pointer">
+      Dashboard de Análise Operacional
+    </h1>
+  </div>
+</header>
 
     <!-- Tela de Upload (RF01, RF-A01) -->
     <div id="uploadScreen" class="flex flex-col items-center justify-center h-full min-h-[70vh] space-y-6 transition-opacity duration-500">
@@ -945,11 +941,11 @@
           </button>
         </div>
 
-        <button id="btnMigrarAtual" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg">
+        <button id="btnMigrarAtual" class="hidden w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg">
           Migrar dados já carregados para o Supabase
         </button>
 
-        <button id="btnMigrarLocais" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg">
+        <button id="btnMigrarLocais" class="hidden w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg">
           Importar relatorio_p1..p10.json da pasta e migrar
         </button>
 

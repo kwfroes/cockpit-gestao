@@ -877,15 +877,33 @@ window.onload = function () {
           return;
       }
 
-      // A MÁGICA AQUI: Usando reduce em vez de spread (...) para evitar estouro de Call Stack
+      // Usando reduce para evitar estouro de Call Stack
       const minDate = new Date(validDates.reduce((min, p) => p < min ? p : min, validDates[0]));
       const maxDate = new Date(validDates.reduce((max, p) => p > max ? p : max, validDates[0]));
 
       const minStr = _native_formatDate(minDate, "dd/MM/yy");
       const maxStr = _native_formatDate(maxDate, "dd/MM/yy");
 
-      badgeEl.innerHTML = `<span class="opacity-75 font-normal">Base lida:</span> ${minStr} a ${maxStr}`;
+      // Monta o HTML interno preservando as cores e fontes do seu badge Tailwind
+      badgeEl.innerHTML = `
+          <span class="font-normal opacity-80">Lido:</span> ${minStr} a ${maxStr}
+          <span class="mx-2 opacity-40">|</span>
+          <span class="font-normal opacity-80">Atualizado em:</span> 
+          <span id="span-nuvem-att" class="animate-pulse ml-1">Buscando...</span>
+      `;
+      
+      // Remove o hidden para exibir o badge na tela
       badgeEl.classList.remove("hidden");
+
+      // Dispara a busca no Supabase
+      buscarUltimaAtualizacaoBot().then(dataFormatada => {
+          const spanNuvem = document.getElementById("span-nuvem-att");
+          if (spanNuvem) {
+              // Remove o efeito de pulso e insere a data
+              spanNuvem.classList.remove("animate-pulse");
+              spanNuvem.innerText = dataFormatada || "Indisponível";
+          }
+      });
   }
 
   // --- 3. LÓGICA DE FILTROS (RF07) ---
@@ -3916,94 +3934,41 @@ document.getElementById("btnSalvarPreferencias").addEventListener("click", async
       });
   }
 
-// --- ROTINA AUTOMÁTICA DE SINCRONIZAÇÃO (SOMENTE ADMIN) ---
-async function verificarSincronizacaoBot() {
-    const role = sessionStorage.getItem("cockpit_user_role");
-    if (role !== "admin") return;
-
-    if (!allData || allData.length === 0) return;
-
+// --- FUNÇÃO PARA EXIBIR A ÚLTIMA ATUALIZAÇÃO NO FRONT-END ---
+async function buscarUltimaAtualizacaoBot() {
     try {
-        const hoje = new Date();
-        const dataCorte = new Date(hoje.getFullYear(), hoje.getMonth() - 2, 1);
-        
-        const dadosDashboardRecentes = allData.filter(row => row._dataAnalise && row._dataAnalise >= dataCorte);
-        if (dadosDashboardRecentes.length === 0) return;
-
-        const dataCorteIso = dataCorte.toISOString().split('T')[0];
-
-        // 1. CHECAGEM DE ASSINATURA: Pede ao banco apenas as contagens (usando head: true, o download é 0 bytes)
-        const { count: countTotal } = await supabaseClient
+        // Pede ao Supabase apenas a coluna 'atualizado_em', 
+        // ordena da mais nova para a mais velha e pega só a primeira.
+        const { data, error } = await supabaseClient
             .from('analises_bot_cache')
-            .select('*', { count: 'exact', head: true })
-            .gte('data_analise', dataCorteIso);
+            .select('atualizado_em')
+            .order('atualizado_em', { ascending: false })
+            .limit(1);
 
-        const { count: countDeferidas } = await supabaseClient
-            .from('analises_bot_cache')
-            .select('*', { count: 'exact', head: true })
-            .gte('data_analise', dataCorteIso)
-            .eq('situacao_solicitacao', 'Deferida');
-
-        // 2. Calcula a assinatura local baseada na tela atual
-        const totalLocal = dadosDashboardRecentes.length;
-        const deferidasLocal = dadosDashboardRecentes.filter(r => r["Situação Solicitação"] === "Deferida").length;
-
-        // 3. A DECISÃO: Só sincroniza se houver real diferença nos dados
-        if (countTotal === totalLocal && countDeferidas === deferidasLocal) {
-            console.log("✅ Os dados do painel e do Bot estão idênticos. Sincronização ignorada.");
-            return; 
+        if (error) {
+            console.error("Erro ao buscar a última atualização do Bot:", error);
+            return;
         }
 
-        console.log(`🔄 Diferença detectada! Painel (Total: ${totalLocal}, Def: ${deferidasLocal}) vs Bot (Total: ${countTotal}, Def: ${countDeferidas}). Sincronizando...`);
-
-        const agoraIso = new Date().toISOString(); 
-        
-        // --- A MÁGICA DA DEDUPLICAÇÃO ACONTECE AQUI ---
-        // Preparamos os dados para envio garantindo que não há duplicatas no lote
-        const mapaUnicos = new Map();
-
-        dadosDashboardRecentes.forEach(row => {
-            // Pega o ID e limpa espaços em branco caso a base original esteja suja
-            const idBruto = row["IdSolicitacao"];
+        if (data && data.length > 0) {
+            const dataIso = data[0].atualizado_em;
             
-            if (idBruto) {
-                const idUnico = String(idBruto).trim();
-
-                mapaUnicos.set(idUnico, {
-                    id: idUnico, 
-                    usuario_analista: row["Usuario Analista"] || "Não identificado",
-                    situacao_solicitacao: row["Situação Solicitação"] || "Desconhecida",
-                    data_solicitacao: row._dataSolicitacao && !isNaN(row._dataSolicitacao.getTime()) ? row._dataSolicitacao.toISOString().split('T')[0] : null,
-                    data_analise: row._dataAnalise && !isNaN(row._dataAnalise.getTime()) ? row._dataAnalise.toISOString().split('T')[0] : null,
-                    mes_referencia: row._mesAnoAnalise,
-                    atualizado_em: agoraIso 
-                });
-            }
-        });
-
-        // Transforma o Map (já sem duplicatas) de volta em um Array para enviar ao banco
-        const dadosParaOBot = Array.from(mapaUnicos.values());
-        // ----------------------------------------------
-
-        // 4. ENVIO VIA UPSERT (Garante que não haverá duplicatas)
-        const loteTamanho = 1000;
-        for (let i = 0; i < dadosParaOBot.length; i += loteTamanho) {
-            const lote = dadosParaOBot.slice(i, i + loteTamanho);
+            // Formata para o padrão brasileiro (Ex: 19/08/2026, 14:30:00)
+            const dataFormatada = new Date(dataIso).toLocaleString('pt-BR');
             
-            const { error } = await supabaseClient
-                .from('analises_bot_cache')
-                .upsert(lote, { onConflict: 'id' });
-                
-            if (error) {
-                console.error("Erro no Upsert do lote:", error);
-                break;
-            }
+            console.log(`✅ Última atualização do banco: ${dataFormatada}`);
+            
+            // Exemplo de como você pode jogar isso na tela (ajuste o ID conforme seu HTML)
+            // document.getElementById('texto-ultima-atualizacao').innerText = `Última sincronização: ${dataFormatada}`;
+            
+            return dataFormatada;
+        } else {
+            console.log("⚠️ Nenhum registro de atualização encontrado.");
+            // document.getElementById('texto-ultima-atualizacao').innerText = "Aguardando primeira sincronização...";
         }
-        
-        console.log("✅ Tabela do Bot sincronizada com sucesso com os novos dados.");
         
     } catch (e) {
-        console.error("Erro na sincronização automática do Bot:", e);
+        console.error("Erro na função buscarUltimaAtualizacaoBot:", e);
     }
 }
 
