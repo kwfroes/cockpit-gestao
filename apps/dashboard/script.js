@@ -3958,15 +3958,32 @@ async function verificarSincronizacaoBot() {
 
         const agoraIso = new Date().toISOString(); 
         
-        const dadosParaOBot = dadosDashboardRecentes.map(row => ({
-            id: row.id, // OBRIGATÓRIO manter o ID para o Upsert
-            usuario_analista: row["Usuario Analista"] || "Não identificado",
-            situacao_solicitacao: row["Situação Solicitação"] || "Desconhecida",
-            data_solicitacao: row._dataSolicitacao && !isNaN(row._dataSolicitacao.getTime()) ? row._dataSolicitacao.toISOString().split('T')[0] : null,
-            data_analise: row._dataAnalise && !isNaN(row._dataAnalise.getTime()) ? row._dataAnalise.toISOString().split('T')[0] : null,
-            mes_referencia: row._mesAnoAnalise,
-            atualizado_em: agoraIso 
-        }));
+        // --- A MÁGICA DA DEDUPLICAÇÃO ACONTECE AQUI ---
+        // Preparamos os dados para envio garantindo que não há duplicatas no lote
+        const mapaUnicos = new Map();
+
+        dadosDashboardRecentes.forEach(row => {
+            // Pega o ID e limpa espaços em branco caso a base original esteja suja
+            const idBruto = row["IdSolicitacao"];
+            
+            if (idBruto) {
+                const idUnico = String(idBruto).trim();
+
+                mapaUnicos.set(idUnico, {
+                    id: idUnico, 
+                    usuario_analista: row["Usuario Analista"] || "Não identificado",
+                    situacao_solicitacao: row["Situação Solicitação"] || "Desconhecida",
+                    data_solicitacao: row._dataSolicitacao && !isNaN(row._dataSolicitacao.getTime()) ? row._dataSolicitacao.toISOString().split('T')[0] : null,
+                    data_analise: row._dataAnalise && !isNaN(row._dataAnalise.getTime()) ? row._dataAnalise.toISOString().split('T')[0] : null,
+                    mes_referencia: row._mesAnoAnalise,
+                    atualizado_em: agoraIso 
+                });
+            }
+        });
+
+        // Transforma o Map (já sem duplicatas) de volta em um Array para enviar ao banco
+        const dadosParaOBot = Array.from(mapaUnicos.values());
+        // ----------------------------------------------
 
         // 4. ENVIO VIA UPSERT (Garante que não haverá duplicatas)
         const loteTamanho = 1000;
@@ -3989,4 +4006,5 @@ async function verificarSincronizacaoBot() {
         console.error("Erro na sincronização automática do Bot:", e);
     }
 }
+
 };
