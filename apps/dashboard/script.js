@@ -3989,3 +3989,4 @@ async function verificarSincronizacaoBot() {
         console.error("Erro na sincronização automática do Bot:", e);
     }
 }
+};
