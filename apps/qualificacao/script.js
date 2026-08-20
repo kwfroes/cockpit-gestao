@@ -3728,37 +3728,37 @@ function normalizarTexto(t) {
 
 // Separa o texto de "observacoes" da API em 3 blocos: compreende / compreende ainda / não compreende
 function parseObservacoesIbge(observacoes) {
-    const vazio = { compreende: [], compreendeAinda: [], naoCompreende: [], notasComplementares: [] };
-    if (!observacoes || observacoes.length === 0) return vazio;
-
-    const textoCompleto = observacoes.join(' ');
-    const regexCabecalhos = /Esta subclasse (compreende ainda|n[aã]o compreende|compreende)|Notas complementares/gi;
-    const blocos = [];
-    let match;
-    let ultimaPos = null;
-    let ultimoTipo = null;
-
-    while ((match = regexCabecalhos.exec(textoCompleto)) !== null) {
-        if (ultimaPos !== null) {
-            blocos.push({ tipo: ultimoTipo, texto: textoCompleto.slice(ultimaPos, match.index) });
-        }
-        if (match[1]) {
-            const cap = match[1].toLowerCase();
-            ultimoTipo = cap.includes('ainda') ? 'compreendeAinda' : (cap.includes('ao') || cap.includes('ão')) ? 'naoCompreende' : 'compreende';
-        } else {
-            ultimoTipo = 'notasComplementares';
-        }
-        ultimaPos = match.index + match[0].length;
-    }
-    if (ultimaPos !== null) {
-        blocos.push({ tipo: ultimoTipo, texto: textoCompleto.slice(ultimaPos) });
-    }
-
     const resultado = { compreende: [], compreendeAinda: [], naoCompreende: [], notasComplementares: [] };
-    blocos.forEach(b => {
-        const itens = b.texto.split(/\s-\s/).map(s => s.trim()).filter(Boolean);
-        resultado[b.tipo].push(...itens);
+    if (!observacoes || !Array.isArray(observacoes) || observacoes.length === 0) return resultado;
+
+    observacoes.forEach(linha => {
+        const linhaLower = linha.toLowerCase().trim();
+        let ultimoTipo = 'notasComplementares'; // Padrão: se não tem cabeçalho, é nota complementar
+        let textoPraProcessar = linha;
+
+        // 1. Identifica a seção baseada na string atual (aceita 'classe' ou 'subclasse')
+        if (linhaLower.startsWith('esta subclasse compreende ainda') || linhaLower.startsWith('esta classe compreende ainda')) {
+            ultimoTipo = 'compreendeAinda';
+            textoPraProcessar = linha.replace(/Esta (sub)?classe compreende ainda:?/gi, '');
+        } else if ((linhaLower.startsWith('esta subclasse n') || linhaLower.startsWith('esta classe n')) && linhaLower.includes('compreende')) {
+            ultimoTipo = 'naoCompreende';
+            textoPraProcessar = linha.replace(/Esta (sub)?classe n[aã]o compreende:?/gi, '');
+        } else if (linhaLower.startsWith('esta subclasse compreende') || linhaLower.startsWith('esta classe compreende')) {
+            ultimoTipo = 'compreende';
+            textoPraProcessar = linha.replace(/Esta (sub)?classe compreende:?/gi, '');
+        } else if (linhaLower.startsWith('notas complementares')) {
+            ultimoTipo = 'notasComplementares';
+            textoPraProcessar = linha.replace(/Notas complementares:?/gi, '');
+        }
+
+        // 2. Divide os itens pelo hífen (lidando com espaços e quebras de linha \r\n) e remove vazios
+        const itens = textoPraProcessar.split(/(?:\r?\n)?\s?-\s/g).map(s => s.trim()).filter(Boolean);
+        
+        if (itens.length > 0) {
+            resultado[ultimoTipo].push(...itens);
+        }
     });
+
     return resultado;
 }
 

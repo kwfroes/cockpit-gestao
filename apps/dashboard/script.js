@@ -1069,7 +1069,6 @@ window.onload = function () {
   }
 
   function applyFilters() {
-    // CORREÇÃO: Verifica se os valores de data existem antes de tentar parsear
     const startInput = document.getElementById("filterPeriodStart");
     const endInput = document.getElementById("filterPeriodEnd");
 
@@ -1080,25 +1079,65 @@ window.onload = function () {
       ? _native_startOfDay(_native_safeParseDate(endInput.value))
       : null;
 
-    // Verifica se algum filtro de data está *ativamente* sendo usado
     const hasDateFilter = start || end;
+    const endDate = end ? new Date(end.getTime() + 86400000) : null;
 
+    // --- 1. FILTRO DINÂMICO DE ANALISTAS ---
+    // Primeiro, criamos uma base filtrada APENAS pelo período (ignorando as outras caixas)
+    const dataFilteredByDate = allData.filter((row) => {
+      const analysisDate = _native_startOfDay(row._dataAnalise);
+      if (!analysisDate) {
+        return !hasDateFilter;
+      }
+      return (!start || analysisDate >= start) && (!endDate || analysisDate < endDate);
+    });
+
+    // Só reescrevemos o dropdown se o usuário for Admin (pois os users normais têm o campo travado)
+    const role = sessionStorage.getItem("cockpit_user_role");
+    const filterAnalyst = document.getElementById("filterAnalyst");
+
+    if (role === "admin" && filterAnalyst) {
+      // Salva o analista que estava selecionado antes da mudança de data
+      const currentSelectedAnalyst = filterAnalyst.value;
+      const availableAnalysts = new Set();
+      
+      // Mapeia quem trabalhou neste novo período
+      dataFilteredByDate.forEach((row) => {
+        if (row["Usuario Analista"]) availableAnalysts.add(row["Usuario Analista"]);
+      });
+
+      const sortedAnalysts = [...availableAnalysts].sort();
+      
+      // Limpa as opções atuais e mantém apenas a opção "Todos"
+      filterAnalyst.options.length = 1; 
+      
+      // Preenche com a nova lista restrita ao período
+      sortedAnalysts.forEach((analystName) => {
+        filterAnalyst.add(new Option(analystName, analystName));
+      });
+
+      // Se o analista que estava selecionado ainda trabalhou nesse período, mantém ele.
+      // Se não (ex: ele estava de férias no mês selecionado), volta a seleção para "Todos" (all)
+      if (sortedAnalysts.includes(currentSelectedAnalyst)) {
+        filterAnalyst.value = currentSelectedAnalyst;
+      } else {
+        filterAnalyst.value = "all";
+      }
+    }
+
+    // --- 2. APLICAÇÃO DOS FILTROS FINAIS ---
+    // Pega o valor atualizado (e seguro) do analista e das outras caixas
     const analyst = document.getElementById("filterAnalyst").value;
     const situation = document.getElementById("filterSituation").value;
     const uf = document.getElementById("filterUf").value;
 
-    const endDate = end ? new Date(end.getTime() + 86400000) : null;
-
     filteredData = allData.filter((row) => {
-      const analysisDate = _native_startOfDay(row._dataAnalise); // null para datas inválidas
+      const analysisDate = _native_startOfDay(row._dataAnalise);
 
       let dateMatch;
       if (!analysisDate) {
-        // Se a data da linha é inválida...
-        // Só inclua se NENHUM filtro de data estiver ativo.
         dateMatch = !hasDateFilter;
       } else {
-        // Se a data da linha é válida, aplica a lógica normal de filtro
         dateMatch =
           (!start || analysisDate >= start) &&
           (!endDate || analysisDate < endDate);
@@ -1449,7 +1488,7 @@ window.onload = function () {
         `;
   }
 
-  // RF02: KPIs Gerais
+// RF02: KPIs Gerais
   function renderKPIs(data) {
     const kpiContainer = document.getElementById("kpis");
     if (!data.length) {
@@ -1459,7 +1498,35 @@ window.onload = function () {
     }
 
     const total = data.length;
-    // CORREÇÃO: Esta lógica já filtra corretamente (só pega tempos válidos)
+
+    // --- INÍCIO DA LÓGICA IMUNE AO FILTRO DE ANALISTA ---
+    
+    // 1. Captura as datas selecionadas nos filtros globais
+    const startInput = document.getElementById("filterPeriodStart").value;
+    const endInput = document.getElementById("filterPeriodEnd").value;
+    
+    const start = startInput ? _native_startOfDay(_native_safeParseDate(startInput)) : null;
+    const end = endInput ? _native_startOfDay(_native_safeParseDate(endInput)) : null;
+    const endDate = end ? new Date(end.getTime() + 86400000) : null;
+    const hasDateFilter = start || end;
+
+    // 2. Filtra a base global (allData) respeitando APENAS as datas (ignora analista, UF, etc)
+    const dadosFiltradosSoPorData = allData.filter((row) => {
+      const analysisDate = _native_startOfDay(row._dataAnalise);
+      if (!analysisDate) {
+        return !hasDateFilter;
+      }
+      return (!start || analysisDate >= start) && (!endDate || analysisDate < endDate);
+    });
+
+    // 3. Cria o Set com as strings exatas de "Data Validação Termo" usando essa base imune
+    const datasValidacaoUnicas = new Set(
+      dadosFiltradosSoPorData.map(d => d["Data Validação Termo"]).filter(Boolean)
+    );
+    const qtdTermosAnalisados = datasValidacaoUnicas.size;
+    
+    // --- FIM DA LÓGICA IMUNE AO FILTRO DE ANALISTA ---
+
     const temposAnalise = data
       .map((d) => d._tempoAnalise)
       .filter((t) => t !== null && t >= 0);
@@ -1467,41 +1534,51 @@ window.onload = function () {
     const mediaTempo = stats.mean(temposAnalise).toFixed(1);
     const medianaTempo = stats.median(temposAnalise).toFixed(1);
 
-    const deferidas = data.filter(
-      (d) => d["Situação Solicitação"] === "Deferida",
-    ).length;
+// --- NOVA LÓGICA: DEFERIDAS + DEFERIDAS PARCIAIS ---
+    const deferidasIntegrais = data.filter((d) => d["Situação Solicitação"] === "Deferida").length;
+    const deferidasParciais = data.filter((d) => d["Situação Solicitação"] === "Deferida Parcial").length;
+    const deferidasTotal = deferidasIntegrais + deferidasParciais;
+
     const indeferidas = data.filter(
       (d) => d["Situação Solicitação"] === "Indeferida",
     ).length;
-    const assinadas = data.filter(
-      (d) => d["Assinado Digitalmente"] === "Assinado Digitalmente",
-    ).length;
 
     const taxaDeferimento =
-      total > 0 ? ((deferidas / total) * 100).toFixed(1) : 0;
+      total > 0 ? ((deferidasTotal / total) * 100).toFixed(1) : 0;
     const taxaIndeferimento =
       total > 0 ? ((indeferidas / total) * 100).toFixed(1) : 0;
-    const taxaAssinatura =
-      total > 0 ? ((assinadas / total) * 100).toFixed(1) : 0;
 
+    // Renderiza os cards
     kpiContainer.innerHTML = `
             ${renderKpiCard(
               "Total Solicitações",
-              total.toLocaleString("pt-BR"),
+              total.toLocaleString("pt-BR")
             )}
+
             ${renderKpiCard(
               "Tempo Médio",
               `${mediaTempo} dias`,
-              "Média de (Data Análise - Data Solicitacao).",
+              "Média de (Data Análise - Data Solicitacao)."
             )}
+
             ${renderKpiCard(
               "Tempo Mediano",
               `${medianaTempo} dias`,
-              "Valor central do tempo de análise. Menos sensível a outliers que a média.",
+              "Valor central do tempo de análise. Menos sensível a outliers que a média."
             )}
-            ${renderKpiCard("Taxa Deferimento", `${taxaDeferimento}%`)}
+
+            ${renderKpiCard(
+              "Taxa Deferimento", 
+              `${taxaDeferimento}%`,
+              `Composta por ${deferidasIntegrais.toLocaleString("pt-BR")} Deferidas e ${deferidasParciais.toLocaleString("pt-BR")} Parciais.`
+            )}
             ${renderKpiCard("Taxa Indeferimento", `${taxaIndeferimento}%`)}
-            ${renderKpiCard("Taxa Ass. Digital", `${taxaAssinatura}%`)}
+
+            ${renderKpiCard(
+              "Termos Deferidos",
+              qtdTermosAnalisados.toLocaleString("pt-BR"),
+              "Volume contabilizado por registro único de data e hora da validação do termo (Imune ao filtro de Analistas)."
+            )}
         `;
   }
 
@@ -2720,6 +2797,7 @@ async function exportPDF(overrideAnalyst = null) {
   const analystCountInfo = document.getElementById("analyst-count-info");
 
   // Variáveis de Estado da Paginação
+  let baseAnalystData = [];
   let currentAnalystData = [];
   let currentPage = 1;
   const itemsPerPage = 20;
@@ -2739,7 +2817,47 @@ async function exportPDF(overrideAnalyst = null) {
             if (thAnalista) thAnalista.classList.add("hidden");    // OCULTA se for individual
         }
 
-        currentAnalystData = [...filteredData];
+        baseAnalystData = [...filteredData];
+
+        // Popula dinamicamente os novos dropdowns locais com base no que está disponível na tabela
+        const situacoes = new Set();
+        const tipos = new Set();
+        baseAnalystData.forEach(row => {
+            if (row["Situação Solicitação"]) situacoes.add(row["Situação Solicitação"]);
+            if (row["Tipo Solicitacão"]) tipos.add(row["Tipo Solicitacão"]);
+        });
+        
+        populateSelect("tableFilterSituacao", [...situacoes].sort());
+        populateSelect("tableFilterTipo", [...tipos].sort());
+
+        // Limpa o campo de CNPJ ao mudar de visualização no filtro global
+        const inputCnpj = document.getElementById("tableFilterCnpj");
+        if (inputCnpj) inputCnpj.value = "";
+
+        // Aplica o filtro (que aciona a ordenação e a renderização)
+        applyTableFilters();
+    }
+
+    // NOVA FUNÇÃO: Aplica os filtros apenas na tabela local
+    function applyTableFilters() {
+      const cnpjFiltro = document.getElementById("tableFilterCnpj")?.value.toLowerCase().trim() || "";
+      const situacaoFiltro = document.getElementById("tableFilterSituacao")?.value || "all";
+      const tipoFiltro = document.getElementById("tableFilterTipo")?.value || "all";
+
+      currentAnalystData = baseAnalystData.filter(row => {
+          const rowCnpj = (row["CNPJ/CPF"] || "").toLowerCase();
+          
+          // Permite pesquisar o CNPJ com ou sem pontuação
+          const limpaString = str => str.replace(/\D/g, "");
+          const matchCnpj = rowCnpj.includes(cnpjFiltro) || limpaString(rowCnpj).includes(limpaString(cnpjFiltro));
+          
+          const matchSituacao = situacaoFiltro === "all" || row["Situação Solicitação"] === situacaoFiltro;
+          const matchTipo = tipoFiltro === "all" || row["Tipo Solicitacão"] === tipoFiltro;
+
+          return matchCnpj && matchSituacao && matchTipo;
+      });
+
+        //currentAnalystData = [...filteredData];
 
         currentSort = { col: "dataAnalise", direction: "desc" };
         if (typeof updateSortIcons === "function") {
@@ -2899,6 +3017,22 @@ async function exportPDF(overrideAnalyst = null) {
     )} até ${endRecord.toLocaleString(
       "pt-BR",
     )} de ${totalRecords.toLocaleString("pt-BR")} registros.`;
+  }
+
+  // Event Listeners dos Filtros Locais da Tabela
+  const tableFilterCnpj = document.getElementById("tableFilterCnpj");
+  const tableFilterSituacao = document.getElementById("tableFilterSituacao");
+  const tableFilterTipo = document.getElementById("tableFilterTipo");
+
+  if (tableFilterCnpj) {
+    // Usa "input" para buscar a cada letra digitada sem precisar apertar enter
+    tableFilterCnpj.addEventListener("input", applyTableFilters);
+  }
+  if (tableFilterSituacao) {
+    tableFilterSituacao.addEventListener("change", applyTableFilters);
+  }
+  if (tableFilterTipo) {
+    tableFilterTipo.addEventListener("change", applyTableFilters);
   }
 
   // Atualiza Controles

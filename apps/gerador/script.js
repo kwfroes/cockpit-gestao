@@ -1548,6 +1548,8 @@ const debouncedSearchCompanyByName = debounce(searchCompanyByName, 300);
   const familySearchInput = document.getElementById("familySearchInput");
   const familyResults = document.getElementById("familyResults");
   const contactMadeCheckbox = document.getElementById("contactMade");
+  const partialRegistrationWrapper = document.getElementById("partialRegistrationWrapper");
+  const partialRegistrationTypeInput = document.getElementById("partialRegistrationType");
   const contactDetailsWrapper = document.getElementById(
     "contactDetailsWrapper",
   );
@@ -1693,6 +1695,49 @@ const debouncedSearchCompanyByName = debounce(searchCompanyByName, 300);
   }
 
   /**
+   * Atualiza as opções do select de rebaixamento baseado na hierarquia:
+   * CRC > CRS > Candidato.
+   */
+  const updatePartialRegistrationOptions = () => {
+    const requestedType = registrationTypeInput.value; 
+    const partialSelect = partialRegistrationTypeInput;
+    const currentVal = partialSelect.value;
+
+    partialSelect.innerHTML = ""; // Limpa as opções atuais
+
+    // Helper para adicionar opção
+    const addOption = (val) => {
+        const opt = document.createElement("option");
+        opt.value = val;
+        opt.textContent = val;
+        partialSelect.appendChild(opt);
+    };
+
+    // Monta a lista baseada na hierarquia permitida
+    if (requestedType === "CRC") {
+        addOption("CRC");
+        addOption("CRS");
+        addOption("Candidato");
+    } else if (requestedType === "CRS") {
+        addOption("CRS");
+        addOption("Candidato");
+    } else if (requestedType === "Candidato") {
+        addOption("Candidato");
+    }
+
+    // Tenta manter o valor anterior se for válido na nova lista
+    const validOptions = Array.from(partialSelect.options).map(o => o.value);
+    if (validOptions.includes(currentVal)) {
+        partialSelect.value = currentVal;
+    } else {
+        // Se a opção anterior não for válida, auto-seleciona um rebaixamento lógico por padrão
+        if (requestedType === "CRC") partialSelect.value = "CRS";
+        else if (requestedType === "CRS") partialSelect.value = "Candidato";
+        else partialSelect.value = "Candidato";
+    }
+  };
+
+  /**
    * @functionality 303
    * @category 3xx: Geração de Mensagens e Formulários
    * @name Manipulação Dinâmica de Seção de Documentos Indeferidos
@@ -1708,6 +1753,13 @@ const debouncedSearchCompanyByName = debounce(searchCompanyByName, 300);
     const analysisFields = document
       .getElementById("company-data")
       .querySelectorAll('input[type="date"], select');
+
+    if (selectedStatus === "Deferida Parcial") {
+      partialRegistrationWrapper.classList.remove("hidden");
+      updatePartialRegistrationOptions(); // <--- CHAMA AQUI PARA ATUALIZAR AS OPÇÕES
+    } else {
+      partialRegistrationWrapper.classList.add("hidden");
+    }
 
     if (selectedStatus === "Apenas Contato") {
         rejectedDocsSection.classList.add("hidden");
@@ -2040,9 +2092,21 @@ const debouncedSearchFamilies = debounceFam(searchFamilies, 300);
               : contactMadeFailedFooter;
         }
 
-        //message = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, foi analisada e *${status}* em *${analysisDate}* para o tipo de cadastro *${registrationType}*, conforme análise abaixo:\n\n${docsText}${legalFooter}\n\n${finalEmailFooter}`;
-        message = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, foi analisada e *${status}* em *${analysisDate}* para o tipo de cadastro *${registrationType}*, conforme análise abaixo:\n\n${docsText}${finalLegalFooter}${finalEmailFooter}`;
-        break; // Fim do bloco Deferida Parcial/Indeferida
+      // --- 1. NOVA LÓGICA INSERIDA AQUI ---
+      let textoDeferidoParcial = "";
+      if (status === "Deferida Parcial") {
+          const tipoConcedido = partialRegistrationTypeInput.value;
+          
+          // REGRA DE EXIBIÇÃO: Só insere a frase se houver rebaixamento de fato
+          if (tipoConcedido !== registrationType) {
+              textoDeferidoParcial = `Em razão do indeferimento dos documentos listados, o fornecedor não atendeu aos requisitos necessários à habilitação no tipo de cadastro solicitado, tendo sido habilitado no tipo de cadastro *${tipoConcedido}*.\n\n`;
+          }
+      }
+      // ------------------------------------
+
+      // --- 2. ATUALIZE A VARIÁVEL MESSAGE INCLUINDO ${textoDeferidoParcial} ---
+      message = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, foi analisada e *${status}* em *${analysisDate}* para o tipo de cadastro *${registrationType}*, conforme análise abaixo:\n\n${docsText}${textoDeferidoParcial}${finalLegalFooter}${finalEmailFooter}`;
+      break; // Fim do bloco Deferida Parcial/Indeferida
       case "Pendente de Envio":
         let baseMessageEnvio = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, encontra-se *Pendente de Envio*.\n\nÉ necessário que o fornecedor acesse o CAF Digital, atualize os dados necessários e realize o envio da solicitação para análise pela Comissão de Inscrição e Registro Cadastral.`;
 
@@ -2320,6 +2384,13 @@ const debouncedSearchFamilies = debounceFam(searchFamilies, 300);
   copyBtn.addEventListener("click", () => copyToClipboard(resultText.value));
   docCategoryInput.addEventListener("change", populateDocNames);
   docNameSelect.addEventListener("change", handleDocNameChange);
+
+  registrationTypeInput.addEventListener("change", () => {
+    // Se o usuário mudar o tipo solicitado enquanto Deferida Parcial está marcado, atualiza a lista
+    if (document.querySelector('input[name="status"]:checked').value === "Deferida Parcial") {
+        updatePartialRegistrationOptions();
+    }
+  });
 
   if (contactPhoneInput) {
     contactPhoneInput.addEventListener("input", (e) => {
