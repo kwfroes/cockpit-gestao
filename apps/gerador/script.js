@@ -2028,9 +2028,20 @@ const debouncedSearchFamilies = debounceFam(searchFamilies, 300);
     const finalLegalFooter = omitLegal ? "" : `${legalParagraph}\n\n`; // Se omitir, é vazio, senão, inclui o parágrafo e 2 quebras de linha.
     const defaultEmailFooter = `O fornecedor é notificado automaticamente por e-mail.`;
     const noEmailFooter = "";
+    // Dicionário de conversão de cargos para o feminino
+    const cargosFemininos = {
+      "Sócio": "Sócia",
+      "Diretor": "Diretora",
+      "Dirigente": "Dirigente",
+      "Presidente": "Presidente",
+      "Representante Legal": "Representante Legal",
+      "Resposável pelo cadastro": "Responsável pelo cadastro" // Já corrigindo a palavra na saída
+    };
+
     const honorific = contactGender === "M" ? "Sr." : "Sra.";
-    const roleString =
-      contactGender === "M" ? contactRole : contactRole.replace("o", "a");
+    
+    // Se for mulher (F), busca no dicionário. Se não achar, mantém o original.
+    const roleString = contactGender === "M" ? contactRole : (cargosFemininos[contactRole] || contactRole);
     //const contactMadeFooter = `O fornecedor é notificado automaticamente por e-mail. Contudo, em contato com o(a) Sr.(a) *${contactName}*, *${contactRole}* da Empresa, foram esclarecidos os motivos do indeferimento, tendo sido informado que estão sendo adotadas as providências necessárias para correção e que será sinalizado quando houver nova solicitação.`;
     const contactMadeSuccessFooter = `O fornecedor é notificado automaticamente por e-mail. Contudo, em contato com ${contactGender === "M" ? "o" : "a"} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, foram esclarecidos os motivos do indeferimento, tendo sido informado que as providências necessárias para regularização já estão sendo adotadas e que será sinalizado quando houver nova solicitação.`;
     const contactMadeFailedFooter = `O fornecedor é notificado automaticamente por e-mail. Contudo, em tentativa de contato telefônico com ${contactGender === "M" ? "o" : "a"} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, não obtivemos êxito, tendo a chamada sido direcionada para a caixa postal.`;
@@ -2149,7 +2160,17 @@ const debouncedSearchFamilies = debounceFam(searchFamilies, 300);
 
           const artigo = contactGender === "M" ? "o" : "a";
           const pronome = contactGender === "M" ? "Sr." : "Sra.";
-          const cargoFormatado = contactGender === "M" ? contactRole : contactRole.replace("o", "a");
+          // Dicionário de conversão para o feminino (garante que palavras como Presidente ou Dirigente não quebrem)
+          const cargosFemininos = {
+              "Sócio": "Sócia",
+              "Diretor": "Diretora",
+              "Dirigente": "Dirigente",
+              "Presidente": "Presidente",
+              "Representante Legal": "Representante Legal",
+              "Resposável pelo cadastro": "Responsável pelo cadastro"
+          };
+
+          const cargoFormatado = contactGender === "M" ? contactRole : (cargosFemininos[contactRole] || contactRole);
 
           if (contactSuccess === "S") {
               message = `Em contato com ${artigo} ${pronome} *${contactName}*, *${cargoFormatado}* da empresa *${companyName}*, inscrita sob o CNPJ nº *${cnpj}*, pelo número *${contactPhone}*, foram esclarecidos os motivos do indeferimento, tendo sido informado que as providências necessárias para regularização já estão sendo adotadas e que será sinalizado quando houver nova solicitação.`;
