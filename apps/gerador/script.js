@@ -2160,15 +2160,6 @@ const debouncedSearchFamilies = debounceFam(searchFamilies, 300);
 
           const artigo = contactGender === "M" ? "o" : "a";
           const pronome = contactGender === "M" ? "Sr." : "Sra.";
-          // Dicionário de conversão para o feminino (garante que palavras como Presidente ou Dirigente não quebrem)
-          const cargosFemininos = {
-              "Sócio": "Sócia",
-              "Diretor": "Diretora",
-              "Dirigente": "Dirigente",
-              "Presidente": "Presidente",
-              "Representante Legal": "Representante Legal",
-              "Resposável pelo cadastro": "Responsável pelo cadastro"
-          };
 
           const cargoFormatado = contactGender === "M" ? contactRole : (cargosFemininos[contactRole] || contactRole);
 
