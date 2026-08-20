@@ -347,7 +347,7 @@
             "Capital": "Curitiba",
             "Links": {
                 "Concordata e Falência - Estado": "",
-                "Regularidade Estadual - Estadual": ""
+                "Regularidade Estadual - Estadual": "https://cdwfazenda.paas.pr.gov.br/cdwportal/certidao/automatica"
             },
             "Cidades": [
                 {
@@ -388,6 +388,14 @@
                     "Links": {
                         "Ficha de Inscrição - Municipio": "",
                         "Regularidade Municipal - Municipio": ""
+                    }
+                },
+                {
+                    "Nome": "Pinhais",
+                    "Tipo": "Polo Regional",
+                    "Links": {
+                        "Ficha de Inscrição - Municipio": "",
+                        "Regularidade Municipal - Municipio": "https://pinhais.atende.net/autoatendimento/servicos/certidao-negativa-de-debitos/detalhar/1"
                     }
                 }
             ]

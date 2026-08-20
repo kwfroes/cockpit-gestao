@@ -572,35 +572,38 @@
           id="analyst-detail-section"
           class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md mb-6 hidden"
         >
-          <div class="flex justify-between items-center mb-4">
-            <h2
-              class="text-xl font-semibold text-gray-800 dark:text-white flex items-center gap-2"
-            >
+          <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 mb-4">
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-white flex items-center gap-2 whitespace-nowrap">
               <span id="analyst-name-display" class="text-blue-600"></span>
-              <span class="text-sm font-normal text-gray-500 dark:text-gray-300"
-                >(Detalhamento)</span
-              >
+              <span class="text-sm font-normal text-gray-500 dark:text-gray-300">(Detalhamento)</span>
             </h2>
 
-            <div id="analyst-pagination" class="flex items-center gap-2 hidden">
-              <button
-                id="btnPagePrev"
-                class="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-white disabled:opacity-50"
-              >
-                &larr; Anterior
-              </button>
-              <span
-                id="pageInfo"
-                class="text-sm text-gray-600 dark:text-gray-300 font-medium"
-              >
-                Pág 1 de 5
-              </span>
-              <button
-                id="btnPageNext"
-                class="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-white disabled:opacity-50"
-              >
-                Próxima &rarr;
-              </button>
+            <div class="flex flex-col md:flex-row items-center gap-4 w-full xl:w-auto justify-end">
+                
+                <!-- Novos Filtros Locais da Tabela -->
+                <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end">
+                    <input type="text" id="tableFilterCnpj" placeholder="Buscar CNPJ/CPF..." class="w-full md:w-48 rounded-md border-gray-300 dark:bg-slate-900 dark:border-slate-600 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm py-1.5 px-3">
+                    <select id="tableFilterSituacao" class="w-full md:w-auto rounded-md border-gray-300 dark:bg-slate-900 dark:border-slate-600 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm py-1.5 pl-3 pr-8">
+                        <option value="all">Situação (Todas)</option>
+                    </select>
+                    <select id="tableFilterTipo" class="w-full md:w-auto rounded-md border-gray-300 dark:bg-slate-900 dark:border-slate-600 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm py-1.5 pl-3 pr-8">
+                        <option value="all">Tipo (Todos)</option>
+                    </select>
+                </div>
+
+                <!-- Paginação -->
+                <div id="analyst-pagination" class="flex items-center gap-2 hidden w-full md:w-auto justify-between md:justify-end border-t md:border-t-0 md:border-l border-gray-200 dark:border-slate-700 pt-3 md:pt-0 md:pl-4">
+                  <button id="btnPagePrev" class="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-white disabled:opacity-50 text-sm rounded">
+                    &larr; Anterior
+                  </button>
+                  <span id="pageInfo" class="text-sm text-gray-600 dark:text-gray-300 font-medium whitespace-nowrap">
+                    Pág 1 de X
+                  </span>
+                  <button id="btnPageNext" class="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-white disabled:opacity-50 text-sm rounded">
+                    Próxima &rarr;
+                  </button>
+                </div>
+
             </div>
           </div>
 
