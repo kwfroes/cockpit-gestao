@@ -1512,11 +1512,13 @@ window.onload = function () {
 
     // 2. Filtra a base global (allData) respeitando APENAS as datas (ignora analista, UF, etc)
     const dadosFiltradosSoPorData = allData.filter((row) => {
-      const analysisDate = _native_startOfDay(row._dataAnalise);
-      if (!analysisDate) {
+      // ALTERAÇÃO: Agora fazemos o parse diretamente da "Data Validação Termo"
+      const validationDate = _native_startOfDay(_native_safeParseDate(row["Data Validação Termo"]));
+      
+      if (!validationDate) {
         return !hasDateFilter;
       }
-      return (!start || analysisDate >= start) && (!endDate || analysisDate < endDate);
+      return (!start || validationDate >= start) && (!endDate || validationDate < endDate);
     });
 
     // 3. Cria o Set com as strings exatas de "Data Validação Termo" usando essa base imune
