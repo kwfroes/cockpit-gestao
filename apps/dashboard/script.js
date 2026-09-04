@@ -1543,6 +1543,15 @@ window.onload = function () {
     
     // --- FIM DA LÓGICA IMUNE AO FILTRO DE ANALISTA ---
 
+
+    const dadosFiltradosPorDataAnalise = allData.filter((row) => {
+      const analysisDate = _native_startOfDay(row._dataAnalise);
+      if (!analysisDate) {
+        return !hasDateFilter;
+      }
+      return (!start || analysisDate >= start) && (!endDate || analysisDate < endDate);
+    });
+
     const temposAnalise = data
       .map((d) => d._tempoAnalise)
       .filter((t) => t !== null && t >= 0);
@@ -1598,8 +1607,8 @@ window.onload = function () {
         `;
 
     // Renderiza os KPIs complementares (rolagem horizontal, após "Termos Deferidos")
-    renderExtraKPIs(dadosFiltradosSoPorData, allData, start, end, endDate, hasDateFilter);
-  }
+    renderExtraKPIs(dadosFiltradosPorDataAnalise, allData, start, end, endDate, hasDateFilter);
+      }
 
   // --- KPIs COMPLEMENTARES DE ANALISTAS (Seção em rolagem) ---
   // Card compacto, mesmo padrão visual do renderKpiCard.
