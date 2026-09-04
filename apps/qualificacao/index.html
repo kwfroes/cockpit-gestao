@@ -97,7 +97,7 @@
                     +
                 </button>
                 
-                <button onclick="exportFullBase()" class="bg-emerald-600 hover:bg-emerald-700 text-white p-2 rounded-lg transition-all shadow-md admin-only" title="Exportar JSON">
+                <button onclick="abrirModalExportJson()" class="bg-emerald-600 hover:bg-emerald-700 text-white p-2 rounded-lg transition-all shadow-md admin-only" title="Exportar JSON">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                 </button>
 
@@ -557,11 +557,40 @@
         </div>
     </div>
 
-    <div id="toast-container" class="fixed bottom-20 right-5 z-[200] flex flex-col gap-2"></div>
+        <div id="modal-export-json" class="hidden fixed inset-0 z-[110] flex items-center justify-center bg-slate-900/70 backdrop-blur-sm p-4">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-4xl rounded-2xl shadow-2xl flex flex-col max-h-[88vh] border dark:border-slate-800 animate-fade-in">
+            <div class="p-5 border-b dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-850 rounded-t-2xl">
+                <h3 class="font-bold dark:text-white flex items-center gap-2 text-xs uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Exportar JSON por Ramo
+                </h3>
+                <button onclick="fecharModalExportJson()" class="text-slate-400 hover:text-red-500 text-2xl transition-colors">&times;</button>
+            </div>
+            <div class="p-4 border-b dark:border-slate-800 flex flex-col sm:flex-row gap-3 justify-between items-center bg-slate-50 dark:bg-slate-850/60">
+                <input type="text" id="export-json-search" oninput="renderExportJsonRamos(this.value)" placeholder="Buscar ramo por código ou nome..."
+                    class="w-full sm:w-64 p-2 text-xs border rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500">
+                <div class="flex items-center gap-2 shrink-0" title="Usado no botão 'Baixar em Fatias' de cada ramo, para evitar truncamento ao enviar para IA">
+                    <label for="export-json-tamanho-fatia" class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">Famílias/arquivo:</label>
+                    <input type="number" id="export-json-tamanho-fatia" value="10" min="1" max="500"
+                        class="w-16 p-2 text-xs border rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 text-center">
+                </div>
+                <button onclick="exportFullBase()" class="w-full sm:w-auto shrink-0 bg-slate-700 hover:bg-slate-800 dark:bg-slate-700 dark:hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Baixar Tudo (Backup Completo)
+                </button>
+            </div>
+            <div id="export-json-ramos-list" class="p-6 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 bg-slate-50/50 dark:bg-slate-900/50">
+                <p class="col-span-full text-center py-8 text-slate-400 italic">Carregando ramos...</p>
+            </div>
+        </div>
+    </div>
+
+<div id="toast-container" class="fixed bottom-20 right-5 z-[200] flex flex-col gap-2"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="./archives/icons.js"></script>
     <script src="analisador_cnpj.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

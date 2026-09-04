@@ -273,6 +273,20 @@ window.onload = function () {
   //Reorganiza tabela
   let currentSort = { col: null, direction: "asc" };
 
+  // --- HELPER GLOBAL DE NORMALIZAÇÃO DE STRINGS ---
+  // Remove acentos, espaços extras e transforma em minúsculas.
+  // Usado para comparações de "Situação Solicitação" e nomes que podem
+  // variar em capitalização/acentuação na base (evita erros de string).
+  function normalizeString(str) {
+    if (!str) return "";
+    return str
+      .toString()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .trim()
+      .toLowerCase();
+  }
+
   // --- LÓGICA DE FERIADOS E DIAS ÚTEIS ---
 
   // 1. Feriados Fixos (Dia-Mês) - Salvador/BA/Nacional
@@ -1582,7 +1596,161 @@ window.onload = function () {
               "Volume contabilizado por registro único de data e hora da validação do termo (Imune ao filtro de Analistas)."
             )}
         `;
+
+    // Renderiza os KPIs complementares (rolagem horizontal, após "Termos Deferidos")
+    renderExtraKPIs(dadosFiltradosSoPorData, allData, start, end, endDate, hasDateFilter);
   }
+
+  // --- KPIs COMPLEMENTARES DE ANALISTAS (Seção em rolagem) ---
+  // Card compacto, mesmo padrão visual do renderKpiCard.
+  function renderExtraKpiCard(title, value, subtitle, tooltip) {
+    return `
+      <div class="snap-start shrink-0 w-52 bg-white dark:bg-slate-800 p-4 rounded-lg shadow-md text-center">
+          <div class="flex items-center justify-center gap-2">
+              <h4 class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">${title}</h4>
+              ${
+                tooltip
+                  ? `
+              <div class="tooltip-container">
+                  <span class="tooltip-icon">i</span>
+                  <span class="tooltip-text">${tooltip}</span>
+              </div>
+              `
+                  : ""
+              }
+          </div>
+          <p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">${value}</p>
+          ${subtitle ? `<p class="text-[10px] text-gray-400 mt-1">${subtitle}</p>` : ""}
+      </div>
+    `;
+  }
+
+  /**
+   * Calcula e renderiza os KPIs complementares de analistas:
+   * Média Análise/Analista, Média/Maior/Menor Nº de Analistas Ativos,
+   * Solicitações Entradas (por Data Solicitacao) e Taxa de SLA.
+   * Todos IMUNES ao filtro de Analista (mesmo padrão do card "Termos Deferidos"),
+   * exceto "Solicitações Entradas", que usa allData + filtro próprio de datas.
+   */
+  function renderExtraKPIs(dadosFiltradosSoPorData, allDataRef, start, end, endDate, hasDateFilter) {
+    const container = document.getElementById("extra-kpis-scroll");
+    if (!container) return;
+
+    // --- 1) Média de Análises por Analista ---
+    const analistasDistintos = new Set(
+      dadosFiltradosSoPorData.map((r) => r["Usuario Analista"]).filter(Boolean),
+    );
+    const mediaAnalisePorAnalista =
+      analistasDistintos.size > 0
+        ? (dadosFiltradosSoPorData.length / analistasDistintos.size).toFixed(1)
+        : "0";
+
+    // --- 2/3/4) Estatísticas diárias de Analistas Ativos ---
+    const porDia = stats.groupBy(
+      dadosFiltradosSoPorData.filter((r) => r._diaAnalise),
+      "_diaAnalise",
+    );
+    const diasStats = Object.entries(porDia).map(([dia, rows]) => ({
+      dia,
+      qtdAnalistas: new Set(rows.map((r) => r["Usuario Analista"]).filter(Boolean)).size,
+    }));
+
+    let mediaAnalistasAtivos = "0.0";
+    let maiorTxt = "-";
+    let menorTxt = "-";
+    let maiorData = "";
+    let menorData = "";
+    if (diasStats.length > 0) {
+      const qtds = diasStats.map((d) => d.qtdAnalistas);
+      mediaAnalistasAtivos = stats.mean(qtds).toFixed(1);
+      const maiorObj = diasStats.reduce((a, b) => (b.qtdAnalistas > a.qtdAnalistas ? b : a));
+      const menorObj = diasStats.reduce((a, b) => (b.qtdAnalistas < a.qtdAnalistas ? b : a));
+      maiorTxt = `${maiorObj.qtdAnalistas}`;
+      maiorData = `(${_native_formatDate(_native_safeParseDate(maiorObj.dia), "dd/MM/yy")})`;
+      menorTxt = `${menorObj.qtdAnalistas}`;
+      menorData = `(${_native_formatDate(_native_safeParseDate(menorObj.dia), "dd/MM/yy")})`;
+    }
+
+    // --- 5) Solicitações Entradas (por Data Solicitacao, excluindo situações) ---
+    // NORMALIZADO: compara "Situação Solicitação" ignorando acentos/maiúsculas
+    // para evitar que uma pequena diferença de grafia na base quebre o filtro.
+    const statusExcluidosNormalizados = ["pendente de envio", "cancelada"];
+    const entradas = allDataRef.filter((row) => {
+      const dataSol = _native_startOfDay(row._dataSolicitacao); // derivado de "Data Solicitacao"
+      if (!dataSol) return false;
+      const dentroPeriodo =
+        (!start || dataSol >= start) && (!endDate || dataSol < endDate);
+      const situacaoNormalizada = normalizeString(row["Situação Solicitação"]);
+      const situacaoValida = !statusExcluidosNormalizados.includes(situacaoNormalizada);
+      return dentroPeriodo && situacaoValida;
+    }).length;
+
+    // --- 6) Taxa de SLA (<= 5 dias úteis) — reaproveita a mesma regra do exportPDF ---
+    const temposSla = dadosFiltradosSoPorData
+      .map((d) => d._tempoAnalise)
+      .filter((t) => t !== null && t >= 0);
+    const dentroSla = temposSla.filter((t) => t <= 5).length;
+    const taxaSla = temposSla.length > 0 ? ((dentroSla / temposSla.length) * 100).toFixed(1) : "0.0";
+
+    container.innerHTML = `
+      ${renderExtraKpiCard(
+        "Média Análise/Analista",
+        mediaAnalisePorAnalista,
+        "análises por analista no período",
+        "Total de solicitações dividido pelo nº de analistas distintos que atuaram no período (imune ao filtro de Analista).",
+      )}
+      ${renderExtraKpiCard(
+        "Média Analistas Ativos",
+        mediaAnalistasAtivos,
+        "por dia com movimento",
+        "Média diária do nº de analistas distintos com ao menos 1 análise concluída.",
+      )}
+      ${renderExtraKpiCard(
+        "Maior Nº Analistas",
+        maiorTxt,
+        maiorData,
+        "Dia do período com o maior nº de analistas simultaneamente ativos.",
+      )}
+      ${renderExtraKpiCard(
+        "Menor Nº Analistas",
+        menorTxt,
+        menorData,
+        "Dia do período (com movimento) com o menor nº de analistas ativos.",
+      )}
+      ${renderExtraKpiCard(
+        "Solicitações Entradas",
+        entradas.toLocaleString("pt-BR"),
+        "por Data Solicitação",
+        "Baseado na Data Solicitação. Exclui (com normalização de acentos/maiúsculas) as situações 'Pendente de Envio' e 'Cancelada'.",
+      )}
+      ${renderExtraKpiCard(
+        "Taxa de SLA (5 dias)",
+        `${taxaSla}%`,
+        "aderência ao prazo",
+        "% de análises concluídas em até 5 dias úteis (mesmo cálculo já usado no relatório PDF).",
+      )}
+    `;
+  }
+
+  // --- CARROSSEL DE 2 PÁGINAS DOS KPIs (Principais <-> Complementares) ---
+  // Controlado pela seta única ao lado do card "Termos Deferidos".
+  let kpisPage = 0; // 0 = KPIs principais, 1 = KPIs complementares de analistas
+  function updateKpisSliderButtons() {
+    const btnNext = document.getElementById("btnKpisNext");
+    const btnPrev = document.getElementById("btnKpisPrev");
+    if (btnNext) btnNext.classList.toggle("hidden", kpisPage === 1);
+    if (btnPrev) btnPrev.classList.toggle("hidden", kpisPage === 0);
+  }
+  function goToKpisPage(page) {
+    kpisPage = page;
+    const slider = document.getElementById("kpisSlider");
+    if (slider) slider.style.transform = `translateX(-${page * 50}%)`;
+    updateKpisSliderButtons();
+  }
+  const btnKpisNext = document.getElementById("btnKpisNext");
+  const btnKpisPrev = document.getElementById("btnKpisPrev");
+  if (btnKpisNext) btnKpisNext.addEventListener("click", () => goToKpisPage(1));
+  if (btnKpisPrev) btnKpisPrev.addEventListener("click", () => goToKpisPage(0));
 
   // RF03: Desempenho da Equipe
   function renderTeamPerformance(data) {

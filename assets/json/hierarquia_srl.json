@@ -14,6 +14,16 @@
                         "id": "SAEB/SRL/COE/EXEC",
                         "sigla": "EXEC",
                         "nome": "Execução Orçamentária da SRL"
+                    },
+                    {
+                        "id": "SAEB/SRL/COE/NPD",
+                        "sigla": "NPD",
+                        "nome": "Núcleo de Projetos e Demandas"
+                    },
+                    {
+                        "id": "SAEB/SRL/COE/COE",
+                        "sigla": "COE",
+                        "nome": "Coordenação Executiva"
                     }
                 ]
             },

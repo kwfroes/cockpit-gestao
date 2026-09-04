@@ -1245,6 +1245,197 @@ window.exportFullBase = () => {
     link.click();
 };
 
+// ==========================================
+// EXPORTA\u00c7\u00c3O DE JSON POR RAMO (Modal + Ranking de CNAEs + Fatiamento)
+// ==========================================
+function calcularEstatisticasPorRamo() {
+    const mapa = new Map();
+    familyData.forEach(item => {
+        const temRamo = item.Ramo && item.Ramo.codigo;
+        const codigo = temRamo ? item.Ramo.codigo.toString() : '__sem_ramo__';
+        const nome = temRamo ? (item.Ramo.nome || 'Ramo sem nome') : 'Sem Ramo / Geral';
+        if (!mapa.has(codigo)) {
+            mapa.set(codigo, { codigo, nome, familias: [], cnaeMap: new Map() });
+        }
+        const entry = mapa.get(codigo);
+        entry.familias.push(item);
+        (item.CNAEs || []).forEach(c => {
+            if (!c || !c.codigo) return;
+            const chave = normalizarCodigoCnae(c.codigo);
+            if (!entry.cnaeMap.has(chave)) {
+                entry.cnaeMap.set(chave, { codigo: c.codigo, descricao: c.descricao || '', count: 0 });
+            }
+            entry.cnaeMap.get(chave).count++;
+        });
+    });
+    return mapa;
+}
+
+window.abrirModalExportJson = () => {
+    const input = document.getElementById('export-json-search');
+    if (input) input.value = '';
+    renderExportJsonRamos('');
+    document.getElementById('modal-export-json').classList.remove('hidden');
+};
+
+window.fecharModalExportJson = () => {
+    document.getElementById('modal-export-json').classList.add('hidden');
+};
+
+window.renderExportJsonRamos = (termo = '') => {
+    const container = document.getElementById('export-json-ramos-list');
+    if (!container) return;
+    const mapa = calcularEstatisticasPorRamo();
+    const termoNorm = (termo || '').trim().toLowerCase();
+    let ramosArray = Array.from(mapa.values());
+    if (termoNorm) {
+        ramosArray = ramosArray.filter(r =>
+            r.codigo.toLowerCase().includes(termoNorm) || r.nome.toLowerCase().includes(termoNorm)
+        );
+    }
+    ramosArray.sort((a, b) => {
+        if (a.codigo === '__sem_ramo__') return 1;
+        if (b.codigo === '__sem_ramo__') return -1;
+        return a.codigo.localeCompare(b.codigo, undefined, { numeric: true });
+    });
+    if (ramosArray.length === 0) {
+        container.innerHTML = `<p class="col-span-full text-center py-8 text-slate-400 italic">Nenhum ramo encontrado para essa busca.</p>`;
+        return;
+    }
+    container.innerHTML = ramosArray.map(r => {
+        const idSafe = r.codigo.replace(/[^a-zA-Z0-9]/g, '_');
+        const qtdFamilias = r.familias.length;
+        const qtdCnaes = r.cnaeMap.size;
+        const temDescricao = r.codigo !== '__sem_ramo__' && descricoesRamos.some(d => d.codigo === r.codigo);
+        const topCnaes = Array.from(r.cnaeMap.values()).sort((a, b) => b.count - a.count).slice(0, 5);
+        const maxCount = topCnaes.length > 0 ? topCnaes[0].count : 1;
+        return `
+        <div class="border border-slate-200 dark:border-slate-800 rounded-xl p-4 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-all flex flex-col">
+            <div class="flex justify-between items-start gap-2 mb-3">
+                <div class="min-w-0">
+                    <p class="text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest">
+                        Ramo ${r.codigo === '__sem_ramo__' ? '--' : r.codigo}
+                    </p>
+                    <h4 class="font-bold text-slate-800 dark:text-white text-sm leading-tight">${r.nome}</h4>
+                </div>
+                ${temDescricao ? `
+                <button type="button" onclick="showRamoInfo('${r.codigo}')"
+                    class="shrink-0 p-1.5 text-blue-500 hover:text-white bg-blue-50 hover:bg-blue-500 dark:bg-blue-900/30 dark:hover:bg-blue-600 rounded-lg transition-all"
+                    title="Ver descri\u00e7\u00e3o completa do ramo">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </button>` : ''}
+            </div>
+            <div class="flex gap-4 text-[11px] text-slate-500 dark:text-slate-400 font-bold mb-3">
+                <span>\ud83d\udcc1 ${qtdFamilias} fam\u00edlia(s)</span>
+                <span>\ud83c\udff7\ufe0f ${qtdCnaes} CNAE(s) \u00fanico(s)</span>
+            </div>
+            <button type="button" onclick="toggleRankingCnaeRamo('${idSafe}')"
+                class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 mb-2 self-start">
+                \ud83d\udcca Ver ranking de CNAEs mais frequentes
+            </button>
+            <div id="ranking-cnae-${idSafe}" class="hidden space-y-2 mb-3 bg-slate-50 dark:bg-slate-850 p-3 rounded-lg border dark:border-slate-800">
+                ${topCnaes.length > 0 ? topCnaes.map(c => `
+                    <div class="text-[10px]">
+                        <div class="flex justify-between mb-0.5">
+                            <span class="font-mono font-bold text-blue-600 dark:text-blue-400">${c.codigo}</span>
+                            <span class="text-slate-500 dark:text-slate-400">${c.count} fam\u00edlia(s)</span>
+                        </div>
+                        <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5">
+                            <div class="bg-indigo-500 h-1.5 rounded-full" style="width: ${Math.round((c.count / maxCount) * 100)}%"></div>
+                        </div>
+                        <p class="text-slate-400 dark:text-slate-500 truncate mt-0.5" title="${escapeAttrModal(c.descricao)}">${c.descricao}</p>
+                    </div>
+                `).join('') : '<p class="text-[10px] italic text-slate-400 text-center">Nenhum CNAE vinculado neste ramo.</p>'}
+            </div>
+            <div class="mt-auto flex flex-col sm:flex-row gap-2">
+                <button type="button" onclick="exportarRamoJson('${r.codigo}')"
+                    class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold uppercase tracking-wider py-2 rounded-lg transition-colors shadow-sm flex items-center justify-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    JSON Completo
+                </button>
+                <button type="button" onclick="exportarRamoJsonFatiado('${r.codigo}')"
+                    class="flex-1 bg-violet-600 hover:bg-violet-700 text-white text-[10px] font-bold uppercase tracking-wider py-2 rounded-lg transition-colors shadow-sm flex items-center justify-center gap-1.5"
+                    title="Gera um .zip com v\u00e1rios JSONs menores, ideal para an\u00e1lise com IA sem truncamento">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                    Baixar em Fatias (.zip)
+                </button>
+            </div>
+        </div>`;
+    }).join('');
+};
+
+window.toggleRankingCnaeRamo = (idSafe) => {
+    const el = document.getElementById(`ranking-cnae-${idSafe}`);
+    if (el) el.classList.toggle('hidden');
+};
+
+window.exportarRamoJson = (codigo) => {
+    const dados = familyData.filter(f => {
+        const cod = (f.Ramo && f.Ramo.codigo) ? f.Ramo.codigo.toString() : '__sem_ramo__';
+        return cod === codigo;
+    });
+    if (dados.length === 0) {
+        if (typeof showToast === 'function') showToast('Nenhuma fam\u00edlia encontrada para este ramo.');
+        return;
+    }
+    const sufixoArquivo = codigo === '__sem_ramo__' ? 'sem_ramo' : codigo.replace(/\./g, '_');
+    const nomeRamo = codigo === '__sem_ramo__' ? 'Sem Ramo / Geral' : codigo;
+    const dataStr = JSON.stringify(dados, null, 2);
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(new Blob([dataStr], { type: 'application/json' }));
+    link.download = `qualificacao_tecnica_ramo_${sufixoArquivo}.json`;
+    link.click();
+    if (typeof showToast === 'function') showToast(`JSON do Ramo ${nomeRamo} exportado (${dados.length} fam\u00edlia(s))!`);
+    enviarLogAoPai("EXPORTAR_JSON_RAMO", { ramo_codigo: codigo, total_familias: dados.length });
+};
+
+// Divide as fam\u00edlias de um ramo em blocos menores (padr\u00e3o 10) e empacota tudo em um \u00fanico .zip,
+// evitando truncamento ao colar/enviar o conte\u00fado para an\u00e1lise de IA.
+window.exportarRamoJsonFatiado = async (codigo) => {
+    const dados = familyData.filter(f => {
+        const cod = (f.Ramo && f.Ramo.codigo) ? f.Ramo.codigo.toString() : '__sem_ramo__';
+        return cod === codigo;
+    });
+    if (dados.length === 0) {
+        if (typeof showToast === 'function') showToast('Nenhuma fam\u00edlia encontrada para este ramo.');
+        return;
+    }
+    if (typeof JSZip === 'undefined') {
+        if (typeof showError === 'function') showError('Biblioteca ausente', 'N\u00e3o foi poss\u00edvel carregar o gerador de .zip (JSZip). Verifique sua conex\u00e3o e tente novamente.');
+        return;
+    }
+    const inputTamanho = document.getElementById('export-json-tamanho-fatia');
+    let tamanhoFatia = parseInt(inputTamanho ? inputTamanho.value : '10', 10);
+    if (isNaN(tamanhoFatia) || tamanhoFatia < 1) tamanhoFatia = 10;
+    const sufixoArquivo = codigo === '__sem_ramo__' ? 'sem_ramo' : codigo.replace(/\./g, '_');
+    const nomeRamo = codigo === '__sem_ramo__' ? 'Sem Ramo / Geral' : codigo;
+    const fatias = [];
+    for (let i = 0; i < dados.length; i += tamanhoFatia) {
+        fatias.push(dados.slice(i, i + tamanhoFatia));
+    }
+    const totalFatias = fatias.length;
+    const digitos = String(totalFatias).length;
+    if (typeof showToast === 'function') showToast(`Gerando ${totalFatias} arquivo(s) de at\u00e9 ${tamanhoFatia} fam\u00edlia(s), aguarde...`);
+    try {
+        const zip = new JSZip();
+        fatias.forEach((chunk, idx) => {
+            const numFatia = String(idx + 1).padStart(digitos, '0');
+            const nomeArquivoFatia = `ramo_${sufixoArquivo}_parte_${numFatia}_de_${totalFatias}.json`;
+            zip.file(nomeArquivoFatia, JSON.stringify(chunk, null, 2));
+        });
+        const blob = await zip.generateAsync({ type: 'blob' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `qualificacao_tecnica_ramo_${sufixoArquivo}_fatiado.zip`;
+        link.click();
+        if (typeof showToast === 'function') showToast(`ZIP do Ramo ${nomeRamo} gerado com ${totalFatias} arquivo(s) (${dados.length} fam\u00edlia(s) no total)!`);
+        enviarLogAoPai("EXPORTAR_JSON_RAMO_FATIADO", { ramo_codigo: codigo, total_familias: dados.length, tamanho_fatia: tamanhoFatia, total_arquivos: totalFatias });
+    } catch (err) {
+        console.error(err);
+        if (typeof showError === 'function') showError('Erro ao gerar ZIP', 'Falha ao empacotar os arquivos fatiados. Tente novamente.');
+    }
+};
+
 // --- EVENT LISTENERS ---
 searchInput.oninput = () => applyFilters(true);
 typeFilter.onchange = () => applyFilters(true);
@@ -3982,7 +4173,8 @@ const gerenciarRolagemDoFundo = () => {
         'summary-modal', 
         'errorModal', 
         'ramo-info-modal',
-        'modal-busca-cnae' // O modal do IBGE
+        'modal-busca-cnae', // O modal do IBGE
+        'modal-export-json'
     ];
 
     const modaisDinamicos = [
@@ -4019,7 +4211,7 @@ const gerenciarRolagemDoFundo = () => {
 
 // 1. Observador de Modais Estáticos (Vigia APENAS a classe desses 7 elementos, super leve)
 const observerEstatico = new MutationObserver(gerenciarRolagemDoFundo);
-const idsEstaticos = ['family-form-modal', 'suggestions-modal', 'welcomeModalQualificacao', 'summary-modal', 'errorModal', 'ramo-info-modal', 'modal-busca-cnae'];
+const idsEstaticos = ['family-form-modal', 'suggestions-modal', 'welcomeModalQualificacao', 'summary-modal', 'errorModal', 'ramo-info-modal', 'modal-busca-cnae', 'modal-export-json'];
 
 idsEstaticos.forEach(id => {
     const el = document.getElementById(id);
