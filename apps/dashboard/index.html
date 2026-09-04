@@ -336,12 +336,48 @@
         
         </section>
 
-        <!-- Seção 1: KPIs Gerais (RF02) -->
-        <section
-          id="kpis"
-          class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6"
-        >
-          <!-- Os KPIs serão inseridos aqui via JS -->
+        <!-- Seção 1: KPIs Gerais (RF02) + Complementares (carrossel de 2 páginas) -->
+        <section class="relative mb-6">
+          <div class="overflow-x-clip overflow-y-visible">
+            <div
+              id="kpisSlider"
+              class="flex transition-transform duration-500 ease-in-out"
+              style="width: 200%"
+            >
+              <!-- Página 1: KPIs principais -->
+              <div
+                id="kpis"
+                class="w-1/2 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 pr-2"
+              >
+                <!-- Os KPIs serão inseridos aqui via JS -->
+              </div>
+              <!-- Página 2: KPIs complementares de Analistas -->
+              <div
+                id="extra-kpis-scroll"
+                class="w-1/2 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 pl-2"
+              >
+                <!-- Cards injetados via JS (renderExtraKPIs) -->
+              </div>
+            </div>
+          </div>
+          <!-- Seta única: fica ao lado do último card (Termos Deferidos) -->
+          <button
+            id="btnKpisNext"
+            type="button"
+            class="absolute top-1/2 -translate-y-1/2 -right-3 z-10 w-7 h-7 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg flex items-center justify-center text-sm transition-all"
+            title="Ver métricas complementares de analistas"
+          >
+            &rsaquo;
+          </button>
+          <!-- Seta de volta (só aparece na página 2) -->
+          <button
+            id="btnKpisPrev"
+            type="button"
+            class="hidden absolute top-1/2 -translate-y-1/2 -left-3 z-10 w-7 h-7 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg flex items-center justify-center text-sm transition-all"
+            title="Voltar aos KPIs principais"
+          >
+            &lsaquo;
+          </button>
         </section>
 
         <!-- Seção 2: Desempenho da Equipe (RF03) -->
