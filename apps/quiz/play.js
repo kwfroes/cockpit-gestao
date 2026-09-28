@@ -13,6 +13,7 @@ let opcoesAtuais = [];
 let perguntaAtualId = null;
 let dadosPerguntaCache = {};
 let jaRespondeuNestaRodada = false;
+let timestampInicioResposta = 0;
 let ultimoGanhoRodada = 0;          // Isolado para não ser sobrescrito pelo Realtime
 let promiseEnvioResposta = null;    // Garante que o RPC termine antes de exibir o feedback
 let realtimeChannel = null;
@@ -80,7 +81,7 @@ async function handleEntrarSala(e) {
     try {
         const { data: sala, error: errSala } = await supabaseClient
             .from("quiz_salas")
-            .select("id, codigo, status, pergunta_atual_id")
+            .select("id, codigo, status, pergunta_atual_id, questionario_id")
             .eq("codigo", pin)
             .maybeSingle();
 
@@ -277,6 +278,7 @@ async function avaliarEstadoSala(status, perguntaId, enunciadoBroadcast = null, 
             promiseEnvioResposta = null;
         }
 
+        timestampInicioResposta = performance.now(); // Inicia a contagem de agilidade do aluno
         await carregarDadosPergunta(perguntaId);
 
         if (enunciadoBroadcast) {
@@ -335,8 +337,8 @@ async function carregarDadosPergunta(perguntaId) {
         const { data: perg, error } = await supabaseClient
             .from("quiz_perguntas")
             .select(`
-                id, enunciado, tempo_segundos, tempo_leitura_segundos,
-                quiz_opcoes (id, texto, cor_indice)
+                id, enunciado, justificativa, tempo_segundos, tempo_leitura_segundos,
+                quiz_opcoes (id, texto, is_correta, cor_indice)
             `)
             .eq("id", perguntaId)
             .single();
@@ -372,6 +374,11 @@ async function enviarResposta(indiceOpcao) {
 
     jaRespondeuNestaRodada = true;
     if (alunoTimerInterval) clearInterval(alunoTimerInterval);
+
+    // Calcula o tempo exato com precisão de milissegundos
+    const tempoGastoSegundos = ((performance.now() - timestampInicioResposta) / 1000).toFixed(2);
+    const elTempo = document.getElementById("aluno-tempo-gasto-txt");
+    if (elTempo) elTempo.textContent = `${tempoGastoSegundos} segundos`;
 
     document.querySelectorAll(".btn-opcao").forEach(btn => btn.disabled = true);
     trocarTela("enviado");
@@ -414,12 +421,10 @@ async function enviarResposta(indiceOpcao) {
 }
 
 async function exibirFeedbackRodada() {
-    // Se a requisição da resposta ainda estiver em trânsito, aguarda ela concluir!
     if (promiseEnvioResposta) {
         try { await promiseEnvioResposta; } catch (e) {}
     }
 
-    // Fallback de segurança: se respondeu mas ultimoGanhoRodada ainda for 0, confere no banco
     if (jaRespondeuNestaRodada && ultimoGanhoRodada === 0 && perguntaAtualId) {
         const { data: respBanco } = await supabaseClient
             .from("quiz_respostas")
@@ -450,6 +455,182 @@ async function exibirFeedbackRodada() {
         pontosEl.textContent = "0 pontos nesta rodada";
         pontosEl.className = "text-sm font-black text-red-400 font-mono";
         if (navigator.vibrate) navigator.vibrate(200);
+    }
+
+    // Exibe qual era a alternativa correta e a justificativa na tela do celular
+    const boxJust = document.getElementById("feedback-justificativa-box");
+    const txtCorreta = document.getElementById("feedback-correta-txt");
+    const txtJust = document.getElementById("feedback-justificativa-txt");
+    const pergAtual = dadosPerguntaCache[perguntaAtualId];
+
+    if (boxJust && pergAtual) {
+        const opcCorreta = (pergAtual.quiz_opcoes || []).find(o => o.is_correta);
+        txtCorreta.textContent = opcCorreta ? opcCorreta.texto : "--";
+        if (pergAtual.justificativa) {
+            txtJust.textContent = `💡 ${pergAtual.justificativa}`;
+            txtJust.classList.remove("hidden");
+        } else {
+            txtJust.classList.add("hidden");
+        }
+        boxJust.classList.remove("hidden");
+    } else if (boxJust) {
+        boxJust.classList.add("hidden");
+    }
+}
+
+// ========================================================
+// GERADOR DE PDF DO ALUNO (PERGUNTAS + SUAS RESPOSTAS + GABARITO)
+// ========================================================
+async function baixarGabaritoPDF() {
+    const btn = document.getElementById("btn-baixar-pdf");
+    if (!salaAtual || !participante) {
+        exibirToast("Dados da partida não encontrados.");
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = "<span>Gerando PDF...</span>";
+
+    try {
+        // 1. Busca o questionário caso questionario_id não estivesse em memória
+        let questionarioId = salaAtual.questionario_id;
+        if (!questionarioId) {
+            const { data: s } = await supabaseClient.from("quiz_salas").select("questionario_id").eq("id", salaAtual.id).single();
+            questionarioId = s?.questionario_id;
+        }
+
+        const { data: quizInfo } = await supabaseClient
+            .from("quiz_questionarios")
+            .select("titulo, descricao")
+            .eq("id", questionarioId)
+            .maybeSingle();
+
+        // 2. Busca todas as perguntas, alternativas e justificativas do quiz
+        const { data: perguntas } = await supabaseClient
+            .from("quiz_perguntas")
+            .select("id, ordem, enunciado, justificativa, quiz_opcoes (id, texto, is_correta, cor_indice)")
+            .eq("questionario_id", questionarioId)
+            .order("ordem", { ascending: true });
+
+        // 3. Busca todas as respostas dadas por este aluno na sala
+        const { data: minhasRespostas } = await supabaseClient
+            .from("quiz_respostas")
+            .select("pergunta_id, opcao_id, pontos_ganhos")
+            .eq("sala_id", salaAtual.id)
+            .eq("participante_id", participante.id);
+
+        const mapaRespostas = {};
+        (minhasRespostas || []).forEach(r => { mapaRespostas[r.pergunta_id] = r; });
+
+        // 4. Monta o documento PDF com jsPDF
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ unit: "mm", format: "a4" });
+        const margem = 15;
+        const larguraUtil = 180;
+        let y = 18;
+
+        // Cabeçalho do Relatório
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.setTextColor(88, 28, 135); // Roxo Quiz Arena
+        const tituloQuiz = quizInfo?.titulo || "Relatório de Desempenho - Quiz Arena";
+        const linhasTitulo = doc.splitTextToSize(tituloQuiz, larguraUtil);
+        doc.text(linhasTitulo, margem, y);
+        y += linhasTitulo.length * 6 + 2;
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.setTextColor(71, 85, 105);
+        const dataHoje = new Date().toLocaleDateString("pt-BR");
+        doc.text(`Participante: ${participante.apelido}   |   Pontuação Final: ${participante.pontos} pts   |   Data: ${dataHoje}`, margem, y);
+        y += 6;
+
+        doc.setDrawColor(203, 213, 225);
+        doc.line(margem, y, margem + larguraUtil, y);
+        y += 8;
+
+        // Lista cada questão
+        (perguntas || []).forEach((p, idx) => {
+            const respAluno = mapaRespostas[p.id];
+            const opcoes = p.quiz_opcoes || [];
+            const opcaoMarcada = opcoes.find(o => o.id === respAluno?.opcao_id);
+            const opcaoCorreta = opcoes.find(o => o.is_correta);
+            const acertou = opcaoMarcada && opcaoMarcada.is_correta;
+
+            // Prepara linhas de texto para calcular quebra de página
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(11);
+            const linhasEnunciado = doc.splitTextToSize(`${idx + 1}. ${p.enunciado}`, larguraUtil);
+
+            const txtSuaResp = opcaoMarcada
+                ? `Sua resposta: ${opcaoMarcada.texto} (${acertou ? `ACERTOU +${respAluno.pontos_ganhos} pts` : "ERROU"})`
+                : "Sua resposta: Não respondeu a tempo (0 pts)";
+            const linhasSuaResp = doc.splitTextToSize(txtSuaResp, larguraUtil - 4);
+
+            const txtCorreta = `Resposta correta: ${opcaoCorreta ? opcaoCorreta.texto : "--"}`;
+            const linhasCorreta = doc.splitTextToSize(txtCorreta, larguraUtil - 4);
+
+            const linhasJust = p.justificativa
+                ? doc.splitTextToSize(`Justificativa: ${p.justificativa}`, larguraUtil - 4)
+                : [];
+
+            const alturaBloco = (linhasEnunciado.length * 5) + (linhasSuaResp.length * 5) + (linhasCorreta.length * 5) + (linhasJust.length * 4.5) + 12;
+
+            if (y + alturaBloco > 280) {
+                doc.addPage();
+                y = 20;
+            }
+
+            // 1. Enunciado
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(11);
+            doc.setTextColor(15, 23, 42);
+            doc.text(linhasEnunciado, margem, y);
+            y += linhasEnunciado.length * 5 + 1.5;
+
+            // 2. O que o aluno respondeu
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(9.5);
+            if (acertou) {
+                doc.setTextColor(5, 150, 105); // Verde
+            } else {
+                doc.setTextColor(220, 38, 38); // Vermelho
+            }
+            doc.text(linhasSuaResp, margem + 2, y);
+            y += linhasSuaResp.length * 4.8 + 1;
+
+            // 3. Resposta correta (se errou ou não respondeu, destaca o gabarito)
+            if (!acertou) {
+                doc.setFont("helvetica", "bold");
+                doc.setTextColor(5, 150, 105);
+                doc.text(linhasCorreta, margem + 2, y);
+                y += linhasCorreta.length * 4.8 + 1;
+            }
+
+            // 4. Justificativa
+            if (linhasJust.length > 0) {
+                doc.setFont("helvetica", "italic");
+                doc.setFontSize(9);
+                doc.setTextColor(100, 116, 139);
+                doc.text(linhasJust, margem + 2, y);
+                y += linhasJust.length * 4.5 + 1;
+            }
+
+            y += 4;
+            doc.setDrawColor(241, 245, 249);
+            doc.line(margem, y, margem + larguraUtil, y);
+            y += 6;
+        });
+
+        const nomeArquivo = `Gabarito_${(participante.apelido || "Aluno").replace(/[^a-zA-Z0-9]/g, "_")}.pdf`;
+        doc.save(nomeArquivo);
+
+    } catch (err) {
+        console.error("Erro ao gerar PDF:", err);
+        exibirToast("Erro ao gerar o PDF.");
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = "<span>📄 Baixar Gabarito e Respostas (PDF)</span>";
     }
 }
 // ----------------------------------------------------
@@ -503,7 +684,7 @@ async function restaurarSessaoLocal() {
             // Confere no Supabase o status real da sala antes de reconectar
             const { data: salaBanco, error } = await supabaseClient
                 .from("quiz_salas")
-                .select("id, codigo, status, pergunta_atual_id")
+                .select("id, codigo, status, pergunta_atual_id, questionario_id")
                 .eq("id", salaObj.id)
                 .maybeSingle();
 

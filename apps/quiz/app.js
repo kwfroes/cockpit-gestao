@@ -112,7 +112,14 @@ async function carregarQuizzes() {
     try {
         const { data, error } = await supabase
             .from("quiz_questionarios")
-            .select(`id, titulo, descricao, created_at, quiz_perguntas (id)`)
+            .select(`
+                id, titulo, descricao, created_at,
+                quiz_perguntas (id),
+                quiz_salas (
+                    id, codigo, status, created_at,
+                    quiz_participantes (apelido, pontos)
+                )
+            `)
             .order("created_at", { ascending: false });
 
         if (error) throw error;
@@ -134,14 +141,56 @@ function renderizarDashboardQuizzes() {
 
     quizzesDisponiveis.forEach(q => {
         const qtdPerguntas = q.quiz_perguntas ? q.quiz_perguntas.length : 0;
+
+        // Filtra as partidas que tiveram participantes e ordena da mais recente para a mais antiga
+        const salasComJogadores = (q.quiz_salas || [])
+            .filter(s => s.quiz_participantes && s.quiz_participantes.length > 0)
+            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+        const qtdUsos = salasComJogadores.length;
+
+        // Monta a lista de vencedores de cada sessão
+        const historicoHtml = qtdUsos > 0
+            ? `
+                <details class="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800/80 text-xs group/hist">
+                    <summary class="cursor-pointer font-bold text-slate-500 dark:text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 flex items-center justify-between select-none list-none">
+                        <span class="flex items-center gap-1.5">
+                            🏆 <span>Vencedores por partida (${qtdUsos})</span>
+                        </span>
+                        <span class="text-[10px] transition-transform group-open/hist:rotate-180">▼</span>
+                    </summary>
+                    <div class="mt-2 space-y-1.5 max-h-32 overflow-y-auto pr-1">
+                        ${salasComJogadores.map(s => {
+                            const ranking = [...s.quiz_participantes].sort((a, b) => b.pontos - a.pontos);
+                            const vencedor = ranking[0];
+                            const dataPartida = new Date(s.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+                            return `
+                                <div class="flex justify-between items-center bg-slate-50 dark:bg-slate-950 px-2.5 py-1.5 rounded-lg border border-slate-200/60 dark:border-slate-800">
+                                    <span class="text-[10px] font-mono text-slate-400">Sala #${s.codigo} (${dataPartida})</span>
+                                    <span class="text-[11px] font-bold text-slate-700 dark:text-slate-200 truncate max-w-[140px]">
+                                        👑 ${vencedor.apelido} <strong class="text-purple-600 dark:text-purple-400 font-mono">(${vencedor.pontos} pts)</strong>
+                                    </span>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </details>
+            `
+            : `<p class="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800/80 text-[11px] text-slate-400 italic">Ainda não utilizado em sala.</p>`;
+
         const card = document.createElement("div");
         card.className = "bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between hover:border-purple-500/40 transition-all";
         card.innerHTML = `
             <div>
                 <div class="flex justify-between items-center mb-2">
-                    <span class="text-[10px] font-black uppercase px-2.5 py-1 rounded-md bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300">
-                        ${qtdPerguntas} ${qtdPerguntas === 1 ? 'Pergunta' : 'Perguntas'}
-                    </span>
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-[10px] font-black uppercase px-2.5 py-1 rounded-md bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300">
+                            ${qtdPerguntas} ${qtdPerguntas === 1 ? 'Pergunta' : 'Perguntas'}
+                        </span>
+                        <span class="text-[10px] font-bold px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                            📊 ${qtdUsos}x usado
+                        </span>
+                    </div>
                     
                     <!-- Botões de Editar e Excluir -->
                     <div class="flex items-center gap-1">
@@ -156,9 +205,11 @@ function renderizarDashboardQuizzes() {
 
                 <h3 class="font-bold text-slate-800 dark:text-white text-base mt-1">${q.titulo}</h3>
                 <p class="text-xs text-slate-500 mt-1 line-clamp-2">${q.descricao || 'Sem descrição.'}</p>
+
+                ${historicoHtml}
             </div>
 
-            <div class="mt-5 pt-3 border-t border-slate-100 dark:border-slate-800">
+            <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800">
                 <button onclick="criarSalaAoVivo('${q.id}')" ${qtdPerguntas === 0 ? 'disabled' : ''} class="w-full py-2.5 bg-purple-600 hover:bg-purple-700 disabled:opacity-40 text-white text-xs font-black rounded-xl shadow-md transition-all">
                     Apresentar em Sala ➔
                 </button>
@@ -191,7 +242,7 @@ async function abrirModalEditarQuiz(quizId) {
             .select(`
                 id, titulo, descricao,
                 quiz_perguntas (
-                    id, ordem, enunciado, tempo_segundos, tempo_leitura_segundos,
+                    id, ordem, enunciado, justificativa, tempo_segundos, tempo_leitura_segundos,
                     quiz_opcoes (id, texto, is_correta, cor_indice)
                 )
             `)
@@ -241,6 +292,7 @@ function adicionarBlocoPergunta(dadosPergunta = null) {
     const numeroQuestao = container.children.length + 1;
 
     const enunciadoVal = dadosPergunta ? (dadosPergunta.enunciado || "").replace(/"/g, '&quot;') : "";
+    const justificativaVal = dadosPergunta ? (dadosPergunta.justificativa || "").replace(/"/g, '&quot;') : "";
     const tempoLeituraVal = dadosPergunta ? (dadosPergunta.tempo_leitura_segundos || 5) : 5;
     const tempoRespostaVal = dadosPergunta ? (dadosPergunta.tempo_segundos || 5) : 5;
 
@@ -293,6 +345,10 @@ function adicionarBlocoPergunta(dadosPergunta = null) {
                     <input type="text" value="${opcoesOrdenadas[i].texto}" placeholder="Alternativa ${i + 1}" class="b-opcao-texto w-full text-xs bg-transparent outline-none text-slate-800 dark:text-white">
                 </div>
             `).join('')}
+        </div>
+
+        <div class="pt-1">
+            <input type="text" value="${justificativaVal}" placeholder="💡 Justificativa / explicação da resposta correta (opcional)..." class="b-justificativa w-full px-3 py-1.5 bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/50 rounded-lg text-xs text-slate-700 dark:text-slate-300 outline-none focus:ring-2 focus:ring-amber-500">
         </div>
     `;
     container.appendChild(div);
@@ -376,6 +432,7 @@ async function salvarNovoQuiz() {
             const enunciado = b.querySelector(".b-enunciado").value.trim();
             if (!enunciado) continue;
 
+            const justificativa = b.querySelector(".b-justificativa")?.value.trim() || null;
             const tempoLeitura = parseInt(b.querySelector(".b-tempo-leitura")?.value) || 5;
             const tempoResposta = parseInt(b.querySelector(".b-tempo-resposta")?.value) || 5;
 
@@ -384,6 +441,7 @@ async function salvarNovoQuiz() {
                 .insert([{
                     questionario_id: targetQuizId,
                     enunciado: enunciado,
+                    justificativa: justificativa,
                     ordem: ordemReal++,
                     tempo_leitura_segundos: tempoLeitura,
                     tempo_segundos: tempoResposta
@@ -484,7 +542,7 @@ async function criarSalaAoVivo(quizId) {
 
         const { data: perguntas } = await supabase
             .from("quiz_perguntas")
-            .select(`id, ordem, enunciado, tempo_segundos, tempo_leitura_segundos, quiz_opcoes (id, texto, is_correta, cor_indice)`)
+            .select(`id, ordem, enunciado, justificativa, tempo_segundos, tempo_leitura_segundos, quiz_opcoes (id, texto, is_correta, cor_indice)`)
             .eq("questionario_id", quizId)
             .order("ordem", { ascending: true });
 
@@ -809,7 +867,7 @@ async function finalizarTempoPergunta() {
 
     const { data: votosBanco } = await supabase
         .from("quiz_respostas")
-        .select("opcao_id, participante_id")
+        .select("opcao_id, participante_id, tempo_gasto_segundos")
         .eq("pergunta_id", pergunta.id)
         .eq("sala_id", salaAtiva.id);
 
@@ -831,13 +889,23 @@ async function finalizarTempoPergunta() {
     const opcoesOrdenadas = [...(pergunta.quiz_opcoes || [])].sort((a, b) => a.cor_indice - b.cor_indice);
     opcoesOrdenadas.forEach((opc, idx) => {
         const cfg = OPCOES_CONFIG[idx % 4];
-        const votosNesta = votosValidos.filter(r => r.opcao_id === opc.id).length;
+        const votosDestaOpcao = votosValidos.filter(r => r.opcao_id === opc.id);
+        const votosNesta = votosDestaOpcao.length;
         const porcentagem = totalVotos > 0 ? Math.round((votosNesta / totalVotos) * 100) : 0;
+        
+        // Calcula a média de tempo de quem escolheu esta alternativa
+        let tempoMedioStr = "";
+        if (votosNesta > 0) {
+            const somaTempos = votosDestaOpcao.reduce((acc, curr) => acc + (parseFloat(curr.tempo_gasto_segundos) || 0), 0);
+            const media = somaTempos / votosNesta;
+            tempoMedioStr = ` ⏱️ ${media.toFixed(2)}s`;
+        }
+
         const destaqueCorreta = opc.is_correta
             ? "ring-2 ring-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/30"
             : "opacity-65";
 
-        containerBarras.innerHTML += `
+    containerBarras.innerHTML += `
             <div class="flex items-center gap-3 text-left">
                 <span class="w-9 h-9 rounded-xl ${cfg.cor} flex items-center justify-center font-bold text-sm shrink-0">${cfg.icone}</span>
                 <div class="flex-1 bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden h-11 flex items-center px-4 relative border border-slate-200 dark:border-slate-700 ${destaqueCorreta}">
@@ -845,12 +913,25 @@ async function finalizarTempoPergunta() {
                     <span class="relative z-10 text-xs md:text-sm font-bold text-slate-800 dark:text-white flex-1 truncate">
                         ${opc.texto} ${opc.is_correta ? '<span class="ml-2 text-[10px] font-black uppercase px-2 py-0.5 rounded bg-emerald-500 text-white">Correta</span>' : ''}
                     </span>
-                    <span class="relative z-10 text-xs font-black text-slate-700 dark:text-slate-200 font-mono">${votosNesta} ${votosNesta === 1 ? 'voto' : 'votos'} (${porcentagem}%)</span>
+                    <span class="relative z-10 text-xs font-black text-slate-700 dark:text-slate-200 font-mono">${votosNesta} ${votosNesta === 1 ? 'voto' : 'votos'} (${porcentagem}%)${tempoMedioStr}</span>
                 </div>
                 ${opc.is_correta ? '<span class="text-emerald-500 font-black text-xl">✔</span>' : '<span class="text-transparent text-xl">✔</span>'}
             </div>
         `;
     });
+
+    // Exibe o bloco de justificativa se houver explicação cadastrada para a questão
+    if (pergunta.justificativa) {
+        containerBarras.innerHTML += `
+            <div class="mt-5 p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 text-left flex items-start gap-3">
+                <span class="text-xl shrink-0">💡</span>
+                <div>
+                    <p class="text-[10px] font-black uppercase tracking-widest text-amber-600 dark:text-amber-400">Justificativa da Resposta</p>
+                    <p class="text-xs md:text-sm font-medium text-slate-700 dark:text-slate-200 mt-0.5 leading-relaxed">${pergunta.justificativa}</p>
+                </div>
+            </div>
+        `;
+    }
 }
 
 async function avancarParaPlacar() {
@@ -997,4 +1078,21 @@ function toast(message, type = 'success') {
         el.classList.add('translate-y-2', 'opacity-0');
         setTimeout(() => el.remove(), 300);
     }, 3500);
+}
+
+// Copia o link direto de acesso do aluno para a área de transferência
+function copiarLinkSala() {
+    if (!salaAtiva || !salaAtiva.codigo) {
+        toast("Nenhuma sala ativa no momento.", "error");
+        return;
+    }
+
+    const baseDir = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+    const urlAluno = `${baseDir}/play.html?sala=${salaAtiva.codigo}`;
+
+    navigator.clipboard.writeText(urlAluno).then(() => {
+        toast("Link copiado para a área de transferência!");
+    }).catch(() => {
+        toast("Falha ao copiar o link.", "error");
+    });
 }
