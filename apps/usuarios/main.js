@@ -286,12 +286,14 @@ const app = {
         // Marca/Desmarca as caixas de seleção
         const checkboxes = document.querySelectorAll('input[name="app_permission"]');
         checkboxes.forEach(cb => {
-            cb.checked = userApps.includes(cb.value);
-            // Se o usuário já for admin, bloqueia os checkboxes visualmente
+            // Se for admin, força tudo a ficar marcado e bloqueado visualmente
             if (role === 'admin') {
+                cb.checked = true;
                 cb.disabled = true;
                 cb.parentElement.classList.add('opacity-50', 'cursor-not-allowed');
             } else {
+                // Se for usuário normal, puxa do banco
+                cb.checked = userApps.includes(cb.value);
                 cb.disabled = false;
                 cb.parentElement.classList.remove('opacity-50', 'cursor-not-allowed');
             }
@@ -339,7 +341,7 @@ const app = {
             
             if (role === 'admin') {
                 // Se virar Admin (ou continuar Admin), recebe o pacote completo
-                allowed_apps = ['#home', '#dashboard', '#gerador', '#contratos', '#legislacao', '#qualificacao', '#regmap', '#demandas', '#conversor', '#usuarios'];
+                allowed_apps = ['#home', '#dashboard', '#gerador', '#contratos', '#legislacao', '#qualificacao', '#regmap', '#demandas', '#conversor', '#usuarios', '#vistoria'];
             } else {
                 // Se for User (ou rebaixado para User), pega os marcados e mescla garantindo a Home
                 const checkedBoxes = Array.from(document.querySelectorAll('input[name="app_permission"]:checked'));
@@ -564,7 +566,7 @@ const app = {
                 // Ler apps permitidos baseados nos checkboxes
                 let allowed_apps = ["#home", "#demandas"];
                 if (role === 'admin') {
-                    allowed_apps = ['#home', '#dashboard', '#gerador', '#contratos', '#legislacao', '#qualificacao', '#regmap', '#demandas', '#conversor', '#usuarios'];
+                    allowed_apps = ['#home', '#dashboard', '#gerador', '#contratos', '#legislacao', '#qualificacao', '#regmap', '#demandas', '#conversor', '#usuarios', '#vistoria'];
                 } else {
                     const checkedBoxes = Array.from(document.querySelectorAll('input[name="new_app_permission"]:checked'));
                     const customApps = checkedBoxes.map(cb => cb.value);
