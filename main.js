@@ -626,6 +626,7 @@ if (loginForm) {
     "#regmap": "apps/regmap/index.html",
     "#usuarios": "apps/usuarios/index.html",
     "#vistoria": "apps/vistoria/index.html",
+    "#quiz": "apps/quiz/index.html",
   };
   const defaultHash = "#home";
 
@@ -1081,6 +1082,7 @@ async function performLogout() {
       { element: document.querySelector('a[href="#conversor"]'), route: "#conversor" },
       { element: document.querySelector('a[href="#usuarios"]'), route: "#usuarios" },
       { element: document.querySelector('a[href="#vistoria"]'), route: "#vistoria" },
+      { element: document.querySelector('a[href="#quiz"]'), route: "#quiz" },
     ];
 
     // 3. Varre e esconde usando a classe do Tailwind "hidden"
