@@ -84,9 +84,14 @@
             <!-- FASE A: LOBBY -->
             <div id="arena-lobby" class="w-full max-w-4xl flex flex-col items-center text-center space-y-6">
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-3xl shadow-xl w-full flex flex-col md:flex-row items-center gap-8 justify-around">
+                    <!-- QR Code Dinâmico e Botão Copiar Link -->
                     <div class="flex flex-col items-center">
                         <div id="lobby-qrcode" class="p-3 bg-white rounded-2xl shadow-inner border border-slate-200"></div>
                         <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-3">Aponte a câmera do celular</p>
+                        <button type="button" onclick="copiarLinkSala()" class="mt-3 px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 shadow-xs">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                            <span>Copiar Link da Sala</span>
+                        </button>
                     </div>
 
                     <div class="flex flex-col items-center md:items-start text-center md:text-left space-y-3">
