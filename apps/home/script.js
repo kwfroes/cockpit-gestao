@@ -71,6 +71,20 @@ const APP_REGISTRY = {
         icone: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>',
         corHover: 'hover:border-purple-500',
         corIcone: 'text-purple-500 bg-purple-50 dark:bg-purple-900/30'
+    },
+    '#vistoria': {
+        id: '#vistoria',
+        titulo: 'Vistoria Física',
+        icone: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="12" height="20" rx="1"/><line x1="12" y1="6" x2="14" y2="6"/><line x1="16" y1="6" x2="18" y2="6"/><line x1="12" y1="10" x2="14" y2="10"/><line x1="16" y1="10" x2="18" y2="10"/><circle cx="6" cy="15" r="3"/><line x1="8.2" y1="17.2" x2="10.5" y2="19.5"/></svg>',
+        corHover: 'hover:border-teal-500',
+        corIcone: 'text-teal-500 bg-teal-50 dark:bg-teal-900/30'
+    },
+    '#quiz': {
+        id: '#quiz',
+        titulo: 'Sala Ativa',
+        icone: '<svg class="w-5 h-5" viewBox="0 0 16 16" fill="currentColor"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286z"/><path d="M7.001 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0z"/></svg>',
+        corHover: 'hover:border-sky-500',
+        corIcone: 'text-sky-500 bg-sky-50 dark:bg-sky-900/30'
     }
 };
 

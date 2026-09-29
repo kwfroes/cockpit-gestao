@@ -82,7 +82,7 @@
                 ⚡
             </div>
             <div>
-                <h1 class="text-lg md:text-xl font-black text-slate-800 dark:text-white leading-tight">Sala Ativa</h1>
+                <h1 class="text-lg md:text-xl font-black text-slate-800 dark:text-white leading-tight">Quiz Arena</h1>
                 <p id="subtitulo-header" class="text-xs text-slate-400">Painel do Instrutor</p>
             </div>
         </div>
@@ -193,6 +193,14 @@
                     </div>
                 </div>
 
+                <details class="group -mt-2">
+                    <summary class="cursor-pointer select-none text-xs font-bold text-slate-400 hover:text-emerald-500 transition-colors list-none flex items-center gap-1 w-max normal-case tracking-normal">
+                        <span>Ver quem já respondeu</span>
+                        <span class="text-[10px] transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div id="lista-quem-respondeu" class="mt-2 flex flex-wrap gap-1.5"></div>
+                </details>
+
                 <!-- Enunciado Principal -->
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 md:p-10 rounded-3xl shadow-xl text-center min-h-[180px] flex items-center justify-center">
                     <h3 id="pergunta-enunciado" class="text-2xl md:text-4xl font-black text-slate-800 dark:text-white leading-snug">
@@ -242,6 +250,14 @@
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-8 py-6 rounded-3xl shadow-xl text-center">
                     <h3 id="nuvem-enunciado" class="text-2xl md:text-3xl font-black text-slate-800 dark:text-white leading-snug">--</h3>
                 </div>
+
+                <details class="group -mt-3">
+                    <summary class="cursor-pointer select-none text-xs font-bold text-slate-400 hover:text-sky-500 transition-colors list-none flex items-center gap-1 w-max normal-case tracking-normal">
+                        <span>Ver progresso por participante</span>
+                        <span class="text-[10px] transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div id="lista-progresso-nuvem" class="mt-2 flex flex-wrap gap-1.5"></div>
+                </details>
 
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-xl p-4 md:p-6 overflow-hidden">
                     <div id="nuvem-container" class="relative w-full" style="height: clamp(340px, 54vh, 680px);">
@@ -354,6 +370,26 @@
                 <div>
                     <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Descrição Breve (Opcional)</label>
                     <input type="text" id="quiz-desc-input" placeholder="Ex: Avaliação rápida dos conceitos do Módulo 1" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-sm font-medium outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Modo do Questionário</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <label class="flex items-start gap-2.5 p-3 bg-slate-50 dark:bg-slate-950 border-2 border-purple-500 rounded-xl cursor-pointer has-[:checked]:border-purple-500 has-[:not(:checked)]:border-slate-200 dark:has-[:not(:checked)]:border-slate-700 transition-colors">
+                            <input type="radio" name="quiz-modo" id="quiz-modo-pontuado" value="pontuado" checked class="mt-0.5 accent-purple-600">
+                            <span>
+                                <span class="block text-sm font-bold text-slate-800 dark:text-white">🏆 Com ranking</span>
+                                <span class="block text-[11px] text-slate-500 dark:text-slate-400">Pontua respostas e mostra pódio ao final.</span>
+                            </span>
+                        </label>
+                        <label class="flex items-start gap-2.5 p-3 bg-slate-50 dark:bg-slate-950 border-2 border-slate-200 dark:border-slate-700 rounded-xl cursor-pointer has-[:checked]:border-purple-500 transition-colors">
+                            <input type="radio" name="quiz-modo" id="quiz-modo-opiniao" value="opiniao" class="mt-0.5 accent-purple-600">
+                            <span>
+                                <span class="block text-sm font-bold text-slate-800 dark:text-white">☁️ Só opinião</span>
+                                <span class="block text-[11px] text-slate-500 dark:text-slate-400">Sem ranking, mesmo com perguntas de múltipla escolha.</span>
+                            </span>
+                        </label>
+                    </div>
                 </div>
 
                 <div class="border-t border-slate-200 dark:border-slate-800 pt-4">
