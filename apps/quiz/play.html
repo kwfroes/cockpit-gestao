@@ -132,6 +132,42 @@
             </div>
         </section>
 
+        <!-- 3B. NUVEM DE PALAVRAS -->
+        <section id="tela-nuvem" class="hidden flex flex-col space-y-4 py-1">
+            <div class="flex justify-between items-center">
+                <span id="nuvem-aluno-badge" class="text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30">
+                    ☁️ Nuvem de palavras
+                </span>
+                <span id="nuvem-aluno-contador" class="text-xs font-bold text-slate-400 font-mono">0 de 1</span>
+            </div>
+
+            <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl shadow-lg text-center flex items-center justify-center min-h-[95px]">
+                <h3 id="nuvem-aluno-enunciado" class="text-base sm:text-lg font-black text-white leading-snug">Carregando pergunta...</h3>
+            </div>
+
+            <form id="form-nuvem" class="space-y-2.5" autocomplete="off">
+                <input type="text" id="input-palavra" maxlength="25" enterkeyhint="send" autocapitalize="sentences" placeholder="Digite uma palavra"
+                    class="select-text w-full text-center text-lg font-bold py-3.5 bg-slate-950 border border-slate-700 rounded-2xl text-white focus:ring-2 focus:ring-sky-500 outline-none">
+                <div class="flex justify-between text-[10px] font-bold text-slate-500 px-1">
+                    <span>Palavra curta ou expressão</span>
+                    <span id="nuvem-caracteres" class="font-mono">0/25</span>
+                </div>
+                <button type="submit" id="btn-enviar-palavra" class="w-full py-4 bg-sky-600 hover:bg-sky-700 active:scale-95 transition-all text-white font-black text-sm uppercase tracking-wider rounded-2xl shadow-lg shadow-sky-600/30">
+                    Enviar palavra
+                </button>
+            </form>
+
+            <div id="nuvem-aluno-concluido" class="hidden p-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 text-center space-y-1">
+                <p id="nuvem-aluno-concluido-titulo" class="text-sm font-black text-emerald-400">Tudo enviado!</p>
+                <p id="nuvem-aluno-concluido-txt" class="text-xs text-slate-300">Acompanhe a nuvem crescer no telão.</p>
+            </div>
+
+            <div class="space-y-2">
+                <p class="text-[10px] font-black uppercase tracking-widest text-slate-500">Suas palavras</p>
+                <div id="nuvem-aluno-chips" class="flex flex-wrap gap-2"></div>
+            </div>
+        </section>
+
         <!-- 4. RESPOSTA ENVIADA -->
         <section id="tela-enviado" class="hidden flex flex-col items-center justify-center text-center space-y-4">
             <div class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-3xl font-black animate-pulse">✓</div>

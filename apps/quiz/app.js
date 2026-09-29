@@ -14,12 +14,54 @@ let respostasRecebidas = [];
 let timerInterval = null;
 let realtimeChannel = null;
 let lobbyPollInterval = null;
-let fasePergunta = 'idle'; // 'leitura' | 'valendo' | 'encerrada'
+let fasePergunta = 'idle'; // 'leitura' | 'valendo' | 'encerrada' | 'nuvem' | 'nuvem_resultado'
+
+// Nuvem de palavras
+let palavrasNuvem = new Map();      // id da resposta -> { id, participante_id, pergunta_id, texto, oculta }
+let nuvemElementos = new Map();     // chave normalizada -> <span> no telão
+let chavesNuvemBloqueadas = new Set(); // palavras ocultadas pelo instrutor (novas iguais já chegam ocultas)
+let nuvemPollInterval = null;
+let nuvemRenderAgendado = false;
+let nuvemResizeObserver = null;
 
 // Controle de Edição e Exclusão
 let quizEmEdicaoId = null;
 let quizParaExcluirId = null;
 let contadorUidPergunta = 0;
+
+// Palavra mais citada de uma sessão encerrada (dashboard), agrupando por grafia/acentuação
+function palavraMaisCitadaHistorico(lista) {
+    const grupos = new Map();
+    (lista || []).forEach(r => {
+        const chave = chaveNuvem(r.texto);
+        if (!chave) return;
+        let g = grupos.get(chave);
+        if (!g) { g = { total: 0, formas: new Map() }; grupos.set(chave, g); }
+        g.total++;
+        const forma = String(r.texto).trim();
+        g.formas.set(forma, (g.formas.get(forma) || 0) + 1);
+    });
+
+    let melhor = null;
+    grupos.forEach((g, chave) => {
+        if (!melhor || g.total > melhor.total) {
+            let exibicao = "", maior = 0;
+            g.formas.forEach((qtd, forma) => { if (qtd > maior) { maior = qtd; exibicao = forma; } });
+            melhor = { chave, total: g.total, exibicao };
+        }
+    });
+    return melhor;
+}
+
+// Escapa texto digitado por usuários antes de inserir via innerHTML (evita XSS no telão)
+function escapeHtml(valor) {
+    return String(valor ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
 
 const OPCOES_CONFIG = [
     { cor: 'bg-red-500 text-white', icone: '▲' },
@@ -114,10 +156,11 @@ async function carregarQuizzes() {
             .from("quiz_questionarios")
             .select(`
                 id, titulo, descricao, created_at,
-                quiz_perguntas (id),
+                quiz_perguntas (id, tipo),
                 quiz_salas (
                     id, codigo, status, created_at,
-                    quiz_participantes (apelido, pontos)
+                    quiz_participantes (apelido, pontos),
+                    quiz_nuvem_respostas (texto)
                 )
             `)
             .order("created_at", { ascending: false });
@@ -141,6 +184,8 @@ function renderizarDashboardQuizzes() {
 
     quizzesDisponiveis.forEach(q => {
         const qtdPerguntas = q.quiz_perguntas ? q.quiz_perguntas.length : 0;
+        const qtdNuvens = (q.quiz_perguntas || []).filter(p => p.tipo === 'nuvem').length;
+        const quizEhSoNuvem = qtdPerguntas > 0 && qtdNuvens === qtdPerguntas;
 
         // Filtra as partidas que tiveram participantes e ordena da mais recente para a mais antiga
         const salasComJogadores = (q.quiz_salas || [])
@@ -155,20 +200,31 @@ function renderizarDashboardQuizzes() {
                 <details class="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800/80 text-xs group/hist">
                     <summary class="cursor-pointer font-bold text-slate-500 dark:text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 flex items-center justify-between select-none list-none">
                         <span class="flex items-center gap-1.5">
-                            🏆 <span>Vencedores por partida (${qtdUsos})</span>
+                            ${quizEhSoNuvem ? '☁️' : '🏆'} <span>${quizEhSoNuvem ? 'Palavra mais citada por partida' : 'Vencedores por partida'} (${qtdUsos})</span>
                         </span>
                         <span class="text-[10px] transition-transform group-open/hist:rotate-180">▼</span>
                     </summary>
                     <div class="mt-2 space-y-1.5 max-h-32 overflow-y-auto pr-1">
                         ${salasComJogadores.map(s => {
-                            const ranking = [...s.quiz_participantes].sort((a, b) => b.pontos - a.pontos);
-                            const vencedor = ranking[0];
                             const dataPartida = new Date(s.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+
+                            let linhaDestaque;
+                            if (quizEhSoNuvem) {
+                                const top = palavraMaisCitadaHistorico(s.quiz_nuvem_respostas || []);
+                                linhaDestaque = top
+                                    ? `☁️ ${escapeHtml(top.exibicao)} <strong class="text-sky-600 dark:text-sky-400 font-mono">(${top.total}x)</strong>`
+                                    : `<span class="italic text-slate-400">Sem palavras enviadas</span>`;
+                            } else {
+                                const ranking = [...s.quiz_participantes].sort((a, b) => b.pontos - a.pontos);
+                                const vencedor = ranking[0];
+                                linhaDestaque = `👑 ${escapeHtml(vencedor.apelido)} <strong class="text-purple-600 dark:text-purple-400 font-mono">(${vencedor.pontos} pts)</strong>`;
+                            }
+
                             return `
                                 <div class="flex justify-between items-center bg-slate-50 dark:bg-slate-950 px-2.5 py-1.5 rounded-lg border border-slate-200/60 dark:border-slate-800">
                                     <span class="text-[10px] font-mono text-slate-400">Sala #${s.codigo} (${dataPartida})</span>
                                     <span class="text-[11px] font-bold text-slate-700 dark:text-slate-200 truncate max-w-[140px]">
-                                        👑 ${vencedor.apelido} <strong class="text-purple-600 dark:text-purple-400 font-mono">(${vencedor.pontos} pts)</strong>
+                                        ${linhaDestaque}
                                     </span>
                                 </div>
                             `;
@@ -187,6 +243,10 @@ function renderizarDashboardQuizzes() {
                         <span class="text-[10px] font-black uppercase px-2.5 py-1 rounded-md bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300">
                             ${qtdPerguntas} ${qtdPerguntas === 1 ? 'Pergunta' : 'Perguntas'}
                         </span>
+                        ${qtdNuvens > 0 ? `
+                        <span class="text-[10px] font-bold px-2 py-1 rounded-md bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-300">
+                            ☁️ ${qtdNuvens} ${qtdNuvens === 1 ? 'nuvem' : 'nuvens'}
+                        </span>` : ''}
                         <span class="text-[10px] font-bold px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
                             📊 ${qtdUsos}x usado
                         </span>
@@ -203,8 +263,8 @@ function renderizarDashboardQuizzes() {
                     </div>
                 </div>
 
-                <h3 class="font-bold text-slate-800 dark:text-white text-base mt-1">${q.titulo}</h3>
-                <p class="text-xs text-slate-500 mt-1 line-clamp-2">${q.descricao || 'Sem descrição.'}</p>
+                <h3 class="font-bold text-slate-800 dark:text-white text-base mt-1">${escapeHtml(q.titulo)}</h3>
+                <p class="text-xs text-slate-500 mt-1 line-clamp-2">${escapeHtml(q.descricao || 'Sem descrição.')}</p>
 
                 ${historicoHtml}
             </div>
@@ -242,7 +302,7 @@ async function abrirModalEditarQuiz(quizId) {
             .select(`
                 id, titulo, descricao,
                 quiz_perguntas (
-                    id, ordem, enunciado, justificativa, tempo_segundos, tempo_leitura_segundos,
+                    id, ordem, tipo, max_palavras, enunciado, justificativa, tempo_segundos, tempo_leitura_segundos,
                     quiz_opcoes (id, texto, is_correta, cor_indice)
                 )
             `)
@@ -291,8 +351,10 @@ function adicionarBlocoPergunta(dadosPergunta = null) {
     const uid = contadorUidPergunta;
     const numeroQuestao = container.children.length + 1;
 
-    const enunciadoVal = dadosPergunta ? (dadosPergunta.enunciado || "").replace(/"/g, '&quot;') : "";
-    const justificativaVal = dadosPergunta ? (dadosPergunta.justificativa || "").replace(/"/g, '&quot;') : "";
+    const tipoVal = dadosPergunta && dadosPergunta.tipo === 'nuvem' ? 'nuvem' : 'multipla';
+    const maxPalavrasVal = dadosPergunta ? (dadosPergunta.max_palavras || 1) : 1;
+    const enunciadoVal = escapeHtml(dadosPergunta ? dadosPergunta.enunciado : "");
+    const justificativaVal = escapeHtml(dadosPergunta ? dadosPergunta.justificativa : "");
     const tempoLeituraVal = dadosPergunta ? (dadosPergunta.tempo_leitura_segundos || 5) : 5;
     const tempoRespostaVal = dadosPergunta ? (dadosPergunta.tempo_segundos || 5) : 5;
 
@@ -306,29 +368,43 @@ function adicionarBlocoPergunta(dadosPergunta = null) {
     if (dadosPergunta && dadosPergunta.quiz_opcoes && dadosPergunta.quiz_opcoes.length > 0) {
         const salvas = [...dadosPergunta.quiz_opcoes].sort((a, b) => a.cor_indice - b.cor_indice);
         opcoesOrdenadas = [0, 1, 2, 3].map(i => ({
-            texto: salvas[i] ? (salvas[i].texto || "").replace(/"/g, '&quot;') : "",
+            texto: salvas[i] ? escapeHtml(salvas[i].texto) : "",
             is_correta: salvas[i] ? !!salvas[i].is_correta : (i === 0)
         }));
     }
 
     const div = document.createElement("div");
-    div.className = "p-4 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 space-y-3 relative group";
+    div.className = "bloco-pergunta p-4 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 space-y-3 relative group";
+    div.dataset.tipo = tipoVal;
     div.innerHTML = `
         <div class="flex flex-wrap justify-between items-center gap-2">
-            <span class="label-num-questao text-xs font-bold text-purple-600 dark:text-purple-400 uppercase">Questão #${numeroQuestao}</span>
-            
+            <div class="flex items-center gap-2">
+                <span class="label-num-questao text-xs font-bold text-purple-600 dark:text-purple-400 uppercase">Questão #${numeroQuestao}</span>
+                <select class="b-tipo bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-bold rounded-lg px-2 py-1 outline-none text-slate-700 dark:text-slate-200" onchange="alternarTipoBloco(this)">
+                    <option value="multipla" ${tipoVal === 'multipla' ? 'selected' : ''}>🔘 Múltipla escolha</option>
+                    <option value="nuvem" ${tipoVal === 'nuvem' ? 'selected' : ''}>☁️ Nuvem de palavras</option>
+                </select>
+            </div>
+
             <div class="flex flex-wrap items-center gap-3">
-                <div class="flex items-center gap-1">
+                <div class="b-so-multipla flex items-center gap-1">
                     <label class="text-[10px] font-bold text-slate-400 uppercase">Leitura:</label>
                     <select class="b-tempo-leitura bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-bold rounded-lg px-2 py-1 outline-none text-amber-600 dark:text-amber-400">
                         ${[3, 5, 7, 10].map(v => `<option value="${v}" ${tempoLeituraVal === v ? 'selected' : ''}>${v}s</option>`).join('')}
                     </select>
                 </div>
 
-                <div class="flex items-center gap-1">
+                <div class="b-so-multipla flex items-center gap-1">
                     <label class="text-[10px] font-bold text-slate-400 uppercase">Resposta:</label>
                     <select class="b-tempo-resposta bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-bold rounded-lg px-2 py-1 outline-none text-purple-600 dark:text-purple-400">
                         ${[3, 5, 10, 15, 20, 30].map(v => `<option value="${v}" ${tempoRespostaVal === v ? 'selected' : ''}>${v}s</option>`).join('')}
+                    </select>
+                </div>
+
+                <div class="b-so-nuvem flex items-center gap-1">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase">Palavras por pessoa:</label>
+                    <select class="b-max-palavras bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-bold rounded-lg px-2 py-1 outline-none text-sky-600 dark:text-sky-400">
+                        ${[1, 2, 3, 5].map(v => `<option value="${v}" ${maxPalavrasVal === v ? 'selected' : ''}>${v}</option>`).join('')}
                     </select>
                 </div>
 
@@ -337,8 +413,8 @@ function adicionarBlocoPergunta(dadosPergunta = null) {
         </div>
 
         <input type="text" value="${enunciadoVal}" placeholder="Digite o enunciado da questão..." class="b-enunciado w-full px-3 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-xs font-medium outline-none focus:ring-2 focus:ring-purple-500">
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
+
+        <div class="b-so-multipla grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
             ${[0, 1, 2, 3].map(i => `
                 <div class="flex items-center gap-2 bg-white dark:bg-slate-900 p-2 rounded-lg border border-slate-200 dark:border-slate-800">
                     <input type="radio" name="correta_uid_${uid}" value="${i}" ${opcoesOrdenadas[i].is_correta ? 'checked' : ''} class="b-correta accent-purple-600 cursor-pointer" title="Marcar como correta">
@@ -347,11 +423,35 @@ function adicionarBlocoPergunta(dadosPergunta = null) {
             `).join('')}
         </div>
 
-        <div class="pt-1">
+        <div class="b-so-multipla pt-1">
             <input type="text" value="${justificativaVal}" placeholder="💡 Justificativa / explicação da resposta correta (opcional)..." class="b-justificativa w-full px-3 py-1.5 bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/50 rounded-lg text-xs text-slate-700 dark:text-slate-300 outline-none focus:ring-2 focus:ring-amber-500">
         </div>
+
+        <p class="b-so-nuvem text-[11px] text-slate-500 dark:text-slate-400 bg-sky-50/70 dark:bg-sky-950/20 border border-sky-200 dark:border-sky-800/50 rounded-lg px-3 py-2">
+            Cada participante envia até o número de palavras escolhido acima (até 25 caracteres cada). Não vale pontos e não tem resposta certa; você encerra as respostas quando quiser.
+        </p>
     `;
     container.appendChild(div);
+    aplicarTipoBloco(div);
+}
+
+function alternarTipoBloco(selectEl) {
+    const bloco = selectEl.closest(".bloco-pergunta");
+    if (!bloco) return;
+    bloco.dataset.tipo = selectEl.value;
+    aplicarTipoBloco(bloco);
+}
+
+function aplicarTipoBloco(bloco) {
+    const isNuvem = bloco.dataset.tipo === 'nuvem';
+    bloco.querySelectorAll(".b-so-multipla").forEach(el => el.classList.toggle("hidden", isNuvem));
+    bloco.querySelectorAll(".b-so-nuvem").forEach(el => el.classList.toggle("hidden", !isNuvem));
+    const enunciado = bloco.querySelector(".b-enunciado");
+    if (enunciado) {
+        enunciado.placeholder = isNuvem
+            ? "Ex: Em uma palavra, o que você espera deste curso?"
+            : "Digite o enunciado da questão...";
+    }
 }
 
 function removerBlocoPergunta(btnEl) {
@@ -432,14 +532,19 @@ async function salvarNovoQuiz() {
             const enunciado = b.querySelector(".b-enunciado").value.trim();
             if (!enunciado) continue;
 
-            const justificativa = b.querySelector(".b-justificativa")?.value.trim() || null;
+            const tipo = b.querySelector(".b-tipo")?.value === 'nuvem' ? 'nuvem' : 'multipla';
+            const isNuvem = tipo === 'nuvem';
+            const justificativa = isNuvem ? null : (b.querySelector(".b-justificativa")?.value.trim() || null);
             const tempoLeitura = parseInt(b.querySelector(".b-tempo-leitura")?.value) || 5;
             const tempoResposta = parseInt(b.querySelector(".b-tempo-resposta")?.value) || 5;
+            const maxPalavras = parseInt(b.querySelector(".b-max-palavras")?.value) || 1;
 
             const { data: perguntaCriada, error: errP } = await supabase
                 .from("quiz_perguntas")
                 .insert([{
                     questionario_id: targetQuizId,
+                    tipo: tipo,
+                    max_palavras: maxPalavras,
                     enunciado: enunciado,
                     justificativa: justificativa,
                     ordem: ordemReal++,
@@ -450,6 +555,9 @@ async function salvarNovoQuiz() {
                 .single();
 
             if (errP) throw errP;
+
+            // Nuvem de palavras não tem alternativas
+            if (isNuvem) continue;
 
             const radioChecked = b.querySelector(".b-correta:checked");
             const indiceCorreto = radioChecked ? parseInt(radioChecked.value) : 0;
@@ -542,7 +650,7 @@ async function criarSalaAoVivo(quizId) {
 
         const { data: perguntas } = await supabase
             .from("quiz_perguntas")
-            .select(`id, ordem, enunciado, justificativa, tempo_segundos, tempo_leitura_segundos, quiz_opcoes (id, texto, is_correta, cor_indice)`)
+            .select(`id, ordem, tipo, max_palavras, enunciado, justificativa, tempo_segundos, tempo_leitura_segundos, quiz_opcoes (id, texto, is_correta, cor_indice)`)
             .eq("questionario_id", quizId)
             .order("ordem", { ascending: true });
 
@@ -583,6 +691,7 @@ function montarArenaLobby(codigoSala) {
     document.getElementById("arena-resultado").classList.add("hidden");
     document.getElementById("arena-placar").classList.add("hidden");
     document.getElementById("arena-podio").classList.add("hidden");
+    document.getElementById("arena-nuvem").classList.add("hidden");
 
     document.getElementById("lobby-pin").textContent = codigoSala;
     document.getElementById("lobby-count").textContent = "0";
@@ -640,6 +749,17 @@ function iniciarRealtimeSala(salaId) {
         .on('broadcast', { event: 'novo_voto' }, (payload) => {
             registrarVotoMemoria(payload.payload);
         })
+        .on('broadcast', { event: 'nova_palavra' }, (payload) => {
+            registrarPalavraNuvem(payload.payload);
+        })
+        .on('postgres_changes', {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'quiz_nuvem_respostas',
+            filter: `sala_id=eq.${salaId}`
+        }, (payload) => {
+            registrarPalavraNuvem(payload.new);
+        })
         .on('postgres_changes', {
             event: 'INSERT',
             schema: 'public',
@@ -683,7 +803,7 @@ function atualizarLobbyParticipantes() {
 
     grid.innerHTML = participantesConectados.map(p => `
         <span class="px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white rounded-xl text-xs font-bold shadow-xs">
-            ${p.apelido}
+            ${escapeHtml(p.apelido)}
         </span>
     `).join("");
 }
@@ -698,6 +818,11 @@ async function dispararPerguntaAtual() {
     const pergunta = perguntasDaPartida[indicePerguntaAtual];
     if (!pergunta) {
         exibirPodioFinal();
+        return;
+    }
+
+    if (pergunta.tipo === 'nuvem') {
+        await iniciarNuvem(pergunta);
         return;
     }
 
@@ -728,6 +853,7 @@ async function dispararPerguntaAtual() {
     document.getElementById("arena-lobby").classList.add("hidden");
     document.getElementById("arena-resultado").classList.add("hidden");
     document.getElementById("arena-placar").classList.add("hidden");
+    document.getElementById("arena-nuvem").classList.add("hidden");
     document.getElementById("arena-pergunta").classList.remove("hidden");
 
     document.getElementById("pergunta-numero-badge").textContent = `Questão ${indicePerguntaAtual + 1} de ${perguntasDaPartida.length}`;
@@ -749,7 +875,7 @@ async function dispararPerguntaAtual() {
         containerOpcoes.innerHTML += `
             <div class="${cfg.cor} p-6 rounded-2xl flex items-center gap-4 shadow-lg text-left transform transition-all">
                 <span class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center font-black text-xl shrink-0">${cfg.icone}</span>
-                <span class="text-lg md:text-xl font-bold leading-tight">${opc.texto}</span>
+                <span class="text-lg md:text-xl font-bold leading-tight">${escapeHtml(opc.texto)}</span>
             </div>
         `;
     });
@@ -911,7 +1037,7 @@ async function finalizarTempoPergunta() {
                 <div class="flex-1 bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden h-11 flex items-center px-4 relative border border-slate-200 dark:border-slate-700 ${destaqueCorreta}">
                     <div class="absolute left-0 top-0 bottom-0 ${cfg.cor} opacity-35 transition-all duration-500" style="width: ${porcentagem}%"></div>
                     <span class="relative z-10 text-xs md:text-sm font-bold text-slate-800 dark:text-white flex-1 truncate">
-                        ${opc.texto} ${opc.is_correta ? '<span class="ml-2 text-[10px] font-black uppercase px-2 py-0.5 rounded bg-emerald-500 text-white">Correta</span>' : ''}
+                        ${escapeHtml(opc.texto)} ${opc.is_correta ? '<span class="ml-2 text-[10px] font-black uppercase px-2 py-0.5 rounded bg-emerald-500 text-white">Correta</span>' : ''}
                     </span>
                     <span class="relative z-10 text-xs font-black text-slate-700 dark:text-slate-200 font-mono">${votosNesta} ${votosNesta === 1 ? 'voto' : 'votos'} (${porcentagem}%)${tempoMedioStr}</span>
                 </div>
@@ -927,7 +1053,7 @@ async function finalizarTempoPergunta() {
                 <span class="text-xl shrink-0">💡</span>
                 <div>
                     <p class="text-[10px] font-black uppercase tracking-widest text-amber-600 dark:text-amber-400">Justificativa da Resposta</p>
-                    <p class="text-xs md:text-sm font-medium text-slate-700 dark:text-slate-200 mt-0.5 leading-relaxed">${pergunta.justificativa}</p>
+                    <p class="text-xs md:text-sm font-medium text-slate-700 dark:text-slate-200 mt-0.5 leading-relaxed">${escapeHtml(pergunta.justificativa)}</p>
                 </div>
             </div>
         `;
@@ -954,7 +1080,7 @@ async function avancarParaPlacar() {
             <div class="flex justify-between items-center p-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs">
                 <div class="flex items-center gap-3">
                     <span class="text-xl">${iconePos}</span>
-                    <span class="font-bold text-sm text-slate-800 dark:text-white">${p.apelido}</span>
+                    <span class="font-bold text-sm text-slate-800 dark:text-white">${escapeHtml(p.apelido)}</span>
                 </div>
                 <span class="font-mono font-black text-sm text-purple-600 dark:text-purple-400">${p.pontos} pts</span>
             </div>
@@ -992,7 +1118,14 @@ async function exibirPodioFinal() {
         .order("pontos", { ascending: false });
 
     document.getElementById("arena-placar").classList.add("hidden");
+    document.getElementById("arena-nuvem").classList.add("hidden");
     document.getElementById("arena-podio").classList.remove("hidden");
+
+    // Partida só com nuvens de palavras: não há pontuação para premiar
+    const temPontuacao = perguntasDaPartida.some(p => p.tipo !== 'nuvem');
+    document.getElementById("podio-steps").classList.toggle("hidden", !temPontuacao);
+    document.getElementById("podio-eyebrow").textContent = temPontuacao ? "Grande Final" : "Atividade concluída";
+    document.getElementById("podio-titulo").textContent = temPontuacao ? "Pódio dos Campeões 🎉" : "Obrigado pela participação ☁️";
 
     document.getElementById("podio-nome-1").textContent = ranking?.[0]?.apelido || "--";
     document.getElementById("podio-pontos-1").textContent = `${ranking?.[0]?.pontos || 0} pts`;
@@ -1003,7 +1136,7 @@ async function exibirPodioFinal() {
     document.getElementById("podio-nome-3").textContent = ranking?.[2]?.apelido || "--";
     document.getElementById("podio-pontos-3").textContent = `${ranking?.[2]?.pontos || 0} pts`;
 
-    if (typeof confetti === "function") {
+    if (temPontuacao && typeof confetti === "function") {
         confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
     }
 }
@@ -1011,6 +1144,8 @@ async function exibirPodioFinal() {
 async function voltarParaDashboard() {
     if (timerInterval) clearInterval(timerInterval);
     if (lobbyPollInterval) clearInterval(lobbyPollInterval);
+    if (nuvemPollInterval) { clearInterval(nuvemPollInterval); nuvemPollInterval = null; }
+    fasePergunta = 'idle';
 
     // Se houver uma sala aberta, derruba todos os participantes conectados
     if (salaAtiva && salaAtiva.id) {
@@ -1095,4 +1230,463 @@ function copiarLinkSala() {
     }).catch(() => {
         toast("Falha ao copiar o link.", "error");
     });
+}
+
+// ========================================================
+// NUVEM DE PALAVRAS (TELÃO)
+// ========================================================
+const CORES_NUVEM = [
+    'text-purple-600 dark:text-purple-400',
+    'text-sky-600 dark:text-sky-400',
+    'text-emerald-600 dark:text-emerald-400',
+    'text-rose-600 dark:text-rose-400',
+    'text-amber-600 dark:text-amber-400',
+    'text-indigo-600 dark:text-indigo-400',
+    'text-teal-600 dark:text-teal-400',
+    'text-fuchsia-600 dark:text-fuchsia-400'
+];
+
+// "Transparência", "transparencia" e " TRANSPARÊNCIA " viram a mesma chave
+function chaveNuvem(texto) {
+    return String(texto || "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, " ");
+}
+
+// Número estável por palavra: define cor, orientação e ângulo inicial na espiral
+function hashNuvem(chave) {
+    let h = 0;
+    for (let i = 0; i < chave.length; i++) h = (h * 31 + chave.charCodeAt(i)) >>> 0;
+    return h;
+}
+
+function corNuvem(chave) {
+    return CORES_NUVEM[hashNuvem(chave) % CORES_NUVEM.length];
+}
+
+function perguntaNuvemAtual() {
+    const p = perguntasDaPartida[indicePerguntaAtual];
+    return p && p.tipo === 'nuvem' ? p : null;
+}
+
+async function iniciarNuvem(pergunta) {
+    if (timerInterval) clearInterval(timerInterval);
+    if (nuvemPollInterval) clearInterval(nuvemPollInterval);
+
+    fasePergunta = 'nuvem';
+    palavrasNuvem = new Map();
+    nuvemElementos = new Map();
+    chavesNuvemBloqueadas = new Set();
+
+    await supabase
+        .from("quiz_salas")
+        .update({ status: 'nuvem', pergunta_atual_id: pergunta.id })
+        .eq("id", salaAtiva.id);
+
+    if (realtimeChannel) {
+        realtimeChannel.send({
+            type: 'broadcast',
+            event: 'mudar_status',
+            payload: {
+                status: 'nuvem',
+                perguntaId: pergunta.id,
+                enunciado: pergunta.enunciado,
+                maxPalavras: pergunta.max_palavras || 1
+            }
+        });
+    }
+
+    ["arena-lobby", "arena-pergunta", "arena-resultado", "arena-placar", "arena-podio"]
+        .forEach(id => document.getElementById(id).classList.add("hidden"));
+    document.getElementById("arena-nuvem").classList.remove("hidden");
+
+    document.getElementById("nuvem-numero-badge").textContent = `Questão ${indicePerguntaAtual + 1} de ${perguntasDaPartida.length}`;
+    document.getElementById("nuvem-enunciado").textContent = pergunta.enunciado;
+
+    const badge = document.getElementById("nuvem-fase-badge");
+    badge.textContent = "☁️ Recebendo palavras";
+    badge.className = "px-3 py-1 rounded-full text-xs font-black bg-sky-500/15 text-sky-600 dark:text-sky-400 border border-sky-500/30 animate-pulse";
+
+    document.getElementById("btn-encerrar-nuvem").classList.remove("hidden");
+    document.getElementById("btn-nuvem-proxima").classList.add("hidden");
+
+    const containerNuvem = document.getElementById("nuvem-container");
+    containerNuvem.innerHTML = "";
+    // Reorganiza a nuvem quando o tamanho muda (ex.: entrar/sair do Modo Telão)
+    if (!nuvemResizeObserver && typeof ResizeObserver === "function") {
+        nuvemResizeObserver = new ResizeObserver(() => agendarRenderNuvem());
+        nuvemResizeObserver.observe(containerNuvem);
+    }
+    renderizarNuvem();
+
+    await buscarPalavrasNuvemBanco();
+    // Rede de segurança caso algum evento Realtime se perca
+    nuvemPollInterval = setInterval(buscarPalavrasNuvemBanco, 3000);
+}
+
+async function buscarPalavrasNuvemBanco() {
+    const pergunta = perguntaNuvemAtual();
+    if (!salaAtiva || !pergunta) return;
+
+    const { data, error } = await supabase
+        .from("quiz_nuvem_respostas")
+        .select("id, participante_id, pergunta_id, texto, oculta")
+        .eq("sala_id", salaAtiva.id)
+        .eq("pergunta_id", pergunta.id);
+
+    if (error || !data) return;
+
+    let mudou = false;
+    data.forEach(r => {
+        const atual = palavrasNuvem.get(r.id);
+        if (!atual || atual.oculta !== r.oculta) {
+            palavrasNuvem.set(r.id, { ...r });
+            mudou = true;
+        }
+        aplicarBloqueioSeNecessario(palavrasNuvem.get(r.id));
+    });
+    if (mudou) agendarRenderNuvem();
+}
+
+function registrarPalavraNuvem(r) {
+    const pergunta = perguntaNuvemAtual();
+    if (!r || !r.id || !pergunta || r.pergunta_id !== pergunta.id) return;
+    if (fasePergunta !== 'nuvem' && fasePergunta !== 'nuvem_resultado') return;
+    if (palavrasNuvem.has(r.id)) return;
+
+    const registro = {
+        id: r.id,
+        participante_id: r.participante_id,
+        pergunta_id: r.pergunta_id,
+        texto: String(r.texto || "").slice(0, 25),
+        oculta: !!r.oculta
+    };
+    palavrasNuvem.set(r.id, registro);
+    aplicarBloqueioSeNecessario(registro);
+    agendarRenderNuvem();
+}
+
+// Se o instrutor já ocultou essa palavra, repetições novas também ficam ocultas
+function aplicarBloqueioSeNecessario(registro) {
+    if (!registro || registro.oculta) return;
+    if (!chavesNuvemBloqueadas.has(chaveNuvem(registro.texto))) return;
+    registro.oculta = true;
+    supabase.from("quiz_nuvem_respostas").update({ oculta: true }).eq("id", registro.id).then();
+}
+
+function agendarRenderNuvem() {
+    if (nuvemRenderAgendado) return;
+    nuvemRenderAgendado = true;
+    requestAnimationFrame(renderizarNuvem);
+}
+
+function agregarPalavrasNuvem() {
+    const grupos = new Map();
+    palavrasNuvem.forEach(r => {
+        if (r.oculta) return;
+        const chave = chaveNuvem(r.texto);
+        if (!chave) return;
+        let g = grupos.get(chave);
+        if (!g) {
+            g = { chave, total: 0, formas: new Map() };
+            grupos.set(chave, g);
+        }
+        g.total++;
+        const forma = r.texto.trim();
+        g.formas.set(forma, (g.formas.get(forma) || 0) + 1);
+    });
+
+    return [...grupos.values()].map(g => {
+        // Exibe a grafia mais usada pelos participantes
+        let exibicao = "", maior = 0;
+        g.formas.forEach((qtd, forma) => { if (qtd > maior) { maior = qtd; exibicao = forma; } });
+        return { chave: g.chave, total: g.total, exibicao };
+    }).sort((a, b) => b.total - a.total || a.exibicao.localeCompare(b.exibicao, 'pt-BR'));
+}
+
+// Posiciona caixas numa espiral elíptica a partir do centro, sem sobreposição.
+// Retorna, para cada caixa, { x, y, w, h } (canto superior esquerdo) ou null se não coube.
+function posicionarEmEspiral(caixas, W, H, limitarAoRetangulo) {
+    const colocadas = [];
+    const resultado = [];
+    const cx = W / 2, cy = H / 2;
+    const esticarX = Math.min(3, Math.max(1, W / H)); // espalha mais na horizontal, preenchendo o retângulo
+    const GAP = 6;
+    const raioMax = Math.hypot(W, H);
+
+    const sobrepoe = (a) => colocadas.some(b =>
+        a.x < b.x + b.w + GAP && a.x + a.w + GAP > b.x &&
+        a.y < b.y + b.h + GAP && a.y + a.h + GAP > b.y
+    );
+
+    caixas.forEach((c, i) => {
+        let achou = null;
+        const anguloInicial = (c.seed % 628) / 100;   // cada palavra começa num ângulo diferente
+        const sentido = c.seed % 2 === 0 ? 1 : -1;
+
+        for (let t = 0; t < 900; t += 0.17) {
+            const r = 1.7 * t;
+            if (r > raioMax) break;
+            const ang = sentido * t + anguloInicial;
+            const x = cx + r * esticarX * Math.cos(ang) - c.w / 2;
+            const y = cy + r * Math.sin(ang) - c.h / 2;
+
+            if (limitarAoRetangulo && (x < 0 || y < 0 || x + c.w > W || y + c.h > H)) continue;
+
+            const candidata = { x, y, w: c.w, h: c.h };
+            if (i === 0 || !sobrepoe(candidata)) {
+                achou = candidata;
+                break;
+            }
+        }
+
+        if (achou) colocadas.push(achou);
+        resultado.push(achou);
+    });
+
+    return resultado;
+}
+
+function medirPalavraNuvem(medidor, texto, px) {
+    medidor.textContent = texto;
+    medidor.style.fontSize = `${px}px`;
+    return { w: medidor.offsetWidth, h: medidor.offsetHeight };
+}
+
+function renderizarNuvem() {
+    nuvemRenderAgendado = false;
+    const container = document.getElementById("nuvem-container");
+    if (!container) return;
+
+    const registros = [...palavrasNuvem.values()];
+    const visiveis = registros.filter(r => !r.oculta);
+    const ocultas = registros.length - visiveis.length;
+
+    document.getElementById("nuvem-total-palavras").textContent = visiveis.length;
+    document.getElementById("nuvem-total-participantes").textContent = new Set(registros.map(r => r.participante_id)).size;
+    document.getElementById("nuvem-qtd-ocultas").textContent = ocultas;
+    document.getElementById("btn-restaurar-ocultas").classList.toggle("hidden", ocultas === 0);
+
+    const itens = agregarPalavrasNuvem().slice(0, 80);
+
+    // Remove palavras que deixaram de existir (ocultadas)
+    const chavesAtuais = new Set(itens.map(i => i.chave));
+    nuvemElementos.forEach((el, chave) => {
+        if (!chavesAtuais.has(chave)) {
+            el.remove();
+            nuvemElementos.delete(chave);
+        }
+    });
+
+    let vazia = document.getElementById("nuvem-vazia");
+    if (itens.length === 0) {
+        if (!vazia) {
+            vazia = document.createElement("p");
+            vazia.id = "nuvem-vazia";
+            vazia.className = "absolute inset-0 flex items-center justify-center text-sm text-slate-400 italic";
+            container.appendChild(vazia);
+        }
+        vazia.textContent = fasePergunta === 'nuvem_resultado'
+            ? "Nenhuma palavra visível."
+            : "As palavras aparecem aqui assim que os participantes enviarem.";
+        return;
+    }
+    if (vazia) vazia.remove();
+
+    const W = container.clientWidth;
+    const H = container.clientHeight;
+    if (!W || !H) return;
+
+    // Elemento invisível, sem animação, só para medir o tamanho final de cada palavra
+    let medidor = document.getElementById("nuvem-medidor");
+    if (!medidor) {
+        medidor = document.createElement("span");
+        medidor.id = "nuvem-medidor";
+        medidor.className = "nuvem-palavra nuvem-medidor";
+        medidor.setAttribute("aria-hidden", "true");
+        container.appendChild(medidor);
+    }
+
+    const MIN_PX = 18, MAX_PX = 96;
+    const maxTotal = itens[0].total;
+
+    const base = itens.map((it, i) => {
+        const seed = hashNuvem(it.chave);
+        return {
+            ...it,
+            seed,
+            proporcao: maxTotal <= 1 ? 0.45 : Math.pow((it.total - 1) / (maxTotal - 1), 0.6),
+            // Algumas palavras menores ficam na vertical para preencher os vãos (nunca as 3 mais citadas)
+            vertical: itens.length >= 8 && i >= 3 && seed % 5 === 0
+        };
+    });
+
+    const montarCaixas = (fator) => base.map(it => {
+        let px = (MIN_PX + (MAX_PX - MIN_PX) * it.proporcao) * fator;
+        let m = medirPalavraNuvem(medidor, it.exibicao, px);
+        const limite = (it.vertical ? H : W) * 0.92;   // nenhuma palavra maior que o quadro
+        if (m.w > limite) {
+            px *= limite / m.w;
+            m = medirPalavraNuvem(medidor, it.exibicao, px);
+        }
+        return {
+            px,
+            wTexto: m.w,
+            hTexto: m.h,
+            w: it.vertical ? m.h : m.w,
+            h: it.vertical ? m.w : m.h,
+            seed: it.seed
+        };
+    });
+
+    // Passo 1: monta a nuvem livre para descobrir o tamanho natural dela
+    let caixas = montarCaixas(1);
+    const livre = posicionarEmEspiral(caixas, W, H, false).filter(Boolean);
+    const minX = Math.min(...livre.map(b => b.x)), maxX = Math.max(...livre.map(b => b.x + b.w));
+    const minY = Math.min(...livre.map(b => b.y)), maxY = Math.max(...livre.map(b => b.y + b.h));
+
+    // Passo 2: amplia ou reduz as fontes para a nuvem ocupar o retângulo inteiro
+    let fator = Math.min(1.8, (W * 0.95) / (maxX - minX), (H * 0.92) / (maxY - minY));
+    if (Math.abs(fator - 1) > 0.03) caixas = montarCaixas(fator);
+    let posicoes = posicionarEmEspiral(caixas, W, H, true);
+
+    // Se alguma palavra não coube, reduz um pouco e tenta de novo (até 8 vezes)
+    for (let tentativa = 0; tentativa < 8 && posicoes.some(p => !p); tentativa++) {
+        fator *= 0.9;
+        caixas = montarCaixas(fator);
+        posicoes = posicionarEmEspiral(caixas, W, H, true);
+    }
+
+    // Centraliza o conjunto no quadro (a espiral pode crescer mais para um lado)
+    const postas = posicoes.filter(Boolean);
+    if (postas.length > 0) {
+        const bx0 = Math.min(...postas.map(b => b.x)), bx1 = Math.max(...postas.map(b => b.x + b.w));
+        const by0 = Math.min(...postas.map(b => b.y)), by1 = Math.max(...postas.map(b => b.y + b.h));
+        const dx = (W - bx1 - bx0) / 2, dy = (H - by1 - by0) / 2;
+        postas.forEach(b => { b.x += dx; b.y += dy; });
+    }
+
+    base.forEach((it, i) => {
+        const c = caixas[i];
+        const p = posicoes[i];
+        let el = nuvemElementos.get(it.chave);
+        const novo = !el;
+
+        if (novo) {
+            el = document.createElement("span");
+            el.className = `nuvem-palavra nova ${corNuvem(it.chave)}`;
+            el.dataset.chave = it.chave;
+            el.addEventListener("click", () => ocultarPalavraNuvem(el.dataset.chave));
+            el.addEventListener("animationend", () => el.classList.remove("nova"), { once: true });
+            nuvemElementos.set(it.chave, el);
+        }
+
+        el.textContent = it.exibicao; // textContent: nunca interpreta HTML
+        el.title = `${it.total} ${it.total === 1 ? 'menção' : 'menções'} · clique para ocultar`;
+        el.style.setProperty("--rot", it.vertical ? "-90deg" : "0deg");
+        el.style.fontSize = `${c.px.toFixed(1)}px`;
+
+        if (p) {
+            // A rotação é feita pelo centro, então alinhamos o centro do texto ao centro da caixa
+            const centroX = p.x + p.w / 2;
+            const centroY = p.y + p.h / 2;
+            el.style.left = `${(centroX - c.wTexto / 2).toFixed(1)}px`;
+            el.style.top = `${(centroY - c.hTexto / 2).toFixed(1)}px`;
+            el.classList.remove("fora");
+        } else {
+            el.classList.add("fora"); // não coube no quadro (casos extremos, com muitas palavras)
+        }
+
+        // Estilos definidos antes de entrar na tela: palavra nova surge no lugar certo, sem "voar" do canto
+        if (novo) container.appendChild(el);
+    });
+}
+
+async function ocultarPalavraNuvem(chave) {
+    const pergunta = perguntaNuvemAtual();
+    if (!pergunta || !salaAtiva) return;
+
+    const ids = [...palavrasNuvem.values()]
+        .filter(r => !r.oculta && chaveNuvem(r.texto) === chave)
+        .map(r => r.id);
+    if (ids.length === 0) return;
+
+    const { error } = await supabase
+        .from("quiz_nuvem_respostas")
+        .update({ oculta: true })
+        .in("id", ids);
+
+    if (error) {
+        toast("Não foi possível ocultar a palavra.", "error");
+        return;
+    }
+
+    chavesNuvemBloqueadas.add(chave);
+    ids.forEach(id => { const r = palavrasNuvem.get(id); if (r) r.oculta = true; });
+    agendarRenderNuvem();
+}
+
+async function restaurarPalavrasOcultas() {
+    const pergunta = perguntaNuvemAtual();
+    if (!pergunta || !salaAtiva) return;
+
+    const { error } = await supabase
+        .from("quiz_nuvem_respostas")
+        .update({ oculta: false })
+        .eq("sala_id", salaAtiva.id)
+        .eq("pergunta_id", pergunta.id)
+        .eq("oculta", true);
+
+    if (error) {
+        toast("Não foi possível restaurar as palavras.", "error");
+        return;
+    }
+
+    chavesNuvemBloqueadas.clear();
+    palavrasNuvem.forEach(r => { r.oculta = false; });
+    agendarRenderNuvem();
+    toast("Palavras restauradas.");
+}
+
+async function encerrarNuvem() {
+    const pergunta = perguntaNuvemAtual();
+    if (!pergunta || fasePergunta !== 'nuvem') return;
+
+    fasePergunta = 'nuvem_resultado';
+    if (nuvemPollInterval) { clearInterval(nuvemPollInterval); nuvemPollInterval = null; }
+
+    const btnEncerrar = document.getElementById("btn-encerrar-nuvem");
+    btnEncerrar.disabled = true;
+
+    if (realtimeChannel) {
+        realtimeChannel.send({
+            type: 'broadcast',
+            event: 'mudar_status',
+            payload: { status: 'nuvem_resultado', perguntaId: pergunta.id }
+        });
+    }
+
+    await supabase.from("quiz_salas").update({ status: 'nuvem_resultado' }).eq("id", salaAtiva.id);
+
+    // Dá tempo para envios que estavam a caminho e busca a lista final
+    await new Promise(r => setTimeout(r, 400));
+    await buscarPalavrasNuvemBanco();
+
+    // Recria a nuvem já organizada (mais citadas ao centro), num único "revelar"
+    nuvemElementos.forEach(el => el.remove());
+    nuvemElementos.clear();
+    renderizarNuvem();
+
+    const badge = document.getElementById("nuvem-fase-badge");
+    badge.textContent = "✔ Respostas encerradas";
+    badge.className = "px-3 py-1 rounded-full text-xs font-black bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30";
+
+    btnEncerrar.disabled = false;
+    btnEncerrar.classList.add("hidden");
+
+    const isUltima = indicePerguntaAtual + 1 >= perguntasDaPartida.length;
+    document.getElementById("btn-nuvem-proxima-txt").textContent = isUltima ? "Finalizar atividade" : "Próxima pergunta";
+    document.getElementById("btn-nuvem-proxima").classList.remove("hidden");
 }
