@@ -19,10 +19,17 @@ let promiseEnvioResposta = null;    // Garante que o RPC termine antes de exibir
 let realtimeChannel = null;
 let alunoTimerInterval = null;
 
+// Nuvem de palavras
+let palavrasEnviadasNuvem = [];
+let maxPalavrasNuvem = 1;
+let nuvemAberta = false;
+let enviandoPalavra = false;
+
 const telas = {
     login: document.getElementById("tela-login"),
     espera: document.getElementById("tela-espera"),
     pergunta: document.getElementById("tela-pergunta"),
+    nuvem: document.getElementById("tela-nuvem"),
     enviado: document.getElementById("tela-enviado"),
     feedback: document.getElementById("tela-feedback"),
     final: document.getElementById("tela-final")
@@ -43,6 +50,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     restaurarSessaoLocal();
     document.getElementById("form-entrar").addEventListener("submit", handleEntrarSala);
+    document.getElementById("form-nuvem").addEventListener("submit", enviarPalavraNuvem);
+    document.getElementById("input-palavra").addEventListener("input", (e) => {
+        document.getElementById("nuvem-caracteres").textContent = `${e.target.value.length}/25`;
+    });
 });
 
 function trocarTela(nomeTela) {
@@ -140,10 +151,10 @@ function conectarRealtime() {
     realtimeChannel = supabaseClient
         .channel(`quiz_sala_${salaAtual.id}`)
         .on('broadcast', { event: 'mudar_status' }, (payload) => {
-            const { status, perguntaId, enunciado, tempo } = payload.payload;
+            const { status, perguntaId, enunciado, tempo, maxPalavras } = payload.payload;
             salaAtual.status = status;
             salaAtual.pergunta_atual_id = perguntaId;
-            avaliarEstadoSala(status, perguntaId, enunciado, tempo);
+            avaliarEstadoSala(status, perguntaId, enunciado, tempo, maxPalavras);
         })
         .on('postgres_changes', {
             event: 'UPDATE',
@@ -225,7 +236,7 @@ function iniciarTimerAluno(segundosTotais, temaCor) {
     }, 30);
 }
 
-async function avaliarEstadoSala(status, perguntaId, enunciadoBroadcast = null, tempoBroadcast = null) {
+async function avaliarEstadoSala(status, perguntaId, enunciadoBroadcast = null, tempoBroadcast = null, maxPalavrasBroadcast = null) {
     // Se o professor clicou em "Encerrar Partida", derruba o aluno na hora
     if (status === 'encerrado') {
         derrubarParticipante("A partida foi encerrada pelo instrutor.");
@@ -307,6 +318,13 @@ async function avaliarEstadoSala(status, perguntaId, enunciadoBroadcast = null, 
         return;
     }
 
+    // NUVEM DE PALAVRAS: coletando ('nuvem') ou encerrada ('nuvem_resultado')
+    if (status === 'nuvem' || status === 'nuvem_resultado') {
+        if (alunoTimerInterval) clearInterval(alunoTimerInterval);
+        await abrirTelaNuvem(status, perguntaId, enunciadoBroadcast, maxPalavrasBroadcast);
+        return;
+    }
+
     if (status === 'placar') {
         if (alunoTimerInterval) clearInterval(alunoTimerInterval);
         await exibirFeedbackRodada();
@@ -337,7 +355,7 @@ async function carregarDadosPergunta(perguntaId) {
         const { data: perg, error } = await supabaseClient
             .from("quiz_perguntas")
             .select(`
-                id, enunciado, justificativa, tempo_segundos, tempo_leitura_segundos,
+                id, tipo, max_palavras, enunciado, justificativa, tempo_segundos, tempo_leitura_segundos,
                 quiz_opcoes (id, texto, is_correta, cor_indice)
             `)
             .eq("id", perguntaId)
@@ -508,7 +526,7 @@ async function baixarGabaritoPDF() {
         // 2. Busca todas as perguntas, alternativas e justificativas do quiz
         const { data: perguntas } = await supabaseClient
             .from("quiz_perguntas")
-            .select("id, ordem, enunciado, justificativa, quiz_opcoes (id, texto, is_correta, cor_indice)")
+            .select("id, ordem, tipo, enunciado, justificativa, quiz_opcoes (id, texto, is_correta, cor_indice)")
             .eq("questionario_id", questionarioId)
             .order("ordem", { ascending: true });
 
@@ -522,6 +540,19 @@ async function baixarGabaritoPDF() {
         const mapaRespostas = {};
         (minhasRespostas || []).forEach(r => { mapaRespostas[r.pergunta_id] = r; });
 
+        // 3b. Palavras enviadas nas nuvens
+        const { data: minhasPalavras } = await supabaseClient
+            .from("quiz_nuvem_respostas")
+            .select("pergunta_id, texto, created_at")
+            .eq("sala_id", salaAtual.id)
+            .eq("participante_id", participante.id)
+            .order("created_at", { ascending: true });
+
+        const mapaPalavras = {};
+        (minhasPalavras || []).forEach(r => {
+            (mapaPalavras[r.pergunta_id] = mapaPalavras[r.pergunta_id] || []).push(r.texto);
+        });
+
         // 4. Monta o documento PDF com jsPDF
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF({ unit: "mm", format: "a4" });
@@ -532,8 +563,8 @@ async function baixarGabaritoPDF() {
         // Cabeçalho do Relatório
         doc.setFont("helvetica", "bold");
         doc.setFontSize(14);
-        doc.setTextColor(88, 28, 135); // Roxo Quiz Arena
-        const tituloQuiz = quizInfo?.titulo || "Relatório de Desempenho - Quiz Arena";
+        doc.setTextColor(88, 28, 135); // Roxo Sala Ativa
+        const tituloQuiz = quizInfo?.titulo || "Relatório de Desempenho - Sala Ativa";
         const linhasTitulo = doc.splitTextToSize(tituloQuiz, larguraUtil);
         doc.text(linhasTitulo, margem, y);
         y += linhasTitulo.length * 6 + 2;
@@ -551,6 +582,41 @@ async function baixarGabaritoPDF() {
 
         // Lista cada questão
         (perguntas || []).forEach((p, idx) => {
+            // Pergunta do tipo nuvem: lista apenas as palavras enviadas
+            if (p.tipo === 'nuvem') {
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(11);
+                const linhasEnunc = doc.splitTextToSize(`${idx + 1}. ${p.enunciado} (nuvem de palavras)`, larguraUtil);
+                const palavras = mapaPalavras[p.id] || [];
+                const txtPalavras = palavras.length > 0
+                    ? `Suas palavras: ${palavras.join(", ")}`
+                    : "Você não enviou palavras nesta nuvem.";
+                doc.setFontSize(9.5);
+                const linhasPal = doc.splitTextToSize(txtPalavras, larguraUtil - 4);
+
+                if (y + (linhasEnunc.length * 5) + (linhasPal.length * 5) + 12 > 280) {
+                    doc.addPage();
+                    y = 20;
+                }
+
+                doc.setFontSize(11);
+                doc.setTextColor(15, 23, 42);
+                doc.text(linhasEnunc, margem, y);
+                y += linhasEnunc.length * 5 + 1.5;
+
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(9.5);
+                doc.setTextColor(2, 132, 199); // Azul nuvem
+                doc.text(linhasPal, margem + 2, y);
+                y += linhasPal.length * 4.8 + 1;
+
+                y += 4;
+                doc.setDrawColor(241, 245, 249);
+                doc.line(margem, y, margem + larguraUtil, y);
+                y += 6;
+                return;
+            }
+
             const respAluno = mapaRespostas[p.id];
             const opcoes = p.quiz_opcoes || [];
             const opcaoMarcada = opcoes.find(o => o.id === respAluno?.opcao_id);
@@ -652,6 +718,8 @@ function derrubarParticipante(mensagem = "A sala foi encerrada.") {
     perguntaAtualId = null;
     jaRespondeuNestaRodada = false;
     ultimoGanhoRodada = 0;
+    palavrasEnviadasNuvem = [];
+    nuvemAberta = false;
 
     // 2. Esconde o crachá do topo (Nome e Pontos)
     document.getElementById("header-user-info").classList.add("hidden");
@@ -709,4 +777,192 @@ async function restaurarSessaoLocal() {
 function limparSessaoLocal() {
     sessionStorage.removeItem("quiz_aluno_sala");
     sessionStorage.removeItem("quiz_aluno_part");
+}
+
+// ========================================================
+// NUVEM DE PALAVRAS (CELULAR)
+// ========================================================
+function normalizarPalavraNuvem(t) {
+    return String(t || "").trim().toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, " ");
+}
+
+async function abrirTelaNuvem(status, perguntaId, enunciadoBroadcast, maxPalavrasBroadcast) {
+    const mudouPergunta = perguntaId !== perguntaAtualId;
+    if (mudouPergunta) {
+        perguntaAtualId = perguntaId;
+        palavrasEnviadasNuvem = [];
+        jaRespondeuNestaRodada = false;
+        ultimoGanhoRodada = 0;
+        promiseEnvioResposta = null;
+    }
+
+    trocarTela("nuvem");
+
+    const elEnunciado = document.getElementById("nuvem-aluno-enunciado");
+    if (enunciadoBroadcast) elEnunciado.textContent = enunciadoBroadcast;
+
+    await carregarDadosPergunta(perguntaId);
+    const dados = dadosPerguntaCache[perguntaId];
+    if (dados) elEnunciado.textContent = dados.enunciado;
+
+    maxPalavrasNuvem = maxPalavrasBroadcast || dados?.max_palavras || 1;
+
+    // Ao recarregar a página no meio da nuvem, recupera o que já foi enviado
+    if (mudouPergunta) await carregarMinhasPalavrasNuvem(perguntaId);
+
+    const estavaAberta = nuvemAberta;
+    nuvemAberta = status === 'nuvem';
+    renderizarEstadoNuvem();
+
+    if (nuvemAberta && (mudouPergunta || !estavaAberta)) {
+        if (navigator.vibrate) navigator.vibrate(80);
+        if (palavrasEnviadasNuvem.length < maxPalavrasNuvem) {
+            setTimeout(() => document.getElementById("input-palavra").focus(), 200);
+        }
+    }
+}
+
+async function carregarMinhasPalavrasNuvem(perguntaId) {
+    if (!salaAtual || !participante || !perguntaId) return;
+    const { data } = await supabaseClient
+        .from("quiz_nuvem_respostas")
+        .select("texto, created_at")
+        .eq("sala_id", salaAtual.id)
+        .eq("pergunta_id", perguntaId)
+        .eq("participante_id", participante.id)
+        .order("created_at", { ascending: true });
+
+    if (data) palavrasEnviadasNuvem = data.map(r => r.texto);
+}
+
+function renderizarEstadoNuvem() {
+    const enviadas = palavrasEnviadasNuvem.length;
+    const form = document.getElementById("form-nuvem");
+    const concluido = document.getElementById("nuvem-aluno-concluido");
+    const titulo = document.getElementById("nuvem-aluno-concluido-titulo");
+    const txt = document.getElementById("nuvem-aluno-concluido-txt");
+    const badge = document.getElementById("nuvem-aluno-badge");
+    const input = document.getElementById("input-palavra");
+    const btn = document.getElementById("btn-enviar-palavra");
+
+    document.getElementById("nuvem-aluno-contador").textContent = `${enviadas} de ${maxPalavrasNuvem}`;
+
+    // Chips com as palavras já enviadas (textContent, sem HTML)
+    const chips = document.getElementById("nuvem-aluno-chips");
+    chips.innerHTML = "";
+    if (enviadas === 0) {
+        const vazio = document.createElement("span");
+        vazio.className = "text-xs text-slate-500 italic";
+        vazio.textContent = "Nenhuma enviada ainda.";
+        chips.appendChild(vazio);
+    } else {
+        palavrasEnviadasNuvem.forEach(p => {
+            const chip = document.createElement("span");
+            chip.className = "px-3 py-1.5 rounded-xl bg-sky-500/15 border border-sky-500/30 text-sky-200 text-xs font-bold";
+            chip.textContent = p;
+            chips.appendChild(chip);
+        });
+    }
+
+    if (!nuvemAberta) {
+        form.classList.add("hidden");
+        concluido.classList.remove("hidden");
+        titulo.textContent = "Respostas encerradas";
+        txt.textContent = enviadas > 0 ? "Veja o resultado da nuvem no telão." : "O tempo acabou antes do seu envio. Veja o resultado no telão.";
+        badge.textContent = "✔ Nuvem encerrada";
+        badge.className = "text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+        return;
+    }
+
+    badge.textContent = "☁️ Nuvem de palavras";
+    badge.className = "text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30";
+
+    if (enviadas >= maxPalavrasNuvem) {
+        form.classList.add("hidden");
+        concluido.classList.remove("hidden");
+        titulo.textContent = maxPalavrasNuvem === 1 ? "Palavra enviada!" : "Tudo enviado!";
+        txt.textContent = "Acompanhe a nuvem crescer no telão.";
+        return;
+    }
+
+    form.classList.remove("hidden");
+    concluido.classList.add("hidden");
+    input.placeholder = enviadas === 0 ? "Digite uma palavra" : "Digite mais uma palavra";
+    btn.textContent = maxPalavrasNuvem > 1 ? `Enviar palavra (${enviadas + 1} de ${maxPalavrasNuvem})` : "Enviar palavra";
+}
+
+function mensagemErroNuvem(err) {
+    const msg = String(err?.message || "");
+    if (msg.includes("NUVEM_FECHADA")) return "As respostas desta nuvem já foram encerradas.";
+    if (msg.includes("LIMITE_ATINGIDO")) return "Você já enviou o máximo de palavras.";
+    if (msg.includes("PALAVRA_REPETIDA")) return "Você já enviou essa palavra.";
+    if (msg.includes("TEXTO_INVALIDO")) return "Use de 1 a 25 caracteres.";
+    return "Não foi possível enviar. Tente de novo.";
+}
+
+async function enviarPalavraNuvem(e) {
+    e.preventDefault();
+    if (enviandoPalavra || !nuvemAberta || !salaAtual || !participante || !perguntaAtualId) return;
+
+    const input = document.getElementById("input-palavra");
+    const btn = document.getElementById("btn-enviar-palavra");
+    const texto = input.value.trim().replace(/\s+/g, " ");
+
+    if (!texto) {
+        exibirToast("Digite uma palavra antes de enviar.");
+        return;
+    }
+    if (palavrasEnviadasNuvem.length >= maxPalavrasNuvem) return;
+    if (palavrasEnviadasNuvem.some(p => normalizarPalavraNuvem(p) === normalizarPalavraNuvem(texto))) {
+        exibirToast("Você já enviou essa palavra.");
+        return;
+    }
+
+    enviandoPalavra = true;
+    btn.disabled = true;
+    btn.textContent = "Enviando...";
+
+    try {
+        const { data, error } = await supabaseClient.rpc("submit_nuvem_palavra", {
+            p_sala_id: salaAtual.id,
+            p_participante_id: participante.id,
+            p_pergunta_id: perguntaAtualId,
+            p_texto: texto
+        });
+        if (error) throw error;
+
+        const linha = Array.isArray(data) ? data[0] : data;
+        palavrasEnviadasNuvem.push(linha?.texto || texto);
+        input.value = "";
+        document.getElementById("nuvem-caracteres").textContent = "0/25";
+        if (navigator.vibrate) navigator.vibrate(40);
+
+        // Aviso instantâneo ao telão (o banco também dispara via postgres_changes)
+        if (realtimeChannel && linha?.id) {
+            realtimeChannel.send({
+                type: 'broadcast',
+                event: 'nova_palavra',
+                payload: {
+                    id: linha.id,
+                    sala_id: salaAtual.id,
+                    pergunta_id: linha.pergunta_id,
+                    participante_id: participante.id,
+                    texto: linha.texto
+                }
+            });
+        }
+    } catch (err) {
+        console.warn("Erro ao enviar palavra:", err);
+        exibirToast(mensagemErroNuvem(err));
+        const msg = String(err?.message || "");
+        if (msg.includes("NUVEM_FECHADA")) nuvemAberta = false;
+        if (msg.includes("LIMITE_ATINGIDO")) await carregarMinhasPalavrasNuvem(perguntaAtualId);
+    } finally {
+        enviandoPalavra = false;
+        btn.disabled = false;
+        renderizarEstadoNuvem();
+        if (nuvemAberta && palavrasEnviadasNuvem.length < maxPalavrasNuvem) input.focus();
+    }
 }

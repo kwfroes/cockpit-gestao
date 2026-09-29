@@ -28,6 +28,47 @@
         ::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
         .dark ::-webkit-scrollbar-thumb { background-color: #334155; }
         .tabular-timer { font-variant-numeric: tabular-nums; }
+
+        /* Nuvem de palavras: cada palavra é posicionada em espiral pelo JS */
+        .nuvem-palavra {
+            position: absolute;
+            left: 0;
+            top: 0;
+            line-height: 1;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            padding: 0.04em 0.12em;
+            border-radius: 0.25em;
+            white-space: nowrap;
+            cursor: pointer;
+            transform: rotate(var(--rot, 0deg));
+            transition:
+                left 650ms cubic-bezier(0.2, 0.8, 0.2, 1),
+                top 650ms cubic-bezier(0.2, 0.8, 0.2, 1),
+                font-size 650ms cubic-bezier(0.2, 0.8, 0.2, 1),
+                transform 650ms cubic-bezier(0.2, 0.8, 0.2, 1),
+                opacity 250ms,
+                background-color 150ms;
+        }
+        .nuvem-palavra:hover { background-color: rgba(239, 68, 68, 0.12); text-decoration: line-through; text-decoration-color: rgba(239, 68, 68, 0.6); }
+        .nuvem-palavra.fora { opacity: 0; pointer-events: none; }
+        .nuvem-palavra.nova { animation: nuvemEntrada 550ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .nuvem-medidor {
+            visibility: hidden;
+            pointer-events: none;
+            transition: none !important;
+            animation: none !important;
+            transform: none !important;
+        }
+        @keyframes nuvemEntrada {
+            0%   { transform: rotate(var(--rot, 0deg)) scale(0.3); opacity: 0; }
+            60%  { transform: rotate(var(--rot, 0deg)) scale(1.12); opacity: 1; }
+            100% { transform: rotate(var(--rot, 0deg)) scale(1); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .nuvem-palavra { transition: opacity 150ms; }
+            .nuvem-palavra.nova { animation: none; }
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
@@ -41,7 +82,7 @@
                 ⚡
             </div>
             <div>
-                <h1 class="text-lg md:text-xl font-black text-slate-800 dark:text-white leading-tight">Quiz Arena</h1>
+                <h1 class="text-lg md:text-xl font-black text-slate-800 dark:text-white leading-tight">Sala Ativa</h1>
                 <p id="subtitulo-header" class="text-xs text-slate-400">Painel do Instrutor</p>
             </div>
         </div>
@@ -177,6 +218,55 @@
                 </div>
             </div>
 
+            <!-- FASE B2: NUVEM DE PALAVRAS -->
+            <div id="arena-nuvem" class="hidden w-full max-w-6xl flex flex-col space-y-5">
+                <div class="flex flex-wrap justify-between items-center gap-4 text-sm font-bold uppercase tracking-widest">
+                    <div class="flex items-center gap-3">
+                        <span id="nuvem-numero-badge" class="text-slate-400">Questão 1 de 5</span>
+                        <span id="nuvem-fase-badge" class="px-3 py-1 rounded-full text-xs font-black bg-sky-500/15 text-sky-600 dark:text-sky-400 border border-sky-500/30">
+                            ☁️ Recebendo palavras
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <div class="flex items-center gap-2">
+                            <span class="text-slate-400 text-xs">PALAVRAS:</span>
+                            <strong id="nuvem-total-palavras" class="text-sky-600 dark:text-sky-400 text-2xl font-black">0</strong>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-slate-400 text-xs">PARTICIPARAM:</span>
+                            <strong id="nuvem-total-participantes" class="text-emerald-500 text-2xl font-black">0</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-8 py-6 rounded-3xl shadow-xl text-center">
+                    <h3 id="nuvem-enunciado" class="text-2xl md:text-3xl font-black text-slate-800 dark:text-white leading-snug">--</h3>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-xl p-4 md:p-6 overflow-hidden">
+                    <div id="nuvem-container" class="relative w-full" style="height: clamp(340px, 54vh, 680px);">
+                        <p id="nuvem-vazia" class="absolute inset-0 flex items-center justify-center text-sm text-slate-400 italic">As palavras aparecem aqui assim que os participantes enviarem.</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap justify-between items-center gap-3">
+                    <div class="flex items-center gap-3 text-xs text-slate-400">
+                        <span id="nuvem-dica-moderacao">Clique numa palavra para ocultá-la do telão.</span>
+                        <button type="button" id="btn-restaurar-ocultas" onclick="restaurarPalavrasOcultas()" class="hidden font-bold text-purple-600 dark:text-purple-400 hover:underline">
+                            Restaurar ocultas (<span id="nuvem-qtd-ocultas">0</span>)
+                        </button>
+                    </div>
+                    <div class="flex gap-3">
+                        <button type="button" id="btn-encerrar-nuvem" onclick="encerrarNuvem()" class="bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-black text-sm px-6 py-3 rounded-xl shadow-lg transition-all">
+                            Encerrar respostas
+                        </button>
+                        <button type="button" id="btn-nuvem-proxima" onclick="avancarRodada()" class="hidden bg-purple-600 hover:bg-purple-700 text-white font-black text-sm px-6 py-3 rounded-xl shadow-lg shadow-purple-600/30 transition-all">
+                            <span id="btn-nuvem-proxima-txt">Próxima pergunta</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- FASE C: RESULTADO DA PERGUNTA (RESPOSTA CERTA + VOTOS) -->
             <div id="arena-resultado" class="hidden w-full max-w-4xl flex flex-col space-y-6 text-center">
                 <div class="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl">
@@ -214,8 +304,8 @@
             <!-- FASE E: PÓDIO FINAL -->
             <div id="arena-podio" class="hidden w-full max-w-4xl flex flex-col items-center space-y-8 text-center">
                 <div>
-                    <span class="text-xs font-black uppercase tracking-widest text-yellow-500">Grande Final</span>
-                    <h2 class="text-4xl font-black text-slate-800 dark:text-white">Pódio dos Campeões 🎉</h2>
+                    <span id="podio-eyebrow" class="text-xs font-black uppercase tracking-widest text-yellow-500">Grande Final</span>
+                    <h2 id="podio-titulo" class="text-4xl font-black text-slate-800 dark:text-white">Pódio dos Campeões 🎉</h2>
                 </div>
 
                 <div id="podio-steps" class="flex items-end justify-center gap-3 w-full max-w-xl h-64 pt-8">
