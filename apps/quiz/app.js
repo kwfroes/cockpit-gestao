@@ -14,6 +14,7 @@ let respostasRecebidas = [];
 let timerInterval = null;
 let realtimeChannel = null;
 let lobbyPollInterval = null;
+let quizModoAtual = 'pontuado'; // modo do quiz da sala em andamento: 'pontuado' | 'opiniao'
 let fasePergunta = 'idle'; // 'leitura' | 'valendo' | 'encerrada' | 'nuvem' | 'nuvem_resultado'
 
 // Nuvem de palavras
@@ -155,7 +156,7 @@ async function carregarQuizzes() {
         const { data, error } = await supabase
             .from("quiz_questionarios")
             .select(`
-                id, titulo, descricao, created_at,
+                id, titulo, descricao, created_at, modo,
                 quiz_perguntas (id, tipo),
                 quiz_salas (
                     id, codigo, status, created_at,
@@ -186,6 +187,8 @@ function renderizarDashboardQuizzes() {
         const qtdPerguntas = q.quiz_perguntas ? q.quiz_perguntas.length : 0;
         const qtdNuvens = (q.quiz_perguntas || []).filter(p => p.tipo === 'nuvem').length;
         const quizEhSoNuvem = qtdPerguntas > 0 && qtdNuvens === qtdPerguntas;
+        // "Só opinião" quando o instrutor marcou explicitamente OU quando o quiz é 100% nuvem (fallback para quizzes antigos)
+        const ehOpiniao = q.modo === 'opiniao' || quizEhSoNuvem;
 
         // Filtra as partidas que tiveram participantes e ordena da mais recente para a mais antiga
         const salasComJogadores = (q.quiz_salas || [])
@@ -200,7 +203,7 @@ function renderizarDashboardQuizzes() {
                 <details class="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800/80 text-xs group/hist">
                     <summary class="cursor-pointer font-bold text-slate-500 dark:text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 flex items-center justify-between select-none list-none">
                         <span class="flex items-center gap-1.5">
-                            ${quizEhSoNuvem ? '☁️' : '🏆'} <span>${quizEhSoNuvem ? 'Palavra mais citada por partida' : 'Vencedores por partida'} (${qtdUsos})</span>
+                            ${ehOpiniao ? '☁️' : '🏆'} <span>${ehOpiniao ? 'Palavra mais citada por partida' : 'Vencedores por partida'} (${qtdUsos})</span>
                         </span>
                         <span class="text-[10px] transition-transform group-open/hist:rotate-180">▼</span>
                     </summary>
@@ -209,7 +212,7 @@ function renderizarDashboardQuizzes() {
                             const dataPartida = new Date(s.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
 
                             let linhaDestaque;
-                            if (quizEhSoNuvem) {
+                            if (ehOpiniao) {
                                 const top = palavraMaisCitadaHistorico(s.quiz_nuvem_respostas || []);
                                 linhaDestaque = top
                                     ? `☁️ ${escapeHtml(top.exibicao)} <strong class="text-sky-600 dark:text-sky-400 font-mono">(${top.total}x)</strong>`
@@ -287,6 +290,7 @@ function abrirModalNovoQuiz() {
 
     document.getElementById("quiz-titulo-input").value = "";
     document.getElementById("quiz-desc-input").value = "";
+    document.getElementById("quiz-modo-pontuado").checked = true;
     document.getElementById("container-perguntas-builder").innerHTML = "";
     adicionarBlocoPergunta();
     document.getElementById("modal-quiz").classList.remove("hidden");
@@ -300,7 +304,7 @@ async function abrirModalEditarQuiz(quizId) {
         const { data: quiz, error } = await supabase
             .from("quiz_questionarios")
             .select(`
-                id, titulo, descricao,
+                id, titulo, descricao, modo,
                 quiz_perguntas (
                     id, ordem, tipo, max_palavras, enunciado, justificativa, tempo_segundos, tempo_leitura_segundos,
                     quiz_opcoes (id, texto, is_correta, cor_indice)
@@ -320,6 +324,7 @@ async function abrirModalEditarQuiz(quizId) {
 
         document.getElementById("quiz-titulo-input").value = quiz.titulo || "";
         document.getElementById("quiz-desc-input").value = quiz.descricao || "";
+        document.getElementById(quiz.modo === 'opiniao' ? "quiz-modo-opiniao" : "quiz-modo-pontuado").checked = true;
 
         const container = document.getElementById("container-perguntas-builder");
         container.innerHTML = "";
@@ -469,6 +474,7 @@ function removerBlocoPergunta(btnEl) {
 async function salvarNovoQuiz() {
     const titulo = document.getElementById("quiz-titulo-input").value.trim();
     const descricao = document.getElementById("quiz-desc-input").value.trim();
+    const modo = document.getElementById("quiz-modo-opiniao").checked ? 'opiniao' : 'pontuado';
     const btn = document.getElementById("btn-salvar-quiz");
 
     if (!titulo) {
@@ -494,7 +500,7 @@ async function salvarNovoQuiz() {
             // 1. Atualiza título e descrição do questionário
             const { error: errUpd } = await supabase
                 .from("quiz_questionarios")
-                .update({ titulo, descricao })
+                .update({ titulo, descricao, modo })
                 .eq("id", quizEmEdicaoId);
 
             if (errUpd) throw errUpd;
@@ -517,7 +523,7 @@ async function salvarNovoQuiz() {
             // MODO CRIAÇÃO:
             const { data: quizCriado, error: errIns } = await supabase
                 .from("quiz_questionarios")
-                .insert([{ host_id: user.id, titulo, descricao }])
+                .insert([{ host_id: user.id, titulo, descricao, modo }])
                 .select()
                 .single();
 
@@ -647,6 +653,13 @@ async function criarSalaAoVivo(quizId) {
     try {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
+
+        const { data: quizInfo } = await supabase
+            .from("quiz_questionarios")
+            .select("modo")
+            .eq("id", quizId)
+            .maybeSingle();
+        quizModoAtual = quizInfo?.modo === 'opiniao' ? 'opiniao' : 'pontuado';
 
         const { data: perguntas } = await supabase
             .from("quiz_perguntas")
@@ -789,6 +802,7 @@ function registrarVotoMemoria(voto) {
     if (!respostasRecebidas.some(r => r.participante_id === voto.participante_id)) {
         respostasRecebidas.push(voto);
         document.getElementById("pergunta-respostas-count").textContent = respostasRecebidas.length;
+        renderizarQuemRespondeu();
 
         if (fasePergunta === 'valendo' && participantesConectados.length > 0 && respostasRecebidas.length >= participantesConectados.length) {
             finalizarTempoPergunta();
@@ -796,7 +810,30 @@ function registrarVotoMemoria(voto) {
     }
 }
 
+// Lista, na fase de pergunta, quem já respondeu e quem ainda está pendente
+function renderizarQuemRespondeu() {
+    const lista = document.getElementById("lista-quem-respondeu");
+    if (!lista) return;
+
+    const respondidos = new Set(respostasRecebidas.map(r => r.participante_id));
+    if (participantesConectados.length === 0) {
+        lista.innerHTML = `<span class="text-[11px] text-slate-400 italic">Nenhum participante conectado.</span>`;
+        return;
+    }
+
+    lista.innerHTML = participantesConectados.map(p => {
+        const respondeu = respondidos.has(p.id);
+        const estilo = respondeu
+            ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800'
+            : 'bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-200 dark:border-slate-700';
+        return `<span class="px-2.5 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1 border ${estilo}">
+            ${respondeu ? '✔' : '⏳'} ${escapeHtml(p.apelido)}
+        </span>`;
+    }).join('');
+}
+
 function atualizarLobbyParticipantes() {
+    renderizarQuemRespondeu();
     const grid = document.getElementById("lobby-participantes-grid");
     document.getElementById("lobby-count").textContent = participantesConectados.length;
     document.getElementById("btn-iniciar-jogo").disabled = participantesConectados.length === 0;
@@ -829,6 +866,7 @@ async function dispararPerguntaAtual() {
     fasePergunta = 'leitura';
     respostasRecebidas = [];
     document.getElementById("pergunta-respostas-count").textContent = "0";
+    renderizarQuemRespondeu();
 
     const tempoLeitura = pergunta.tempo_leitura_segundos || 5;
 
@@ -1122,7 +1160,7 @@ async function exibirPodioFinal() {
     document.getElementById("arena-podio").classList.remove("hidden");
 
     // Partida só com nuvens de palavras: não há pontuação para premiar
-    const temPontuacao = perguntasDaPartida.some(p => p.tipo !== 'nuvem');
+    const temPontuacao = quizModoAtual === 'pontuado' && perguntasDaPartida.some(p => p.tipo !== 'nuvem');
     document.getElementById("podio-steps").classList.toggle("hidden", !temPontuacao);
     document.getElementById("podio-eyebrow").textContent = temPontuacao ? "Grande Final" : "Atividade concluída";
     document.getElementById("podio-titulo").textContent = temPontuacao ? "Pódio dos Campeões 🎉" : "Obrigado pela participação ☁️";
@@ -1602,6 +1640,38 @@ function renderizarNuvem() {
         // Estilos definidos antes de entrar na tela: palavra nova surge no lugar certo, sem "voar" do canto
         if (novo) container.appendChild(el);
     });
+
+    renderizarProgressoNuvem();
+}
+
+// Mostra, por participante, quantas palavras já enviou em relação ao limite da pergunta
+function renderizarProgressoNuvem() {
+    const container = document.getElementById("lista-progresso-nuvem");
+    if (!container) return;
+
+    const pergunta = perguntaNuvemAtual();
+    const max = pergunta?.max_palavras || 1;
+
+    if (participantesConectados.length === 0) {
+        container.innerHTML = `<span class="text-[11px] text-slate-400 italic">Nenhum participante conectado.</span>`;
+        return;
+    }
+
+    const porParticipante = new Map();
+    palavrasNuvem.forEach(r => {
+        porParticipante.set(r.participante_id, (porParticipante.get(r.participante_id) || 0) + 1);
+    });
+
+    container.innerHTML = participantesConectados.map(p => {
+        const qtd = porParticipante.get(p.id) || 0;
+        const completo = qtd >= max;
+        const estilo = completo
+            ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800'
+            : 'bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-200 dark:border-slate-700';
+        return `<span class="px-2.5 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1 border ${estilo}">
+            ${completo ? '✔' : '⏳'} ${escapeHtml(p.apelido)} <span class="opacity-70">${qtd}/${max}</span>
+        </span>`;
+    }).join('');
 }
 
 async function ocultarPalavraNuvem(chave) {

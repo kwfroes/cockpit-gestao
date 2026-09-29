@@ -341,7 +341,7 @@ const app = {
             
             if (role === 'admin') {
                 // Se virar Admin (ou continuar Admin), recebe o pacote completo
-                allowed_apps = ['#home', '#dashboard', '#gerador', '#contratos', '#legislacao', '#qualificacao', '#regmap', '#demandas', '#conversor', '#usuarios', '#vistoria'];
+                allowed_apps = ['#home', '#dashboard', '#gerador', '#contratos', '#legislacao', '#qualificacao', '#regmap', '#demandas', '#conversor', '#usuarios', '#vistoria', '#quiz'];
             } else {
                 // Se for User (ou rebaixado para User), pega os marcados e mescla garantindo a Home
                 const checkedBoxes = Array.from(document.querySelectorAll('input[name="app_permission"]:checked'));
@@ -566,7 +566,7 @@ const app = {
                 // Ler apps permitidos baseados nos checkboxes
                 let allowed_apps = ["#home", "#demandas"];
                 if (role === 'admin') {
-                    allowed_apps = ['#home', '#dashboard', '#gerador', '#contratos', '#legislacao', '#qualificacao', '#regmap', '#demandas', '#conversor', '#usuarios', '#vistoria'];
+                    allowed_apps = ['#home', '#dashboard', '#gerador', '#contratos', '#legislacao', '#qualificacao', '#regmap', '#demandas', '#conversor', '#usuarios', '#vistoria', ];
                 } else {
                     const checkedBoxes = Array.from(document.querySelectorAll('input[name="new_app_permission"]:checked'));
                     const customApps = checkedBoxes.map(cb => cb.value);
