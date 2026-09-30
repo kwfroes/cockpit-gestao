@@ -69,6 +69,14 @@
             .nuvem-palavra { transition: opacity 150ms; }
             .nuvem-palavra.nova { animation: none; }
         }
+        /* Crachás do lobby (espiral), mesmo princípio de transição suave da nuvem de palavras */
+        #lobby-participantes-grid > div {
+            position: absolute;
+            transition: left 550ms cubic-bezier(0.2, 0.8, 0.2, 1), top 550ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 300ms;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            #lobby-participantes-grid > div { transition: opacity 200ms; }
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
@@ -82,7 +90,7 @@
                 ⚡
             </div>
             <div>
-                <h1 class="text-lg md:text-xl font-black text-slate-800 dark:text-white leading-tight">Quiz Arena</h1>
+                <h1 class="text-lg md:text-xl font-black text-slate-800 dark:text-white leading-tight">Sala Ativa</h1>
                 <p id="subtitulo-header" class="text-xs text-slate-400">Painel do Instrutor</p>
             </div>
         </div>
@@ -161,8 +169,8 @@
                         </button>
                     </div>
 
-                    <div id="lobby-participantes-grid" class="flex flex-wrap gap-2 justify-center max-h-48 overflow-y-auto p-2">
-                        <p class="text-xs text-slate-400 italic">Aguardando participantes entrarem...</p>
+                    <div id="lobby-participantes-grid" class="relative w-full" style="height: clamp(180px, 30vh, 320px);">
+                        <p id="lobby-vazio" class="absolute inset-0 flex items-center justify-center text-xs text-slate-400 italic">Aguardando participantes entrarem...</p>
                     </div>
                 </div>
             </div>
@@ -283,6 +291,49 @@
                 </div>
             </div>
 
+            <!-- FASE B3: OPINIÃO EM TEXTO (ANÔNIMA NO TELÃO) -->
+            <div id="arena-texto" class="hidden w-full max-w-5xl flex flex-col space-y-5">
+                <div class="w-full bg-slate-200 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden shadow-inner">
+                    <div id="texto-timer-bar" class="bg-violet-500 h-full w-full"></div>
+                </div>
+
+                <div class="flex flex-wrap justify-between items-center gap-4 text-sm font-bold uppercase tracking-widest">
+                    <div class="flex items-center gap-3">
+                        <span id="texto-numero-badge" class="text-slate-400">Questão 1 de 5</span>
+                        <span id="texto-fase-badge" class="px-3 py-1 rounded-full text-xs font-black bg-violet-500/15 text-violet-600 dark:text-violet-400 border border-violet-500/30">
+                            💬 Recebendo respostas
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <strong id="texto-timer-txt" class="tabular-timer font-mono text-2xl font-black text-violet-500">00.00s</strong>
+                        <div class="flex items-center gap-2">
+                            <span class="text-slate-400 text-xs">RESPOSTAS:</span>
+                            <strong id="texto-total-respostas" class="text-emerald-500 text-2xl font-black">0</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-8 py-6 rounded-3xl shadow-xl text-center">
+                    <h3 id="texto-enunciado" class="text-2xl md:text-3xl font-black text-slate-800 dark:text-white leading-snug">--</h3>
+                </div>
+
+                <div id="texto-aviso-anonimo" class="flex items-center gap-3 p-4 rounded-2xl border-2 border-dashed border-violet-300 dark:border-violet-800/60 bg-violet-50/50 dark:bg-violet-950/20 text-xs text-violet-700 dark:text-violet-300">
+                    <span class="text-xl shrink-0">🕶️</span>
+                    <span>As respostas aparecem abaixo <strong>sem identificar quem escreveu</strong>, assim que o tempo encerrar. Ninguém na sala verá seu nome vinculado à resposta.</span>
+                </div>
+
+                <div id="texto-resultado-container" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[420px] overflow-y-auto p-1"></div>
+
+                <div class="flex justify-end gap-3">
+                    <button type="button" id="btn-encerrar-texto" onclick="encerrarTexto()" class="bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-black text-sm px-6 py-3 rounded-xl shadow-lg transition-all">
+                        Encerrar respostas
+                    </button>
+                    <button type="button" id="btn-texto-proxima" onclick="avancarRodada()" class="hidden bg-purple-600 hover:bg-purple-700 text-white font-black text-sm px-6 py-3 rounded-xl shadow-lg shadow-purple-600/30 transition-all">
+                        <span id="btn-texto-proxima-txt">Próxima pergunta</span>
+                    </button>
+                </div>
+            </div>
+
             <!-- FASE C: RESULTADO DA PERGUNTA (RESPOSTA CERTA + VOTOS) -->
             <div id="arena-resultado" class="hidden w-full max-w-4xl flex flex-col space-y-6 text-center">
                 <div class="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl">
@@ -327,18 +378,21 @@
                 <div id="podio-steps" class="flex items-end justify-center gap-3 w-full max-w-xl h-64 pt-8">
                     <div id="podio-2" class="flex-1 flex flex-col items-center">
                         <div class="text-2xl mb-1">🥈</div>
+                        <div id="podio-avatar-2" class="mb-1"></div>
                         <p id="podio-nome-2" class="text-xs font-bold truncate max-w-[100px] text-slate-700 dark:text-slate-300">--</p>
                         <p id="podio-pontos-2" class="text-[10px] text-slate-400 font-mono mb-2">0 pts</p>
                         <div class="w-full bg-slate-300 dark:bg-slate-700 rounded-t-2xl h-36 flex items-center justify-center font-black text-2xl text-slate-500 shadow-md">2</div>
                     </div>
                     <div id="podio-1" class="flex-1 flex flex-col items-center">
                         <div class="text-4xl mb-1 animate-bounce">👑</div>
+                        <div id="podio-avatar-1" class="mb-1"></div>
                         <p id="podio-nome-1" class="text-sm font-black truncate max-w-[120px] text-purple-600 dark:text-purple-400">--</p>
                         <p id="podio-pontos-1" class="text-xs text-slate-400 font-mono mb-2">0 pts</p>
                         <div class="w-full bg-yellow-400 rounded-t-2xl h-48 flex items-center justify-center font-black text-3xl text-yellow-900 shadow-xl">1</div>
                     </div>
                     <div id="podio-3" class="flex-1 flex flex-col items-center">
                         <div class="text-2xl mb-1">🥉</div>
+                        <div id="podio-avatar-3" class="mb-1"></div>
                         <p id="podio-nome-3" class="text-xs font-bold truncate max-w-[100px] text-slate-700 dark:text-slate-300">--</p>
                         <p id="podio-pontos-3" class="text-[10px] text-slate-400 font-mono mb-2">0 pts</p>
                         <div class="w-full bg-amber-700/60 rounded-t-2xl h-24 flex items-center justify-center font-black text-2xl text-amber-200 shadow-md">3</div>
@@ -411,6 +465,31 @@
         </div>
     </div>
 
+    <!-- MODAL: DETALHES DA SESSÃO -->
+    <div id="modal-detalhes-sessao" class="fixed inset-0 z-50 bg-slate-900/80 hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-3xl flex flex-col max-h-[90vh] border border-slate-200 dark:border-slate-800">
+            <div class="p-5 border-b border-slate-200 dark:border-slate-800 flex justify-between items-start gap-3">
+                <div class="min-w-0">
+                    <h3 class="text-lg font-black text-slate-800 dark:text-white uppercase tracking-wider">Detalhes da Sessão</h3>
+                    <p id="detalhes-sessao-subtitulo" class="text-xs text-slate-400 mt-0.5 truncate">--</p>
+                </div>
+                <button onclick="fecharModalDetalhesSessao()" class="text-slate-400 hover:text-red-500 transition-colors p-1 shrink-0">✕</button>
+            </div>
+
+            <div id="detalhes-sessao-corpo" class="p-6 overflow-y-auto flex-1 space-y-6">
+                <p class="text-sm text-slate-400 italic">Carregando...</p>
+            </div>
+
+            <div class="p-4 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-3 bg-slate-50 dark:bg-slate-900 rounded-b-2xl">
+                <button type="button" onclick="fecharModalDetalhesSessao()" class="px-5 py-2 text-xs font-bold text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors">Fechar</button>
+                <button type="button" id="btn-exportar-csv-modal" onclick="exportarResultadosCSVAtual()" disabled class="px-6 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 rounded-lg shadow-md transition-colors flex items-center gap-2">
+                    ⬇ Exportar CSV
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="avatars.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

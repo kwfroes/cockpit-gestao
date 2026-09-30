@@ -15,7 +15,7 @@ let timerInterval = null;
 let realtimeChannel = null;
 let lobbyPollInterval = null;
 let quizModoAtual = 'pontuado'; // modo do quiz da sala em andamento: 'pontuado' | 'opiniao'
-let fasePergunta = 'idle'; // 'leitura' | 'valendo' | 'encerrada' | 'nuvem' | 'nuvem_resultado'
+let fasePergunta = 'idle'; // 'leitura' | 'valendo' | 'encerrada' | 'nuvem' | 'nuvem_resultado' | 'texto' | 'texto_resultado'
 
 // Nuvem de palavras
 let palavrasNuvem = new Map();      // id da resposta -> { id, participante_id, pergunta_id, texto, oculta }
@@ -24,6 +24,13 @@ let chavesNuvemBloqueadas = new Set(); // palavras ocultadas pelo instrutor (nov
 let nuvemPollInterval = null;
 let nuvemRenderAgendado = false;
 let nuvemResizeObserver = null;
+let lobbyElementos = new Map();
+let lobbyResizeObserver = null;
+
+// Opinião em texto (anônima no telão)
+let respostasTexto = new Map();     // id da resposta -> { id, participante_id, pergunta_id, texto }
+let textoPollInterval = null;
+let textoTimerInterval = null;
 
 // Controle de Edição e Exclusão
 let quizEmEdicaoId = null;
@@ -31,27 +38,30 @@ let quizParaExcluirId = null;
 let contadorUidPergunta = 0;
 
 // Palavra mais citada de uma sessão encerrada (dashboard), agrupando por grafia/acentuação
-function palavraMaisCitadaHistorico(lista) {
+// Agrupa uma lista de respostas de nuvem por grafia/acentuação (usada no histórico do dashboard,
+// nos detalhes da sessão e na exportação CSV). incluirOcultas mantém palavras que o instrutor ocultou ao vivo.
+function agregarListaDePalavras(lista, incluirOcultas) {
     const grupos = new Map();
     (lista || []).forEach(r => {
+        if (!incluirOcultas && r.oculta) return;
         const chave = chaveNuvem(r.texto);
         if (!chave) return;
         let g = grupos.get(chave);
-        if (!g) { g = { total: 0, formas: new Map() }; grupos.set(chave, g); }
+        if (!g) { g = { chave, total: 0, formas: new Map() }; grupos.set(chave, g); }
         g.total++;
         const forma = String(r.texto).trim();
         g.formas.set(forma, (g.formas.get(forma) || 0) + 1);
     });
 
-    let melhor = null;
-    grupos.forEach((g, chave) => {
-        if (!melhor || g.total > melhor.total) {
-            let exibicao = "", maior = 0;
-            g.formas.forEach((qtd, forma) => { if (qtd > maior) { maior = qtd; exibicao = forma; } });
-            melhor = { chave, total: g.total, exibicao };
-        }
-    });
-    return melhor;
+    return [...grupos.values()].map(g => {
+        let exibicao = "", maior = 0;
+        g.formas.forEach((qtd, forma) => { if (qtd > maior) { maior = qtd; exibicao = forma; } });
+        return { chave: g.chave, total: g.total, exibicao };
+    }).sort((a, b) => b.total - a.total || a.exibicao.localeCompare(b.exibicao, 'pt-BR'));
+}
+
+function palavraMaisCitadaHistorico(lista) {
+    return agregarListaDePalavras(lista, true)[0] || null;
 }
 
 // Escapa texto digitado por usuários antes de inserir via innerHTML (evita XSS no telão)
@@ -161,7 +171,8 @@ async function carregarQuizzes() {
                 quiz_salas (
                     id, codigo, status, created_at,
                     quiz_participantes (apelido, pontos),
-                    quiz_nuvem_respostas (texto)
+                    quiz_nuvem_respostas (texto),
+                    quiz_texto_respostas (id)
                 )
             `)
             .order("created_at", { ascending: false });
@@ -186,9 +197,10 @@ function renderizarDashboardQuizzes() {
     quizzesDisponiveis.forEach(q => {
         const qtdPerguntas = q.quiz_perguntas ? q.quiz_perguntas.length : 0;
         const qtdNuvens = (q.quiz_perguntas || []).filter(p => p.tipo === 'nuvem').length;
-        const quizEhSoNuvem = qtdPerguntas > 0 && qtdNuvens === qtdPerguntas;
-        // "Só opinião" quando o instrutor marcou explicitamente OU quando o quiz é 100% nuvem (fallback para quizzes antigos)
-        const ehOpiniao = q.modo === 'opiniao' || quizEhSoNuvem;
+        const qtdTextos = (q.quiz_perguntas || []).filter(p => p.tipo === 'texto').length;
+        const quizSoOpiniao = qtdPerguntas > 0 && (qtdNuvens + qtdTextos) === qtdPerguntas;
+        // "Só opinião" quando o instrutor marcou explicitamente OU quando o quiz não tem nenhuma pergunta pontuável (fallback para quizzes antigos)
+        const ehOpiniao = q.modo === 'opiniao' || quizSoOpiniao;
 
         // Filtra as partidas que tiveram participantes e ordena da mais recente para a mais antiga
         const salasComJogadores = (q.quiz_salas || [])
@@ -214,9 +226,14 @@ function renderizarDashboardQuizzes() {
                             let linhaDestaque;
                             if (ehOpiniao) {
                                 const top = palavraMaisCitadaHistorico(s.quiz_nuvem_respostas || []);
-                                linhaDestaque = top
-                                    ? `☁️ ${escapeHtml(top.exibicao)} <strong class="text-sky-600 dark:text-sky-400 font-mono">(${top.total}x)</strong>`
-                                    : `<span class="italic text-slate-400">Sem palavras enviadas</span>`;
+                                const qtdRespostasTexto = (s.quiz_texto_respostas || []).length;
+                                if (top) {
+                                    linhaDestaque = `☁️ ${escapeHtml(top.exibicao)} <strong class="text-sky-600 dark:text-sky-400 font-mono">(${top.total}x)</strong>`;
+                                } else if (qtdRespostasTexto > 0) {
+                                    linhaDestaque = `💬 <strong class="text-violet-600 dark:text-violet-400 font-mono">${qtdRespostasTexto}</strong> ${qtdRespostasTexto === 1 ? 'resposta' : 'respostas'}`;
+                                } else {
+                                    linhaDestaque = `<span class="italic text-slate-400">Sem respostas enviadas</span>`;
+                                }
                             } else {
                                 const ranking = [...s.quiz_participantes].sort((a, b) => b.pontos - a.pontos);
                                 const vencedor = ranking[0];
@@ -226,9 +243,14 @@ function renderizarDashboardQuizzes() {
                             return `
                                 <div class="flex justify-between items-center bg-slate-50 dark:bg-slate-950 px-2.5 py-1.5 rounded-lg border border-slate-200/60 dark:border-slate-800">
                                     <span class="text-[10px] font-mono text-slate-400">Sala #${s.codigo} (${dataPartida})</span>
-                                    <span class="text-[11px] font-bold text-slate-700 dark:text-slate-200 truncate max-w-[140px]">
-                                        ${linhaDestaque}
-                                    </span>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-[11px] font-bold text-slate-700 dark:text-slate-200 truncate max-w-[140px]">
+                                            ${linhaDestaque}
+                                        </span>
+                                        <button type="button" onclick="abrirDetalhesSessao('${s.id}', '${q.id}', '${s.codigo}')" title="Ver detalhes da sessão" class="shrink-0 p-1 rounded-md text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                        </button>
+                                    </div>
                                 </div>
                             `;
                         }).join('')}
@@ -250,6 +272,10 @@ function renderizarDashboardQuizzes() {
                         <span class="text-[10px] font-bold px-2 py-1 rounded-md bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-300">
                             ☁️ ${qtdNuvens} ${qtdNuvens === 1 ? 'nuvem' : 'nuvens'}
                         </span>` : ''}
+                        ${qtdTextos > 0 ? `
+                        <span class="text-[10px] font-bold px-2 py-1 rounded-md bg-violet-50 dark:bg-violet-900/30 text-violet-600 dark:text-violet-300">
+                            💬 ${qtdTextos} ${qtdTextos === 1 ? 'texto' : 'textos'}
+                        </span>` : ''}
                         <span class="text-[10px] font-bold px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
                             📊 ${qtdUsos}x usado
                         </span>
@@ -259,6 +285,9 @@ function renderizarDashboardQuizzes() {
                     <div class="flex items-center gap-1">
                         <button type="button" onclick="abrirModalEditarQuiz('${q.id}')" title="Editar Questionário" class="p-1.5 rounded-lg text-slate-400 hover:text-purple-600 hover:bg-purple-50 dark:hover:bg-slate-800 transition-colors">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        </button>
+                        <button type="button" onclick="duplicarQuiz('${q.id}')" title="Duplicar Questionário" class="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-slate-800 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                         </button>
                         <button type="button" onclick="confirmarExclusaoQuiz('${q.id}')" title="Excluir Questionário" class="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-slate-800 transition-colors">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
@@ -356,7 +385,7 @@ function adicionarBlocoPergunta(dadosPergunta = null) {
     const uid = contadorUidPergunta;
     const numeroQuestao = container.children.length + 1;
 
-    const tipoVal = dadosPergunta && dadosPergunta.tipo === 'nuvem' ? 'nuvem' : 'multipla';
+    const tipoVal = (dadosPergunta && (dadosPergunta.tipo === 'nuvem' || dadosPergunta.tipo === 'texto')) ? dadosPergunta.tipo : 'multipla';
     const maxPalavrasVal = dadosPergunta ? (dadosPergunta.max_palavras || 1) : 1;
     const enunciadoVal = escapeHtml(dadosPergunta ? dadosPergunta.enunciado : "");
     const justificativaVal = escapeHtml(dadosPergunta ? dadosPergunta.justificativa : "");
@@ -388,6 +417,7 @@ function adicionarBlocoPergunta(dadosPergunta = null) {
                 <select class="b-tipo bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-bold rounded-lg px-2 py-1 outline-none text-slate-700 dark:text-slate-200" onchange="alternarTipoBloco(this)">
                     <option value="multipla" ${tipoVal === 'multipla' ? 'selected' : ''}>🔘 Múltipla escolha</option>
                     <option value="nuvem" ${tipoVal === 'nuvem' ? 'selected' : ''}>☁️ Nuvem de palavras</option>
+                    <option value="texto" ${tipoVal === 'texto' ? 'selected' : ''}>💬 Opinião em texto (anônima)</option>
                 </select>
             </div>
 
@@ -399,10 +429,10 @@ function adicionarBlocoPergunta(dadosPergunta = null) {
                     </select>
                 </div>
 
-                <div class="b-so-multipla flex items-center gap-1">
+                <div class="b-com-tempo-resposta flex items-center gap-1">
                     <label class="text-[10px] font-bold text-slate-400 uppercase">Resposta:</label>
                     <select class="b-tempo-resposta bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-bold rounded-lg px-2 py-1 outline-none text-purple-600 dark:text-purple-400">
-                        ${[3, 5, 10, 15, 20, 30].map(v => `<option value="${v}" ${tempoRespostaVal === v ? 'selected' : ''}>${v}s</option>`).join('')}
+                        ${[3, 5, 10, 15, 20, 30, 60, 90].map(v => `<option value="${v}" ${tempoRespostaVal === v ? 'selected' : ''}>${v}s</option>`).join('')}
                     </select>
                 </div>
 
@@ -419,7 +449,7 @@ function adicionarBlocoPergunta(dadosPergunta = null) {
 
         <input type="text" value="${enunciadoVal}" placeholder="Digite o enunciado da questão..." class="b-enunciado w-full px-3 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-xs font-medium outline-none focus:ring-2 focus:ring-purple-500">
 
-        <div class="b-so-multipla grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
+        <div class="b-so-multipla-opcoes grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
             ${[0, 1, 2, 3].map(i => `
                 <div class="flex items-center gap-2 bg-white dark:bg-slate-900 p-2 rounded-lg border border-slate-200 dark:border-slate-800">
                     <input type="radio" name="correta_uid_${uid}" value="${i}" ${opcoesOrdenadas[i].is_correta ? 'checked' : ''} class="b-correta accent-purple-600 cursor-pointer" title="Marcar como correta">
@@ -428,12 +458,16 @@ function adicionarBlocoPergunta(dadosPergunta = null) {
             `).join('')}
         </div>
 
-        <div class="b-so-multipla pt-1">
+        <div class="b-so-multipla-opcoes pt-1">
             <input type="text" value="${justificativaVal}" placeholder="💡 Justificativa / explicação da resposta correta (opcional)..." class="b-justificativa w-full px-3 py-1.5 bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/50 rounded-lg text-xs text-slate-700 dark:text-slate-300 outline-none focus:ring-2 focus:ring-amber-500">
         </div>
 
         <p class="b-so-nuvem text-[11px] text-slate-500 dark:text-slate-400 bg-sky-50/70 dark:bg-sky-950/20 border border-sky-200 dark:border-sky-800/50 rounded-lg px-3 py-2">
             Cada participante envia até o número de palavras escolhido acima (até 25 caracteres cada). Não vale pontos e não tem resposta certa; você encerra as respostas quando quiser.
+        </p>
+
+        <p class="b-so-texto text-[11px] text-slate-500 dark:text-slate-400 bg-violet-50/70 dark:bg-violet-950/20 border border-violet-200 dark:border-violet-800/50 rounded-lg px-3 py-2">
+            Cada participante escreve uma resposta livre (até 400 caracteres) dentro do tempo definido acima. As respostas aparecem no telão sem identificar quem escreveu — mas ficam salvas e você pode ver quem respondeu o quê depois, no dashboard.
         </p>
     `;
     container.appendChild(div);
@@ -448,14 +482,24 @@ function alternarTipoBloco(selectEl) {
 }
 
 function aplicarTipoBloco(bloco) {
-    const isNuvem = bloco.dataset.tipo === 'nuvem';
-    bloco.querySelectorAll(".b-so-multipla").forEach(el => el.classList.toggle("hidden", isNuvem));
+    const tipo = bloco.dataset.tipo;
+    const isNuvem = tipo === 'nuvem';
+    const isTexto = tipo === 'texto';
+    const isMultipla = !isNuvem && !isTexto;
+
+    bloco.querySelectorAll(".b-so-multipla").forEach(el => el.classList.toggle("hidden", !isMultipla));
+    bloco.querySelectorAll(".b-so-multipla-opcoes").forEach(el => el.classList.toggle("hidden", !isMultipla));
+    bloco.querySelectorAll(".b-com-tempo-resposta").forEach(el => el.classList.toggle("hidden", isNuvem));
     bloco.querySelectorAll(".b-so-nuvem").forEach(el => el.classList.toggle("hidden", !isNuvem));
+    bloco.querySelectorAll(".b-so-texto").forEach(el => el.classList.toggle("hidden", !isTexto));
+
     const enunciado = bloco.querySelector(".b-enunciado");
     if (enunciado) {
         enunciado.placeholder = isNuvem
             ? "Ex: Em uma palavra, o que você espera deste curso?"
-            : "Digite o enunciado da questão...";
+            : isTexto
+                ? "Ex: O que você acha que poderia melhorar no atendimento?"
+                : "Digite o enunciado da questão...";
     }
 }
 
@@ -538,9 +582,11 @@ async function salvarNovoQuiz() {
             const enunciado = b.querySelector(".b-enunciado").value.trim();
             if (!enunciado) continue;
 
-            const tipo = b.querySelector(".b-tipo")?.value === 'nuvem' ? 'nuvem' : 'multipla';
+            const tipoSelecionado = b.querySelector(".b-tipo")?.value;
+            const tipo = (tipoSelecionado === 'nuvem' || tipoSelecionado === 'texto') ? tipoSelecionado : 'multipla';
             const isNuvem = tipo === 'nuvem';
-            const justificativa = isNuvem ? null : (b.querySelector(".b-justificativa")?.value.trim() || null);
+            const isTexto = tipo === 'texto';
+            const justificativa = (isNuvem || isTexto) ? null : (b.querySelector(".b-justificativa")?.value.trim() || null);
             const tempoLeitura = parseInt(b.querySelector(".b-tempo-leitura")?.value) || 5;
             const tempoResposta = parseInt(b.querySelector(".b-tempo-resposta")?.value) || 5;
             const maxPalavras = parseInt(b.querySelector(".b-max-palavras")?.value) || 1;
@@ -562,8 +608,8 @@ async function salvarNovoQuiz() {
 
             if (errP) throw errP;
 
-            // Nuvem de palavras não tem alternativas
-            if (isNuvem) continue;
+            // Nuvem de palavras e opinião em texto não têm alternativas
+            if (isNuvem || isTexto) continue;
 
             const radioChecked = b.querySelector(".b-correta:checked");
             const indiceCorreto = radioChecked ? parseInt(radioChecked.value) : 0;
@@ -705,10 +751,17 @@ function montarArenaLobby(codigoSala) {
     document.getElementById("arena-placar").classList.add("hidden");
     document.getElementById("arena-podio").classList.add("hidden");
     document.getElementById("arena-nuvem").classList.add("hidden");
+    document.getElementById("arena-texto").classList.add("hidden");
 
     document.getElementById("lobby-pin").textContent = codigoSala;
     document.getElementById("lobby-count").textContent = "0";
-    document.getElementById("lobby-participantes-grid").innerHTML = `<p class="text-xs text-slate-400 italic">Aguardando participantes...</p>`;
+    lobbyElementos.clear();
+    const gridLobby = document.getElementById("lobby-participantes-grid");
+    gridLobby.innerHTML = `<p id="lobby-vazio" class="absolute inset-0 flex items-center justify-center text-xs text-slate-400 italic">Aguardando participantes entrarem...</p>`;
+    if (!lobbyResizeObserver && typeof ResizeObserver === "function") {
+        lobbyResizeObserver = new ResizeObserver(() => renderizarLobbyEspiral());
+        lobbyResizeObserver.observe(gridLobby);
+    }
     document.getElementById("btn-iniciar-jogo").disabled = true;
 
     const baseDir = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
@@ -765,6 +818,9 @@ function iniciarRealtimeSala(salaId) {
         .on('broadcast', { event: 'nova_palavra' }, (payload) => {
             registrarPalavraNuvem(payload.payload);
         })
+        .on('broadcast', { event: 'nova_resposta_texto' }, (payload) => {
+            registrarRespostaTexto(payload.payload);
+        })
         .on('postgres_changes', {
             event: 'INSERT',
             schema: 'public',
@@ -772,6 +828,14 @@ function iniciarRealtimeSala(salaId) {
             filter: `sala_id=eq.${salaId}`
         }, (payload) => {
             registrarPalavraNuvem(payload.new);
+        })
+        .on('postgres_changes', {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'quiz_texto_respostas',
+            filter: `sala_id=eq.${salaId}`
+        }, (payload) => {
+            registrarRespostaTexto(payload.new);
         })
         .on('postgres_changes', {
             event: 'INSERT',
@@ -826,23 +890,101 @@ function renderizarQuemRespondeu() {
         const estilo = respondeu
             ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800'
             : 'bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-200 dark:border-slate-700';
-        return `<span class="px-2.5 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1 border ${estilo}">
-            ${respondeu ? '✔' : '⏳'} ${escapeHtml(p.apelido)}
+        return `<span class="pl-1 pr-2.5 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1.5 border ${estilo}">
+            ${renderAvatarChip(p.avatar, p.apelido, 'w-4 h-4')} ${respondeu ? '✔' : '⏳'} ${escapeHtml(p.apelido)}
         </span>`;
     }).join('');
 }
 
 function atualizarLobbyParticipantes() {
     renderizarQuemRespondeu();
-    const grid = document.getElementById("lobby-participantes-grid");
     document.getElementById("lobby-count").textContent = participantesConectados.length;
     document.getElementById("btn-iniciar-jogo").disabled = participantesConectados.length === 0;
+    renderizarLobbyEspiral();
+}
 
-    grid.innerHTML = participantesConectados.map(p => `
-        <span class="px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white rounded-xl text-xs font-bold shadow-xs">
-            ${escapeHtml(p.apelido)}
-        </span>
-    `).join("");
+// Espalha os crachás (avatar + nome) dos participantes em espiral pelo quadro do lobby,
+// igual à nuvem de palavras — reaproveita posicionarEmEspiral() e hashNuvem().
+function renderizarLobbyEspiral() {
+    const container = document.getElementById("lobby-participantes-grid");
+    if (!container) return;
+
+    if (participantesConectados.length === 0) {
+        lobbyElementos.forEach(el => el.remove());
+        lobbyElementos.clear();
+        if (!document.getElementById("lobby-vazio")) {
+            container.innerHTML = `<p id="lobby-vazio" class="absolute inset-0 flex items-center justify-center text-xs text-slate-400 italic">Aguardando participantes entrarem...</p>`;
+        }
+        return;
+    }
+    document.getElementById("lobby-vazio")?.remove();
+
+    const W = container.clientWidth;
+    const H = container.clientHeight;
+    if (!W || !H) return;
+
+    // Remove crachás de quem não está mais na lista (não deveria acontecer no lobby, mas por segurança)
+    const idsAtuais = new Set(participantesConectados.map(p => p.id));
+    lobbyElementos.forEach((el, id) => {
+        if (!idsAtuais.has(id)) { el.remove(); lobbyElementos.delete(id); }
+    });
+
+    // Medidor invisível: descobre o tamanho real de cada crachá (varia com o tamanho do nome)
+    let medidor = document.getElementById("lobby-medidor");
+    if (!medidor) {
+        medidor = document.createElement("div");
+        medidor.id = "lobby-medidor";
+        medidor.style.cssText = "position:absolute; visibility:hidden; white-space:nowrap; pointer-events:none;";
+        container.appendChild(medidor);
+    }
+
+    const classeCrachá = "flex flex-col items-center gap-1 w-20 text-slate-800 dark:text-white";
+
+    const caixas = participantesConectados.map(p => {
+        medidor.innerHTML = `<span class="${classeCrachá}">${renderAvatarChip(p.avatar, p.apelido, 'w-14 h-14')}<span class="text-[11px] font-bold leading-tight text-center truncate max-w-full">${escapeHtml(p.apelido)}</span></span>`;
+        const el = medidor.firstElementChild;
+        return { w: el.offsetWidth, h: el.offsetHeight, seed: hashNuvem(p.id) };
+    });
+
+    let posicoes = posicionarEmEspiral(caixas, W, H, true);
+    let fator = 1;
+    for (let tentativa = 0; tentativa < 8 && posicoes.some(p => !p); tentativa++) {
+        fator *= 0.92;
+        posicoes = posicionarEmEspiral(caixas.map(c => ({ ...c, w: c.w * fator, h: c.h * fator })), W, H, true);
+    }
+
+    const postas = posicoes.filter(Boolean);
+    if (postas.length > 0) {
+        const bx0 = Math.min(...postas.map(b => b.x)), bx1 = Math.max(...postas.map(b => b.x + b.w));
+        const by0 = Math.min(...postas.map(b => b.y)), by1 = Math.max(...postas.map(b => b.y + b.h));
+        const dx = (W - bx1 - bx0) / 2, dy = (H - by1 - by0) / 2;
+        postas.forEach(b => { b.x += dx; b.y += dy; });
+    }
+
+    participantesConectados.forEach((p, i) => {
+        const pos = posicoes[i];
+        let el = lobbyElementos.get(p.id);
+        const novo = !el;
+
+        if (novo) {
+            el = document.createElement("div");
+            el.className = `absolute ${classeCrachá}`;
+            el.dataset.id = p.id;
+            lobbyElementos.set(p.id, el);
+        }
+
+        el.innerHTML = `${renderAvatarChip(p.avatar, p.apelido, 'w-14 h-14')}<span class="text-[11px] font-bold leading-tight text-center truncate max-w-full">${escapeHtml(p.apelido)}</span>`;
+
+        if (pos) {
+            el.style.left = `${pos.x}px`;
+            el.style.top = `${pos.y}px`;
+            el.style.opacity = "1";
+        } else {
+            el.style.opacity = "0"; // não coube (caso extremo, muitos participantes)
+        }
+
+        if (novo) container.appendChild(el);
+    });
 }
 
 async function iniciarPartida() {
@@ -860,6 +1002,11 @@ async function dispararPerguntaAtual() {
 
     if (pergunta.tipo === 'nuvem') {
         await iniciarNuvem(pergunta);
+        return;
+    }
+
+    if (pergunta.tipo === 'texto') {
+        await iniciarTexto(pergunta);
         return;
     }
 
@@ -892,6 +1039,7 @@ async function dispararPerguntaAtual() {
     document.getElementById("arena-resultado").classList.add("hidden");
     document.getElementById("arena-placar").classList.add("hidden");
     document.getElementById("arena-nuvem").classList.add("hidden");
+    document.getElementById("arena-texto").classList.add("hidden");
     document.getElementById("arena-pergunta").classList.remove("hidden");
 
     document.getElementById("pergunta-numero-badge").textContent = `Questão ${indicePerguntaAtual + 1} de ${perguntasDaPartida.length}`;
@@ -1101,7 +1249,7 @@ async function finalizarTempoPergunta() {
 async function avancarParaPlacar() {
     const { data: ranking } = await supabase
         .from("quiz_participantes")
-        .select("id, apelido, pontos")
+        .select("id, apelido, pontos, avatar")
         .eq("sala_id", salaAtiva.id)
         .order("pontos", { ascending: false });
 
@@ -1118,6 +1266,7 @@ async function avancarParaPlacar() {
             <div class="flex justify-between items-center p-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs">
                 <div class="flex items-center gap-3">
                     <span class="text-xl">${iconePos}</span>
+                    ${renderAvatarChip(p.avatar, p.apelido, 'w-8 h-8')}
                     <span class="font-bold text-sm text-slate-800 dark:text-white">${escapeHtml(p.apelido)}</span>
                 </div>
                 <span class="font-mono font-black text-sm text-purple-600 dark:text-purple-400">${p.pontos} pts</span>
@@ -1149,28 +1298,48 @@ async function exibirPodioFinal() {
         });
     }
 
-    const { data: ranking } = await supabase
+    const { data: rankingBruto } = await supabase
         .from("quiz_participantes")
-        .select("apelido, pontos")
+        .select("apelido, pontos, avatar")
         .eq("sala_id", salaAtiva.id)
         .order("pontos", { ascending: false });
 
     document.getElementById("arena-placar").classList.add("hidden");
     document.getElementById("arena-nuvem").classList.add("hidden");
+    document.getElementById("arena-texto").classList.add("hidden");
     document.getElementById("arena-podio").classList.remove("hidden");
 
-    // Partida só com nuvens de palavras: não há pontuação para premiar
-    const temPontuacao = quizModoAtual === 'pontuado' && perguntasDaPartida.some(p => p.tipo !== 'nuvem');
+    // Só mostra ranking se: (a) o quiz é do modo pontuado, (b) toda pergunta de múltipla escolha
+    // recebeu ao menos uma resposta de alguém (sessão não foi "vazia"/só um teste), e (c) existe
+    // pelo menos um participante com pontuação > 0 (alguém realmente pontuou, não só entrou e ficou parado).
+    const perguntasMultipla = perguntasDaPartida.filter(p => p.tipo !== 'nuvem' && p.tipo !== 'texto');
+    let todasPerguntasForamRespondidas = perguntasMultipla.length > 0;
+    if (perguntasMultipla.length > 0) {
+        const { data: respostasSala } = await supabase
+            .from("quiz_respostas")
+            .select("pergunta_id")
+            .eq("sala_id", salaAtiva.id);
+        const perguntasComResposta = new Set((respostasSala || []).map(r => r.pergunta_id));
+        todasPerguntasForamRespondidas = perguntasMultipla.every(p => perguntasComResposta.has(p.id));
+    }
+
+    const ranking = (rankingBruto || []).filter(p => p.pontos > 0);
+    const temPontuacao = quizModoAtual === 'pontuado' && perguntasMultipla.length > 0
+        && todasPerguntasForamRespondidas && ranking.length > 0;
+
     document.getElementById("podio-steps").classList.toggle("hidden", !temPontuacao);
     document.getElementById("podio-eyebrow").textContent = temPontuacao ? "Grande Final" : "Atividade concluída";
     document.getElementById("podio-titulo").textContent = temPontuacao ? "Pódio dos Campeões 🎉" : "Obrigado pela participação ☁️";
 
+    document.getElementById("podio-avatar-1").innerHTML = ranking?.[0] ? renderAvatarChip(ranking[0].avatar, ranking[0].apelido, 'w-12 h-12') : '';
     document.getElementById("podio-nome-1").textContent = ranking?.[0]?.apelido || "--";
     document.getElementById("podio-pontos-1").textContent = `${ranking?.[0]?.pontos || 0} pts`;
 
+    document.getElementById("podio-avatar-2").innerHTML = ranking?.[1] ? renderAvatarChip(ranking[1].avatar, ranking[1].apelido, 'w-9 h-9') : '';
     document.getElementById("podio-nome-2").textContent = ranking?.[1]?.apelido || "--";
     document.getElementById("podio-pontos-2").textContent = `${ranking?.[1]?.pontos || 0} pts`;
 
+    document.getElementById("podio-avatar-3").innerHTML = ranking?.[2] ? renderAvatarChip(ranking[2].avatar, ranking[2].apelido, 'w-9 h-9') : '';
     document.getElementById("podio-nome-3").textContent = ranking?.[2]?.apelido || "--";
     document.getElementById("podio-pontos-3").textContent = `${ranking?.[2]?.pontos || 0} pts`;
 
@@ -1183,6 +1352,8 @@ async function voltarParaDashboard() {
     if (timerInterval) clearInterval(timerInterval);
     if (lobbyPollInterval) clearInterval(lobbyPollInterval);
     if (nuvemPollInterval) { clearInterval(nuvemPollInterval); nuvemPollInterval = null; }
+    if (textoPollInterval) { clearInterval(textoPollInterval); textoPollInterval = null; }
+    if (textoTimerInterval) { clearInterval(textoTimerInterval); textoTimerInterval = null; }
     fasePergunta = 'idle';
 
     // Se houver uma sala aberta, derruba todos os participantes conectados
@@ -1336,7 +1507,7 @@ async function iniciarNuvem(pergunta) {
         });
     }
 
-    ["arena-lobby", "arena-pergunta", "arena-resultado", "arena-placar", "arena-podio"]
+    ["arena-lobby", "arena-pergunta", "arena-resultado", "arena-placar", "arena-podio", "arena-texto"]
         .forEach(id => document.getElementById(id).classList.add("hidden"));
     document.getElementById("arena-nuvem").classList.remove("hidden");
 
@@ -1421,27 +1592,7 @@ function agendarRenderNuvem() {
 }
 
 function agregarPalavrasNuvem() {
-    const grupos = new Map();
-    palavrasNuvem.forEach(r => {
-        if (r.oculta) return;
-        const chave = chaveNuvem(r.texto);
-        if (!chave) return;
-        let g = grupos.get(chave);
-        if (!g) {
-            g = { chave, total: 0, formas: new Map() };
-            grupos.set(chave, g);
-        }
-        g.total++;
-        const forma = r.texto.trim();
-        g.formas.set(forma, (g.formas.get(forma) || 0) + 1);
-    });
-
-    return [...grupos.values()].map(g => {
-        // Exibe a grafia mais usada pelos participantes
-        let exibicao = "", maior = 0;
-        g.formas.forEach((qtd, forma) => { if (qtd > maior) { maior = qtd; exibicao = forma; } });
-        return { chave: g.chave, total: g.total, exibicao };
-    }).sort((a, b) => b.total - a.total || a.exibicao.localeCompare(b.exibicao, 'pt-BR'));
+    return agregarListaDePalavras([...palavrasNuvem.values()], false);
 }
 
 // Posiciona caixas numa espiral elíptica a partir do centro, sem sobreposição.
@@ -1668,8 +1819,8 @@ function renderizarProgressoNuvem() {
         const estilo = completo
             ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800'
             : 'bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-200 dark:border-slate-700';
-        return `<span class="px-2.5 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1 border ${estilo}">
-            ${completo ? '✔' : '⏳'} ${escapeHtml(p.apelido)} <span class="opacity-70">${qtd}/${max}</span>
+        return `<span class="pl-1 pr-2.5 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1.5 border ${estilo}">
+            ${renderAvatarChip(p.avatar, p.apelido, 'w-4 h-4')} ${completo ? '✔' : '⏳'} ${escapeHtml(p.apelido)} <span class="opacity-70">${qtd}/${max}</span>
         </span>`;
     }).join('');
 }
@@ -1759,4 +1910,573 @@ async function encerrarNuvem() {
     const isUltima = indicePerguntaAtual + 1 >= perguntasDaPartida.length;
     document.getElementById("btn-nuvem-proxima-txt").textContent = isUltima ? "Finalizar atividade" : "Próxima pergunta";
     document.getElementById("btn-nuvem-proxima").classList.remove("hidden");
+}
+
+// ========================================================
+// OPINIÃO EM TEXTO (ANÔNIMA NO TELÃO)
+// ========================================================
+function perguntaTextoAtual() {
+    const p = perguntasDaPartida[indicePerguntaAtual];
+    return p && p.tipo === 'texto' ? p : null;
+}
+
+async function iniciarTexto(pergunta) {
+    if (timerInterval) clearInterval(timerInterval);
+    if (textoTimerInterval) clearInterval(textoTimerInterval);
+    if (textoPollInterval) clearInterval(textoPollInterval);
+
+    fasePergunta = 'texto';
+    respostasTexto = new Map();
+
+    await supabase
+        .from("quiz_salas")
+        .update({ status: 'texto', pergunta_atual_id: pergunta.id })
+        .eq("id", salaAtiva.id);
+
+    const tempoResposta = pergunta.tempo_segundos || 30;
+
+    if (realtimeChannel) {
+        realtimeChannel.send({
+            type: 'broadcast',
+            event: 'mudar_status',
+            payload: { status: 'texto', perguntaId: pergunta.id, enunciado: pergunta.enunciado, tempo: tempoResposta }
+        });
+    }
+
+    ["arena-lobby", "arena-pergunta", "arena-resultado", "arena-placar", "arena-podio", "arena-nuvem"]
+        .forEach(id => document.getElementById(id).classList.add("hidden"));
+    document.getElementById("arena-texto").classList.remove("hidden");
+
+    document.getElementById("texto-numero-badge").textContent = `Questão ${indicePerguntaAtual + 1} de ${perguntasDaPartida.length}`;
+    document.getElementById("texto-enunciado").textContent = pergunta.enunciado;
+    document.getElementById("texto-total-respostas").textContent = "0";
+    document.getElementById("texto-resultado-container").innerHTML = "";
+    document.getElementById("texto-resultado-container").classList.add("hidden");
+    document.getElementById("texto-aviso-anonimo").classList.remove("hidden");
+
+    const badge = document.getElementById("texto-fase-badge");
+    badge.textContent = "💬 Recebendo respostas";
+    badge.className = "px-3 py-1 rounded-full text-xs font-black bg-violet-500/15 text-violet-600 dark:text-violet-400 border border-violet-500/30 animate-pulse";
+
+    document.getElementById("btn-encerrar-texto").classList.remove("hidden");
+    document.getElementById("btn-encerrar-texto").disabled = false;
+    document.getElementById("btn-texto-proxima").classList.add("hidden");
+
+    iniciarTimerTexto(tempoResposta);
+
+    await buscarRespostasTextoBanco();
+    // Rede de segurança caso algum evento Realtime se perca
+    textoPollInterval = setInterval(buscarRespostasTextoBanco, 3000);
+}
+
+// Cronômetro dedicado da tela de opinião em texto (mesma matemática do cronômetro principal,
+// mas em elementos próprios, já que essa fase tem seu próprio layout)
+function iniciarTimerTexto(segundosTotais) {
+    if (textoTimerInterval) clearInterval(textoTimerInterval);
+
+    const duracaoMs = segundosTotais * 1000;
+    const fimTimestamp = performance.now() + duracaoMs;
+    const bar = document.getElementById("texto-timer-bar");
+    const label = document.getElementById("texto-timer-txt");
+
+    const atualizar = () => {
+        const restanteMs = Math.max(0, fimTimestamp - performance.now());
+        const pct = (restanteMs / duracaoMs) * 100;
+        bar.style.width = `${pct}%`;
+        label.textContent = `${(restanteMs / 1000).toFixed(2).padStart(5, "0")}s`;
+
+        if (restanteMs <= 0) {
+            clearInterval(textoTimerInterval);
+            encerrarTexto();
+        }
+    };
+
+    atualizar();
+    textoTimerInterval = setInterval(atualizar, 50);
+}
+
+async function buscarRespostasTextoBanco() {
+    const pergunta = perguntaTextoAtual();
+    if (!salaAtiva || !pergunta) return;
+
+    const { data, error } = await supabase
+        .from("quiz_texto_respostas")
+        .select("id, participante_id, pergunta_id, texto")
+        .eq("sala_id", salaAtiva.id)
+        .eq("pergunta_id", pergunta.id);
+
+    if (error || !data) return;
+
+    let mudou = false;
+    data.forEach(r => {
+        if (!respostasTexto.has(r.id)) {
+            respostasTexto.set(r.id, { ...r });
+            mudou = true;
+        }
+    });
+    if (mudou) atualizarContadorTexto();
+}
+
+function registrarRespostaTexto(r) {
+    const pergunta = perguntaTextoAtual();
+    if (!r || !r.id || !pergunta || r.pergunta_id !== pergunta.id) return;
+    if (fasePergunta !== 'texto' && fasePergunta !== 'texto_resultado') return;
+    if (respostasTexto.has(r.id)) return;
+
+    respostasTexto.set(r.id, {
+        id: r.id,
+        participante_id: r.participante_id,
+        pergunta_id: r.pergunta_id,
+        texto: String(r.texto || "").slice(0, 400)
+    });
+    atualizarContadorTexto();
+}
+
+// Só o número aparece durante a coleta — nenhum nome, preservando o anonimato
+function atualizarContadorTexto() {
+    const el = document.getElementById("texto-total-respostas");
+    if (el) el.textContent = respostasTexto.size;
+}
+
+async function encerrarTexto() {
+    const pergunta = perguntaTextoAtual();
+    if (!pergunta || (fasePergunta !== 'texto')) return;
+
+    fasePergunta = 'texto_resultado';
+    if (textoTimerInterval) { clearInterval(textoTimerInterval); textoTimerInterval = null; }
+    if (textoPollInterval) { clearInterval(textoPollInterval); textoPollInterval = null; }
+
+    const btnEncerrar = document.getElementById("btn-encerrar-texto");
+    btnEncerrar.disabled = true;
+
+    if (realtimeChannel) {
+        realtimeChannel.send({
+            type: 'broadcast',
+            event: 'mudar_status',
+            payload: { status: 'texto_resultado', perguntaId: pergunta.id }
+        });
+    }
+
+    await supabase.from("quiz_salas").update({ status: 'texto_resultado' }).eq("id", salaAtiva.id);
+
+    // Dá tempo para envios que estavam a caminho e busca a lista final
+    await new Promise(r => setTimeout(r, 400));
+    await buscarRespostasTextoBanco();
+    renderizarRespostasTextoAnonimas();
+
+    document.getElementById("texto-aviso-anonimo").classList.add("hidden");
+    const badge = document.getElementById("texto-fase-badge");
+    badge.textContent = "✔ Respostas encerradas";
+    badge.className = "px-3 py-1 rounded-full text-xs font-black bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30";
+
+    btnEncerrar.disabled = false;
+    btnEncerrar.classList.add("hidden");
+
+    const isUltima = indicePerguntaAtual + 1 >= perguntasDaPartida.length;
+    document.getElementById("btn-texto-proxima-txt").textContent = isUltima ? "Finalizar atividade" : "Próxima pergunta";
+    document.getElementById("btn-texto-proxima").classList.remove("hidden");
+}
+
+// Embaralha e exibe as respostas sem nenhuma referência a quem escreveu —
+// a ordem de submissão também não é preservada, para não dar pista de autoria.
+function renderizarRespostasTextoAnonimas() {
+    const container = document.getElementById("texto-resultado-container");
+    container.classList.remove("hidden");
+
+    const respostas = [...respostasTexto.values()];
+    if (respostas.length === 0) {
+        container.innerHTML = `<p class="text-sm text-slate-400 italic col-span-full text-center">Nenhuma resposta foi enviada.</p>`;
+        return;
+    }
+
+    for (let i = respostas.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [respostas[i], respostas[j]] = [respostas[j], respostas[i]];
+    }
+
+    const CORES_CARD = [
+        'bg-violet-50 dark:bg-violet-950/30 border-violet-200 dark:border-violet-800/60',
+        'bg-sky-50 dark:bg-sky-950/30 border-sky-200 dark:border-sky-800/60',
+        'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800/60',
+        'bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800/60',
+        'bg-rose-50 dark:bg-rose-950/30 border-rose-200 dark:border-rose-800/60'
+    ];
+
+    container.innerHTML = respostas.map((r, i) => `
+        <div class="p-4 rounded-2xl border ${CORES_CARD[i % CORES_CARD.length]} text-sm text-slate-700 dark:text-slate-200 leading-relaxed break-words">
+            “${escapeHtml(r.texto)}”
+        </div>
+    `).join('');
+}
+
+// ========================================================
+// DUPLICAR QUESTIONÁRIO
+// ========================================================
+async function duplicarQuiz(quizId) {
+    if (!supabase) return;
+
+    try {
+        const { data: quiz, error } = await supabase
+            .from("quiz_questionarios")
+            .select(`
+                titulo, descricao, modo,
+                quiz_perguntas (
+                    ordem, tipo, max_palavras, enunciado, justificativa, tempo_segundos, tempo_leitura_segundos,
+                    quiz_opcoes (texto, is_correta, cor_indice)
+                )
+            `)
+            .eq("id", quizId)
+            .single();
+
+        if (error || !quiz) {
+            toast("Erro ao carregar questionário para duplicar.", "error");
+            return;
+        }
+
+        const { data: { user } } = await supabase.auth.getUser();
+
+        const { data: novoQuiz, error: errIns } = await supabase
+            .from("quiz_questionarios")
+            .insert([{
+                host_id: user.id,
+                titulo: `${quiz.titulo} (cópia)`,
+                descricao: quiz.descricao,
+                modo: quiz.modo
+            }])
+            .select()
+            .single();
+
+        if (errIns) throw errIns;
+
+        for (const p of (quiz.quiz_perguntas || [])) {
+            const { data: novaPergunta, error: errP } = await supabase
+                .from("quiz_perguntas")
+                .insert([{
+                    questionario_id: novoQuiz.id,
+                    ordem: p.ordem,
+                    tipo: p.tipo,
+                    max_palavras: p.max_palavras,
+                    enunciado: p.enunciado,
+                    justificativa: p.justificativa,
+                    tempo_segundos: p.tempo_segundos,
+                    tempo_leitura_segundos: p.tempo_leitura_segundos
+                }])
+                .select()
+                .single();
+
+            if (errP) throw errP;
+
+            if (p.quiz_opcoes && p.quiz_opcoes.length > 0) {
+                const opcoesPayload = p.quiz_opcoes.map(o => ({
+                    pergunta_id: novaPergunta.id,
+                    texto: o.texto,
+                    is_correta: o.is_correta,
+                    cor_indice: o.cor_indice
+                }));
+                const { error: errOpc } = await supabase.from("quiz_opcoes").insert(opcoesPayload);
+                if (errOpc) throw errOpc;
+            }
+        }
+
+        toast("Questionário duplicado com sucesso!");
+        await carregarQuizzes();
+
+    } catch (err) {
+        console.error("Erro ao duplicar quiz:", err);
+        toast("Erro ao duplicar questionário.", "error");
+    }
+}
+
+// ========================================================
+// DETALHES DA SESSÃO E EXPORTAÇÃO DE RESULTADOS (CSV)
+// ========================================================
+let sessaoDetalhesAtual = null;
+
+// Busca tudo que uma sessão encerrada precisa para exibição/exportação: ranking, respostas
+// por pergunta (com tempo) e palavras da nuvem (agregadas via agregarListaDePalavras e por aluno).
+async function carregarResultadosDaSessao(salaId, questionarioId) {
+    if (!supabase) return null;
+
+    try {
+        const [
+            { data: quizInfo },
+            { data: perguntas },
+            { data: participantes },
+            { data: respostas },
+            { data: nuvemRespostas },
+            { data: textoRespostas }
+        ] = await Promise.all([
+            supabase.from("quiz_questionarios").select("titulo, modo").eq("id", questionarioId).maybeSingle(),
+            supabase.from("quiz_perguntas")
+                .select("id, ordem, tipo, enunciado, quiz_opcoes (id, texto, is_correta, cor_indice)")
+                .eq("questionario_id", questionarioId)
+                .order("ordem", { ascending: true }),
+            supabase.from("quiz_participantes").select("id, apelido, pontos, avatar").eq("sala_id", salaId),
+            supabase.from("quiz_respostas")
+                .select("pergunta_id, opcao_id, participante_id, tempo_gasto_segundos, pontos_ganhos")
+                .eq("sala_id", salaId),
+            supabase.from("quiz_nuvem_respostas")
+                .select("pergunta_id, participante_id, texto, oculta")
+                .eq("sala_id", salaId),
+            supabase.from("quiz_texto_respostas")
+                .select("pergunta_id, participante_id, texto")
+                .eq("sala_id", salaId)
+        ]);
+
+        return {
+            quizInfo: quizInfo || null,
+            perguntas: perguntas || [],
+            participantes: participantes || [],
+            respostas: respostas || [],
+            nuvemRespostas: nuvemRespostas || [],
+            textoRespostas: textoRespostas || []
+        };
+    } catch (err) {
+        console.error("Erro ao carregar resultados da sessão:", err);
+        return null;
+    }
+}
+
+async function abrirDetalhesSessao(salaId, questionarioId, codigoSala) {
+    const modal = document.getElementById("modal-detalhes-sessao");
+    modal.classList.remove("hidden");
+    document.getElementById("detalhes-sessao-subtitulo").textContent = `Sala #${codigoSala}`;
+    document.getElementById("detalhes-sessao-corpo").innerHTML = '<p class="text-sm text-slate-400 italic">Carregando...</p>';
+    document.getElementById("btn-exportar-csv-modal").disabled = true;
+    sessaoDetalhesAtual = null;
+
+    const dados = await carregarResultadosDaSessao(salaId, questionarioId);
+    if (!dados) {
+        document.getElementById("detalhes-sessao-corpo").innerHTML = '<p class="text-sm text-red-500">Não foi possível carregar os dados desta sessão.</p>';
+        return;
+    }
+
+    sessaoDetalhesAtual = { codigoSala, dados };
+    document.getElementById("detalhes-sessao-subtitulo").textContent = `${dados.quizInfo?.titulo || 'Questionário'} — Sala #${codigoSala}`;
+    renderizarDetalhesSessao(dados);
+    document.getElementById("btn-exportar-csv-modal").disabled = false;
+}
+
+function fecharModalDetalhesSessao() {
+    document.getElementById("modal-detalhes-sessao").classList.add("hidden");
+    sessaoDetalhesAtual = null;
+}
+
+function renderizarDetalhesSessao(dados) {
+    const corpo = document.getElementById("detalhes-sessao-corpo");
+    const ehOpiniao = dados.quizInfo?.modo === 'opiniao'
+        || (dados.perguntas.length > 0 && dados.perguntas.every(p => p.tipo === 'nuvem' || p.tipo === 'texto'));
+
+    let html = "";
+
+    // Ranking (ou lista simples de participantes, se for um quiz de opinião)
+    if (ehOpiniao) {
+        html += `
+            <div>
+                <h4 class="text-xs font-black uppercase text-slate-400 tracking-wider mb-2">Participantes (${dados.participantes.length})</h4>
+                <div class="flex flex-wrap gap-1.5">
+                    ${dados.participantes.map(p => `<span class="pl-1 pr-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center gap-1.5">${renderAvatarChip(p.avatar, p.apelido, 'w-5 h-5')}${escapeHtml(p.apelido)}</span>`).join('')
+                        || '<p class="text-xs text-slate-400 italic">Nenhum participante.</p>'}
+                </div>
+            </div>`;
+    } else {
+        const ranking = [...dados.participantes].sort((a, b) => b.pontos - a.pontos);
+        html += `
+            <div>
+                <h4 class="text-xs font-black uppercase text-slate-400 tracking-wider mb-2">Ranking Final</h4>
+                <div class="space-y-1.5">
+                    ${ranking.map((p, i) => `
+                        <div class="flex justify-between items-center px-3 py-2 bg-slate-50 dark:bg-slate-950 rounded-lg border border-slate-200/60 dark:border-slate-800">
+                            <span class="flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-200">${i + 1}º ${renderAvatarChip(p.avatar, p.apelido, 'w-6 h-6')}${escapeHtml(p.apelido)}</span>
+                            <span class="text-xs font-black text-purple-600 dark:text-purple-400 font-mono">${p.pontos} pts</span>
+                        </div>
+                    `).join('') || '<p class="text-xs text-slate-400 italic">Nenhum participante.</p>'}
+                </div>
+            </div>`;
+    }
+
+    // Respostas por pergunta (múltipla escolha)
+    const perguntasMultipla = dados.perguntas.filter(p => p.tipo !== 'nuvem' && p.tipo !== 'texto');
+    if (perguntasMultipla.length > 0) {
+        html += `<div><h4 class="text-xs font-black uppercase text-slate-400 tracking-wider mb-2">Respostas por Pergunta</h4><div class="space-y-3">`;
+        perguntasMultipla.forEach((pergunta, idx) => {
+            const respostasDaPergunta = dados.respostas.filter(r => r.pergunta_id === pergunta.id);
+            const total = respostasDaPergunta.length;
+            const opcoes = pergunta.quiz_opcoes || [];
+
+            html += `<div class="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
+                <p class="text-xs font-bold text-slate-700 dark:text-slate-200 mb-2">${idx + 1}. ${escapeHtml(pergunta.enunciado)}</p>
+                <div class="space-y-1.5">
+                    ${total === 0 ? '<p class="text-[11px] text-slate-400 italic">Sem respostas registradas.</p>' : opcoes.map(opc => {
+                        const qtd = respostasDaPergunta.filter(r => r.opcao_id === opc.id).length;
+                        const pct = total > 0 ? Math.round((qtd / total) * 100) : 0;
+                        return `<div class="flex items-center gap-2 text-[11px]">
+                            <span class="flex-1 truncate ${opc.is_correta ? 'font-bold text-emerald-600 dark:text-emerald-400' : 'text-slate-600 dark:text-slate-300'}">${opc.is_correta ? '✔ ' : ''}${escapeHtml(opc.texto)}</span>
+                            <span class="font-mono text-slate-400 shrink-0">${qtd} (${pct}%)</span>
+                        </div>`;
+                    }).join('')}
+                </div>
+            </div>`;
+        });
+        html += `</div></div>`;
+    }
+
+    // Nuvem de palavras (agregada)
+    const perguntasNuvem = dados.perguntas.filter(p => p.tipo === 'nuvem');
+    if (perguntasNuvem.length > 0) {
+        html += `<div><h4 class="text-xs font-black uppercase text-slate-400 tracking-wider mb-2">Nuvem de Palavras</h4><div class="space-y-3">`;
+        perguntasNuvem.forEach((pergunta, idx) => {
+            const palavras = dados.nuvemRespostas.filter(r => r.pergunta_id === pergunta.id);
+            const agregadas = agregarListaDePalavras(palavras, false);
+            html += `<div class="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
+                <p class="text-xs font-bold text-slate-700 dark:text-slate-200 mb-2">${idx + 1}. ${escapeHtml(pergunta.enunciado)}</p>
+                <div class="flex flex-wrap gap-1.5">
+                    ${agregadas.map(item => `<span class="px-2 py-1 rounded-lg text-[11px] font-bold bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-300">${escapeHtml(item.exibicao)} <span class="opacity-60">(${item.total}x)</span></span>`).join('')
+                        || '<p class="text-[11px] text-slate-400 italic">Nenhuma palavra enviada.</p>'}
+                </div>
+            </div>`;
+        });
+        html += `</div></div>`;
+    }
+
+    // Opinião em texto (com nome do aluno — visão privada do instrutor; no telão ao vivo é anônima)
+    const perguntasTexto = dados.perguntas.filter(p => p.tipo === 'texto');
+    if (perguntasTexto.length > 0) {
+        const apelidoPorId = new Map(dados.participantes.map(p => [p.id, p.apelido]));
+        html += `<div><h4 class="text-xs font-black uppercase text-slate-400 tracking-wider mb-2">Opinião em Texto <span class="normal-case font-normal text-slate-400">(anônima no telão, identificada aqui)</span></h4><div class="space-y-3">`;
+        perguntasTexto.forEach((pergunta, idx) => {
+            const respostas = dados.textoRespostas.filter(r => r.pergunta_id === pergunta.id);
+            html += `<div class="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
+                <p class="text-xs font-bold text-slate-700 dark:text-slate-200 mb-2">${idx + 1}. ${escapeHtml(pergunta.enunciado)}</p>
+                <div class="space-y-1.5">
+                    ${respostas.map(r => `
+                        <div class="p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800">
+                            <p class="text-[10px] font-bold text-violet-600 dark:text-violet-400">${escapeHtml(apelidoPorId.get(r.participante_id) || "—")}</p>
+                            <p class="text-[11px] text-slate-600 dark:text-slate-300">${escapeHtml(r.texto)}</p>
+                        </div>
+                    `).join('') || '<p class="text-[11px] text-slate-400 italic">Nenhuma resposta enviada.</p>'}
+                </div>
+            </div>`;
+        });
+        html += `</div></div>`;
+    }
+
+    corpo.innerHTML = html || '<p class="text-sm text-slate-400 italic">Sem dados para esta sessão.</p>';
+}
+
+function exportarResultadosCSVAtual() {
+    if (!sessaoDetalhesAtual) return;
+    exportarResultadosCSV(sessaoDetalhesAtual.dados, sessaoDetalhesAtual.codigoSala);
+}
+
+// Gera um único CSV com 4 seções (ranking, respostas por pergunta, nuvem agregada, nuvem por aluno).
+// Palavras ocultadas pelo instrutor ao vivo não entram na exportação.
+function exportarResultadosCSV(dados, codigoSala) {
+    const apelidoPorId = new Map(dados.participantes.map(p => [p.id, p.apelido]));
+    const linhas = [];
+
+    linhas.push(linhaCsv(["RANKING FINAL"]));
+    linhas.push(linhaCsv(["Posição", "Apelido", "Pontos"]));
+    const ranking = [...dados.participantes].sort((a, b) => b.pontos - a.pontos);
+    if (ranking.length === 0) {
+        linhas.push(linhaCsv(["-", "Nenhum participante", "-"]));
+    } else {
+        ranking.forEach((p, i) => linhas.push(linhaCsv([i + 1, p.apelido, p.pontos])));
+    }
+    linhas.push("");
+
+    const perguntasMultipla = dados.perguntas.filter(p => p.tipo !== 'nuvem' && p.tipo !== 'texto');
+    if (perguntasMultipla.length > 0) {
+        linhas.push(linhaCsv(["RESPOSTAS POR PERGUNTA"]));
+        linhas.push(linhaCsv(["Pergunta", "Apelido", "Resposta", "Correta", "Tempo (s)", "Pontos"]));
+        perguntasMultipla.forEach(pergunta => {
+            const opcoesPorId = new Map((pergunta.quiz_opcoes || []).map(o => [o.id, o]));
+            const respostasDaPergunta = dados.respostas.filter(r => r.pergunta_id === pergunta.id);
+
+            if (respostasDaPergunta.length === 0) {
+                linhas.push(linhaCsv([pergunta.enunciado, "-", "Sem respostas registradas", "-", "-", "-"]));
+                return;
+            }
+            respostasDaPergunta.forEach(r => {
+                const opc = opcoesPorId.get(r.opcao_id);
+                const tempo = r.tempo_gasto_segundos != null ? String(r.tempo_gasto_segundos).replace(".", ",") : "-";
+                linhas.push(linhaCsv([
+                    pergunta.enunciado,
+                    apelidoPorId.get(r.participante_id) || "—",
+                    opc ? opc.texto : "—",
+                    opc?.is_correta ? "Sim" : "Não",
+                    tempo,
+                    r.pontos_ganhos ?? 0
+                ]));
+            });
+        });
+        linhas.push("");
+    }
+
+    const perguntasNuvem = dados.perguntas.filter(p => p.tipo === 'nuvem');
+    if (perguntasNuvem.length > 0) {
+        linhas.push(linhaCsv(["PALAVRAS DA NUVEM (AGREGADO)"]));
+        linhas.push(linhaCsv(["Pergunta", "Palavra", "Menções"]));
+        perguntasNuvem.forEach(pergunta => {
+            const palavras = dados.nuvemRespostas.filter(r => r.pergunta_id === pergunta.id);
+            const agregadas = agregarListaDePalavras(palavras, false);
+            if (agregadas.length === 0) {
+                linhas.push(linhaCsv([pergunta.enunciado, "-", 0]));
+            } else {
+                agregadas.forEach(item => linhas.push(linhaCsv([pergunta.enunciado, item.exibicao, item.total])));
+            }
+        });
+        linhas.push("");
+
+        linhas.push(linhaCsv(["PALAVRAS DA NUVEM (POR ALUNO)"]));
+        linhas.push(linhaCsv(["Pergunta", "Apelido", "Palavra"]));
+        perguntasNuvem.forEach(pergunta => {
+            const palavras = dados.nuvemRespostas.filter(r => r.pergunta_id === pergunta.id && !r.oculta);
+            if (palavras.length === 0) {
+                linhas.push(linhaCsv([pergunta.enunciado, "-", "Nenhuma palavra enviada"]));
+            } else {
+                palavras.forEach(r => linhas.push(linhaCsv([pergunta.enunciado, apelidoPorId.get(r.participante_id) || "—", r.texto])));
+            }
+        });
+        linhas.push("");
+    }
+
+    const perguntasTexto = dados.perguntas.filter(p => p.tipo === 'texto');
+    if (perguntasTexto.length > 0) {
+        linhas.push(linhaCsv(["OPINIÃO EM TEXTO (ANÔNIMA NO TELÃO, IDENTIFICADA AQUI)"]));
+        linhas.push(linhaCsv(["Pergunta", "Apelido", "Resposta"]));
+        perguntasTexto.forEach(pergunta => {
+            const respostas = dados.textoRespostas.filter(r => r.pergunta_id === pergunta.id);
+            if (respostas.length === 0) {
+                linhas.push(linhaCsv([pergunta.enunciado, "-", "Nenhuma resposta enviada"]));
+            } else {
+                respostas.forEach(r => linhas.push(linhaCsv([pergunta.enunciado, apelidoPorId.get(r.participante_id) || "—", r.texto])));
+            }
+        });
+    }
+
+    baixarCsv(`Resultados_Sala_${codigoSala}.csv`, linhas.join("\r\n"));
+}
+
+function paraCsvCampo(valor) {
+    const str = String(valor ?? "");
+    if (/[;"\n]/.test(str)) return '"' + str.replace(/"/g, '""') + '"';
+    return str;
+}
+
+function linhaCsv(campos) {
+    return campos.map(paraCsvCampo).join(";");
+}
+
+function baixarCsv(nomeArquivo, conteudo) {
+    // BOM no início: sem isso, acentos (ã, ç, õ) aparecem corrompidos ao abrir no Excel
+    const blob = new Blob(["\uFEFF" + conteudo], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = nomeArquivo;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
 }
