@@ -135,6 +135,26 @@ const app = {
         if (tbodyInativos) tbodyInativos.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-slate-500">Carregando...</td></tr>';
         
         const { data, error } = await supabase.from('profiles').select('*').order('name', { ascending: true });
+        this._usuariosPorId = new Map((data || []).map(u => [u.id, u]));
+
+        if (data && data.length > 0) {
+            const usuariosAtivosParaPool = data.filter(u => u.status !== 'inativo');
+            const totalUsadoBytes = usuariosAtivosParaPool.reduce((soma, u) => soma + (u.storage_used_bytes || 0), 0);
+            const totalAlocadoBytes = usuariosAtivosParaPool.reduce((soma, u) => soma + (u.storage_quota_bytes || 524288000), 0);
+            const TETO_GLOBAL_BYTES = 10 * 1024 * 1024 * 1024;
+
+            const poolEl = document.getElementById('pool-armazenamento');
+            if (poolEl) {
+                const usadoTxt = totalUsadoBytes >= 1073741824
+                    ? `${(totalUsadoBytes / 1073741824).toFixed(2)} GB`
+                    : `${(totalUsadoBytes / 1048576).toFixed(1)} MB`;
+                const alocadoGB = (totalAlocadoBytes / 1073741824).toFixed(2);
+                const pctUsado = Math.min(100, Math.round((totalUsadoBytes / TETO_GLOBAL_BYTES) * 100));
+                const pctAlocado = Math.min(100, Math.round((totalAlocadoBytes / TETO_GLOBAL_BYTES) * 100));
+
+                poolEl.innerHTML = `📦 Armazenamento: <strong>${usadoTxt} usados</strong> (${pctUsado}% do pool) · <strong>${alocadoGB} GB alocados</strong> de 10 GB (${pctAlocado}% já reservado entre os usuários)`;
+            }
+        }
 
         if (error) {
             this.showToast("Erro ao carregar: " + error.message, "error");
@@ -210,6 +230,13 @@ const app = {
                         </svg>
                     </button>
 
+                    ${isInativo ? `
+                    <button onclick="app.limparArmazenamento('${u.id}', '${(u.name || 'usuário').replace(/'/g, "\\'")}')"
+                        class="text-amber-500 hover:text-amber-700 mr-3" title="Limpar armazenamento (Cockpit Drive)">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    </button>
+                    ` : ''}
+
                     <button onclick="${isMe ? `app.showToast('Segurança: Você não pode alterar o seu próprio status.', 'error')` : `app.alternarStatus('${u.id}', '${u.status || 'ativo'}')`}"
                         class="${isInativo ? 'text-green-500 hover:text-green-700' : 'text-red-500 hover:text-red-700'} ${isMe ? 'opacity-30 cursor-not-allowed' : ''}"
                         title="${isMe ? 'Proteção de Conta Ativa' : (isInativo ? 'Ativar Usuário' : 'Inativar Usuário')}">
@@ -242,6 +269,11 @@ const app = {
     // 3. ABRIR MODAL DE EDIÇÃO
     async abrirEdicao(id, name, email, role, encodedApps, encodedCoord, isResp, encodedUserDash, isEmailAtivo, isTelegramAtivo) {
         document.getElementById('editId').value = id;
+        const dadosCompletos = this._usuariosPorId?.get(id);
+        const cotaBytes = dadosCompletos?.storage_quota_bytes || 524288000;
+        const usoBytes = dadosCompletos?.storage_used_bytes || 0;
+        document.getElementById('editStorageQuota').value = Math.round(cotaBytes / (1024 * 1024));
+        document.getElementById('editStorageUsado').textContent = `Em uso: ${(usoBytes / (1024 * 1024)).toFixed(1)} MB`;
         document.getElementById('editName').value = name;
         document.getElementById('editEmail').value = email !== 'undefined' ? email : '';
         document.getElementById('editRole').value = role;
@@ -354,6 +386,8 @@ const app = {
             btn.textContent = "Atualizando...";
 
             const user_dash = document.getElementById('editUserDash').value;
+            const storageQuotaMB = parseInt(document.getElementById('editStorageQuota').value) || 500;
+            const storage_quota_bytes = storageQuotaMB * 1024 * 1024;
             try {
                 const avatarUrl = await this.uploadAvatar('editAvatar');
 
@@ -370,8 +404,9 @@ const app = {
                         responsavel: responsavel,
                         user_dash: user_dash,
                         recebe_email_semanal: recebeEmail,
-                        recebe_email_mensal: recebeEmail
-                    } 
+                        recebe_email_mensal: recebeEmail,
+                        storage_quota_bytes: storage_quota_bytes
+                    }
                 };
 
                 if (avatarUrl) payload.avatar_url = avatarUrl;
@@ -407,6 +442,48 @@ const app = {
                 btn.textContent = "Salvar Alterações";
             }
      },
+
+    // LIMPAR ARMAZENAMENTO (Cockpit Drive) — usado em contas inativas pra liberar espaço do pool físico
+    async limparArmazenamento(userId, userName) {
+        if (!confirm(`Excluir TODOS os arquivos de "${userName}" no Cockpit Drive? Essa ação não pode ser desfeita.`)) return;
+
+        const WORKER_URL_DRIVE = "https://cockpit-storage-worker.kwfroes.workers.dev";
+
+        try {
+            const { data: { session } } = await supabase.auth.getSession();
+            const token = session?.access_token;
+            if (!token) { this.showToast("Sessão expirada. Faça login novamente.", "error"); return; }
+
+            const { data: arquivos, error: errList } = await supabase
+                .from('storage_arquivos')
+                .select('id, storage_key')
+                .eq('user_id', userId);
+
+            if (errList) throw errList;
+
+            for (const arquivo of (arquivos || [])) {
+                try {
+                    await fetch(`${WORKER_URL_DRIVE}/${arquivo.storage_key}`, {
+                        method: "DELETE",
+                        headers: { "Authorization": `Bearer ${token}` }
+                    });
+                } catch (e) {
+                    console.error("Erro ao excluir do R2:", arquivo.storage_key, e);
+                }
+            }
+
+            await supabase.from('storage_arquivos').delete().eq('user_id', userId);
+            await supabase.from('storage_pastas').delete().eq('user_id', userId);
+
+            this.showToast(`Armazenamento de "${userName}" foi limpo (${(arquivos || []).length} arquivo(s)).`);
+
+            enviarLogAoPai("LIMPAR_ARMAZENAMENTO_USUARIO", { alvo_id: userId, alvo_nome: userName, qtd_arquivos: (arquivos || []).length });
+
+            await this.carregarUsuarios();
+        } catch (err) {
+            this.showToast("Erro ao limpar armazenamento: " + err.message, "error");
+        }
+    },
 
     // 5. INATIVAR / ATIVAR USUÁRIO
     async alternarStatus(id, statusAtual) {
@@ -574,6 +651,8 @@ const app = {
                 }
 
                 const user_dash = document.getElementById('newUserDash').value;
+                const storageQuotaMB = parseInt(document.getElementById('newStorageQuota').value) || 500;
+                const storage_quota_bytes = storageQuotaMB * 1024 * 1024;
                 // Envia para a Edge Function incluindo a coordenação montada
                 const { error } = await supabase.functions.invoke('gerenciar-usuarios', {
                     body: { 
@@ -586,8 +665,9 @@ const app = {
                             allowed_apps: allowed_apps,
                             coordenacao: coordenacao, // Aqui vai a string unificada (Ex: "DSL/CGCF")
                             responsavel: responsavel,
-                            user_dash: user_dash
-                        } 
+                            user_dash: user_dash,
+                            storage_quota_bytes: storage_quota_bytes
+                        }
                     }
                 });
 
