@@ -33,6 +33,9 @@
                 <span class="hidden sm:inline">Novo Usuário</span>
             </button>
         </div>
+        <div id="pool-armazenamento" class="mb-4 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs text-slate-500">
+            Calculando armazenamento alocado...
+        </div>
 
         <div class="flex gap-4 border-b border-gray-200 dark:border-slate-800 mb-6 overflow-x-auto whitespace-nowrap">
             <button onclick="app.mudarAba('usuarios')" id="tabUsuarios" class="px-4 py-3 font-bold text-blue-600 border-b-2 border-blue-600 transition-colors">
@@ -276,6 +279,11 @@
                 <button onclick="document.getElementById('modal').classList.add('hidden')" class="flex-1 bg-gray-200 dark:bg-slate-800 text-slate-800 dark:text-white py-2.5 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-700 transition font-medium">Cancelar</button>
                 <button onclick="app.salvarUsuario()" id="btnSaveUser" class="flex-1 bg-green-600 text-white py-2.5 rounded-lg hover:bg-green-700 transition font-medium shadow-md">Criar Usuário</button>
             </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-500 mb-1">Armazenamento (Cockpit Drive) — MB</label>
+                <input id="newStorageQuota" type="number" min="50" step="50" value="500" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
+                <p class="text-[10px] text-slate-400 mt-1">Padrão: 500MB. O pool total do Cockpit é de 10GB entre todos os usuários.</p>
+            </div>
         </div>
     </div>
 
@@ -415,6 +423,12 @@
                         </label>
                     </div>
                     <p class="text-[10px] text-slate-400 mt-1 italic">* Administradores possuem acesso automático a todas as ferramentas.</p>
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Armazenamento (Cockpit Drive) — MB</label>
+                    <input id="editStorageQuota" type="number" min="50" step="50" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
+                    <p id="editStorageUsado" class="text-[10px] text-slate-400 mt-1"></p>
                 </div>
 
                 <div>

@@ -385,7 +385,9 @@ function adicionarBlocoPergunta(dadosPergunta = null) {
     const uid = contadorUidPergunta;
     const numeroQuestao = container.children.length + 1;
 
-    const tipoVal = (dadosPergunta && (dadosPergunta.tipo === 'nuvem' || dadosPergunta.tipo === 'texto')) ? dadosPergunta.tipo : 'multipla';
+    const tipoVal = dadosPergunta
+        ? ((dadosPergunta.tipo === 'nuvem' || dadosPergunta.tipo === 'texto') ? dadosPergunta.tipo : 'multipla')
+        : (document.getElementById("quiz-modo-opiniao")?.checked ? 'nuvem' : 'multipla');
     const maxPalavrasVal = dadosPergunta ? (dadosPergunta.max_palavras || 1) : 1;
     const enunciadoVal = escapeHtml(dadosPergunta ? dadosPergunta.enunciado : "");
     const justificativaVal = escapeHtml(dadosPergunta ? dadosPergunta.justificativa : "");
@@ -501,6 +503,19 @@ function aplicarTipoBloco(bloco) {
                 ? "Ex: O que você acha que poderia melhorar no atendimento?"
                 : "Digite o enunciado da questão...";
     }
+}
+
+// Ao trocar o modo do questionário, sugere um tipo padrão para todas as perguntas do builder
+// (múltipla para "com ranking", nuvem para "só opinião") — cada pergunta continua podendo ser
+// trocada individualmente depois (ex.: para "opinião em texto").
+function aplicarModoAosTiposDePergunta(modo) {
+    const tipoPadrao = modo === 'opiniao' ? 'nuvem' : 'multipla';
+    document.querySelectorAll("#container-perguntas-builder .bloco-pergunta").forEach(bloco => {
+        const select = bloco.querySelector(".b-tipo");
+        if (select) select.value = tipoPadrao;
+        bloco.dataset.tipo = tipoPadrao;
+        aplicarTipoBloco(bloco);
+    });
 }
 
 function removerBlocoPergunta(btnEl) {

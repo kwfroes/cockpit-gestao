@@ -627,6 +627,7 @@ if (loginForm) {
     "#usuarios": "apps/usuarios/index.html",
     "#vistoria": "apps/vistoria/index.html",
     "#quiz": "apps/quiz/index.html",
+    "#chatstorage": "apps/chatstorage/index.html",
   };
   const defaultHash = "#home";
 
@@ -1083,6 +1084,7 @@ async function performLogout() {
       { element: document.querySelector('a[href="#usuarios"]'), route: "#usuarios" },
       { element: document.querySelector('a[href="#vistoria"]'), route: "#vistoria" },
       { element: document.querySelector('a[href="#quiz"]'), route: "#quiz" },
+      { element: document.querySelector('a[href="#chatstorage"]'), route: "#chatstorage" },
     ];
 
     // 3. Varre e esconde usando a classe do Tailwind "hidden"
@@ -1832,7 +1834,8 @@ async function performLogout() {
 
   // Objeto que armazena a quantidade de notificações de cada app do Cockpit
 const globalNotificationState = {
-    demandas: 0
+    demandas: 0,
+    chatstorage: 0,
     // No futuro, se houver 'contratos': 0, etc.
 };
 
