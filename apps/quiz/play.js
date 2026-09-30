@@ -18,6 +18,7 @@ let ultimoGanhoRodada = 0;          // Isolado para não ser sobrescrito pelo Re
 let promiseEnvioResposta = null;    // Garante que o RPC termine antes de exibir o feedback
 let realtimeChannel = null;
 let alunoTimerInterval = null;
+let avatarEscolhido = null;
 
 // Nuvem de palavras
 let palavrasEnviadasNuvem = [];
@@ -25,11 +26,18 @@ let maxPalavrasNuvem = 1;
 let nuvemAberta = false;
 let enviandoPalavra = false;
 
+// Opinião em texto (anônima)
+let textoAberto = false;
+let jaEnviouTexto = false;
+let enviandoTexto = false;
+let textoAlunoTimerInterval = null;
+
 const telas = {
     login: document.getElementById("tela-login"),
     espera: document.getElementById("tela-espera"),
     pergunta: document.getElementById("tela-pergunta"),
     nuvem: document.getElementById("tela-nuvem"),
+    texto: document.getElementById("tela-texto"),
     enviado: document.getElementById("tela-enviado"),
     feedback: document.getElementById("tela-feedback"),
     final: document.getElementById("tela-final")
@@ -49,10 +57,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     restaurarSessaoLocal();
+    montarSeletorDeAvatares();
     document.getElementById("form-entrar").addEventListener("submit", handleEntrarSala);
     document.getElementById("form-nuvem").addEventListener("submit", enviarPalavraNuvem);
     document.getElementById("input-palavra").addEventListener("input", (e) => {
         document.getElementById("nuvem-caracteres").textContent = `${e.target.value.length}/25`;
+    });
+    document.getElementById("form-texto").addEventListener("submit", enviarRespostaTexto);
+    document.getElementById("input-texto").addEventListener("input", (e) => {
+        document.getElementById("texto-caracteres").textContent = `${e.target.value.length}/400`;
     });
 });
 
@@ -73,6 +86,32 @@ function exibirToast(msg) {
     t.textContent = msg;
     t.classList.remove("opacity-0", "pointer-events-none");
     setTimeout(() => t.classList.add("opacity-0", "pointer-events-none"), 3000);
+}
+
+function montarSeletorDeAvatares() {
+    const grid = document.getElementById("grid-avatares");
+    if (!grid) return;
+
+    avatarEscolhido = ORDEM_AVATARS[Math.floor(Math.random() * ORDEM_AVATARS.length)];
+
+    grid.innerHTML = ORDEM_AVATARS.map(chave => `
+        <button type="button" data-avatar="${chave}" onclick="escolherAvatar('${chave}')"
+            class="avatar-opcao flex items-center justify-center p-1.5 rounded-2xl border-2 transition-all ${chave === avatarEscolhido ? 'border-purple-500 bg-purple-500/10' : 'border-transparent bg-slate-900'}">
+            ${renderAvatarChip(chave, '', 'w-full h-full aspect-square')}
+        </button>
+    `).join('');
+}
+
+function escolherAvatar(chave) {
+    avatarEscolhido = chave;
+    document.querySelectorAll('.avatar-opcao').forEach(btn => {
+        const selecionado = btn.dataset.avatar === chave;
+        btn.classList.toggle('border-purple-500', selecionado);
+        btn.classList.toggle('bg-purple-500/10', selecionado);
+        btn.classList.toggle('border-transparent', !selecionado);
+        btn.classList.toggle('bg-slate-900', !selecionado);
+    });
+    if (navigator.vibrate) navigator.vibrate(20);
 }
 
 async function handleEntrarSala(e) {
@@ -114,7 +153,7 @@ async function handleEntrarSala(e) {
 
         const { data: partCriado, error: errPart } = await supabaseClient
             .from("quiz_participantes")
-            .insert([{ sala_id: sala.id, apelido: nickname, pontos: 0 }])
+            .insert([{ sala_id: sala.id, apelido: nickname, pontos: 0, avatar: avatarEscolhido }])
             .select()
             .single();
 
@@ -141,6 +180,7 @@ async function handleEntrarSala(e) {
 
 function atualizarHeader(nome, pontos) {
     document.getElementById("header-user-info").classList.remove("hidden");
+    document.getElementById("label-user-avatar").innerHTML = renderAvatarChip(participante?.avatar, nome, "w-6 h-6");
     document.getElementById("label-user-name").textContent = nome;
     document.getElementById("label-user-score").textContent = `${pontos} pts`;
 }
@@ -322,6 +362,13 @@ async function avaliarEstadoSala(status, perguntaId, enunciadoBroadcast = null, 
     if (status === 'nuvem' || status === 'nuvem_resultado') {
         if (alunoTimerInterval) clearInterval(alunoTimerInterval);
         await abrirTelaNuvem(status, perguntaId, enunciadoBroadcast, maxPalavrasBroadcast);
+        return;
+    }
+
+    // OPINIÃO EM TEXTO: coletando ('texto') ou encerrada ('texto_resultado')
+    if (status === 'texto' || status === 'texto_resultado') {
+        if (alunoTimerInterval) clearInterval(alunoTimerInterval);
+        await abrirTelaTexto(status, perguntaId, enunciadoBroadcast, tempoBroadcast);
         return;
     }
 
@@ -553,6 +600,16 @@ async function baixarGabaritoPDF() {
             (mapaPalavras[r.pergunta_id] = mapaPalavras[r.pergunta_id] || []).push(r.texto);
         });
 
+        // 3c. Resposta de opinião em texto enviada pelo aluno
+        const { data: minhasRespostasTexto } = await supabaseClient
+            .from("quiz_texto_respostas")
+            .select("pergunta_id, texto")
+            .eq("sala_id", salaAtual.id)
+            .eq("participante_id", participante.id);
+
+        const mapaTexto = {};
+        (minhasRespostasTexto || []).forEach(r => { mapaTexto[r.pergunta_id] = r.texto; });
+
         // 4. Monta o documento PDF com jsPDF
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF({ unit: "mm", format: "a4" });
@@ -563,8 +620,8 @@ async function baixarGabaritoPDF() {
         // Cabeçalho do Relatório
         doc.setFont("helvetica", "bold");
         doc.setFontSize(14);
-        doc.setTextColor(88, 28, 135); // Roxo Sala Ativa
-        const tituloQuiz = quizInfo?.titulo || "Relatório de Desempenho - Sala Ativa";
+        doc.setTextColor(88, 28, 135); // Roxo Quiz Arena
+        const tituloQuiz = quizInfo?.titulo || "Relatório de Desempenho - Quiz Arena";
         const linhasTitulo = doc.splitTextToSize(tituloQuiz, larguraUtil);
         doc.text(linhasTitulo, margem, y);
         y += linhasTitulo.length * 6 + 2;
@@ -609,6 +666,38 @@ async function baixarGabaritoPDF() {
                 doc.setTextColor(2, 132, 199); // Azul nuvem
                 doc.text(linhasPal, margem + 2, y);
                 y += linhasPal.length * 4.8 + 1;
+
+                y += 4;
+                doc.setDrawColor(241, 245, 249);
+                doc.line(margem, y, margem + larguraUtil, y);
+                y += 6;
+                return;
+            }
+
+            // Pergunta do tipo opinião em texto: mostra a resposta enviada (registrada, mas anônima só no telão)
+            if (p.tipo === 'texto') {
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(11);
+                const linhasEnunc = doc.splitTextToSize(`${idx + 1}. ${p.enunciado} (opinião em texto)`, larguraUtil);
+                const respostaTexto = mapaTexto[p.id] || "Você não enviou resposta a tempo.";
+                doc.setFontSize(9.5);
+                const linhasResp = doc.splitTextToSize(`Sua resposta: ${respostaTexto}`, larguraUtil - 4);
+
+                if (y + (linhasEnunc.length * 5) + (linhasResp.length * 5) + 12 > 280) {
+                    doc.addPage();
+                    y = 20;
+                }
+
+                doc.setFontSize(11);
+                doc.setTextColor(15, 23, 42);
+                doc.text(linhasEnunc, margem, y);
+                y += linhasEnunc.length * 5 + 1.5;
+
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(9.5);
+                doc.setTextColor(124, 58, 237); // Roxo opinião
+                doc.text(linhasResp, margem + 2, y);
+                y += linhasResp.length * 4.8 + 1;
 
                 y += 4;
                 doc.setDrawColor(241, 245, 249);
@@ -964,5 +1053,172 @@ async function enviarPalavraNuvem(e) {
         btn.disabled = false;
         renderizarEstadoNuvem();
         if (nuvemAberta && palavrasEnviadasNuvem.length < maxPalavrasNuvem) input.focus();
+    }
+}
+
+// ========================================================
+// OPINIÃO EM TEXTO (CELULAR) — resposta livre, cronometrada, anônima no telão
+// ========================================================
+async function abrirTelaTexto(status, perguntaId, enunciadoBroadcast, tempoBroadcast) {
+    const mudouPergunta = perguntaId !== perguntaAtualId;
+    if (mudouPergunta) {
+        perguntaAtualId = perguntaId;
+        jaEnviouTexto = false;
+        jaRespondeuNestaRodada = false;
+        ultimoGanhoRodada = 0;
+        promiseEnvioResposta = null;
+    }
+
+    trocarTela("texto");
+
+    const elEnunciado = document.getElementById("texto-aluno-enunciado");
+    if (enunciadoBroadcast) elEnunciado.textContent = enunciadoBroadcast;
+
+    await carregarDadosPergunta(perguntaId);
+    const dados = dadosPerguntaCache[perguntaId];
+    if (dados) elEnunciado.textContent = dados.enunciado;
+
+    // Ao recarregar a página no meio da pergunta, recupera se já respondeu
+    if (mudouPergunta) await verificarMinhaRespostaTexto(perguntaId);
+
+    const estavaAberto = textoAberto;
+    textoAberto = status === 'texto';
+    renderizarEstadoTexto();
+
+    if (textoAberto) {
+        const tempoTotal = tempoBroadcast || dados?.tempo_segundos || 30;
+        if (mudouPergunta || !estavaAberto) {
+            iniciarTimerAlunoTexto(tempoTotal);
+            if (navigator.vibrate) navigator.vibrate(80);
+            if (!jaEnviouTexto) setTimeout(() => document.getElementById("input-texto").focus(), 200);
+        }
+    } else if (textoAlunoTimerInterval) {
+        clearInterval(textoAlunoTimerInterval);
+    }
+}
+
+async function verificarMinhaRespostaTexto(perguntaId) {
+    if (!salaAtual || !participante || !perguntaId) return;
+    const { data } = await supabaseClient
+        .from("quiz_texto_respostas")
+        .select("id")
+        .eq("pergunta_id", perguntaId)
+        .eq("participante_id", participante.id)
+        .maybeSingle();
+
+    jaEnviouTexto = !!data;
+}
+
+function iniciarTimerAlunoTexto(segundosTotais) {
+    if (textoAlunoTimerInterval) clearInterval(textoAlunoTimerInterval);
+
+    const duracaoMs = segundosTotais * 1000;
+    const fimTimestamp = performance.now() + duracaoMs;
+    const label = document.getElementById("texto-aluno-timer");
+
+    const atualizar = () => {
+        const restanteMs = Math.max(0, fimTimestamp - performance.now());
+        label.textContent = `${(restanteMs / 1000).toFixed(2).padStart(5, "0")}s`;
+        if (restanteMs <= 0) clearInterval(textoAlunoTimerInterval);
+    };
+
+    atualizar();
+    textoAlunoTimerInterval = setInterval(atualizar, 100);
+}
+
+function renderizarEstadoTexto() {
+    const form = document.getElementById("form-texto");
+    const concluido = document.getElementById("texto-aluno-concluido");
+    const titulo = document.getElementById("texto-aluno-concluido-titulo");
+    const txt = document.getElementById("texto-aluno-concluido-txt");
+    const badge = document.getElementById("texto-aluno-badge");
+
+    if (!textoAberto) {
+        form.classList.add("hidden");
+        concluido.classList.remove("hidden");
+        titulo.textContent = "Respostas encerradas";
+        txt.textContent = jaEnviouTexto ? "Veja as respostas (anônimas) no telão." : "O tempo acabou antes do seu envio.";
+        badge.textContent = "✔ Encerrado";
+        badge.className = "text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+        return;
+    }
+
+    badge.textContent = "💬 Opinião em texto";
+    badge.className = "text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30";
+
+    if (jaEnviouTexto) {
+        form.classList.add("hidden");
+        concluido.classList.remove("hidden");
+        titulo.textContent = "Resposta enviada!";
+        txt.textContent = "Acompanhe as respostas (anônimas) no telão.";
+    } else {
+        form.classList.remove("hidden");
+        concluido.classList.add("hidden");
+    }
+}
+
+function mensagemErroTexto(err) {
+    const msg = String(err?.message || "");
+    if (msg.includes("RESPOSTA_FECHADA")) return "O tempo para responder já encerrou.";
+    if (msg.includes("JA_RESPONDEU")) return "Você já enviou sua resposta.";
+    if (msg.includes("TEXTO_INVALIDO")) return "Escreva de 1 a 400 caracteres.";
+    return "Não foi possível enviar. Tente de novo.";
+}
+
+async function enviarRespostaTexto(e) {
+    e.preventDefault();
+    if (enviandoTexto || !textoAberto || jaEnviouTexto || !salaAtual || !participante || !perguntaAtualId) return;
+
+    const input = document.getElementById("input-texto");
+    const btn = document.getElementById("btn-enviar-texto");
+    const texto = input.value.trim();
+
+    if (!texto) {
+        exibirToast("Escreva uma resposta antes de enviar.");
+        return;
+    }
+
+    enviandoTexto = true;
+    btn.disabled = true;
+    btn.textContent = "Enviando...";
+
+    try {
+        const { data, error } = await supabaseClient.rpc("submit_texto_resposta", {
+            p_sala_id: salaAtual.id,
+            p_participante_id: participante.id,
+            p_pergunta_id: perguntaAtualId,
+            p_texto: texto
+        });
+        if (error) throw error;
+
+        const linha = Array.isArray(data) ? data[0] : data;
+        jaEnviouTexto = true;
+        if (navigator.vibrate) navigator.vibrate(40);
+
+        // Aviso instantâneo ao telão (o banco também dispara via postgres_changes)
+        if (realtimeChannel && linha?.id) {
+            realtimeChannel.send({
+                type: 'broadcast',
+                event: 'nova_resposta_texto',
+                payload: {
+                    id: linha.id,
+                    sala_id: salaAtual.id,
+                    pergunta_id: linha.pergunta_id,
+                    participante_id: participante.id,
+                    texto: linha.texto
+                }
+            });
+        }
+    } catch (err) {
+        console.warn("Erro ao enviar resposta de texto:", err);
+        exibirToast(mensagemErroTexto(err));
+        const msg = String(err?.message || "");
+        if (msg.includes("RESPOSTA_FECHADA")) textoAberto = false;
+        if (msg.includes("JA_RESPONDEU")) jaEnviouTexto = true;
+    } finally {
+        enviandoTexto = false;
+        btn.disabled = false;
+        btn.textContent = "Enviar resposta";
+        renderizarEstadoTexto();
     }
 }
