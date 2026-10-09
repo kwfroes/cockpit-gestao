@@ -189,7 +189,7 @@ function conectarRealtime() {
     if (realtimeChannel) realtimeChannel.unsubscribe();
 
     realtimeChannel = supabaseClient
-        .channel(`quiz_sala_${salaAtual.id}`)
+        .channel(`quiz_sala_${salaAtual.id}`, { config: { private: true } })
         .on('broadcast', { event: 'mudar_status' }, (payload) => {
             const { status, perguntaId, enunciado, tempo, maxPalavras } = payload.payload;
             salaAtual.status = status;

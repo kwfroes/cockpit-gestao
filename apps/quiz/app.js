@@ -744,7 +744,7 @@ async function criarSalaAoVivo(quizId) {
         salaAtiva = salaCriada;
 
         montarArenaLobby(codigoSala);
-        iniciarRealtimeSala(salaAtiva.id);
+        await iniciarRealtimeSala(salaAtiva.id);
 
         buscarParticipantesBanco(salaAtiva.id);
         if (lobbyPollInterval) clearInterval(lobbyPollInterval);
@@ -812,11 +812,15 @@ async function buscarParticipantesBanco(salaId) {
     }
 }
 
-function iniciarRealtimeSala(salaId) {
+async function iniciarRealtimeSala(salaId) {
     if (realtimeChannel) realtimeChannel.unsubscribe();
 
+    // Necessário pra RLS de canal privado reconhecer o instrutor autenticado
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.access_token) supabase.realtime.setAuth(session.access_token);
+
     realtimeChannel = supabase
-        .channel(`quiz_sala_${salaId}`)
+        .channel(`quiz_sala_${salaId}`, { config: { private: true } })
         .on('broadcast', { event: 'novo_participante' }, (payload) => {
             const p = payload.payload;
             if (!participantesConectados.some(x => x.id === p.id)) {
