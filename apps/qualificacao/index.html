@@ -92,6 +92,11 @@
                     <span>TERCEIRIZADOS</span>
                 </label>
 
+                <label class="admin-only flex items-center gap-2 text-[10px] font-bold text-amber-700 dark:text-amber-400 cursor-pointer bg-white dark:bg-slate-850 p-2 rounded-lg border dark:border-slate-700" title="Famílias com inclusão/exclusão de documento aplicada, ainda sem ciência de um gestor CGCF">
+                    <input type="checkbox" id="filter-pendencia-ciencia" class="rounded text-amber-600">
+                    <span>⚠️</span>
+                </label>
+
                 <button onclick="openFamilyForm()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-xs font
                 -bold transition-all shadow-md cgcf-manager-only">
                     +
@@ -100,6 +105,12 @@
                 <button onclick="abrirModalExportJson()" class="bg-emerald-600 hover:bg-emerald-700 text-white p-2 rounded-lg transition-all shadow-md admin-only" title="Exportar JSON">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                 </button>
+
+                <button onclick="abrirModalReanaliseJuridica()" class="admin-only bg-indigo-700 hover:bg-indigo-800 text-white p-2 rounded-lg transition-all shadow-md relative" title="Reanálise Jurídica">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span id="badge-reanalise-pendentes" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow">0</span>
+                </button>
+
 
                 <input type="file" id="upload-cnpj" accept="application/pdf" class="hidden" onchange="analisarFornecedor(event)">
 
@@ -585,6 +596,124 @@
         </div>
     </div>
 
+    <div id="modal-reanalise-juridica" class="hidden fixed inset-0 z-[150] bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-5xl rounded-2xl shadow-2xl flex flex-col max-h-[88vh] border dark:border-slate-800 animate-fade-in">
+        <div class="p-5 border-b dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-850 rounded-t-2xl">
+            <h3 class="font-bold dark:text-white flex items-center gap-2 text-xs uppercase tracking-widest text-indigo-700 dark:text-indigo-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Reanálise Jurídica — Fila de Trabalho
+            </h3>
+            <button onclick="fecharModalReanaliseJuridica()" class="text-slate-400 hover:text-red-500 text-2xl transition-colors">&times;</button>
+        </div>
+
+        <div class="p-4 border-b dark:border-slate-800 flex flex-wrap gap-3 items-center bg-slate-50 dark:bg-slate-850/60">
+            <select id="reanalise-filtro-escopo" onchange="aplicarFiltrosReanalise()" class="p-2 text-xs border rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white outline-none">
+                <option value="prioritario" selected>Prioritário (exigência adicional)</option>
+                <option value="">Todos</option>
+                <option value="secundario">Secundário (só ATC hoje)</option>
+            </select>
+            <select id="reanalise-filtro-status" onchange="aplicarFiltrosReanalise()" class="p-2 text-xs border rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white outline-none">
+                <option value="">Todos Status</option>
+                <option value="pendente">Pendente</option>
+                <option value="em_analise">Em Análise</option>
+                <option value="aguardando_terceiro">Aguardando Terceiro</option>
+                <option value="sugerido_ia">Sugerido pela IA</option>
+                <option value="validado">Validado</option>
+            </select>
+            <select id="reanalise-filtro-cluster" onchange="aplicarFiltrosReanalise()" class="p-2 text-xs border rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white outline-none">
+                <option value="">Todos Clusters</option>
+                <option value="C1">C1 — Engenharia/Arquitetura</option>
+                <option value="C2">C2 — Saúde Regulada</option>
+                <option value="C3">C3 — Vig. Sanitária isolada</option>
+                <option value="C4">C4 — Baixo Risco</option>
+                <option value="C5">C5 — Conselhos Econ./Jurídicos</option>
+                <option value="C6">C6 — Agências Reguladoras</option>
+                <option value="C7">C7 — Órgãos Estaduais/Setoriais</option>
+                <option value="C8">C8 — Não classificado</option>
+            </select>
+            <label class="flex items-center gap-2 text-[10px] font-bold text-emerald-700 dark:text-emerald-400 cursor-pointer bg-white dark:bg-slate-800 px-2 py-1.5 rounded-lg border dark:border-slate-700"
+                title="Só famílias onde todos os documentos exigidos/elegíveis já têm base legal validada no dicionário — tendem a ser mais rápidas de validar">
+                <input type="checkbox" id="reanalise-filtro-docs-validados" onchange="aplicarFiltrosReanalise()" class="rounded text-emerald-600">
+                <span>✅ Docs validados</span>
+            </label>
+            <span id="reanalise-contador" class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest ml-auto"></span>
+            <button type="button" id="btn-sugerir-ia-lote" onclick="sugerirFundamentacaoEmLote()" disabled
+                class="bg-violet-600 hover:bg-violet-700 disabled:opacity-40 disabled:cursor-not-allowed text-white px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider shadow-md flex items-center gap-2 transition-colors"
+                title="Analisa com IA até 20 famílias do filtro atual (sem sugestão ainda) numa única chamada">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                Sugerir IA em Lote (<span class="qtd-lote">0</span>)
+            </button>
+        </div>
+
+        <div id="reanalise-fila-lista" class="p-6 overflow-y-auto custom-scrollbar flex-1 bg-slate-50 dark:bg-slate-900/50 space-y-2">
+            <p class="text-center text-sm text-slate-500 dark:text-slate-400 py-8">Carregando fila...</p>
+        </div>
+    </div>
+</div>
+
+<!-- Detalhe / decisão de uma família -->
+<div id="modal-detalhe-reanalise" class="hidden fixed inset-0 z-[160] bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-2xl shadow-2xl flex flex-col max-h-[90vh] border dark:border-slate-800 animate-fade-in">
+        <div class="p-5 border-b dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-850 rounded-t-2xl">
+            <div>
+                <p id="detalhe-reanalise-cluster" class="text-[10px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-1"></p>
+                <h3 id="detalhe-reanalise-titulo" class="font-bold text-slate-800 dark:text-white text-sm"></h3>
+            </div>
+            <button onclick="fecharDetalheReanalise()" class="text-slate-400 hover:text-red-500 text-2xl transition-colors">&times;</button>
+        </div>
+
+        <div id="detalhe-reanalise-corpo" class="p-6 overflow-y-auto space-y-4">
+            <!-- preenchido por renderizarDetalheReanalise() -->
+        </div>
+
+        <div class="p-4 border-t dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-850 rounded-b-2xl">
+            <button type="button" id="btn-sugerir-ia-reanalise" onclick="sugerirFundamentacaoIA()"
+                class="bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider shadow-md flex items-center gap-2 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                Sugerir Fundamentação (IA)
+            </button>
+            <button type="button" onclick="validarReanalise()"
+                class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg text-xs font-bold uppercase tracking-wider shadow-md flex items-center gap-2 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                Validar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Confirmar/editar a base legal de UM documento no dicionário compartilhado
+     (base_legal_documento) antes de marcar como validado. -->
+<div id="modal-validar-documento" class="hidden fixed inset-0 z-[170] bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-2xl shadow-2xl flex flex-col border dark:border-slate-800 animate-fade-in">
+        <div class="p-5 border-b dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-850 rounded-t-2xl">
+            <div>
+                <p class="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-1">Validar documento</p>
+                <h3 id="validar-documento-titulo" class="font-bold text-slate-800 dark:text-white text-sm"></h3>
+            </div>
+            <button onclick="fecharModalValidarDocumento()" class="text-slate-400 hover:text-red-500 text-2xl transition-colors">&times;</button>
+        </div>
+
+        <div class="p-6 space-y-2">
+            <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase">Base legal (edite antes de confirmar, se precisar)</label>
+            <textarea id="input-validar-documento-base-legal" rows="4" class="w-full p-2 text-xs border rounded-lg dark:bg-slate-850 dark:border-slate-700 dark:text-white"></textarea>
+            <p class="text-[10px] text-slate-400 dark:text-slate-500">Vale pra todas as famílias que usam este mesmo documento.</p>
+        </div>
+
+        <div class="p-4 border-t dark:border-slate-800 flex justify-end gap-2 bg-slate-50 dark:bg-slate-850 rounded-b-2xl">
+            <button type="button" onclick="fecharModalValidarDocumento()"
+                class="bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors">
+                Cancelar
+            </button>
+            <button type="button" onclick="confirmarValidarDocumento()"
+                class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg text-xs font-bold uppercase tracking-wider shadow-md flex items-center gap-2 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                Confirmar e Validar
+            </button>
+        </div>
+    </div>
+</div>
+
+
 <div id="toast-container" class="fixed bottom-20 right-5 z-[200] flex flex-col gap-2"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
@@ -596,6 +725,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../../assets/auth.js"></script>
     <script type="module" src="script.js"></script>
+    <script type="module" src="script_reanalise_juridica.js"></script>
     <script type="module" src="motor_cnae.js"></script> 
 
 </body>

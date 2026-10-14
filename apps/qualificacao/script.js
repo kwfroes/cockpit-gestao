@@ -195,6 +195,19 @@ window.abrirModalDetalheFamilia = (index) => {
 
                 <div class="border-t border-slate-200 dark:border-slate-700 pt-4">
                     <div class="flex items-center justify-between mb-2">
+                        <p class="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">Fundamentação Legal</p>
+                        <button type="button" onclick="document.getElementById('modal-detalhe-familia').remove(); abrirDetalheReanaliseDireto('${item.Família}');"
+                            class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 hover:underline">
+                            Ver na Reanálise Jurídica
+                        </button>
+                    </div>
+                    <div id="fundamentacao-legal-modal" class="text-xs text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg border dark:border-slate-700 italic text-slate-400">
+                        Carregando...
+                    </div>
+                </div>
+
+                <div class="border-t border-slate-200 dark:border-slate-700 pt-4">
+                    <div class="flex items-center justify-between mb-2">
                         <p class="text-[10px] font-bold text-blue-500 uppercase tracking-widest">CNAEs Relacionados</p>
                         <div class="flex items-center gap-3">
                             <!-- NOVO BOTÃO: Visível para todos, envia para a fila de sugestões -->
@@ -203,7 +216,7 @@ window.abrirModalDetalheFamilia = (index) => {
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                                 Sugerir Vínculo
                             </button>
-                            
+
                             <!-- BOTÃO ATUAL: Restrito aos Gestores (Usa a classe cgcf-manager-only) -->
                             <button type="button" id="btn-sugerir-cnae-modal" onclick="rodarSugestaoCnaeModal(${index})"
                                 class="cgcf-manager-only text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 transition-colors">
@@ -232,6 +245,7 @@ window.abrirModalDetalheFamilia = (index) => {
         </div>
     `;
     document.body.appendChild(modal);
+    carregarFundamentacaoLegalModal(item.Família);
 };
 
 window.rodarSugestaoCnaeModal = (index) => {
@@ -611,6 +625,24 @@ async function initApp() {
             "Ramo": item.ramo || {}
         }));
 
+        // 3b. Marca quais famílias têm alteração de documento (incluir/excluir,
+        // aplicada a partir de uma sugestão da Reanálise Jurídica) ainda
+        // aguardando ciência de um gestor CGCF — usado pro selo no card e
+        // pelo filtro "pendente de ciência" abaixo. A função já faz a
+        // consulta pesada (script_reanalise_juridica.js, migration 006);
+        // se esse módulo ainda não carregou por algum motivo, só não marca
+        // nada (degrada bem, sem quebrar o carregamento da grade).
+        if (typeof window.buscarFamiliasComAlteracaoPendente === 'function') {
+            try {
+                const familiasPendentes = await window.buscarFamiliasComAlteracaoPendente();
+                familyData.forEach(item => {
+                    item.pendenteCiencia = familiasPendentes.has(item["Família"]);
+                });
+            } catch (e) {
+                console.warn('Não foi possível verificar alterações de documento pendentes:', e);
+            }
+        }
+
         // 4. Processa os retornos e converte para JSON
         if (respRamos && respRamos.ok) window.ramosDictionary = await respRamos.json();
         if (respDescRamos && respDescRamos.ok) descricoesRamos = await respDescRamos.json();
@@ -664,6 +696,7 @@ function applyFilters(resetPage = true) {
     const term = searchInput.value.toLowerCase();
     const type = typeFilter.value;
     const onlyTerceirizado = terceirizadoFilter.checked;
+    const onlyPendenciaCiencia = document.getElementById('filter-pendencia-ciencia')?.checked || false;
 
     const cnaeOperador = document.getElementById('filter-cnae-operador')?.value || '';
     const cnaeValorRaw = document.getElementById('filter-cnae-valor')?.value;
@@ -679,6 +712,7 @@ function applyFilters(resetPage = true) {
                           allDocs.includes(term);
         const typeMatch = type === "" || item.Tipo === type;
         const terceirizadoMatch = !onlyTerceirizado || item.Terceirizado === "Sim";
+        const pendenciaMatch = !onlyPendenciaCiencia || item.pendenteCiencia === true;
 
         let cnaeMatch = true;
         if (cnaeOperador && cnaeValor !== null && !isNaN(cnaeValor)) {
@@ -688,7 +722,7 @@ function applyFilters(resetPage = true) {
             else if (cnaeOperador === 'gte') cnaeMatch = qtdCnaes >= cnaeValor;
         }
 
-        return textMatch && typeMatch && terceirizadoMatch && cnaeMatch;
+        return textMatch && typeMatch && terceirizadoMatch && pendenciaMatch && cnaeMatch;
     });
     if (resetPage) {
         currentPage = 1;
@@ -746,6 +780,7 @@ grid.innerHTML = '';
         ${isHighlighted ? 'highlight-new border-blue-500 z-10' : 'hover:border-blue-400'}`;       
         
         card.innerHTML = `
+            ${item.pendenteCiencia ? `<span class="absolute -top-2 -right-2 bg-amber-500 text-white text-[9px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow z-10" title="Alteração de documento aguardando ciência">⚠️</span>` : ''}
             <div class="flex justify-between items-start mb-4">
                 <div class="flex gap-2">
                     <span class="text-[9px] font-bold px-2 py-1 rounded ${tipoBadgeClasses} uppercase tracking-tighter transition-all">
@@ -1440,6 +1475,7 @@ window.exportarRamoJsonFatiado = async (codigo) => {
 searchInput.oninput = () => applyFilters(true);
 typeFilter.onchange = () => applyFilters(true);
 terceirizadoFilter.onchange = () => applyFilters(true);
+document.getElementById('filter-pendencia-ciencia')?.addEventListener('change', () => applyFilters(true));
 document.getElementById('filter-cnae-operador').onchange = () => applyFilters(true);
 document.getElementById('filter-cnae-valor').oninput = () => applyFilters(true);
 document.getElementById('btn-prev').onclick = () => { if(currentPage > 1) { currentPage--; renderGrid(); } };

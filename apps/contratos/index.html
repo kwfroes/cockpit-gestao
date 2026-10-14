@@ -668,24 +668,31 @@
               Dados do Contrato
             </legend>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <input
-                type="text"
-                id="contrato-processo-sei"
-                placeholder="Nº Processo SEI*"
-                class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-1"
-                required
-              />
-              <input
-                type="url"
-                id="contrato-link-sei"
-                placeholder="Link do Processo SEI"
-                class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-1 md:col-span-2"
-              />
+              <!-- CORREÇÃO: campo agrupado em um wrapper "contents" (não altera
+                   o grid) para poder ser ocultado via JS no modo Aditivo, já que
+                   nesse modo o processo SEI relevante é o do próprio aditivo
+                   (campo "aditivo-processo-sei"), evitando duplicidade -->
+              <div id="container-processo-sei-principal" class="contents">
+                <input
+                  type="text"
+                  id="contrato-processo-sei"
+                  placeholder="Nº Processo SEI*"
+                  class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-1"
+                  required
+                />
+                <input
+                  type="url"
+                  id="contrato-link-sei"
+                  placeholder="Link do Processo SEI"
+                  class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-1 md:col-span-2"
+                />
+              </div>
               <input
                 type="text"
                 id="contrato-numero"
                 placeholder="Nº do Contrato*"
                 class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-1"
+                required
               />
               <div>
                 <label
@@ -945,6 +952,15 @@
     </button>
   </div>
           <div class="flex justify-end items-center pt-4">
+            <!-- CORREÇÃO: botão de acesso ao catálogo de Itens
+                 Faturáveis do contrato/termo (ver modal-itens-faturaveis) -->
+            <button
+              type="button"
+              class="btn-gerenciar-itens-faturaveis bg-slate-600 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded-lg mr-4 admin-only"
+              data-id="contrato_1763149379825"
+            >
+              Itens Faturáveis
+            </button>
             <button
               class="btn-abrir-modal-pagamento bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mr-4 admin-only"
               data-id="contrato_1763149379825"
@@ -988,8 +1004,12 @@
             class="text-lg font-semibold text-gray-700 dark:text-gray-300"
           ></h3>
           <div>
+            <!-- CORREÇÃO: id adicionado ao label para permitir renomear
+                 para "Data da Entrega" quando o contrato for Termo de
+                 Cooperação Técnica (ver atualizarModalPagamentoPorTipoContrato) -->
             <label
               for="pagamento-data"
+              id="label-pagamento-data"
               class="block text-sm font-medium text-gray-700 dark:text-gray-300"
               >Data do Pagamento</label
             >
@@ -1002,8 +1022,12 @@
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div>
+              <!-- CORREÇÃO: em Cooperação Técnica, o Período passa a ser
+                   a competência mensal da entrega (ex: mês de referência)
+                   e se torna obrigatório -->
               <label
                 for="pagamento-periodo-de"
+                id="label-pagamento-periodo-de"
                 class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >Período (De)</label
               >
@@ -1016,6 +1040,7 @@
             <div>
               <label
                 for="pagamento-periodo-ate"
+                id="label-pagamento-periodo-ate"
                 class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >Período (Até)</label
               >
@@ -1026,56 +1051,71 @@
               />
             </div>
           </div>
-          <div>
-            <label
-              for="pagamento-valor"
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >Valor Pago (R$)</label
-            >
-            <input
-              type="text"
-              id="pagamento-valor"
-              placeholder="5.000,00"
-              class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full currency-input"
-              required
-            />
+          <!-- CORREÇÃO: "Valor Pago" agrupado em um wrapper "contents"
+               para ser ocultado via JS quando o contrato for Termo de
+               Cooperação Técnica (entrega sem pagamento) -->
+          <div id="container-pagamento-valor" class="contents">
+            <div>
+              <label
+                for="pagamento-valor"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >Valor Pago (R$)</label
+              >
+              <input
+                type="text"
+                id="pagamento-valor"
+                placeholder="5.000,00"
+                class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full currency-input"
+                required
+              />
+            </div>
           </div>
-          <div>
-            <label
-              for="pagamento-nf"
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >Nº Nota Fiscal</label
-            >
-            <input
-              type="text"
-              id="pagamento-nf"
-              placeholder="12345"
-              class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full"
-              
-            />
+          <!-- CORREÇÃO: Nº Nota Fiscal, Nº Processo SEI Pagamento e
+               Documentos de Execução não fazem sentido em modo Entrega
+               (Termo de Cooperação Técnica, sem pagamento/nota fiscal
+               associada), então são agrupados em wrappers "contents" para
+               serem ocultados via JS
+               (ver atualizarModalPagamentoPorTipoContrato) -->
+          <div id="container-pagamento-nf" class="contents">
+            <div>
+              <label
+                for="pagamento-nf"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >Nº Nota Fiscal</label
+              >
+              <input
+                type="text"
+                id="pagamento-nf"
+                placeholder="12345"
+                class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full"
+                
+              />
+            </div>
           </div>
-          <div>
-            <label
-              for="pagamento-processo-sei"
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >Nº Processo SEI Pagamento</label
-            >
-            <input
-              type="text"
-              id="pagamento-processo-sei"
-              placeholder="12345.6789/2025-00"
-              class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full"
-              required
-            />
-            <input
-              type="url"
-              id="pagamento-link-sei"
-              placeholder="Link do Processo SEI (Pagamento, opcional)"
-              class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full"
-            />
+          <div id="container-pagamento-sei-pagamento" class="contents">
+            <div>
+              <label
+                for="pagamento-processo-sei"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >Nº Processo SEI Pagamento</label
+              >
+              <input
+                type="text"
+                id="pagamento-processo-sei"
+                placeholder="12345.6789/2025-00"
+                class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full"
+                required
+              />
+              <input
+                type="url"
+                id="pagamento-link-sei"
+                placeholder="Link do Processo SEI (Pagamento, opcional)"
+                class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full"
+              />
+            </div>
           </div>
 
-          <div class="border-t border-gray-200 dark:border-slate-700 pt-4 mt-4">
+          <div id="container-pagamento-documentos" class="border-t border-gray-200 dark:border-slate-700 pt-4 mt-4">
               <button type="button" id="btn-toggle-docs" class="flex justify-between items-center w-full py-2 text-sm font-bold text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-md transition-colors">
                   <span class="flex items-center">
                       <svg id="icon-docs-arrow" class="w-4 h-4 mr-2 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -1094,7 +1134,9 @@
               </div>
           </div>
 
-          <div class="flex items-center pt-2">
+          <!-- CORREÇÃO: checkbox TRD oculto junto com "Valor Pago" em
+               modo Entrega (Cooperação Técnica) -->
+          <div id="container-pagamento-trd" class="flex items-center pt-2">
             <input
               type="checkbox"
               id="pagamento-is-trd"
@@ -1145,6 +1187,34 @@
             id="detalhe-pagamento-info"
             class="text-lg font-semibold text-gray-700 dark:text-gray-300"
           ></h3>
+
+          <!-- CORREÇÃO: seletor do catálogo de "Itens Faturáveis" do
+               contrato/termo. Ao escolher um item, preenche
+               automaticamente a Descrição e, se houver, o Valor Unit.
+               (evita redigitar sempre a mesma descrição) -->
+          <div class="flex items-end gap-2">
+            <div class="flex-1">
+              <label
+                for="detalhe-item-catalogo"
+                class="block text-xs font-medium text-gray-600 dark:text-gray-400"
+                >Selecionar do catálogo (opcional)</label
+              >
+              <select
+                id="detalhe-item-catalogo"
+                class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md w-full"
+              >
+                <option value="">— Digitar manualmente —</option>
+              </select>
+            </div>
+            <button
+              type="button"
+              id="btn-gerenciar-itens-faturaveis-inline"
+              class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md text-sm whitespace-nowrap admin-only"
+              title="Gerenciar catálogo de itens faturáveis deste contrato"
+            >
+              Gerenciar Itens
+            </button>
+          </div>
 
           <form
             id="form-detalhe-item"
@@ -1225,9 +1295,20 @@
                   class="bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-white"
                 >
                   <tr>
-                    <td colspan="3" class="px-4 py-2 text-right font-bold">
+                    <td class="px-4 py-2 text-right font-bold">
                       Total dos Itens:
                     </td>
+                    <!-- CORREÇÃO: soma a Quantidade total, alinhada sob
+                         a coluna "Qtd" (útil em Entregas, onde o valor
+                         costuma ser R$ 0,00 e a quantidade é o dado
+                         relevante) -->
+                    <td
+                      id="detalhe-item-total-qtd"
+                      class="px-4 py-2 font-bold"
+                    >
+                      0
+                    </td>
+                    <td></td>
                     <td
                       id="detalhe-item-total-geral"
                       class="px-4 py-2 font-bold"
@@ -1260,6 +1341,84 @@
       </div>
     </div>
 
+    <!-- CORREÇÃO: Modal "Itens Faturáveis" — catálogo de itens
+         recorrentes (com valor fixo opcional) por contrato/termo, para
+         evitar redigitar a descrição em cada Nota Fiscal/Entrega -->
+    <div id="modal-itens-faturaveis" class="modal">
+      <div class="modal-content !max-w-xl">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-bold">Itens Faturáveis do Contrato</h2>
+          <button
+            class="modal-close text-gray-500 dark:text-gray-300 hover:text-gray-800 text-3xl"
+          >
+            &times;
+          </button>
+        </div>
+
+        <div class="modal-body space-y-4">
+          <input type="hidden" id="itemfat-contrato-id" />
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            Cadastre aqui os itens que costumam ser lançados neste
+            contrato/termo de cooperação. O Valor Fixo é opcional: se
+            informado, o valor unitário será sugerido automaticamente ao
+            selecionar o item (mas continuará editável).
+          </p>
+
+          <form
+            id="form-item-faturavel"
+            class="grid grid-cols-4 gap-3 p-3 bg-gray-100 dark:bg-slate-700/50 rounded-lg"
+          >
+            <input
+              type="text"
+              id="itemfat-descricao"
+              placeholder="Descrição (ex: Emissão de certidão)"
+              class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-4 md:col-span-3"
+              required
+            />
+            <input
+              type="text"
+              id="itemfat-valor-fixo"
+              placeholder="Valor Fixo (opc.)"
+              class="p-2 border dark:border-slate-600 bg-white dark:bg-slate-900 dark:text-white rounded-md col-span-4 md:col-span-1 currency-input-3dec"
+            />
+            <button
+              type="submit"
+              class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg col-span-4"
+            >
+              Adicionar Item ao Catálogo
+            </button>
+          </form>
+
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
+              <thead class="bg-gray-50 dark:bg-slate-700">
+                <tr>
+                  <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Descrição</th>
+                  <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Valor Fixo</th>
+                  <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Ação</th>
+                </tr>
+              </thead>
+              <tbody
+                id="lista-itens-faturaveis"
+                class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700 text-gray-700 dark:text-gray-300"
+              >
+                <!-- Itens injetados via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="flex justify-end pt-4">
+          <button
+            type="button"
+            class="modal-close bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg"
+          >
+            Fechar
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div id="modal-detalhes-aditivo" class="modal">
       <div class="modal-content !max-w-3xl">
         <div class="flex justify-between items-center mb-4">
@@ -1280,7 +1439,12 @@
           </fieldset>
 
           <fieldset class="border border-gray-300 p-4 rounded-lg">
-            <legend class="text-lg font-semibold px-2">
+            <!-- CORREÇÃO: rótulo passa a "Entregas Associadas ao
+                 Período" quando o contrato é Termo de Cooperação Técnica -->
+            <legend
+              id="detalhe-aditivo-pagamentos-titulo"
+              class="text-lg font-semibold px-2"
+            >
               Pagamentos Associados ao Período
             </legend>
             <div

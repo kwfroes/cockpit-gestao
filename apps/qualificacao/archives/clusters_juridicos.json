@@ -1,0 +1,82 @@
+{
+  "C1": {
+    "codigo": "C1",
+    "nome": "Engenharia/Arquitetura/Técnicos Industriais (CREA/CAU/CFT + CAT)",
+    "qtde_familias_referencia": 220,
+    "base_legal_tipica": "Lei 5.194/1966 (CREA); Lei 5.524/1968 (CFT); Lei 11.888/2008 (CAU, se cabível); arts. 62 e 67 da Lei 14.133/2021.",
+    "checklist_validacao": "Confirmar vigência das leis; confirmar se CAU se aplica (arquitetura) ou somente CREA/CFT; padronizar texto \"Certidão de Acervo Técnico com Atestado\".",
+    "ordem_prioridade": 1,
+    "requer_sugestao_ia": true,
+    "aviso_fixo": null
+  },
+  "C2": {
+    "codigo": "C2",
+    "nome": "Saúde regulada (Conselhos de Saúde + Vigilância Sanitária)",
+    "qtde_familias_referencia": 47,
+    "base_legal_tipica": "Lei 12.842/2013 (Ato Médico); Resolução CGSIM nº 62/2020; Decreto nº 85.878/1981 (profissões de saúde correlatas).",
+    "checklist_validacao": "Confirmar conselho elegível por especialidade (CRM/CRO/COREN/CRF/CRN/CRESS/CRP/CREFITO); confirmar que a atividade é Risco III/Alto Risco e não Baixo Risco.",
+    "ordem_prioridade": 2,
+    "requer_sugestao_ia": true,
+    "aviso_fixo": null
+  },
+  "C4": {
+    "codigo": "C4",
+    "nome": "Baixo risco / Declaração de Dispensa (sem outra exigência)",
+    "qtde_familias_referencia": 47,
+    "base_legal_tipica": "Resolução CGSIM nº 57/2020 (Declaração de Dispensa de Ato Público para atividades de Baixo Risco).",
+    "checklist_validacao": "Apenas confirmar classificação de risco do CNAE como \"Baixo Risco A\"; não exige pesquisa jurídica adicional por família.",
+    "ordem_prioridade": 3,
+    "requer_sugestao_ia": false,
+    "aviso_fixo": null
+  },
+  "C5": {
+    "codigo": "C5",
+    "nome": "Conselhos Econômico-Administrativos/Jurídicos (CRA/CORECON/CRC/OAB)",
+    "qtde_familias_referencia": 16,
+    "base_legal_tipica": "Lei 4.769/1965 (Administração/Economia); Decreto nº 31.794/1952; Lei 9.295/1946 (Contabilidade); Lei 8.906/1994 (OAB).",
+    "checklist_validacao": "Confirmar conselho elegível (CRA x CORECON x CRC) conforme natureza do serviço; verificar se há exigência cumulativa ou alternativa (\"e/ou\").",
+    "ordem_prioridade": 4,
+    "requer_sugestao_ia": true,
+    "aviso_fixo": null
+  },
+  "C6": {
+    "codigo": "C6",
+    "nome": "Agências Reguladoras Federais (transporte/telecom/combustível/financeiro)",
+    "qtde_familias_referencia": 15,
+    "base_legal_tipica": "Normas específicas de cada agência (ANP, ANAC, ANTT, ANTAQ, ANATEL, SUSEP, BACEN, INMETRO) — variam por família.",
+    "checklist_validacao": "Maior risco de desatualização: confirmar nº e data da resolução vigente de cada agência reguladora, pois são alteradas com frequência.",
+    "ordem_prioridade": 5,
+    "requer_sugestao_ia": true,
+    "aviso_fixo": "Maior risco de desatualização normativa — agências reguladoras alteram resoluções com frequência. Exigir confirmação manual de vigência mesmo com score alto da IA."
+  },
+  "C3": {
+    "codigo": "C3",
+    "nome": "Vigilância Sanitária isolada (sem conselho específico)",
+    "qtde_familias_referencia": 14,
+    "base_legal_tipica": "Lei Federal nº 9.782/1999 (ANVISA); Resolução CGSIM nº 62/2020.",
+    "checklist_validacao": "Confirmar classificação de risco do CNAE; confirmar que não há conselho profissional aplicável.",
+    "ordem_prioridade": 6,
+    "requer_sugestao_ia": true,
+    "aviso_fixo": null
+  },
+  "C7": {
+    "codigo": "C7",
+    "nome": "Órgãos/Licenças Estaduais ou Setoriais Específicas",
+    "qtde_familias_referencia": 2,
+    "base_legal_tipica": "Normas setoriais específicas (ex.: ADAB, AGERBA, CBM/BA, Ministério da Agricultura/Turismo/Defesa).",
+    "checklist_validacao": "Tratar individualmente — poucas famílias, sem padrão comum a explorar.",
+    "ordem_prioridade": 7,
+    "requer_sugestao_ia": true,
+    "aviso_fixo": null
+  },
+  "C8": {
+    "codigo": "C8",
+    "nome": "Outro padrão não classificado automaticamente",
+    "qtde_familias_referencia": 3,
+    "base_legal_tipica": "A definir após leitura manual.",
+    "checklist_validacao": "Ler manualmente o texto de \"Documento Exigido (atual)\" na Lista de Trabalho e reclassificar.",
+    "ordem_prioridade": 8,
+    "requer_sugestao_ia": true,
+    "aviso_fixo": null
+  }
+}

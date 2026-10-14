@@ -230,6 +230,13 @@ const app = {
                         </svg>
                     </button>
 
+                    ${!isInativo && u.email ? `
+                    <button onclick="app.resetarSenhaAdmin('${u.id}', '${(u.name || 'usuário').replace(/'/g, "\\'")}', '${u.email}')"
+                        class="text-amber-500 hover:text-amber-700 mr-3" title="Reenviar senha / Forçar redefinição no próximo login">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+                    </button>
+                    ` : ''}
+
                     ${isInativo ? `
                     <button onclick="app.limparArmazenamento('${u.id}', '${(u.name || 'usuário').replace(/'/g, "\\'")}')"
                         class="text-amber-500 hover:text-amber-700 mr-3" title="Limpar armazenamento (Cockpit Drive)">
@@ -373,7 +380,7 @@ const app = {
             
             if (role === 'admin') {
                 // Se virar Admin (ou continuar Admin), recebe o pacote completo
-                allowed_apps = ['#home', '#dashboard', '#gerador', '#contratos', '#legislacao', '#qualificacao', '#regmap', '#demandas', '#conversor', '#usuarios', '#vistoria', '#quiz'];
+                allowed_apps = ['#home', '#dashboard', '#gerador', '#contratos', '#legislacao', '#qualificacao', '#regmap', '#demandas', '#conversor', '#usuarios', '#vistoria', '#quiz', '#chatstorage'];
             } else {
                 // Se for User (ou rebaixado para User), pega os marcados e mescla garantindo a Home
                 const checkedBoxes = Array.from(document.querySelectorAll('input[name="app_permission"]:checked'));
@@ -552,6 +559,55 @@ const app = {
         }, 10);
     },
 
+    // 5B. REENVIAR SENHA (ADMIN) + FORÇAR TROCA NO PRÓXIMO LOGIN
+    async resetarSenhaAdmin(id, name, email) {
+        const modal = document.getElementById('confirmStatusModal');
+        const content = document.getElementById('confirmStatusContent');
+        const btnConfirm = document.getElementById('btnConfirmAction');
+        const iconDiv = document.getElementById('confirmIcon');
+
+        document.getElementById('confirmTitle').textContent = "Reenviar Senha?";
+        iconDiv.className = "w-14 h-14 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4";
+        iconDiv.innerHTML = '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>';
+        btnConfirm.className = "flex-1 px-4 py-2 font-medium rounded-lg text-white shadow-md transition-colors bg-amber-600 hover:bg-amber-700 shadow-amber-500/30";
+        btnConfirm.textContent = "Sim, Reenviar";
+
+        document.getElementById('confirmMessage').textContent = `Gerar uma nova senha provisória para "${name}" e enviar por e-mail? O usuário será obrigado a trocar a senha no próximo login.`;
+
+        btnConfirm.disabled = false;
+
+        btnConfirm.onclick = async () => {
+            btnConfirm.textContent = "Enviando...";
+            btnConfirm.disabled = true;
+
+            try {
+                const { error } = await supabase.functions.invoke('gerenciar-usuarios', {
+                    body: { acao: 'resetar_senha_admin', idUsuario: id }
+                });
+
+                if (error) throw error;
+
+                this.showToast(`Nova senha enviada para ${email}.`);
+
+                enviarLogAoPai("RESETAR_SENHA_ADMIN", { alvo_id: id, alvo_nome: name, alvo_email: email });
+
+                this.fecharConfirmacao();
+            } catch (err) {
+                this.fecharConfirmacao();
+                this.showToast("Erro ao reenviar senha: " + err.message, "error");
+            } finally {
+                btnConfirm.disabled = false;
+            }
+        };
+
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+        }, 10);
+    },
+
     fecharConfirmacao() {
         const modal = document.getElementById('confirmStatusModal');
         const content = document.getElementById('confirmStatusContent');
@@ -643,7 +699,7 @@ const app = {
                 // Ler apps permitidos baseados nos checkboxes
                 let allowed_apps = ["#home", "#demandas"];
                 if (role === 'admin') {
-                    allowed_apps = ['#home', '#dashboard', '#gerador', '#contratos', '#legislacao', '#qualificacao', '#regmap', '#demandas', '#conversor', '#usuarios', '#vistoria', ];
+                    allowed_apps = ['#home', '#dashboard', '#gerador', '#contratos', '#legislacao', '#qualificacao', '#regmap', '#demandas', '#conversor', '#usuarios', '#vistoria', '#quiz', '#chatstorage'];
                 } else {
                     const checkedBoxes = Array.from(document.querySelectorAll('input[name="new_app_permission"]:checked'));
                     const customApps = checkedBoxes.map(cb => cb.value);
