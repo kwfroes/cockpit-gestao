@@ -214,6 +214,17 @@ function resetarFormularioContrato() {
   // Reseta o stepper
   document.getElementById("stepper-contrato").style.display = "flex";
 
+  // CORREÇÃO: restaura o campo "Nº Processo SEI" principal, que pode ter
+  // sido ocultado/tornado opcional na última vez que o modal foi aberto em
+  // modo Aditivo (ver abrirModalContratoForm)
+  const containerSeiPrincipal = document.getElementById(
+    "container-processo-sei-principal",
+  );
+  if (containerSeiPrincipal) containerSeiPrincipal.style.display = "";
+  const inputSeiPrincipal = document.getElementById("contrato-processo-sei");
+  if (inputSeiPrincipal)
+    inputSeiPrincipal.setAttribute("required", "required");
+
   // Oculta seção de aditivo
   const fieldsetAditivo = document.getElementById("fieldset-aditivo");
   fieldsetAditivo.style.display = "none";
@@ -257,8 +268,20 @@ const TIPOS_DOCUMENTOS_PAGAMENTO = [
     "Autorização do Documento Hábil",
     "Liquidação de Empenho",
     "Nota de Ordem Bancária",
-    "Nota de Ordem Bancária "
+    // CORREÇÃO: existem duas NOBs distintas no processo — uma referente à
+    // Guia de Recolhimento (acima, recebe o valor "principal - DAE") e
+    // outra referente à própria DAE (recebe o valor da DAE). Antes a
+    // segunda linha existia só como um duplicado com espaço invisível no
+    // final do nome, o que a deixava idêntica à primeira na tela e fora do
+    // alcance do cálculo automático (o switch comparava pelo texto exato).
+    "Nota de Ordem Bancária (DAE)",
 ];
+
+// CORREÇÃO: alíquota do DAE extraída para constante nomeada (antes era um
+// número mágico "0.048" espalhado dentro do cálculo automático). Representa
+// o percentual estadual aplicado sobre o valor pago principal para apurar
+// o Documento de Arrecadação Estadual; o restante (Guia/NOB) é o complemento.
+const ALIQUOTA_DAE = 0.048;
 
 function renderizarCamposDocumentos(dadosExistentes = []) {
     const container = document.getElementById("container-documentos-pagamento");
@@ -318,11 +341,15 @@ function adicionarLinhaDocumento(tipo, numero = "", valor = "") {
                 let valorCalculado = 0;
                 
                 // Base de cálculos solicitada
-                const dae = Math.round(valorPagoPrincipal * 0.048 * 100) / 100;
+                const dae = Math.round(valorPagoPrincipal * ALIQUOTA_DAE * 100) / 100;
                 const guiaOuNob = valorPagoPrincipal - dae;
 
                 switch(tipo) {
                     case "Documento de Arrecadação Estadual":
+                    // CORREÇÃO: a NOB referente à DAE recebe o mesmo valor
+                    // da própria DAE (a outra NOB, sem sufixo, continua
+                    // recebendo o "principal - DAE", abaixo).
+                    case "Nota de Ordem Bancária (DAE)":
                         valorCalculado = dae;
                         break;
                     case "Guia de Recolhimento":
@@ -459,7 +486,10 @@ function gerarLayoutNotaPagamento(pagamento, contrato) {
     </html>`;
 }
 
-// Função de disparo (Certifique-se que p.origemContratoId está sendo passado)
+// CORREÇÃO: existiam duas declarações idênticas desta função (código
+// morto); unificadas em uma só, mantendo o alerta de erro (mais amigável
+// ao usuário) e o tamanho de janela 600x800 (que era o efetivamente usado,
+// pois a segunda declaração sobrescrevia a primeira em tempo de execução).
 function imprimirDetalhePagamento(contratoId, pagamentoId) {
     const contrato = db.contratos.find(c => c.id === contratoId);
     if (!contrato) {
@@ -471,19 +501,6 @@ function imprimirDetalhePagamento(contratoId, pagamentoId) {
         alert("Pagamento não encontrado!");
         return;
     }
-
-    const html = gerarLayoutNotaPagamento(pagamento, contrato);
-    const win = window.open('', '_blank', 'width=500,height=700');
-    win.document.write(html);
-    win.document.close();
-}
-
-// Função para disparar a impressão
-function imprimirDetalhePagamento(contratoId, pagamentoId) {
-    const contrato = db.contratos.find(c => c.id === contratoId);
-    if (!contrato) return;
-    const pagamento = contrato.pagamentos.find(p => p.id === pagamentoId);
-    if (!pagamento) return;
 
     const html = gerarLayoutNotaPagamento(pagamento, contrato);
     const win = window.open('', '_blank', 'width=600,height=800');
@@ -974,13 +991,30 @@ function abrirModalContratoForm(modo, contratoId) {
       // Preenche dados do PAI (unidade, empresa, objeto, etc.)
       preencherFormularioContrato(contratoPai);
 
+      // CORREÇÃO: o campo "Nº Processo SEI" principal é redundante no modo
+      // Aditivo (nenhum relatório/tabela usa esse valor para aditivos — só
+      // o campo "aditivo-processo-sei" é exibido). Por isso ele é ocultado
+      // e deixa de ser obrigatório; seu valor é sincronizado automaticamente
+      // a partir do processo SEI do aditivo, evitando digitação duplicada e
+      // divergência entre os dois números.
+      const containerSeiPrincipalAditivo = document.getElementById(
+        "container-processo-sei-principal",
+      );
+      if (containerSeiPrincipalAditivo)
+        containerSeiPrincipalAditivo.style.display = "none";
+      const inputSeiPrincipalAditivo = document.getElementById(
+        "contrato-processo-sei",
+      );
+      inputSeiPrincipalAditivo.removeAttribute("required");
+      inputSeiPrincipalAditivo.value = isEdicao
+        ? aditivo.processoSei || ""
+        : "";
+
       // Dados comuns que podem ser sobrescritos pelo aditivo
-      document.getElementById("contrato-processo-sei").value = isEdicao
-        ? aditivo.processoSei
-        : "";
-      document.getElementById("contrato-numero").value = isEdicao
-        ? aditivo.numeroContrato
-        : "";
+      // CORREÇÃO: Nº do Contrato sempre herda do contrato pai (quem
+      // identifica o aditivo é o campo "aditivo-numero", preenchido abaixo)
+      document.getElementById("contrato-numero").value =
+        contratoPai.numeroContrato || "";
       document.getElementById("contrato-tipo").value = contratoPai.tipoContrato;
       document.getElementById("contrato-objeto").value = contratoPai.objeto;
       document.getElementById("contrato-tempo").value =
@@ -996,19 +1030,27 @@ function abrirModalContratoForm(modo, contratoId) {
         "contrato-estimativa-mensal",
       );
       if (estimativaInput) {
-        estimativaInput.value = isEdicao
-          ? (aditivo.estimativaMensal || 0).toString().replace(".", ",")
-          : "";
+        // CORREÇÃO: herda sempre do contrato pai, tanto em "Novo Aditivo"
+        // quanto ao editar um aditivo já existente (o valor de estimativa
+        // mensal pertence ao contrato, não a cada termo aditivo isoladamente)
+        estimativaInput.value = (contratoPai.estimativaMensal || 0)
+          .toString()
+          .replace(".", ",");
         formatInputAsBRL({ target: estimativaInput });
       }
 
-      // Restrição para Cooperação Técnica
+      // CORREÇÃO: Termos de Cooperação Técnica não têm valor monetário,
+      // então "Aditivo de Valor" e "Outro" continuam ocultos. Porém agora
+      // também é permitido registrar "Alteração Gestor/Fiscal" (antes só
+      // "Prazo" era permitido, impedindo essa troca nesse tipo de contrato).
       if (contratoPai.tipoContrato === "Cooperacao Tecnica") {
         const selectTipo = document.getElementById("aditivo-tipo");
-        selectTipo.value = "Prazo";
+        const tiposPermitidosCooperacao = ["", "Prazo", "GestorFiscal"];
+        if (!isEdicao) selectTipo.value = "Prazo";
         Array.from(selectTipo.options).forEach((opt) => {
-          opt.style.display =
-            opt.value === "Prazo" || opt.value === "" ? "" : "none";
+          opt.style.display = tiposPermitidosCooperacao.includes(opt.value)
+            ? ""
+            : "none";
         });
       }
 
@@ -1073,10 +1115,13 @@ function abrirModalContratoForm(modo, contratoId) {
           }
         }
       } else {
-        // Novo aditivo → limpa campos específicos
+        // Novo aditivo → limpa valor específico, mas pré-preenche a Data Fim
+        // com a data vigente AGREGADA (considerando aditivos de prazo
+        // anteriores), e não a data fim original do contrato
         document.getElementById("contrato-valor-total").value = "";
+        const resumoVigente = calcularResumoContrato(contratoPai);
         document.getElementById("contrato-data-fim").value =
-          contratoPai.dataFim || "";
+          resumoVigente.dataFimFinal || contratoPai.dataFim || "";
       }
 
       // Atualiza visibilidade dos campos do aditivo
@@ -1144,7 +1189,11 @@ function atualizarCamposAditivo() {
   } else if (tipo === "Prazo") {
     prazoFields.style.display = "grid";
     prazoInput.setAttribute("required", "required");
-    valorFields.style.display = "grid";
+    // CORREÇÃO: o campo "Valor Aditado" ficava visível e editável também em
+    // aditivos de Prazo, mas salvarContrato() só captura
+    // contrato-valor-total quando aditivo.tipo === "Valor" — qualquer valor
+    // digitado aqui num aditivo de Prazo era descartado silenciosamente ao
+    // salvar. Campo ocultado para não sugerir uma captura que não existe.
   } else if (tipo === "GestorFiscal") {
     gestorFields.style.display = "block";
     gestorNomeInput.setAttribute("required", "required"); // Pelo menos o gestor é obrigatório
@@ -1211,6 +1260,84 @@ function atualizarCamposPorTipoContrato() {
       valorTotalInput.setAttribute("required", "required");
     }
   }
+}
+
+// CORREÇÃO: helper para localizar o contrato PAI de um registro (que
+// pode ser o próprio contrato, caso não seja um aditivo). O catálogo de
+// "Itens Faturáveis" é sempre armazenado no contrato pai, para ser
+// compartilhado entre o contrato e todos os seus aditivos.
+function getContratoPai(contratoId) {
+  const contrato = db.contratos.find((c) => c.id === contratoId);
+  if (!contrato) return null;
+  if (!contrato.parentId) return contrato;
+  return db.contratos.find((c) => c.id === contrato.parentId) || contrato;
+}
+
+// CORREÇÃO: controla a aparência do modal "Adicionar/Editar Pagamento"
+// conforme o tipo de contrato. Em Termo de Cooperação Técnica não existe
+// pagamento (o objeto é a prestação do serviço, sem contrapartida
+// financeira), então o formulário vira "Registrar Entrega": oculta Valor
+// Pago/TRD, torna o Período (De/Até) obrigatório (competência mensal da
+// entrega) e ajusta os rótulos.
+function atualizarModalPagamentoPorTipoContrato(contratoId) {
+  const contrato = db.contratos.find((c) => c.id === contratoId);
+  const isCooperacao = contrato?.tipoContrato === "Cooperacao Tecnica";
+
+  const containerValor = document.getElementById("container-pagamento-valor");
+  const containerTrd = document.getElementById("container-pagamento-trd");
+  const valorInput = document.getElementById("pagamento-valor");
+  const periodoDeInput = document.getElementById("pagamento-periodo-de");
+  const periodoAteInput = document.getElementById("pagamento-periodo-ate");
+  const labelData = document.getElementById("label-pagamento-data");
+  const labelPeriodoDe = document.getElementById("label-pagamento-periodo-de");
+  const labelPeriodoAte = document.getElementById(
+    "label-pagamento-periodo-ate",
+  );
+
+  // CORREÇÃO: Nº Nota Fiscal, Nº Processo SEI Pagamento (+ link) e
+  // Documentos de Execução também não se aplicam a uma Entrega (Termo de
+  // Cooperação Técnica), pois não há pagamento/nota fiscal associada
+  const containerNf = document.getElementById("container-pagamento-nf");
+  const containerSeiPagamento = document.getElementById(
+    "container-pagamento-sei-pagamento",
+  );
+  const containerDocumentos = document.getElementById(
+    "container-pagamento-documentos",
+  );
+  const seiPagamentoInput = document.getElementById("pagamento-processo-sei");
+
+  if (containerValor) containerValor.style.display = isCooperacao ? "none" : "";
+  if (containerTrd) containerTrd.style.display = isCooperacao ? "none" : "flex";
+  if (containerNf) containerNf.style.display = isCooperacao ? "none" : "";
+  if (containerSeiPagamento)
+    containerSeiPagamento.style.display = isCooperacao ? "none" : "";
+  if (containerDocumentos)
+    containerDocumentos.style.display = isCooperacao ? "none" : "";
+
+  if (valorInput) {
+    if (isCooperacao) valorInput.removeAttribute("required");
+    else valorInput.setAttribute("required", "required");
+  }
+  if (seiPagamentoInput) {
+    if (isCooperacao) seiPagamentoInput.removeAttribute("required");
+    else seiPagamentoInput.setAttribute("required", "required");
+  }
+
+  if (isCooperacao) {
+    periodoDeInput?.setAttribute("required", "required");
+    periodoAteInput?.setAttribute("required", "required");
+    if (labelData) labelData.textContent = "Data da Entrega";
+    if (labelPeriodoDe) labelPeriodoDe.textContent = "Competência (De)";
+    if (labelPeriodoAte) labelPeriodoAte.textContent = "Competência (Até)";
+  } else {
+    periodoDeInput?.removeAttribute("required");
+    periodoAteInput?.removeAttribute("required");
+    if (labelData) labelData.textContent = "Data do Pagamento";
+    if (labelPeriodoDe) labelPeriodoDe.textContent = "Período (De)";
+    if (labelPeriodoAte) labelPeriodoAte.textContent = "Período (Até)";
+  }
+
+  return { isCooperacao, tituloBase: isCooperacao ? "Entrega" : "Pagamento" };
 }
 
 // --- Funções de Cálculo ---
@@ -1281,7 +1408,7 @@ function calcularResumoContrato(contratoPai) {
     statusContrato = "A Iniciar";
     // Amarelo Pastel vs Amarelo Neon
     statusCor =
-      "text-yellow-600 bg-yellow-10 dark:bg-yellow-900/40 dark:text-yellow-400 dark:border dark:border-yellow-800";
+      "text-yellow-600 bg-yellow-50 dark:bg-yellow-900/40 dark:text-yellow-400 dark:border dark:border-yellow-800";
   } else if (dataFimAgregada < hoje) {
     statusContrato = "Vencido/Encerrado";
     // Vermelho Pastel vs Vermelho Neon
@@ -1366,7 +1493,10 @@ function renderizarContratos() {
   // 1. Captura os valores dos filtros
   const busca = document.getElementById("filtro-busca")?.value.toLowerCase() || "";
   const entidadeFiltro = document.getElementById("filtro-entidade")?.value || "todas";
-  
+  // CORREÇÃO: o select #filtro-tipo existia na tela mas nunca era lido nem
+  // tinha listener registrado — selecionar uma opção não tinha efeito algum.
+  const tipoFiltro = document.getElementById("filtro-tipo")?.value || "todos";
+
   // Captura todos os status que estão marcados (checked)
   const statusSelecionados = Array.from(document.querySelectorAll(".filtro-status-check:checked"))
     .map(cb => cb.value);
@@ -1386,9 +1516,10 @@ function renderizarContratos() {
 
     const matchesBusca = stringParaBusca.includes(busca);
     const matchesEntidade = entidadeFiltro === "todas" || nomeEmpresa === entidadeFiltro;
+    const matchesTipo = tipoFiltro === "todos" || c.tipoContrato === tipoFiltro;
     const matchesStatus = statusSelecionados.includes(resumo.status);
 
-    return matchesBusca && matchesEntidade && matchesStatus;
+    return matchesBusca && matchesEntidade && matchesTipo && matchesStatus;
   });
 
   // 3. Verifica se há resultados
@@ -1435,7 +1566,16 @@ function renderizarContratos() {
 
     // Ações
     card.querySelector(".btn-visualizar-contrato").dataset.id = contrato.id;
-    card.querySelector(".btn-abrir-modal-pagamento").dataset.id = contrato.id;
+    const btnPagamentoCard = card.querySelector(".btn-abrir-modal-pagamento");
+    btnPagamentoCard.dataset.id = contrato.id;
+    // CORREÇÃO: o texto do botão agora reflete o tipo de contrato já na
+    // tela principal (antes só mudava dentro do modal de Detalhes,
+    // deixando "+ Pagamento" fixo no card mesmo para Termo de Cooperação
+    // Técnica, que na verdade registra "Entrega")
+    btnPagamentoCard.textContent =
+      contrato.tipoContrato === "Cooperacao Tecnica"
+        ? "+ Registrar Entrega"
+        : "+ Pagamento";
 
     // INSERE TUDO NO MESMO CONTAINER
     listaPrincipal.appendChild(card);
@@ -1665,7 +1805,7 @@ function renderizarModalVisualizar(contratoId) {
       `${gestorAtual.nome} ${
         gestorAtual.matricula ? `(Mat. ${gestorAtual.matricula})` : ""
       }`,
-      "font-bold bg-yellow-10 dark:bg-yellow-900/30 dark:text-yellow-200 p-1 rounded-md",
+      "font-bold bg-yellow-50 dark:bg-yellow-900/30 dark:text-yellow-200 p-1 rounded-md",
     ),
 
     renderField(
@@ -1677,7 +1817,7 @@ function renderizarModalVisualizar(contratoId) {
             )
             .join("<br>") // <--- Use <br> para HTML
         : "N/D",
-      "font-bold bg-yellow-10 dark:bg-yellow-900/30 dark:text-yellow-100 p-1 rounded-md",
+      "font-bold bg-yellow-50 dark:bg-yellow-900/30 dark:text-yellow-100 p-1 rounded-md",
     ),
   ]
     .filter(Boolean)
@@ -1776,30 +1916,55 @@ function renderizarModalVisualizar(contratoId) {
   }
 
   // Tabela Pagamentos (com destaque Amarelo para Programado)
+  // CORREÇÃO: título muda para "Histórico de Entregas" em Termo de
+  // Cooperação Técnica, já que não há pagamento nesses contratos
+  const isCooperacaoTecnicaResumo =
+    contratoPai.tipoContrato === "Cooperacao Tecnica";
   let pagamentosContent = `
-        <h4 class="font-semibold mb-2">Histórico de Pagamentos</h4>
+        <h4 class="font-semibold mb-2">${
+          isCooperacaoTecnicaResumo
+            ? "Histórico de Entregas"
+            : "Histórico de Pagamentos"
+        }</h4>
         <div class="overflow-x-auto border rounded-lg">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50 dark:bg-slate-700">
                     <tr>
+                        ${
+                          isCooperacaoTecnicaResumo
+                            ? `
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Data da Entrega</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Competência</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Qtd. Itens</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Ações</th>
+                        `
+                            : `
                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Data</th>
                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Período</th>
                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Valor</th>
                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">NF</th>
                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Proc. Pag. SEI</th> <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Ações</th>
+                        `
+                        }
                      </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700 border border-gray-200">
                     ${
                       pagamentos.length === 0
-                        ? `<tr><td colspan="6" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Nenhum pagamento.</td></tr>`
+                        ? `<tr><td colspan="${
+                            isCooperacaoTecnicaResumo ? 4 : 6
+                          }" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">${
+                            isCooperacaoTecnicaResumo
+                              ? "Nenhuma entrega registrada."
+                              : "Nenhum pagamento."
+                          }</td></tr>`
                         : pagamentos
                             .map((p) => {
                               const dataPagto = p.data ? new Date(p.data + "T00:00:00") : null;
                               const isProgramado = dataPagto && dataPagto > hoje;
                               const badgeAndamento = '<span class="text-[10px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded font-bold uppercase border border-blue-200 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-800">Em andamento</span>';
                               const rowClass = isProgramado
-                                ? "bg-yellow-10"
+                                ? "bg-yellow-50"
                                 : p.origemContratoId !== contratoPai.id
                                   ? "bg-blue-50"
                                   : "";
@@ -1822,8 +1987,22 @@ function renderizarModalVisualizar(contratoId) {
                                                 ? `${formatDate(p.periodoDe)} a ${formatDate(p.periodoAte)}`
                                                 : "N/D"
                                             }</td>
+                                            ${
+                                              isCooperacaoTecnicaResumo
+                                                ? `<td class="px-4 py-3 text-sm">${
+                                                    (p.detalhes || []).reduce(
+                                                      (soma, item) =>
+                                                        soma + (parseFloat(item.quantidade) || 0),
+                                                      0,
+                                                    )
+                                                  }</td>`
+                                                : `
                                             <td class="px-4 py-3 text-sm">
-                                                ${formatCurrency(p.valorPago)}
+                                                ${
+                                                  p.tipoRegistro === "entrega"
+                                                    ? '<span class="text-xs text-gray-500 dark:text-gray-400 italic">Entrega (s/ valor)</span>'
+                                                    : formatCurrency(p.valorPago)
+                                                }
                                                 ${
                                                   p.isTRD
                                                     ? '<span class="ml-1 px-2 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800 border border-red-200 dark:bg-red-900/40 dark:text-red-400 dark:border-red-800">TRD</span>'
@@ -1839,6 +2018,8 @@ function renderizarModalVisualizar(contratoId) {
                                                     : p.processoPagamentoSei || "N/D"
                                                 }
                                             </td>
+                                            `
+                                            }
 
 
                                   <td class="px-4 py-3 text-sm flex items-center">
@@ -2080,6 +2261,20 @@ function renderizarModalVisualizar(contratoId) {
   );
   if (btnPagamentoModal) {
     btnPagamentoModal.dataset.id = contratoPai.id;
+    // CORREÇÃO: em Termo de Cooperação Técnica não há pagamento (apenas
+    // entrega mensal sem valor), então o rótulo do botão muda
+    btnPagamentoModal.textContent =
+      contratoPai.tipoContrato === "Cooperacao Tecnica"
+        ? "+ Registrar Entrega"
+        : "+ Pagamento";
+  }
+
+  // CORREÇÃO: Atualiza o ID do botão "Itens Faturáveis" no rodapé do modal
+  const btnItensFaturaveisModal = document.querySelector(
+    "#modal-visualizar-contrato .btn-gerenciar-itens-faturaveis",
+  );
+  if (btnItensFaturaveisModal) {
+    btnItensFaturaveisModal.dataset.id = contratoPai.id;
   }
 
   // --- LISTENERS DE GRÁFICO ---
@@ -2145,6 +2340,19 @@ function renderizarModalDetalharAditivo(aditivoId, contratoPaiId) {
   document.getElementById("detalhe-aditivo-titulo").textContent =
     `Detalhes do ${aditivo.aditivo.numero} Termo Aditivo`;
 
+  // CORREÇÃO: rótulo e lógica de "consumo" mudam para Termo de
+  // Cooperação Técnica, que não tem pagamento associado (apenas entregas)
+  const isCooperacaoTecnicaDetalhe =
+    contratoPai.tipoContrato === "Cooperacao Tecnica";
+  const tituloPagamentosAditivo = document.getElementById(
+    "detalhe-aditivo-pagamentos-titulo",
+  );
+  if (tituloPagamentosAditivo) {
+    tituloPagamentosAditivo.textContent = isCooperacaoTecnicaDetalhe
+      ? "Entregas Associadas ao Período"
+      : "Pagamentos Associados ao Período";
+  }
+
   // 1. Renderiza os Detalhes do Aditivo
   const infoContainer = document.getElementById("detalhe-aditivo-info");
   const valorAditado = parseFloat(aditivo.valorTotal) || 0;
@@ -2207,8 +2415,9 @@ function renderizarModalDetalharAditivo(aditivoId, contratoPaiId) {
   let mensagemErro = "";
 
   if (aditivo.aditivo.tipo === "GestorFiscal") {
-    mensagemErro =
-      "Aditivos de Gestor/Fiscal não possuem pagamentos associados.";
+    mensagemErro = isCooperacaoTecnicaDetalhe
+      ? "Aditivos de Gestor/Fiscal não possuem entregas associadas."
+      : "Aditivos de Gestor/Fiscal não possuem pagamentos associados.";
   } else if (
     aditivo.aditivo.tipo === "Valor" ||
     aditivo.aditivo.tipo === "Outro"
@@ -2255,6 +2464,55 @@ function renderizarModalDetalharAditivo(aditivoId, contratoPaiId) {
   // Renderiza HTML baseados no cálculo acima
   if (!podeFiltrar) {
     pagamentosContainer.innerHTML = `<div class="text-gray-500 dark:text-gray-400 text-center p-4">${mensagemErro}</div>`;
+  } else if (isCooperacaoTecnicaDetalhe) {
+    // CORREÇÃO: Termo de Cooperação Técnica não tem valor consumido —
+    // mostra apenas a contagem de entregas registradas no período, sem
+    // card de % de consumo financeiro (que não se aplica)
+    const qtdEntregas = pagamentosFiltrados.length;
+    const infoConsumoHtmlCoop = `
+            <div class="flex flex-col items-center justify-center p-3 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-lg mb-4">
+                <span class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-semibold">Entregas no Período</span>
+                <div class="text-2xl font-bold text-gray-800 dark:text-white mt-1">${qtdEntregas}</div>
+            </div>`;
+
+    let htmlTabelaCoop = "";
+    if (pagamentosFiltrados.length === 0) {
+      htmlTabelaCoop = `<p class="text-gray-500 dark:text-gray-400 text-center">Nenhuma entrega encontrada no período.</p>`;
+    } else {
+      htmlTabelaCoop = `
+                <div class="overflow-x-auto border rounded-lg">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-600 uppercase">Competência</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-600 uppercase">Data da Entrega</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
+                        ${pagamentosFiltrados
+                          .map(
+                            (p) => `
+                            <tr>
+                                <td class="px-4 py-3 text-sm font-semibold text-gray-800 dark:text-gray-300">${
+                                  p.periodoDe
+                                    ? `${formatDate(
+                                        p.periodoDe,
+                                      )} a ${formatDate(p.periodoAte)}`
+                                    : "N/D"
+                                }</td>
+                                <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">${
+                                  p.data ? formatDate(p.data) : "N/D"
+                                }</td>
+                            </tr>
+                        `,
+                          )
+                          .join("")}
+                    </tbody>
+                </table>
+                </div>`;
+    }
+
+    pagamentosContainer.innerHTML = infoConsumoHtmlCoop + htmlTabelaCoop;
   } else {
     // Calcula totais separando TRD
     pagamentosFiltrados.forEach((p) => {
@@ -2409,14 +2667,51 @@ function renderizarModalDetalhesPagamento(contratoId, pagamentoId) {
   document.getElementById("detalhe-contrato-id").value = contratoId;
   document.getElementById("detalhe-pagamento-id").value = pagamentoId;
 
-  document.getElementById("detalhe-pagamento-info").textContent = `NF: ${
-    pagamento.notaFiscal
-  } - Valor Total: ${formatCurrency(pagamento.valorPago)}`;
+  // CORREÇÃO: título e resumo mudam para "Entrega" em Termo de
+  // Cooperação Técnica (sem valor); popula também o seletor do catálogo
+  // de Itens Faturáveis do contrato/termo
+  const isEntrega =
+    pagamento.tipoRegistro === "entrega" ||
+    contrato.tipoContrato === "Cooperacao Tecnica";
+  const tituloModalDetalhe = document.querySelector(
+    "#modal-detalhes-pagamento h2",
+  );
+  if (tituloModalDetalhe) {
+    tituloModalDetalhe.textContent = isEntrega
+      ? "Detalhamento da Entrega"
+      : "Detalhes da Nota Fiscal";
+  }
+  document.getElementById("detalhe-pagamento-info").textContent = isEntrega
+    ? `Competência: ${formatDate(pagamento.periodoDe)} a ${formatDate(
+        pagamento.periodoAte,
+      )}`
+    : `NF: ${pagamento.notaFiscal} - Valor Total: ${formatCurrency(
+        pagamento.valorPago,
+      )}`;
+
+  popularSelectCatalogoItens(contratoId);
+
+  // CORREÇÃO: em Detalhamento de Entrega, o "Valor Unit." não é
+  // obrigatório (a entrega pode não ter valor monetário associado); o
+  // placeholder é ajustado para deixar isso claro
+  const valorItemInput = document.getElementById("detalhe-item-valor");
+  if (valorItemInput) {
+    if (isEntrega) {
+      valorItemInput.removeAttribute("required");
+      valorItemInput.placeholder = "Valor Unit. (opcional)";
+    } else {
+      valorItemInput.setAttribute("required", "required");
+      valorItemInput.placeholder = "Valor Unit.";
+    }
+  }
 
   const listaItens = document.getElementById("lista-detalhes-itens");
   listaItens.innerHTML = "";
 
   let totalItens = 0;
+  // CORREÇÃO: soma também a quantidade total dos itens (relevante em
+  // Entregas, onde o valor costuma ser R$ 0,00)
+  let totalQtdItens = 0;
 
   if (!pagamento.detalhes || pagamento.detalhes.length === 0) {
     listaItens.innerHTML = `<tr><td colspan="5" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Nenhum item detalhado.</td></tr>`;
@@ -2426,6 +2721,7 @@ function renderizarModalDetalhesPagamento(contratoId, pagamentoId) {
         (parseFloat(item.quantidade) || 0) *
         (parseFloat(item.valorUnitario) || 0);
       totalItens += valorTotalItem;
+      totalQtdItens += parseFloat(item.quantidade) || 0;
 
       const row = `
                 <tr>
@@ -2456,6 +2752,13 @@ function renderizarModalDetalhesPagamento(contratoId, pagamentoId) {
 
   document.getElementById("detalhe-item-total-geral").textContent =
     formatCurrency(totalItens);
+  // CORREÇÃO: exibe a quantidade total somada na linha de rodapé da tabela
+  const totalQtdEl = document.getElementById("detalhe-item-total-qtd");
+  if (totalQtdEl) {
+    totalQtdEl.textContent = Number.isInteger(totalQtdItens)
+      ? totalQtdItens
+      : totalQtdItens.toLocaleString("pt-BR");
+  }
   document.getElementById("form-detalhe-item").reset();
 }
 
@@ -2473,41 +2776,53 @@ function showFormStep(step) {
   }
 
   const stepper = document.getElementById("stepper-contrato");
-  if (stepper.style.display === "none") return;
 
-  // Atualiza as cores das bolinhas (agora até 4)
-  for (let i = 1; i <= 4; i++) {
-    const dot = document.getElementById(`step-dot-${i}`);
-    if (!dot) continue;
+  // CORREÇÃO: o controle de visibilidade dos botões (Anterior/Próximo/Salvar)
+  // foi movido para fora do bloco do stepper. Antes, quando o stepper estava
+  // oculto (modo Aditivo/EditarAditivo), a função retornava aqui e os botões
+  // ficavam com o estado "vazado" da última vez que o modal de contrato foi
+  // usado, permitindo inclusive avançar indevidamente ao Passo 4.
+  if (stepper.style.display !== "none") {
+    // Atualiza as cores das bolinhas (agora até 4)
+    for (let i = 1; i <= 4; i++) {
+      const dot = document.getElementById(`step-dot-${i}`);
+      if (!dot) continue;
 
-    dot.classList.remove(
-      "bg-blue-600",
-      "bg-green-600",
-      "bg-gray-300",
-      "text-white",
-      "text-gray-600",
-    );
+      dot.classList.remove(
+        "bg-blue-600",
+        "bg-green-600",
+        "bg-gray-300",
+        "text-white",
+        "text-gray-600",
+      );
 
-    if (i < step) {
-      dot.classList.add("bg-green-600", "text-white"); // Passos concluídos
-    } else if (i === step) {
-      dot.classList.add("bg-blue-600", "text-white"); // Passo atual
-    } else {
-      dot.classList.add("bg-gray-300", "text-gray-600"); // Passos futuros
+      if (i < step) {
+        dot.classList.add("bg-green-600", "text-white"); // Passos concluídos
+      } else if (i === step) {
+        dot.classList.add("bg-blue-600", "text-white"); // Passo atual
+      } else {
+        dot.classList.add("bg-gray-300", "text-gray-600"); // Passos futuros
+      }
     }
   }
 
   // Controle dos botões Inferiores
+  // CORREÇÃO: quando o stepper está oculto (modo Aditivo/EditarAditivo), o
+  // formulário sempre fica parado no Passo 3 e é de passo único — portanto
+  // "Anterior" e "Próximo" devem ficar sempre ocultos e "Salvar" sempre
+  // visível, independentemente do valor numérico de `step`.
+  const isFluxoDeAditivo = stepper.style.display === "none";
+
   document.getElementById("btn-form-anterior").style.display =
-    step === 1 ? "none" : "inline-block";
+    isFluxoDeAditivo || step === 1 ? "none" : "inline-block";
 
-  // O botão "Próximo" some no último passo (4)
+  // O botão "Próximo" some no último passo (4) ou no fluxo de Aditivo
   document.getElementById("btn-form-proximo").style.display =
-    step === 4 ? "none" : "inline-block";
+    isFluxoDeAditivo || step === 4 ? "none" : "inline-block";
 
-  // O botão "Salvar" só aparece no último passo (4)
+  // O botão "Salvar" aparece no último passo (4) ou no fluxo de Aditivo
   document.getElementById("btn-form-salvar").style.display =
-    step === 4 ? "inline-block" : "none";
+    isFluxoDeAditivo || step === 4 ? "inline-block" : "none";
 }
 
 function validateStep(step) {
@@ -2799,6 +3114,12 @@ async function salvarContrato(e) {
       justificativa: document.getElementById("aditivo-justificativa").value,
       dataAssinatura: document.getElementById("aditivo-data-assinatura").value,
     };
+    // CORREÇÃO: sincroniza o campo "processoSei" de nível superior do
+    // aditivo (não exibido em nenhum relatório, mas mantido por
+    // compatibilidade) com o processo SEI realmente preenchido pelo
+    // usuário no fieldset do aditivo, evitando gravar valor em branco ou
+    // divergente entre os dois campos
+    contratoData.processoSei = contratoData.aditivo.processoSei;
     // CAPTURA DEFINITIVA: Lê os dados específicos da tela para não gravar em branco
     if (contratoData.aditivo.tipo === "Valor") {
       const vTotal = document.getElementById("contrato-valor-total").value;
@@ -2899,10 +3220,18 @@ async function salvarPagamento(e) {
     });
   // ----------------------------------------------------------
 
+  // CORREÇÃO: Termo de Cooperação Técnica não tem pagamento — o
+  // lançamento mensal é uma "Entrega" (sem valor), identificada por
+  // tipoRegistro para diferenciar nas listagens/relatórios
+  const isCooperacao = contrato.tipoContrato === "Cooperacao Tecnica";
+
   // 1. Captura os dados do formulário
   const pagamentoData = {
+    tipoRegistro: isCooperacao ? "entrega" : "pagamento",
     data: document.getElementById("pagamento-data").value,
-    valorPago: parseBRL(document.getElementById("pagamento-valor").value),
+    valorPago: isCooperacao
+      ? 0
+      : parseBRL(document.getElementById("pagamento-valor").value),
     documentosExecucao: docsParaSalvar.length > 0 ? docsParaSalvar : null,
     notaFiscal: document.getElementById("pagamento-nf").value,
     processoPagamentoSei: document.getElementById("pagamento-processo-sei")
@@ -2911,7 +3240,9 @@ async function salvarPagamento(e) {
       document.getElementById("pagamento-link-sei").value.trim() || null,
     periodoDe: document.getElementById("pagamento-periodo-de").value,
     periodoAte: document.getElementById("pagamento-periodo-ate").value,
-    isTRD: document.getElementById("pagamento-is-trd").checked,
+    isTRD: isCooperacao
+      ? false
+      : document.getElementById("pagamento-is-trd").checked,
   };
 
   // 2. VALIDAÇÃO SEI (MOVIDA PARA CÁ - Antes de salvar)
@@ -2995,6 +3326,121 @@ async function salvarDetalheItem(e) {
   pagamento.detalhes.push(novoItem);
   await supabase.from('contratos').update({ pagamentos: contrato.pagamentos }).eq('id', contrato.id);
   renderizarModalDetalhesPagamento(contratoId, pagamentoId);
+}
+
+// CORREÇÃO: funções do catálogo "Itens Faturáveis" por contrato/termo,
+// compartilhado entre o contrato pai e seus aditivos
+
+function popularSelectCatalogoItens(contratoDonoId) {
+  const select = document.getElementById("detalhe-item-catalogo");
+  if (!select) return;
+  const contratoPai = getContratoPai(contratoDonoId);
+  const itens = contratoPai?.itensFaturaveis || [];
+
+  select.innerHTML =
+    '<option value="">— Digitar manualmente —</option>' +
+    itens
+      .map(
+        (item) =>
+          `<option value="${item.id}" data-valor-fixo="${
+            item.valorFixo != null ? item.valorFixo : ""
+          }">${item.descricao}</option>`,
+      )
+      .join("");
+}
+
+function renderizarListaItensFaturaveis(contratoPaiId) {
+  const contratoPai = db.contratos.find((c) => c.id === contratoPaiId);
+  const lista = document.getElementById("lista-itens-faturaveis");
+  if (!lista) return;
+  const itens = contratoPai?.itensFaturaveis || [];
+
+  if (itens.length === 0) {
+    lista.innerHTML = `<tr><td colspan="3" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Nenhum item cadastrado.</td></tr>`;
+    return;
+  }
+
+  lista.innerHTML = itens
+    .map(
+      (item) => `
+      <tr>
+        <td class="px-4 py-3 text-sm">${item.descricao}</td>
+        <td class="px-4 py-3 text-sm">${
+          item.valorFixo != null ? formatCurrency(item.valorFixo) : "—"
+        }</td>
+        <td class="px-4 py-3 text-sm">
+          <button
+              class="btn-excluir-item-faturavel text-red-600 hover:text-red-800"
+              data-contrato-pai-id="${contratoPaiId}"
+              data-item-id="${item.id}"
+              title="Excluir"
+          >
+              <svg class="w-5 h-5 pointer-events-none" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M12.663 1.5h-1.326c-1.069 0-1.49.09-1.921.27-.432.181-.792.453-1.084.82-.292.365-.493.746-.784 1.774L7.368 5H5a1 1 0 0 0 0 2h.563l.703 11.25c.082 1.32.123 1.98.407 2.481a2.5 2.5 0 0 0 1.083 1.017C8.273 22 8.935 22 10.258 22h3.484c1.323 0 1.985 0 2.502-.252a2.5 2.5 0 0 0 1.083-1.017c.284-.5.325-1.16.407-2.482L18.437 7H19a1 1 0 1 0 0-2h-2.367l-.18-.636c-.292-1.028-.493-1.409-.785-1.775a2.694 2.694 0 0 0-1.084-.819c-.431-.18-.852-.27-1.92-.27zm1.89 3.5-.025-.09c-.203-.717-.29-.905-.424-1.074a.696.696 0 0 0-.292-.221c-.2-.084-.404-.115-1.149-.115h-1.326c-.745 0-.95.031-1.149.115a.696.696 0 0 0-.292.221c-.135.169-.221.357-.424 1.074L9.446 5h5.108zM9.61 8.506a.75.75 0 0 0-.724.776l.297 8.495a.75.75 0 0 0 1.499-.053l-.297-8.494a.75.75 0 0 0-.775-.724zm4.008.724a.75.75 0 0 1 1.499.052l-.297 8.495a.75.75 0 0 1-1.499-.053l.297-8.494z" fill="currentColor"/>
+              </svg>
+          </button>
+        </td>
+      </tr>
+    `,
+    )
+    .join("");
+}
+
+function abrirModalItensFaturaveis(contratoId) {
+  const contratoPai = getContratoPai(contratoId);
+  if (!contratoPai) return;
+  document.getElementById("itemfat-contrato-id").value = contratoPai.id;
+  document.getElementById("form-item-faturavel").reset();
+  renderizarListaItensFaturaveis(contratoPai.id);
+  abrirModal("modal-itens-faturaveis");
+}
+
+async function salvarItemFaturavel(e) {
+  e.preventDefault();
+  const contratoPaiId = document.getElementById("itemfat-contrato-id").value;
+  const contratoPai = db.contratos.find((c) => c.id === contratoPaiId);
+  if (!contratoPai) return;
+
+  const descricao = document.getElementById("itemfat-descricao").value.trim();
+  if (!descricao) return;
+
+  const valorFixoRaw = document.getElementById("itemfat-valor-fixo").value;
+  const valorFixo = valorFixoRaw ? parseBRL(valorFixoRaw) : null;
+
+  if (!contratoPai.itensFaturaveis) contratoPai.itensFaturaveis = [];
+  contratoPai.itensFaturaveis.push({
+    id: `itemfat_${Date.now()}`,
+    descricao,
+    valorFixo,
+  });
+
+  await supabase
+    .from("contratos")
+    .update({ itensFaturaveis: contratoPai.itensFaturaveis })
+    .eq("id", contratoPai.id);
+
+  document.getElementById("form-item-faturavel").reset();
+  renderizarListaItensFaturaveis(contratoPai.id);
+  popularSelectCatalogoItens(contratoPai.id);
+  mostrarToast("Item adicionado ao catálogo.");
+}
+
+async function excluirItemFaturavel(contratoPaiId, itemId) {
+  const contratoPai = db.contratos.find((c) => c.id === contratoPaiId);
+  if (!contratoPai || !contratoPai.itensFaturaveis) return;
+
+  contratoPai.itensFaturaveis = contratoPai.itensFaturaveis.filter(
+    (i) => i.id !== itemId,
+  );
+
+  await supabase
+    .from("contratos")
+    .update({ itensFaturaveis: contratoPai.itensFaturaveis })
+    .eq("id", contratoPai.id);
+
+  renderizarListaItensFaturaveis(contratoPai.id);
+  popularSelectCatalogoItens(contratoPai.id);
+  mostrarToast("Item removido do catálogo.");
 }
 
 async function excluirPagamento(contratoId, pagamentoId) {
@@ -3287,30 +3733,53 @@ function exportarDetalhesPDF(contratoPaiId) {
     });
   }
 
-  // --- Página 3+: Histórico de Pagamentos ---
+  // --- Página 3+: Histórico de Pagamentos / Entregas ---
+  // CORREÇÃO: título e colunas mudam para Termo de Cooperação Técnica,
+  // que não possui pagamento/NF/processo SEI de pagamento associado
+  const isCooperacaoTecnicaPDF =
+    contratoPai.tipoContrato === "Cooperacao Tecnica";
   doc.addPage();
   doc.setFontSize(16);
-  doc.text("Histórico de Pagamentos (Consolidado)", 14, 22);
+  doc.text(
+    isCooperacaoTecnicaPDF
+      ? "Histórico de Entregas (Consolidado)"
+      : "Histórico de Pagamentos (Consolidado)",
+    14,
+    22,
+  );
   let startY = 30; // <<<< MODIFICAÇÃO: Renomeada ou resetada
 
   if (pagamentos.length === 0) {
     doc.setFontSize(11);
     doc.setTextColor(100);
-    doc.text("Nenhum pagamento registrado.", 14, 30);
+    doc.text(
+      isCooperacaoTecnicaPDF
+        ? "Nenhuma entrega registrada."
+        : "Nenhum pagamento registrado.",
+      14,
+      30,
+    );
   } else {
     pagamentos.forEach((p, index) => {
-      const headPagamento = [
-        ["Data", "Período", "Valor Pago", "NF", "Proc. Pag. SEI"],
-      ];
-    const bodyPagamento = [
-      [
-        (p.data ? formatDate(p.data) : "Em andamento") + (p.origemAditivo ? `\n(Aditivo ${p.origemAditivo})` : ""),
-        p.periodoDe ? `${formatDate(p.periodoDe)} a ${formatDate(p.periodoAte)}` : "N/D",
-        formatCurrency(p.valorPago),
-        p.notaFiscal || "Em andamento",
-        p.processoPagamentoSei,
-      ],
-    ];
+      const headPagamento = isCooperacaoTecnicaPDF
+        ? [["Data da Entrega", "Competência"]]
+        : [["Data", "Período", "Valor Pago", "NF", "Proc. Pag. SEI"]];
+    const bodyPagamento = isCooperacaoTecnicaPDF
+      ? [
+          [
+            (p.data ? formatDate(p.data) : "Em andamento") + (p.origemAditivo ? `\n(Aditivo ${p.origemAditivo})` : ""),
+            p.periodoDe ? `${formatDate(p.periodoDe)} a ${formatDate(p.periodoAte)}` : "N/D",
+          ],
+        ]
+      : [
+          [
+            (p.data ? formatDate(p.data) : "Em andamento") + (p.origemAditivo ? `\n(Aditivo ${p.origemAditivo})` : ""),
+            p.periodoDe ? `${formatDate(p.periodoDe)} a ${formatDate(p.periodoAte)}` : "N/D",
+            formatCurrency(p.valorPago),
+            p.notaFiscal || "Em andamento",
+            p.processoPagamentoSei,
+          ],
+        ];
 
       // Verifica se precisa de nova página ANTES de desenhar
       let requiredHeight = 20; // Altura estimada do pagto + detalhes
@@ -3480,6 +3949,11 @@ function exportarAditivoPDF(aditivoId, contratoPaiId) {
   });
 
   // --- Bloco 3: Cálculos de Consumo (COM TRD) ---
+  // CORREÇÃO: Termo de Cooperação Técnica não tem valor/TRD associado;
+  // o bloco mostra a contagem de entregas no período, em vez de consumo
+  // financeiro
+  const isCooperacaoTecnicaAditivoPDF =
+    contratoPai.tipoContrato === "Cooperacao Tecnica";
   if (aditivo.aditivo.tipo !== "GestorFiscal") {
     let pagamentosFiltrados = [];
     let totalConsumidoAditivo = 0;
@@ -3549,14 +4023,19 @@ function exportarAditivoPDF(aditivoId, contratoPaiId) {
       percTexto = `${perc.toFixed(2)}% do valor total do contrato`;
     }
 
-    const dadosConsumo = [
-      ["Período de Vigência", textoPeriodo],
-      ["Consumo do Aditivo", formatCurrency(totalConsumidoAditivo)], // Apenas valor "Limpo"
-      ["Representatividade", percTexto],
-    ];
+    const dadosConsumo = isCooperacaoTecnicaAditivoPDF
+      ? [
+          ["Período de Vigência", textoPeriodo],
+          ["Entregas no Período", String(pagamentosFiltrados.length)],
+        ]
+      : [
+          ["Período de Vigência", textoPeriodo],
+          ["Consumo do Aditivo", formatCurrency(totalConsumidoAditivo)], // Apenas valor "Limpo"
+          ["Representatividade", percTexto],
+        ];
 
-    // SE HOUVER TRD, ADICIONA LINHAS EXTRAS
-    if (totalConsumidoTRD > 0) {
+    // SE HOUVER TRD, ADICIONA LINHAS EXTRAS (não se aplica à Cooperação Técnica)
+    if (!isCooperacaoTecnicaAditivoPDF && totalConsumidoTRD > 0) {
       // Adiciona linha de Total Geral antes
       dadosConsumo.splice(1, 0, [
         "Total Geral Pago no Período",
@@ -3570,7 +4049,14 @@ function exportarAditivoPDF(aditivoId, contratoPaiId) {
     }
 
     doc.autoTable({
-      head: [["Análise de Execução Financeira", ""]],
+      head: [
+        [
+          isCooperacaoTecnicaAditivoPDF
+            ? "Análise de Entregas"
+            : "Análise de Execução Financeira",
+          "",
+        ],
+      ],
       body: dadosConsumo,
       startY: doc.autoTable.previous.finalY + 10,
       headStyles: { fillColor: [243, 156, 18] }, // Laranja
@@ -3588,8 +4074,24 @@ function exportarAditivoPDF(aditivoId, contratoPaiId) {
       },
     });
 
-    // --- Bloco 4: Lista de Pagamentos ---
-    if (pagamentosFiltrados.length > 0) {
+    // --- Bloco 4: Lista de Pagamentos / Entregas ---
+    if (pagamentosFiltrados.length > 0 && isCooperacaoTecnicaAditivoPDF) {
+      // CORREÇÃO: lista simplificada de Entregas (sem NF/Valor/TRD)
+      const rowsEntregas = pagamentosFiltrados.map((p) => [
+        p.periodoDe
+          ? `${formatDate(p.periodoDe)} a ${formatDate(p.periodoAte)}`
+          : "N/D",
+        p.data ? formatDate(p.data) : "Em andamento",
+      ]);
+
+      doc.autoTable({
+        head: [["Competência", "Data da Entrega"]],
+        body: rowsEntregas,
+        startY: doc.autoTable.previous.finalY + 10,
+        headStyles: { fillColor: [127, 140, 141] }, // Cinza
+        theme: "striped",
+      });
+    } else if (pagamentosFiltrados.length > 0) {
       const rowsPagamentos = pagamentosFiltrados.map((p) => [
         p.data ? formatDate(p.data) : "Em andamento",
         p.periodoDe ? `${formatDate(p.periodoDe)} a ${formatDate(p.periodoAte)}` : "N/D",
@@ -3624,7 +4126,9 @@ function exportarAditivoPDF(aditivoId, contratoPaiId) {
     } else if (aditivo.aditivo.tipo === "Prazo") {
       doc.setFontSize(10);
       doc.text(
-        "Nenhum pagamento registrado neste período de vigência.",
+        isCooperacaoTecnicaAditivoPDF
+          ? "Nenhuma entrega registrada neste período de vigência."
+          : "Nenhum pagamento registrado neste período de vigência.",
         14,
         doc.autoTable.previous.finalY + 15,
       );
@@ -3799,9 +4303,13 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Listeners para filtros em tempo real
+  // CORREÇÃO: "#filtro-status" era resíduo de uma versão anterior (virou o
+  // dropdown de checkboxes ".filtro-status-check" logo abaixo, que já tem
+  // seu próprio listener); removido por não existir mais no HTML.
   document.getElementById("filtro-busca")?.addEventListener("input", renderizarContratos);
-  document.getElementById("filtro-status")?.addEventListener("change", renderizarContratos);
   document.getElementById("filtro-entidade")?.addEventListener("change", renderizarContratos);
+  // CORREÇÃO: faltava o listener do filtro de Tipo de Instrumento.
+  document.getElementById("filtro-tipo")?.addEventListener("change", renderizarContratos);
 
   document.querySelectorAll(".filtro-status-check").forEach(checkbox => {
     checkbox.addEventListener("change", renderizarContratos);
@@ -3879,15 +4387,26 @@ menuStatus?.addEventListener("click", (e) => {
       // Abre o modal de pagamento, pré-preenchido com dados do PAI
       // (Exatamente como se clicasse "+ Pagamento" no card)
       document.getElementById("form-pagamento").reset();
+      renderizarCamposDocumentos();
       document.getElementById("pagamento-contrato-id").value = contratoPai.id; // O ID do PAI
       document.getElementById("pagamento-id").value = ""; // Limpa ID do pagamento (é um NOVO pagto)
       document.getElementById("pagamento-contrato-objeto").textContent =
         `Contrato: ${contratoPai.objeto}`;
 
+      // CORREÇÃO: faltava chamar atualizarModalPagamentoPorTipoContrato()
+      // aqui, diferente dos outros dois pontos de entrada (botão do card e
+      // botão "Editar"). Sem essa chamada, o modal reabria com os campos
+      // Valor/TRD/NF/SEI/Documentos no estado "vazado" da última vez que
+      // foi usado para um contrato comum, e o título ficava sempre
+      // "Adicionar Pagamento" mesmo em Termo de Cooperação Técnica
+      // (deveria ser "Adicionar Entrega").
+      const { tituloBase } = atualizarModalPagamentoPorTipoContrato(
+        contratoPai.id,
+      );
       document.getElementById("modal-pagamento-titulo").textContent =
-        "Adicionar Pagamento";
+        `Adicionar ${tituloBase}`;
       document.getElementById("modal-pagamento-submit-btn").textContent =
-        "Adicionar Pagamento";
+        `Adicionar ${tituloBase}`;
       document.getElementById("pagamento-data").value = new Date()
         .toISOString()
         .split("T")[0];
@@ -3927,6 +4446,35 @@ menuStatus?.addEventListener("click", (e) => {
   document
     .getElementById("form-detalhe-item")
     .addEventListener("submit", salvarDetalheItem);
+
+  // CORREÇÃO: submit do formulário de cadastro do catálogo "Itens Faturáveis"
+  const formItemFaturavel = document.getElementById("form-item-faturavel");
+  if (formItemFaturavel) {
+    formItemFaturavel.addEventListener("submit", salvarItemFaturavel);
+  }
+
+  // CORREÇÃO: ao escolher um item do catálogo em "Detalhes da Nota
+  // Fiscal/Entrega", preenche automaticamente a Descrição e, se houver, o
+  // Valor Unit. (o campo continua editável manualmente depois)
+  const selectCatalogoItens = document.getElementById("detalhe-item-catalogo");
+  if (selectCatalogoItens) {
+    selectCatalogoItens.addEventListener("change", (e) => {
+      const opt = e.target.selectedOptions[0];
+      if (!opt || !opt.value) return;
+
+      document.getElementById("detalhe-item-desc").value = opt.textContent;
+
+      const valorFixo = opt.dataset.valorFixo;
+      if (valorFixo) {
+        const valorInput = document.getElementById("detalhe-item-valor");
+        valorInput.value = parseFloat(valorFixo).toFixed(3).replace(".", ",");
+        formatInputAsBRL({ target: valorInput });
+      }
+
+      // Reseta o select para permitir escolher o mesmo item novamente depois
+      e.target.value = "";
+    });
+  }
 
   // Listener para validação visual imediata nos campos SEI
   const camposSEI = [
@@ -4083,7 +4631,7 @@ menuStatus?.addEventListener("click", (e) => {
       abrirModal("modal-visualizar-contrato");
     }
 
-    // Botão "+ Pagamento" no Card
+    // Botão "+ Pagamento" / "+ Registrar Entrega" no Card
     if (e.target.classList.contains("btn-abrir-modal-pagamento")) {
       const contratoId = e.target.dataset.id;
       const contrato = db.contratos.find((c) => c.id === contratoId);
@@ -4097,10 +4645,15 @@ menuStatus?.addEventListener("click", (e) => {
         document.getElementById("pagamento-contrato-objeto").textContent =
           `Contrato: ${contrato.objeto}`;
 
+        // CORREÇÃO: alterna rótulos/campos entre "Pagamento" (padrão) e
+        // "Entrega" (Termo de Cooperação Técnica, sem valor)
+        const { tituloBase } = atualizarModalPagamentoPorTipoContrato(
+          contrato.id,
+        );
         document.getElementById("modal-pagamento-titulo").textContent =
-          "Adicionar Pagamento";
+          `Adicionar ${tituloBase}`;
         document.getElementById("modal-pagamento-submit-btn").textContent =
-          "Adicionar Pagamento";
+          `Adicionar ${tituloBase}`;
         document.getElementById("pagamento-data").value = new Date()
           .toISOString()
           .split("T")[0];
@@ -4180,8 +4733,13 @@ menuStatus?.addEventListener("click", (e) => {
 
         renderizarCamposDocumentos(pagamento.documentosExecucao || {});
 
+        // CORREÇÃO: alterna rótulos/campos entre "Pagamento" (padrão) e
+        // "Entrega" (Termo de Cooperação Técnica, sem valor)
+        const { tituloBase } = atualizarModalPagamentoPorTipoContrato(
+          contratoId,
+        );
         document.getElementById("modal-pagamento-titulo").textContent =
-          "Editar Pagamento";
+          `Editar ${tituloBase}`;
         document.getElementById("modal-pagamento-submit-btn").textContent =
           "Salvar Alterações";
 
@@ -4194,6 +4752,29 @@ menuStatus?.addEventListener("click", (e) => {
       const { contratoId, pagamentoId } = e.target.dataset;
       renderizarModalDetalhesPagamento(contratoId, pagamentoId);
       abrirModal("modal-detalhes-pagamento");
+    }
+
+    // CORREÇÃO: Botão "Itens Faturáveis" (rodapé do modal Visualizar Contrato)
+    if (e.target.classList.contains("btn-gerenciar-itens-faturaveis")) {
+      const contratoId = e.target.dataset.id;
+      abrirModalItensFaturaveis(contratoId);
+    }
+
+    // CORREÇÃO: Botão "Gerenciar Itens" (dentro do modal de Detalhes da NF/Entrega)
+    if (e.target.id === "btn-gerenciar-itens-faturaveis-inline") {
+      const contratoId = document.getElementById("detalhe-contrato-id").value;
+      abrirModalItensFaturaveis(contratoId);
+    }
+
+    // CORREÇÃO: Botão "Excluir" item do catálogo de Itens Faturáveis
+    if (e.target.classList.contains("btn-excluir-item-faturavel")) {
+      const { contratoPaiId, itemId } = e.target.dataset;
+      abrirModalConfirmacao(
+        "Tem certeza que deseja excluir este item do catálogo?",
+        () => {
+          excluirItemFaturavel(contratoPaiId, itemId);
+        },
+      );
     }
 
     // Botão "Excluir" Pagamento
@@ -4422,16 +5003,42 @@ const app = {
 function exportarAnaliseExcel(contratoPaiId) {
   const contratoPai = db.contratos.find(c => c.id === contratoPaiId);
   const aditivos = db.contratos.filter(c => c.parentId === contratoPaiId);
-  
+
+  // CORREÇÃO: Termo de Cooperação Técnica não tem Processo SEI de
+  // Pagamento/NF (não há pagamento), então essas colunas são omitidas e
+  // a coluna "Tipo" passa a identificar corretamente o registro como
+  // "Entrega"
+  const isCooperacaoTecnicaExcel =
+    contratoPai.tipoContrato === "Cooperacao Tecnica";
+
   // 1. Ordenamos os aditivos por data fim para garantir a cronologia
-  const aditivosOrdenados = [...aditivos].sort((a, b) => 
-    new Date(a.dataFim + "T00:00:00") - new Date(b.dataFim + "T00:00:00")
-  );
+  // CORREÇÃO: apenas aditivos de Prazo alteram a vigência/data fim do
+  // contrato — mesmo critério usado em exportarAditivoPDF e
+  // renderizarModalDetalharAditivo. Aditivos de Valor/GestorFiscal herdam a
+  // mesma dataFim do contrato pai no momento da criação (ver
+  // abrirModalContratoForm), então incluí-los aqui causava atribuição
+  // ambígua/incorreta do "Instrumento" quando havia mais de um aditivo
+  // não-Prazo.
+  const aditivosOrdenados = [...aditivos]
+    .filter((ad) => ad.aditivo?.tipo === "Prazo")
+    .sort((a, b) =>
+      new Date(a.dataFim + "T00:00:00") - new Date(b.dataFim + "T00:00:00"),
+    );
 
   const dadosParaExcel = [];
 
-  // 2. Iteramos apenas sobre os pagamentos do contrato pai (onde todos estão centralizados)
-  contratoPai.pagamentos.forEach(pag => {
+  // 2. CORREÇÃO: antes só iterava contratoPai.pagamentos. Pagamentos
+  // registrados diretamente em um registro de aditivo (como já acontece em
+  // exportarDetalhesPDF/exportarHistoricoConsumoPDF, que juntam
+  // contratoPai.pagamentos + ad.pagamentos de todos os aditivos) ficavam de
+  // fora do Excel, mas apareciam normalmente no PDF — dado divergente entre
+  // os dois relatórios do mesmo contrato.
+  const todosPagamentos = [
+    ...(contratoPai.pagamentos || []),
+    ...aditivos.flatMap((ad) => ad.pagamentos || []),
+  ];
+
+  todosPagamentos.forEach(pag => {
     if (!pag.periodoAte) return;
 
     const dataRef = new Date(pag.periodoAte + "T00:00:00");
@@ -4453,19 +5060,47 @@ function exportarAnaliseExcel(contratoPaiId) {
     }
 
     // 4. Montagem das linhas para o Excel
-    const mapearLinha = (item = null) => ({
-      "Instrumento": instrumentoVigente,
-      "Processo SEI": pag.processoPagamentoSei,
-      "NF": pag.notaFiscal || "Em andamento",
-      "Data Pagto": pag.data ? formatDate(pag.data) : "Em andamento",
-      "Competência": new Date(pag.periodoAte + "T00:00:00").getFullYear(),
-      "Mês": new Date(pag.periodoAte + "T00:00:00").getMonth() + 1,
-      "Item Descrição": item ? item.descricao : "N/D",
-      "Qtd": item ? item.quantidade : "N/D",
-      "Valor Unit": item ? item.valorUnitario : "N/D",
-      "Total Item": item ? (item.quantidade * item.valorUnitario) : pag.valorPago,
-      "Tipo": pag.isTRD ? "TRD" : "Normal"
-    });
+    const mapearLinha = (item = null) => {
+      const tipoRegistro =
+        pag.tipoRegistro === "entrega"
+          ? "Entrega"
+          : pag.isTRD
+            ? "TRD"
+            : "Normal";
+
+      // CORREÇÃO: em Cooperação Técnica, omite Processo SEI/NF de
+      // Pagamento (não existem nesse fluxo) e usa "Data da Entrega" como
+      // rótulo
+      if (isCooperacaoTecnicaExcel) {
+        return {
+          "Instrumento": instrumentoVigente,
+          "Data da Entrega": pag.data ? formatDate(pag.data) : "Em andamento",
+          "Competência": new Date(pag.periodoAte + "T00:00:00").getFullYear(),
+          "Mês": new Date(pag.periodoAte + "T00:00:00").getMonth() + 1,
+          "Item Descrição": item ? item.descricao : "N/D",
+          "Qtd": item ? item.quantidade : "N/D",
+          "Valor Unit": item ? (item.valorUnitario || "N/D") : "N/D",
+          "Total Item": item
+            ? item.quantidade * (item.valorUnitario || 0)
+            : "N/D",
+          "Tipo": tipoRegistro,
+        };
+      }
+
+      return {
+        "Instrumento": instrumentoVigente,
+        "Processo SEI": pag.processoPagamentoSei,
+        "NF": pag.notaFiscal || "Em andamento",
+        "Data Pagto": pag.data ? formatDate(pag.data) : "Em andamento",
+        "Competência": new Date(pag.periodoAte + "T00:00:00").getFullYear(),
+        "Mês": new Date(pag.periodoAte + "T00:00:00").getMonth() + 1,
+        "Item Descrição": item ? item.descricao : "N/D",
+        "Qtd": item ? item.quantidade : "N/D",
+        "Valor Unit": item ? item.valorUnitario : "N/D",
+        "Total Item": item ? (item.quantidade * item.valorUnitario) : pag.valorPago,
+        "Tipo": tipoRegistro,
+      };
+    };
 
     if (pag.detalhes && pag.detalhes.length > 0) {
       pag.detalhes.forEach(item => dadosParaExcel.push(mapearLinha(item)));
@@ -4477,7 +5112,11 @@ function exportarAnaliseExcel(contratoPaiId) {
   // Geração do arquivo
   const worksheet = XLSX.utils.json_to_sheet(dadosParaExcel);
   const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Análise Detalhada");
+  XLSX.utils.book_append_sheet(
+    workbook,
+    worksheet,
+    isCooperacaoTecnicaExcel ? "Análise de Entregas" : "Análise Detalhada",
+  );
   XLSX.writeFile(workbook, `Analise_Contrato_${contratoPai.numeroContrato}.xlsx`);
 };
 
