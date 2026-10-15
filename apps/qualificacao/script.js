@@ -643,6 +643,28 @@ async function initApp() {
             }
         }
 
+        // Expõe pra fora: familyData/applyFilters são variáveis locais deste
+        // módulo (script.js), então o módulo de Reanálise Jurídica não
+        // consegue atualizá-las diretamente depois que o app já carregou —
+        // precisava de um reload de página inteira pra pegar uma família que
+        // acabou de ganhar (ou perder) uma pendência de ciência DURANTE a
+        // sessão (ex.: "aplicar sugestão" ou "dar ciência" feitos no modal
+        // de Reanálise, que roda por cima desta mesma página). Esta função
+        // refaz só a parte 3b acima e reaplica o filtro atual, sem mexer na
+        // página em que o usuário está.
+        window.atualizarPendenciasCienciaGrid = async () => {
+            if (typeof window.buscarFamiliasComAlteracaoPendente !== 'function') return;
+            try {
+                const familiasPendentes = await window.buscarFamiliasComAlteracaoPendente();
+                familyData.forEach(item => {
+                    item.pendenteCiencia = familiasPendentes.has(item["Família"]);
+                });
+                applyFilters(false); // false = mantém a página atual, só reordena/filtra de novo
+            } catch (e) {
+                console.warn('Falha ao atualizar pendências de ciência:', e);
+            }
+        };
+
         // 4. Processa os retornos e converte para JSON
         if (respRamos && respRamos.ok) window.ramosDictionary = await respRamos.json();
         if (respDescRamos && respDescRamos.ok) descricoesRamos = await respDescRamos.json();
@@ -774,19 +796,20 @@ grid.innerHTML = '';
             : 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 dark:shadow-[0_0_10px_rgba(251,146,60,0.3)] dark:border dark:border-orange-500/50';
 
         const terceirizadoBadgeClasses = 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 dark:shadow-[0_0_10px_rgba(192,132,252,0.3)] dark:border dark:border-purple-500/50';
-        
+        const pendenciaBadgeClasses = 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 dark:shadow-[0_0_10px_rgba(245,158,11,0.3)] dark:border dark:border-amber-500/50';
+
         card.className = `relative bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border transition-all cursor-pointer group flex flex-col min-h-full animate-fade-in 
         ${isTerceirizado ? 'border-purple-200 dark:border-purple-900/40' : 'border-slate-200 dark:border-slate-800'} 
         ${isHighlighted ? 'highlight-new border-blue-500 z-10' : 'hover:border-blue-400'}`;       
         
         card.innerHTML = `
-            ${item.pendenteCiencia ? `<span class="absolute -top-2 -right-2 bg-amber-500 text-white text-[9px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow z-10" title="Alteração de documento aguardando ciência">⚠️</span>` : ''}
             <div class="flex justify-between items-start mb-4">
-                <div class="flex gap-2">
+                <div class="flex gap-2 flex-wrap">
                     <span class="text-[9px] font-bold px-2 py-1 rounded ${tipoBadgeClasses} uppercase tracking-tighter transition-all">
                         ${item.Tipo === 'S' ? 'Serviço' : 'Material'}
                     </span>
                     ${isTerceirizado ? `<span class="text-[9px] font-bold px-2 py-1 rounded ${terceirizadoBadgeClasses} uppercase tracking-tighter transition-all">Terceirizado</span>` : ''}
+                    ${item.pendenteCiencia ? `<span class="text-[9px] font-bold px-2 py-1 rounded ${pendenciaBadgeClasses} uppercase tracking-tighter transition-all" title="Alteração de documento aguardando ciência">⚠️ Pendente</span>` : ''}
                 </div>
 
                 <div class="flex gap-1">
@@ -3706,7 +3729,11 @@ window.processarSugestao = async (id, decisao, codFamilia = null, codCnae = null
 // Dispara a contagem do badge ao iniciar a tela
 document.addEventListener('DOMContentLoaded', () => {
     // Dá um timeout rápido para garantir que o cliente Supabase esteja ok
-    setTimeout(carregarContadorSugestoes, 1500); 
+    setTimeout(carregarContadorSugestoes, 1500);
+    // Badge do botão "Análise de Qualificação Técnica" (Reanálise Jurídica)
+    // — função mora em script_reanalise_juridica.js; typeof protege contra
+    // esse módulo ainda não ter carregado por algum motivo.
+    setTimeout(() => { if (typeof window.carregarContadorReanalisePendentes === 'function') window.carregarContadorReanalisePendentes(); }, 1500);
 });
 
 window.abrirModalVinculoCnaes = () => {
