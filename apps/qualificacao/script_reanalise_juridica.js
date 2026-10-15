@@ -202,6 +202,9 @@ window.abrirModalReanaliseJuridica = async () => {
 
 window.fecharModalReanaliseJuridica = () => {
   document.getElementById('modal-reanalise-juridica').classList.add('hidden');
+  // Reflete no badge do header qualquer mudança de status feita nesta
+  // sessão (famílias que saíram de pendente/aguardando_terceiro).
+  if (typeof window.carregarContadorReanalisePendentes === 'function') window.carregarContadorReanalisePendentes();
 };
 
 // Supabase/PostgREST corta em 1000 linhas por requisição por padrão — com
@@ -1107,6 +1110,13 @@ window.aplicarSugestaoDocumento = async (idx) => {
     familiaAbertaAtual.gemini_sugestao_documentos = sugestoes;
     await registrarHistorico(f.familia_codigo, 'edicao_manual', { aplicou_sugestao_documento: s });
 
+    // Essa família acabou de entrar na lista de "pendente de ciência" — sem
+    // isso, o selo/filtro ⚠️ da tela principal (script.js) só pegaria essa
+    // mudança num recarregamento de página inteiro, porque o grid dela é
+    // montado uma vez só no carregamento (familyData.pendenteCiencia), e
+    // este modal roda por cima da mesma página, na mesma sessão.
+    if (typeof window.atualizarPendenciasCienciaGrid === 'function') window.atualizarPendenciasCienciaGrid();
+
     if (typeof showToast === 'function') showToast(`"${s.nome}" ${s.acao === 'remover' ? 'removido dos' : 'incluído nos'} documentos ${s.tipo === 'elegivel' ? 'elegíveis' : 'exigidos'} — sinalizado na tela principal até um gestor CGCF dar ciência.`);
     renderizarDetalheReanalise();
   } catch (err) {
@@ -1308,10 +1318,16 @@ window.validarReanalise = async () => {
 };
 
 // ----------------------------------------------------------------------------
-// Badge de pendentes no botão do header (chamado também por applyFamilyRoleRestrictions
-// indiretamente; opcional — chame onde o app já chama carregarContadorSugestoes())
+// Badge de pendentes no botão do header — mesmo padrão do badge-sugestoes
+// (carregarContadorSugestoes em script.js): só consulta se o usuário for
+// admin (o botão em si já é admin-only, então pra quem não é, nem vale
+// gastar a consulta). Chamado por script.js no carregamento da página, e
+// aqui mesmo ao abrir/fechar a fila, pra refletir mudanças feitas na sessão.
 // ----------------------------------------------------------------------------
 window.carregarContadorReanalisePendentes = async () => {
+  const role = sessionStorage.getItem('cockpit_user_role');
+  if (role !== 'admin') return;
+
   const badge = document.getElementById('badge-reanalise-pendentes');
   if (!badge) return;
 
@@ -1408,10 +1424,17 @@ window.carregarFundamentacaoLegalModal = async (familiaCodigo) => {
             </p>
             ${p.motivo ? `<p class="text-slate-600 dark:text-slate-400">${p.motivo}</p>` : ''}
             <p class="text-[9px] text-slate-400">Por ${p.aplicado_por ?? '—'} em ${new Date(p.aplicado_em).toLocaleDateString('pt-BR')}</p>
-            <button type="button" onclick="darCienciaAlteracao('${p.id}', '${familiaCodigo}')"
-              class="admin-only text-[10px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline">
-              Dar ciência
-            </button>
+            <div class="flex items-center gap-3">
+              <button type="button" onclick="darCienciaAlteracao('${p.id}', '${familiaCodigo}')"
+                class="admin-only text-[10px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline">
+                Dar ciência
+              </button>
+              <button type="button" onclick="abrirModalRejeitarAlteracao('${p.id}', '${familiaCodigo}', '${(p.documento || '').replace(/'/g, "\\'")}')"
+                class="admin-only text-[10px] font-bold text-red-600 dark:text-red-400 hover:underline"
+                title="Desfaz a inclusão/exclusão em qualificacao_tecnica, em vez de só confirmar que viu">
+                Rejeitar
+              </button>
+            </div>
           </div>
         `).join('')}
       </div>`
@@ -1430,11 +1453,72 @@ window.carregarFundamentacaoLegalModal = async (familiaCodigo) => {
   `;
 };
 
+// Ao dar ciência numa INCLUSÃO de documento, busca a lei já conhecida desse
+// documento no dicionário compartilhado (base_legal_documento — pode estar
+// 'sugerido_ia' ou já 'validado', usa o que tiver) e, se encontrar, acrescenta
+// ao texto de "Fundamentação Legal" ATUAL da família
+// (qualificacao_reanalise_juridica.base_legal_atual) — assim o texto que
+// aparece pra qualquer usuário no modal principal já reflete o documento
+// novo, sem precisar editar manualmente. Não mexe em decisao_base_legal (o
+// texto da decisão final, que só muda quando o analista decide isso na tela
+// de Reanálise); só no texto "atual". Silenciosa de propósito: se o
+// documento ainda não tem lei nenhuma no dicionário, não há nada a somar
+// ainda — fica como estava, sem travar a ciência por causa disso.
+async function atualizarBaseLegalAtualComDocumento(familiaCodigo, nomeDocumento) {
+  const { data: docRow } = await supabase
+    .from('base_legal_documento')
+    .select('base_legal')
+    .eq('documento', nomeDocumento)
+    .maybeSingle();
+
+  const leiDocumento = docRow?.base_legal?.trim();
+  if (!leiDocumento) return;
+
+  const { data: familiaRow, error: errFamilia } = await supabase
+    .from('qualificacao_reanalise_juridica')
+    .select('base_legal_atual')
+    .eq('familia_codigo', familiaCodigo)
+    .single();
+  if (errFamilia || !familiaRow) return;
+
+  const textoAtual = familiaRow.base_legal_atual || '';
+  if (textoAtual.includes(leiDocumento)) return; // já está lá, não duplica
+
+  const novoTexto = textoAtual
+    ? `${textoAtual}\n${nomeDocumento}: ${leiDocumento}`
+    : `${nomeDocumento}: ${leiDocumento}`;
+
+  const { error: errUpdate } = await supabase
+    .from('qualificacao_reanalise_juridica')
+    .update({ base_legal_atual: novoTexto })
+    .eq('familia_codigo', familiaCodigo);
+  if (errUpdate) {
+    console.warn('Falha ao atualizar base_legal_atual com a lei do documento:', errUpdate);
+    return;
+  }
+
+  // Se essa família estiver aberta no modal de detalhe da Reanálise (não só
+  // no modal principal, que é quem chama esta função), reflete lá também.
+  if (familiaAbertaAtual && familiaAbertaAtual.familia_codigo === familiaCodigo) {
+    familiaAbertaAtual.base_legal_atual = novoTexto;
+    renderizarDetalheReanalise();
+  }
+}
+
 // Dar ciência numa alteração de documento específica — restrito a
 // admin/gestor CGCF responsável (mesma policy de escrita da migration 006).
 // Recarrega o próprio bloco pra sumir o item assim que confirmado.
 window.darCienciaAlteracao = async (id, familiaCodigo) => {
   const usuario = sessionStorage.getItem('cockpit_user_realname') || 'Usuário do Sistema';
+
+  // Busca a alteração ANTES de marcar ciente, pra saber se é inclusão (só
+  // nesse caso há lei de documento pra puxar pro texto da família).
+  const { data: alteracao } = await supabase
+    .from('qualificacao_documento_alteracoes')
+    .select('acao, documento')
+    .eq('id', id)
+    .single();
+
   const { error } = await supabase
     .from('qualificacao_documento_alteracoes')
     .update({ ciente_por: usuario, ciente_em: new Date().toISOString() })
@@ -1444,12 +1528,30 @@ window.darCienciaAlteracao = async (id, familiaCodigo) => {
     if (typeof showError === 'function') showError('Erro', 'Falha ao dar ciência: ' + error.message);
     return;
   }
+
+  if (alteracao && alteracao.acao === 'incluir') {
+    await atualizarBaseLegalAtualComDocumento(familiaCodigo, alteracao.documento);
+  }
+
+  // A família pode ter saído da lista de "pendente de ciência" — mantém o
+  // selo/filtro da tela principal em dia sem precisar recarregar a página
+  // inteira (mesmo problema e mesma correção do lado de "aplicar sugestão").
+  if (typeof window.atualizarPendenciasCienciaGrid === 'function') window.atualizarPendenciasCienciaGrid();
+
   if (typeof showToast === 'function') showToast('Ciência registrada.');
   await window.carregarFundamentacaoLegalModal(familiaCodigo);
 };
 
 window.darCienciaTodasAlteracoesFamilia = async (familiaCodigo) => {
   const usuario = sessionStorage.getItem('cockpit_user_realname') || 'Usuário do Sistema';
+
+  const { data: pendentesIncluir } = await supabase
+    .from('qualificacao_documento_alteracoes')
+    .select('documento')
+    .eq('familia_codigo', familiaCodigo)
+    .eq('acao', 'incluir')
+    .is('ciente_em', null);
+
   const { error } = await supabase
     .from('qualificacao_documento_alteracoes')
     .update({ ciente_por: usuario, ciente_em: new Date().toISOString() })
@@ -1460,8 +1562,127 @@ window.darCienciaTodasAlteracoesFamilia = async (familiaCodigo) => {
     if (typeof showError === 'function') showError('Erro', 'Falha ao dar ciência: ' + error.message);
     return;
   }
+
+  for (const p of pendentesIncluir || []) {
+    await atualizarBaseLegalAtualComDocumento(familiaCodigo, p.documento);
+  }
+
+  if (typeof window.atualizarPendenciasCienciaGrid === 'function') window.atualizarPendenciasCienciaGrid();
+
   if (typeof showToast === 'function') showToast('Ciência registrada em todas as alterações desta família.');
   await window.carregarFundamentacaoLegalModal(familiaCodigo);
+};
+
+// ----------------------------------------------------------------------------
+// Rejeitar uma alteração pendente (em vez de só dar ciência) — desfaz de
+// verdade a inclusão/exclusão que já tinha sido aplicada em
+// qualificacao_tecnica (ver migration 008_rejeicao_alteracao_documento.sql).
+// Guarda só id/familia_codigo/documento (o suficiente pra reverter e pra
+// reencontrar a sugestão correspondente em gemini_sugestao_documentos); o
+// motivo de rejeição vem do textarea no confirmar.
+// ----------------------------------------------------------------------------
+let rejeicaoAlteracaoAtual = null;
+
+window.abrirModalRejeitarAlteracao = (id, familiaCodigo, documento) => {
+  rejeicaoAlteracaoAtual = { id, familiaCodigo, documento };
+  document.getElementById('rejeitar-alteracao-titulo').textContent = documento;
+  document.getElementById('input-motivo-rejeicao').value = '';
+  document.getElementById('modal-rejeitar-alteracao').classList.remove('hidden');
+};
+
+window.fecharModalRejeitarAlteracao = () => {
+  document.getElementById('modal-rejeitar-alteracao').classList.add('hidden');
+  rejeicaoAlteracaoAtual = null;
+};
+
+window.confirmarRejeitarAlteracao = async () => {
+  if (!rejeicaoAlteracaoAtual) return;
+  const { id, familiaCodigo } = rejeicaoAlteracaoAtual;
+  const motivo = document.getElementById('input-motivo-rejeicao').value.trim();
+  const usuario = sessionStorage.getItem('cockpit_user_realname') || 'Usuário do Sistema';
+
+  try {
+    const { data: alteracao, error: errBusca } = await supabase
+      .from('qualificacao_documento_alteracoes')
+      .select('acao, tipo_lista, documento')
+      .eq('id', id)
+      .single();
+    if (errBusca || !alteracao) throw errBusca || new Error('Alteração não encontrada.');
+
+    // Desfaz de verdade em qualificacao_tecnica: uma inclusão vira remoção,
+    // uma exclusão vira re-inclusão — o inverso exato do que
+    // aplicarSugestaoDocumento fez.
+    const coluna = alteracao.tipo_lista === 'elegivel' ? 'documentos_elegiveis' : 'documentos_exigidos';
+    const { data: familiaTecnica, error: errFamiliaTecnica } = await supabase
+      .from('qualificacao_tecnica')
+      .select(coluna)
+      .eq('familia', familiaCodigo)
+      .single();
+    if (errFamiliaTecnica) throw errFamiliaTecnica;
+
+    const listaAtual = familiaTecnica?.[coluna] || [];
+    const listaRevertida = alteracao.acao === 'incluir'
+      ? listaAtual.filter((d) => d !== alteracao.documento)
+      : (listaAtual.includes(alteracao.documento) ? listaAtual : [...listaAtual, alteracao.documento]);
+
+    const { error: errUpdateTecnica } = await supabase
+      .from('qualificacao_tecnica')
+      .update({ [coluna]: listaRevertida })
+      .eq('familia', familiaCodigo);
+    if (errUpdateTecnica) throw errUpdateTecnica;
+
+    // Marca a alteração como resolvida (sai da lista de pendentes) E como
+    // rejeitada (diferencia de uma ciência normal no histórico).
+    const { error: errUpdateAlteracao } = await supabase
+      .from('qualificacao_documento_alteracoes')
+      .update({
+        ciente_por: usuario,
+        ciente_em: new Date().toISOString(),
+        rejeitado: true,
+        rejeitado_por: usuario,
+        motivo_rejeicao: motivo || null,
+      })
+      .eq('id', id);
+    if (errUpdateAlteracao) throw errUpdateAlteracao;
+
+    // Se a sugestão de origem (gemini_sugestao_documentos) ainda estiver
+    // marcada como aplicada, desmarca — senão o botão "Aplicar esta
+    // sugestão" não volta a aparecer, mesmo a mudança tendo sido desfeita.
+    const { data: familiaReanalise, error: errFamiliaReanalise } = await supabase
+      .from('qualificacao_reanalise_juridica')
+      .select('gemini_sugestao_documentos')
+      .eq('familia_codigo', familiaCodigo)
+      .single();
+
+    if (!errFamiliaReanalise && familiaReanalise) {
+      const sugestoes = familiaReanalise.gemini_sugestao_documentos || [];
+      const nomeNorm = normalizarNomeDocumento(alteracao.documento);
+      const sugestoesAtualizadas = sugestoes.map((s) => {
+        if (s.aplicado && normalizarNomeDocumento(s.nome) === nomeNorm && s.acao === alteracao.acao) {
+          const { aplicado, aplicado_por, aplicado_em, ...resto } = s;
+          return resto;
+        }
+        return s;
+      });
+
+      const { error: errSugestao } = await supabase
+        .from('qualificacao_reanalise_juridica')
+        .update({ gemini_sugestao_documentos: sugestoesAtualizadas })
+        .eq('familia_codigo', familiaCodigo);
+      if (!errSugestao && familiaAbertaAtual && familiaAbertaAtual.familia_codigo === familiaCodigo) {
+        familiaAbertaAtual.gemini_sugestao_documentos = sugestoesAtualizadas;
+        renderizarDetalheReanalise();
+      }
+    }
+
+    window.fecharModalRejeitarAlteracao();
+    if (typeof window.atualizarPendenciasCienciaGrid === 'function') window.atualizarPendenciasCienciaGrid();
+    if (typeof showToast === 'function') showToast(`"${alteracao.documento}" — alteração rejeitada e desfeita.`);
+    await window.carregarFundamentacaoLegalModal(familiaCodigo);
+  } catch (err) {
+    console.error('Falha ao rejeitar alteração:', err);
+    if (typeof showError === 'function') showError('Erro', err.message || 'Falha ao rejeitar e desfazer a alteração.');
+  }
 };
 
 // Abre o modal de detalhe da reanálise direto por código de família, sem
