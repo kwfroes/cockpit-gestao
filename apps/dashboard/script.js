@@ -6,25 +6,45 @@ window.onload = function () {
   const RELATORIOS_BUCKET = 'relatorios-caf';
   const RETENTION_MONTHS = 26; // 25 meses fechados + o mês corrente em andamento
 
+  // Mesmo critério usado nos demais módulos do Cockpit: o responsável pela
+  // coordenação (gestor CGCF, não-admin) tem acesso de VISUALIZAÇÃO igual ao
+  // admin — só ações de gestão/config do sistema continuam exclusivas do admin.
+  function isGestorCGCF() {
+      const role = sessionStorage.getItem("cockpit_user_role");
+      const coordenacao = (sessionStorage.getItem("cockpit_user_coordenacao") || "").toUpperCase();
+      const responsavel = sessionStorage.getItem("cockpit_user_responsavel") === "true";
+      return role === "admin" || (coordenacao.includes("CGCF") && responsavel);
+  }
+
   function applyRoleRestrictions() {
       const role = sessionStorage.getItem("cockpit_user_role");
-      
+      const gestor = isGestorCGCF();
+
       if (role !== "admin") {
-          // IDs de todos os botões/áreas que devem sumir para o User comum
-          const elementsToHide = [
-              "btnGerenciadorMeses", 
-              "btnAddCsv", 
+          // Ações de gestão/configuração do sistema: só admin, mesmo para o gestor CGCF
+          const adminOnlyElements = [
+              "btnGerenciadorMeses",
+              "btnAddCsv",
               "btnOpenHolidays",
-              "exportJsonButton", 
-              "exportPdfButton", 
-              "exportPdfButtonDashboard",
-              "comparison-section" // Caso você tenha uma div isolada para a comparação de analistas
+              "exportJsonButton",
           ];
-          
-          elementsToHide.forEach(id => {
+          adminOnlyElements.forEach(id => {
               const el = document.getElementById(id);
               if (el) el.style.display = "none";
           });
+
+          // Visualização/análise da equipe: liberado também pro gestor CGCF responsável
+          if (!gestor) {
+              const viewOnlyElements = [
+                  "exportPdfButton",
+                  "exportPdfButtonDashboard",
+                  "comparison-section" // Caso você tenha uma div isolada para a comparação de analistas
+              ];
+              viewOnlyElements.forEach(id => {
+                  const el = document.getElementById(id);
+                  if (el) el.style.display = "none";
+              });
+          }
 
           // Esconde o contêiner inteiro do Filtro de Analista para que ele nem saiba que existe
           // const filterAnalyst = document.getElementById("filterAnalyst");
@@ -441,8 +461,7 @@ window.onload = function () {
                 
                 // 2. CORREÇÃO DA REGRA DE NEGÓCIO: 
                 // Só tenta montar a aba de comparação se for Admin (evita crash por falta de dados)
-                const userRole = sessionStorage.getItem("cockpit_user_role");
-                if (userRole === "admin" && typeof initComparisonFilters === "function") {
+                if (isGestorCGCF() && typeof initComparisonFilters === "function") {
                     initComparisonFilters(allData);
                 }
 
@@ -829,8 +848,6 @@ window.onload = function () {
   }
 
   function processRawData(data) {
-    const role = sessionStorage.getItem("cockpit_user_role");
-    
     // --- 1. A NOVA CHAVE MESTRA ---
     // Puxa a variável que o App Pai gravou no login
     const userDash = sessionStorage.getItem("cockpit_user_dash");
@@ -839,10 +856,11 @@ window.onload = function () {
 
     // --------------------------------------------------------
     // GATEKEEPER DE DADOS
-    // Se não for admin, deleta da memória qualquer linha que 
-    // não pertença ao analista logado antes de montar o dash.
+    // Se não for admin NEM o responsável pela coordenação (gestor CGCF),
+    // deleta da memória qualquer linha que não pertença ao analista logado
+    // antes de montar o dash. Admin e gestor CGCF veem todos os analistas.
     // --------------------------------------------------------
-    if (role !== "admin") {
+    if (!isGestorCGCF()) {
         // Função auxiliar para padronizar os nomes: 
         // Remove acentos, espaços extras e transforma em minúsculas
         const normalizeString = (str) => {
@@ -970,11 +988,10 @@ window.onload = function () {
       }
     });
 
-  const role = sessionStorage.getItem("cockpit_user_role");
-    const filterAnalyst = document.getElementById("filterAnalyst");
+  const filterAnalyst = document.getElementById("filterAnalyst");
 
-    if (role === "admin") {
-        // Admin vê todo mundo e pode clicar
+    if (isGestorCGCF()) {
+        // Admin e gestor CGCF veem todo mundo e podem clicar
         populateSelect("filterAnalyst", [...analysts].sort());
         filterAnalyst.disabled = false;
         filterAnalyst.classList.remove("cursor-not-allowed", "opacity-70", "bg-gray-100", "dark:bg-slate-800");
@@ -1106,11 +1123,10 @@ window.onload = function () {
       return (!start || analysisDate >= start) && (!endDate || analysisDate < endDate);
     });
 
-    // Só reescrevemos o dropdown se o usuário for Admin (pois os users normais têm o campo travado)
-    const role = sessionStorage.getItem("cockpit_user_role");
+    // Só reescrevemos o dropdown se for Admin ou gestor CGCF (pois os users normais têm o campo travado)
     const filterAnalyst = document.getElementById("filterAnalyst");
 
-    if (role === "admin" && filterAnalyst) {
+    if (isGestorCGCF() && filterAnalyst) {
       // Salva o analista que estava selecionado antes da mudança de data
       const currentSelectedAnalyst = filterAnalyst.value;
       const availableAnalysts = new Set();
@@ -2588,15 +2604,14 @@ async function exportPDF(overrideAnalyst = null) {
         doc.setFontSize(11);
         doc.setTextColor(100);
 
-      const userRole = sessionStorage.getItem("cockpit_user_role");
-        let notaEquipe = "";
+      let notaEquipe = "";
 
         if (analistaFiltro !== 'all') {
             const indexNoRanking = teamData.findIndex(a => a.nome === analistaFiltro);
             const dados = teamData[indexNoRanking];
 
             if (dados) {
-                if (userRole === "admin") {
+                if (isGestorCGCF()) {
                     // Admin tirando relatório individual: Mostra ranking na equipe
                     const posicao = indexNoRanking + 1;
                     notaEquipe = `Análise: O analista ${analistaFiltro} apresentou o ${posicao}º maior volume de conclusões, ` +
