@@ -457,8 +457,12 @@ window.onload = function () {
             try {
                 // 1. Inicia o dashboard principal
                 initDashboard(allData);
-                verificarSincronizacaoBot();
-                
+                // Chamada defensiva: essa função não existe em nenhum arquivo
+                // carregado (nem script.js nem auth.js), e sem a guarda ela
+                // lançava ReferenceError e abortava tudo que vinha depois
+                // (comparação de analistas, toggleHeaderButtons, stats externos).
+                if (typeof verificarSincronizacaoBot === "function") verificarSincronizacaoBot();
+
                 // 2. CORREÇÃO DA REGRA DE NEGÓCIO: 
                 // Só tenta montar a aba de comparação se for Admin (evita crash por falta de dados)
                 if (isGestorCGCF() && typeof initComparisonFilters === "function") {
