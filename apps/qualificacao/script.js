@@ -46,7 +46,12 @@ function applyFamilyRoleRestrictions() {
     }
 
     // 2. Regra para botões de Gestão da CGCF (Permite Admin como bypass de segurança)
-    const isGestorCGCF = (coordenacao === "CGCF" && isResponsavel) || role === "admin";
+    // Comparação flexibilizada em 2026-10-15: o valor real salvo em
+    // profiles.coordenacao é composto (ex.: "DSL/CGCF", Diretoria+Coordenação
+    // juntos no mesmo campo) pra TODO MUNDO, inclusive admin — a igualdade
+    // exata com "CGCF" nunca batia com ninguém. Mesmo critério usado agora
+    // nas policies de RLS (migration 010): basta conter "CGCF".
+    const isGestorCGCF = ((coordenacao || "").toUpperCase().includes("CGCF") && isResponsavel) || role === "admin";
     
     if (!isGestorCGCF) {
         cssRules += `\n.cgcf-manager-only { display: none !important; }`;
@@ -662,6 +667,33 @@ async function initApp() {
                 applyFilters(false); // false = mantém a página atual, só reordena/filtra de novo
             } catch (e) {
                 console.warn('Falha ao atualizar pendências de ciência:', e);
+            }
+        };
+
+        // Mesmo problema do comentário acima, mas pra lista de documentos em
+        // si: aplicarSugestaoDocumento/confirmarRejeitarAlteracao/exclusão
+        // pela tela "Gerenciar Documentos" escrevem direto em
+        // qualificacao_tecnica.documentos_exigidos/documentos_elegiveis no
+        // banco, mas nunca atualizavam o familyData já carregado aqui — o
+        // modal "Obrigatórios/Elegíveis" (abrirModalDetalheFamilia) é
+        // montado só a partir de item["Documentos Exigidos"/"Elegíveis"] em
+        // memória, então a inclusão ficava invisível pro usuário até um F5,
+        // mesmo já estando salva. patch: { documentos_exigidos?, documentos_elegiveis? }
+        // (arrays já prontos, o chamador decide qual das duas chaves manda).
+        window.sincronizarDocumentosFamiliaPrincipal = (familiaCodigo, patch) => {
+            const idx = familyData.findIndex((f) => f["Família"] === familiaCodigo);
+            if (idx === -1) return;
+            const item = familyData[idx];
+            if (patch.documentos_exigidos !== undefined) item["Documentos Exigidos"] = patch.documentos_exigidos;
+            if (patch.documentos_elegiveis !== undefined) item["Documentos Elegíveis"] = patch.documentos_elegiveis;
+
+            // Se o modal de detalhe desta MESMA família estiver aberto agora
+            // (por baixo do modal de Reanálise/Gerenciar Documentos, que
+            // rodam por cima), redesenha na hora — senão o usuário só veria
+            // a lista certa depois de fechar e abrir de novo.
+            const modalAberto = document.getElementById('modal-detalhe-familia');
+            if (modalAberto && modalAberto.textContent.includes(`Família ${familiaCodigo}`)) {
+                abrirModalDetalheFamilia(idx);
             }
         };
 
