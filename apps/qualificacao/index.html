@@ -641,6 +641,12 @@
                 <span>✅ Docs validados</span>
             </label>
             <span id="reanalise-contador" class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest ml-auto"></span>
+            <button type="button" id="btn-baixar-excel-qualificacao" onclick="baixarExcelQualificacaoTecnica()"
+                class="bg-teal-700 hover:bg-teal-800 text-white px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider shadow-md flex items-center gap-2 transition-colors"
+                title="Gera um Excel com todas as famílias: código, descrição, documentos exigidos/elegíveis e a base legal de cada documento (do dicionário, não da decisão da família)">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                Baixar Excel
+            </button>
             <button type="button" id="btn-sugerir-ia-lote" onclick="sugerirFundamentacaoEmLote()" disabled
                 class="bg-violet-600 hover:bg-violet-700 disabled:opacity-40 disabled:cursor-not-allowed text-white px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider shadow-md flex items-center gap-2 transition-colors"
                 title="Analisa com IA até 20 famílias do filtro atual (sem sugestão ainda) numa única chamada">
@@ -848,6 +854,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="./archives/icons.js"></script>
     <script src="analisador_cnpj.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

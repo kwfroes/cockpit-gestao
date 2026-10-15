@@ -359,6 +359,118 @@ window.aplicarFiltrosReanalise = () => {
 };
 
 // ----------------------------------------------------------------------------
+// Exportação em Excel: TODAS as famílias da fila (não só o filtro/página
+// atual), com uma coluna de base legal montada a partir do DICIONÁRIO POR
+// DOCUMENTO (base_legal_documento) — nunca da decisão da família
+// (decisao_base_legal/base_legal_atual) — pedido explícito: cada linha
+// reflete a lei de cada documento exigido/elegível daquela família, não o
+// texto final que um analista decidiu escrever à mão.
+// ----------------------------------------------------------------------------
+window.baixarExcelQualificacaoTecnica = async () => {
+  if (typeof XLSX === 'undefined') {
+    if (typeof showError === 'function') showError('Erro', 'Biblioteca de Excel não carregou — recarregue a página e tente de novo.');
+    return;
+  }
+  if (!filaCarregada || filaCarregada.length === 0) {
+    if (typeof showToast === 'function') showToast('Nenhuma família carregada ainda — aguarde a fila terminar de carregar.');
+    return;
+  }
+
+  const btn = document.getElementById('btn-baixar-excel-qualificacao');
+  const textoOriginal = btn?.innerHTML;
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = 'Gerando...';
+  }
+
+  try {
+    // Dicionário completo documento -> base_legal, numa chamada só — mais
+    // barato que montar family por family (1.120 famílias).
+    const { data: documentos, error } = await supabase
+      .from('base_legal_documento')
+      .select('documento, base_legal');
+    if (error) throw error;
+
+    const baseLegalPorDocumento = new Map((documentos || []).map((d) => [d.documento, d.base_legal]));
+
+    // filaCarregada vem ordenada por escopo -> status -> cluster -> família
+    // (ordem de trabalho da vw_fila_reanalise, útil pra priorizar quem
+    // analisar) — mas o relatório é pra consulta, então reordena só por
+    // família_codigo (01.00 -> 99.99). localeCompare com numeric:true evita
+    // o problema de ordenação alfabética ("10.00" antes de "2.00").
+    const linhas = [...filaCarregada]
+      .sort((a, b) => (a.familia_codigo || '').localeCompare(b.familia_codigo || '', 'pt-BR', { numeric: true }))
+      .map((f) => {
+      const exigidos = f.documentos_exigidos_atual || [];
+      const elegiveis = f.documentos_elegiveis_atual || [];
+      const todosDocumentos = [...exigidos, ...elegiveis];
+
+      // Uma lei por documento, na ordem exigidos -> elegíveis, sem repetir a
+      // mesma lei duas vezes (documentos diferentes podem citar a mesma
+      // norma — ex.: dois conselhos regidos pela mesma lei de criação).
+      const leis = [];
+      for (const nome of todosDocumentos) {
+        const lei = baseLegalPorDocumento.get(nome);
+        if (lei && !leis.includes(lei)) leis.push(lei);
+      }
+
+      // Status da PRÓPRIA reanálise da família (qualificacao_reanalise_juridica.status),
+      // não de cada documento no dicionário — "Revisada" só depois que um
+      // analista valida a família em si (window.validarReanalise), com
+      // status = 'validado'. Qualquer outro status (pendente, em_analise,
+      // aguardando_terceiro, sugerido_ia) ainda é "Falta revisar".
+      const statusRevisao = f.status === 'validado' ? 'Revisada' : 'Falta revisar';
+
+      return {
+        'Código Família': f.familia_codigo,
+        'Descrição': f.descricao,
+        'Documentos Exigíveis': exigidos.join('; '),
+        'Documentos Elegíveis': elegiveis.join('; '),
+        'Base Legal (dos documentos)': leis.join('; '),
+        'Base Legal Revisada?': statusRevisao,
+      };
+    });
+
+    const planilha = XLSX.utils.json_to_sheet(linhas);
+
+    // Blindagem extra: força "Código Família" (coluna A) a ser gravado como
+    // texto na célula, nunca número. f.familia_codigo já chega como string
+    // do banco ("01.00"), e o SheetJS normalmente respeita isso — mas como
+    // a pergunta foi "tá garantido?", isso elimina qualquer dependência de
+    // auto-detecção: o Excel nunca vai "ajudar" tirando o zero à esquerda.
+    for (let i = 0; i < linhas.length; i++) {
+      const endereco = XLSX.utils.encode_cell({ r: i + 1, c: 0 }); // +1 pula a linha de cabeçalho
+      if (planilha[endereco]) planilha[endereco].t = 's';
+    }
+
+    planilha['!cols'] = [
+      { wch: 14 }, // Código Família
+      { wch: 45 }, // Descrição
+      { wch: 50 }, // Documentos Exigíveis
+      { wch: 50 }, // Documentos Elegíveis
+      { wch: 70 }, // Base Legal (dos documentos)
+      { wch: 16 }, // Base Legal Revisada?
+    ];
+
+    const livro = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(livro, planilha, 'Qualificação Técnica');
+
+    const dataHoje = new Date().toISOString().slice(0, 10);
+    XLSX.writeFile(livro, `qualificacao_tecnica_base_legal_${dataHoje}.xlsx`);
+
+    if (typeof showToast === 'function') showToast(`Excel gerado com ${linhas.length} família(s).`);
+  } catch (err) {
+    console.error('Falha ao gerar Excel da Qualificação Técnica:', err);
+    if (typeof showError === 'function') showError('Erro', err.message || 'Falha ao gerar o Excel.');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = textoOriginal;
+    }
+  }
+};
+
+// ----------------------------------------------------------------------------
 // Sugestão de IA EM LOTE, sobre o filtro atualmente aplicado na fila (ex.:
 // filtra cluster=C1 e clica aqui pra mandar até 20 famílias de uma vez, numa
 // única chamada — mesmo padrão/limite já usado na aprovação de CNAE).
