@@ -42,6 +42,14 @@ let dicionarioBaseLegalDocumentosAtual = new Map();
 // documentos exigidos/elegíveis já validados em algum momento, nem que
 // tenha sido por outra família que também usa o mesmo documento).
 let dicionarioStatusDocumentosGlobal = new Map();
+// Cache da tela "Gerenciar Documentos" — lista completa de base_legal_documento,
+// carregada quando o modal abre. Reaproveitado também pelo prefill de
+// validarBaseLegalDocumento() quando chamado de dentro dessa tela (sem
+// família nenhuma aberta).
+let documentosGerenciarCarregados = [];
+// Estado do modal de confirmação de exclusão de documento: nome + famílias
+// vinculadas encontradas (por lista), preenchido por excluirDocumentoGerenciar.
+let exclusaoDocumentoAtual = null;
 // Reduzido de 20 para 8: cada família carrega base legal + justificativa +
 // fontes + alertas (texto mais longo que a aprovação de CNAE); em 20 por
 // lote a resposta do Gemini vinha sendo cortada por limite de tokens.
@@ -50,7 +58,7 @@ const TAMANHO_LOTE_IA_REANALISE = 8;
 // Lote separado para o dicionário de base legal por DOCUMENTO (mais leve que
 // a análise por família — cada item é só nome + citação), então comporta
 // mais por chamada.
-const TAMANHO_LOTE_DOCUMENTOS = 25;
+const TAMANHO_LOTE_DOCUMENTOS = 15;
 
 function normalizarNomeDocumento(nome) {
   return (nome || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
@@ -131,11 +139,18 @@ async function sugerirBaseLegalDocumentos(nomesDocumentos) {
 
   const { data: existentes, error: errExistentes } = await supabase
     .from('base_legal_documento')
-    .select('documento')
+    .select('documento, base_legal')
     .in('documento', nomesUnicos);
   if (errExistentes) throw errExistentes;
 
-  const jaExistentesSet = new Set((existentes || []).map((r) => r.documento));
+  // "Já existe no dicionário" só conta se a linha tiver texto de base legal
+  // de verdade — uma linha criada sem análise (ex.: cadastro manual pela
+  // tela Gerenciar Documentos, ou uma migração de seed) tem base_legal nulo
+  // e precisa continuar contando como "faltante", senão a IA nunca chega a
+  // analisá-la (ela fica pra sempre com "—" e o botão "Preencher faltantes
+  // com IA"/"Sugerir IA + lote" reporta "já estava no dicionário" sem nunca
+  // ter sido analisada de fato).
+  const jaExistentesSet = new Set((existentes || []).filter((r) => r.base_legal).map((r) => r.documento));
   const faltantes = nomesUnicos.filter((n) => !jaExistentesSet.has(n));
   if (faltantes.length === 0) return { novos: 0, jaExistentes: nomesUnicos.length };
 
@@ -152,6 +167,7 @@ async function sugerirBaseLegalDocumentos(nomesDocumentos) {
     const linhas = resultados.map((r) => ({
       documento: r.documento,
       base_legal: r.base_legal ?? null,
+      atividades_regulamentadas: r.atividades_regulamentadas ?? null,
       status: 'sugerido_ia',
       gemini_score: r.score ?? null,
       gemini_justificativa: r.justificativa ?? null,
@@ -925,11 +941,18 @@ window.sugerirBaseLegalDocumentosDaFamiliaAberta = async () => {
 let documentoEmValidacao = null;
 
 window.validarBaseLegalDocumento = (nomeDocumento) => {
-  const atual = dicionarioBaseLegalDocumentosAtual.get(nomeDocumento);
+  // Prefill busca primeiro no dicionário da família aberta (contexto normal,
+  // dentro da Reanálise) e, se não achar (ex.: chamado de dentro da tela
+  // "Gerenciar Documentos", que lista o dicionário inteiro sem família
+  // nenhuma aberta), cai pro cache carregado por lá.
+  const atual = dicionarioBaseLegalDocumentosAtual.get(nomeDocumento)
+    || documentosGerenciarCarregados.find((d) => d.documento === nomeDocumento);
   documentoEmValidacao = nomeDocumento;
 
   document.getElementById('validar-documento-titulo').textContent = nomeDocumento;
   document.getElementById('input-validar-documento-base-legal').value = atual?.base_legal ?? '';
+  const campoAtividades = document.getElementById('input-validar-documento-atividades');
+  if (campoAtividades) campoAtividades.value = atual?.atividades_regulamentadas ?? '';
   document.getElementById('modal-validar-documento').classList.remove('hidden');
 };
 
@@ -942,6 +965,7 @@ window.confirmarValidarDocumento = async () => {
   if (!documentoEmValidacao) return;
   const nomeDocumento = documentoEmValidacao;
   const textoFinal = document.getElementById('input-validar-documento-base-legal').value.trim();
+  const atividadesFinal = (document.getElementById('input-validar-documento-atividades')?.value || '').trim();
 
   const usuario = sessionStorage.getItem('cockpit_user_realname') || 'Usuário do Sistema';
   const { error } = await supabase
@@ -949,6 +973,7 @@ window.confirmarValidarDocumento = async () => {
     .upsert({
       documento: nomeDocumento,
       base_legal: textoFinal,
+      atividades_regulamentadas: atividadesFinal || null,
       status: 'validado',
       validado_por: usuario,
       validado_em: new Date().toISOString(),
@@ -971,6 +996,463 @@ window.confirmarValidarDocumento = async () => {
   if (familiaAbertaAtual) {
     await carregarBaseLegalDocumentosDaFamilia(familiaAbertaAtual);
     renderizarDetalheReanalise();
+  }
+
+  // Se a tela "Gerenciar Documentos" estiver aberta (ou só com os dados em
+  // cache), reflete a edição ali também, sem precisar recarregar a lista
+  // inteira do banco de novo.
+  const idxGerenciar = documentosGerenciarCarregados.findIndex((d) => d.documento === nomeDocumento);
+  const linhaAtualizada = { documento: nomeDocumento, base_legal: textoFinal, atividades_regulamentadas: atividadesFinal || null, status: 'validado', validado_por: usuario, validado_em: new Date().toISOString() };
+  if (idxGerenciar >= 0) {
+    documentosGerenciarCarregados[idxGerenciar] = { ...documentosGerenciarCarregados[idxGerenciar], ...linhaAtualizada };
+  } else {
+    documentosGerenciarCarregados.push(linhaAtualizada);
+  }
+  const modalGerenciar = document.getElementById('modal-gerenciar-documentos');
+  if (modalGerenciar && !modalGerenciar.classList.contains('hidden')) {
+    renderizarListaDocumentosGerenciar();
+  }
+};
+
+// ----------------------------------------------------------------------------
+// Gerenciar Documentos: tela central pro dicionário base_legal_documento —
+// listar/buscar, editar a lei (reaproveita validarBaseLegalDocumento acima),
+// ver famílias vinculadas e excluir com aviso + desvinculação automática.
+// ----------------------------------------------------------------------------
+window.abrirModalGerenciarDocumentos = async () => {
+  document.getElementById('modal-gerenciar-documentos').classList.remove('hidden');
+  document.getElementById('gerenciar-documentos-busca').value = '';
+  document.getElementById('gerenciar-documentos-lista').innerHTML = `<p class="text-center text-sm text-slate-500 dark:text-slate-400 py-8">Carregando documentos...</p>`;
+
+  const { data, error } = await supabase
+    .from('base_legal_documento')
+    .select('*')
+    .order('documento', { ascending: true });
+
+  if (error) {
+    document.getElementById('gerenciar-documentos-lista').innerHTML = `<p class="text-center text-sm text-red-500 py-8">Falha ao carregar: ${error.message}</p>`;
+    return;
+  }
+
+  documentosGerenciarCarregados = data || [];
+  renderizarListaDocumentosGerenciar();
+};
+
+window.fecharModalGerenciarDocumentos = () => {
+  document.getElementById('modal-gerenciar-documentos').classList.add('hidden');
+};
+
+// Ícones pequenos (w-4 h-4) reaproveitados nos botões de ação dos cards —
+// mesmo estilo heroicons-outline já usado no resto do app.
+const SVG_ICONE_EDITAR = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>`;
+const SVG_ICONE_VER = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>`;
+const SVG_ICONE_VALIDAR = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+const SVG_ICONE_EXCLUIR = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>`;
+
+// Acordeão: só um bloco de "famílias vinculadas" aberto por vez — abrir um
+// novo fecha o anterior automaticamente.
+let gerenciarDocumentosFamiliasAbertoId = null;
+
+window.renderizarListaDocumentosGerenciar = () => {
+  const termo = (document.getElementById('gerenciar-documentos-busca')?.value || '').toLowerCase().trim();
+  const statusFiltro = document.getElementById('gerenciar-documentos-filtro-status')?.value || '';
+
+  const lista = documentosGerenciarCarregados.filter((d) => {
+    if (statusFiltro && d.status !== statusFiltro) return false;
+    if (termo && !d.documento.toLowerCase().includes(termo)) return false;
+    return true;
+  });
+
+  document.getElementById('gerenciar-documentos-contador').textContent = `${lista.length} de ${documentosGerenciarCarregados.length}`;
+
+  const container = document.getElementById('gerenciar-documentos-lista');
+  if (lista.length === 0) {
+    container.innerHTML = `<p class="text-center text-sm text-slate-500 dark:text-slate-400 py-8">Nenhum documento encontrado.</p>`;
+    return;
+  }
+
+  // Trocar de filtro/busca redesenha a lista inteira — nenhum painel de
+  // famílias vinculadas sobrevive a isso, então reseta o estado do acordeão.
+  gerenciarDocumentosFamiliasAbertoId = null;
+
+  container.innerHTML = lista.map((d) => {
+    const corStatus = d.status === 'validado'
+      ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400'
+      : 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400';
+    const idSeguro = `fam-vinc-${d.documento.replace(/[^a-zA-Z0-9]/g, '')}`;
+    const nomeEsc = d.documento.replace(/'/g, "\\'");
+    // "Validar" rápido (aprova como está, sem abrir o modal de edição) só
+    // faz sentido quando já existe texto pra aprovar e ainda não foi
+    // validado — senão é "Editar" (preencher do zero) que resolve.
+    const podeValidarRapido = d.status !== 'validado' && !!d.base_legal;
+    return `
+      <div class="bg-white dark:bg-slate-850 p-3 rounded-lg border dark:border-slate-700 space-y-1">
+        <div class="flex items-start justify-between gap-2">
+          <div class="min-w-0">
+            <p class="font-bold text-sm text-slate-800 dark:text-white">${d.documento}</p>
+            <p class="text-xs text-slate-600 dark:text-slate-400 mt-0.5">${d.base_legal
+              ? `<a href="https://www.google.com/search?q=${encodeURIComponent(d.base_legal)}" target="_blank" rel="noopener noreferrer" class="hover:underline hover:text-indigo-600 dark:hover:text-indigo-400" title="Pesquisar esta lei no Google (abre em outra aba)">${d.base_legal}</a>`
+              : '<span class="italic text-slate-400">Sem base legal ainda.</span>'}</p>
+            <p class="text-[11px] text-slate-500 dark:text-slate-500 mt-1"><span class="font-bold uppercase tracking-wide text-[9px]">Atividades:</span> ${d.atividades_regulamentadas || '<span class="italic text-slate-400">Ainda não analisado.</span>'}</p>
+          </div>
+          <span class="px-2 py-0.5 rounded text-[9px] font-bold uppercase shrink-0 ${corStatus}">${d.status === 'validado' ? 'Validado' : 'Sugerido IA'}</span>
+        </div>
+        <div class="flex items-center gap-1 pt-1">
+          <button type="button" onclick="validarBaseLegalDocumento('${nomeEsc}')" title="Editar"
+            class="admin-only p-1.5 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded transition-colors">
+            ${SVG_ICONE_EDITAR}
+          </button>
+          <button type="button" onclick="toggleFamiliasVinculadasGerenciar('${idSeguro}', '${nomeEsc}')" title="Ver famílias vinculadas"
+            class="p-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors">
+            ${SVG_ICONE_VER}
+          </button>
+          ${podeValidarRapido ? `
+          <button type="button" onclick="validarDocumentoRapido('${nomeEsc}')" title="Validar (aprovar o texto como está, sem editar)"
+            class="admin-only p-1.5 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded transition-colors">
+            ${SVG_ICONE_VALIDAR}
+          </button>` : ''}
+          <button type="button" onclick="excluirDocumentoGerenciar('${nomeEsc}')" title="Excluir"
+            class="admin-only p-1.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors">
+            ${SVG_ICONE_EXCLUIR}
+          </button>
+        </div>
+        <div id="${idSeguro}" class="hidden text-xs text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 p-2 rounded border dark:border-slate-700">
+          Carregando...
+        </div>
+      </div>`;
+  }).join('');
+};
+
+// Aprova o documento como está (base legal + atividades já preenchidas, seja
+// por IA seja à mão) sem abrir o modal de edição — pra quando o texto já
+// está bom e o gestor só precisa confirmar. Continua existindo o caminho
+// "Editar" pra quando o texto precisa de ajuste antes de validar.
+window.validarDocumentoRapido = async (nomeDocumento) => {
+  const doc = documentosGerenciarCarregados.find((d) => d.documento === nomeDocumento);
+  if (!doc || !doc.base_legal) {
+    if (typeof showError === 'function') showError('Atenção', 'Preencha a base legal antes de validar — use o ícone de editar.');
+    return;
+  }
+  if (doc.status === 'validado') return;
+
+  const usuario = sessionStorage.getItem('cockpit_user_realname') || 'Usuário do Sistema';
+  const patch = { status: 'validado', validado_por: usuario, validado_em: new Date().toISOString() };
+
+  const { error } = await supabase.from('base_legal_documento').update(patch).eq('documento', nomeDocumento);
+  if (error) {
+    if (typeof showError === 'function') showError('Erro', 'Falha ao validar documento: ' + error.message);
+    return;
+  }
+
+  Object.assign(doc, patch);
+  dicionarioStatusDocumentosGlobal.set(normalizarNomeDocumento(nomeDocumento), 'validado');
+  marcarFamiliasComDocumentosValidados(filaCarregada);
+  renderizarListaDocumentosGerenciar();
+  if (typeof showToast === 'function') showToast(`"${nomeDocumento}" validado sem alterar o texto.`);
+};
+
+// Abre o painel de famílias vinculadas de UM documento, fechando qualquer
+// outro que já estivesse aberto — evita a lista inteira virar uma parede de
+// texto quando o gestor vai clicando em vários documentos seguidos.
+window.toggleFamiliasVinculadasGerenciar = (idContainer, nomeDocumento) => {
+  if (gerenciarDocumentosFamiliasAbertoId && gerenciarDocumentosFamiliasAbertoId !== idContainer) {
+    document.getElementById(gerenciarDocumentosFamiliasAbertoId)?.classList.add('hidden');
+  }
+
+  const container = document.getElementById(idContainer);
+  if (!container) return;
+
+  const estavaAberto = gerenciarDocumentosFamiliasAbertoId === idContainer;
+  if (estavaAberto) {
+    container.classList.add('hidden');
+    gerenciarDocumentosFamiliasAbertoId = null;
+  } else {
+    container.classList.remove('hidden');
+    gerenciarDocumentosFamiliasAbertoId = idContainer;
+    carregarFamiliasVinculadasGerenciar(nomeDocumento, idContainer);
+  }
+};
+
+// Busca em qualificacao_tecnica (não em base_legal_documento — lá não tem
+// família nenhuma) quem tem esse documento em exigidos OU elegíveis. Usa
+// .contains() (operador @> do Postgres em cima de um text[]) — duas
+// consultas porque são duas colunas diferentes, sem jeito de fazer um "OR
+// entre colunas" direto no client do Supabase.
+async function buscarFamiliasVinculadasDocumento(nomeDocumento) {
+  const [{ data: exigido, error: errExigido }, { data: elegivel, error: errElegivel }] = await Promise.all([
+    supabase.from('qualificacao_tecnica').select('familia, descricao').contains('documentos_exigidos', [nomeDocumento]),
+    supabase.from('qualificacao_tecnica').select('familia, descricao').contains('documentos_elegiveis', [nomeDocumento]),
+  ]);
+  if (errExigido || errElegivel) throw errExigido || errElegivel;
+  return { exigido: exigido || [], elegivel: elegivel || [] };
+}
+
+window.carregarFamiliasVinculadasGerenciar = async (nomeDocumento, idContainer) => {
+  const container = document.getElementById(idContainer);
+  if (!container || container.classList.contains('hidden')) return; // foi fechado de novo antes da resposta chegar
+  if (container.dataset.carregado === 'true') return; // já carregou uma vez, não refaz a consulta
+
+  try {
+    const { exigido, elegivel } = await buscarFamiliasVinculadasDocumento(nomeDocumento);
+    container.dataset.carregado = 'true';
+    if (exigido.length === 0 && elegivel.length === 0) {
+      container.innerHTML = `<span class="italic text-slate-400">Nenhuma família usa este documento atualmente.</span>`;
+      return;
+    }
+    // Uma família por linha (em vez de tudo junto separado por " · ") —
+    // lista fica legível mesmo quando um documento é usado por dezenas de
+    // famílias (ex.: "Atestado de Capacidade Técnica").
+    const bloco = (titulo, itens) => itens.length > 0
+      ? `<div class="mb-1 last:mb-0">
+          <p class="font-bold mb-0.5">${titulo} (${itens.length}):</p>
+          <ul class="space-y-0.5">
+            ${itens.map((f) => `<li>${f.familia} — ${f.descricao}</li>`).join('')}
+          </ul>
+        </div>`
+      : '';
+    container.innerHTML = `${bloco('Exigido em', exigido)}${bloco('Elegível em', elegivel)}`;
+  } catch (err) {
+    container.innerHTML = `<span class="text-red-500">Falha ao buscar famílias: ${err.message}</span>`;
+  }
+};
+
+window.adicionarNovoDocumentoGerenciar = async () => {
+  const nome = document.getElementById('novo-documento-nome').value.trim();
+  const baseLegal = document.getElementById('novo-documento-base-legal').value.trim();
+  if (!nome) {
+    if (typeof showError === 'function') showError('Atenção', 'Informe o nome do documento.');
+    return;
+  }
+  if (documentosGerenciarCarregados.some((d) => d.documento === nome)) {
+    if (typeof showError === 'function') showError('Atenção', 'Já existe um documento com esse nome exato no dicionário.');
+    return;
+  }
+
+  const { error } = await supabase
+    .from('base_legal_documento')
+    .insert([{ documento: nome, base_legal: baseLegal || null, status: baseLegal ? 'validado' : 'sugerido_ia' }]);
+
+  if (error) {
+    if (typeof showError === 'function') showError('Erro', 'Falha ao adicionar documento: ' + error.message);
+    return;
+  }
+
+  documentosGerenciarCarregados.push({ documento: nome, base_legal: baseLegal || null, status: baseLegal ? 'validado' : 'sugerido_ia' });
+  dicionarioStatusDocumentosGlobal.set(normalizarNomeDocumento(nome), baseLegal ? 'validado' : 'sugerido_ia');
+  document.getElementById('novo-documento-nome').value = '';
+  document.getElementById('novo-documento-base-legal').value = '';
+  renderizarListaDocumentosGerenciar();
+  if (typeof showToast === 'function') showToast(`"${nome}" adicionado ao dicionário.`);
+};
+
+let preenchimentoAtividadesEmAndamento = false;
+
+// Faz o backfill, nos documentos que JÁ têm linha no dicionário, do que
+// ainda estiver faltando: base legal e/ou o resumo de atividades
+// regulamentadas — ex.: os 25 documentos da migration 009 (entraram sem
+// base legal nenhuma), ou qualquer documento que só tenha ganhado a
+// pergunta de atividades depois da migration 011. Preenche só os campos que
+// estiverem null — NUNCA sobrescreve um base_legal já existente (editado à
+// mão ou sugerido antes) e NUNCA mexe em status/validado_por/validado_em de
+// um documento já 'validado' (se chegou a 'validado', por definição já tem
+// base_legal preenchido, então nunca entra no ramo que mexe em status aqui).
+window.preencherAtividadesFaltantesComIA = async () => {
+  if (preenchimentoAtividadesEmAndamento) return;
+
+  const faltantes = documentosGerenciarCarregados.filter((d) => !d.atividades_regulamentadas || !d.base_legal);
+  if (faltantes.length === 0) {
+    if (typeof showToast === 'function') showToast('Todos os documentos do dicionário já têm base legal e atividades preenchidos.');
+    return;
+  }
+
+  const btn = document.getElementById('btn-preencher-atividades-ia');
+  const textoOriginal = btn?.innerHTML;
+  preenchimentoAtividadesEmAndamento = true;
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = 'Analisando...';
+  }
+
+  let preenchidos = 0;
+  try {
+    for (let i = 0; i < faltantes.length; i += TAMANHO_LOTE_DOCUMENTOS) {
+      const lote = faltantes.slice(i, i + TAMANHO_LOTE_DOCUMENTOS).map((d) => d.documento);
+      const { data: resultados, error } = await supabase.functions.invoke('gerar-base-legal-documento', {
+        body: { documentos: lote },
+      });
+      if (error) throw error;
+      if (!Array.isArray(resultados)) throw new Error('Resposta inesperada da IA (documentos).');
+
+      for (const r of resultados) {
+        const docAtual = documentosGerenciarCarregados.find((d) => d.documento === r.documento);
+        const patch = {};
+
+        if (!docAtual?.atividades_regulamentadas && r.atividades_regulamentadas) {
+          patch.atividades_regulamentadas = r.atividades_regulamentadas;
+        }
+        if (!docAtual?.base_legal && r.base_legal) {
+          patch.base_legal = r.base_legal;
+          patch.gemini_score = r.score ?? null;
+          patch.gemini_justificativa = r.justificativa ?? null;
+          patch.gemini_fontes = r.fontes ?? [];
+          patch.gemini_alertas = r.alertas ?? [];
+          patch.gemini_analisado_em = new Date().toISOString();
+          // Só mexe em status aqui se ele ainda não tinha base_legal — ou
+          // seja, nunca era 'validado' de verdade (validado sem base_legal
+          // não deveria existir, mas por segurança checa mesmo assim).
+          if (docAtual?.status !== 'validado') patch.status = 'sugerido_ia';
+        }
+
+        if (Object.keys(patch).length === 0) continue; // IA incerta nos dois campos — não grava nada
+
+        const { error: errUpdate } = await supabase
+          .from('base_legal_documento')
+          .update(patch)
+          .eq('documento', r.documento);
+        if (errUpdate) {
+          console.warn(`Falha ao gravar pendências de "${r.documento}":`, errUpdate);
+          continue;
+        }
+
+        if (docAtual) Object.assign(docAtual, patch);
+        if (patch.status) dicionarioStatusDocumentosGlobal.set(normalizarNomeDocumento(r.documento), patch.status);
+        preenchidos++;
+      }
+    }
+
+    marcarFamiliasComDocumentosValidados(filaCarregada);
+    renderizarListaDocumentosGerenciar();
+    if (typeof showToast === 'function') {
+      showToast(preenchidos > 0
+        ? `Pendências preenchidas em ${preenchidos} de ${faltantes.length} documento(s).`
+        : 'A IA não teve certeza suficiente em nenhum dos documentos deste lote — nada foi gravado.');
+    }
+  } catch (err) {
+    console.error('Falha ao preencher pendências do dicionário:', err);
+    if (typeof showError === 'function') showError('Erro na IA', err.message || 'Falha ao analisar os documentos.');
+  } finally {
+    preenchimentoAtividadesEmAndamento = false;
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = textoOriginal;
+    }
+  }
+};
+
+window.excluirDocumentoGerenciar = async (nomeDocumento) => {
+  const aviso = document.getElementById('excluir-documento-aviso');
+  document.getElementById('excluir-documento-titulo').textContent = nomeDocumento;
+  aviso.innerHTML = `<p class="text-xs text-slate-500 dark:text-slate-400 italic">Verificando famílias vinculadas...</p>`;
+  document.getElementById('modal-confirmar-exclusao-documento').classList.remove('hidden');
+
+  try {
+    const { exigido, elegivel } = await buscarFamiliasVinculadasDocumento(nomeDocumento);
+    exclusaoDocumentoAtual = { nome: nomeDocumento, exigido, elegivel };
+
+    if (exigido.length === 0 && elegivel.length === 0) {
+      aviso.innerHTML = `<p class="text-sm text-slate-600 dark:text-slate-400">Nenhuma família usa este documento atualmente. Ele será removido só do dicionário de leis.</p>`;
+      return;
+    }
+
+    const linha = (titulo, itens) => itens.length > 0
+      ? `<div><p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">${titulo} (${itens.length})</p><p class="text-xs text-slate-700 dark:text-slate-300">${itens.map((f) => `${f.familia} — ${f.descricao}`).join(', ')}</p></div>`
+      : '';
+    aviso.innerHTML = `
+      <p class="text-sm text-slate-700 dark:text-slate-300">Este documento está vinculado a <span class="font-bold">${exigido.length + elegivel.length}</span> família(s). Excluir vai <span class="font-bold text-red-600 dark:text-red-400">remover o documento dessas famílias também</span> (desvincula automaticamente), com cada remoção registrada e sinalizada pra ciência de um gestor CGCF, igual qualquer outra exclusão de documento.</p>
+      ${linha('Exigido em', exigido)}
+      ${linha('Elegível em', elegivel)}
+    `;
+  } catch (err) {
+    aviso.innerHTML = `<p class="text-sm text-red-500">Falha ao verificar famílias vinculadas: ${err.message}</p>`;
+  }
+};
+
+window.fecharModalConfirmarExclusaoDocumento = () => {
+  document.getElementById('modal-confirmar-exclusao-documento').classList.add('hidden');
+  exclusaoDocumentoAtual = null;
+};
+
+window.confirmarExclusaoDocumento = async () => {
+  if (!exclusaoDocumentoAtual) return;
+  const { nome, exigido, elegivel } = exclusaoDocumentoAtual;
+  const usuario = sessionStorage.getItem('cockpit_user_realname') || 'Usuário do Sistema';
+
+  const btn = document.querySelector('#modal-confirmar-exclusao-documento button[onclick="confirmarExclusaoDocumento()"]');
+  const textoOriginal = btn ? btn.innerHTML : '';
+  if (btn) { btn.disabled = true; btn.innerHTML = `${SVG_SPINNER_IA} Excluindo...`; }
+
+  try {
+    // Pega a lei atual (se tiver) antes de apagar, só pra não perder essa
+    // informação do histórico de auditoria quando a linha do dicionário
+    // deixar de existir.
+    const docAtual = documentosGerenciarCarregados.find((d) => d.documento === nome);
+    const baseLegalAnterior = docAtual?.base_legal ?? null;
+
+    // Desvincula de cada família, uma lista (exigido/elegível) por vez —
+    // mesmo padrão de reversão usado em confirmarRejeitarAlteracao, só que
+    // em lote, pra toda família que ainda cita o documento.
+    const desvincular = async (familia, coluna, tipoLista) => {
+      const { data: familiaTecnica, error: errBusca } = await supabase
+        .from('qualificacao_tecnica')
+        .select(coluna)
+        .eq('familia', familia)
+        .single();
+      if (errBusca) throw errBusca;
+
+      const listaAtual = familiaTecnica?.[coluna] || [];
+      const novaLista = listaAtual.filter((d) => d !== nome);
+
+      const { error: errUpdate } = await supabase
+        .from('qualificacao_tecnica')
+        .update({ [coluna]: novaLista })
+        .eq('familia', familia);
+      if (errUpdate) throw errUpdate;
+
+      await supabase.from('qualificacao_documento_alteracoes').insert([{
+        familia_codigo: familia,
+        tipo_lista: tipoLista,
+        acao: 'excluir',
+        documento: nome,
+        motivo: 'Documento excluído do dicionário compartilhado (tela Gerenciar Documentos) — desvinculado automaticamente.',
+        base_legal: baseLegalAnterior,
+        aplicado_por: usuario,
+      }]);
+
+      // Mantém a família aberta na Reanálise (se for o caso) e a fila em dia,
+      // sem precisar recarregar tudo.
+      if (familiaAbertaAtual && familiaAbertaAtual.familia_codigo === familia) {
+        familiaAbertaAtual[coluna + '_atual'] = novaLista;
+      }
+      sincronizarItemFilaLocal(familia, { [coluna + '_atual']: novaLista });
+      if (typeof window.sincronizarDocumentosFamiliaPrincipal === 'function') {
+        window.sincronizarDocumentosFamiliaPrincipal(familia, { [coluna]: novaLista });
+      }
+    };
+
+    for (const f of exigido) await desvincular(f.familia, 'documentos_exigidos', 'exigido');
+    for (const f of elegivel) await desvincular(f.familia, 'documentos_elegiveis', 'elegivel');
+
+    const { error: errDelete } = await supabase
+      .from('base_legal_documento')
+      .delete()
+      .eq('documento', nome);
+    if (errDelete) throw errDelete;
+
+    documentosGerenciarCarregados = documentosGerenciarCarregados.filter((d) => d.documento !== nome);
+    dicionarioStatusDocumentosGlobal.delete(normalizarNomeDocumento(nome));
+    marcarFamiliasComDocumentosValidados(filaCarregada);
+    renderizarListaDocumentosGerenciar();
+    if (familiaAbertaAtual) renderizarDetalheReanalise();
+
+    window.fecharModalConfirmarExclusaoDocumento();
+    if (typeof window.atualizarPendenciasCienciaGrid === 'function') window.atualizarPendenciasCienciaGrid();
+    const totalDesvinculado = exigido.length + elegivel.length;
+    if (typeof showToast === 'function') showToast(`"${nome}" excluído do dicionário${totalDesvinculado > 0 ? ` e desvinculado de ${totalDesvinculado} família(s)` : ''}.`);
+  } catch (err) {
+    console.error('Falha ao excluir documento:', err);
+    if (typeof showError === 'function') showError('Erro', err.message || 'Falha ao excluir o documento.');
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = textoOriginal; }
   }
 };
 
@@ -1084,6 +1566,14 @@ window.aplicarSugestaoDocumento = async (idx) => {
       .update({ [coluna]: novaLista })
       .eq('familia', f.familia_codigo);
     if (errUpdate) throw errUpdate;
+
+    // Reflete na hora no familyData da tela principal (script.js) — sem
+    // isso, o modal "Obrigatórios/Elegíveis" da família continua mostrando
+    // a lista de antes até a página ser recarregada, mesmo a inclusão já
+    // estando salva em qualificacao_tecnica.
+    if (typeof window.sincronizarDocumentosFamiliaPrincipal === 'function') {
+      window.sincronizarDocumentosFamiliaPrincipal(f.familia_codigo, { [coluna]: novaLista });
+    }
 
     const { error: errAlteracao } = await supabase
       .from('qualificacao_documento_alteracoes')
@@ -1325,8 +1815,14 @@ window.validarReanalise = async () => {
 // aqui mesmo ao abrir/fechar a fila, pra refletir mudanças feitas na sessão.
 // ----------------------------------------------------------------------------
 window.carregarContadorReanalisePendentes = async () => {
+  // Mesmo critério de ui/live/script.js (applyFamilyRoleRestrictions) depois
+  // da flexibilização de 2026-10-15 — coordenacao vem composto ("DSL/CGCF")
+  // pra todo mundo, então não dá pra comparar com igualdade exata.
   const role = sessionStorage.getItem('cockpit_user_role');
-  if (role !== 'admin') return;
+  const coordenacao = sessionStorage.getItem('cockpit_user_coordenacao') || '';
+  const responsavel = sessionStorage.getItem('cockpit_user_responsavel') === 'true';
+  const isGestorCGCF = (coordenacao.toUpperCase().includes('CGCF') && responsavel) || role === 'admin';
+  if (!isGestorCGCF) return;
 
   const badge = document.getElementById('badge-reanalise-pendentes');
   if (!badge) return;
@@ -1630,6 +2126,10 @@ window.confirmarRejeitarAlteracao = async () => {
       .update({ [coluna]: listaRevertida })
       .eq('familia', familiaCodigo);
     if (errUpdateTecnica) throw errUpdateTecnica;
+
+    if (typeof window.sincronizarDocumentosFamiliaPrincipal === 'function') {
+      window.sincronizarDocumentosFamiliaPrincipal(familiaCodigo, { [coluna]: listaRevertida });
+    }
 
     // Marca a alteração como resolvida (sai da lista de pendentes) E como
     // rejeitada (diferencia de uma ciência normal no histórico).
