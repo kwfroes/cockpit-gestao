@@ -877,13 +877,13 @@ function renderizarDetalheReanalise() {
             ${s.aplicado
               ? `<p class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">✅ Aplicado em ${new Date(s.aplicado_em).toLocaleDateString('pt-BR')} por ${s.aplicado_por ?? '—'} — aguardando ciência de um gestor CGCF na tela principal.</p>`
               : `<button type="button" onclick="aplicarSugestaoDocumento(${idx})"
-                  class="admin-only text-[10px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
+                  class="cgcf-manager-only text-[10px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
                   title="Grava de verdade esta mudança em documentos_exigidos/documentos_elegiveis da família, e sinaliza na tela principal até um gestor CGCF dar ciência">
                   ✓ Aplicar esta sugestão na família
                 </button>`}
           </div>`;
             }).join('')}
-        <details class="admin-only pt-1">
+        <details class="cgcf-manager-only pt-1">
           <summary class="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer select-none">+ Adicionar sugestão manual</summary>
           <div class="mt-2 p-2 bg-white dark:bg-slate-850 rounded border dark:border-slate-700 space-y-2">
             <div class="grid grid-cols-2 gap-2">
