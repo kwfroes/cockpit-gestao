@@ -47,6 +47,11 @@ let dicionarioStatusDocumentosGlobal = new Map();
 // validarBaseLegalDocumento() quando chamado de dentro dessa tela (sem
 // família nenhuma aberta).
 let documentosGerenciarCarregados = [];
+// Filtro de status da lista de "Gerenciar Documentos" — seleção múltipla
+// (antes era um <select> de opção única). Por padrão só "sugerido_ia" vem
+// marcado, pra abrir a lista já focada no que falta validar; marcar
+// "validado" também passa a mostrar, dinamicamente, o que já foi concluído.
+let gerenciarDocumentosStatusSelecionados = new Set(["sugerido_ia"]);
 // Estado do modal de confirmação de exclusão de documento: nome + famílias
 // vinculadas encontradas (por lista), preenchido por excluirDocumentoGerenciar.
 let exclusaoDocumentoAtual = null;
@@ -309,15 +314,62 @@ async function carregarFilaReanalise() {
   aplicarFiltrosReanalise();
 }
 
+// Filtro de status da fila de trabalho — seleção múltipla (antes era um
+// <select> de opção única). Por padrão vem tudo marcado MENOS "validado",
+// pra fila abrir focada no que ainda precisa de trabalho; marcar "validado"
+// também passa a mostrar, dinamicamente, o que já foi concluído.
+let reanaliseFiltroStatusSelecionados = new Set(['pendente', 'em_analise', 'aguardando_terceiro', 'sugerido_ia']);
+const NOMES_STATUS_FILA = {
+  pendente: 'Pendente',
+  em_analise: 'Em Análise',
+  aguardando_terceiro: 'Aguardando Terceiro',
+  sugerido_ia: 'Sugerido pela IA',
+  validado: 'Validado',
+};
+
+window.toggleDropdownFiltroStatusFila = () => {
+  document.getElementById('dropdown-filtro-status-fila')?.classList.toggle('hidden');
+};
+
+window.alterarFiltroStatusFila = (checkbox) => {
+  if (checkbox.checked) reanaliseFiltroStatusSelecionados.add(checkbox.value);
+  else reanaliseFiltroStatusSelecionados.delete(checkbox.value);
+  atualizarLabelFiltroStatusFila();
+  aplicarFiltrosReanalise();
+};
+
+function atualizarLabelFiltroStatusFila() {
+  const label = document.getElementById('reanalise-filtro-status-label');
+  if (!label) return;
+  const todasChaves = Object.keys(NOMES_STATUS_FILA);
+  const selecionados = [...reanaliseFiltroStatusSelecionados];
+  if (selecionados.length === 0) {
+    label.textContent = 'Status: nenhum';
+  } else if (selecionados.length === todasChaves.length) {
+    label.textContent = 'Status: Todos';
+  } else if (!reanaliseFiltroStatusSelecionados.has('validado') && selecionados.length === todasChaves.length - 1) {
+    label.textContent = 'Status: Todos (exceto Validado)';
+  } else {
+    label.textContent = `Status: ${selecionados.map((s) => NOMES_STATUS_FILA[s] || s).join(', ')}`;
+  }
+}
+
+// Fecha o dropdown ao clicar fora dele.
+document.addEventListener('click', (ev) => {
+  const wrapper = document.getElementById('dropdown-filtro-status-fila-wrapper');
+  if (wrapper && !wrapper.contains(ev.target)) {
+    document.getElementById('dropdown-filtro-status-fila')?.classList.add('hidden');
+  }
+});
+
 window.aplicarFiltrosReanalise = () => {
   const escopo = document.getElementById('reanalise-filtro-escopo').value;
-  const status = document.getElementById('reanalise-filtro-status').value;
   const cluster = document.getElementById('reanalise-filtro-cluster').value;
   const soDocumentosValidados = document.getElementById('reanalise-filtro-docs-validados')?.checked || false;
 
   const filtradas = filaCarregada.filter((item) =>
     (!escopo || item.escopo === escopo) &&
-    (!status || item.status === status) &&
+    reanaliseFiltroStatusSelecionados.has(item.status) &&
     (!cluster || item.cluster === cluster) &&
     (!soDocumentosValidados || item.todosDocumentosValidados)
   );
@@ -1136,6 +1188,16 @@ window.abrirModalGerenciarDocumentos = async () => {
   document.getElementById('gerenciar-documentos-busca').value = '';
   document.getElementById('gerenciar-documentos-lista').innerHTML = `<p class="text-center text-sm text-slate-500 dark:text-slate-400 py-8">Carregando documentos...</p>`;
 
+  // Volta o filtro de status pro padrão a cada abertura do modal: só
+  // "Sugerido IA" marcado, "Validado" desmarcado.
+  gerenciarDocumentosStatusSelecionados = new Set(["sugerido_ia"]);
+  const chkSugerido = document.getElementById('filtro-status-doc-sugerido_ia');
+  const chkValidado = document.getElementById('filtro-status-doc-validado');
+  if (chkSugerido) chkSugerido.checked = true;
+  if (chkValidado) chkValidado.checked = false;
+  atualizarLabelFiltroStatusDocumentos();
+  document.getElementById('dropdown-filtro-status-documentos')?.classList.add('hidden');
+
   const { data, error } = await supabase
     .from('base_legal_documento')
     .select('*')
@@ -1165,12 +1227,47 @@ const SVG_ICONE_EXCLUIR = `<svg class="w-4 h-4" fill="none" stroke="currentColor
 // novo fecha o anterior automaticamente.
 let gerenciarDocumentosFamiliasAbertoId = null;
 
+// Dropdown de status (seleção múltipla) da lista de "Gerenciar Documentos".
+window.toggleDropdownFiltroStatusDocumentos = () => {
+  document.getElementById('dropdown-filtro-status-documentos')?.classList.toggle('hidden');
+};
+
+window.alterarFiltroStatusDocumentos = (checkbox) => {
+  if (checkbox.checked) gerenciarDocumentosStatusSelecionados.add(checkbox.value);
+  else gerenciarDocumentosStatusSelecionados.delete(checkbox.value);
+  atualizarLabelFiltroStatusDocumentos();
+  renderizarListaDocumentosGerenciar();
+};
+
+function atualizarLabelFiltroStatusDocumentos() {
+  const label = document.getElementById('gerenciar-documentos-filtro-status-label');
+  if (!label) return;
+  const nomes = { sugerido_ia: 'Sugerido IA', validado: 'Validado' };
+  const selecionados = [...gerenciarDocumentosStatusSelecionados];
+  if (selecionados.length === 0) {
+    label.textContent = 'Status: nenhum';
+  } else if (selecionados.length === Object.keys(nomes).length) {
+    label.textContent = 'Status: Todos';
+  } else {
+    label.textContent = `Status: ${selecionados.map((s) => nomes[s] || s).join(', ')}`;
+  }
+}
+
+// Fecha o dropdown ao clicar fora dele (sem fechar quando o clique é no
+// próprio botão ou dentro do painel — isso cada checkbox já trata via
+// onchange, que não precisa fechar o painel pra permitir marcar os dois).
+document.addEventListener('click', (ev) => {
+  const wrapper = document.getElementById('dropdown-filtro-status-documentos-wrapper');
+  if (wrapper && !wrapper.contains(ev.target)) {
+    document.getElementById('dropdown-filtro-status-documentos')?.classList.add('hidden');
+  }
+});
+
 window.renderizarListaDocumentosGerenciar = () => {
   const termo = (document.getElementById('gerenciar-documentos-busca')?.value || '').toLowerCase().trim();
-  const statusFiltro = document.getElementById('gerenciar-documentos-filtro-status')?.value || '';
 
   const lista = documentosGerenciarCarregados.filter((d) => {
-    if (statusFiltro && d.status !== statusFiltro) return false;
+    if (!gerenciarDocumentosStatusSelecionados.has(d.status)) return false;
     if (termo && !d.documento.toLowerCase().includes(termo)) return false;
     return true;
   });
