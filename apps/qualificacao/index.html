@@ -648,6 +648,12 @@
                             onchange="alterarFiltroStatusFila(this)" class="rounded">
                         Sugerido pela IA
                     </label>
+                    <label class="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 p-1.5 rounded hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer"
+                        title="Famílias já validadas cuja data de revisão (revisar_em) já passou -- manual ou porque a base legal de um documento que elas usam mudou no dicionário.">
+                        <input type="checkbox" id="filtro-status-fila-revisao_vencida" value="revisao_vencida" checked
+                            onchange="alterarFiltroStatusFila(this)" class="rounded">
+                        🔄 Revisão Vencida
+                    </label>
                     <hr class="my-1 border-slate-200 dark:border-slate-700">
                     <label class="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 p-1.5 rounded hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer">
                         <input type="checkbox" id="filtro-status-fila-validado" value="validado"
@@ -686,6 +692,12 @@
                 Sugerir IA em Lote (<span class="qtd-lote">0</span>)
             </button>
         </div>
+
+        <!-- Visão agregada da fila inteira (não só do filtro atual) --
+             preenchido por atualizarStatsReanaliseFila(). Fundo sólido +
+             borda + sombra, diferente do fundo da lista abaixo, pra não
+             "colar" visualmente nas linhas quando o usuário rola a lista. -->
+        <div id="reanalise-fila-stats" class="px-4 py-3 flex flex-wrap gap-2 bg-white dark:bg-slate-850 border-b dark:border-slate-800 shadow-sm relative z-10"></div>
 
         <div id="reanalise-fila-lista" class="p-6 overflow-y-auto custom-scrollbar flex-1 bg-slate-50 dark:bg-slate-900/50 space-y-2">
             <p class="text-center text-sm text-slate-500 dark:text-slate-400 py-8">Carregando fila...</p>
@@ -909,9 +921,9 @@
     <script src="analisador_cnpj.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../../assets/auth.js"></script>
-    <script type="module" src="script.js?v=20261016c"></script>
-    <script type="module" src="script_reanalise_juridica.js?v=20261016c"></script>
-    <script type="module" src="motor_cnae.js?v=20261016c"></script> 
+    <script type="module" src="script.js?v=20261016f"></script>
+    <script type="module" src="script_reanalise_juridica.js?v=20261016f"></script>
+    <script type="module" src="motor_cnae.js?v=20261016f"></script>
 
 </body>
 </html>
