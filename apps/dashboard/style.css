@@ -55,9 +55,44 @@
     visibility: visible;
     opacity: 1;
 }
+
+/* Variante usada nos cards mais à direita de cada fileira de KPI (ex.:
+   "Termos Deferidos", "Taxa de SLA (5 dias)"). O balão padrão é
+   centralizado (300px, metade pra cada lado) e nesses cards vazava pra
+   fora do container "overflow-x-clip" do carrossel de KPIs, ficando
+   cortado/escondido atrás da borda e da seta de navegação. Aqui o balão
+   abre alinhado à direita do ícone, estendendo pra ESQUERDA em vez de
+   centralizado, e com z-index mais alto pra garantir que fica na frente. */
+.tooltip-container.tooltip-abre-esquerda .tooltip-text {
+    left: auto;
+    right: 0;
+    margin-left: 0;
+    z-index: 60;
+}
+.tooltip-container.tooltip-abre-esquerda .tooltip-text::after {
+    left: auto;
+    right: 14px;
+    margin-left: 0;
+}
 /* Ajuste para ícone no título */
 .title-with-tooltip {
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+/* Altura padronizada dos cards de KPI nas 3 páginas do carrossel.
+   Antes, a altura igual entre páginas vinha do "align-items: stretch"
+   (padrão) do flex container #kpisSlider — mas isso fazia a página 1
+   (1 linha) esticar até a altura da página mais alta (quando ela
+   tinha 2 linhas), ficando desproporcional. Trocamos o slider pra
+   "items-start" (cada página com sua altura natural) e agora damos
+   uma altura mínima igual a TODO card individual (independente da
+   página), centralizando o conteúdo — assim ficam do mesmo tamanho
+   mesmo a 1ª página não tendo a linha de subtítulo que as outras têm. */
+.kpi-card-fixed {
+    min-height: 108px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
