@@ -1507,15 +1507,31 @@ window.onload = function () {
   };
 
   // Renderiza um único KPI Card
-  function renderKpiCard(title, value, tooltip) {
+  // abreEsquerda: true pros cards mais à direita de cada fileira (ex.:
+  // "Termos Deferidos"), cujo balão de tooltip centralizado (300px) vazava
+  // pra fora do container "overflow-x-clip" do carrossel e ficava cortado/
+  // escondido atrás da borda ou da seta de navegação. Nesse caso o balão
+  // abre alinhado à direita do ícone (estendendo pra esquerda) em vez de
+  // centralizado, e some das vistas o problema de clipping.
+  // imuneAnalista: true marca, com um selinho discreto (👥), os cards cujo
+  // valor NÃO muda quando o filtro "Analista" é trocado — sempre somam a
+  // equipe inteira (ex.: "Termos Deferidos"). O tooltip "i" já explicava
+  // isso no texto, mas só pra quem passasse o mouse nele; o selinho dá uma
+  // pista visual mesmo sem interação, sem competir com o "i" de ajuda.
+  function renderKpiCard(title, value, tooltip, abreEsquerda, imuneAnalista) {
     return `
-            <div class="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-md text-center">
+            <div class="kpi-card-fixed bg-white dark:bg-slate-800 p-4 rounded-lg shadow-md text-center">
                 <div class="flex items-center justify-center gap-2">
                     <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase">${title}</h4>
                     ${
+                      imuneAnalista
+                        ? `<span class="text-[10px] text-indigo-400 dark:text-indigo-300 opacity-70" title="Este indicador soma toda a equipe — não muda com o filtro de Analista.">👥</span>`
+                        : ""
+                    }
+                    ${
                       tooltip
                         ? `
-                    <div class="tooltip-container">
+                    <div class="tooltip-container${abreEsquerda ? " tooltip-abre-esquerda" : ""}">
                         <span class="tooltip-icon">i</span>
                         <span class="tooltip-text">${tooltip}</span>
                     </div>
@@ -1628,25 +1644,35 @@ window.onload = function () {
             ${renderKpiCard(
               "Termos Deferidos",
               qtdTermosAnalisados.toLocaleString("pt-BR"),
-              "Volume contabilizado por registro único de data e hora da validação do termo (Imune ao filtro de Analistas)."
+              "Volume contabilizado por registro único de data e hora da validação do termo (Imune ao filtro de Analistas).",
+              true,
+              true
             )}
         `;
 
     // Renderiza os KPIs complementares (rolagem horizontal, após "Termos Deferidos")
-    renderExtraKPIs(dadosFiltradosPorDataAnalise, allData, start, end, endDate, hasDateFilter);
+    // "data" (filteredData) vai além do que as outras já recebem: é o único
+    // parâmetro aqui que RESPEITA o filtro de Analista — usado só pelos
+    // cards "Dia de Mais Análises"/"Dia de Menos Análises".
+    renderExtraKPIs(dadosFiltradosPorDataAnalise, allData, start, end, endDate, hasDateFilter, data);
       }
 
   // --- KPIs COMPLEMENTARES DE ANALISTAS (Seção em rolagem) ---
   // Card compacto, mesmo padrão visual do renderKpiCard.
-  function renderExtraKpiCard(title, value, subtitle, tooltip) {
+  function renderExtraKpiCard(title, value, subtitle, tooltip, abreEsquerda, imuneAnalista) {
     return `
-      <div class="snap-start shrink-0 w-52 bg-white dark:bg-slate-800 p-4 rounded-lg shadow-md text-center">
+      <div class="kpi-card-fixed snap-start shrink-0 w-52 bg-white dark:bg-slate-800 p-4 rounded-lg shadow-md text-center">
           <div class="flex items-center justify-center gap-2">
               <h4 class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">${title}</h4>
               ${
+                imuneAnalista
+                  ? `<span class="text-[10px] text-indigo-400 dark:text-indigo-300 opacity-70" title="Este indicador soma toda a equipe — não muda com o filtro de Analista.">👥</span>`
+                  : ""
+              }
+              ${
                 tooltip
                   ? `
-              <div class="tooltip-container">
+              <div class="tooltip-container${abreEsquerda ? " tooltip-abre-esquerda" : ""}">
                   <span class="tooltip-icon">i</span>
                   <span class="tooltip-text">${tooltip}</span>
               </div>
@@ -1665,11 +1691,38 @@ window.onload = function () {
    * Média Análise/Analista, Média/Maior/Menor Nº de Analistas Ativos,
    * Solicitações Entradas (por Data Solicitacao) e Taxa de SLA.
    * Todos IMUNES ao filtro de Analista (mesmo padrão do card "Termos Deferidos"),
-   * exceto "Solicitações Entradas", que usa allData + filtro próprio de datas.
+   * exceto "Solicitações Entradas", que usa allData + filtro próprio de datas,
+   * e "Dia de Mais/Menos Análises", que usa dadosRespeitandoAnalista (abaixo)
+   * e por isso MUDA conforme o filtro de Analista selecionado.
    */
-  function renderExtraKPIs(dadosFiltradosSoPorData, allDataRef, start, end, endDate, hasDateFilter) {
+  function renderExtraKPIs(dadosFiltradosSoPorData, allDataRef, start, end, endDate, hasDateFilter, dadosRespeitandoAnalista) {
     const container = document.getElementById("extra-kpis-scroll");
     if (!container) return;
+
+    // --- 7) Dia de Mais Análises / Dia de Menos Análises ---
+    // Diferente dos outros cards desta seção, este respeita o filtro de
+    // Analista: se "Todos" estiver selecionado, mostra o pico/vale da
+    // equipe inteira; se um analista específico estiver selecionado,
+    // mostra o dia de pico/vale DELE no período.
+    const porDiaRespeitandoAnalista = stats.groupBy(
+      (dadosRespeitandoAnalista || []).filter((r) => r._diaAnalise),
+      "_diaAnalise",
+    );
+    const diasVolumeAnalista = Object.entries(porDiaRespeitandoAnalista).map(
+      ([dia, rows]) => ({ dia, qtd: rows.length }),
+    );
+    let picoVolumeTxt = "-";
+    let picoVolumeData = "";
+    let fracoVolumeTxt = "-";
+    let fracoVolumeData = "";
+    if (diasVolumeAnalista.length > 0) {
+      const picoObj = diasVolumeAnalista.reduce((a, b) => (b.qtd > a.qtd ? b : a));
+      const fracoObj = diasVolumeAnalista.reduce((a, b) => (b.qtd < a.qtd ? b : a));
+      picoVolumeTxt = `${picoObj.qtd}`;
+      picoVolumeData = `(${_native_formatDate(_native_safeParseDate(picoObj.dia), "dd/MM/yy")})`;
+      fracoVolumeTxt = `${fracoObj.qtd}`;
+      fracoVolumeData = `(${_native_formatDate(_native_safeParseDate(fracoObj.dia), "dd/MM/yy")})`;
+    }
 
     // --- 1) Média de Análises por Analista ---
     const analistasDistintos = new Set(
@@ -1727,65 +1780,106 @@ window.onload = function () {
     const dentroSla = temposSla.filter((t) => t <= 5).length;
     const taxaSla = temposSla.length > 0 ? ((dentroSla / temposSla.length) * 100).toFixed(1) : "0.0";
 
+    // Página 2 do carrossel (6 cards — cabe inteira numa fileira em
+    // lg:grid-cols-6, sem sobra/wrap). "Menor Nº Analistas" é o último
+    // (6ª coluna, borda direita de verdade), por isso leva "abreEsquerda"
+    // (o balão que abre pra esquerda, pra não ser cortado pelo
+    // overflow-x-clip do carrossel).
     container.innerHTML = `
       ${renderExtraKpiCard(
         "Média Análise/Analista",
         mediaAnalisePorAnalista,
         "análises por analista no período",
         "Total de solicitações dividido pelo nº de analistas distintos que atuaram no período (imune ao filtro de Analista).",
+        false,
+        true
+      )}
+      ${renderExtraKpiCard(
+        "Dia de Mais Análises",
+        picoVolumeTxt,
+        picoVolumeData,
+        "Dia do período com o maior volume de análises concluídas. Respeita o filtro de Analista: 'Todos' mostra o pico da equipe, um analista específico mostra o pico dele.",
+      )}
+      ${renderExtraKpiCard(
+        "Dia de Menos Análises",
+        fracoVolumeTxt,
+        fracoVolumeData,
+        "Dia do período (entre os dias com movimento) com o menor volume de análises concluídas. Respeita o filtro de Analista: 'Todos' mostra o vale da equipe, um analista específico mostra o vale dele.",
       )}
       ${renderExtraKpiCard(
         "Média Analistas Ativos",
         mediaAnalistasAtivos,
         "por dia com movimento",
         "Média diária do nº de analistas distintos com ao menos 1 análise concluída.",
+        false,
+        true
       )}
       ${renderExtraKpiCard(
         "Maior Nº Analistas",
         maiorTxt,
         maiorData,
         "Dia do período com o maior nº de analistas simultaneamente ativos.",
+        false,
+        true
       )}
       ${renderExtraKpiCard(
         "Menor Nº Analistas",
         menorTxt,
         menorData,
         "Dia do período (com movimento) com o menor nº de analistas ativos.",
+        true,
+        true
       )}
+    `;
+
+    // Página 3 do carrossel: os 2 cards que sobravam (antes empilhavam
+    // numa 2ª linha da página 2, esticando a página 1 por causa do
+    // align-items:stretch do flex). Agora vão pra sua própria página.
+    const container2 = document.getElementById("extra-kpis-scroll-2");
+    if (container2) {
+      container2.innerHTML = `
       ${renderExtraKpiCard(
         "Solicitações Entradas",
         entradas.toLocaleString("pt-BR"),
         "por Data Solicitação",
         "Baseado na Data Solicitação. Exclui (com normalização de acentos/maiúsculas) as situações 'Pendente de Envio' e 'Cancelada'.",
+        false,
+        true
       )}
       ${renderExtraKpiCard(
         "Taxa de SLA (5 dias)",
         `${taxaSla}%`,
         "aderência ao prazo",
         "% de análises concluídas em até 5 dias úteis (mesmo cálculo já usado no relatório PDF).",
+        false,
+        true
       )}
-    `;
+      `;
+    }
   }
 
-  // --- CARROSSEL DE 2 PÁGINAS DOS KPIs (Principais <-> Complementares) ---
+  // --- CARROSSEL DE 3 PÁGINAS DOS KPIs (Principais <-> Complementares 1 <-> Complementares 2) ---
   // Controlado pela seta única ao lado do card "Termos Deferidos".
-  let kpisPage = 0; // 0 = KPIs principais, 1 = KPIs complementares de analistas
+  const KPIS_TOTAL_PAGINAS = 3;
+  let kpisPage = 0; // 0 = principais, 1 = complementares (6 cards), 2 = complementares restantes (2 cards)
   function updateKpisSliderButtons() {
     const btnNext = document.getElementById("btnKpisNext");
     const btnPrev = document.getElementById("btnKpisPrev");
-    if (btnNext) btnNext.classList.toggle("hidden", kpisPage === 1);
+    if (btnNext) btnNext.classList.toggle("hidden", kpisPage === KPIS_TOTAL_PAGINAS - 1);
     if (btnPrev) btnPrev.classList.toggle("hidden", kpisPage === 0);
   }
   function goToKpisPage(page) {
-    kpisPage = page;
+    kpisPage = Math.max(0, Math.min(KPIS_TOTAL_PAGINAS - 1, page));
     const slider = document.getElementById("kpisSlider");
-    if (slider) slider.style.transform = `translateX(-${page * 50}%)`;
+    // O slider tem width:300% (3 páginas de 1/3 cada), então cada página
+    // desloca 100/3% (não 50% como no carrossel antigo de 2 páginas).
+    if (slider) slider.style.transform = `translateX(-${kpisPage * (100 / KPIS_TOTAL_PAGINAS)}%)`;
     updateKpisSliderButtons();
   }
   const btnKpisNext = document.getElementById("btnKpisNext");
   const btnKpisPrev = document.getElementById("btnKpisPrev");
-  if (btnKpisNext) btnKpisNext.addEventListener("click", () => goToKpisPage(1));
-  if (btnKpisPrev) btnKpisPrev.addEventListener("click", () => goToKpisPage(0));
+  if (btnKpisNext) btnKpisNext.addEventListener("click", () => goToKpisPage(kpisPage + 1));
+  if (btnKpisPrev) btnKpisPrev.addEventListener("click", () => goToKpisPage(kpisPage - 1));
 
   // RF03: Desempenho da Equipe
   function renderTeamPerformance(data) {
@@ -1797,7 +1891,7 @@ window.onload = function () {
 
     if (!data.length) {
       tableBody.innerHTML =
-        "<tr><td colspan='5' class='text-center py-4 text-gray-500 dark:text-gray-400'>Sem dados de equipe para exibir.</td></tr>";
+        "<tr><td colspan='9' class='text-center py-4 text-gray-500 dark:text-gray-400'>Sem dados de equipe para exibir.</td></tr>";
       return;
     }
 
@@ -1823,12 +1917,32 @@ window.onload = function () {
       const participacao =
         totalVisivel > 0 ? (totalMes / totalVisivel) * 100 : 0;
 
+      // Dia de Pico / Dia Mais Fraco: olha os dias em que ESTE analista
+      // atuou (dailyCounts, já calculado acima) e acha o de maior e o de
+      // menor volume de análises dele. "Mais fraco" só considera dias em
+      // que ele teve movimento (não entra dia sem nenhuma análise).
+      const diasDoAnalista = Object.entries(dailyCounts); // [ [dia, qtd], ... ]
+      let diaPicoTxt = "-";
+      let diaFracoTxt = "-";
+      if (diasDoAnalista.length > 0) {
+        const [diaPico, qtdPico] = diasDoAnalista.reduce((a, b) =>
+          b[1] > a[1] ? b : a,
+        );
+        const [diaFraco, qtdFraco] = diasDoAnalista.reduce((a, b) =>
+          b[1] < a[1] ? b : a,
+        );
+        diaPicoTxt = `${qtdPico} (${_native_formatDate(_native_safeParseDate(diaPico), "dd/MM/yy")})`;
+        diaFracoTxt = `${qtdFraco} (${_native_formatDate(_native_safeParseDate(diaFraco), "dd/MM/yy")})`;
+      }
+
       performanceData.push({
         nome: analyst,
         totalMes: totalMes,
         mediaDiaria: mediaDiaria,
         desvioPadrao: desvioPadrao,
         participacao: participacao,
+        diaPicoTxt: diaPicoTxt,
+        diaFracoTxt: diaFracoTxt,
         situations: stats.countBy(rows, "Situação Solicitação"),
       });
     }
@@ -1857,6 +1971,12 @@ window.onload = function () {
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                         ${d.participacao.toFixed(1)}%
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600 dark:text-green-400">
+                        ${d.diaPicoTxt}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-orange-500 dark:text-orange-400">
+                        ${d.diaFracoTxt}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-center flex justify-center gap-3">
                         <button onclick="window.exportAnalystPDF('${d.nome}')" title="Gerar Relatório PDF" class="text-red-500 hover:text-red-700 transition-transform transform hover:scale-110 text-lg">📄</button>
@@ -2573,7 +2693,19 @@ async function exportPDF(overrideAnalyst = null) {
             
             const mediaMsAnalista = milissegundosDoAnalista.length > 0 ? stats.mean(milissegundosDoAnalista) : 0;
             const tempoFormatadoAnalista = formatarTempoPreciso(mediaMsAnalista);
-            
+
+            // Dia de Pico / Dia Mais Fraco deste analista (mesmo cálculo da
+            // tabela "Performance de Analistas" na tela).
+            const diasDoAnalistaPdf = Object.entries(dailyCounts);
+            let diaPicoTxtPdf = "-";
+            let diaFracoTxtPdf = "-";
+            if (diasDoAnalistaPdf.length > 0) {
+                const [diaPicoPdf, qtdPicoPdf] = diasDoAnalistaPdf.reduce((a, b) => (b[1] > a[1] ? b : a));
+                const [diaFracoPdf, qtdFracoPdf] = diasDoAnalistaPdf.reduce((a, b) => (b[1] < a[1] ? b : a));
+                diaPicoTxtPdf = `${qtdPicoPdf} (${_native_formatDate(_native_safeParseDate(diaPicoPdf), "dd/MM/yy")})`;
+                diaFracoTxtPdf = `${qtdFracoPdf} (${_native_formatDate(_native_safeParseDate(diaFracoPdf), "dd/MM/yy")})`;
+            }
+
             teamData.push({
                 nome: name,
                 total: rows.length,
@@ -2581,7 +2713,9 @@ async function exportPDF(overrideAnalyst = null) {
                 desvio: stats.stdDev(dailyValues),
                 participacao: ((rows.length / totalEquipePeriodo) * 100).toFixed(1),
                 tempoMedioMs: mediaMsAnalista,
-                tempoMedioFormatado: tempoFormatadoAnalista
+                tempoMedioFormatado: tempoFormatadoAnalista,
+                diaPicoTxt: diaPicoTxtPdf,
+                diaFracoTxt: diaFracoTxtPdf
             });
         }
 
@@ -2594,18 +2728,22 @@ async function exportPDF(overrideAnalyst = null) {
                 item.total,
                 item.media,
                 Number(item.desvio).toFixed(2),
-                item.participacao + "%"
+                item.participacao + "%",
+                item.diaPicoTxt,
+                item.diaFracoTxt
             ]);
 
         doc.autoTable({
             startY: currentY + 8,
-            head: [["Analista", "Total", "Média Diária", "Desvio Padrão", "Participação"]],
+            head: [["Analista", "Total", "Média Diária", "Desvio Padrão", "Participação", "Dia de Pico", "Dia Mais Fraco"]],
             body: filteredTableRows,
             theme: "grid",
             headStyles: { fillColor: [70, 70, 70] },
-            columnStyles: { 
-                1: { halign: 'center' }, 2: { halign: 'center' }, 
-                3: { halign: 'center' }, 4: { halign: 'center' } 
+            styles: { fontSize: 8 },
+            columnStyles: {
+                1: { halign: 'center' }, 2: { halign: 'center' },
+                3: { halign: 'center' }, 4: { halign: 'center' },
+                5: { halign: 'center' }, 6: { halign: 'center' }
             },
             margin: { left: MARGIN_LEFT }
         });
