@@ -1157,6 +1157,12 @@ window.onload = function () {
       } else {
         filterAnalyst.value = "all";
       }
+
+      // Mesma janela de período, agora pros selects de Comparação —
+      // antes só o dropdown padrão era resincronizado aqui.
+      if (typeof atualizarSelectsComparacao === "function") {
+        atualizarSelectsComparacao(sortedAnalysts);
+      }
     }
 
     // --- 2. APLICAÇÃO DOS FILTROS FINAIS ---
@@ -3897,14 +3903,45 @@ async function exportPDF(overrideAnalyst = null) {
       }
   }
 
-  function initComparisonFilters(data) {
-    const analysts = [...new Set(data.map(d => d["Usuario Analista"]))].filter(Boolean).sort();
+  // Reconstrói os 3 selects de comparação com uma lista de analistas já
+  // restrita ao período/filtros atuais — preserva a seleção de cada select
+  // se o analista ainda estiver na lista, senão volta pra "none" (evita
+  // deixar selecionado alguém sem nenhum dado na janela escolhida).
+  function atualizarSelectsComparacao(analystsList) {
     ["compareAnalyst1", "compareAnalyst2", "compareAnalyst3"].forEach(id => {
         const sel = document.getElementById(id);
-        analysts.forEach(a => sel.add(new Option(a, a)));
+        if (!sel) return;
+        const valorAtual = sel.value;
+        sel.options.length = 1; // mantém só a opção "Analista N" (none)
+        analystsList.forEach(a => sel.add(new Option(a, a)));
+        sel.value = analystsList.includes(valorAtual) ? valorAtual : "none";
     });
+  }
 
-    document.getElementById("btnRunComparison").addEventListener("click", runComparison);
+  function initComparisonFilters(data) {
+    // IMPORTANTE: não repovoa os selects aqui a partir de "data" bruto.
+    // Essa função é chamada mais de uma vez no fluxo (carga inicial +
+    // upload manual de CSV), e repopular direto do dataset inteiro
+    // sobrescrevia, com a lista completa e SEM filtro de período, a lista
+    // já restrita que applyFilters()/atualizarSelectsComparacao() monta —
+    // era por isso que a Comparação mostrava analistas fora do período
+    // (ex.: "Administrador PRODEB") mesmo com a sincronização já corrigida.
+    // A lista em si fica só a cargo do applyFilters(), que já roda antes e
+    // depois desta chamada no fluxo normal de carregamento/filtro.
+    const btnComparar = document.getElementById("btnRunComparison");
+    if (btnComparar && !btnComparar.dataset.comparacaoBound) {
+        btnComparar.addEventListener("click", runComparison);
+        btnComparar.dataset.comparacaoBound = "true";
+    }
+
+    // Rede de segurança: se os selects ainda estiverem vazios (ex.: logo
+    // após um upload de CSV, antes do primeiro applyFilters() rodar),
+    // povoa uma vez com o que tiver disponível, só pra não ficar sem opção.
+    const selAnalista1 = document.getElementById("compareAnalyst1");
+    if (selAnalista1 && selAnalista1.options.length <= 1) {
+        const analysts = [...new Set(data.map(d => d["Usuario Analista"]))].filter(Boolean).sort();
+        atualizarSelectsComparacao(analysts);
+    }
 }
 
 function runComparison() {
