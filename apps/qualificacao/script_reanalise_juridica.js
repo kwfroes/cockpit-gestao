@@ -303,12 +303,31 @@ async function carregarFilaReanalise() {
     const [fila] = await Promise.all([
       buscarFilaReanaliseCompleta(),
       carregarDicionarioStatusDocumentos(),
+      carregarPendenciasCienciaGlobal(),
     ]);
     filaCarregada = fila;
     marcarFamiliasComDocumentosValidados(filaCarregada);
   } catch (error) {
     container.innerHTML = `<p class="text-center py-8 text-red-500">Erro ao buscar a fila: ${error.message}</p>`;
     return;
+  }
+
+  // Padrão dinâmico do filtro de escopo: a fila abre em "Prioritário" (HTML
+  // já vem com essa opção marcada) só enquanto existir trabalho prioritário
+  // de fato pendente. Quando a fila prioritária zera (nenhuma família
+  // 'prioritario' em status diferente de 'validado'), não faz sentido
+  // continuar abrindo nela -- muda o padrão pra "Secundário" automaticamente.
+  // Só troca se o filtro ainda estiver no valor-padrão original
+  // ("prioritario"); se o usuário já tiver escolhido outra coisa (ex.:
+  // "Todos") nesta sessão, essa escolha não é sobrescrita.
+  const selectEscopo = document.getElementById('reanalise-filtro-escopo');
+  if (selectEscopo && selectEscopo.value === 'prioritario') {
+    const existePrioritariaPendente = filaCarregada.some(
+      (item) => item.escopo === 'prioritario' && item.status !== 'validado'
+    );
+    if (!existePrioritariaPendente) {
+      selectEscopo.value = 'secundario';
+    }
   }
 
   aplicarFiltrosReanalise();
@@ -318,12 +337,18 @@ async function carregarFilaReanalise() {
 // <select> de opção única). Por padrão vem tudo marcado MENOS "validado",
 // pra fila abrir focada no que ainda precisa de trabalho; marcar "validado"
 // também passa a mostrar, dinamicamente, o que já foi concluído.
-let reanaliseFiltroStatusSelecionados = new Set(['pendente', 'em_analise', 'aguardando_terceiro', 'sugerido_ia']);
+// "revisao_vencida" é um valor PSEUDO -- nenhum item tem literalmente esse
+// status (ver itemTemRevisaoVencida); o filtro trata ele à parte, ligado à
+// data revisar_em de itens já 'validado'. Entra marcado por padrão porque é
+// trabalho acionável (igual pendente/em_analise/etc), mesmo a família
+// permanecendo 'validado' no banco.
+let reanaliseFiltroStatusSelecionados = new Set(['pendente', 'em_analise', 'aguardando_terceiro', 'sugerido_ia', 'revisao_vencida']);
 const NOMES_STATUS_FILA = {
   pendente: 'Pendente',
   em_analise: 'Em Análise',
   aguardando_terceiro: 'Aguardando Terceiro',
   sugerido_ia: 'Sugerido pela IA',
+  revisao_vencida: 'Revisão Vencida',
   validado: 'Validado',
 };
 
@@ -367,21 +392,26 @@ window.aplicarFiltrosReanalise = () => {
   const cluster = document.getElementById('reanalise-filtro-cluster').value;
   const soDocumentosValidados = document.getElementById('reanalise-filtro-docs-validados')?.checked || false;
 
-  const filtradas = filaCarregada.filter((item) =>
-    (!escopo || item.escopo === escopo) &&
-    reanaliseFiltroStatusSelecionados.has(item.status) &&
-    (!cluster || item.cluster === cluster) &&
-    (!soDocumentosValidados || item.todosDocumentosValidados)
-  );
+  const filtradas = filaCarregada.filter((item) => {
+    const statusBate =
+      reanaliseFiltroStatusSelecionados.has(item.status) ||
+      (itemTemRevisaoVencida(item) && reanaliseFiltroStatusSelecionados.has('revisao_vencida'));
+    return (!escopo || item.escopo === escopo) &&
+      statusBate &&
+      (!cluster || item.cluster === cluster) &&
+      (!soDocumentosValidados || item.todosDocumentosValidados);
+  });
 
   // Pedido: famílias com sugestão da IA (status 'sugerido_ia') ficam no
   // topo da lista, pra priorizar quem já foi analisado e só falta validar.
-  // As já 'validado' continuam por último (mesma lógica de antes, fim de
-  // fluxo); o resto mantém a ordem que já vinha de vw_fila_reanalise
-  // (escopo -> status -> cluster -> código) dentro de cada grupo, já que
-  // Array.prototype.sort é estável.
+  // Revisão vencida entra na mesma prioridade -- também é trabalho pronto
+  // pra ser feito agora, só que originado de uma família já validada antes.
+  // As já 'validado' (sem revisão vencida) continuam por último (mesma
+  // lógica de antes, fim de fluxo); o resto mantém a ordem que já vinha de
+  // vw_fila_reanalise (escopo -> status -> cluster -> código) dentro de
+  // cada grupo, já que Array.prototype.sort é estável.
   const prioridadeOrdenacao = (item) =>
-    item.status === 'sugerido_ia' ? 0 : item.status === 'validado' ? 2 : 1;
+    item.status === 'sugerido_ia' || itemTemRevisaoVencida(item) ? 0 : item.status === 'validado' ? 2 : 1;
   filtradas.sort((a, b) => prioridadeOrdenacao(a) - prioridadeOrdenacao(b));
 
   filaFiltradaAtual = filtradas;
@@ -408,7 +438,64 @@ window.aplicarFiltrosReanalise = () => {
   }
 
   renderizarFilaReanalise(filtradas);
+  atualizarStatsReanaliseFila();
 };
+
+// ----------------------------------------------------------------------------
+// Painel de estatísticas no topo da Fila de Trabalho -- visão agregada que
+// antes só existia como "X de Y famílias" no filtro atual. Calculado sobre
+// filaCarregada inteira (não o filtro corrente), pra sempre mostrar o
+// panorama real independente do que está marcado nos filtros.
+// ----------------------------------------------------------------------------
+let cienciaPendenteCount = null;
+let cienciaPendenteMaisAntigaEm = null;
+
+async function carregarPendenciasCienciaGlobal() {
+  const { data, error } = await supabase
+    .from('qualificacao_documento_alteracoes')
+    .select('aplicado_em')
+    .is('ciente_em', null)
+    .order('aplicado_em', { ascending: true });
+  if (error) {
+    console.warn('Falha ao buscar pendências de ciência (stats da fila):', error);
+    cienciaPendenteCount = null;
+    cienciaPendenteMaisAntigaEm = null;
+    return;
+  }
+  cienciaPendenteCount = (data || []).length;
+  cienciaPendenteMaisAntigaEm = data && data.length > 0 ? data[0].aplicado_em : null;
+}
+
+function atualizarStatsReanaliseFila() {
+  const container = document.getElementById('reanalise-fila-stats');
+  if (!container) return;
+
+  const pendentes = filaCarregada.filter((i) => i.status === 'pendente').length;
+  const aguardandoValidacaoIA = filaCarregada.filter((i) => i.status === 'sugerido_ia').length;
+  const revisaoVencida = filaCarregada.filter((i) => itemTemRevisaoVencida(i)).length;
+
+  let diasCienciaMaisAntiga = null;
+  if (cienciaPendenteMaisAntigaEm) {
+    diasCienciaMaisAntiga = Math.max(0, Math.floor((Date.now() - new Date(cienciaPendenteMaisAntigaEm).getTime()) / 86400000));
+  }
+
+  const tile = (valor, label, destaque) => `
+    <div class="bg-white dark:bg-slate-850 border dark:border-slate-700 rounded-lg px-3 py-2 text-center min-w-[110px] ${destaque ? 'ring-1 ring-rose-300 dark:ring-rose-800' : ''}">
+      <p class="text-lg font-black ${destaque ? 'text-rose-600 dark:text-rose-400' : 'text-slate-700 dark:text-slate-200'}">${valor}</p>
+      <p class="text-[9px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500 leading-tight">${label}</p>
+    </div>`;
+
+  container.innerHTML = `
+    ${tile(pendentes, 'Pendentes (nunca abertas)')}
+    ${tile(aguardandoValidacaoIA, 'Aguard. validação da IA')}
+    ${tile(revisaoVencida, 'Revisão vencida', revisaoVencida > 0)}
+    ${tile(
+      cienciaPendenteCount ?? '—',
+      diasCienciaMaisAntiga !== null ? `Ciência pendente (mais antiga: ${diasCienciaMaisAntiga}d)` : 'Ciência pendente',
+      (cienciaPendenteCount ?? 0) > 0
+    )}
+  `;
+}
 
 // ----------------------------------------------------------------------------
 // Exportação em Excel: TODAS as famílias da fila (não só o filtro/página
@@ -719,6 +806,18 @@ async function executarLoteIA(candidatos, btnLote, textoCarregando) {
   }
 }
 
+// "Revisão vencida" é um status DERIVADO, não gravado em `status` (que
+// continua só com os 5 valores de sempre) -- fica mais simples e mais
+// seguro do que mexer num enum/CHECK que não sei se existe no banco. Uma
+// família 'validado' com revisar_em no passado cai aqui; o trigger da
+// migration 016 marca revisar_em = hoje quando a base legal de um
+// documento que a família usa muda no dicionário, e dá pra marcar também
+// na mão ao validar.
+function itemTemRevisaoVencida(item) {
+  if (!item || item.status !== 'validado' || !item.revisar_em) return false;
+  return new Date(`${item.revisar_em}T00:00:00`) <= new Date();
+}
+
 function renderizarFilaReanalise(itens) {
   const container = document.getElementById('reanalise-fila-lista');
 
@@ -746,6 +845,10 @@ function renderizarFilaReanalise(itens) {
       ? `<span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider border ${corBadgeScore(item.gemini_score)}">🤖 ${item.gemini_score}/10</span>`
       : '';
 
+    const badgeRevisaoVencida = itemTemRevisaoVencida(item)
+      ? `<span title="Validada em ${item.validado_em ? new Date(item.validado_em).toLocaleDateString('pt-BR') : '—'}, mas a revisão venceu em ${new Date(`${item.revisar_em}T00:00:00`).toLocaleDateString('pt-BR')} -- um documento que ela usa mudou de base legal, ou chegou a data de revalidação definida." class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider border bg-rose-50 text-rose-700 dark:bg-rose-900/20 dark:text-rose-400 border-rose-200 dark:border-rose-800">🔄 Revisão vencida</span>`
+      : '';
+
     return `
     <div onclick="abrirDetalheReanalise('${item.familia_codigo}')"
          class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-wrap items-center gap-3 cursor-pointer hover:shadow-md hover:border-indigo-300 dark:hover:border-indigo-700 transition-all">
@@ -755,6 +858,7 @@ function renderizarFilaReanalise(itens) {
       ${item.cluster ? `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-600 dark:bg-slate-900 dark:text-slate-400">${item.cluster}</span>` : ''}
       <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${corStatus}">${item.status.replace('_', ' ')}</span>
       ${badgeScore}
+      ${badgeRevisaoVencida}
       ${item.todosDocumentosValidados && item.status !== 'validado'
         ? `<span title="Todos os documentos exigidos/elegíveis desta família já têm base legal validada no dicionário — a decisão final tende a ser rápida." class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider border bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800">✅ Docs validados</span>`
         : ''}
@@ -790,10 +894,60 @@ window.abrirDetalheReanalise = async (familiaCodigo) => {
     sincronizarItemFilaLocal(familiaCodigo, { status: 'em_analise' });
   }
 
-  await carregarBaseLegalDocumentosDaFamilia(data);
+  await Promise.all([
+    carregarBaseLegalDocumentosDaFamilia(data),
+    carregarHistoricoFamilia(familiaCodigo),
+  ]);
   renderizarDetalheReanalise();
   document.getElementById('modal-detalhe-reanalise').classList.remove('hidden');
 };
+
+// Histórico de eventos desta família (qualificacao_reanalise_historico) --
+// já era gravado em toda validação/sugestão/promoção de escopo
+// (registrarHistorico), mas nunca lido de volta. Guarda no módulo
+// (historicoFamiliaAtual) pra renderizarDetalheReanalise não precisar ser
+// assíncrona -- ela já é chamada várias vezes em sequência síncrona.
+let historicoFamiliaAtual = [];
+
+const ROTULOS_TIPO_EVENTO_HISTORICO = {
+  validacao: 'Validação',
+  sugestao_ia: 'Sugestão da IA',
+  edicao_manual: 'Edição manual',
+  promocao_escopo: 'Promoção de escopo',
+};
+
+function resumoPayloadHistorico(evento) {
+  const p = evento.payload || {};
+  switch (evento.tipo_evento) {
+    case 'validacao':
+      return `Base legal: "${(p.decisao_base_legal || '').slice(0, 140)}${(p.decisao_base_legal || '').length > 140 ? '…' : ''}"`;
+    case 'sugestao_ia':
+      return `Score ${p.sugestao?.score ?? '—'}/10 — ${(p.sugestao?.justificativa || '').slice(0, 140)}${(p.sugestao?.justificativa || '').length > 140 ? '…' : ''}`;
+    case 'promocao_escopo':
+      return `${p.de ?? '—'} → ${p.para ?? '—'}`;
+    case 'edicao_manual':
+      if (p.de && p.para) return `${p.de} → ${p.para}`;
+      if (p.sugestao_documento_manual_adicionada) return `Sugestão manual: ${p.sugestao_documento_manual_adicionada.acao} "${p.sugestao_documento_manual_adicionada.nome}"`;
+      if (p.aplicou_sugestao_documento) return `Aplicou: ${p.aplicou_sugestao_documento.acao} "${p.aplicou_sugestao_documento.nome}"`;
+      return JSON.stringify(p).slice(0, 140);
+    default:
+      return JSON.stringify(p).slice(0, 140);
+  }
+}
+
+async function carregarHistoricoFamilia(familiaCodigo) {
+  const { data, error } = await supabase
+    .from('qualificacao_reanalise_historico')
+    .select('*')
+    .eq('familia_codigo', familiaCodigo)
+    .order('criado_em', { ascending: false });
+  if (error) {
+    console.warn('Falha ao buscar histórico da família:', error);
+    historicoFamiliaAtual = [];
+    return;
+  }
+  historicoFamiliaAtual = data || [];
+}
 
 // Busca no dicionário compartilhado (base_legal_documento) só os documentos
 // desta família — guarda num Map(documento -> linha) em
@@ -1009,6 +1163,39 @@ function renderizarDetalheReanalise() {
       <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase">Observação da Decisão</label>
       <textarea id="input-decisao-observacao" rows="2" class="w-full p-2 text-xs border rounded-lg dark:bg-slate-850 dark:border-slate-700 dark:text-white">${f.decisao_observacao ?? ''}</textarea>
       <p class="text-[10px] text-slate-400 dark:text-slate-500 italic">A decisão fica só em qualificacao_reanalise_juridica (ligada por familia_codigo) — nada é copiado pra qualificacao_tecnica; quem precisar das duas informações consulta as duas tabelas.</p>
+
+      <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mt-2">Revisar em (revalidação)</label>
+      <input type="date" id="input-decisao-revisar-em" value="${f.revisar_em ?? ''}"
+        class="w-full p-2 text-xs border rounded-lg dark:bg-slate-850 dark:border-slate-700 dark:text-white" />
+      <div class="flex items-center justify-between">
+        <p class="text-[10px] text-slate-400 dark:text-slate-500 italic">Quando chegar nessa data, a família volta a aparecer na fila como "Revisão Vencida". Deixe em branco pra não agendar revisão.</p>
+        <button type="button" onclick="sugerirRevisarEm12Meses()"
+          class="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline whitespace-nowrap ml-2" title="Preenche com hoje + 12 meses">
+          ↻ Sugerir +12 meses
+        </button>
+      </div>
+    </div>
+
+    <div class="border-t dark:border-slate-800 pt-3">
+      <details>
+        <summary class="cursor-pointer text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase select-none">📜 Histórico desta família (${historicoFamiliaAtual.length})</summary>
+        <div class="mt-2 space-y-2 max-h-56 overflow-y-auto pr-1">
+          ${
+            historicoFamiliaAtual.length === 0
+              ? `<p class="text-xs text-slate-400 italic">Nenhum evento registrado ainda.</p>`
+              : historicoFamiliaAtual.map((evento) => `
+                <div class="p-2 bg-slate-50 dark:bg-slate-900/50 rounded border border-slate-200 dark:border-slate-700 text-xs">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="font-bold text-slate-600 dark:text-slate-300">${ROTULOS_TIPO_EVENTO_HISTORICO[evento.tipo_evento] ?? evento.tipo_evento}</span>
+                    <span class="text-[10px] text-slate-400 whitespace-nowrap">${evento.criado_em ? new Date(evento.criado_em).toLocaleString('pt-BR') : ''}</span>
+                  </div>
+                  <p class="text-slate-500 dark:text-slate-400 text-[11px] mt-0.5">${evento.usuario ?? '—'}</p>
+                  <p class="text-slate-600 dark:text-slate-300 mt-1">${resumoPayloadHistorico(evento)}</p>
+                </div>
+              `).join('')
+          }
+        </div>
+      </details>
     </div>
   `;
 
@@ -1064,6 +1251,16 @@ window.preencherDecisaoComDocumentosValidados = () => {
   if (pendentes.length > 0 && typeof showToast === 'function') {
     showToast(`Preenchido com ${leis.length} norma(s) de documentos validados. ${pendentes.length} documento(s) ainda sem validação não entraram.`);
   }
+};
+
+// Preenche o campo "Revisar em" com hoje + 12 meses — só sugestão, o
+// analista pode editar ou limpar antes de validar.
+window.sugerirRevisarEm12Meses = () => {
+  const campo = document.getElementById('input-decisao-revisar-em');
+  if (!campo) return;
+  const data = new Date();
+  data.setMonth(data.getMonth() + 12);
+  campo.value = data.toISOString().slice(0, 10);
 };
 
 // Analisa com IA só os documentos (exigidos + elegíveis) da família aberta
@@ -1222,10 +1419,16 @@ const SVG_ICONE_EDITAR = `<svg class="w-4 h-4" fill="none" stroke="currentColor"
 const SVG_ICONE_VER = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>`;
 const SVG_ICONE_VALIDAR = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
 const SVG_ICONE_EXCLUIR = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>`;
+const SVG_ICONE_HISTORICO = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
 
 // Acordeão: só um bloco de "famílias vinculadas" aberto por vez — abrir um
 // novo fecha o anterior automaticamente.
 let gerenciarDocumentosFamiliasAbertoId = null;
+
+// Mesmo padrão de acordeão, pro painel de "histórico deste documento"
+// (base_legal_documento_historico, migration 015) — independente do painel
+// de famílias vinculadas, os dois podem ficar abertos ao mesmo tempo.
+let gerenciarDocumentosHistoricoAbertoId = null;
 
 // Dropdown de status (seleção múltipla) da lista de "Gerenciar Documentos".
 window.toggleDropdownFiltroStatusDocumentos = () => {
@@ -1283,12 +1486,14 @@ window.renderizarListaDocumentosGerenciar = () => {
   // Trocar de filtro/busca redesenha a lista inteira — nenhum painel de
   // famílias vinculadas sobrevive a isso, então reseta o estado do acordeão.
   gerenciarDocumentosFamiliasAbertoId = null;
+  gerenciarDocumentosHistoricoAbertoId = null;
 
   container.innerHTML = lista.map((d) => {
     const corStatus = d.status === 'validado'
       ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400'
       : 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400';
     const idSeguro = `fam-vinc-${d.documento.replace(/[^a-zA-Z0-9]/g, '')}`;
+    const idHistSeguro = `hist-doc-${d.documento.replace(/[^a-zA-Z0-9]/g, '')}`;
     const nomeEsc = d.documento.replace(/'/g, "\\'");
     // "Validar" rápido (aprova como está, sem abrir o modal de edição) só
     // faz sentido quando já existe texto pra aprovar e ainda não foi
@@ -1315,6 +1520,10 @@ window.renderizarListaDocumentosGerenciar = () => {
             class="p-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors">
             ${SVG_ICONE_VER}
           </button>
+          <button type="button" onclick="toggleHistoricoDocumentoGerenciar('${idHistSeguro}', '${nomeEsc}')" title="Ver histórico deste documento"
+            class="p-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors">
+            ${SVG_ICONE_HISTORICO}
+          </button>
           ${podeValidarRapido ? `
           <button type="button" onclick="validarDocumentoRapido('${nomeEsc}')" title="Validar (aprovar o texto como está, sem editar)"
             class="admin-only p-1.5 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded transition-colors">
@@ -1326,6 +1535,9 @@ window.renderizarListaDocumentosGerenciar = () => {
           </button>
         </div>
         <div id="${idSeguro}" class="hidden text-xs text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 p-2 rounded border dark:border-slate-700">
+          Carregando...
+        </div>
+        <div id="${idHistSeguro}" class="hidden text-xs text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 p-2 rounded border dark:border-slate-700">
           Carregando...
         </div>
       </div>`;
@@ -1422,6 +1634,61 @@ window.carregarFamiliasVinculadasGerenciar = async (nomeDocumento, idContainer) 
     container.innerHTML = `${bloco('Exigido em', exigido)}${bloco('Elegível em', elegivel)}`;
   } catch (err) {
     container.innerHTML = `<span class="text-red-500">Falha ao buscar famílias: ${err.message}</span>`;
+  }
+};
+
+// Mesmo padrão de acordeão de "famílias vinculadas" acima, só que pro
+// histórico de alterações do PRÓPRIO documento no dicionário
+// (base_legal_documento_historico, migration 015) — abrir um fecha o outro
+// painel de histórico que já estivesse aberto, mas não mexe no painel de
+// famílias vinculadas (são independentes).
+window.toggleHistoricoDocumentoGerenciar = (idContainer, nomeDocumento) => {
+  if (gerenciarDocumentosHistoricoAbertoId && gerenciarDocumentosHistoricoAbertoId !== idContainer) {
+    document.getElementById(gerenciarDocumentosHistoricoAbertoId)?.classList.add('hidden');
+  }
+
+  const container = document.getElementById(idContainer);
+  if (!container) return;
+
+  const estavaAberto = gerenciarDocumentosHistoricoAbertoId === idContainer;
+  if (estavaAberto) {
+    container.classList.add('hidden');
+    gerenciarDocumentosHistoricoAbertoId = null;
+  } else {
+    container.classList.remove('hidden');
+    gerenciarDocumentosHistoricoAbertoId = idContainer;
+    carregarHistoricoDocumentoGerenciar(nomeDocumento, idContainer);
+  }
+};
+
+window.carregarHistoricoDocumentoGerenciar = async (nomeDocumento, idContainer) => {
+  const container = document.getElementById(idContainer);
+  if (!container || container.classList.contains('hidden')) return; // foi fechado de novo antes da resposta chegar
+  if (container.dataset.carregado === 'true') return; // já carregou uma vez, não refaz a consulta
+
+  try {
+    const { data, error } = await supabase
+      .from('base_legal_documento_historico')
+      .select('*')
+      .eq('documento', nomeDocumento)
+      .order('alterado_em', { ascending: false });
+    if (error) throw error;
+
+    container.dataset.carregado = 'true';
+    if (!data || data.length === 0) {
+      container.innerHTML = `<span class="italic text-slate-400">Nenhuma alteração registrada ainda neste documento.</span>`;
+      return;
+    }
+
+    container.innerHTML = data.map((h) => `
+      <div class="mb-1.5 last:mb-0 pb-1.5 last:pb-0 border-b last:border-0 dark:border-slate-700">
+        <p class="text-[10px] text-slate-400">${new Date(h.alterado_em).toLocaleString('pt-BR')}</p>
+        <p>Base legal anterior: ${h.base_legal_anterior ?? '<span class="italic text-slate-400">—</span>'}</p>
+        <p>Status anterior: ${h.status_anterior ?? '—'}${h.validado_por_anterior ? ` (por ${h.validado_por_anterior})` : ''}</p>
+        ${h.atividades_regulamentadas_anterior ? `<p>Atividades anteriores: ${h.atividades_regulamentadas_anterior}</p>` : ''}
+      </div>`).join('');
+  } catch (err) {
+    container.innerHTML = `<span class="text-red-500">Falha ao buscar histórico: ${err.message}</span>`;
   }
 };
 
@@ -1949,6 +2216,8 @@ window.validarReanalise = async () => {
 
   const decisaoBaseLegal = document.getElementById('input-decisao-base-legal').value.trim();
   const decisaoObservacao = document.getElementById('input-decisao-observacao').value.trim();
+  const campoRevisarEm = document.getElementById('input-decisao-revisar-em');
+  const revisarEm = campoRevisarEm && campoRevisarEm.value ? campoRevisarEm.value : null;
   const usuario = sessionStorage.getItem('cockpit_user_realname') || 'Usuário do Sistema';
 
   if (!decisaoBaseLegal) {
@@ -1967,6 +2236,7 @@ window.validarReanalise = async () => {
       status: 'validado',
       validado_por: usuario,
       validado_em: new Date().toISOString(),
+      revisar_em: revisarEm,
       // Promove escopo se uma família secundária ganhou exigência adicional na reanálise
       ...(f.escopo === 'secundario' && decisaoBaseLegal !== f.base_legal_atual
         ? { escopo: 'prioritario' }
@@ -1995,6 +2265,7 @@ window.validarReanalise = async () => {
     sincronizarItemFilaLocal(f.familia_codigo, {
       status: 'validado',
       tem_decisao_final: true,
+      revisar_em: revisarEm,
       ...(atualizacao.escopo ? { escopo: atualizacao.escopo } : {}),
     });
 
@@ -2242,6 +2513,9 @@ window.darCienciaAlteracao = async (id, familiaCodigo) => {
   // selo/filtro da tela principal em dia sem precisar recarregar a página
   // inteira (mesmo problema e mesma correção do lado de "aplicar sugestão").
   if (typeof window.atualizarPendenciasCienciaGrid === 'function') window.atualizarPendenciasCienciaGrid();
+  // Não bloqueia a resposta pro usuário -- só atualiza o painel de stats da
+  // Fila de Trabalho (se estiver aberto) em segundo plano.
+  carregarPendenciasCienciaGlobal().then(atualizarStatsReanaliseFila);
 
   if (typeof showToast === 'function') showToast('Ciência registrada.');
   await window.carregarFundamentacaoLegalModal(familiaCodigo);
@@ -2273,6 +2547,7 @@ window.darCienciaTodasAlteracoesFamilia = async (familiaCodigo) => {
   }
 
   if (typeof window.atualizarPendenciasCienciaGrid === 'function') window.atualizarPendenciasCienciaGrid();
+  carregarPendenciasCienciaGlobal().then(atualizarStatsReanaliseFila);
 
   if (typeof showToast === 'function') showToast('Ciência registrada em todas as alterações desta família.');
   await window.carregarFundamentacaoLegalModal(familiaCodigo);
