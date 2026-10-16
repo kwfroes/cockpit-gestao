@@ -616,14 +616,46 @@
                 <option value="">Todos</option>
                 <option value="secundario">Secundário (só ATC hoje)</option>
             </select>
-            <select id="reanalise-filtro-status" onchange="aplicarFiltrosReanalise()" class="p-2 text-xs border rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white outline-none">
-                <option value="">Todos Status</option>
-                <option value="pendente">Pendente</option>
-                <option value="em_analise">Em Análise</option>
-                <option value="aguardando_terceiro">Aguardando Terceiro</option>
-                <option value="sugerido_ia">Sugerido pela IA</option>
-                <option value="validado">Validado</option>
-            </select>
+            <!-- Seleção múltipla de status (antes era um <select> de opção
+                 única). Por padrão todos vêm marcados, MENOS "Validado" —
+                 a fila abre já focada no que ainda precisa de trabalho, mas
+                 dá pra marcar "Validado" também pra ver dinamicamente o que
+                 já foi concluído. -->
+            <div class="relative shrink-0" id="dropdown-filtro-status-fila-wrapper">
+                <button type="button" id="btn-reanalise-filtro-status" onclick="toggleDropdownFiltroStatusFila()"
+                    class="p-2 text-xs border rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white outline-none flex items-center gap-1.5 whitespace-nowrap">
+                    <span id="reanalise-filtro-status-label">Status: Todos (exceto Validado)</span>
+                    <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <div id="dropdown-filtro-status-fila" class="hidden absolute z-20 mt-1 bg-white dark:bg-slate-850 border dark:border-slate-700 rounded-lg shadow-lg p-2 space-y-1 min-w-[190px]">
+                    <label class="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 p-1.5 rounded hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer">
+                        <input type="checkbox" id="filtro-status-fila-pendente" value="pendente" checked
+                            onchange="alterarFiltroStatusFila(this)" class="rounded">
+                        Pendente
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 p-1.5 rounded hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer">
+                        <input type="checkbox" id="filtro-status-fila-em_analise" value="em_analise" checked
+                            onchange="alterarFiltroStatusFila(this)" class="rounded">
+                        Em Análise
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 p-1.5 rounded hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer">
+                        <input type="checkbox" id="filtro-status-fila-aguardando_terceiro" value="aguardando_terceiro" checked
+                            onchange="alterarFiltroStatusFila(this)" class="rounded">
+                        Aguardando Terceiro
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 p-1.5 rounded hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer">
+                        <input type="checkbox" id="filtro-status-fila-sugerido_ia" value="sugerido_ia" checked
+                            onchange="alterarFiltroStatusFila(this)" class="rounded">
+                        Sugerido pela IA
+                    </label>
+                    <hr class="my-1 border-slate-200 dark:border-slate-700">
+                    <label class="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 p-1.5 rounded hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer">
+                        <input type="checkbox" id="filtro-status-fila-validado" value="validado"
+                            onchange="alterarFiltroStatusFila(this)" class="rounded">
+                        Validado
+                    </label>
+                </div>
+            </div>
             <select id="reanalise-filtro-cluster" onchange="aplicarFiltrosReanalise()" class="p-2 text-xs border rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white outline-none">
                 <option value="">Todos Clusters</option>
                 <option value="C1">C1 — Engenharia/Arquitetura</option>
@@ -744,12 +776,30 @@
         <div class="p-4 border-b dark:border-slate-800 flex flex-wrap gap-3 items-center bg-slate-50 dark:bg-slate-850/60">
             <input type="text" id="gerenciar-documentos-busca" oninput="renderizarListaDocumentosGerenciar()" placeholder="Buscar documento..."
                 class="flex-1 min-w-[200px] p-2 text-xs border rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-slate-500">
-            <select id="gerenciar-documentos-filtro-status" onchange="renderizarListaDocumentosGerenciar()"
-                class="p-2 text-xs border rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-slate-500">
-                <option value="">Todos os status</option>
-                <option value="sugerido_ia">Sugerido IA</option>
-                <option value="validado">Validado</option>
-            </select>
+            <!-- Seleção múltipla de status (antes era um <select> de opção
+                 única). Por padrão só "Sugerido IA" vem marcado — "Validado"
+                 começa desmarcado, pra lista abrir já focada no que falta
+                 fazer. Marcar "Validado" também mostra, dinamicamente, o que
+                 já foi concluído, sem precisar trocar de filtro. -->
+            <div class="relative shrink-0" id="dropdown-filtro-status-documentos-wrapper">
+                <button type="button" id="btn-gerenciar-documentos-filtro-status" onclick="toggleDropdownFiltroStatusDocumentos()"
+                    class="p-2 text-xs border rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-slate-500 flex items-center gap-1.5 whitespace-nowrap">
+                    <span id="gerenciar-documentos-filtro-status-label">Status: Sugerido IA</span>
+                    <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <div id="dropdown-filtro-status-documentos" class="hidden absolute z-20 mt-1 bg-white dark:bg-slate-850 border dark:border-slate-700 rounded-lg shadow-lg p-2 space-y-1 min-w-[160px]">
+                    <label class="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 p-1.5 rounded hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer">
+                        <input type="checkbox" id="filtro-status-doc-sugerido_ia" value="sugerido_ia" checked
+                            onchange="alterarFiltroStatusDocumentos(this)" class="rounded">
+                        Sugerido IA
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 p-1.5 rounded hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer">
+                        <input type="checkbox" id="filtro-status-doc-validado" value="validado"
+                            onchange="alterarFiltroStatusDocumentos(this)" class="rounded">
+                        Validado
+                    </label>
+                </div>
+            </div>
             <button type="button" id="btn-preencher-atividades-ia" onclick="preencherAtividadesFaltantesComIA()"
                 class="admin-only bg-violet-600 hover:bg-violet-700 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-colors shrink-0"
                 title="Analisa com IA os documentos do dicionário que ainda estão sem base legal e/ou sem o resumo de atividades regulamentadas — nunca mexe em documento já validado">
@@ -859,9 +909,9 @@
     <script src="analisador_cnpj.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../../assets/auth.js"></script>
-    <script type="module" src="script.js?v=20261016a"></script>
-    <script type="module" src="script_reanalise_juridica.js?v=20261016a"></script>
-    <script type="module" src="motor_cnae.js?v=20261016a"></script> 
+    <script type="module" src="script.js?v=20261016c"></script>
+    <script type="module" src="script_reanalise_juridica.js?v=20261016c"></script>
+    <script type="module" src="motor_cnae.js?v=20261016c"></script> 
 
 </body>
 </html>
