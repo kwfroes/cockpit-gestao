@@ -13,7 +13,8 @@ const currentUserName = sessionStorage.getItem('cockpit_user_realname') || 'Serv
 // Listeners Base
 document.addEventListener("DOMContentLoaded", () => {
     fetchVistorias();
-    configurarBuscaCnpj(); 
+    configurarBuscaCnpj();
+    configurarDropzoneFotos();
 });
 document.getElementById('search-input').addEventListener('input', renderGrid);
 
@@ -252,10 +253,17 @@ function atualizarDisplayAreaTotal(somaTotal) {
 // ==========================================
 
 function processarFotos(event) {
-    const files = event.target.files;
+    processarArquivosFotos(event.target.files);
+
+    // Limpa o input para permitir selecionar a mesma imagem novamente se precisar
+    document.getElementById('foto-upload').value = '';
+}
+
+// Recebe uma FileList (do input de arquivo OU de um drag-and-drop) e
+// converte/comprime cada imagem usando FileReader + Canvas, igual antes.
+function processarArquivosFotos(files) {
     if (!files || files.length === 0) return;
 
-    // Converte e comprime cada imagem usando FileReader + Canvas
     Array.from(files).forEach(file => {
         if (!file.type.startsWith('image/')) return;
         
@@ -292,9 +300,59 @@ function processarFotos(event) {
         }
         reader.readAsDataURL(file);
     });
-    
-    // Limpa o input para permitir selecionar a mesma imagem novamente se precisar
-    document.getElementById('foto-upload').value = '';
+}
+
+// Permite arrastar fotos (do computador, do Explorer/Finder, ou de outra
+// aba) direto para o box "Capturar Câmera / Anexar Fotos", tanto na Nova
+// Vistoria quanto na Edição (é o mesmo elemento, reaproveitado pelo modal).
+function configurarDropzoneFotos() {
+    const dropzone = document.getElementById('dropzone-fotos');
+    if (!dropzone) return;
+
+    const classesDestaque = ['border-blue-500', 'bg-blue-50', 'dark:bg-slate-700', 'dark:border-blue-500'];
+
+    ['dragenter', 'dragover'].forEach(nomeEvento => {
+        dropzone.addEventListener(nomeEvento, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropzone.classList.add(...classesDestaque);
+        });
+    });
+
+    ['dragleave', 'dragend'].forEach(nomeEvento => {
+        dropzone.addEventListener(nomeEvento, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropzone.classList.remove(...classesDestaque);
+        });
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropzone.classList.remove(...classesDestaque);
+
+        const files = e.dataTransfer && e.dataTransfer.files;
+        if (!files || files.length === 0) return;
+
+        const temImagem = Array.from(files).some(f => f.type.startsWith('image/'));
+        if (!temImagem) {
+            toast("Arraste apenas arquivos de imagem.", "error");
+            return;
+        }
+
+        processarArquivosFotos(files);
+    });
+
+    // Rede de segurança: se o usuário soltar a foto um pouco fora do box
+    // (ainda dentro do modal), evita que o navegador abra/baixe a imagem
+    // e perca o que estava sendo preenchido no formulário.
+    window.addEventListener('dragover', (e) => e.preventDefault());
+    window.addEventListener('drop', (e) => {
+        if (e.target !== dropzone && !dropzone.contains(e.target)) {
+            e.preventDefault();
+        }
+    });
 }
 
 function removerFoto(index) {
@@ -593,15 +651,17 @@ function montarHtmlRelatorio(v, domImgs, dataFormatada, horaFormatada, corpoText
 
     if (v.fotos && v.fotos.length > 0) {
         v.fotos.forEach((foto, idx) => {
-            // Padrão Paisagem: 280px (~metade da página do Word)
-            let larguraPx = 280;
+            // TESTE: Padrão Paisagem subido de 280px para 600px (quase a largura
+            // útil da página do Word) para aproveitar melhor a resolução já
+            // capturada (até 800px) sem precisar mudar a compressão no upload.
+            let larguraPx = 600;
 
             if (domImgs && domImgs[idx]) {
                 const w = domImgs[idx].naturalWidth || domImgs[idx].width || 1;
                 const h = domImgs[idx].naturalHeight || domImgs[idx].height || 1;
                 if (h > w) {
-                    // Padrão Retrato (Vertical): 140px (~1/4 da página do Word)
-                    larguraPx = 140;
+                    // Padrão Retrato (Vertical): mantém a mesma proporção 2:1 de antes
+                    larguraPx = 300;
                 }
             }
 
