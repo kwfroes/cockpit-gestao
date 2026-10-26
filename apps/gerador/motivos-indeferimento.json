@@ -1,0 +1,3301 @@
+[
+  {
+    "motivo": "O Termo de Concordância e Veracidade deverá informar os dados do representante legal.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento não é do representante legal.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "DCTF/Declaração do Simples Nacional deverá constar o mesmo exercício do balanço apresentado.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço patrimonial transcrito.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Declaração incompleta. Favor observar o modelo disponibilizado.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Razão Social divergente do Contrato Social.",
+    "categorias": [
+      "Qualificação Técnica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Alvará da viglância sanitária - endereço divergente do contrato social.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Certidão de acervo técnico - cat incompatível com a família.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Assinatura não é do representante legal.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente documento no idioma de origem.",
+    "categorias": [
+      "Qualificação Técnica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento ilegível.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Não foi possível verificar a autenticidade da assinatura.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento diverso do solicitado. Favor encaminhar o Alvará de Funcionamento Municipal ou a Ficha de Inscrição Municipal.",
+    "categorias": [
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente documento de identificação do sócio.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Termo do sei bahia é incompatível. Favor anexar o termo do caf digital.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento divergente do solicitado.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço patrimonial sem registro na junta comercial.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Diversos documentos no mesmo arquivo pdf.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente balanço patrimonial, dre da escrituração contábil.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente atestado averbado.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Capital social diverso do estabelecido no contrato social/estatuto. Favor retificar.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente certidão de acervo técnico com atestado averbado.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente contrato social e documento de identificação. Favor observar instruções no documento.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente assinatura digital. Favor observar instruções no documento.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Não foi possível abrir o pdf anexado.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Família solicitada exige apresentação de crea/cft + cat e atestado averbado pelo crea/cft.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento não anexado na solicitação.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente assinatura do representante legal no Balanço de Abertura.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "O documento deve ser emitido no estado sede do cnpj/cpf.",
+    "categorias": [
+      "Qualificação Técnica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Exercício contábil incompleto.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço patrimonial com erro técnico, contas do ativo/passivo demonstram valores diferentes no somatório.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Não anexou cartão do cnpj dos sócios.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Empresa com faturamento superior a r$360.000,00, classificada como empresa de pequeno porte.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento diverso do solicitado.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Qualificação Econômico-Financeira",
+      "Qualificação Técnica",
+      "Regularidade Fiscal e Trabalhista",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente Contrato Social para verificação.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Qualificação Econômico-Financeira",
+      "Qualificação Técnica",
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente certidão de quitação pessoa jurídica do crea.",
+    "categorias": [],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente documento de identificação do representante.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Regularidade Fiscal e Trabalhista",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente o objeto social no contrato.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente Termo de Concordância e Veracidade.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço sem registro na junta comercial. ausente termo de abertura/encerramento e dre.",
+    "categorias": [],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Data do balanço de abertura divergente, verificar data de abertura da empresa.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente termo de abertura e encerramento sped.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente documento emitido em pessoa jurídica.",
+    "categorias": [
+      "Qualificação Técnica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente termo de abertura e encerramento, recibo de entrega e dre sped.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço patrimonial deve ser enviado em um único formato de escrituração contábil.",
+    "categorias": [],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Certidão vencida.",
+    "categorias": [
+      "Qualificação Econômico-Financeira",
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente termo de abertura e termo de encerramento do livro diário.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Certidão de Acervo Técnico com atestado não corresponde com responsável técnico que consta no CREA/CAU.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Empresa com faturamento menor que r$ 360.000,00, classificada como microempresa.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Analise depende do valor da receita bruta contida no balanço patrimonial.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento não corresponde ao Alvará de Vigilância Sanitária.",
+    "categorias": [],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Dre não discrimina os impostos incidentes. Favor encaminhar dre a parte assinado pelo contador com balanço em único pdf.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço patrimonial com erro técnico, ausente dre em sua sequência de páginas.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente crea- conselho regional de engenharia e agronomia pessoa jurídica.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Não foi possível verificar a autenticidade do documento.",
+    "categorias": [
+      "Qualificação Econômico-Financeira",
+      "Qualificação Técnica",
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Endereço / capital social divergente da atual alteração contratual.",
+    "categorias": [
+      "Qualificação Técnica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente cau - conselho regional de arquitetura e urbanismo.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço patrimonial com número de páginas incorreto.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Dre não descrimina receita bruta e impostos incidentes sobre a receita, favor verificar e encaminhar dre a parte com todos os documentos em um único pdf.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço com erro técnico, contas do ativo não discrimina valores somatórios para lançamento.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento não corresponde ao cra - conselho regional de administração.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Empresa com faturamento superior a R$ 4.800.000,00. Enquadrada como Normal.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço patrimonial com erro técnico, ausente o lançamento do capital social.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente autorização de funcionamento do ministério da justiça.",
+    "categorias": [],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "A procuração pública deverá ser emitida em cartório, porém este documento é dispensado para sócio.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "O livro razão não substitui o livro diário, favor retificar.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Certidão positiva.",
+    "categorias": [
+      "Qualificação Econômico-Financeira",
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente o dre.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Declaração deverá ter sua definição da categoria, verificar enquadramento.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente estatuto/ata para verificação.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Qualificação Técnica",
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "A certidão deve ser expedida no domicílio da empresa.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente recibo de entrega e escrituração contábil sped.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Divergência no texto do termo de abertura/encerramento exercício contábil, verificar escrita.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento com CNPJ/CPF diverso.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Contas de compensação deverão estar lançadas no ativo e no passivo.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Lançamentos contábeis incorretos. Favor retificar.",
+    "categorias": [],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Lançamentos contábeis incorretos. Favor preencher os campos de acordo com o documento enviado.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento com data de validade vencida.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente recibo de entrega e dre do sped.",
+    "categorias": [],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente Estatuto Social, Ata não Descreve Dados da Empresa.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Quadro societário incompleto. Favor complementar.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço patrimonial deverá conter registro em cartório de p. jurídica ou junta comercial.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento incompleto, favor observar informações dos documentos complementares.",
+    "categorias": [
+      "Qualificação Técnica",
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Órgão fiscalizador com endereço incorreto.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Contrato social não consta capital social, para verificação no balanço patrimonial.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço com erro técnico, erro nos lançamentos das contas de compensação.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Certidão incompleta.",
+    "categorias": [
+      "Qualificação Econômico-Financeira",
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Pendente envio do Termo de Concordância e Veracidade. Favor observar instruções de envio.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente certidão mobiliaria.",
+    "categorias": [
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente Certidão de Débitos do Estado da Bahia.",
+    "categorias": [
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento sem tradução juramentada.",
+    "categorias": [],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço patrimonial com erro técnico, demonstram exercício iguais com valores diferentes.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "O documento deve ser emitido em papel timbrado e conter assinatura do representante legal.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Fornecedor suspenso por tempo determinado.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Empresa possui fins lucrativos. Favor alterar e fazer nova solicitação.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente balanço de abertura devidamente registrado.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor Encaminhar o Contrato Social Consolidado",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente termo de abertura e encerramento, balanço patrimonial e recibo de entrega de escrituração contábil sped..",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Contrato social, ata ou estatuto incompleto.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Certidão de acervo técnico com atestado averbado deverá corresponder ao registro no cft.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento com dados desatualizados.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Responsável técnico do crea/cau/cft/cra diverso do apresentado nas cat. Favor retificar.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Empresa não possui fins lucrativos. Favor alterar e fazer nova solicitação.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Assinatura com dados desatualizados, favor verificar dados.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Cat não possui identificação do responsável técnico.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor marcar a opção de Sociedade Anônima na aba Dados do Fornecedor.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documentação deve possuir tradução juramentada e ser apostilada.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "O balanço deverá ser enviado em modelo SPED, registrado na Junta Comercial ou publicado em jornal/revista.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço patrimonial com erro de nomenclatura no dre.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "A assinatura digital deve conter licença icp brasil.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente certidão de quitação pessoa jurídica do cft.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor apresentar o termo do inventariante e o documento de identidade do representante.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor desmarcar a opção sociedade anônima.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor apresentar um documento que demonstre que a empresa está em situação regular no ano corrente.",
+    "categorias": [
+      "Qualificação Técnica",
+      "Regularidade Fiscal e Trabalhista",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Nos termos da resolução cgsim n°62 classifica atividades econômicas de médio e alto risco, exigindo alvará da Vigilância Sanitária.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "O documento fornecido deve ser correspondente à pessoa física.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Quadro societário incorreto. Favor retificar.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ordem de páginas ilegível.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Quadro de dirigentes incorreto. Favor retificar.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento incompleto.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente número do CPF no Documento de Identificação.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Estatuto/ata não possui registro de órgão competente.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documentos complementares com endereço divergente do informado.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Qualificação Técnica",
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento assinado digitalmente deve ser enviado em formato nato digital..",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente estatuto e ata para verificação do capital social.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento de identidade não possui o número do cpf.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente estatuto social para verificação do endereço.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente o estatuto social para conferência de dados.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "A Declaração deverá ser acompanhada pelo alvará da Vigilância Sanitária.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente apresentação da posse dos nomeados homologado pelo banco central do brasil, conforme resolução nº 2645.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor anexar a Declaração de inexistência de inscrição ou a certidão negativa mobiliária.",
+    "categorias": [
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Apresentar a ata onde consta a alteração de endereço.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente relação de filiais no estatuto/ata.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "CPF incorreto, favor refazer a solicitação.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento de identidade possui cpf diferente do cadastrado.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor apresentar ata de eleição atualizada.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço com erro técnico no dre.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Lançamentos contábeis incompletos. Favor complementar.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente termo de abertura/encerramento e dre do livro diário.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente selo de autenticação do crea na cat.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor apresentar contrato social que especifique o cnpj das filiais.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Sem Descrição"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Termo de abertura / encerramento / recibo de entrega de escrituração contábil com exercício incompleto.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Número do CNPJ registrado diferente do informado ao CAF. Favor abrir uma nova solicitação.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Receita bruta/líquida não informada, favor retificar.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Certidão de ações cíveis não demonstra processos de concordata e falência. Favor anexar o documento correto.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ata/estatuto não discrimina o cnpj e endereço das filiais.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente Procuração do Representante Legal.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço publicado apresentação exclusiva para s.a. Favor apresentar livro diário ou sped.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Assinatura recortada. Favor assinar o documento em vias originais.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "O documento deverá estar acompanhado da guia de pagamento anual.",
+    "categorias": [
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Dre a parte sem assinatura do sócio e contador.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente assinatura no documento.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Não se faz necessário a Declaração de desenquadramento, visto a Declaração enquadramento encaminhada.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço patrimonial com erro técnico. contas credoras/devedoras lançadas no ativo/passivo.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "A certidão deve ser expedida no domicílio do fornecedor.",
+    "categorias": [
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Decisão judicial não dispensa a apresentação de certidões para fins de cadastro e licitações.",
+    "categorias": [
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor verificar as contas do dre a parte.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente contas do ativo/passivo no balanço patrimonial.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente termo de abertura.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor encaminhar notas explicativas em um único anexo do balanço patrimonial encaminhado.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor apresentar Alvará de Vigilância Sanitária correspondente à nova categoria de empresa.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente certidão de administradores susep correspondente ao cnpj solicitado.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor anexar o Alvará de Vigilância Sanitária do local onde as refeições são preparadas.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Protocolo de renovação da Vigilância Sanitária não é um documento hábil para comprovar qualificação técnica.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente última alteração contratual consolidada ou contrato social com alterações contratuais.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor apresentar comprovante de registro no crea.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento apresentado deve ser procuração pública ou conter assinatura digital válida.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Empresa estrangeira deve solicitar o código do credor a unidade licitante e incluir o código no número de registro da empresa no caf digital.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente autorização de fornecimento do país sede da empresa.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Contrato social sem registro na junta comercial.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "A data do período (inicial e final) do balanço de abertura deverá ser correspondente a data de abertura da empresa. Favor verificar nomenclatura do documento.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente documento de identidade do sócio.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "O código de família solicitado exige a apresentação do Alvará de Vigilância Sanitária.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Endereço informado diverge dos demais documentos apresentados.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "A certidão deve ser emitida em nome da pessoa jurídica.",
+    "categorias": [
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor encaminhar o termo de abertura/encerramento completo, referente à todo o exercício financeiro.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor anexar o ccmei.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Código de família é incompatível com a atividade permitida no Alvará de Vigilância Sanitária.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Endereço informado em dados do fornecedor é diferente do informado no contrato social.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Sócio não consta no contrato social da empresa.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Não foi possível verificar a autenticidade no portal https://verificador.iti.br/.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento de identidade com dados diferentes do contrato social.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor registrar apenas o presidente no campo dirigentes.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço Patrimonial possui cnpj e razão social diferentes.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor anexar o regimento da autarquia com a lei de constituição.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor anexar o termo de posse e o documento de identidade.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente certidão de administradores susep.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Erro técnico nas contas do passivo.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente termo de abertura e encerramento, balanço patrimonial e dre sped.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor anexar o decreto de nomeação.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Termo de Concordância e Veracidade cancelado. decorrido 30 dias sem a juntada do arquivo..",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Razão social / capital social divergentes do contrato social.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausência do certificado de credenciamento cbm.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausência do certificado de micro empreendedor individual - mei.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente quadro societário atual.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente termo de encerramento.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente certidão de quitação da anuidade do profissional.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Termo de Concordância e Veracidade sem formatação.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente balanco de abertura registrado na junta comercial.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Procuração sem assinatura do(s) sócio(s) da empresa.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "A procuração deverá conferir poderes para receber citação, intimação e responder administrativa e judicialmente por seus atos.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Obrigatório preenchimento do balanço 02 conforme a lei federal 14.133/21.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Contrato social/estatuto/ata com sequência de páginas incorreta.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "O dre a parte, deverá a ser apresentado com o balanço encaminhado anteriormente.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "A Declaração deve informar a prorrogação.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço não corresponde ao exercício 2023.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Endereço divergente do Contrato Social, Estatuto Social ou ATA",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço patrimonial não corresponde ao exercício de 2023",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço patrimonial não corresponde ao exercício de 2024",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Endereço/Razão Social informado divergente do apresentado no Contrato Social",
+    "categorias": [
+      "Qualificação Econômico-Financeira",
+      "Regularidade Fiscal e Trabalhista",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor anexar Termo de Responsabilidade Técnica CRBIO e o Certificado de Registro Pessoa Jurídica",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente documento de constituição da empresa",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "O Termo foi assinado por Pessoa Jurídica diferente da matriz.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Termo enviado sem preenchimento dos dados obrigatórios.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor adicionar Ramo de Atividade correspondente à Família solicitada.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço sem registro na Junta Comercial / Balanço com data divergente da data de abertura da empresa",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Quadro de Dirigentes inexistente no Contrato Social",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Apresentar Termo de Compromisso e Certidão de Inventariante ou Decisão Judicial assinada.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Porte declarado diverge do informado no Cartão CNPJ",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Apresentar a Declaração de Dispensa de Ato Público para atividades de Baixo Risco",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Capital Social não informado na última alteração contratual. Encaminhar a consolidação atualizada.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Assinatura deve corresponder ao Representante Legal mencionado no documento",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Encaminhar documento de Qualificação Técnica da empresa líder do Consórcio.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento apresentado como Procuração é divergente do solicitado.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Certidão de Acervo Operacional - CAO incompatível com a família.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Assinatura não corresponde à apresentada no documento do Representante Legal ou não foi realizada por meio de assinatura digital gov.br.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Termo de Concordância apresenta dados desatualizados, favor baixar novamente o documento e verificar as informações.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor encaminhar Contrato Social que especifique o endereços das filiais.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "O nome do Representante Legal deve estar como apresentado no documento.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Número do documento de identificação divergente do documento apresentado.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Deve ser informado o número de CPF do procurador no documento apresentado.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento com data de incorreta.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente autorização do Ministério da Saúde publicado em Diário Oficial da União (DOU).",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Certidão deve ser expedida pelo município onde a empresa está estabelecida.",
+    "categorias": [
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Número do documento incorreto/incompleto. Favor iniciar novo cadastro com o número correto.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Dimensão do imóvel constante no Contrato Social não atende ao mínimo exigido.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor apresentar documento do Conselho de Classe juntamente com Certidão de Regularidade Anual.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Certidão Judicial unificada positiva. Necessário apresentar Certidão de ausência de feitos falimentares.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Assinatura digital inválida, favor assinar novamente e não manipular arquivo após assinatura.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor apresentar Documento de Identificação atualizado.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento ilegível/incompleto. Favor escanear ou encaminhar documento digital.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Família exige CRA com atestado averbado pelo Conselho.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento cortado. Favor verificar documento apresentado.",
+    "categorias": [
+      "Qualificação Econômico-Financeira",
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "O Balanço apresentado em SPED deve conter Termos de Abertura e Encerramento, Recibo de Entrega, Balanço Patrimonial e DRE.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ordem de páginas incorreto. Favor corrigir.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "O Balanço apresentado deve conter Termos de Abertura e Encerramento, Balanço Patrimonial, DRE e ser registrado em Junta Comercial.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor apresentar Certificado de Registro da empresa Procuradora em conjunto.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Endereço divergente do Cartão CNPJ.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Cartão CNPJ desatualizado quanto ao porte da empresa. Favor apresentar documento atualizado.",
+    "categorias": [
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Procuração com validade vencida. Favor apresentar documento atualizado.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Atividade/Classe da AFE apresentada é incompatível com a família solicitada.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento apresentado como Cartão CNPJ é diverso do solicitado.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Razão Social informada no Termo é divergente do Contrato Social.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Obrigatória a apresentação do Certificado de Registro emitido pela PF ou EB da empresa ou Procurador.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Inserir em conjunto página inicial da Resolução no Diário Oficial.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor informar Razão Social no Termo de Concordata e Veracidade.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Quadro de Dirigentes informado no documento é divergente do apresentado em ATA.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Relação de Produtos Controlados em anexo apresentado não contempla a família solicitada.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "A Atividade Econômica autorizada é incompatível com a família solicitada.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Relatório de Vistoria não corresponde ao endereço atual da empresa. Exigida nova vistoria.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Campo de ressalva preenchido incorretamente. Selecionar uma opção.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor apresentar documento original emitido pelo órgão competente.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Fornecedor MEI não pode ser enquadrado como ME devido a faturamento incompatível.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "CAT com Atestado não corresponde ao responsável técnico registrado no respectivo Conselho de Classe.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor apresentar CRNM ou documento equivalente com CPF como Documento de Identificação.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "CNPJ da Filial não consta em Contrato Social da Matriz.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente Documento de Identificação do Representante Legal e Procuração referente a assinatura do Termo de Concordância.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Contrato Social apresentado não pertence à empresa cadastrada.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Diversos PDFs anexados ao Documento de Identificação no Termo de Concordância. Favor anexar apenas o documento solicitado.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento de Identificação incompleto.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor inserir o nº do RG/CPF no Termo de Concordância e Veracidade.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente ATA e/ou documento que nomeie Representante Legal e quadro de dirigentes.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Deve ser apresentado somente o Certificado de Condição de Microempreendedor Individual (CCMEI) no campo Contrato Social.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente Atestado de Capacidade Técnica.  deve atestar a qualidade do serviço prestado.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Análise dos Dirigente depende do deferimeto da ATA.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Total da Receita Líquida com erro técnico.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor apresentar documento emitido em até um ano.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor não realizar alterações no Termo de Declaração de Concordância e Veracidade",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Dirigente deve constar em ATA ou Estatuto Social.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Necessário apresentar Documento de Identificação do dirigente/sócio e nome deve constar em ATA/Estatuto.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausência de Certificado de Registro (PF/EB) ou de autorização equivalente emitida pela autoridade competente do país de origem.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente Declaração de Superveniência, documento obrigatório para o cadastro, deve ser devidamente assinada por representante legal.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço de abertura com erro de nomenclatura.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente Documentos de Identificação com CPF e foto para verificação.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor encaminhar a Ficha de Inscrição Municipal ou CCMEI com Dispensa de Alvará e Licença de Funcionamento.",
+    "categorias": [
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Deve ser apresentado comprovação de cadastro emitida pela SEDUR",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor apresentar Certidão de Regularidade Fiscal.",
+    "categorias": [
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento apresentado deve ser procuração pública ou conter assinatura digital válida e ser assinada por um dos representantes da empresa indicado em Contrato Social ou ATA.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor apresentar Certidão Para Fins de Licitação emitida pelo Poder Judiciário",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor apresentar documento emitido pelo órgão competente.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço patrimonial não corresponde ao período de 2025",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "O Termo de Concordância e Veracidade não deve conter alterações além do preenchimento dos campos obrigatórios.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ata de nomeação expirada. Favor apresentar ato de nomeação/reeleição ou documento que comprove a designação de novo dirigente.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Necessário apresentar, junto ao documento de constituição, ato que comprove a participação societária dos integrantes.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento de Identificação incompleto. Deve ser apresentado com frente e verso.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Necessário apresentar a declaração conforme modelo padrão disponibilizado.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Divergência entre o Responsável Técnico registrado no CREA e o indicado nas CATs.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento deve ser apresentado no CNPJ do consórcio.",
+    "categorias": [
+      "Qualificação Econômico-Financeira",
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente certidão emitida pela Secretaria da Receita Federal do Brasil",
+    "categorias": [
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente certidão emitida pelo Tribunal Superior do Trabalho",
+    "categorias": [
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Necessário apresentar, em conjunto, procuração ou documento que nomeie a pessoa física procuradora responsável.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Procuração deve conceder poderes para representação plena perante a Administração Pública.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Dirigentes devem ser incluídos em campo específico.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Certidão de Acervo Técnico com atestado não corresponde com o responsável técnico que consta no CAU.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Favor apresentar, em conjunto, um dos documentos complementares indicados no Certificado.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento estrangeiro deve ser apresentado acompanhado de tradução.",
+    "categorias": [
+      "Habilitação Jurídica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Assinatura não pode sobrepor o texto do Termo de Concordância e Veracidade.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Deve ser apresentada Certidão de Objeto e Pé ou documento equivalente, atualizado, que comprove a situação atual do processo de recuperação judicial.",
+    "categorias": [
+      "Qualificação Econômico-Financeira",
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Deve ser possível validar assinatura via portal validar.iti.gov.br",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Assinatura digital deve corresponder à Pessoa Jurídica cadastrada ou ao Representante Legal constante no Contrato Social.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Procuração apresentada possui poderes limitados, não contemplando a representação geral da empresa perante a Administração Pública.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Empresa encontra-se irregular junto à RFB. Favor verificar a situação e apresentar comprovante atualizado.",
+    "categorias": [
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Tradução deve ser apresentada em conjunto com documento original.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Declaração apresentada não tem equivalência ao Alvará Sanitário.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Cartão CNPJ incompleto/rasurado.",
+    "categorias": [
+      "Regularidade Fiscal e Trabalhista",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausência da cadeia de procurações que vincule a empresa estrangeira à pessoa física apresentada como representante.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Capital Social divergente do constante no Contrato Social. Favor apresentar a última alteração contratual consolidada.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Dados do Representante Legal incompletos ou insuficientes.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento apresentado em nome de pessoa jurídica diversa.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço de Abertura deve apresentar período correspondente a data da abertura da empresa e estar registrado em Junta Comercial.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "O documento deverá ser apresentado em papel timbrado contendo os dados de identificação da empresa cadastrada.",
+    "categorias": [
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Ausente Cartão CNPJ.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Documento ilegível/cortado.",
+    "categorias": [
+      "Regularidade Fiscal e Trabalhista"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Declaração não substitui Procuração do Representante Legal. Favor enviar documento correto.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Apresentar a Declaração de Dispensa de Ato Público para atividades de Baixo Risco.",
+    "categorias": [
+      "Qualificação Técnica"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Balanço Patrimonial Cortado/Incompleto.",
+    "categorias": [
+      "Qualificação Econômico-Financeira"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "O campo Endereço não está preenchido. Favor preenchê-lo.",
+    "categorias": [
+      "Habilitação Jurídica",
+      "Requerimentos e Declarações"
+    ],
+    "origem": "Motivos"
+  },
+  {
+    "motivo": "Família solicitada é incompatível com o objeto social da empresa.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família solicitada exige apresentação de CFT + CAT e atestado averbado pelo CFT.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família solicitada exige apresentação de CAU/CREA + CAT e atestado averbado pelo CAU/CREA.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família solicitada exige apresentação de CREA + CAT e atestado averbado pelo CREA.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família não consta no objeto e Atestado de Capacidade Técnica.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Atestado de Capacidade Técnica é incompatível com o código de família solicitado.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Atestado de Capacidade Técnica não corresponde com empresa.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Atestado de Capacidade Técnica não corresponde com responsável técnico.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família exige autorização do Ministério da Saúde.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Diversos documentos no mesmo arquivo PDF.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família solicitada exige apresentação de CREA/CFT + CAT e atestado averbado pelo CREA/CFT.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Documento não anexado na solicitação.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Atestado de Capacidade Técnica não discrimina os itens.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Documento diverso do solicitado.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Não foi possível abrir o arquivo PDF anexado.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família exige alvará de Vigilância Sanitária.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família não pode ser concedida para servidor público.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Ausente contrato social para verificação do objeto.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Código de família incompatível com sócio servidor público.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Favor apresentar Atestado de Capacidade Técnica com nota fiscal correspondente para comprovação.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família solicitada exige apresentação Ministério da Agricultura ou ADAB - Agência Estadual de Defesa Agropecuária.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Aguardando relatório de vistoria. Serviço terceirizado.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Certidão de Acervo Técnico com atestado não corresponde com o responsável técnico que consta no CREA.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Atestado de Capacidade Técnica fora do padrão.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Certidão de Acervo Técnico com atestado incompleta.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família exige CRA - Conselho Regional de Administração e atestado averbado.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Atestado averbado é incompatível com o código de família.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família exige registro em Conselho de classe.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Ausente alvará de funcionamento do Ministério da Justiça.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Ausente código de família.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Contrato social ausente de objeto social.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Não foi possível abrir PDF do órgão fiscalizador.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Atestado de Capacidade Técnica deve ser emitido por pessoa jurídica  divergente.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Ausente Certidão de Acervo Técnico.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Empresa não atende ao disposto no parecer PGE 287/2020.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Ausente estatuto social para a verificação do objeto social.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Ausente certidão de quitação pessoa jurídica do CREA.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família exige autorização da ANP.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Contrato social incompleto.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Órgão fiscalizador com endereço incorreto.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Tipo de cadastro candidato não atende famílias de terceirização.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família exige Atestado de Capacidade Técnica averbado.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Ausente ultima alteração contratual.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Ausente identificação de numeração da CAT no Atestado de Capacidade Técnica.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Código não autorizado conforme Certidão de Acervo Técnico apresentada.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Contrato social sem registro na junta para verificação do objeto.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Atestado deverá constar em papel timbrado e assinatura do representante legal da empresa emissora.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família solicitada exige apresentação do Conselho Regional de Química - CRQ.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Ausente assinatura no Atestado de Capacidade Técnica.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família exige a carta patente SUSEP.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Alvará de Vigilância Sanitária vencido.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Fornecedor suspenso por tempo determinado.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Não foi possível verificar autenticidade do documernto.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "CAT não possui identificação do responsável técnico.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Empresa possui fins lucrativos. favor alterar e fazer nova solicitação.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Código de família inativo.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família exige Certidão de Acervo Técnico com atestado averbado - CAT.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Documento ilegível.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Atestado de Capacidade Técnica emitido por pessoa jurídica divergente da nota fiscal.",
+    "categorias": [
+      "EQUIPAMENTOS E ARTIGOS DE USO MEDICO",
+      "DENTARIO E VETERINARIO"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Ausente certidão de quitação pessoa jurídica do CFT.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Código de família incompatível com as atribuições delimitadas na certidão de quitação pessoa jurídica.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Atestado não possui carimbo ou identificação do representante que assinou o documento.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Nos termos da resolução CGSIM n°62 classifica atividades econômicas de médio e alto risco, exigindo alvará da Vigilância Sanitária.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família exige autorização do Ministério da Defesa - Exército e Atestado de Capacidade Técnica.",
+    "categorias": [
+      "ARMAMENTOS"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Empresas consorciadas deveram estar cadastradas no CAF digital.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Enviar apenas um atestado de capacidade no PDF constando o item da família solicitado. O atestado deverá conter a Razão Social e CNPJ tanto da empresa beneficiária como da emissora.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Não foi possível verificar objeto social no contrato social / estatuto social.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Número de autenticação do atestado está divergindo do número de autenticação presente na CAT.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Ausente o cadastro de contribuinte Estadual.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Favor apresentar invoice com tradução juramentada.",
+    "categorias": [
+      "EQUIPAMENTOS E ARTIGOS DE USO MEDICO",
+      "DENTARIO E VETERINARIO"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "CAT incompatível com o código de família solicitado.",
+    "categorias": [
+      "Família"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Atestado de Capacidade Técnica não menciona qual a empresa fornecedora.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Ausente selo de autenticação do CREA na CAT.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Documento de identidade não possui o número de CPF.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Número do CNPJ/CPF registrado diferente do informado ao CAF. Favor abrir uma nova solicitação.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Ausente atestado averbado.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Atestado de Capacidade Técnica não pode ser emitido por empresa do mesmo grupo econômico.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "CNPJ existente no Atestado de Capacidade Técnica não corresponde ao da empresa solicitante.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família solicitada exige apresentação de CAU + CAT e atestado averbado pelo CAU.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Código de família é incompatível com a finalidade da fundação.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Assinatura recortada. Favor assinar o documento em vias originais.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Empresa não possui fins lucrativos. Favor alterar e fazer nova solicitação.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Alvará de Vigilância Sanitária não permite a comercialização dos produtos.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Ausente autorização de fornecimento do país sede da empresa.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "A declaração de dispensa de alvará não abrange o ramo de atividade solicitado.",
+    "categorias": [
+      "EQUIPAMENTOS E ARTIGOS DE USO MEDICO",
+      "DENTARIO E VETERINARIO"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família inativa.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família exige o registro da ANAC.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "O contrato de prestação de serviços deve ser por prazo indeterminado, o profissional deve integrar o quadro permanente da empresa.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "O contrato com responsável técnica não deverá ter prazo determinado.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Solicitação de relatório de vistoria não respondida. favor verificar.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Atestado de Capacidade Técnica emitido antes da abertura da empresa.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Certidão de Acervo Técnico com número divergente do Atestado de Capacidade Técnica apresentado.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "A finalidade da fundação não é compatível com o código de família solicitado. conforme PA-NLC-200-2023.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Data do Atestado de Capacidade Técnica não corresponde com emissão da nota fiscal.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "O cadastro da empresa estrangeira deverá ser registado com o código credor fornecido pela unidade contratante.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Documento com dados desatualizados.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Ausente documento no idioma de origem, correspondente ao arquivo traduzido encaminhado.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Documentação deve possuir tradução juramentada e ser apostilada.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Análise depende da apresentação do documento de identificação.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Ausente documento de Qualificação Técnica emitido em Pessoa Jurídica",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Favor apresentar comprovante de Regularidade junto ao Conselho.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família exige autorização do Ministério do Turismo",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família solicitada exige apresentação de CRC e CAT",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Apresentar a Declaração de Dispensa de Ato Público para atividades de Baixo Risco",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Documento de constituição sem registro na Junta ou Cartório para verificação do Objeto.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Enviar apenas uma Certidão de Acervo Técnico com Atestado Averbado no PDF referente à família solicitada.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família solicitada é incompatível com a Atividade Turística apresentada no CADASTUR.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Favor apresentar Atestado de Capacidade Técnica para comprovação.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Ausente Atestado de Capacidade Técnica",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Nota Fiscal apresentada possui data posterior ao Atestado de Capacidade Técnica",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Nota Fiscal deve ser emitida pela empresa contratada",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Atestado deverá conter CNPJ e Razão Social da empresa contratante e da empresa contratada.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Relatório de Vistoria negado. Dimensão do imóvel constante no Contrato Social não atende ao mínimo exigido.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Favor apresentar Atestado de Capacidade Técnica em papel timbrado juntamente com a Nota Fiscal.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Favor apresentar documento do Conselho de Classe juntamente com Certidão de Regularidade Anual.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Atividade/Classe da AFE apresentada é incompatível com a família solicitada.",
+    "categorias": [
+      "ARTIGOS PARA HIGIENE PESSOAL",
+      "EQUIPAMENTOS E ARTIGOS DE USO MEDICO",
+      "DENTARIO E VETERINARIO",
+      "SUBSTANCIAS E PRODUTOS QUIMICOS"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Obrigatória a apresentação do Certificado de Registro emitido pela PF ou EB da empresa ou Procurador.",
+    "categorias": [
+      "ARMAMENTOS"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Inserir em conjunto página inicial da Resolução no Diário Oficial.",
+    "categorias": [
+      "ARTIGOS PARA HIGIENE PESSOAL",
+      "EQUIPAMENTOS E ARTIGOS DE USO MEDICO",
+      "DENTARIO E VETERINARIO",
+      "SUBSTANCIAS E PRODUTOS QUIMICOS"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Relação de Produtos Controlados em anexo apresentada não contempla a família solicitada.",
+    "categorias": [
+      "ARMAMENTOS"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família exige regularidade com a SUSEP.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Relatório de Vistoria não corresponde ao endereço atual da empresa. Exigida nova vistoria.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Código de família é incompatível com a atividade permitida no Alvará de Vigilância Sanitária.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Documento anexado não corresponde a um Atestado de Capacidade Técnica.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Ausente Atestado de Capacidade Técnica. Documento deve atestar a qualidade do serviço prestado.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Atestado de Capacidade Técnica incompatível com Objeto Social da empresa.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "CAT vinculada a Conselho diferente do apresentado no cadastro.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Nota Fiscal deve corresponder ao Atestado de Capacidade Técnica apresentado.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Certidão de Acervo Técnico com atestado não corresponde com o responsável técnico que consta no CAU.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família negada conforme Art. 176, inciso XI do Estatuto dos Servidores Públicos do Estado da Bahia.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família exige a apresentação de Certificado de Credenciamento válido emitido pelo CBM.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Declaração apresentada não tem equivalência ao Alvará Sanitário.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Família incompatível com o Art. 176 da Lei Ordinária 6.677/1994.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "O Atestado de Capacidade Técnica deverá ser emitido em nome da Pessoa Jurídica cadastrada.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  },
+  {
+    "motivo": "Atestado de Capacidade Técnica deverá especificar os serviços prestados e atestar sua qualidade e quantidade.",
+    "categorias": [
+      "Todos"
+    ],
+    "origem": "Familia"
+  }
+]
