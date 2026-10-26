@@ -108,7 +108,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const modalcontactNameInput = document.getElementById("contactNameInput");
   const modalcontactRoleInput = document.getElementById("contactRoleInput");
   const contactPhoneInputModal = document.getElementById("contactPhoneInput");
-  //const contactPhoneInput = document.getElementById("contactPhoneInput");
   const contactsModal = document.getElementById("contactsModal");
   const openContactsModalBtn = document.getElementById("openContactsModalBtn");
   const closeContactsModalBtn = document.getElementById(
@@ -139,6 +138,21 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .catch((error) =>
       console.error("Erro ao carregar lista de documentos:", error),
+    );
+
+  // Carregar a lista de motivos de indeferimento já usados no sistema,
+  // para sugerir motivos semelhantes enquanto o analista digita.
+  let motivosIndeferimento = [];
+  fetch("motivos-indeferimento.json")
+    .then((response) => response.json())
+    .then((data) => {
+      motivosIndeferimento = Array.isArray(data) ? data : [];
+      console.log(
+        `Lista de motivos de indeferimento carregada (${motivosIndeferimento.length} itens).`,
+      );
+    })
+    .catch((error) =>
+      console.error("Erro ao carregar lista de motivos de indeferimento:", error),
     );
 
   // --- FUNÇÕES GERAIS E DE UTILIDADE ---
@@ -397,6 +411,45 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  /**
+   * @functionality 209.1
+   * @category 2xx: Banco de Dados e Persistência
+   * @name Snooze do Lembrete de Backup Pessoal
+   * @description Salva o timestamp em que o usuário clicou em "Não"/fechou o
+   * lembrete, para que a decisão "persista" por um tempo e o modal não volte
+   * a aparecer em TODA abertura do app, mesmo com o backup ainda vencido.
+   */
+  function saveBackupReminderSnooze(timestamp) {
+    return new Promise((resolve, reject) => {
+      if (!db) return reject("DB not available");
+      const transaction = db.transaction(["metadata"], "readwrite");
+      const store = transaction.objectStore("metadata");
+      const request = store.put({
+        id: "backup_reminder_snoozed_at",
+        value: timestamp,
+      });
+      request.onsuccess = () => resolve();
+      request.onerror = (e) => reject(e.target.error);
+    });
+  }
+
+  function getBackupReminderSnooze() {
+    return new Promise((resolve) => {
+      if (!db) return resolve(0);
+      const transaction = db.transaction(["metadata"], "readonly");
+      const store = transaction.objectStore("metadata");
+      const request = store.get("backup_reminder_snoozed_at");
+      request.onsuccess = () =>
+        resolve(request.result ? request.result.value : 0);
+      request.onerror = () => resolve(0);
+    });
+  }
+
+  // Tempo mínimo entre um "Não"/fechar do lembrete e a próxima cobrança,
+  // independente da frequência configurada (evita o modal toda vez que o
+  // app é aberto, mesmo quando o usuário já disse que faria depois).
+  const BACKUP_REMINDER_SNOOZE_MS = 86400000; // 24h
+
 
   // --- INICIALIZAÇÃO E LÓGICA DO BANCO DE DADOS ---
 
@@ -430,10 +483,15 @@ document.addEventListener("DOMContentLoaded", function () {
       if (periodMs === 0) return; // Usuário desativou os lembretes
 
       const lastBackupTimestamp = await getLastPersonalBackupTimestamp();
+      const snoozedAt = await getBackupReminderSnooze();
       const now = Date.now();
 
-      if (lastBackupTimestamp + periodMs < now) {
-        // Backup está vencido!
+      const backupVencido = lastBackupTimestamp + periodMs < now;
+      const aindaDentroDoSnooze =
+        snoozedAt + BACKUP_REMINDER_SNOOZE_MS > now;
+
+      if (backupVencido && !aindaDentroDoSnooze) {
+        // Backup está vencido e o usuário não "soneca" o lembrete recentemente
         backupReminderModal.classList.remove("hidden");
       }
     } catch (error) {
@@ -542,14 +600,23 @@ document.addEventListener("DOMContentLoaded", function () {
    * @name Download de Arquivo de Backup com Blob e URL Temporária
    * @description Cria Blob criptografado e trigger download via hidden.
    */
-  async function processExport() {
+  async function processExport(options = {}) {
       if (!db) {
         showToast("Banco de dados não está pronto.", "error");
         return;
       }
 
       try {
-        const storesToExport = ["history", "contacts", "metadata"];
+        // Metadata (configurações do lembrete etc.) sempre vai no backup.
+        // Histórico e Contatos são opcionais, conforme as checkboxes do
+        // modal "Opções de Exportação" (ou o options passado por quem chamou).
+        const includeHistory = options.includeHistory !== false;
+        const includeContacts = options.includeContacts !== false;
+
+        const storesToExport = ["metadata"];
+        if (includeHistory) storesToExport.push("history");
+        if (includeContacts) storesToExport.push("contacts");
+
         const exportObj = {};
         const transaction = db.transaction(storesToExport, "readonly");
         
@@ -1179,7 +1246,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function addContact() {
     const name = modalcontactNameInput.value.trim();
     const role = modalcontactRoleInput.value.trim();
-    let phone = contactPhoneInput.value.trim().replace(/\D/g, "");
+    let phone = contactPhoneInputModal.value.trim().replace(/\D/g, "");
 
     if (!name || !phone) {
       showToast("Nome e WhatsApp são obrigatórios.", "error");
@@ -1200,7 +1267,7 @@ document.addEventListener("DOMContentLoaded", function () {
       showToast("Contato adicionado!", "success");
       modalcontactNameInput.value = "";
       modalcontactRoleInput.value = "";
-      contactPhoneInput.value = "";
+      contactPhoneInputModal.value = "";
       renderContactsList();
     };
     transaction.onerror = () => showToast("Erro ao salvar contato.", "error");
@@ -1541,6 +1608,9 @@ const debouncedSearchCompanyByName = debounce(searchCompanyByName, 300);
   const socioNameWrapper = document.getElementById("socioNameWrapper");
   const socioNameInput = document.getElementById("socioName");
   const rejectionReasonInput = document.getElementById("rejectionReason");
+  const rejectionReasonResults = document.getElementById(
+    "rejectionReasonResults",
+  );
   const docNameWrapper = document.getElementById("docNameWrapper");
   const familyAutocompleteWrapper = document.getElementById(
     "familyAutocompleteWrapper",
@@ -1920,6 +1990,101 @@ const debouncedSearchCompanyByName = debounce(searchCompanyByName, 300);
     rejectedDocs.splice(index, 1);
     renderRejectedDocs();
   };
+
+  /**
+   * @functionality 316
+   * @category 3xx: Geração de Mensagens e Formulários
+   * @name Normalização de Texto para Busca Sem Acento
+   * @description Remove acentuação e caixa para comparação tolerante entre strings.
+   */
+  const normalizeForSearch = (text) =>
+    (text || "")
+      .toString()
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .toLowerCase()
+      .trim();
+
+  /**
+   * @functionality 317
+   * @category 3xx: Geração de Mensagens e Formulários
+   * @name Autocomplete de Motivos de Indeferimento Já Utilizados
+   * @description Filtra motivosIndeferimento por semelhança com o texto digitado,
+   * priorizando motivos já cadastrados para a categoria/aba selecionada no momento.
+   */
+  function buscarMotivosSemelhantes(termoDigitado) {
+    const termo = normalizeForSearch(termoDigitado);
+    if (termo.length < 3 || motivosIndeferimento.length === 0) return [];
+
+    const categoriaAtual = docCategoryInput ? docCategoryInput.value : "";
+
+    const termoPalavras = termo.split(/\s+/).filter(Boolean);
+
+    const candidatos = motivosIndeferimento
+      .map((item) => {
+        const motivoNormalizado = normalizeForSearch(item.motivo);
+        // Exige que TODAS as palavras digitadas apareçam no motivo (em qualquer ordem)
+        const bate = termoPalavras.every((palavra) =>
+          motivoNormalizado.includes(palavra),
+        );
+        if (!bate) return null;
+
+        const categorias = item.categorias || [];
+        const relevanteParaCategoria =
+          !categoriaAtual ||
+          categorias.includes(categoriaAtual) ||
+          categorias.includes("Todos");
+
+        // Pontuação simples: motivo que começa com o termo digitado, ou que já
+        // é da categoria/aba atual, sobe na lista de sugestões.
+        let score = 0;
+        if (motivoNormalizado.startsWith(termo)) score += 2;
+        if (relevanteParaCategoria) score += 1;
+
+        return { motivo: item.motivo, score };
+      })
+      .filter(Boolean)
+      .sort((a, b) => b.score - a.score);
+
+    // Remove duplicados (texto igual) mantendo o de maior score
+    const vistos = new Set();
+    const unicos = [];
+    for (const c of candidatos) {
+      if (!vistos.has(c.motivo)) {
+        vistos.add(c.motivo);
+        unicos.push(c.motivo);
+      }
+    }
+
+    return unicos.slice(0, 8);
+  }
+
+  /**
+   * @functionality 318
+   * @category 3xx: Geração de Mensagens e Formulários
+   * @name Renderização do Dropdown de Sugestões de Motivos
+   * @description Monta a lista clicável de motivos semelhantes abaixo do textarea.
+   */
+  function renderMotivoSuggestions(sugestoes) {
+    if (!sugestoes || sugestoes.length === 0) {
+      rejectionReasonResults.innerHTML = "";
+      rejectionReasonResults.classList.add("hidden");
+      return;
+    }
+
+    rejectionReasonResults.innerHTML = "";
+    sugestoes.forEach((motivo) => {
+      const item = document.createElement("div");
+      item.className =
+        "px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer border-b dark:border-slate-700 last:border-b-0";
+      item.textContent = motivo;
+      item.dataset.motivo = motivo;
+      rejectionReasonResults.appendChild(item);
+    });
+    rejectionReasonResults.classList.remove("hidden");
+  }
+
+  let buscaMotivoTimeout = null;
 
   /**
    * @functionality 304
@@ -2310,7 +2475,9 @@ const debouncedSearchFamilies = debounceFam(searchFamilies, 300);
     }
   });
   confirmExportBtn.addEventListener("click", () => {
-    processExport();
+    const includeContacts = document.getElementById("exportContacts").checked;
+    const includeHistory = document.getElementById("exportHistory").checked;
+    processExport({ includeContacts, includeHistory });
     exportModal.classList.add("hidden");
   });
 
@@ -2434,6 +2601,30 @@ const debouncedSearchFamilies = debounceFam(searchFamilies, 300);
     }
   });
 
+  // --- AUTOCOMPLETE DE MOTIVOS DE INDEFERIMENTO ---
+  rejectionReasonInput.addEventListener("input", (e) => {
+    clearTimeout(buscaMotivoTimeout);
+    const valor = e.target.value;
+    buscaMotivoTimeout = setTimeout(() => {
+      renderMotivoSuggestions(buscarMotivosSemelhantes(valor));
+    }, 200);
+  });
+
+  rejectionReasonResults.addEventListener("mousedown", (e) => {
+    // mousedown (não click) para disparar antes do blur do textarea
+    const target = e.target.closest("[data-motivo]");
+    if (!target) return;
+    e.preventDefault();
+    rejectionReasonInput.value = target.dataset.motivo;
+    renderMotivoSuggestions([]);
+    rejectionReasonInput.focus();
+  });
+
+  rejectionReasonInput.addEventListener("blur", () => {
+    // Pequeno delay para não fechar antes do mousedown na sugestão
+    setTimeout(() => renderMotivoSuggestions([]), 150);
+  });
+
   // --- LISTENERS DO LEMBRETE DE BACKUP E CONFIGURAÇÃO ---
 
   // Salva o período imediatamente ao ser alterado no modal de DB
@@ -2471,13 +2662,15 @@ const debouncedSearchFamilies = debounceFam(searchFamilies, 300);
   }
 
   if (cancelBackupReminderBtn) {
-    cancelBackupReminderBtn.addEventListener("click", () => {
+    cancelBackupReminderBtn.addEventListener("click", async () => {
+      await saveBackupReminderSnooze(Date.now());
       backupReminderModal.classList.add("hidden");
     });
   }
 
   if (closeBackupReminderBtn) {
-    closeBackupReminderBtn.addEventListener("click", () => {
+    closeBackupReminderBtn.addEventListener("click", async () => {
+      await saveBackupReminderSnooze(Date.now());
       backupReminderModal.classList.add("hidden");
     });
   }
