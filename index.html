@@ -56,6 +56,9 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
+
 
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
@@ -96,6 +99,21 @@
       .dark ::-webkit-scrollbar-thumb:hover {
         background-color: #475569;
       }
+
+      /* Estilos visuais para as respostas em Markdown do Sr. Cockpit */
+      .cockpit-markdown { font-size: 0.75rem; line-height: 1.4; }
+      .cockpit-markdown p { margin-bottom: 0.75rem; }
+      .cockpit-markdown strong { font-weight: 600; color: #2563eb; }
+      .dark .cockpit-markdown strong { color: #60a5fa; }
+      .cockpit-markdown ul { list-style-type: disc; padding-left: 1.25rem; margin-bottom: 0.75rem; }
+      .cockpit-markdown ol { list-style-type: decimal; padding-left: 1.25rem; margin-bottom: 0.75rem; }
+      .cockpit-markdown li { margin-bottom: 0.25rem; }
+      .cockpit-markdown table { width: 100%; border-collapse: collapse; margin-bottom: 0.75rem; border-radius: 4px; overflow: hidden; }
+      .cockpit-markdown th, .cockpit-markdown td { border: 1px solid #e2e8f0; padding: 0.5rem; text-align: left; }
+      .cockpit-markdown th { background-color: #f1f5f9; font-weight: 600; }
+      .dark .cockpit-markdown th, .dark .cockpit-markdown td { border-color: #475569; }
+      .dark .cockpit-markdown th { background-color: #334155; }
+      .cockpit-markdown h1, .cockpit-markdown h2, .cockpit-markdown h3 { font-weight: bold; margin: 1rem 0 0.5rem 0; }
     </style>
   </head>
   <body class="h-full bg-gray-100 dark:bg-slate-900 overflow-hidden relative">
@@ -1214,6 +1232,81 @@
       </div>
     </div>
 
+<!-- === MÓDULO SR. COCKPIT (BOTÃO FLUTUANTE & CHAT) === -->
+<div id="srCockpitModule" class="fixed bottom-6 right-6 z-[90] flex flex-col items-end">
+  <!-- Janela de Chat -->
+  <div id="cockpitChatWindow" class="hidden w-80 sm:w-96 h-[500px] max-h-[80vh] bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 mb-4 overflow-hidden flex-col origin-bottom-right transition-all duration-300 transform scale-95 opacity-0">
+    <!-- Cabeçalho -->
+    <div class="bg-gradient-to-r from-slate-900 to-slate-800 p-4 flex justify-between items-center text-white">
+      <div class="flex items-center gap-3">
+        <!-- Ícone dinâmico do estado atual -->
+        <img id="srCockpitStatusIcon" src="assets/img/chatbot/sr-cockpit-icone.png" alt="Sr. Cockpit" class="w-8 h-8 drop-shadow-md transition-transform duration-300">
+        <div>
+          <h3 class="font-bold text-sm">Sr. Cockpit</h3>
+          <p class="text-[10px] text-slate-300 flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Online e pronto
+          </p>
+        </div>
+      </div>
+      <div class="flex items-center gap-1">
+        <button type="button" onclick="novaConversaCockpit()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-1.5 rounded-lg" title="Nova conversa" aria-label="Nova conversa">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+        </button>
+        <button type="button" onclick="toggleExpandChat()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-1.5 rounded-lg" title="Expandir janela" aria-label="Expandir janela">
+          <svg id="expandChatIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 4l-5-5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+          </svg>
+        </button>
+        <button type="button" onclick="toggleCockpitChat()" class="text-slate-400 hover:text-white transition-colors p-1" title="Fechar" aria-label="Fechar">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Área de Mensagens -->
+    <div id="cockpitChatMessages" role="log" aria-live="polite" class="flex-1 min-h-0 p-4 overflow-y-auto bg-slate-50 dark:bg-slate-900/50 flex flex-col gap-3">
+      <!-- Mensagem de Boas-vindas -->
+      <div id="cockpitWelcome" class="flex items-start gap-2">
+        <img src="assets/img/chatbot/sr-cockpit-icone.png" class="w-8 h-8 mt-1 drop-shadow-sm">
+        <div class="bg-white dark:bg-slate-700 p-3 rounded-2xl rounded-tl-sm shadow-sm border border-slate-100 dark:border-slate-600 text-xs text-slate-700 dark:text-slate-200">
+          Olá! Sou o Sr. Cockpit. Como posso ajudar com a gestão hoje? Posso consultar as suas demandas (prazos, atrasos e notificações), famílias, itens, CNAEs e documentos da Qualificação Técnica e tirar dúvidas sobre as regras do sistema.
+        </div>
+      </div>
+      <!-- Sugestões rápidas (somem após a primeira pergunta) -->
+      <!-- Sugestões rápidas (somem após a primeira pergunta) -->
+      <div id="cockpitSuggestions" class="flex flex-col items-start gap-2 pl-8">
+        <button type="button" data-cockpit-suggest="Quais são as minhas demandas atrasadas?" class="text-left text-[11px] px-3 py-1.5 rounded-full border border-blue-200 dark:border-slate-600 text-blue-700 dark:text-blue-300 bg-white dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors">Minhas demandas atrasadas</button>
+        <button type="button" data-cockpit-suggest="Como estão as demandas?" class="text-left text-[11px] px-3 py-1.5 rounded-full border border-blue-200 dark:border-slate-600 text-blue-700 dark:text-blue-300 bg-white dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors">Resumo das demandas</button>
+        <button type="button" data-cockpit-suggest="Qual a descrição e os documentos exigidos da família 04.37?" class="text-left text-[11px] px-3 py-1.5 rounded-full border border-blue-200 dark:border-slate-600 text-blue-700 dark:text-blue-300 bg-white dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors">Documentos exigidos da família 04.37</button>
+        <button type="button" data-cockpit-suggest="Quais famílias envolvem ar condicionado?" class="text-left text-[11px] px-3 py-1.5 rounded-full border border-blue-200 dark:border-slate-600 text-blue-700 dark:text-blue-300 bg-white dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors">Famílias de ar condicionado</button>
+      </div>
+    </div>
+
+    <!-- Área de Input -->
+    <div class="p-3 border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shrink-0">
+      <form id="cockpitChatForm" class="flex gap-2 relative items-center">
+        <input type="text" id="cockpitInput" maxlength="2000" autocomplete="off" placeholder="Faça uma pergunta..." class="w-full pl-4 pr-12 py-2.5 bg-slate-100 dark:bg-slate-900 border-none rounded-full text-xs outline-none focus:ring-2 focus:ring-blue-500 dark:text-white transition-all disabled:opacity-60">
+        <button type="submit" aria-label="Enviar" class="absolute right-1.5 w-8 h-8 flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white rounded-full transition-transform active:scale-95 shadow-md shrink-0 disabled:opacity-50 disabled:cursor-not-allowed">
+          <svg class="w-4 h-4 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Botão Flutuante (O Ícone) -->
+  <button id="srCockpitTrigger" onclick="toggleCockpitChat()" class="relative group focus:outline-none hover:-translate-y-1 transition-transform duration-300">
+    <div class="animate-[bounce_3s_ease-in-out_infinite] drop-shadow-2xl">
+      <!-- Utilize a imagem da versão Ícone Frente aqui -->
+      <img id="srCockpitMainIcon" src="assets/img/chatbot/sr-cockpit-icone.png" alt="Assistente IA" class="w-16 h-16 object-contain filter group-hover:brightness-110 transition-all">
+    </div>
+    <!-- Alerta de notificação (balão vermelho) -->
+    <span id="srCockpitBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white dark:border-slate-900 shadow-md transform scale-0 transition-transform duration-300">1</span>
+  </button>
+</div>
+
+
     <div
       id="weatherBackdrop"
       class="fixed inset-0 z-[45] hidden cursor-default"
@@ -1224,5 +1317,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/auth.js"></script>
     <script src="main.js"></script>
+    <script src="assets/chatbot.js"></script>
   </body>
 </html>

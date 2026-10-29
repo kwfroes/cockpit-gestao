@@ -1,6 +1,20 @@
+// =====================================================================
+// GERADOR DE MENSAGENS CAF - script.js
+// Versão 5.1.0: contatos e histórico no Supabase, vinculados ao usuário
+// logado (auth.uid() + RLS). Contatos com setor e e-mail opcionais.
+// O IndexedDB antigo é usado SOMENTE para leitura, na migração dos dados
+// locais para a conta do usuário.
+// =====================================================================
+
 // --- VARIÁVEIS DE ESTADO ---
-let db;
+let db; // IndexedDB legado (somente leitura / migração)
 const supabaseClientCaf = window.supabaseClient;
+let currentUserId = null;
+
+// Tabelas no Supabase
+const TBL_CONTACTS = "caf_contacts";
+const TBL_HISTORY = "caf_message_history";
+const CONTACT_COLUMNS = "id, name, role, sector, phone, email, is_favorite";
 
 // --- GESTÃO DE TEMA ---
 function applyTheme(theme) {
@@ -12,26 +26,36 @@ window.addEventListener("message", (event) => {
     applyTheme(event.data.theme);
 });
 
+/**
+ * Retorna o UUID do usuário autenticado no Supabase (sessão do app pai).
+ * Lança erro se não houver sessão válida.
+ */
+async function getCurrentUserId() {
+  if (currentUserId) return currentUserId;
+  if (!supabaseClientCaf) throw new Error("Cliente Supabase não carregado.");
+  const { data, error } = await supabaseClientCaf.auth.getUser();
+  if (error || !data || !data.user) {
+    throw new Error("Sessão não encontrada. Faça login novamente no Cockpit.");
+  }
+  currentUserId = data.user.id;
+  return currentUserId;
+}
+
+if (supabaseClientCaf && supabaseClientCaf.auth && supabaseClientCaf.auth.onAuthStateChange) {
+  supabaseClientCaf.auth.onAuthStateChange((event, session) => {
+    if (event === "SIGNED_OUT") currentUserId = null;
+    else if (session && session.user) currentUserId = session.user.id;
+  });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   // --- INFORMAÇÕES DA APLICAÇÃO ---
-  /**
-   * @functionality 501
-   * @category 5xx: Utilitários e Validações
-   * @name Definição de Constantes de Aplicação e Versão
-   * @description Armazena autor, nome, versão e data para footer e logs.
-   */
   const APP_AUTHOR = "Kevin Fróes";
   const APP_NAME = "Gerador de Mensagens";
-  const APP_VERSION = "4.0.0";
-  const APP_VERSION_DATE = "06/08/2026";
+  const APP_VERSION = "5.1.0";
+  const APP_VERSION_DATE = "28/10/2026";
 
   // --- ELEMENTOS DO DOM ---
-  /**
-   * @functionality 407
-   * @category 4xx: UI/UX e Interações
-   * @name Seleção de Elementos DOM com Cache para Performance
-   * @description Armazena referências a inputs, modais e botões em variáveis globais.
-   */
   const dbName = "CafDatabase";
   const dbVersion = 8;
   const cnpjInputForDb = document.getElementById("cnpj");
@@ -48,189 +72,137 @@ document.addEventListener("DOMContentLoaded", function () {
   const confirmExportBtn = document.getElementById("confirmExportBtn");
   const cancelExportBtn = document.getElementById("cancelExportBtn");
   const historySearchCnpj = document.getElementById("historySearchCnpj");
+  const historySearchName = document.getElementById("historySearchName");
+  const historyStatusFilter = document.getElementById("historyStatusFilter");
   const historyStartDate = document.getElementById("historyStartDate");
   const historyEndDate = document.getElementById("historyEndDate");
   const filterHistoryBtn = document.getElementById("filterHistoryBtn");
-  const clearHistoryFilterBtn = document.getElementById(
-    "clearHistoryFilterBtn",
-  );
+  const clearHistoryFilterBtn = document.getElementById("clearHistoryFilterBtn");
+  const historyListContainer = document.getElementById("historyListContainer");
+  const historyLoadMoreBtn = document.getElementById("historyLoadMoreBtn");
+  const historyCount = document.getElementById("historyCount");
 
-  // --- ELEMENTOS DO DASHBOARD ---
+  // --- DASHBOARD ---
   const dashboardModal = document.getElementById("dashboardModal");
-  const openDashboardModalBtn = document.getElementById(
-    "openDashboardModalBtn",
-  );
-  const closeDashboardModalBtn = document.getElementById(
-    "closeDashboardModalBtn",
-  );
-  const dashboardPeriodFilter = document.getElementById(
-    "dashboardPeriodFilter",
-  );
+  const openDashboardModalBtn = document.getElementById("openDashboardModalBtn");
+  const closeDashboardModalBtn = document.getElementById("closeDashboardModalBtn");
+  const dashboardPeriodFilter = document.getElementById("dashboardPeriodFilter");
   const refreshDashboardBtn = document.getElementById("refreshDashboardBtn");
   const statusChartCanvas = document.getElementById("statusChart");
   const topDocsList = document.getElementById("topDocsList");
   const topReasonsList = document.getElementById("topReasonsList");
   const dashboardTotalCount = document.getElementById("dashboardTotalCount");
-  let statusChartInstance = null; // Para destruir o gráfico antigo
+  let statusChartInstance = null;
 
-  // --- MODAL DE BACKUP ---
-  const backupReminderModal = document.getElementById("backupReminderModal");
-  const backupReminderPeriodSelect = document.getElementById(
-    "backupReminderPeriod",
-  );
-  const confirmBackupReminderBtn = document.getElementById(
-    "confirmBackupReminderBtn",
-  );
-  const cancelBackupReminderBtn = document.getElementById(
-    "cancelBackupReminderBtn",
-  );
-  const closeBackupReminderBtn = document.getElementById(
-    "closeBackupReminderBtn",
-  );
-
-  // --- MODAL WPP ---
+  // --- WHATSAPP ---
   const sendWppBtn = document.getElementById("sendWppBtn");
   const wppModal = document.getElementById("wppModal");
   const closeWppModalBtn = document.getElementById("closeWppModalBtn");
-  const wppContactListContainer = document.getElementById(
-    "wppContactListContainer",
-  );
+  const wppContactListContainer = document.getElementById("wppContactListContainer");
+  const wppSearchInput = document.getElementById("wppSearchInput");
 
-  // Elementos do Modal de DB para Contatos
+  // --- CONTATOS ---
   const addContactBtn = document.getElementById("addContactBtn");
-  const contactsListContainer = document.getElementById(
-    "contactsListContainer",
-  );
+  const cancelEditContactBtn = document.getElementById("cancelEditContactBtn");
+  const contactFormTitle = document.getElementById("contactFormTitle");
+  const contactEditingIdInput = document.getElementById("contactEditingId");
+  const contactFavoriteInput = document.getElementById("contactFavoriteInput");
+  const contactsSearchInput = document.getElementById("contactsSearchInput");
+  const contactsCountEl = document.getElementById("contactsCount");
+  const contactsCountBadge = document.getElementById("contactsCountBadge");
+  const contactsListContainer = document.getElementById("contactsListContainer");
   const loadContactsCsvBtn = document.getElementById("loadContactsCsvBtn");
   const exportContactsCsvBtn = document.getElementById("exportContactsCsvBtn");
   const contactsCsvFileInput = document.getElementById("contactsCsvFileInput");
   const contactsDbStatus = document.getElementById("contacts-db-status");
   const modalcontactNameInput = document.getElementById("contactNameInput");
   const modalcontactRoleInput = document.getElementById("contactRoleInput");
+  const modalcontactSectorInput = document.getElementById("contactSectorInput");
+  const modalcontactEmailInput = document.getElementById("contactEmailInput");
   const contactPhoneInputModal = document.getElementById("contactPhoneInput");
   const contactsModal = document.getElementById("contactsModal");
   const openContactsModalBtn = document.getElementById("openContactsModalBtn");
-  const closeContactsModalBtn = document.getElementById(
-    "closeContactsModalBtn",
-  );
+  const closeContactsModalBtn = document.getElementById("closeContactsModalBtn");
+
+  // --- MIGRAÇÃO / SINCRONIZAÇÃO ---
+  const migrationBanner = document.getElementById("migrationBanner");
+  const migrationBannerText = document.getElementById("migrationBannerText");
+  const migrationStartBtn = document.getElementById("migrationStartBtn");
+  const migrationStartBtn2 = document.getElementById("migrationStartBtn2");
+  const migrationDismissBtn = document.getElementById("migrationDismissBtn");
+  const localDataBox = document.getElementById("localDataBox");
+  const localDataText = document.getElementById("localDataText");
+  const syncDot = document.getElementById("syncDot");
+  const syncText = document.getElementById("syncText");
 
   const manualDocNameWrapper = document.getElementById("manualDocNameWrapper");
   const manualDocNameInput = document.getElementById("manualDocName");
-  let qualTecDocs = []; // Variável para armazenar o JSON
 
-  // Carregar o arquivo JSON de documentos
+  let qualTecDocs = [];
   fetch("docs-qual-tec.json")
     .then((response) => response.json())
     .then((data) => {
-      qualTecDocs = data; // Mantemos caso precise usar em outro lugar
-
-      // Transforma o array de objetos do JSON em um array de strings simples para o menu
+      qualTecDocs = data;
       const listaDocumentos = data.map((doc) => doc.nome);
-
-      // Adiciona a opção "Outros" no final para permitir digitação manual
-      //listaDocumentos.push("Outros");
-
-      // Atualiza a lista de documentos da categoria "Qualificação Técnica"
-      // Certifique-se de que a chave aqui é EXATAMENTE igual a que está no value do <option> do HTML
       docsByCat["Qualificação Técnica"] = listaDocumentos;
-
       console.log("Lista de Qualificação Técnica atualizada com sucesso.");
     })
-    .catch((error) =>
-      console.error("Erro ao carregar lista de documentos:", error),
-    );
+    .catch((error) => console.error("Erro ao carregar lista de documentos:", error));
 
-  // Carregar a lista de motivos de indeferimento já usados no sistema,
-  // para sugerir motivos semelhantes enquanto o analista digita.
   let motivosIndeferimento = [];
   fetch("motivos-indeferimento.json")
     .then((response) => response.json())
     .then((data) => {
       motivosIndeferimento = Array.isArray(data) ? data : [];
-      console.log(
-        `Lista de motivos de indeferimento carregada (${motivosIndeferimento.length} itens).`,
-      );
+      console.log(`Lista de motivos de indeferimento carregada (${motivosIndeferimento.length} itens).`);
     })
-    .catch((error) =>
-      console.error("Erro ao carregar lista de motivos de indeferimento:", error),
-    );
+    .catch((error) => console.error("Erro ao carregar lista de motivos de indeferimento:", error));
 
-  // --- FUNÇÕES GERAIS E DE UTILIDADE ---
-
-  /**
-   * @functionality 401 (Atualizada v3 - Neon Dark)
-   * @category 4xx: UI/UX e Interações
-   * @name Sistema de Notificações Toast "Neon Dark"
-   * @description Toasts com fundo escuro, bordas brilhantes e texto colorido para alto contraste.
-   */
+  // =====================================================================
+  // UTILITÁRIOS
+  // =====================================================================
   function showToast(message, type = "info", duration = 3000) {
-    // Cria o container se não existir
     let container = document.getElementById("toast-container");
     if (!container) {
       container = document.createElement("div");
       container.id = "toast-container";
-      container.className =
-        "fixed bottom-5 right-5 z-50 flex flex-col items-end space-y-3 pointer-events-none";
+      container.className = "fixed bottom-5 right-5 z-50 flex flex-col items-end space-y-3 pointer-events-none";
       document.body.appendChild(container);
     }
-
-    // Limite de pilha
     if (container.children.length >= 5) {
       hideToast(container.lastElementChild);
     }
-
-    // Cria o elemento toast
     const toast = document.createElement("div");
-
-    // --- ESTILO BASE (Comum a todos) ---
-    // Fundo escuro profundo, sombra forte, transições suaves
     let baseClass = `
         relative py-3 px-5 rounded-lg shadow-2xl border font-medium
         flex items-center justify-between max-w-sm text-sm z-[9999]
         opacity-0 transition-all duration-300 ease-in-out transform translate-y-4
         bg-gray-900 dark:bg-slate-950 backdrop-blur-sm
     `;
-
-    // --- ESTILOS NEON POR TIPO ---
     if (type === "success") {
-      // VERDE NEON: Borda Verde, Texto Verde Claro
-      baseClass +=
-        " border-green-500 text-green-400 dark:text-green-300 shadow-green-900/20";
+      baseClass += " border-green-500 text-green-400 dark:text-green-300 shadow-green-900/20";
     } else if (type === "error") {
-      // VERMELHO NEON: Borda Vermelha, Texto Vermelho Claro
-      baseClass +=
-        " border-red-500 text-red-400 dark:text-red-300 shadow-red-900/20";
+      baseClass += " border-red-500 text-red-400 dark:text-red-300 shadow-red-900/20";
     } else {
-      // INFO (Default): Borda Cinza/Azul, Texto Branco
       baseClass += " border-gray-600 text-gray-200 dark:text-gray-300";
     }
-
     toast.className = baseClass;
-
-    // Botão de Fechar (Estilizado para combinar)
     let closeBtn = "";
     if (duration === 0) {
       closeBtn = `
-            <button onclick="hideToast(this.parentElement); event.stopPropagation();" 
-                    class="ml-4 hover:text-white transition-colors text-lg leading-none opacity-70 hover:opacity-100">
+            <button onclick="hideToast(this.parentElement); event.stopPropagation();"
+                    class="ml-4 hover:text-white transition-colors text-lg leading-none opacity-70 hover:opacity-100 pointer-events-auto">
                 &times;
             </button>
         `;
       toast.classList.add("pr-2");
     }
-
     toast.innerHTML = `<span>${escapeHtml(message)}</span>${closeBtn}`;
-
-    // Insere no topo
     container.insertBefore(toast, container.firstChild);
-
-    // Anima entrada
     requestAnimationFrame(() => {
       toast.classList.remove("opacity-0", "translate-y-4");
       toast.classList.add("opacity-100", "translate-y-0");
     });
-
-    // Auto-remoção
     const effectiveDuration = duration === 0 ? 0 : Math.max(duration, 2000);
     if (effectiveDuration > 0) {
       setTimeout(() => {
@@ -243,49 +215,27 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  /**
-   * @functionality 401.5
-   * @category 4xx: UI/UX e Interações
-   * @name Esconde Toast Específico ou Todos Manualmente
-   * @description Força fade-out e remoção de um toast pelo elemento ou todos no container.
-   */
   function hideToast(toastElement = null) {
     const container = document.getElementById("toast-container");
     if (!container) return;
-
     if (toastElement) {
-      // Esconde um específico
       toastElement.classList.remove("opacity-100", "translate-y-0");
       toastElement.classList.add("opacity-0", "translate-y-4");
       setTimeout(() => {
-        if (toastElement.parentNode) {
-          container.removeChild(toastElement);
-        }
+        if (toastElement.parentNode) container.removeChild(toastElement);
       }, 300);
     } else {
-      // Esconde todos (útil para cleanup)
       Array.from(container.children).forEach((toast) => hideToast(toast));
     }
   }
+  window.hideToast = hideToast;
 
-  /**
-   * @functionality 416
-   * @category 4xx: UI/UX e Interações
-   * @name Renderização de Footer com Versão e Botão de Logout Condicional
-   * @description Mostra info de app e esconde/mostra logout baseado em autenticação.
-   */
   function renderFooter() {
     const footer = document.getElementById("appVersionInfo");
     if (footer)
-      footer.textContent = `${APP_AUTHOR} - ${APP_NAME} Versão ${APP_VERSION} de ${APP_VERSION_DATE}`;
+      footer.textContent = `${APP_AUTHOR} - ${APP_NAME} - Versão ${APP_VERSION}, de ${APP_VERSION_DATE}`;
   }
 
-  /**
-   * @functionality 103
-   * @category 1xx: Criptografia e Segurança
-   * @name Escapamento de HTML em Renderização de Histórico para Prevenção de XSS
-   * @description Usa escapeHtml para sanitizar mensagens no histórico.
-   */
   window.escapeHtml = function (text) {
     if (typeof text !== "string") return "";
     const div = document.createElement("div");
@@ -293,22 +243,13 @@ document.addEventListener("DOMContentLoaded", function () {
     return div.innerHTML;
   };
 
-  /**
-   * @functionality 503
-   * @category 5xx: Utilitários e Validações
-   * @name Formatação de Máscara Dinâmica de CNPJ/CPF
-   * @description Aplica máscara de CPF (11) ou CNPJ (14) a uma string de dígitos.
-   */
   function formatDocument(v) {
-    v = v.replace(/\D/g, ""); // Remove tudo que não é dígito
-
+    v = v.replace(/\D/g, "");
     if (v.length <= 11) {
-      // Formato CPF
       v = v.replace(/(\d{3})(\d)/, "$1.$2");
       v = v.replace(/(\d{3})(\d)/, "$1.$2");
       v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
     } else {
-      // Formato CNPJ
       v = v.replace(/^(\d{2})(\d)/, "$1.$2");
       v = v.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
       v = v.replace(/\.(\d{3})(\d)/, ".$1/$2");
@@ -317,12 +258,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return v;
   }
 
-  /**
-   * @functionality 505
-   * @category 5xx: Utilitários e Validações
-   * @name Formatação de Máscara Dinâmica de Telefone (XX) X XXXX-XXXX
-   * @description Aplica máscara de telefone a uma string de dígitos.
-   */
+  // Máscara do telefone do fornecedor (seção 3) - inalterada
   function formatPhone(v) {
     v = v.replace(/\D/g, "");
     v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
@@ -330,824 +266,848 @@ document.addEventListener("DOMContentLoaded", function () {
     return v;
   }
 
-
-  // --- LÓGICA DE HASH E VERIFICAÇÃO DE ATUALIZAÇÃO ---
+  /** Máscara do telefone do modal de contatos: (71) 9 9999-9999 */
+  function maskBrPhone(v) {
+    let d = (v || "").replace(/\D/g, "");
+    if (d.length > 11 && d.startsWith("55")) d = d.slice(2);
+    d = d.slice(0, 11);
+    if (d.length <= 2) return d.length ? `(${d}` : "";
+    const ddd = d.slice(0, 2);
+    const rest = d.slice(2);
+    if (rest.length <= 4) return `(${ddd}) ${rest}`;
+    if (d.length === 11) return `(${ddd}) ${rest.slice(0, 1)} ${rest.slice(1, 5)}-${rest.slice(5)}`;
+    if (rest.length <= 8) return `(${ddd}) ${rest.slice(0, 4)}-${rest.slice(4)}`;
+    return `(${ddd}) ${rest}`;
+  }
 
   /**
-   * @functionality 209
-   * @category 2xx: Banco de Dados e Persistência
-   * @name Gerenciamento de Configurações de Backup Pessoal no Metadata
-   * @description Salva o período (ms) selecionado pelo usuário no metadata store.
+   * Normaliza telefone para o padrão do banco: 55 + DDD + número (12 ou 13 dígitos).
+   * Retorna null se inválido.
    */
-  function saveBackupReminderPeriod(periodMs) {
+  function normalizePhone(raw) {
+    const d = String(raw || "").replace(/\D/g, "");
+    if ((d.length === 12 || d.length === 13) && d.startsWith("55")) return d;
+    if (d.length === 10 || d.length === 11) return "55" + d;
+    return null;
+  }
+
+  /** 5571999998888 -> +55 (71) 9 9999-8888 */
+  function formatPhoneDisplay(phone) {
+    const d = String(phone || "");
+    if (!/^55\d{10,11}$/.test(d)) return d;
+    return "+55 " + maskBrPhone(d.slice(2));
+  }
+
+  const EMAIL_REGEX = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+  /**
+   * Normaliza e-mail opcional.
+   * Retorna: null (vazio), string em minúsculas (válido) ou false (inválido).
+   */
+  function normalizeEmail(raw) {
+    const e = String(raw || "").trim().toLowerCase();
+    if (!e) return null;
+    if (e.length > 254 || !EMAIL_REGEX.test(e)) return false;
+    return e;
+  }
+
+  /** Texto opcional: vazio vira null; corta no limite. */
+  function optText(raw, max) {
+    const t = String(raw || "").trim();
+    return t ? t.slice(0, max) : null;
+  }
+
+  function escapeLike(s) {
+    return String(s).replace(/[\\%_]/g, (m) => "\\" + m);
+  }
+
+  function downloadBlob(content, filename, type) {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function chunk(arr, size) {
+    const out = [];
+    for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+    return out;
+  }
+
+  function newClientKey() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return "k" + Date.now().toString(36) + Math.random().toString(36).slice(2);
+  }
+
+  /** Indicador de sincronização (rodapé) */
+  function setSyncStatus(state, text) {
+    if (!syncDot || !syncText) return;
+    const colors = {
+      ok: "bg-green-500",
+      loading: "bg-gray-400",
+      pending: "bg-amber-500",
+      error: "bg-red-500",
+    };
+    syncDot.className = `inline-block w-2 h-2 rounded-full ${colors[state] || colors.loading}`;
+    syncText.textContent = text;
+  }
+
+  // =====================================================================
+  // INDEXEDDB LEGADO (somente para migração)
+  // =====================================================================
+  function idbGetAll(storeName) {
+    return new Promise((resolve) => {
+      if (!db || !db.objectStoreNames.contains(storeName)) return resolve([]);
+      const request = db.transaction([storeName], "readonly").objectStore(storeName).getAll();
+      request.onsuccess = () => resolve(request.result || []);
+      request.onerror = () => resolve([]);
+    });
+  }
+
+  function idbGetMeta(id) {
+    return new Promise((resolve) => {
+      if (!db || !db.objectStoreNames.contains("metadata")) return resolve(null);
+      const request = db.transaction(["metadata"], "readonly").objectStore("metadata").get(id);
+      request.onsuccess = () => resolve(request.result ? request.result.value : null);
+      request.onerror = () => resolve(null);
+    });
+  }
+
+  function idbPutMeta(id, value) {
     return new Promise((resolve, reject) => {
-      if (!db) return reject("DB not available");
-      const transaction = db.transaction(["metadata"], "readwrite");
-      const store = transaction.objectStore("metadata");
-      const request = store.put({
-        id: "backup_reminder_period",
-        value: periodMs,
-      });
+      if (!db || !db.objectStoreNames.contains("metadata")) return reject(new Error("metadata indisponível"));
+      const request = db.transaction(["metadata"], "readwrite").objectStore("metadata").put({ id, value });
       request.onsuccess = () => resolve();
       request.onerror = (e) => reject(e.target.error);
     });
   }
 
-  /**
-   * @functionality 209
-   * @category 2xx: Banco de Dados e Persistência
-   * @name Gerenciamento de Configurações de Backup Pessoal no Metadata
-   * @description Recupera o período (ms) do metadata store. Padrão: Diariamente (86400000).
-   */
-  function getBackupReminderPeriod() {
+  /** Abre o IndexedDB antigo (mesmo schema da versão anterior, sem apagar nada). */
+  function openLegacyDb() {
     return new Promise((resolve) => {
-      if (!db) return resolve(86400000); // Padrão
-      const transaction = db.transaction(["metadata"], "readonly");
-      const store = transaction.objectStore("metadata");
-      const request = store.get("backup_reminder_period");
-      request.onsuccess = () => {
-        // Padrão é 'Diariamente' (86400000) se não estiver definido
-        resolve(request.result ? request.result.value : 86400000);
-      };
-      request.onerror = () => resolve(86400000); // Padrão em caso de erro
-    });
-  }
-
-  /**
-   * @functionality 209
-   * @category 2xx: Banco de Dados e Persistência
-   * @name Gerenciamento de Configurações de Backup Pessoal no Metadata
-   * @description Salva o timestamp (Date.now()) do último backup pessoal realizado.
-   */
-  function updateLastPersonalBackupTimestamp(timestamp) {
-    return new Promise((resolve, reject) => {
-      if (!db) return reject("DB not available");
-      const transaction = db.transaction(["metadata"], "readwrite");
-      const store = transaction.objectStore("metadata");
-      const request = store.put({
-        id: "last_personal_backup",
-        value: timestamp,
-      });
-      request.onsuccess = () => resolve();
-      request.onerror = (e) => reject(e.target.error);
-    });
-  }
-
-  /**
-   * @functionality 209
-   * @category 2xx: Banco de Dados e Persistência
-   * @name Gerenciamento de Configurações de Backup Pessoal no Metadata
-   * @description Recupera o timestamp do último backup pessoal. Padrão: 0.
-   */
-  function getLastPersonalBackupTimestamp() {
-    return new Promise((resolve) => {
-      if (!db) return resolve(0);
-      const transaction = db.transaction(["metadata"], "readonly");
-      const store = transaction.objectStore("metadata");
-      const request = store.get("last_personal_backup");
-      request.onsuccess = () =>
-        resolve(request.result ? request.result.value : 0);
-      request.onerror = () => resolve(0);
-    });
-  }
-
-  /**
-   * @functionality 209.1
-   * @category 2xx: Banco de Dados e Persistência
-   * @name Snooze do Lembrete de Backup Pessoal
-   * @description Salva o timestamp em que o usuário clicou em "Não"/fechou o
-   * lembrete, para que a decisão "persista" por um tempo e o modal não volte
-   * a aparecer em TODA abertura do app, mesmo com o backup ainda vencido.
-   */
-  function saveBackupReminderSnooze(timestamp) {
-    return new Promise((resolve, reject) => {
-      if (!db) return reject("DB not available");
-      const transaction = db.transaction(["metadata"], "readwrite");
-      const store = transaction.objectStore("metadata");
-      const request = store.put({
-        id: "backup_reminder_snoozed_at",
-        value: timestamp,
-      });
-      request.onsuccess = () => resolve();
-      request.onerror = (e) => reject(e.target.error);
-    });
-  }
-
-  function getBackupReminderSnooze() {
-    return new Promise((resolve) => {
-      if (!db) return resolve(0);
-      const transaction = db.transaction(["metadata"], "readonly");
-      const store = transaction.objectStore("metadata");
-      const request = store.get("backup_reminder_snoozed_at");
-      request.onsuccess = () =>
-        resolve(request.result ? request.result.value : 0);
-      request.onerror = () => resolve(0);
-    });
-  }
-
-  // Tempo mínimo entre um "Não"/fechar do lembrete e a próxima cobrança,
-  // independente da frequência configurada (evita o modal toda vez que o
-  // app é aberto, mesmo quando o usuário já disse que faria depois).
-  const BACKUP_REMINDER_SNOOZE_MS = 86400000; // 24h
-
-
-  // --- INICIALIZAÇÃO E LÓGICA DO BANCO DE DADOS ---
-
-  /**
-   * @functionality 502
-   * @category 5xx: Utilitários e Validações
-   * @name Inicialização de Lógica do App Após Autenticação
-   * @description Chama checkForUpdates e checkDbStatus após login ou bootstrapping.
-   */
-  async function initializeAppLogic() {
-      try {
-        await renderContactsList(); // Adicionado await para evitar descompasso
-        await checkForBackupReminder();
-        // O app agora inicia silenciosamente e rápido!
-      } catch (error) {
-        showToast("Erro ao carregar os dados locais.", "error");
-        console.error("Erro em initializeAppLogic:", error);
-      }
-    }
-
-  /**
-   * @functionality 504
-   * @category 5xx: Utilitários e Validações
-   * @name Verificação de Lembrete de Backup na Inicialização
-   * @description Compara o último backup pessoal com o período configurado e exibe o modal se vencido.
-   */
-  async function checkForBackupReminder() {
-
-    try {
-      const periodMs = Number(await getBackupReminderPeriod());
-      if (periodMs === 0) return; // Usuário desativou os lembretes
-
-      const lastBackupTimestamp = await getLastPersonalBackupTimestamp();
-      const snoozedAt = await getBackupReminderSnooze();
-      const now = Date.now();
-
-      const backupVencido = lastBackupTimestamp + periodMs < now;
-      const aindaDentroDoSnooze =
-        snoozedAt + BACKUP_REMINDER_SNOOZE_MS > now;
-
-      if (backupVencido && !aindaDentroDoSnooze) {
-        // Backup está vencido e o usuário não "soneca" o lembrete recentemente
-        backupReminderModal.classList.remove("hidden");
-      }
-    } catch (error) {
-      console.error("Erro ao verificar lembrete de backup:", error);
-    }
-  }
-
-  /**
-   * @functionality 200
-   * @category 2xx: Banco de Dados e Persistência
-   * @name Inicialização e Upgrade de Schema no IndexedDB com Stores Múltiplos
-   * @description Cria stores (companies, families, metadata, history) com índices (ex: timestamp). Versão 4 para compatibilidade.
-   * @functionality 415
-   * @name Prompt de Senha Mestra com Mensagem Dinâmica para Bootstrapping
-   * @description Altera texto do modal baseado em presença de backup.json.
-   */
-  async function initDb() {
+      if (!("indexedDB" in window)) return resolve(null);
       const request = indexedDB.open(dbName, dbVersion);
-
       request.onupgradeneeded = function (event) {
-        db = event.target.result;
-        if (!db.objectStoreNames.contains("metadata"))
-          db.createObjectStore("metadata", { keyPath: "id" });
-        if (!db.objectStoreNames.contains("history")) {
-          const historyStore = db.createObjectStore("history", {
-            keyPath: "id",
-            autoIncrement: true,
-          });
+        const udb = event.target.result;
+        if (!udb.objectStoreNames.contains("metadata"))
+          udb.createObjectStore("metadata", { keyPath: "id" });
+        if (!udb.objectStoreNames.contains("history")) {
+          const historyStore = udb.createObjectStore("history", { keyPath: "id", autoIncrement: true });
           historyStore.createIndex("timestamp", "timestamp", { unique: false });
         }
-
-        if (!db.objectStoreNames.contains("contacts")) {
-          const contactsStore = db.createObjectStore("contacts", {
-            keyPath: "id",
-            autoIncrement: true,
-          });
+        if (!udb.objectStoreNames.contains("contacts")) {
+          const contactsStore = udb.createObjectStore("contacts", { keyPath: "id", autoIncrement: true });
           contactsStore.createIndex("name", "name", { unique: false });
         }
       };
+      request.onsuccess = (event) => resolve(event.target.result);
+      request.onerror = () => resolve(null);
+      request.onblocked = () => resolve(null);
+    });
+  }
 
-      request.onsuccess = async function (event) {
-            db = event.target.result;
+  // =====================================================================
+  // MAPEAMENTO DE REGISTROS (legado / backup -> banco)
+  // =====================================================================
+  const legacyStatusRegex = /foi analisada e \*(.*?)\*/;
 
-            try {
-              await initializeAppLogic();
-              atualizarStatsExternos();
-            } catch (error) {
-              showToast("Erro crítico na inicialização.", "error");
-              console.error("Erro fatal em initDb:", error);
-            }
-          };
-
-      request.onerror = function (event) {
-        showToast("Erro crítico ao acessar o banco de dados local.", "error");
-      };
+  function legacyHistoryToRow(item, uid) {
+    if (!item || typeof item.message !== "string" || !item.message) return null;
+    const cnpjDigits = String(item.cnpj || "").replace(/\D/g, "");
+    if (!cnpjDigits) return null;
+    let status = item.status || null;
+    if (!status) {
+      const m = item.message.match(legacyStatusRegex);
+      if (m && m[1]) status = m[1];
+      else if (item.message.includes("*Pendente de Envio*")) status = "Pendente de Envio";
+      else if (item.message.includes("*Pendente do envio do Termo")) status = "Pendente do Termo";
     }
+    const ts = item.timestamp && !isNaN(new Date(item.timestamp)) ? new Date(item.timestamp).toISOString() : new Date().toISOString();
+    return {
+      user_id: uid,
+      client_key: `legacy:${ts}|${cnpjDigits}`,
+      cnpj: cnpjDigits,
+      company_name: item.companyName || null,
+      status,
+      registration_type: item.registrationType || null,
+      granted_type: null,
+      analysis_date: null,
+      contact_made: !!item.contactMade,
+      contact: null,
+      rejected_docs: Array.isArray(item.rejectedDocs) ? item.rejectedDocs : [],
+      message: item.message,
+      created_at: ts,
+    };
+  }
 
+  function exportedHistoryToRow(item, uid) {
+    if (!item || typeof item.message !== "string" || !item.message || !item.client_key) return null;
+    return {
+      user_id: uid,
+      client_key: String(item.client_key),
+      cnpj: String(item.cnpj || "").replace(/\D/g, ""),
+      company_name: item.company_name || null,
+      status: item.status || null,
+      registration_type: item.registration_type || null,
+      granted_type: item.granted_type || null,
+      analysis_date: item.analysis_date || null,
+      contact_made: !!item.contact_made,
+      contact: item.contact || null,
+      rejected_docs: Array.isArray(item.rejected_docs) ? item.rejected_docs : [],
+      message: item.message,
+      created_at: item.created_at || new Date().toISOString(),
+    };
+  }
 
-  /**
-   * @functionality 201
-   * @category 2xx: Banco de Dados e Persistência
-   * @name Carregamento e Parsing de CSV para Stores Específicos com Delimitador Customizado
-   * @description Lê ISO-8859-1, parseia linhas (companyParser/familyParser), limpa store e atualiza metadados com timestamp.
-   */
-  function loadCsvToDB(file, storeName, statusElement, parser) {
+  function anyHistoryToRow(item, uid) {
+    return item && item.client_key ? exportedHistoryToRow(item, uid) : legacyHistoryToRow(item, uid);
+  }
 
-    if (!file) {
-      alert("Por favor, selecione um arquivo CSV.");
+  /** Converte contato (legado, backup antigo ou backup novo) para linha do banco. */
+  function anyContactToRow(c, uid) {
+    if (!c) return null;
+    const name = String(c.name || "").trim();
+    const phone = normalizePhone(c.phone);
+    if (!name || !phone) return null;
+    const email = normalizeEmail(c.email);
+    return {
+      user_id: uid,
+      name: name.slice(0, 120),
+      role: optText(c.role, 80),
+      sector: optText(c.sector, 120),
+      phone,
+      email: email || null, // e-mail inválido no arquivo é descartado, o contato é mantido
+      is_favorite: !!c.is_favorite,
+    };
+  }
+
+  /** Grava históricos sem duplicar (ON CONFLICT DO NOTHING). Retorna qtd enviada. */
+  async function bulkInsertHistory(rows) {
+    let sent = 0;
+    for (const part of chunk(rows, 500)) {
+      const { error } = await supabaseClientCaf
+        .from(TBL_HISTORY)
+        .upsert(part, { onConflict: "user_id,client_key", ignoreDuplicates: true });
+      if (error) throw error;
+      sent += part.length;
+    }
+    return sent;
+  }
+
+  /** Grava contatos sem sobrescrever os existentes (mesmo telefone é ignorado). */
+  async function bulkInsertContactsKeepExisting(rows) {
+    const unique = new Map();
+    rows.forEach((r) => { if (!unique.has(r.phone)) unique.set(r.phone, r); });
+    const list = [...unique.values()];
+    for (const part of chunk(list, 500)) {
+      const { error } = await supabaseClientCaf
+        .from(TBL_CONTACTS)
+        .upsert(part, { onConflict: "user_id,phone", ignoreDuplicates: true });
+      if (error) throw error;
+    }
+    return list.length;
+  }
+
+  // =====================================================================
+  // MIGRAÇÃO DOS DADOS LOCAIS (IndexedDB -> conta do usuário)
+  // =====================================================================
+  let legacyCounts = { history: 0, contacts: 0 };
+
+  async function checkLegacyData() {
+    db = await openLegacyDb();
+    if (!db) return;
+    const marker = await idbGetMeta("cloud_migration");
+    const [hist, cont] = await Promise.all([idbGetAll("history"), idbGetAll("contacts")]);
+    legacyCounts = { history: hist.length, contacts: cont.length };
+    const hasData = legacyCounts.history > 0 || legacyCounts.contacts > 0;
+    // Se já houve migração neste navegador (por qualquer usuário), não oferece de novo:
+    // evita que outro usuário do mesmo computador "herde" os dados de quem migrou.
+    if (!hasData || marker) {
+      migrationBanner.classList.add("hidden");
+      localDataBox.classList.add("hidden");
       return;
     }
-
-    const reader = new FileReader();
-    reader.onload = function (event) {
-      const lines = event.target.result.split("\n");
-      const totalLines = lines.length;
-      statusElement.textContent = `Processando ${totalLines} linhas...`;
-      statusElement.className = "text-blue-600";
-
-      const transaction = db.transaction([storeName], "readwrite");
-      const objectStore = transaction.objectStore(storeName);
-      objectStore.clear();
-
-      lines.forEach((line, index) => {
-        const record = parser(line);
-        if (record) objectStore.put(record);
-      });
-
-      transaction.oncomplete = function () {
-          showToast(`Contatos carregados com sucesso!`, "success");
-      };
-      transaction.onerror = function () {
-        statusElement.textContent = "Erro ao salvar dados.";
-        statusElement.className = "text-red-600";
-        showToast(`Erro ao carregar base de ${storeName}.`, "error");
-      };
-    };
-    reader.readAsText(file, "ISO-8859-1");
+    const txt = `Há ${legacyCounts.history} registro(s) de histórico e ${legacyCounts.contacts} contato(s) salvos somente neste navegador. Envie-os para a sua conta para acessá-los de qualquer computador. Os dados locais não serão apagados.`;
+    migrationBannerText.textContent = txt;
+    localDataText.textContent = txt;
+    localDataBox.classList.remove("hidden");
+    if (sessionStorage.getItem("caf_migration_dismissed") !== "1") {
+      migrationBanner.classList.remove("hidden");
+    }
   }
 
-  /**
-   * @functionality 400
-   * @category 4xx: UI/UX e Interações
-   * @name Exportação e Importação de Backup JSON com Opções Seletivas e Criptografia
-   * @description Serializa stores selecionados, criptografa e baixa; suporta admin mode.
-   * @functionality 408
-   * @name Download de Arquivo de Backup com Blob e URL Temporária
-   * @description Cria Blob criptografado e trigger download via hidden.
-   */
+  let migrationRunning = false;
+  async function migrateLegacyData() {
+    if (migrationRunning) return;
+    const email = sessionStorage.getItem("cockpit_user_email") || "seu usuário";
+    if (!confirm(`Os dados locais deste navegador serão enviados para a conta de ${email}.\n\nConfirme somente se esses dados forem seus. Deseja continuar?`)) return;
+    migrationRunning = true;
+    [migrationStartBtn, migrationStartBtn2].forEach((b) => b && (b.disabled = true));
+    setSyncStatus("pending", "Migrando...");
+    try {
+      const uid = await getCurrentUserId();
+      const [hist, cont] = await Promise.all([idbGetAll("history"), idbGetAll("contacts")]);
+      const historyRows = hist.map((h) => legacyHistoryToRow(h, uid)).filter(Boolean);
+      const contactRows = cont.map((c) => anyContactToRow(c, uid)).filter(Boolean);
+      const invalidContacts = cont.length - contactRows.length;
+      await bulkInsertContactsKeepExisting(contactRows);
+      await bulkInsertHistory(historyRows);
+      await idbPutMeta("cloud_migration", {
+        uid,
+        at: new Date().toISOString(),
+        history: historyRows.length,
+        contacts: contactRows.length,
+      });
+      migrationBanner.classList.add("hidden");
+      localDataBox.classList.add("hidden");
+      await loadContacts();
+      atualizarStatsExternos();
+      let msg = `Migração concluída: ${historyRows.length} registro(s) de histórico e ${contactRows.length} contato(s).`;
+      if (invalidContacts > 0) msg += ` ${invalidContacts} contato(s) com telefone inválido foram ignorados.`;
+      showToast(msg, "success", 6000);
+      setSyncStatus("ok", "Sincronizado");
+    } catch (err) {
+      console.error("Erro na migração:", err);
+      showToast("Falha na migração. Nenhum dado local foi apagado. Tente novamente.", "error", 6000);
+      setSyncStatus("error", "Erro de sincronização");
+    } finally {
+      migrationRunning = false;
+      [migrationStartBtn, migrationStartBtn2].forEach((b) => b && (b.disabled = false));
+    }
+  }
+
+  // =====================================================================
+  // FILA DE HISTÓRICO PENDENTE (falha de rede ao salvar)
+  // =====================================================================
+  function pendingKey() {
+    return `caf_pending_history_${currentUserId || "anon"}`;
+  }
+  function readPending() {
+    try { return JSON.parse(localStorage.getItem(pendingKey()) || "[]"); } catch (e) { return []; }
+  }
+  function writePending(list) {
+    if (list.length) localStorage.setItem(pendingKey(), JSON.stringify(list));
+    else localStorage.removeItem(pendingKey());
+  }
+
+  async function flushPendingHistory() {
+    const pending = readPending();
+    if (!pending.length) return 0;
+    try {
+      const uid = await getCurrentUserId();
+      const rows = pending.map((r) => ({ ...r, user_id: uid }));
+      await bulkInsertHistory(rows);
+      writePending([]);
+      return rows.length;
+    } catch (e) {
+      console.warn("Pendências de histórico ainda não enviadas:", e);
+      setSyncStatus("pending", `${pending.length} pendente(s) de envio`);
+      return 0;
+    }
+  }
+
+  // =====================================================================
+  // INICIALIZAÇÃO
+  // =====================================================================
+  async function initializeAppLogic() {
+    setSyncStatus("loading", "Conectando...");
+    try {
+      await getCurrentUserId();
+    } catch (error) {
+      console.error(error);
+      setSyncStatus("error", "Sem sessão");
+      showToast(error.message, "error", 6000);
+      return;
+    }
+    try {
+      await loadContacts();
+      const sent = await flushPendingHistory();
+      if (sent > 0) showToast(`${sent} registro(s) pendente(s) enviados ao histórico.`, "success");
+      if (!readPending().length) setSyncStatus("ok", "Sincronizado");
+      atualizarStatsExternos();
+    } catch (error) {
+      console.error("Erro em initializeAppLogic:", error);
+      setSyncStatus("error", "Erro de conexão");
+      showToast("Erro ao carregar seus dados do servidor.", "error");
+    }
+    checkLegacyData().catch((e) => console.warn("Verificação de dados locais:", e));
+  }
+
+  window.addEventListener("online", async () => {
+    const sent = await flushPendingHistory();
+    if (sent > 0) {
+      showToast(`${sent} registro(s) pendente(s) enviados ao histórico.`, "success");
+      setSyncStatus("ok", "Sincronizado");
+      atualizarStatsExternos();
+    }
+  });
+
+  // =====================================================================
+  // EXPORTAÇÃO / IMPORTAÇÃO (.json)
+  // =====================================================================
+  async function fetchAllHistoryForExport() {
+    const all = [];
+    const size = 1000;
+    for (let from = 0; ; from += size) {
+      const { data, error } = await supabaseClientCaf
+        .from(TBL_HISTORY)
+        .select("client_key, cnpj, company_name, status, registration_type, granted_type, analysis_date, contact_made, contact, rejected_docs, message, created_at")
+        .is("deleted_at", null)
+        .order("created_at", { ascending: true })
+        .range(from, from + size - 1);
+      if (error) throw error;
+      all.push(...(data || []));
+      if (!data || data.length < size) break;
+    }
+    return all;
+  }
+
   async function processExport(options = {}) {
-      if (!db) {
-        showToast("Banco de dados não está pronto.", "error");
+    const includeHistory = options.includeHistory !== false;
+    const includeContacts = options.includeContacts !== false;
+    if (!includeHistory && !includeContacts) {
+      showToast("Selecione ao menos uma opção para exportar.", "error");
+      return false;
+    }
+    try {
+      await getCurrentUserId();
+      const exportObj = {
+        app: "gerador-caf",
+        version: 2,
+        exported_at: new Date().toISOString(),
+        user_email: sessionStorage.getItem("cockpit_user_email") || null,
+      };
+      if (includeContacts) {
+        const { data, error } = await supabaseClientCaf
+          .from(TBL_CONTACTS)
+          .select("name, role, sector, phone, email, is_favorite")
+          .order("name");
+        if (error) throw error;
+        exportObj.contacts = data || [];
+      }
+      if (includeHistory) exportObj.history = await fetchAllHistoryForExport();
+      const date = new Date().toISOString().slice(0, 10);
+      const filename = `gerador_caf_backup_${date}.json`;
+      downloadBlob(JSON.stringify(exportObj, null, 2), filename, "application/json");
+      showToast(`Arquivo "${filename}" exportado!`, "success");
+      return true;
+    } catch (error) {
+      console.error("Erro ao exportar:", error);
+      showToast("Falha ao exportar os dados.", "error");
+      return false;
+    }
+  }
+
+  /** Importa backup antigo (metadata/history/contacts) ou novo (version 2). Soma, não apaga. */
+  async function importDatabase(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const importStatus = document.getElementById("importStatus");
+    const importLabel = document.getElementById("importDbLabel");
+    const exportBtn = document.getElementById("exportDbBtn");
+    try {
+      const data = JSON.parse(await file.text());
+      const hist = Array.isArray(data.history) ? data.history : [];
+      const cont = Array.isArray(data.contacts) ? data.contacts : [];
+      if (!hist.length && !cont.length) {
+        showToast("O arquivo não contém histórico nem contatos.", "error");
         return;
       }
-
-      try {
-        // Metadata (configurações do lembrete etc.) sempre vai no backup.
-        // Histórico e Contatos são opcionais, conforme as checkboxes do
-        // modal "Opções de Exportação" (ou o options passado por quem chamou).
-        const includeHistory = options.includeHistory !== false;
-        const includeContacts = options.includeContacts !== false;
-
-        const storesToExport = ["metadata"];
-        if (includeHistory) storesToExport.push("history");
-        if (includeContacts) storesToExport.push("contacts");
-
-        const exportObj = {};
-        const transaction = db.transaction(storesToExport, "readonly");
-        
-        for (const storeName of storesToExport) {
-          const store = transaction.objectStore(storeName);
-          const allRecords = await new Promise((resolve, reject) => {
-            store.getAll().onsuccess = (e) => resolve(e.target.result);
-            store.getAll().onerror = (e) => reject(e.target.error);
-          });
-          exportObj[storeName] = allRecords;
-        }
-
-        const jsonString = JSON.stringify(exportObj, null, 2);
-        // Salva direto como JSON puro e legível
-        const blob = new Blob([jsonString], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-
-        const date = new Date().toISOString().slice(0, 10);
-        const filename = `full_backup_${date}.json`;
-        
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = filename;
-        a.click();
-        URL.revokeObjectURL(url);
-        
-        showToast(`Backup pessoal exportado como "${filename}"!`, "success");
-      } catch (error) {
-        console.error("Erro ao exportar:", error);
-        showToast("Falha ao exportar o backup.", "error");
-      }
-    }
-
-  /**
-   * @functionality 208
-   * @category 2xx: Banco de Dados e Persistência
-   * @name Processamento de Importação de Backup com Merge e Atualização de Hash
-   * @description Descriptografa JSON, insere/atualiza stores e salva novo hash local.
-   */
-  function processImportData(data) {
-      return new Promise((resolve, reject) => {
-        const storesToImport = Object.keys(data);
-        if (storesToImport.length === 0) {
-          showToast("Arquivo de backup inválido ou vazio.", "error");
-          return reject("Arquivo inválido");
-        }
-
-        const transaction = db.transaction(storesToImport, "readwrite");
-        transaction.oncomplete = () => {
-          showToast("Dados restaurados com sucesso!", "success");
-          renderContactsList();
-          resolve();
-        };
-        transaction.onerror = (err) => {
-          console.error("Erro na transação de importação:", err);
-          showToast("Erro ao restaurar os dados.", "error");
-          reject(err);
-        };
-
-        for (const storeName of storesToImport) {
-          if (db.objectStoreNames.contains(storeName)) {
-            const store = transaction.objectStore(storeName);
-            store.clear();
-            data[storeName].forEach((record) => {
-              store.put(record);
-            });
-          }
-        }
-      });
-    }
-
-  /**
-   * @functionality 409
-   * @category 4xx: UI/UX e Interações
-   * @name Importação de Arquivo JSON com Descriptografia e Validação
-   * @description Lê arquivo, descriptografa e processa via processImportData.
-   */
-  async function importDatabase(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const importStatus = document.getElementById("importStatus");
-      const importLabel = document.getElementById("importDbLabel");
-      const exportBtn = document.getElementById("exportDbBtn");
-
+      if (!confirm(`Importar ${hist.length} registro(s) de histórico e ${cont.length} contato(s) para a sua conta?\n\nRegistros já existentes não serão duplicados e nada será apagado.`)) return;
       importStatus.textContent = "Importando... Por favor, aguarde.";
-      importLabel.classList.add("opacity-50", "cursor-not-allowed");
+      importLabel.classList.add("opacity-50", "pointer-events-none");
       exportBtn.disabled = true;
-
-      try {
-        const jsonText = await file.text();
-        const data = JSON.parse(jsonText); // Lê e converte o JSON puro direto
-        await processImportData(data);
-      } catch (error) {
-        console.error("Erro ao importar manualmente:", error);
-        showToast("Falha ao ler o backup. Arquivo inválido.", "error");
-      } finally {
-        event.target.value = "";
-        importStatus.textContent = "";
-        importLabel.classList.remove("opacity-50", "cursor-not-allowed");
-        exportBtn.disabled = false;
-      }
+      const uid = await getCurrentUserId();
+      const historyRows = hist.map((h) => anyHistoryToRow(h, uid)).filter((r) => r && r.cnpj);
+      const contactRows = cont.map((c) => anyContactToRow(c, uid)).filter(Boolean);
+      await bulkInsertContactsKeepExisting(contactRows);
+      await bulkInsertHistory(historyRows);
+      await loadContacts();
+      atualizarStatsExternos();
+      const ignored = hist.length - historyRows.length + (cont.length - contactRows.length);
+      showToast(`Importação concluída.${ignored ? ` ${ignored} item(ns) inválido(s) ignorado(s).` : ""}`, "success", 5000);
+    } catch (error) {
+      console.error("Erro ao importar:", error);
+      showToast("Falha ao importar. Verifique se o arquivo é um backup válido.", "error");
+    } finally {
+      event.target.value = "";
+      importStatus.textContent = "";
+      importLabel.classList.remove("opacity-50", "pointer-events-none");
+      exportBtn.disabled = false;
     }
-
-  // --- LÓGICA DO HISTÓRICO ---
-
-  /**
-   * @functionality 203
-   * @category 2xx: Banco de Dados e Persistência
-   * @name Gerenciamento de Histórico de Mensagens com Armazenamento Auto-Incrementado e Índices
-   * @description Adiciona itens com timestamp.
-   */
-  function saveMessageToHistory(messageData) {
-    if (!db) return;
-    const transaction = db.transaction(["history"], "readwrite");
-    const store = transaction.objectStore("history");
-    store.put(messageData);
-
-    transaction.oncomplete = () => {
-      atualizarStatsExternos(); // Atualiza a Home assim que salvar
-    };
   }
 
-  /**
-   * @functionality 203
-   * @category 2xx: Banco de Dados e Persistência
-   * @name Gerenciamento de Histórico de Mensagens com Armazenamento Auto-Incrementado e Índices
-   * @description Renderiza lista expansível, suporta copy/delete/clear.
-   * @functionality 402
-   * @name Renderização Responsiva de Histórico com Expansão Colapsível e Ações Inline
-   * @description Lista itens com botões copy/delete/expand, usando transições CSS para conteúdo oculto.
-   */
-
+  // =====================================================================
+  // HISTÓRICO
+  // =====================================================================
   const svgIconCopy = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="w-4 h-4">
         <rect x="4" y="8" width="12" height="12" rx="1" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M8 6V5C8 4.44772 8.44772 4 9 4H19C19.5523 4 20 4.44772 20 5V15C20 15.5523 19.5523 16 19 16H18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 2"/>
     </svg>`;
-
   const svgIconExpand = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4 h-4" fill="currentColor">
         <path d="M12 5.83L15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"/>
     </svg>`;
-
   const svgIconCollapse = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4 h-4" fill="currentColor">
         <path d="M7.41 18.59L8.83 20 12 16.83 15.17 20l1.41-1.41L12 14l-4.59 4.59zm9.18-13.18L15.17 4 12 7.17 8.83 4 7.41 5.41 12 10l4.59-4.59z"/>
     </svg>`;
+  const svgIconReopen = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-4 h-4">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/>
+    </svg>`;
+  const phoneIcon = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 text-green-500 inline-block align-middle ml-2"><title>Contato telefônico registrado</title>
+          <path fill-rule="evenodd" d="M5.847.533A2.21 2.21 0 004.391 0H2.206a2.21 2.21 0 00-2.09 1.501c-.098.29-.135.598-.107.903l.001.012a15.13 15.13 0 002.355 6.637c1.29 1.987 2.615 3.304 4.596 4.587a15.197 15.197 0 006.618 2.35h.014a2.21 2.21 0 002.406-2.204v-.075c-.002-.383-.008-1.771 0-2.087A2.204 2.204 0 0014.1 9.386h-.007a8.626 8.626 0 01-1.884-.47 2.21 2.21 0 00-2.327.497l-.515.513a10.903 10.903 0 01-3.313-3.305l.51-.509.003-.003a2.204 2.204 0 00.498-2.326 8.577 8.577 0 01-.47-1.88v-.007A2.204 2.204 0 005.847.533zM4.401 1.5a.71.71 0 01.708.604c.1.753.285 1.493.55 2.205l.001.001a.703.703 0 01-.157.742l-.924.923a.75.75 0 00-.122.902 12.403 12.403 0 004.655 4.646.75.75 0 00.9-.121l.923-.921.002-.002a.71.71 0 01.746-.157h.002c.713.266 1.454.45 2.209.55a.709.709 0 01.606.715 148.67 148.67 0 000 2.134v.07a.702.702 0 01-.481.671.71.71 0 01-.286.035 13.696 13.696 0 01-5.957-2.117c-1.805-1.168-2.979-2.335-4.153-4.144a13.63 13.630 0 01-2.120-5.972.702.702 0 01.419-.704c.09-.04.187-.06.286-.06H4.4z" clip-rule="evenodd"/>
+      </svg>`;
 
-  async function renderHistory(
-    cnpjFilter = "",
-    startDateFilter = "",
-    endDateFilter = "",
-  ) {
-    const container = document.getElementById("historyListContainer");
-    container.innerHTML =
-      '<p class="text-gray-500 text-center">Carregando histórico...</p>';
+  const statusColorMap = {
+    Deferida: "text-green-600",
+    "Deferida Parcial": "text-yellow-600",
+    Indeferida: "text-red-600",
+    "Pendente de Envio": "text-blue-600",
+    "Pendente do Termo": "text-indigo-600",
+    Contato: "text-teal-600",
+  };
 
-    if (!db) {
-      container.innerHTML =
-        '<p class="text-red-500 text-center">Banco de dados não disponível.</p>';
-      return;
+  const HISTORY_PAGE_SIZE = 30;
+  let historyPage = 0;
+  let historyTotal = 0;
+  let historyFilters = {};
+  const historyItemsById = new Map();
+  let lastSavedSignature = null; // anti-duplicidade de cliques repetidos
+
+  /**
+   * Salva a mensagem no histórico do usuário. Em caso de falha de rede,
+   * guarda numa fila local e reenvia automaticamente depois.
+   */
+  async function saveMessageToHistory(messageData) {
+    const signature = `${messageData.cnpj}|${messageData.status}|${messageData.message}`;
+    const now = Date.now();
+    if (lastSavedSignature && lastSavedSignature.sig === signature && now - lastSavedSignature.at < 5 * 60 * 1000) {
+      return "duplicate";
     }
-
-    // --- MAPEAMENTO DE CORES PARA OS STATUS ---
-    const statusColorMap = {
-      Deferida: "text-green-600",
-      "Deferida Parcial": "text-yellow-600",
-      Indeferida: "text-red-600",
-      "Pendente de Envio": "text-blue-600",
-      "Pendente do Termo": "text-indigo-600",
+    const row = {
+      client_key: newClientKey(),
+      cnpj: String(messageData.cnpj || "").replace(/\D/g, ""),
+      company_name: messageData.companyName || null,
+      status: messageData.status || null,
+      registration_type: messageData.registrationType || null,
+      granted_type: messageData.grantedType || null,
+      analysis_date: messageData.analysisDate || null,
+      contact_made: !!messageData.contactMade,
+      contact: messageData.contact || null,
+      rejected_docs: messageData.rejectedDocs || [],
+      message: messageData.message,
+      created_at: new Date(now).toISOString(),
     };
-
-    // --- SVG DO ÍCONE DE TELEFONE ---
-    const phoneIcon = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 text-green-500 inline-block align-middle ml-2" title="Contato telefônico registrado">
-          <path fill-rule="evenodd" d="M5.847.533A2.21 2.21 0 004.391 0H2.206a2.21 2.21 0 00-2.09 1.501c-.098.29-.135.598-.107.903l.001.012a15.13 15.13 0 002.355 6.637c1.29 1.987 2.615 3.304 4.596 4.587a15.197 15.197 0 006.618 2.35h.014a2.21 2.21 0 002.406-2.204v-.075c-.002-.383-.008-1.771 0-2.087A2.204 2.204 0 0014.1 9.386h-.007a8.626 8.626 0 01-1.884-.47 2.21 2.21 0 00-2.327.497l-.515.513a10.903 10.903 0 01-3.313-3.305l.51-.509.003-.003a2.204 2.204 0 00.498-2.326 8.577 8.577 0 01-.47-1.88v-.007A2.204 2.204 0 005.847.533zM4.401 1.5a.71.71 0 01.708.604c.1.753.285 1.493.55 2.205l.001.001a.703.703 0 01-.157.742l-.924.923a.75.75 0 00-.122.902 12.403 12.403 0 004.655 4.646.75.75 0 00.9-.121l.923-.921.002-.002a.71.71 0 01.746-.157h.002c.713.266 1.454.45 2.209.55a.709.709 0 01.606.715 148.67 148.67 0 000 2.134v.07a.702.702 0 01-.481.671.71.71 0 01-.286.035 13.696 13.696 0 01-5.957-2.117c-1.805-1.168-2.979-2.335-4.153-4.144a13.63 13.63 0 01-2.12-5.972.702.702 0 01.419-.704c.09-.04.187-.06.286-.06H4.4zm2.664 2.283v-.001l-.703.264.703-.263z" clip-rule="evenodd"/>
-          <path d="M10.333.005a.75.75 0 10-.166 1.49 4.91 4.91 0 014.338 4.332.75.75 0 001.49-.167A6.41 6.41 0 0010.333.005z"/>
-          <path d="M10.394 2.53a.75.75 0 10-.288 1.472 2.395 2.395 0 011.892 1.892.75.75 0 101.472-.288 3.894 3.894 0 00-3.076-3.076z"/>
-      </svg>
-  `;
-
-    // Busca todos os registros de uma única vez
-    const transaction = db.transaction(["history"], "readonly");
-    const store = transaction.objectStore("history");
-    const allRecords = await new Promise((resolve, reject) => {
-      const request = store.getAll();
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
-    });
-
-    // --- FILTRAGEM ---
-    let filteredRecords = allRecords;
-
-    // Filtro por CNPJ/CPF
-    if (cnpjFilter) {
-      const cleanedFilter = cnpjFilter.replace(/\D/g, "");
-      filteredRecords = filteredRecords.filter((item) => {
-        const cleanedCnpj = item.cnpj.replace(/\D/g, "");
-        return cleanedCnpj.includes(cleanedFilter);
-      });
+    lastSavedSignature = { sig: signature, at: now };
+    try {
+      const uid = await getCurrentUserId();
+      const { error } = await supabaseClientCaf.from(TBL_HISTORY).insert({ ...row, user_id: uid });
+      if (error) throw error;
+      setSyncStatus("ok", "Sincronizado");
+      atualizarStatsExternos();
+      return "saved";
+    } catch (err) {
+      console.error("Erro ao salvar histórico:", err);
+      const pending = readPending();
+      pending.push(row);
+      writePending(pending);
+      setSyncStatus("pending", `${pending.length} pendente(s) de envio`);
+      return "queued";
     }
+  }
 
-    // Filtro por data inicial
-    if (startDateFilter) {
-      const [y, m, d] = startDateFilter.split("-");
-      const startDate = new Date(y, m - 1, d);
-      startDate.setHours(0, 0, 0, 0);
-      filteredRecords = filteredRecords.filter(
-        (item) => new Date(item.timestamp) >= startDate,
-      );
-    }
+  function readHistoryFiltersFromUI() {
+    return {
+      cnpj: historySearchCnpj.value.replace(/\D/g, ""),
+      name: historySearchName.value.trim(),
+      status: historyStatusFilter.value,
+      start: historyStartDate.value,
+      end: historyEndDate.value,
+    };
+  }
 
-    // Filtro por data final
-    if (endDateFilter) {
-      const [y, m, d] = endDateFilter.split("-");
-      const endDate = new Date(y, m - 1, d);
-      endDate.setHours(23, 59, 59, 999);
-      filteredRecords = filteredRecords.filter(
-        (item) => new Date(item.timestamp) <= endDate,
-      );
-    }
+  function localDayBoundaryISO(yyyyMmDd, endOfDay) {
+    const [y, m, d] = yyyyMmDd.split("-").map(Number);
+    const dt = endOfDay ? new Date(y, m - 1, d, 23, 59, 59, 999) : new Date(y, m - 1, d, 0, 0, 0, 0);
+    return dt.toISOString();
+  }
 
-    // --- RESULTADO VAZIO ---
-    if (filteredRecords.length === 0) {
-      container.innerHTML =
-        '<p class="text-gray-500 text-center">Nenhum registro encontrado para os filtros aplicados.</p>';
-      return;
-    }
+  async function fetchHistoryPage(page, filters) {
+    let q = supabaseClientCaf
+      .from(TBL_HISTORY)
+      .select("id, cnpj, company_name, status, registration_type, granted_type, analysis_date, contact_made, contact, rejected_docs, message, created_at", { count: "exact" })
+      .is("deleted_at", null)
+      .order("created_at", { ascending: false })
+      .range(page * HISTORY_PAGE_SIZE, page * HISTORY_PAGE_SIZE + HISTORY_PAGE_SIZE - 1);
+    if (filters.cnpj) q = q.ilike("cnpj", `%${filters.cnpj}%`);
+    if (filters.name) q = q.ilike("company_name", `%${escapeLike(filters.name)}%`);
+    if (filters.status) q = q.eq("status", filters.status);
+    if (filters.start) q = q.gte("created_at", localDayBoundaryISO(filters.start, false));
+    if (filters.end) q = q.lte("created_at", localDayBoundaryISO(filters.end, true));
+    const { data, count, error } = await q;
+    if (error) throw error;
+    return { data: data || [], count: count || 0 };
+  }
 
-    // Limpa e começa a renderizar
-    container.innerHTML = "";
-
-    // Ordena do mais recente para o mais antigo
-    filteredRecords.reverse().forEach((item) => {
-      const date = new Date(item.timestamp);
-      const formattedDate = date.toLocaleString("pt-BR");
-
-      const status = item.status || "Status Desconhecido";
-      const statusColor = statusColorMap[status] || "text-gray-500";
-      const contactMadeHtml = item.contactMade ? phoneIcon : "";
-
-      const div = document.createElement("div");
-      div.className =
-        "border rounded-lg bg-white dark:bg-slate-800 shadow-sm border dark:border-slate-700 overflow-hidden mb-4";
-
-      div.innerHTML = `
-      <div class="p-3 flex justify-between items-center bg-gray-50 dark:bg-slate-700 border-b dark:border-slate-600">
-        <div class="flex-grow">
-          <p class="font-bold text-blue-700 dark:text-blue-400">${escapeHtml(item.companyName)}</p>
-          <p class="text-sm text-gray-600 dark:text-gray-300">${escapeHtml(item.cnpj)}</p>
+  function buildHistoryCard(item) {
+    const formattedDate = new Date(item.created_at).toLocaleString("pt-BR");
+    const status = item.status || "Status Desconhecido";
+    const statusColor = statusColorMap[status] || "text-gray-500";
+    const contactMadeHtml = item.contact_made ? phoneIcon : "";
+    const docDisplay = item.cnpj ? formatDocument(item.cnpj) : "";
+    const extra = [];
+    if (item.analysis_date) extra.push(`Análise: ${formatDate(item.analysis_date)}`);
+    if (item.registration_type) extra.push(`Solicitado: ${escapeHtml(item.registration_type)}`);
+    if (item.granted_type && item.granted_type !== item.registration_type) extra.push(`Concedido: ${escapeHtml(item.granted_type)}`);
+    const div = document.createElement("div");
+    div.className = "history-card border rounded-lg bg-white dark:bg-slate-800 shadow-sm dark:border-slate-700 overflow-hidden";
+    div.dataset.id = item.id;
+    div.innerHTML = `
+      <div class="p-3 flex justify-between items-center gap-2 bg-gray-50 dark:bg-slate-700 border-b dark:border-slate-600">
+        <div class="flex-grow min-w-0">
+          <p class="font-bold text-blue-700 dark:text-blue-400 truncate">${escapeHtml(item.company_name || "")}</p>
+          <p class="text-sm text-gray-600 dark:text-gray-300">${escapeHtml(docDisplay)}</p>
           <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-            <span class="font-bold mr-1 ${statusColor}">${escapeHtml(status)}</span> 
+            <span class="font-bold mr-1 ${statusColor}">${escapeHtml(status)}</span>
             | Gerado em: ${formattedDate}
             ${contactMadeHtml}
           </p>
+          ${extra.length ? `<p class="text-[11px] text-gray-400 mt-0.5">${extra.join(" • ")}</p>` : ""}
         </div>
-
-        <div class="flex items-center space-x-2">
-          <button data-id="${item.id}" class="delete-history-btn text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 font-bold text-2xl leading-none">&times;</button>
-          <button data-message="${encodeURIComponent(item.message)}" title="Copiar" 
-                  class="copy-history-btn bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-slate-600 dark:text-white dark:hover:bg-slate-500 p-2 rounded transition">
-            ${svgIconCopy}
-          </button>
-          <button title="Expandir" 
-                  class="expand-history-btn text-blue-600 hover:bg-blue-100 dark:text-blue-400 dark:hover:bg-slate-600 rounded p-2 transition">
-            ${svgIconExpand}
-          </button>
+        <div class="flex items-center space-x-1 shrink-0">
+          <button data-action="reopen" title="Reabrir no formulário" class="text-amber-600 hover:bg-amber-100 dark:text-amber-400 dark:hover:bg-slate-600 rounded p-2 transition">${svgIconReopen}</button>
+          <button data-action="copy" title="Copiar" class="bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-slate-600 dark:text-white dark:hover:bg-slate-500 p-2 rounded transition">${svgIconCopy}</button>
+          <button data-action="expand" title="Expandir" class="text-blue-600 hover:bg-blue-100 dark:text-blue-400 dark:hover:bg-slate-600 rounded p-2 transition">${svgIconExpand}</button>
+          <button data-action="delete" title="Excluir do histórico" class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 font-bold text-2xl leading-none px-1">&times;</button>
         </div>
       </div>
-
       <div class="history-message-content overflow-hidden" style="max-height:0; transition:max-height 0.3s ease-out;">
-        <pre class="p-4 text-xs text-gray-800 dark:text-gray-200 whitespace-pre-wrap font-sans break-words">
-  ${escapeHtml(item.message)}
-        </pre>
-      </div>
-    `;
-
-      container.appendChild(div);
-    });
+        <pre class="p-4 text-xs text-gray-800 dark:text-gray-200 whitespace-pre-wrap font-sans break-words">${escapeHtml(item.message)}</pre>
+      </div>`;
+    return div;
   }
 
-  /**
-   * @functionality 211
-   * @category 2xx: Banco de Dados e Persistência
-   * @name Limpeza Total de Histórico com Confirmação e Reset de Container
-   * @description Deleta todos itens do store 'history' e limpa UI.
-   */
-  function clearHistory() {
-    if (
-      !confirm(
-        "Tem certeza que deseja apagar TODO o histórico de mensagens? Esta ação não pode ser desfeita.",
-      )
-    ) {
-      return;
+  async function renderHistory(reset = true) {
+    if (reset) {
+      historyPage = 0;
+      historyItemsById.clear();
+      historyFilters = readHistoryFiltersFromUI();
+      historyListContainer.innerHTML = '<p class="text-gray-500 text-center">Carregando histórico...</p>';
+      historyCount.textContent = "";
     }
-    if (!db) return;
-    const transaction = db.transaction(["history"], "readwrite");
-    const store = transaction.objectStore("history");
-    const request = store.clear();
-    request.onsuccess = () => {
-      showToast("Histórico limpo com sucesso.", "success");
-      renderHistory();
-      atualizarStatsExternos();
-    };
-    request.onerror = () => {
-      showToast("Erro ao limpar o histórico.", "error");
-    };
-  }
-
-  /**
-   * @functionality 210
-   * @category 2xx: Banco de Dados e Persistência
-   * @name Deleção de Item de Histórico com Confirmação e Atualização de Lista
-   * @description Remove por ID via transaction e re-renderiza lista.
-   */
-  function deleteHistoryItem(id) {
-    if (!db) return;
-    const transaction = db.transaction(["history"], "readwrite");
-    const store = transaction.objectStore("history");
-    const request = store.delete(id);
-    request.onsuccess = () => {
-      showToast("Item removido do histórico.", "success");
-      renderHistory();
-      atualizarStatsExternos();
-    };
-    request.onerror = () => {
-      showToast("Erro ao remover item.", "error");
-    };
-  }
-
-  // --- LÓGICA DO DASHBOARD ---
-
-  /**
-   * @functionality 600
-   * @category 6xx: Dashboard e Análises
-   * @name Função Principal de Renderização do Dashboard
-   * @description Orquestra a busca, processamento e renderização dos dados.
-   */
-  async function renderDashboard() {
- 
-    // Mostra feedback de carregamento
-    topDocsList.innerHTML =
-      '<p class="text-gray-500 text-center">Processando...</p>';
-    topReasonsList.innerHTML =
-      '<p class="text-gray-500 text-center">Processando...</p>';
-
+    historyLoadMoreBtn.disabled = true;
     try {
-      const period = dashboardPeriodFilter.value;
-      const historyItems = await loadHistoryForDashboard(period);
+      await getCurrentUserId();
+      const { data, count } = await fetchHistoryPage(historyPage, historyFilters);
+      historyTotal = count;
+      if (reset) historyListContainer.innerHTML = "";
+      if (reset && data.length === 0) {
+        historyListContainer.innerHTML = '<p class="text-gray-500 text-center">Nenhum registro encontrado para os filtros aplicados.</p>';
+      }
+      data.forEach((item) => {
+        historyItemsById.set(String(item.id), item);
+        historyListContainer.appendChild(buildHistoryCard(item));
+      });
+      historyCount.textContent = historyTotal ? `Exibindo ${historyItemsById.size} de ${historyTotal} registro(s)` : "";
+      historyLoadMoreBtn.classList.toggle("hidden", historyItemsById.size >= historyTotal);
+    } catch (error) {
+      console.error("Erro ao carregar histórico:", error);
+      historyListContainer.innerHTML = '<p class="text-red-500 text-center">Não foi possível carregar o histórico. Verifique sua conexão.</p>';
+    } finally {
+      historyLoadMoreBtn.disabled = false;
+    }
+  }
+
+  async function deleteHistoryItem(id) {
+    if (!confirm("Remover este registro do histórico?")) return;
+    try {
+      const { error } = await supabaseClientCaf
+        .from(TBL_HISTORY)
+        .update({ deleted_at: new Date().toISOString() })
+        .eq("id", id);
+      if (error) throw error;
+      showToast("Item removido do histórico.", "success");
+      renderHistory(true);
+      atualizarStatsExternos();
+    } catch (err) {
+      console.error(err);
+      showToast("Erro ao remover item.", "error");
+    }
+  }
+
+  async function clearHistory() {
+    if (!confirm("Tem certeza que deseja apagar TODO o seu histórico de mensagens?\n\nOs registros deixarão de aparecer no histórico e no dashboard.")) return;
+    try {
+      await getCurrentUserId();
+      const { error } = await supabaseClientCaf
+        .from(TBL_HISTORY)
+        .update({ deleted_at: new Date().toISOString() })
+        .is("deleted_at", null);
+      if (error) throw error;
+      showToast("Histórico limpo com sucesso.", "success");
+      renderHistory(true);
+      atualizarStatsExternos();
+    } catch (err) {
+      console.error(err);
+      showToast("Erro ao limpar o histórico.", "error");
+    }
+  }
+
+  /** Recarrega uma análise do histórico no formulário principal. */
+  function reopenHistoryItem(item) {
+    if (!item) return;
+    resetFormFields();
+    cnpjInputForDb.value = formatDocument(item.cnpj || "");
+    companyNameInputForDb.value = item.company_name || "";
+    companyNameResults.innerHTML = "";
+    cnpjStatusSpan.textContent = "";
+    registrationDateInput.value = "--";
+    if (["CRC", "CRS", "Candidato"].includes(item.registration_type)) {
+      registrationTypeInput.value = item.registration_type;
+    }
+    const radio = Array.from(statusRadios).find((r) => r.value === item.status);
+    if (radio) radio.checked = true;
+    toggleRejectedDocsSection();
+    if (item.status === "Deferida Parcial" && item.granted_type) {
+      partialRegistrationTypeInput.value = item.granted_type;
+    }
+    if (item.analysis_date) analysisDateInput.value = item.analysis_date;
+    rejectedDocs = Array.isArray(item.rejected_docs) ? item.rejected_docs.map((d) => ({ ...d })) : [];
+    renderRejectedDocs();
+    const c = item.contact;
+    if (item.contact_made) {
+      contactMadeCheckbox.checked = true;
+      contactDetailsWrapper.classList.remove("hidden");
+    }
+    if (c) {
+      contactNameInput.value = c.name || "";
+      if (c.role) contactRoleInput.value = c.role;
+      if (contactPhoneInput) contactPhoneInput.value = c.phone || "";
+      if (contactSuccessSelect && c.success) contactSuccessSelect.value = c.success;
+      const g = document.getElementById(c.gender === "F" ? "contactGenderF" : "contactGenderM");
+      if (g) g.checked = true;
+    }
+    historyModal.classList.add("hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    showToast("Análise carregada no formulário. Revise e gere novamente se necessário.", "info", 4000);
+  }
+
+  // =====================================================================
+  // DASHBOARD
+  // =====================================================================
+  async function renderDashboard() {
+    topDocsList.innerHTML = '<p class="text-gray-500 text-center">Processando...</p>';
+    topReasonsList.innerHTML = '<p class="text-gray-500 text-center">Processando...</p>';
+    try {
+      const historyItems = await loadHistoryForDashboard(dashboardPeriodFilter.value);
       dashboardTotalCount.textContent = historyItems.length;
       if (historyItems.length === 0) {
-        topDocsList.innerHTML =
-          '<p class="text-gray-500 text-center">Nenhum dado encontrado.</p>';
-        topReasonsList.innerHTML =
-          '<p class="text-gray-500 text-center">Nenhum dado encontrado.</p>';
-        if (statusChartInstance) statusChartInstance.destroy();
+        topDocsList.innerHTML = '<p class="text-gray-500 text-center">Nenhum dado encontrado.</p>';
+        topReasonsList.innerHTML = '<p class="text-gray-500 text-center">Nenhum dado encontrado.</p>';
+        if (statusChartInstance) { statusChartInstance.destroy(); statusChartInstance = null; }
         return;
       }
-
       const stats = processHistoryData(historyItems);
-
       renderStatusChart(stats.statusCounts);
-      renderTopList(
-        topDocsList,
-        stats.docCounts,
-        "Nenhum documento indeferido registrado.",
-      );
-      renderTopList(
-        topReasonsList,
-        stats.reasonCounts,
-        "Nenhum motivo de indeferimento registrado.",
-      );
+      renderTopList(topDocsList, stats.docCounts, "Nenhum documento indeferido registrado.");
+      renderTopList(topReasonsList, stats.reasonCounts, "Nenhum motivo de indeferimento registrado.");
     } catch (error) {
       console.error("Erro ao renderizar dashboard:", error);
       showToast("Erro ao processar dados do dashboard.", "error");
     }
   }
 
-  /**
-   * @functionality 601
-   * @category 6xx: Dashboard e Análises
-   * @name Carregamento de Dados do Histórico com Filtro
-   * @description Busca no IndexedDB usando cursor e filtros de período/limite.
-   */
-  function loadHistoryForDashboard(period = "all") {
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction(["history"], "readonly");
-      const store = transaction.objectStore("history");
-      const index = store.index("timestamp"); // Usa o índice de timestamp
-
-      let range = null;
-      if (period === "month") {
-        const oneMonthAgo = new Date();
-        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-        range = IDBKeyRange.lowerBound(oneMonthAgo.toISOString());
-      }
-
-      const request = index.openCursor(range, "prev"); // 'prev' para pegar os mais recentes
-      const results = [];
-      const limit = 1000;
-
-      request.onsuccess = (event) => {
-        const cursor = event.target.result;
-        if (cursor && results.length < limit) {
-          results.push(cursor.value);
-          cursor.continue();
-        } else {
-          resolve(results); // Retorna os dados (limitados a 1000 ou pelo período)
-        }
-      };
-      request.onerror = (event) => reject(event.target.error);
-    });
+  async function loadHistoryForDashboard(period = "all") {
+    await getCurrentUserId();
+    let q = supabaseClientCaf
+      .from(TBL_HISTORY)
+      .select("status, rejected_docs, message, created_at")
+      .is("deleted_at", null)
+      .order("created_at", { ascending: false })
+      .limit(1000);
+    if (period === "month") {
+      const oneMonthAgo = new Date();
+      oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+      q = q.gte("created_at", oneMonthAgo.toISOString());
+    }
+    const { data, error } = await q;
+    if (error) throw error;
+    return (data || []).map((r) => ({ status: r.status, message: r.message, rejectedDocs: r.rejected_docs }));
   }
 
-  /**
-   * @functionality 602
-   * @category 6xx: Dashboard e Análises
-   * @name Processamento e Agregação de Dados do Histórico
-   * @description Processa o array de histórico, com fallback para dados antigos.
-   */
   function processHistoryData(historyItems) {
     const statusCounts = new Map();
     const docCounts = new Map();
     const reasonCounts = new Map();
-
-    const statusRegex = /foi analisada e \*(.*?)\*/; // Fallback para dados antigos
-
     historyItems.forEach((item) => {
-      // 1. Processar Status (com fallback)
       let status = item.status;
       if (!status && item.message) {
-        const match = item.message.match(statusRegex);
-        if (match && match[1]) {
-          status = match[1];
-        }
+        const match = item.message.match(legacyStatusRegex);
+        if (match && match[1]) status = match[1];
       }
-      if (status) {
-        statusCounts.set(status, (statusCounts.get(status) || 0) + 1);
-      }
-
-      // 2. Processar Documentos e Motivos (APENAS dados novos)
+      if (status) statusCounts.set(status, (statusCounts.get(status) || 0) + 1);
       if (item.rejectedDocs && Array.isArray(item.rejectedDocs)) {
         item.rejectedDocs.forEach((doc) => {
-          // Contar Documentos
-          let docName =
-            doc.name === "Sócio" && doc.socioName
-              ? `Sócio: ${doc.socioName}`
-              : doc.name;
+          const docName = doc.name === "Sócio" && doc.socioName ? `Sócio: ${doc.socioName}` : doc.name;
           docCounts.set(docName, (docCounts.get(docName) || 0) + 1);
-
-          // Contar Motivos
-          if (doc.reason) {
-            reasonCounts.set(
-              doc.reason,
-              (reasonCounts.get(doc.reason) || 0) + 1,
-            );
-          }
+          if (doc.reason) reasonCounts.set(doc.reason, (reasonCounts.get(doc.reason) || 0) + 1);
         });
       }
     });
-
-    // Helper para ordenar Map e pegar Top 5
-    const sortMap = (map) => {
-      return [...map.entries()]
-        .sort((a, b) => b[1] - a[1]) // Ordena por contagem (descendente)
-        .slice(0, 5); // Pega o Top 5
-    };
-
+    const sortMap = (map) => [...map.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
     return {
-      statusCounts: new Map(
-        [...statusCounts.entries()].sort((a, b) => b[1] - a[1]),
-      ),
+      statusCounts: new Map([...statusCounts.entries()].sort((a, b) => b[1] - a[1])),
       docCounts: sortMap(docCounts),
       reasonCounts: sortMap(reasonCounts),
     };
   }
-  /**
-   * @functionality 603
-   * @category 6xx: Dashboard e Análises
-   * @name Renderização do Gráfico de Pizza (Chart.js)
-   * @description Cria ou atualiza a instância do gráfico de status.
-   */
+
   function renderStatusChart(statusData) {
-    const ctx = statusChartCanvas.getContext("2d");
-
-    // Destrói o gráfico anterior, se existir (essencial para "Atualizar")
-    if (statusChartInstance) {
-      statusChartInstance.destroy();
+    if (typeof Chart === "undefined") {
+      console.warn("Chart.js não carregado.");
+      return;
     }
-
-    // Mapeamento de cores (pode ser expandido)
+    const ctx = statusChartCanvas.getContext("2d");
+    if (statusChartInstance) statusChartInstance.destroy();
     const statusColors = {
-      Deferida: "rgba(34, 139, 34, 0.7)", // Verde
-      Indeferida: "rgba(220, 20, 60, 0.7)", // Vermelho
-      "Deferida Parcial": "rgba(255, 165, 0, 0.7)", // Laranja
-      "Pendente de Envio": "rgba(100, 149, 237, 0.7)", // Azul
-      "Pendente do Termo": "rgba(218, 165, 32, 0.7)", // Dourado
-      default: "rgba(128, 128, 128, 0.7)", // Cinza
+      Deferida: "rgba(34, 139, 34, 0.7)",
+      Indeferida: "rgba(220, 20, 60, 0.7)",
+      "Deferida Parcial": "rgba(255, 165, 0, 0.7)",
+      "Pendente de Envio": "rgba(100, 149, 237, 0.7)",
+      "Pendente do Termo": "rgba(218, 165, 32, 0.7)",
+      Contato: "rgba(20, 184, 166, 0.7)",
+      default: "rgba(128, 128, 128, 0.7)",
     };
-
     const labels = [...statusData.keys()];
     const data = [...statusData.values()];
-    const backgroundColors = labels.map(
-      (label) => statusColors[label] || statusColors.default,
-    );
-
+    const backgroundColors = labels.map((label) => statusColors[label] || statusColors.default);
     statusChartInstance = new Chart(ctx, {
-      type: "pie", // Tipo 'pie' (Pizza)
+      type: "pie",
       data: {
-        labels: labels,
-        datasets: [
-          {
-            label: "# de Análises",
-            data: data,
-            backgroundColor: backgroundColors,
-            borderColor: backgroundColors.map((c) => c.replace("0.7", "1")),
-            borderWidth: 1,
-          },
-        ],
+        labels,
+        datasets: [{
+          label: "# de Análises",
+          data,
+          backgroundColor: backgroundColors,
+          borderColor: backgroundColors.map((c) => c.replace("0.7", "1")),
+          borderWidth: 1,
+        }],
       },
       options: {
         responsive: true,
         plugins: {
-          legend: {
-            position: "top",
-          },
+          legend: { position: "top" },
           tooltip: {
             callbacks: {
               label: function (context) {
-                let label = context.label || "";
-                let value = context.raw || 0;
-                let total = context.chart.getDatasetMeta(0).total;
-                let percentage = ((value / total) * 100).toFixed(1) + "%";
+                const label = context.label || "";
+                const value = context.raw || 0;
+                const total = context.chart.getDatasetMeta(0).total;
+                const percentage = ((value / total) * 100).toFixed(1) + "%";
                 return `${label}: ${value} (${percentage})`;
               },
             },
@@ -1157,384 +1117,478 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  /**
-   * @functionality 604
-   * @category 6xx: Dashboard e Análises
-   * @name Renderização das Listas "Top 5"
-   * @description Popula o HTML das listas de documentos e motivos.
-   */
   function renderTopList(container, data, emptyMessage) {
     if (data.length === 0) {
       container.innerHTML = `<p class="text-gray-500 text-center">${emptyMessage}</p>`;
       return;
     }
-
-    container.innerHTML = ""; // Limpa o container
+    container.innerHTML = "";
     const ol = document.createElement("ol");
     ol.className = "list-decimal list-inside space-y-2";
-
     data.forEach(([name, count]) => {
       const li = document.createElement("li");
-      li.className =
-        "text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-slate-800 p-2 border-l-4 border-blue-500 rounded-r-md";
-      li.innerHTML = `
-                <span class="font-semibold text-blue-700 dark:text-blue-400">${count}x</span> - ${escapeHtml(
-                  name,
-                )}
-            `;
+      li.className = "text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-slate-800 p-2 border-l-4 border-blue-500 rounded-r-md";
+      li.innerHTML = `<span class="font-semibold text-blue-700 dark:text-blue-400">${count}x</span> - ${escapeHtml(String(name))}`;
       ol.appendChild(li);
     });
     container.appendChild(ol);
   }
 
-  // --- FIM DA LÓGICA DO DASHBOARD ---
+  // =====================================================================
+  // CONTATOS PESSOAIS (lista individual de cada usuário - RLS)
+  // =====================================================================
+  let contactsCache = [];
 
-  // ---XX LÓGICA DE CONTATOS PESSOAIS XX---
-
-  /**
-   * @functionality 212
-   * @category 2xx: Banco de Dados e Persistência
-   * @name Renderização da Lista de Contatos Pessoais no Modal de DB
-   * @description Lê o store 'contacts' e popula a lista no dbModal com botões de exclusão.
-   */
-  async function renderContactsList() {
-    if (!db) return;
-    contactsListContainer.innerHTML =
-      '<p class="text-gray-500 text-center">Carregando...</p>';
-
-    const transaction = db.transaction(["contacts"], "readonly");
-    const store = transaction.objectStore("contacts");
-    const allContacts = await new Promise((resolve, reject) => {
-      store.getAll().onsuccess = (e) => resolve(e.target.result);
-      store.getAll().onerror = (e) => reject(e.target.error);
+  function sortContacts(list) {
+    return list.sort((a, b) => {
+      if (a.is_favorite !== b.is_favorite) return a.is_favorite ? -1 : 1;
+      return (a.name || "").localeCompare(b.name || "", "pt-BR", { sensitivity: "base" });
     });
+  }
 
-    if (allContacts.length === 0) {
-      contactsListContainer.innerHTML =
-        '<p class="text-sm text-gray-500 text-center">Nenhum contato cadastrado.</p>';
+  async function loadContacts() {
+    await getCurrentUserId();
+    const { data, error } = await supabaseClientCaf.from(TBL_CONTACTS).select(CONTACT_COLUMNS);
+    if (error) throw error;
+    contactsCache = sortContacts(data || []);
+    renderContactsList();
+    return contactsCache;
+  }
+
+  function filterContacts(term) {
+    const t = normalizeForSearch(term);
+    if (!t) return contactsCache;
+    const digits = term.replace(/\D/g, "");
+    return contactsCache.filter((c) =>
+      normalizeForSearch(c.name).includes(t) ||
+      normalizeForSearch(c.role).includes(t) ||
+      normalizeForSearch(c.sector).includes(t) ||
+      normalizeForSearch(c.email).includes(t) ||
+      (digits.length >= 3 && String(c.phone).includes(digits)),
+    );
+  }
+
+  /** Linha "Cargo • Setor" (omite o que estiver vazio). */
+  function contactSubtitle(c) {
+    return [c.role, c.sector].filter(Boolean).map(escapeHtml).join(" • ");
+  }
+
+  function renderContactsList() {
+    const total = contactsCache.length;
+    if (contactsCountEl) contactsCountEl.textContent = total;
+    if (contactsCountBadge) contactsCountBadge.textContent = total;
+    const list = filterContacts(contactsSearchInput ? contactsSearchInput.value : "");
+    if (total === 0) {
+      contactsListContainer.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">Nenhum contato cadastrado.</p>';
       return;
     }
-
+    if (list.length === 0) {
+      contactsListContainer.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">Nenhum contato encontrado para a busca.</p>';
+      return;
+    }
     contactsListContainer.innerHTML = "";
-    allContacts.forEach((contact) => {
+    list.forEach((contact) => {
+      const sub = contactSubtitle(contact);
+      const emailHtml = contact.email
+        ? ` • <a href="mailto:${escapeHtml(contact.email)}" class="text-blue-600 dark:text-blue-400 hover:underline">${escapeHtml(contact.email)}</a>`
+        : "";
       const div = document.createElement("div");
-      div.className =
-        "flex justify-between items-center bg-white dark:bg-slate-700 p-2 rounded border dark:border-slate-600 text-sm";
+      div.className = "flex justify-between items-center gap-2 bg-white dark:bg-slate-700 p-2 rounded-lg border dark:border-slate-600 text-sm";
       div.innerHTML = `
-                <div>
-                    <p class="font-semibold text-gray-800 dark:text-white">${escapeHtml(
-                      contact.name,
-                    )}</p>
-                    <p class="text-xs text-gray-600 dark:text-white">${escapeHtml(
-                      contact.role,
-                    )} (${escapeHtml(contact.phone)})</p>
-                </div>
-                <button data-id="${
-                  contact.id
-                }" class="delete-contact-btn text-red-500 hover:text-red-700 font-bold p-1 text-lg leading-none">&times;</button>
-            `;
+        <button data-action="fav" data-id="${contact.id}" title="${contact.is_favorite ? "Remover dos favoritos" : "Marcar como favorito"}"
+                class="text-xl leading-none px-1 ${contact.is_favorite ? "text-yellow-500" : "text-gray-300 hover:text-yellow-400"}">★</button>
+        <div class="flex-grow min-w-0">
+          <p class="font-semibold text-gray-800 dark:text-white truncate">${escapeHtml(contact.name)}</p>
+          ${sub ? `<p class="text-xs text-gray-600 dark:text-gray-300 truncate">${sub}</p>` : ""}
+          <p class="text-xs text-gray-500 dark:text-gray-400 truncate">${escapeHtml(formatPhoneDisplay(contact.phone))}${emailHtml}</p>
+        </div>
+        <button data-action="edit" data-id="${contact.id}" title="Editar" class="text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-slate-600 rounded px-2 py-1 text-xs font-semibold">Editar</button>
+        <button data-action="delete" data-id="${contact.id}" title="Excluir" class="text-red-500 hover:text-red-700 font-bold p-1 text-lg leading-none">&times;</button>`;
       contactsListContainer.appendChild(div);
     });
   }
 
-  /**
-   * @functionality 213
-   * @category 2xx: Banco de Dados e Persistência
-   * @name Adicionar Contato Pessoal
-   * @description Salva um novo contato no store 'contacts' a partir do formulário do modal.
-   */
-  function addContact() {
-    const name = modalcontactNameInput.value.trim();
-    const role = modalcontactRoleInput.value.trim();
-    let phone = contactPhoneInputModal.value.trim().replace(/\D/g, "");
+  function resetContactForm() {
+    contactEditingIdInput.value = "";
+    modalcontactNameInput.value = "";
+    modalcontactRoleInput.value = "";
+    modalcontactSectorInput.value = "";
+    modalcontactEmailInput.value = "";
+    contactPhoneInputModal.value = "";
+    contactFavoriteInput.checked = false;
+    contactFormTitle.textContent = "Novo contato";
+    addContactBtn.textContent = "Adicionar Contato";
+    cancelEditContactBtn.classList.add("hidden");
+  }
 
-    if (!name || !phone) {
+  function startEditContact(id) {
+    const c = contactsCache.find((x) => x.id === id);
+    if (!c) return;
+    contactEditingIdInput.value = c.id;
+    modalcontactNameInput.value = c.name || "";
+    modalcontactRoleInput.value = c.role || "";
+    modalcontactSectorInput.value = c.sector || "";
+    modalcontactEmailInput.value = c.email || "";
+    contactPhoneInputModal.value = maskBrPhone(c.phone);
+    contactFavoriteInput.checked = !!c.is_favorite;
+    contactFormTitle.textContent = "Editando contato";
+    addContactBtn.textContent = "Salvar alterações";
+    cancelEditContactBtn.classList.remove("hidden");
+    modalcontactNameInput.focus();
+  }
+
+  let savingContact = false;
+  async function saveContact() {
+    if (savingContact) return;
+    const name = modalcontactNameInput.value.trim();
+    const role = optText(modalcontactRoleInput.value, 80);
+    const sector = optText(modalcontactSectorInput.value, 120);
+    const phone = normalizePhone(contactPhoneInputModal.value);
+    const email = normalizeEmail(modalcontactEmailInput.value);
+    const editingId = contactEditingIdInput.value || null;
+    if (!name || !contactPhoneInputModal.value.trim()) {
       showToast("Nome e WhatsApp são obrigatórios.", "error");
       return;
     }
-
-    if (phone.length <= 11) {
-      // Ex: 719... ou 119...
-      showToast("Telefone inválido. Inclua o código do país (55).", "error");
+    if (!phone) {
+      showToast("Telefone inválido. Informe DDD + número (10 ou 11 dígitos).", "error");
       return;
     }
-
-    const transaction = db.transaction(["contacts"], "readwrite");
-    const store = transaction.objectStore("contacts");
-    store.put({ name, role, phone });
-
-    transaction.oncomplete = () => {
-      showToast("Contato adicionado!", "success");
-      modalcontactNameInput.value = "";
-      modalcontactRoleInput.value = "";
-      contactPhoneInputModal.value = "";
-      renderContactsList();
-    };
-    transaction.onerror = () => showToast("Erro ao salvar contato.", "error");
+    if (email === false) {
+      showToast("E-mail inválido. Corrija ou deixe o campo em branco.", "error");
+      modalcontactEmailInput.focus();
+      return;
+    }
+    const dup = contactsCache.find((c) => c.phone === phone && c.id !== editingId);
+    if (dup) {
+      showToast(`Este telefone já está cadastrado para "${dup.name}".`, "error");
+      return;
+    }
+    savingContact = true;
+    addContactBtn.disabled = true;
+    try {
+      const uid = await getCurrentUserId();
+      const payload = { name, role, sector, phone, email, is_favorite: contactFavoriteInput.checked };
+      let error;
+      if (editingId) {
+        ({ error } = await supabaseClientCaf.from(TBL_CONTACTS).update(payload).eq("id", editingId));
+      } else {
+        ({ error } = await supabaseClientCaf.from(TBL_CONTACTS).insert({ ...payload, user_id: uid }));
+      }
+      if (error) {
+        if (error.code === "23505") throw new Error("Este telefone já está cadastrado.");
+        if (error.code === "23514") throw new Error("Dados inválidos: verifique telefone e e-mail.");
+        throw error;
+      }
+      showToast(editingId ? "Contato atualizado!" : "Contato adicionado!", "success");
+      resetContactForm();
+      await loadContacts();
+    } catch (err) {
+      console.error(err);
+      const known = err.message && (err.message.includes("telefone") || err.message.includes("Dados inválidos"));
+      showToast(known ? err.message : "Erro ao salvar contato.", "error");
+    } finally {
+      savingContact = false;
+      addContactBtn.disabled = false;
+    }
   }
 
-  /**
-   * @functionality 214
-   * @category 2xx: Banco de Dados e Persistência
-   * @name Deletar Contato Pessoal
-   * @description Remove um contato do store 'contacts' por ID.
-   */
-  function deleteContact(id) {
-    if (!db || !id) return;
-    if (!confirm("Tem certeza que deseja remover este contato?")) return;
+  async function toggleFavorite(id) {
+    const c = contactsCache.find((x) => x.id === id);
+    if (!c) return;
+    try {
+      const { error } = await supabaseClientCaf.from(TBL_CONTACTS).update({ is_favorite: !c.is_favorite }).eq("id", id);
+      if (error) throw error;
+      c.is_favorite = !c.is_favorite;
+      sortContacts(contactsCache);
+      renderContactsList();
+    } catch (err) {
+      console.error(err);
+      showToast("Erro ao atualizar favorito.", "error");
+    }
+  }
 
-    const transaction = db.transaction(["contacts"], "readwrite");
-    const store = transaction.objectStore("contacts");
-    store.delete(id);
-
-    transaction.oncomplete = () => {
+  async function deleteContact(id) {
+    const c = contactsCache.find((x) => x.id === id);
+    if (!c) return;
+    if (!confirm(`Remover o contato "${c.name}"?`)) return;
+    try {
+      const { error } = await supabaseClientCaf.from(TBL_CONTACTS).delete().eq("id", id);
+      if (error) throw error;
+      if (contactEditingIdInput.value === id) resetContactForm();
       showToast("Contato removido.", "success");
-      renderContactsList();
-    };
-    transaction.onerror = () => showToast("Erro ao remover contato.", "error");
+      await loadContacts();
+    } catch (err) {
+      console.error(err);
+      showToast("Erro ao remover contato.", "error");
+    }
   }
 
-  /**
-   * @functionality 417
-   * @category 4xx: UI/UX e Interações
-   * @name Exportar CSV de Contatos Pessoais
-   * @description Gera e baixa um arquivo CSV a partir do store 'contacts'.
-   */
-  async function exportContactsCsv() {
-    if (!db) return;
-    const transaction = db.transaction(["contacts"], "readonly");
-    const store = transaction.objectStore("contacts");
-    const allContacts = await new Promise((resolve, reject) => {
-      store.getAll().onsuccess = (e) => resolve(e.target.result);
-      store.getAll().onerror = (e) => reject(e.target.error);
+  function exportContactsCsv() {
+    if (!contactsCache.length) {
+      showToast("Não há contatos para exportar.", "error");
+      return;
+    }
+    const clean = (s) => String(s || "").replace(/;;/g, ";").replace(/[\r\n]+/g, " ");
+    let csvContent = "Nome;;Cargo;;Telefone;;Setor;;Email\n";
+    contactsCache.forEach((c) => {
+      csvContent += `${clean(c.name)};;${clean(c.role)};;${c.phone};;${clean(c.sector)};;${clean(c.email)}\n`;
     });
-
-    let csvContent = "Nome;;Cargo;;Telefone\n";
-    allContacts.forEach((c) => {
-      csvContent += `${c.name};;${c.role};;${c.phone}\n`;
-    });
-
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "contatos_pessoais_whatsapp.csv";
-    a.click();
-    URL.revokeObjectURL(url);
+    downloadBlob("\uFEFF" + csvContent, "contatos_pessoais_whatsapp.csv", "text/csv;charset=utf-8;");
     showToast("CSV de Contatos exportado!", "success");
   }
 
+  /** Lê CSV em UTF-8 (com ou sem BOM) e, se falhar, em ISO-8859-1. */
+  async function readCsvText(file) {
+    const buf = await file.arrayBuffer();
+    try {
+      return new TextDecoder("utf-8", { fatal: true }).decode(buf).replace(/^\uFEFF/, "");
+    } catch (e) {
+      return new TextDecoder("iso-8859-1").decode(buf);
+    }
+  }
+
   /**
-   * @functionality 314
-   * @category 3xx: Geração de Mensagens e Formulários
-   * @name Abrir Modal de Envio WhatsApp
-   * @description Popula o wppModal com contatos do store 'contacts'.
+   * Linha: Nome;;Cargo;;Telefone[;;Setor[;;Email]]
+   * hasSector / hasEmail indicam se a coluna EXISTE na linha (para não
+   * apagar dados já cadastrados ao importar arquivos antigos de 3 colunas).
    */
-  async function openWppModal() {
-    if (!db) {
-      showToast("Banco de dados não disponível.", "error");
+  const contactsParser = (line) => {
+    const parts = line.split(";;");
+    if (parts.length < 3) return null;
+    const name = parts[0] ? parts[0].trim() : "";
+    const role = parts[1] ? parts[1].trim() : "";
+    const phone = normalizePhone(parts[2]);
+    if (!name || !phone) return null;
+    const hasSector = parts.length >= 4;
+    const hasEmail = parts.length >= 5;
+    const email = hasEmail ? normalizeEmail(parts[4]) : null;
+    return {
+      name,
+      role,
+      phone,
+      hasSector,
+      sector: hasSector ? optText(parts[3], 120) : null,
+      hasEmail,
+      email: email || null,
+      emailInvalid: email === false,
+    };
+  };
+
+  async function importContactsCsv() {
+    const file = contactsCsvFileInput.files[0];
+    if (!file) {
+      showToast("Selecione um arquivo CSV de contatos.", "error");
       return;
     }
+    loadContactsCsvBtn.disabled = true;
+    contactsDbStatus.className = "text-sm font-medium text-center min-h-[20px] text-blue-600";
+    contactsDbStatus.textContent = "Processando...";
+    try {
+      const uid = await getCurrentUserId();
+      const text = await readCsvText(file);
+      const lines = text.split(/\r?\n/).filter((l) => l.trim());
+      const byPhone = new Map();
+      let invalid = 0;
+      let invalidEmails = 0;
+      lines.forEach((line, idx) => {
+        const rec = contactsParser(line);
+        if (rec) {
+          byPhone.set(rec.phone, rec);
+          if (rec.emailInvalid) invalidEmails++;
+        } else if (!(idx === 0 && /nome/i.test(line))) {
+          invalid++; // ignora cabeçalho
+        }
+      });
+      if (!byPhone.size) {
+        contactsDbStatus.textContent = "Nenhum contato válido encontrado no arquivo.";
+        contactsDbStatus.className = "text-sm font-medium text-center min-h-[20px] text-red-600";
+        return;
+      }
+      const existingByPhone = new Map(contactsCache.map((c) => [c.phone, c]));
+      // Todas as linhas com o MESMO conjunto de colunas (exigência do upsert em lote).
+      // Colunas ausentes no arquivo preservam o valor já cadastrado.
+      const rows = [...byPhone.values()].map((r) => {
+        const ex = existingByPhone.get(r.phone);
+        return {
+          user_id: uid,
+          name: r.name,
+          role: r.role || null,
+          phone: r.phone,
+          sector: r.hasSector ? r.sector : ex ? ex.sector || null : null,
+          email: r.hasEmail && !r.emailInvalid ? r.email : ex ? ex.email || null : null,
+        };
+      });
+      const novos = rows.filter((r) => !existingByPhone.has(r.phone)).length;
+      const atualizados = rows.length - novos;
+      for (const part of chunk(rows, 500)) {
+        const { error } = await supabaseClientCaf.from(TBL_CONTACTS).upsert(part, { onConflict: "user_id,phone" });
+        if (error) throw error;
+      }
+      await loadContacts();
+      contactsCsvFileInput.value = "";
+      let msg = `${novos} novo(s), ${atualizados} atualizado(s)`;
+      if (invalid) msg += `, ${invalid} linha(s) inválida(s) ignorada(s)`;
+      if (invalidEmails) msg += `, ${invalidEmails} e-mail(s) inválido(s) desconsiderado(s)`;
+      contactsDbStatus.textContent = msg + ".";
+      contactsDbStatus.className = "text-sm font-medium text-center min-h-[20px] text-green-600";
+      showToast("Contatos importados!", "success");
+    } catch (err) {
+      console.error(err);
+      contactsDbStatus.textContent = "Erro ao importar contatos.";
+      contactsDbStatus.className = "text-sm font-medium text-center min-h-[20px] text-red-600";
+      showToast("Erro ao importar contatos.", "error");
+    } finally {
+      loadContactsCsvBtn.disabled = false;
+    }
+  }
+
+  // --- WHATSAPP ---
+  function renderWppList() {
+    const list = filterContacts(wppSearchInput.value);
+    if (contactsCache.length === 0) {
+      wppContactListContainer.innerHTML = '<p class="text-center text-red-500">Nenhum contato pessoal cadastrado. Adicione contatos em "Meus Dados" &gt; "Gerenciar Contatos".</p>';
+      return;
+    }
+    if (list.length === 0) {
+      wppContactListContainer.innerHTML = '<p class="text-center text-gray-500">Nenhum contato encontrado.</p>';
+      return;
+    }
+    wppContactListContainer.innerHTML = "";
+    list.forEach((contact) => {
+      const sub = contactSubtitle(contact);
+      const button = document.createElement("button");
+      button.className = "w-full text-left p-3 bg-gray-50 dark:bg-slate-700 hover:bg-blue-100 dark:hover:bg-slate-600 rounded-lg transition";
+      button.dataset.phone = contact.phone;
+      button.innerHTML = `
+        <p class="font-semibold text-blue-700 dark:text-blue-400">${contact.is_favorite ? '<span class="text-yellow-500">★</span> ' : ""}${escapeHtml(contact.name)}</p>
+        <p class="text-sm text-gray-600 dark:text-gray-300">${sub}${sub ? " • " : ""}${escapeHtml(formatPhoneDisplay(contact.phone))}</p>`;
+      wppContactListContainer.appendChild(button);
+    });
+  }
+
+  async function openWppModal() {
     const message = resultText.value;
     if (!message) {
       showToast("Gere uma mensagem antes de enviar.", "error");
       return;
     }
-
-    wppContactListContainer.innerHTML =
-      '<p class="text-gray-500 text-center">Carregando contatos...</p>';
-    const transaction = db.transaction(["contacts"], "readonly");
-    const store = transaction.objectStore("contacts");
-    const allContacts = await new Promise((resolve, reject) => {
-      store.getAll().onsuccess = (e) => resolve(e.target.result);
-      store.getAll().onerror = (e) => reject(e.target.error);
-    });
-
-    if (allContacts.length === 0) {
-      wppContactListContainer.innerHTML =
-        '<p class="text-center text-red-500">Nenhum contato pessoal cadastrado. Adicione contatos no menu "Gerenciar Base de Dados".</p>';
-    } else {
-      wppContactListContainer.innerHTML = "";
-      allContacts.forEach((contact) => {
-        const button = document.createElement("button");
-        button.className =
-          "w-full text-left p-3 bg-gray-50 dark:bg-slate-700 hover:bg-blue-100 dark:hover:bg-slate-600 rounded-lg transition";
-        button.dataset.phone = contact.phone;
-        button.innerHTML = `
-                    <p class="font-semibold text-blue-700 dark:text-blue-400">${escapeHtml(
-                      contact.name,
-                    )}</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-300">${escapeHtml(
-                      contact.role,
-                    )}</p>
-                `;
-        wppContactListContainer.appendChild(button);
-      });
-    }
+    wppSearchInput.value = "";
+    wppContactListContainer.innerHTML = '<p class="text-gray-500 text-center">Carregando contatos...</p>';
     wppModal.classList.remove("hidden");
+    try {
+      await loadContacts();
+    } catch (e) {
+      console.error(e);
+      showToast("Não foi possível atualizar os contatos. Exibindo a última lista carregada.", "error");
+    }
+    renderWppList();
+    wppSearchInput.focus();
   }
 
-  /**
-   * @functionality 315
-   * @category 3xx: Geração de Mensagens e Formulários
-   * @name Handler de Clique para Envio de WhatsApp
-   * @description Pega o telefone do data-attribute e abre o link wa.me.
-   */
   function handleWppContactClick(event) {
     const targetButton = event.target.closest("button");
     if (!targetButton || !targetButton.dataset.phone) return;
-
     const phone = targetButton.dataset.phone;
-    const message = resultText.value;
-    const encodedMessage = encodeURIComponent(message);
-    const wppUrl = `https://wa.me/${phone}?text=${encodedMessage}`;
-
-    window.open(wppUrl, "_blank");
+    const encodedMessage = encodeURIComponent(resultText.value);
+    window.open(`https://wa.me/${phone}?text=${encodedMessage}`, "_blank");
     wppModal.classList.add("hidden");
   }
 
-  // ---XX LÓGICA PRINCIPAL DA APLICAÇÃO XX---
-
-  /**
-   * @functionality 205.5
-   * @category 2xx: Banco de Dados e Persistência
-   * @name Parsing de CSV para Contatos Pessoais
-   * @description Extrai nome, cargo e telefone de linhas CSV delimitadas por ';;'.
-   */
-  const contactsParser = (line) => {
-    const parts = line.split(";;");
-    if (parts.length >= 3) {
-      const name = parts[0]?.trim();
-      const role = parts[1]?.trim();
-      const phone = parts[2]?.trim().replace(/\D/g, ""); // Limpa o telefone
-      if (name && phone) return { name, role, phone };
+  // =====================================================================
+  // BUSCA DE EMPRESAS / FAMÍLIAS (inalterado)
+  // =====================================================================
+  let searchCnpjSeq = 0;
+  async function searchCnpj(doc) {
+    companyNameResults.innerHTML = "";
+    const cleanedDoc = doc.replace(/\D/g, "");
+    if (cleanedDoc.length !== 11 && cleanedDoc.length !== 14) {
+      companyNameInputForDb.value = "";
+      cnpjStatusSpan.textContent = "";
+      return;
     }
-    return null;
-  };
-
-  /**
-   * @functionality 302
-   * @category 3xx: Geração de Mensagens e Formulários
-   * @name Busca e Preenchimento Automático de Dados de Empresa via IndexedDB
-   * @description Consulta store 'companies' por CNPJ formatado, popula nome da empresa e exibe status de validação.
-   */
-let searchCnpjSeq = 0; // evita que uma resposta antiga sobrescreva uma mais nova
-async function searchCnpj(doc) {
-  companyNameResults.innerHTML = "";
-  const cleanedDoc = doc.replace(/\D/g, "");
-  if (cleanedDoc.length !== 11 && cleanedDoc.length !== 14) {
-    companyNameInputForDb.value = "";
-    cnpjStatusSpan.textContent = "";
-    return;
-  }
-
-  cnpjStatusSpan.textContent = "Buscando...";
-  cnpjStatusSpan.className = "text-gray-500";
-
-  const mySeq = ++searchCnpjSeq;
-  const { data, error } = await supabaseClientCaf
-    .from("companies")
-    .select("razao_social, data_cadastro, tipo_cadastro")
-    .eq("cnpj", cleanedDoc)
-    .maybeSingle();
-  if (mySeq !== searchCnpjSeq) return;
-
-  if (error) {
-    cnpjStatusSpan.textContent = "Erro";
-    cnpjStatusSpan.className = "text-red-600";
-    registrationDateInput.value = "--";
-    registrationTypeInput.value = "CRC";
-    console.error("searchCnpj:", error.message);
-    return;
-  }
-
-  if (data) {
-    companyNameInputForDb.value = data.razao_social;
-    registrationDateInput.value = formatDate(data.data_cadastro) || "--";
-
-    if (data.tipo_cadastro) {
-      const tipo = data.tipo_cadastro.trim().toUpperCase();
-      if (tipo === "CRC") {
-        registrationTypeInput.value = "CRC";
-      } else if (tipo === "CRS") {
-        registrationTypeInput.value = "CRS";
-      } else if (tipo === "CANDIDATO") {
-        registrationTypeInput.value = "Candidato";
+    cnpjStatusSpan.textContent = "Buscando...";
+    cnpjStatusSpan.className = "text-gray-500";
+    const mySeq = ++searchCnpjSeq;
+    const { data, error } = await supabaseClientCaf
+      .from("companies")
+      .select("razao_social, data_cadastro, tipo_cadastro")
+      .eq("cnpj", cleanedDoc)
+      .maybeSingle();
+    if (mySeq !== searchCnpjSeq) return;
+    if (error) {
+      cnpjStatusSpan.textContent = "Erro";
+      cnpjStatusSpan.className = "text-red-600";
+      registrationDateInput.value = "--";
+      registrationTypeInput.value = "CRC";
+      console.error("searchCnpj:", error.message);
+      return;
+    }
+    if (data) {
+      companyNameInputForDb.value = data.razao_social;
+      registrationDateInput.value = formatDate(data.data_cadastro) || "--";
+      if (data.tipo_cadastro) {
+        const tipo = data.tipo_cadastro.trim().toUpperCase();
+        if (tipo === "CRC") registrationTypeInput.value = "CRC";
+        else if (tipo === "CRS") registrationTypeInput.value = "CRS";
+        else if (tipo === "CANDIDATO") registrationTypeInput.value = "Candidato";
+        else registrationTypeInput.value = "CRC";
+        cnpjStatusSpan.textContent = "Encontrado";
+        cnpjStatusSpan.className = "text-green-600";
       } else {
         registrationTypeInput.value = "CRC";
+        cnpjStatusSpan.textContent = "Encontrado (Sem cadastro)";
+        cnpjStatusSpan.className = "text-yellow-600";
       }
-      cnpjStatusSpan.textContent = "Encontrado";
-      cnpjStatusSpan.className = "text-green-600";
     } else {
+      companyNameInputForDb.value = "";
+      registrationDateInput.value = "--";
       registrationTypeInput.value = "CRC";
-      cnpjStatusSpan.textContent = "Encontrado (Sem cadastro)";
-      cnpjStatusSpan.className = "text-yellow-600";
+      cnpjStatusSpan.textContent = "Não encontrado";
+      cnpjStatusSpan.className = "text-red-600";
     }
-  } else {
-    companyNameInputForDb.value = "";
-    registrationDateInput.value = "--";
-    registrationTypeInput.value = "CRC";
-    cnpjStatusSpan.textContent = "Não encontrado";
-    cnpjStatusSpan.className = "text-red-600";
-  }
-}
-
-  /**
-   * @functionality 302.5
-   * @category 3xx: Geração de Mensagens e Formulários
-   * @name Sistema de Autocomplete para Busca de Empresas por Razão Social
-   * @description Busca fuzzy (contains) em companies store via cursor, limita a 10 resultados.
-   */
-let searchCompanyByNameSeq = 0;
-async function searchCompanyByName(searchTerm) {
-  companyNameResults.innerHTML = "";
-  if (searchTerm.length < 5) return;
-
-  const mySeq = ++searchCompanyByNameSeq;
-  const { data, error } = await supabaseClientCaf
-    .from("companies")
-    .select("cnpj, razao_social, data_cadastro, tipo_cadastro")
-    .ilike("razao_social", `%${searchTerm}%`)
-    .limit(10);
-  if (mySeq !== searchCompanyByNameSeq) return;
-
-  if (error) {
-    console.error("searchCompanyByName:", error.message);
-    cnpjStatusSpan.textContent = "Erro na busca";
-    cnpjStatusSpan.className = "text-red-600";
-    return;
   }
 
-  const results = (data || []).map((c) => ({
-    cnpj: c.cnpj,
-    razaoSocial: c.razao_social,
-    dataCadastro: formatDate(c.data_cadastro),
-    tipoCadastro: c.tipo_cadastro,
-  }));
-  displayCompanyNameResults(results);
-}
-function debounce(fn, delayMs) {
-  let timer = null;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => fn(...args), delayMs);
-  };
-}
-const debouncedSearchCompanyByName = debounce(searchCompanyByName, 300);
+  let searchCompanyByNameSeq = 0;
+  async function searchCompanyByName(searchTerm) {
+    companyNameResults.innerHTML = "";
+    if (searchTerm.length < 5) return;
+    const mySeq = ++searchCompanyByNameSeq;
+    const { data, error } = await supabaseClientCaf
+      .from("companies")
+      .select("cnpj, razao_social, data_cadastro, tipo_cadastro")
+      .ilike("razao_social", `%${searchTerm}%`)
+      .limit(10);
+    if (mySeq !== searchCompanyByNameSeq) return;
+    if (error) {
+      console.error("searchCompanyByName:", error.message);
+      cnpjStatusSpan.textContent = "Erro na busca";
+      cnpjStatusSpan.className = "text-red-600";
+      return;
+    }
+    const results = (data || []).map((c) => ({
+      cnpj: c.cnpj,
+      razaoSocial: c.razao_social,
+      dataCadastro: formatDate(c.data_cadastro),
+      tipoCadastro: c.tipo_cadastro,
+    }));
+    displayCompanyNameResults(results);
+  }
 
-  /**
-   * @functionality 302.6
-   * @category 3xx: Geração de Mensagens e Formulários
-   * @name Renderização de Resultados de Autocomplete de Empresa
-   * @description Preenche div com resultados clicáveis, armazenando dados em data-attributes.
-   */
+  function debounce(fn, delayMs) {
+    let timer = null;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => fn(...args), delayMs);
+    };
+  }
+  const debouncedSearchCompanyByName = debounce(searchCompanyByName, 300);
+
   function displayCompanyNameResults(results) {
     companyNameResults.innerHTML = "";
     results.forEach((company) => {
       const div = document.createElement("div");
-      // Estilização idêntica à de famílias (via CSS em index/style.css)
-      div.className =
-        "p-3 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-sm bg-white dark:bg-slate-800 dark:text-white border-b dark:border-slate-700";
+      div.className = "p-3 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-sm bg-white dark:bg-slate-800 dark:text-white border-b dark:border-slate-700";
       div.textContent = company.razaoSocial;
       div.dataset.cnpj = company.cnpj;
       div.dataset.razaoSocial = company.razaoSocial;
@@ -1544,21 +1598,9 @@ const debouncedSearchCompanyByName = debounce(searchCompanyByName, 300);
     });
   }
 
-  /**
-   * @functionality 309
-   * @category 3xx: Geração de Mensagens e Formulários
-   * @name Mapeamento de Documentos por Categoria em Objeto Constante
-   * @description Define array docsByCat com listas de docs por aba (ex: Habilitação Jurídica).
-   */
   const docsByCat = {
     "Dados do Fornecedor": ["Documento de Identificação"],
-    "Habilitação Jurídica": [
-      "Contrato Social",
-      "Estatuto Social",
-      "Ata",
-      "Sócio",
-      "Dirigente",
-    ],
+    "Habilitação Jurídica": ["Contrato Social", "Estatuto Social", "Ata", "Sócio", "Dirigente"],
     Família: [],
     "Qualificação Técnica": [],
     "Regularidade Fiscal e Trabalhista": [
@@ -1572,11 +1614,7 @@ const debouncedSearchCompanyByName = debounce(searchCompanyByName, 300);
       "Regularidade com o FGTS - CEF",
       "Certidão de Débitos Trabalhistas",
     ],
-    "Qualificação Econômico-Financeira": [
-      "Concordata e Falência",
-      "Balanço 01",
-      "Balanço 02",
-    ],
+    "Qualificação Econômico-Financeira": ["Concordata e Falência", "Balanço 01", "Balanço 02"],
     "Formulários e Declarações": [
       "Declaração do Empregador",
       "Declaração de Superveniência",
@@ -1595,34 +1633,25 @@ const debouncedSearchCompanyByName = debounce(searchCompanyByName, 300);
   const resultText = document.getElementById("resultText");
   const copyBtn = document.getElementById("copyBtn");
   const addDocBtn = document.getElementById("addDocBtn");
-  const rejectedDocsListContainer =
-    document.getElementById("rejected-docs-list");
+  const rejectedDocsListContainer = document.getElementById("rejected-docs-list");
   const companyNameInput = document.getElementById("companyName");
   const analysisDateInput = document.getElementById("analysisDate");
   const registrationTypeInput = document.getElementById("registrationType");
   const registrationDateInput = document.getElementById("registrationDate");
   const docCategoryInput = document.getElementById("docCategory");
   const docNameSelect = document.getElementById("docName");
-  //const customDocNameWrapper = document.getElementById("customDocNameWrapper");
-  //const customDocNameInput = document.getElementById("customDocName");
   const socioNameWrapper = document.getElementById("socioNameWrapper");
   const socioNameInput = document.getElementById("socioName");
   const rejectionReasonInput = document.getElementById("rejectionReason");
-  const rejectionReasonResults = document.getElementById(
-    "rejectionReasonResults",
-  );
+  const rejectionReasonResults = document.getElementById("rejectionReasonResults");
   const docNameWrapper = document.getElementById("docNameWrapper");
-  const familyAutocompleteWrapper = document.getElementById(
-    "familyAutocompleteWrapper",
-  );
+  const familyAutocompleteWrapper = document.getElementById("familyAutocompleteWrapper");
   const familySearchInput = document.getElementById("familySearchInput");
   const familyResults = document.getElementById("familyResults");
   const contactMadeCheckbox = document.getElementById("contactMade");
   const partialRegistrationWrapper = document.getElementById("partialRegistrationWrapper");
   const partialRegistrationTypeInput = document.getElementById("partialRegistrationType");
-  const contactDetailsWrapper = document.getElementById(
-    "contactDetailsWrapper",
-  );
+  const contactDetailsWrapper = document.getElementById("contactDetailsWrapper");
   const contactNameInput = document.getElementById("contactName");
   const contactRoleInput = document.getElementById("contactRole");
   let rejectedDocs = [];
@@ -1631,18 +1660,11 @@ const debouncedSearchCompanyByName = debounce(searchCompanyByName, 300);
   const contactSuccessSelect = document.getElementById("contactSuccess");
   const omitLegalFlagCheckbox = document.getElementById("omitLegalFlag");
 
-  /**
-   * @functionality 312
-   * @category 3xx: Geração de Mensagens e Formulários
-   * @name Reset de Campos de Formulário Após Busca de CNPJ
-   * @description Limpa nome, contato, docs e rejected list ao digitar novo CNPJ.
-   */
   function resetFormFields() {
     document.getElementById("statusDeferida").checked = true;
     registrationTypeInput.value = "CRC";
     registrationDateInput.value = "";
-    const today = new Date().toISOString().split("T")[0];
-    analysisDateInput.value = today;
+    analysisDateInput.value = todayLocalISO();
     rejectedDocs = [];
     renderRejectedDocs();
     toggleRejectedDocsSection();
@@ -1655,286 +1677,151 @@ const debouncedSearchCompanyByName = debounce(searchCompanyByName, 300);
     if (contactPhoneInput) contactPhoneInput.value = "";
     if (contactSuccessSelect) contactSuccessSelect.value = "S";
     const contactGenderM = document.getElementById("contactGenderM");
-    if (contactGenderM) contactGenderM.checked = true; // Volta para Masculino
+    if (contactGenderM) contactGenderM.checked = true;
   }
 
-  /**
-   * @functionality 305
-   * @category 3xx: Geração de Mensagens e Formulários
-   * @name Preenchimento Dinâmico de Selects de Documentos por Categoria
-   * @description Mapeia docsByCat para opções de select, com fallback para 'outro' e custom input.
-   */
+  /** Data de hoje no fuso local (evita "amanhã" após 21h em UTC-3). */
+  function todayLocalISO() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  }
+
   const populateDocNames = () => {
     const selectedCategory = docCategoryInput.value;
-
     familyAutocompleteWrapper.classList.add("hidden");
     docNameWrapper.classList.remove("hidden");
-    //customDocNameWrapper.classList.add("hidden");
     socioNameWrapper.classList.add("hidden");
     familySearchInput.value = "";
     selectedFamilyId = null;
-
     if (selectedCategory === "Família") {
       docNameWrapper.classList.add("hidden");
       familyAutocompleteWrapper.classList.remove("hidden");
       return;
     }
-
     const docs = docsByCat[selectedCategory] || [];
     docNameSelect.innerHTML = "";
-
     docs.forEach((doc) => {
       const option = document.createElement("option");
       option.value = doc;
       option.textContent = doc;
       docNameSelect.appendChild(option);
     });
-
     const otherOption = document.createElement("option");
     otherOption.value = "outro";
     otherOption.textContent = "Outro...";
     docNameSelect.appendChild(otherOption);
-
-    if (selectedCategory === "Qualificação Técnica") {
-      docNameSelect.value = "outro";
-    }
+    if (selectedCategory === "Qualificação Técnica") docNameSelect.value = "outro";
     handleDocNameChange();
   };
 
-  //    /**
-  //   * @functionality 313
-  //   * @category 3xx: Geração de Mensagens e Formulários
-  //   * @name População de Lista de Documentos Personalizados
-  //   * @description Preenche o select customDocName com os itens carregados do JSON qualTecDocs e adiciona a opção "Outros" para permitir a inserção manual de novos nomes.
-  //   */
-  //  function populateCustomDocNameSelect() {
-  //    // Evita repopular se já tiver itens (além do placeholder e "Outros")
-  //    if (customDocNameInput.options.length > 2) return;
-
-  //    customDocNameInput.innerHTML = '<option value="">Selecione um documento...</option>';
-
-  // Adiciona os itens do JSON
-  //    qualTecDocs.forEach(doc => {
-  //        const option = document.createElement("option");
-  //        option.value = doc.nome;
-  //        option.textContent = doc.nome;
-  //        customDocNameInput.appendChild(option);
-  //    });
-
-  // Adiciona a opção "Outros" no final
-  //    const otherOption = document.createElement("option");
-  //    otherOption.value = "Outros";
-  //    otherOption.textContent = "Outros";
-  //    customDocNameInput.appendChild(otherOption);
-  //  }
-
-  // Listener para quando selecionar algo na lista "Especifique o nome do documento"
-  //  customDocNameInput.addEventListener("change", function() {
-  //      if (this.value === "Outros") {
-  //          manualDocNameWrapper.classList.remove("hidden");
-  //          manualDocNameInput.focus();
-  //      } else {
-  //          manualDocNameWrapper.classList.add("hidden");
-  //          manualDocNameInput.value = ""; // Limpa o campo manual se trocar
-  //      }
-  //  });
-
-  /**
-   * @functionality 310
-   * @category 3xx: Geração de Mensagens e Formulários
-   * @name Tratamento de Input Customizado para Documentos 'Outro' ou 'Sócio'
-   * @description Mostra/oculta inputs para nome custom ou sócio baseado em select.
-   */
   function handleDocNameChange() {
     const selectedDoc = docNameSelect.value;
-
-    // Reseta visibilidade dos campos extras
     manualDocNameWrapper.classList.add("hidden");
     socioNameWrapper.classList.add("hidden");
-
-    // Verifica se é "Outros" (vindo da nossa lista JSON ou das listas padrão)
     if (selectedDoc === "Outros" || selectedDoc === "outro") {
       manualDocNameWrapper.classList.remove("hidden");
       manualDocNameInput.focus();
-    }
-    // Caso específico para Sócios
-    else if (selectedDoc === "Sócio") {
+    } else if (selectedDoc === "Sócio") {
       socioNameWrapper.classList.remove("hidden");
       socioNameInput.focus();
     }
   }
 
-  /**
-   * Atualiza as opções do select de rebaixamento baseado na hierarquia:
-   * CRC > CRS > Candidato.
-   */
   const updatePartialRegistrationOptions = () => {
-    const requestedType = registrationTypeInput.value; 
+    const requestedType = registrationTypeInput.value;
     const partialSelect = partialRegistrationTypeInput;
     const currentVal = partialSelect.value;
-
-    partialSelect.innerHTML = ""; // Limpa as opções atuais
-
-    // Helper para adicionar opção
+    partialSelect.innerHTML = "";
     const addOption = (val) => {
-        const opt = document.createElement("option");
-        opt.value = val;
-        opt.textContent = val;
-        partialSelect.appendChild(opt);
+      const opt = document.createElement("option");
+      opt.value = val;
+      opt.textContent = val;
+      partialSelect.appendChild(opt);
     };
-
-    // Monta a lista baseada na hierarquia permitida
     if (requestedType === "CRC") {
-        addOption("CRC");
-        addOption("CRS");
-        addOption("Candidato");
+      addOption("CRC"); addOption("CRS"); addOption("Candidato");
     } else if (requestedType === "CRS") {
-        addOption("CRS");
-        addOption("Candidato");
+      addOption("CRS"); addOption("Candidato");
     } else if (requestedType === "Candidato") {
-        addOption("Candidato");
+      addOption("Candidato");
     }
-
-    // Tenta manter o valor anterior se for válido na nova lista
-    const validOptions = Array.from(partialSelect.options).map(o => o.value);
+    const validOptions = Array.from(partialSelect.options).map((o) => o.value);
     if (validOptions.includes(currentVal)) {
-        partialSelect.value = currentVal;
+      partialSelect.value = currentVal;
     } else {
-        // Se a opção anterior não for válida, auto-seleciona um rebaixamento lógico por padrão
-        if (requestedType === "CRC") partialSelect.value = "CRS";
-        else if (requestedType === "CRS") partialSelect.value = "Candidato";
-        else partialSelect.value = "Candidato";
+      if (requestedType === "CRC") partialSelect.value = "CRS";
+      else if (requestedType === "CRS") partialSelect.value = "Candidato";
+      else partialSelect.value = "Candidato";
     }
   };
 
   /**
-   * @functionality 303
-   * @category 3xx: Geração de Mensagens e Formulários
-   * @name Manipulação Dinâmica de Seção de Documentos Indeferidos
-   * @description Toggle visibilidade por status.
-   * @functionality 306
-   * @name Toggle Condicional de Campos de Análise por Status de Cadastro
-   * @description Desabilita/enable campos (data, tipo) para status 'Pendente'.
+   * Visibilidade de seções e bloqueio de campos por status.
+   * - Deferida Parcial / Indeferida: mostra documentos indeferidos
+   * - Pendente de Envio / Pendente do Termo: bloqueia data e tipo
+   * - Contato: abre os campos de contato e bloqueia apenas a data da análise
    */
   const toggleRejectedDocsSection = () => {
-    const selectedStatus = document.querySelector(
-      'input[name="status"]:checked',
-    ).value;
-    const analysisFields = document
-      .getElementById("company-data")
-      .querySelectorAll('input[type="date"], select');
-
-    if (selectedStatus === "Deferida Parcial") {
-      partialRegistrationWrapper.classList.remove("hidden");
-      updatePartialRegistrationOptions(); // <--- CHAMA AQUI PARA ATUALIZAR AS OPÇÕES
-    } else {
-      partialRegistrationWrapper.classList.add("hidden");
-    }
-
-    if (selectedStatus === "Apenas Contato") {
-        rejectedDocsSection.classList.add("hidden");
-        contactMadeCheckbox.checked = true; // Força o checkbox a marcar
-        contactDetailsWrapper.classList.remove("hidden"); // Abre os detalhes do contato
-        analysisDateInput.disabled = true;
-        analysisDateInput.classList.add("bg-gray-100");
-    }
-
-    else if (
-      selectedStatus === "Deferida Parcial" ||
-      selectedStatus === "Indeferida"
-    ) {
-      rejectedDocsSection.classList.remove("hidden");
-      analysisFields.forEach((field) => (field.disabled = false));
-    } else {
-      rejectedDocsSection.classList.add("hidden");
-    }
-
-    if (
-      selectedStatus === "Pendente de Envio" ||
-      selectedStatus === "Pendente do Termo"
-    ) {
-      analysisFields.forEach((field) => {
-        field.disabled = true;
-        field.classList.add("bg-gray-100");
+    const selectedStatus = document.querySelector('input[name="status"]:checked').value;
+    const analysisFields = document.getElementById("company-data").querySelectorAll('input[type="date"], select');
+    const setLocked = (fields, locked) =>
+      fields.forEach((f) => {
+        f.disabled = locked;
+        f.classList.toggle("bg-gray-100", locked);
       });
-      analysisDateInput.disabled = true;
-      analysisDateInput.classList.add("bg-gray-100");
-    } else {
-      analysisFields.forEach((field) => {
-        field.disabled = false;
-        field.classList.remove("bg-gray-100");
-      });
-      analysisDateInput.disabled = false;
-      analysisDateInput.classList.remove("bg-gray-100");
+
+    partialRegistrationWrapper.classList.toggle("hidden", selectedStatus !== "Deferida Parcial");
+    if (selectedStatus === "Deferida Parcial") updatePartialRegistrationOptions();
+
+    rejectedDocsSection.classList.toggle("hidden", !["Deferida Parcial", "Indeferida"].includes(selectedStatus));
+
+    if (selectedStatus === "Contato") {
+      contactMadeCheckbox.checked = true;
+      contactDetailsWrapper.classList.remove("hidden");
+    }
+
+    setLocked(analysisFields, false);
+    if (selectedStatus === "Pendente de Envio" || selectedStatus === "Pendente do Termo") {
+      setLocked(analysisFields, true);
+    } else if (selectedStatus === "Contato") {
+      setLocked([analysisDateInput], true);
     }
   };
 
-  /**
-   * @functionality 307
-   * @category 3xx: Geração de Mensagens e Formulários
-   * @name Formatação de Data de Análise para DD/MM/AAAA
-   * @description Converte ISO date string para formato brasileiro.
-   */
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const [year, month, day] = dateString.split("-");
     return `${day}/${month}/${year}`;
   };
 
-  /**
-   * @functionality 405
-   * @category 4xx: UI/UX e Interações
-   * @name Renderização de Lista de Documentos Indeferidos com Remoção Inline
-   * @description Gera HTML dinâmico para itens de rejectedDocs, com botões de remoção por índice.
-   */
   const renderRejectedDocs = () => {
     rejectedDocsListContainer.innerHTML = "";
     if (rejectedDocs.length === 0) return;
-
     const heading = document.createElement("h3");
-    heading.className =
-      "text-md font-semibold text-gray-600 dark:text-gray-300";
+    heading.className = "text-md font-semibold text-gray-600 dark:text-gray-300";
     heading.textContent = "Documentos Adicionados:";
     rejectedDocsListContainer.appendChild(heading);
-
     rejectedDocs.forEach((doc, index) => {
       const docElement = document.createElement("div");
-      docElement.className =
-        "flex justify-between items-center bg-white dark:bg-slate-700 p-3 rounded-lg border dark:border-slate-600";
-
+      docElement.className = "flex justify-between items-center bg-white dark:bg-slate-700 p-3 rounded-lg border dark:border-slate-600";
       let docDisplayName = doc.name;
-      if (doc.name === "Sócio" && doc.socioName) {
-        docDisplayName += `: ${doc.socioName}`;
-      }
-
+      if (doc.name === "Sócio" && doc.socioName) docDisplayName += `: ${doc.socioName}`;
       docElement.innerHTML = `
-                <div class="text-sm">
-                    <p class="font-bold text-blue-700 dark:text-blue-400">${escapeHtml(
-                      doc.category,
-                    )}</p>
-                    <p class="text-gray-800 dark:text-gray-200">${escapeHtml(docDisplayName)}</p>
-                    <p class="text-gray-500 italic">Motivo: ${escapeHtml(
-                      doc.reason,
-                    )}</p>
-                </div>
-                <button data-index="${index}" class="remove-doc-btn text-red-500 hover:text-red-700 font-bold p-1">&times;</button>
-            `;
+          <div class="text-sm">
+              <p class="font-bold text-blue-700 dark:text-blue-400">${escapeHtml(doc.category)}</p>
+              <p class="text-gray-800 dark:text-gray-200">${escapeHtml(docDisplayName)}</p>
+              <p class="text-gray-500 italic">Motivo: ${escapeHtml(doc.reason)}</p>
+          </div>
+          <button data-index="${index}" class="remove-doc-btn text-red-500 hover:text-red-700 font-bold p-1">&times;</button>`;
       rejectedDocsListContainer.appendChild(docElement);
     });
   };
 
-  /**
-   * @functionality 303
-   * @category 3xx: Geração de Mensagens e Formulários
-   * @name Manipulação Dinâmica de Seção de Documentos Indeferidos
-   * @description Adiciona/remove itens em array e atualiza a UI.
-   */
   const addRejectedDoc = () => {
     const category = docCategoryInput.value;
     let name;
     const reason = rejectionReasonInput.value.trim();
     let socioName = null;
-
     if (category === "Família") {
       name = familySearchInput.value.trim();
       if (!selectedFamilyId || name === "") {
@@ -1942,11 +1829,8 @@ const debouncedSearchCompanyByName = debounce(searchCompanyByName, 300);
         return;
       }
     } else {
-      // Pega o valor direto do select principal
       const rawName = docNameSelect.value;
-
       if (rawName === "Outros" || rawName === "outro") {
-        // Se for "Outros", pega do campo manual
         name = manualDocNameInput.value.trim();
         if (!name) {
           alert("Por favor, digite o nome do documento.");
@@ -1960,93 +1844,56 @@ const debouncedSearchCompanyByName = debounce(searchCompanyByName, 300);
           return;
         }
       } else {
-        // Caso contrário, é um documento da lista JSON (ou das outras listas padrão)
         name = rawName;
       }
     }
-
     if (!name || !reason) {
       alert("Por favor, preencha o nome do documento e o motivo.");
       return;
     }
-
     rejectedDocs.push({ category, name, reason, socioName });
     renderRejectedDocs();
-
     showToast("Documento adicionado!", "success");
     rejectionReasonInput.value = "";
-    //customDocNameInput.value = ""; // Reseta o select
-    manualDocNameInput.value = ""; // Reseta o input manual
+    manualDocNameInput.value = "";
     socioNameInput.value = "";
-
-    // Reset visual
     manualDocNameWrapper.classList.add("hidden");
-
-    populateDocNames(); // Isso vai resetar o fluxo para o estado inicial da categoria
+    populateDocNames();
     rejectionReasonInput.focus();
   };
 
   const removeRejectedDoc = (index) => {
-    rejectedDocs.splice(index, 1);
+    rejectedDocs.splice(Number(index), 1);
     renderRejectedDocs();
   };
 
-  /**
-   * @functionality 316
-   * @category 3xx: Geração de Mensagens e Formulários
-   * @name Normalização de Texto para Busca Sem Acento
-   * @description Remove acentuação e caixa para comparação tolerante entre strings.
-   */
   const normalizeForSearch = (text) =>
     (text || "")
       .toString()
       .normalize("NFD")
-      .replace(/[̀-ͯ]/g, "")
+      .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase()
       .trim();
 
-  /**
-   * @functionality 317
-   * @category 3xx: Geração de Mensagens e Formulários
-   * @name Autocomplete de Motivos de Indeferimento Já Utilizados
-   * @description Filtra motivosIndeferimento por semelhança com o texto digitado,
-   * priorizando motivos já cadastrados para a categoria/aba selecionada no momento.
-   */
   function buscarMotivosSemelhantes(termoDigitado) {
     const termo = normalizeForSearch(termoDigitado);
     if (termo.length < 3 || motivosIndeferimento.length === 0) return [];
-
     const categoriaAtual = docCategoryInput ? docCategoryInput.value : "";
-
     const termoPalavras = termo.split(/\s+/).filter(Boolean);
-
     const candidatos = motivosIndeferimento
       .map((item) => {
         const motivoNormalizado = normalizeForSearch(item.motivo);
-        // Exige que TODAS as palavras digitadas apareçam no motivo (em qualquer ordem)
-        const bate = termoPalavras.every((palavra) =>
-          motivoNormalizado.includes(palavra),
-        );
+        const bate = termoPalavras.every((palavra) => motivoNormalizado.includes(palavra));
         if (!bate) return null;
-
         const categorias = item.categorias || [];
-        const relevanteParaCategoria =
-          !categoriaAtual ||
-          categorias.includes(categoriaAtual) ||
-          categorias.includes("Todos");
-
-        // Pontuação simples: motivo que começa com o termo digitado, ou que já
-        // é da categoria/aba atual, sobe na lista de sugestões.
+        const relevanteParaCategoria = !categoriaAtual || categorias.includes(categoriaAtual) || categorias.includes("Todos");
         let score = 0;
         if (motivoNormalizado.startsWith(termo)) score += 2;
         if (relevanteParaCategoria) score += 1;
-
         return { motivo: item.motivo, score };
       })
       .filter(Boolean)
       .sort((a, b) => b.score - a.score);
-
-    // Remove duplicados (texto igual) mantendo o de maior score
     const vistos = new Set();
     const unicos = [];
     for (const c of candidatos) {
@@ -2055,105 +1902,66 @@ const debouncedSearchCompanyByName = debounce(searchCompanyByName, 300);
         unicos.push(c.motivo);
       }
     }
-
     return unicos.slice(0, 8);
   }
 
-  /**
-   * @functionality 318
-   * @category 3xx: Geração de Mensagens e Formulários
-   * @name Renderização do Dropdown de Sugestões de Motivos
-   * @description Monta a lista clicável de motivos semelhantes abaixo do textarea.
-   */
   function renderMotivoSuggestions(sugestoes) {
     if (!sugestoes || sugestoes.length === 0) {
       rejectionReasonResults.innerHTML = "";
       rejectionReasonResults.classList.add("hidden");
       return;
     }
-
     rejectionReasonResults.innerHTML = "";
     sugestoes.forEach((motivo) => {
       const item = document.createElement("div");
-      item.className =
-        "px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer border-b dark:border-slate-700 last:border-b-0";
+      item.className = "px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer border-b dark:border-slate-700 last:border-b-0";
       item.textContent = motivo;
       item.dataset.motivo = motivo;
       rejectionReasonResults.appendChild(item);
     });
     rejectionReasonResults.classList.remove("hidden");
   }
-
   let buscaMotivoTimeout = null;
 
-  /**
-   * @functionality 304
-   * @category 3xx: Geração de Mensagens e Formulários
-   * @name Sistema de Autocomplete para Busca de Famílias na DB com Cursor Pagination
-   * @description Busca fuzzy em families store via cursor, limita a 10 resultados, seleciona via click.
-   */
-let searchFamiliesSeq = 0;
-async function searchFamilies(searchTerm) {
-  familyResults.innerHTML = "";
-  if (!searchTerm) return;
-
-  const mySeq = ++searchFamiliesSeq;
-  
-  // Usando o .or() para buscar tanto na descrição quanto no código da família
-  const { data, error } = await supabaseClientCaf
-    .from("qualificacao_tecnica")
-    .select("familia, descricao")
-    .or(`descricao.ilike.%${searchTerm}%,familia.ilike.%${searchTerm}%`)
-    .limit(10);
-    
-  if (mySeq !== searchFamiliesSeq) return;
-
-  if (error) {
-    console.error("searchFamilies:", error.message);
-    return;
+  let searchFamiliesSeq = 0;
+  async function searchFamilies(searchTerm) {
+    familyResults.innerHTML = "";
+    if (!searchTerm) return;
+    const mySeq = ++searchFamiliesSeq;
+    const { data, error } = await supabaseClientCaf
+      .from("qualificacao_tecnica")
+      .select("familia, descricao")
+      .or(`descricao.ilike.%${searchTerm}%,familia.ilike.%${searchTerm}%`)
+      .limit(10);
+    if (mySeq !== searchFamiliesSeq) return;
+    if (error) {
+      console.error("searchFamilies:", error.message);
+      return;
+    }
+    displayFamilyResults((data || []).map((f) => ({ id: f.familia, description: f.descricao })));
   }
-  
-  displayFamilyResults((data || []).map((f) => ({ id: f.familia, description: f.descricao })));
-}
-
-function debounceFam(fn, ms) {
-  let t = null;
-  return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
-}
-const debouncedSearchFamilies = debounceFam(searchFamilies, 300);
+  const debouncedSearchFamilies = debounce(searchFamilies, 300);
 
   function displayFamilyResults(results) {
     familyResults.innerHTML = "";
-    
     if (results.length === 0) {
-        familyResults.innerHTML = '<div class="p-3 text-sm text-gray-500 bg-white dark:bg-slate-800 border-b dark:border-slate-700">Nenhuma família encontrada.</div>';
-        return;
+      familyResults.innerHTML = '<div class="p-3 text-sm text-gray-500 bg-white dark:bg-slate-800 border-b dark:border-slate-700">Nenhuma família encontrada.</div>';
+      return;
     }
-
     results.forEach((family) => {
       const div = document.createElement("div");
       div.className = "p-3 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer text-sm bg-white dark:bg-slate-800 dark:text-white border-b dark:border-slate-700 transition-colors";
-      
-      // Melhoria de UX: Mostra o código e a descrição juntos na listagem
       div.textContent = `${family.id} - ${family.description}`;
       div.dataset.id = family.id;
       div.dataset.description = family.description;
-      
       familyResults.appendChild(div);
     });
   }
 
-  /**
-   * @functionality 300
-   * @category 3xx: Geração de Mensagens e Formulários
-   * @name Geração de Mensagens Personalizadas com Template Switch por Status
-   * @description Monta strings Markdown-like baseadas em status, com agrupamento de docs e footer. Salva em histórico.
-   * @functionality 313
-   * @name Validações de Formulário Antes de Geração com Alerts
-   * @description Checa campos obrigatórios.
-   */
-  const generateMessage = () => {
-
+  // =====================================================================
+  // GERAÇÃO DA MENSAGEM (textos inalterados)
+  // =====================================================================
+  const generateMessage = async () => {
     const companyName = companyNameInput.value.trim();
     const cnpj = cnpjInputForDb.value.trim();
     const analysisDate = formatDate(analysisDateInput.value);
@@ -2164,79 +1972,54 @@ const debouncedSearchFamilies = debounceFam(searchFamilies, 300);
     const contactRole = contactRoleInput.value;
     const contactPhone = contactPhoneInput.value.trim();
     const contactSuccess = contactSuccessSelect.value;
-    const contactGender = document.querySelector(
-      'input[name="contactGender"]:checked',
-    ).value;
+    const contactGender = document.querySelector('input[name="contactGender"]:checked').value;
     const omitLegal = omitLegalFlagCheckbox.checked;
-
     if (!companyName || !cnpj) {
       alert("Por favor, preencha o CNPJ/CPF e o Nome/Razão Social.");
       return;
     }
-
-    if (
-      status !== "Pendente de Envio" &&
-      status !== "Pendente do Termo" &&
-      !analysisDate
-    ) {
+    if (status !== "Pendente de Envio" && status !== "Pendente do Termo" && !analysisDate) {
       alert("Por favor, preencha a data da análise.");
       return;
     }
-
     if (contactMade && (!contactName || !contactRole || !contactPhone)) {
       alert("Por favor, preencha o Nome do Contato e o Cargo.");
       return;
     }
-
-    //const legalFooter = `Importante salientar que as documentações necessárias para registro no Cadastro de Fornecedores do Estado da Bahia – CAF obedecem ao quanto previsto nos art. 62 a 70 e 87 e 88, da Lei Federal nº 14.133/2021 c/c o art. 76 da Lei Estadual nº 14.634/2023.`;
     const legalParagraph = `Importante salientar que as documentações necessárias para registro no Cadastro de Fornecedores do Estado da Bahia – CAF obedecem ao quanto previsto nos art. 62 a 70 e 87 e 88, da Lei Federal nº 14.133/2021 c/c o art. 76 da Lei Estadual nº 14.634/2023.`;
-    const finalLegalFooter = omitLegal ? "" : `${legalParagraph}\n\n`; // Se omitir, é vazio, senão, inclui o parágrafo e 2 quebras de linha.
+    const finalLegalFooter = omitLegal ? "" : `${legalParagraph}\n\n`;
     const defaultEmailFooter = `O fornecedor é notificado automaticamente por e-mail.`;
     const noEmailFooter = "";
-    // Dicionário de conversão de cargos para o feminino
     const cargosFemininos = {
       "Sócio": "Sócia",
       "Diretor": "Diretora",
       "Dirigente": "Dirigente",
       "Presidente": "Presidente",
       "Representante Legal": "Representante Legal",
-      "Resposável pelo cadastro": "Responsável pelo cadastro" // Já corrigindo a palavra na saída
+      "Resposável pelo cadastro": "Responsável pelo cadastro",
     };
-
     const honorific = contactGender === "M" ? "Sr." : "Sra.";
-    
-    // Se for mulher (F), busca no dicionário. Se não achar, mantém o original.
     const roleString = contactGender === "M" ? contactRole : (cargosFemininos[contactRole] || contactRole);
-    //const contactMadeFooter = `O fornecedor é notificado automaticamente por e-mail. Contudo, em contato com o(a) Sr.(a) *${contactName}*, *${contactRole}* da Empresa, foram esclarecidos os motivos do indeferimento, tendo sido informado que estão sendo adotadas as providências necessárias para correção e que será sinalizado quando houver nova solicitação.`;
     const contactMadeSuccessFooter = `O fornecedor é notificado automaticamente por e-mail. Contudo, em contato com ${contactGender === "M" ? "o" : "a"} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, foram esclarecidos os motivos do indeferimento, tendo sido informado que as providências necessárias para regularização já estão sendo adotadas e que será sinalizado quando houver nova solicitação.`;
     const contactMadeFailedFooter = `O fornecedor é notificado automaticamente por e-mail. Contudo, em tentativa de contato telefônico com ${contactGender === "M" ? "o" : "a"} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, não obtivemos êxito, tendo a chamada sido direcionada para a caixa postal.`;
     const contactMadePendenteTermoFooter = `Em contato com ${contactGender === "M" ? "o" : "a"} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, foi esclarecido o motivo da pendência, tendo sido informado que as providências necessárias para o envio do Termo de Concordância já estão sendo adotadas e que será sinalizado quando o envio for realizado.`;
     const contactMadePendenteEnvioFooter = `Em contato com ${contactGender === "M" ? "o" : "a"} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, foi esclarecido o motivo da pendência, tendo sido informado que as providências necessárias para o envio da solicitação já estão sendo adotadas e que será sinalizado quando o envio for realizado.`;
     const contactMadePendenteFailedFooter = `Em tentativa de contato telefônico com ${contactGender === "M" ? "o" : "a"} ${honorific} *${contactName}*, *${roleString}* da empresa, pelo número *${contactPhone}*, não obtivemos êxito, tendo a chamada sido direcionada para a caixa postal. Reiteramos a necessidade de regularização da pendência no CAF Digital para que a solicitação possa ser analisada.`;
     let message = "";
-
     const cleanDocLength = cnpj.replace(/\D/g, "").length;
     let docIdentifier;
-
-    if (cleanDocLength > 11) {
-      docIdentifier = "CNPJ sob o nº";
-    } else if (cleanDocLength < 11) {
-      docIdentifier = "Código nº";
-    } else {
-      docIdentifier = "CPF sob o nº";
-    }
+    if (cleanDocLength > 11) docIdentifier = "CNPJ sob o nº";
+    else if (cleanDocLength < 11) docIdentifier = "Código nº";
+    else docIdentifier = "CPF sob o nº";
 
     switch (status) {
       case "Deferida":
-        //message = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, foi analisada e *${status}* em *${analysisDate}* para o tipo de cadastro *${registrationType}*.\n\n${legalFooter}\n\n${defaultEmailFooter}`;
         message = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, foi analisada e *${status}* em *${analysisDate}* para o tipo de cadastro *${registrationType}*.\n\n${finalLegalFooter}${defaultEmailFooter}`;
         break;
       case "Deferida Parcial":
-      case "Indeferida":
+      case "Indeferida": {
         if (rejectedDocs.length === 0) {
-          alert(
-            `Para o status "${status}", é necessário adicionar pelo menos um documento indeferido.`,
-          );
+          alert(`Para o status "${status}", é necessário adicionar pelo menos um documento indeferido.`);
           return;
         }
         let docsText = "Documentos analisados e Indeferidos:\n\n";
@@ -2248,92 +2031,59 @@ const debouncedSearchFamilies = debounceFam(searchFamilies, 300);
           docsText += `*${category}*\n\n`;
           groupedByCategory[category].forEach((doc) => {
             let docTitle;
-            if (doc.name === "Sócio" && doc.socioName) {
-              docTitle = `*SÓCIO: ${doc.socioName.toUpperCase()}*`;
-            } else {
-              docTitle = `*${doc.name.toUpperCase()}*`;
-            }
+            if (doc.name === "Sócio" && doc.socioName) docTitle = `*SÓCIO: ${doc.socioName.toUpperCase()}*`;
+            else docTitle = `*${doc.name.toUpperCase()}*`;
             docsText += `${docTitle}\n`;
             docsText += `*Motivo*: _${doc.reason}_\n\n`;
           });
         }
-
         let finalEmailFooter = defaultEmailFooter;
-
         if (contactMade) {
-          // Verifica o sucesso (S) ou falha (N) do contato
-          finalEmailFooter =
-            contactSuccess === "S"
-              ? contactMadeSuccessFooter
-              : contactMadeFailedFooter;
+          finalEmailFooter = contactSuccess === "S" ? contactMadeSuccessFooter : contactMadeFailedFooter;
         }
-
-      // --- 1. NOVA LÓGICA INSERIDA AQUI ---
-      let textoDeferidoParcial = "";
-      if (status === "Deferida Parcial") {
+        let textoDeferidoParcial = "";
+        if (status === "Deferida Parcial") {
           const tipoConcedido = partialRegistrationTypeInput.value;
-          
-          // REGRA DE EXIBIÇÃO: Só insere a frase se houver rebaixamento de fato
           if (tipoConcedido !== registrationType) {
-              textoDeferidoParcial = `Em razão do indeferimento dos documentos listados, o fornecedor não atendeu aos requisitos necessários à habilitação no tipo de cadastro solicitado, tendo sido habilitado no tipo de cadastro *${tipoConcedido}*.\n\n`;
+            textoDeferidoParcial = `Em razão do indeferimento dos documentos listados, o fornecedor não atendeu aos requisitos necessários à habilitação no tipo de cadastro solicitado, tendo sido habilitado no tipo de cadastro *${tipoConcedido}*.\n\n`;
           }
-      }
-      // ------------------------------------
-
-      // --- 2. ATUALIZE A VARIÁVEL MESSAGE INCLUINDO ${textoDeferidoParcial} ---
-      message = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, foi analisada e *${status}* em *${analysisDate}* para o tipo de cadastro *${registrationType}*, conforme análise abaixo:\n\n${docsText}${textoDeferidoParcial}${finalLegalFooter}${finalEmailFooter}`;
-      break; // Fim do bloco Deferida Parcial/Indeferida
-      case "Pendente de Envio":
-        let baseMessageEnvio = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, encontra-se *Pendente de Envio*.\n\nÉ necessário que o fornecedor acesse o CAF Digital, atualize os dados necessários e realize o envio da solicitação para análise pela Comissão de Inscrição e Registro Cadastral.`;
-
-        let finalFooterEnvio = noEmailFooter; // << INICIA VAZIO (SEM NOTIFICAÇÃO DE E-MAIL)
-
-        if (contactMade) {
-          // Se houve contato, verificamos o sucesso/falha
-          finalFooterEnvio =
-            contactSuccess === "S"
-              ? contactMadePendenteEnvioFooter
-              : contactMadePendenteFailedFooter;
         }
-
-        // Concatena a mensagem base + footer legal (se não omitido) + footer final
+        message = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, foi analisada e *${status}* em *${analysisDate}* para o tipo de cadastro *${registrationType}*, conforme análise abaixo:\n\n${docsText}${textoDeferidoParcial}${finalLegalFooter}${finalEmailFooter}`;
+        break;
+      }
+      case "Pendente de Envio": {
+        const baseMessageEnvio = `A solicitação do fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, encontra-se *Pendente de Envio*.\n\nÉ necessário que o fornecedor acesse o CAF Digital, atualize os dados necessários e realize o envio da solicitação para análise pela Comissão de Inscrição e Registro Cadastral.`;
+        let finalFooterEnvio = noEmailFooter;
+        if (contactMade) {
+          finalFooterEnvio = contactSuccess === "S" ? contactMadePendenteEnvioFooter : contactMadePendenteFailedFooter;
+        }
         message = `${baseMessageEnvio}\n\n${finalFooterEnvio}`;
         break;
-      case "Pendente do Termo":
-        let baseMessageTermo = `A solicitação enviada pelo fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, encontra-se *Pendente do envio do Termo de Concordância e Veracidade*.\n\nO fornecedor poderá realizar o envio do referido Termo por meio do *CAF Digital*, assinando-o eletronicamente com Certificado ICP-Brasil (por exemplo, utilizando o Assinador gov.br), ou optar pela entrega presencial, conforme orientações contidas no próprio Termo.`;
-
-        let finalFooterTermo = noEmailFooter; // << INICIA VAZIO (SEM NOTIFICAÇÃO DE E-MAIL)
-
+      }
+      case "Pendente do Termo": {
+        const baseMessageTermo = `A solicitação enviada pelo fornecedor *${companyName}*, inscrito no ${docIdentifier} *${cnpj}*, encontra-se *Pendente do envio do Termo de Concordância e Veracidade*.\n\nO fornecedor poderá realizar o envio do referido Termo por meio do *CAF Digital*, assinando-o eletronicamente com Certificado ICP-Brasil (por exemplo, utilizando o Assinador gov.br), ou optar pela entrega presencial, conforme orientações contidas no próprio Termo.`;
+        let finalFooterTermo = noEmailFooter;
         if (contactMade) {
-          // Se houve contato, verificamos o sucesso/falha
-          finalFooterTermo =
-            contactSuccess === "S"
-              ? contactMadePendenteTermoFooter
-              : contactMadePendenteFailedFooter;
+          finalFooterTermo = contactSuccess === "S" ? contactMadePendenteTermoFooter : contactMadePendenteFailedFooter;
         }
-
-        // Concatena a mensagem base + footer legal (se não omitido) + footer final
         message = `${baseMessageTermo}\n\n${finalFooterTermo}`;
         break;
-
-      // Dentro do switch (status) no script.js
-      case "Contato":
-          if (!contactName || !contactPhone) {
-              alert("Por favor, preencha os dados do contato.");
-              return;
-          }
-
-          const artigo = contactGender === "M" ? "o" : "a";
-          const pronome = contactGender === "M" ? "Sr." : "Sra.";
-
-          const cargoFormatado = contactGender === "M" ? contactRole : (cargosFemininos[contactRole] || contactRole);
-
-          if (contactSuccess === "S") {
-              message = `Em contato com ${artigo} ${pronome} *${contactName}*, *${cargoFormatado}* da empresa *${companyName}*, inscrita sob o CNPJ nº *${cnpj}*, pelo número *${contactPhone}*, foram esclarecidos os motivos do indeferimento, tendo sido informado que as providências necessárias para regularização já estão sendo adotadas e que será sinalizado quando houver nova solicitação.`;
-          } else {
-              message = `Em tentativa de contato telefônico com ${artigo} ${pronome} *${contactName}*, *${cargoFormatado}* da empresa *${companyName}*, inscrita sob o CNPJ nº *${cnpj}*, pelo número *${contactPhone}*, não obtivemos êxito, tendo a chamada sido direcionada para a caixa postal.`;
-          }
-          break;
+      }
+      case "Contato": {
+        if (!contactName || !contactPhone) {
+          alert("Por favor, preencha os dados do contato.");
+          return;
+        }
+        const artigo = contactGender === "M" ? "o" : "a";
+        const pronome = contactGender === "M" ? "Sr." : "Sra.";
+        const cargoFormatado = contactGender === "M" ? contactRole : (cargosFemininos[contactRole] || contactRole);
+        if (contactSuccess === "S") {
+          message = `Em contato com ${artigo} ${pronome} *${contactName}*, *${cargoFormatado}* da empresa *${companyName}*, inscrita sob o CNPJ nº *${cnpj}*, pelo número *${contactPhone}*, foram esclarecidos os motivos do indeferimento, tendo sido informado que as providências necessárias para regularização já estão sendo adotadas e que será sinalizado quando houver nova solicitação.`;
+        } else {
+          message = `Em tentativa de contato telefônico com ${artigo} ${pronome} *${contactName}*, *${cargoFormatado}* da empresa *${companyName}*, inscrita sob o CNPJ nº *${cnpj}*, pelo número *${contactPhone}*, não obtivemos êxito, tendo a chamada sido direcionada para a caixa postal.`;
+        }
+        break;
+      }
     }
 
     resultText.value = message;
@@ -2342,266 +2092,212 @@ const debouncedSearchFamilies = debounceFam(searchFamilies, 300);
     resultText.style.height = resultText.scrollHeight + 10 + "px";
     resultText.scrollIntoView({ behavior: "smooth", block: "end" });
 
+    const isPending = status === "Pendente de Envio" || status === "Pendente do Termo";
     const messageData = {
-      cnpj: cnpj,
-      companyName: companyName,
-      message: message,
-      timestamp: new Date().toISOString(),
-
-      // --- Variávais para dash ---
-      status: status,
-      rejectedDocs: rejectedDocs,
-      registrationType: registrationType,
-      contactMade: contactMade,
-      // ---
+      cnpj,
+      companyName,
+      message,
+      status,
+      rejectedDocs: rejectedDocs.map((d) => ({ ...d })),
+      registrationType,
+      grantedType: status === "Deferida Parcial" ? partialRegistrationTypeInput.value : null,
+      analysisDate: isPending || status === "Contato" ? null : analysisDateInput.value || null,
+      contactMade,
+      contact: contactMade
+        ? { name: contactName, role: contactRole, phone: contactPhone, gender: contactGender, success: contactSuccess }
+        : null,
     };
-    saveMessageToHistory(messageData);
-    showToast("Mensagem gerada e salva no histórico!", "success");
+    const result = await saveMessageToHistory(messageData);
+    if (result === "saved") showToast("Mensagem gerada e salva no histórico!", "success");
+    else if (result === "duplicate") showToast("Mensagem gerada (já estava registrada no histórico).", "info");
+    else showToast("Mensagem gerada. Sem conexão: o registro será enviado ao histórico automaticamente.", "error", 5000);
   };
 
-  /**
-   * @functionality 406
-   * @category 4xx: UI/UX e Interações
-   * @name Cópia para Clipboard com Fallback e Toast de Feedback
-   * @description Usa Navigator Clipboard API para copiar texto de mensagem ou histórico.
-   */
   const copyToClipboard = (text) => {
     if (!text) return;
-
     navigator.clipboard
       .writeText(text)
-      .then(() => {
-        showToast("Texto copiado com sucesso!", "success");
-      })
+      .then(() => showToast("Texto copiado com sucesso!", "success"))
       .catch((err) => {
         console.error("Falha ao copiar texto: ", err);
         showToast("Erro ao copiar texto.", "error");
       });
   };
 
-  // --- EVENT LISTENERS ---
-
-  // Modais
-  /**
-   * @functionality 404
-   * @category 4xx: UI/UX e Interações
-   * @name Binding de Eventos para Modais com Fechamento por Clique Externo
-   * @description Adiciona listeners para abrir/fechar modais (DB, histórico, export, senha) via classes Tailwind.
-   */
-  openDbModalBtn.addEventListener("click", async () => {
-    // Carrega o valor salvo no select ao abrir o modal
-    try {
-      const savedPeriod = await getBackupReminderPeriod();
-      // Garante que o elemento existe antes de tentar definir o valor
-      if (backupReminderPeriodSelect) {
-        backupReminderPeriodSelect.value = savedPeriod;
-      }
-    } catch (e) {
-      if (backupReminderPeriodSelect) {
-        backupReminderPeriodSelect.value = 86400000; // Padrão
-      }
-    }
-    dbModal.classList.remove("hidden");
-  });
-
-  closeDbModalBtn.addEventListener("click", () =>
-    dbModal.classList.add("hidden"),
-  );
+  // =====================================================================
+  // EVENT LISTENERS
+  // =====================================================================
+  // --- Modal "Meus Dados" ---
+  openDbModalBtn.addEventListener("click", () => dbModal.classList.remove("hidden"));
+  closeDbModalBtn.addEventListener("click", () => dbModal.classList.add("hidden"));
   dbModal.addEventListener("click", (e) => {
     if (e.target.id === "dbModal") dbModal.classList.add("hidden");
   });
 
+  // --- Histórico ---
   openHistoryModalBtn.addEventListener("click", () => {
     historyModal.classList.remove("hidden");
-    // Limpa os campos de filtro e renderiza a lista completa ao abrir
     historySearchCnpj.value = "";
+    historySearchName.value = "";
+    historyStatusFilter.value = "";
     historyStartDate.value = "";
     historyEndDate.value = "";
-    renderHistory();
+    renderHistory(true);
   });
-
-  // Listener para o botão de filtrar
-  filterHistoryBtn.addEventListener("click", () => {
-    const cnpj = historySearchCnpj.value.trim();
-    const startDate = historyStartDate.value;
-    const endDate = historyEndDate.value;
-    renderHistory(cnpj, startDate, endDate);
-  });
-
-  // Listener para limpar os filtros
+  filterHistoryBtn.addEventListener("click", () => renderHistory(true));
+  [historySearchCnpj, historySearchName].forEach((el) =>
+    el.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") renderHistory(true);
+    }),
+  );
   clearHistoryFilterBtn.addEventListener("click", () => {
     historySearchCnpj.value = "";
+    historySearchName.value = "";
+    historyStatusFilter.value = "";
     historyStartDate.value = "";
     historyEndDate.value = "";
-    renderHistory(); // Renderiza a lista completa novamente
+    renderHistory(true);
   });
-
-  // Ajusta o CNPJ no filtro de history
+  historyLoadMoreBtn.addEventListener("click", () => {
+    historyPage++;
+    renderHistory(false);
+  });
   historySearchCnpj.addEventListener("input", (e) => {
-    let v = e.target.value.replace(/\D/g, ""); // Remove tudo que não é dígito
-
-    if (v.length <= 11) {
-      // Formato CPF
-      v = v.replace(/(\d{3})(\d)/, "$1.$2");
-      v = v.replace(/(\d{3})(\d)/, "$1.$2");
-      v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-    } else {
-      // Formato CNPJ
-      v = v.replace(/^(\d{2})(\d)/, "$1.$2");
-      v = v.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
-      v = v.replace(/\.(\d{3})(\d)/, ".$1/$2");
-      v = v.replace(/(\d{4})(\d)/, "$1-$2");
-    }
-    e.target.value = v;
+    e.target.value = formatDocument(e.target.value);
   });
-
-  closeHistoryModalBtn.addEventListener("click", () =>
-    historyModal.classList.add("hidden"),
-  );
+  closeHistoryModalBtn.addEventListener("click", () => historyModal.classList.add("hidden"));
   historyModal.addEventListener("click", (e) => {
     if (e.target.id === "historyModal") historyModal.classList.add("hidden");
   });
+  document.getElementById("clearHistoryBtn").addEventListener("click", clearHistory);
 
-  document.getElementById("exportDbBtn").addEventListener("click", () => {
-    updateAdminControlsState();
-    exportModal.classList.remove("hidden");
-  });
-  cancelExportBtn.addEventListener("click", () => {
-    exportModal.classList.add("hidden");
-  });
-  exportModal.addEventListener("click", (e) => {
-    if (e.target.id === "exportModal") {
-      exportModal.classList.add("hidden");
+  historyListContainer.addEventListener("click", function (e) {
+    const btn = e.target.closest("button[data-action]");
+    if (!btn) return;
+    const card = btn.closest(".history-card");
+    const item = card ? historyItemsById.get(card.dataset.id) : null;
+    if (!item) return;
+    const action = btn.dataset.action;
+    if (action === "copy") {
+      copyToClipboard(item.message);
+    } else if (action === "delete") {
+      deleteHistoryItem(item.id);
+    } else if (action === "reopen") {
+      reopenHistoryItem(item);
+    } else if (action === "expand") {
+      const content = card.querySelector(".history-message-content");
+      if (!content.style.maxHeight || content.style.maxHeight === "0px") {
+        content.style.maxHeight = content.scrollHeight + "px";
+        btn.innerHTML = svgIconCollapse;
+        btn.title = "Recolher";
+      } else {
+        content.style.maxHeight = "0px";
+        btn.innerHTML = svgIconExpand;
+        btn.title = "Expandir";
+      }
     }
   });
-  confirmExportBtn.addEventListener("click", () => {
+
+  // --- Exportação / Importação ---
+  document.getElementById("exportDbBtn").addEventListener("click", () => {
+    exportModal.classList.remove("hidden");
+  });
+  cancelExportBtn.addEventListener("click", () => exportModal.classList.add("hidden"));
+  exportModal.addEventListener("click", (e) => {
+    if (e.target.id === "exportModal") exportModal.classList.add("hidden");
+  });
+  confirmExportBtn.addEventListener("click", async () => {
     const includeContacts = document.getElementById("exportContacts").checked;
     const includeHistory = document.getElementById("exportHistory").checked;
-    processExport({ includeContacts, includeHistory });
-    exportModal.classList.add("hidden");
+    confirmExportBtn.disabled = true;
+    const ok = await processExport({ includeContacts, includeHistory });
+    confirmExportBtn.disabled = false;
+    if (ok) exportModal.classList.add("hidden");
+  });
+  document.getElementById("importDbFile").addEventListener("change", importDatabase);
+
+  // --- Migração ---
+  migrationStartBtn.addEventListener("click", migrateLegacyData);
+  migrationStartBtn2.addEventListener("click", migrateLegacyData);
+  migrationDismissBtn.addEventListener("click", () => {
+    sessionStorage.setItem("caf_migration_dismissed", "1");
+    migrationBanner.classList.add("hidden");
   });
 
-  /**
-   * @functionality 301
-   * @category 3xx: Geração de Mensagens e Formulários
-   * @name Validação e Formatação Automática de CNPJ/CPF com Máscara Dinâmica
-   * @description Aplica máscaras regex baseadas no tamanho (11 para CPF, 14 para CNPJ) e busca na DB.
-   */
+  // --- Formulário principal ---
   cnpjInputForDb.addEventListener("input", (e) => {
     e.target.value = formatDocument(e.target.value);
     resetFormFields();
     searchCnpj(e.target.value);
   });
 
-  document
-    .getElementById("importDbFile")
-    .addEventListener("change", importDatabase);
-  document
-    .getElementById("clearHistoryBtn")
-    .addEventListener("click", clearHistory);
-
-  // Listener para buscar por nome ao digitar
   companyNameInputForDb.addEventListener("input", (e) => {
     const searchTerm = e.target.value;
     if (searchTerm.length === 0) {
-      companyNameResults.innerHTML = ""; // Limpa se o campo estiver vazio
-      cnpjStatusSpan.textContent = ""; // Limpa o status
+      companyNameResults.innerHTML = "";
+      cnpjStatusSpan.textContent = "";
     } else if (searchTerm.length >= 5) {
-      cnpjStatusSpan.textContent = "Buscando..."; // Indica busca
+      cnpjStatusSpan.textContent = "Buscando...";
       cnpjStatusSpan.className = "text-gray-500";
       debouncedSearchCompanyByName(searchTerm);
     }
   });
 
-  // Listener para preencher CNPJ ao clicar no resultado do nome
   companyNameResults.addEventListener("click", (e) => {
     if (e.target.tagName === "DIV") {
       const cnpj = e.target.dataset.cnpj;
       const razaoSocial = e.target.dataset.razaoSocial;
       const dataCadastro = e.target.dataset.dataCadastro;
       const tipoCadastro = e.target.dataset.tipoCadastro;
-
-      // Reseta o resto do formulário (status, data, docs)
       resetFormFields();
-
-      // Preenche os campos
       companyNameInputForDb.value = razaoSocial;
       cnpjInputForDb.value = formatDocument(cnpj);
       registrationDateInput.value = dataCadastro || "--";
-
-      // Lógica de mapeamento do Tipo de Cadastro (igual ao searchCnpj)
       if (tipoCadastro) {
         const tipo = tipoCadastro.trim().toUpperCase();
-        if (tipo === "CRC") {
-          registrationTypeInput.value = "CRC";
-        } else if (tipo === "CRS") {
-          registrationTypeInput.value = "CRS";
-        } else if (tipo === "CANDIDATO") {
-          registrationTypeInput.value = "Candidato";
-        } else {
-          registrationTypeInput.value = "CRC"; // Padrão
-        }
+        if (tipo === "CRC") registrationTypeInput.value = "CRC";
+        else if (tipo === "CRS") registrationTypeInput.value = "CRS";
+        else if (tipo === "CANDIDATO") registrationTypeInput.value = "Candidato";
+        else registrationTypeInput.value = "CRC";
       } else {
-        registrationTypeInput.value = "CRC"; // Padrão
+        registrationTypeInput.value = "CRC";
       }
-
-      // Atualiza o status
       cnpjStatusSpan.textContent = "Encontrado";
       cnpjStatusSpan.className = "text-green-600";
-
-      // Limpa os resultados
       companyNameResults.innerHTML = "";
     }
   });
 
-  // Formulário principal
-  statusRadios.forEach((radio) =>
-    radio.addEventListener("change", toggleRejectedDocsSection),
-  );
+  statusRadios.forEach((radio) => radio.addEventListener("change", toggleRejectedDocsSection));
   addDocBtn.addEventListener("click", addRejectedDoc);
   generateBtn.addEventListener("click", generateMessage);
   copyBtn.addEventListener("click", () => copyToClipboard(resultText.value));
   docCategoryInput.addEventListener("change", populateDocNames);
   docNameSelect.addEventListener("change", handleDocNameChange);
-
   registrationTypeInput.addEventListener("change", () => {
-    // Se o usuário mudar o tipo solicitado enquanto Deferida Parcial está marcado, atualiza a lista
     if (document.querySelector('input[name="status"]:checked').value === "Deferida Parcial") {
-        updatePartialRegistrationOptions();
+      updatePartialRegistrationOptions();
     }
   });
-
   if (contactPhoneInput) {
     contactPhoneInput.addEventListener("input", (e) => {
       e.target.value = formatPhone(e.target.value);
     });
   }
-
-  /**
-   * @functionality 311
-   * @category 3xx: Geração de Mensagens e Formulários
-   * @name Seleção de Família via Autocomplete com Dataset Attributes
-   * @description Armazena ID e descrição em data-attributes para uso posterior.
-   */
-  familySearchInput.addEventListener("input", (e) =>
-    debouncedSearchFamilies(e.target.value),
-  );
+  familySearchInput.addEventListener("input", (e) => debouncedSearchFamilies(e.target.value));
   familyResults.addEventListener("click", (e) => {
-    if (e.target.tagName === "DIV") {
+    if (e.target.tagName === "DIV" && e.target.dataset.id) {
       familySearchInput.value = e.target.textContent;
       selectedFamilyId = e.target.dataset.id;
       familyResults.innerHTML = "";
     }
   });
-
   rejectedDocsListContainer.addEventListener("click", function (e) {
     if (e.target.classList.contains("remove-doc-btn")) {
-      const index = e.target.getAttribute("data-index");
-      removeRejectedDoc(index);
+      removeRejectedDoc(e.target.getAttribute("data-index"));
     }
   });
 
-  // --- AUTOCOMPLETE DE MOTIVOS DE INDEFERIMENTO ---
   rejectionReasonInput.addEventListener("input", (e) => {
     clearTimeout(buscaMotivoTimeout);
     const valor = e.target.value;
@@ -2609,9 +2305,7 @@ const debouncedSearchFamilies = debounceFam(searchFamilies, 300);
       renderMotivoSuggestions(buscarMotivosSemelhantes(valor));
     }, 200);
   });
-
   rejectionReasonResults.addEventListener("mousedown", (e) => {
-    // mousedown (não click) para disparar antes do blur do textarea
     const target = e.target.closest("[data-motivo]");
     if (!target) return;
     e.preventDefault();
@@ -2619,311 +2313,143 @@ const debouncedSearchFamilies = debounceFam(searchFamilies, 300);
     renderMotivoSuggestions([]);
     rejectionReasonInput.focus();
   });
-
   rejectionReasonInput.addEventListener("blur", () => {
-    // Pequeno delay para não fechar antes do mousedown na sugestão
     setTimeout(() => renderMotivoSuggestions([]), 150);
   });
 
-  // --- LISTENERS DO LEMBRETE DE BACKUP E CONFIGURAÇÃO ---
-
-  // Salva o período imediatamente ao ser alterado no modal de DB
-  // Adiciona uma verificação para garantir que o elemento existe
-  if (backupReminderPeriodSelect) {
-    backupReminderPeriodSelect.addEventListener("change", async (e) => {
-      try {
-        await saveBackupReminderPeriod(Number(e.target.value));
-        showToast("Frequência do lembrete atualizada!", "success");
-      } catch (error) {
-        showToast("Erro ao salvar a frequência.", "error");
-      }
-    });
-  }
-
-  // Ações do modal de lembrete (adiciona verificações)
-  if (confirmBackupReminderBtn) {
-    confirmBackupReminderBtn.addEventListener("click", async () => {
-      const options = {
-        includeCompanies: false,
-        includeFamilies: false,
-        includeHistory: true,
-        includeContacts: true,
-      };
-
-      // 1. Inicia a exportação (que já exibe um toast)
-      await processExport(options);
-
-      // 2. Atualiza o timestamp do último backup
-      await updateLastPersonalBackupTimestamp(Date.now());
-
-      // 3. Fecha o modal
-      backupReminderModal.classList.add("hidden");
-    });
-  }
-
-  if (cancelBackupReminderBtn) {
-    cancelBackupReminderBtn.addEventListener("click", async () => {
-      await saveBackupReminderSnooze(Date.now());
-      backupReminderModal.classList.add("hidden");
-    });
-  }
-
-  if (closeBackupReminderBtn) {
-    closeBackupReminderBtn.addEventListener("click", async () => {
-      await saveBackupReminderSnooze(Date.now());
-      backupReminderModal.classList.add("hidden");
-    });
-  }
-
-  //  if (backupReminderModal) {
-  //      backupReminderModal.addEventListener('click', (e) => {
-  //        if (e.target.id === 'backupReminderModal') {
-  //            backupReminderModal.classList.add('hidden');
-  //        }
-  //    });
-  //}
-
-  /**
-   * @functionality 413
-   * @category 4xx: UI/UX e Interações
-   * @name Event Delegation para Ações no Container de Histórico
-   * @description Um listener único para copy/delete/expand em itens dinâmicos.
-   * @functionality 411
-   * @name Expansão/Colapso de Conteúdo de Mensagem no Histórico com Transições
-   * @description Alterna max-height via CSS para animação suave.
-   */
-  document
-    .getElementById("historyListContainer")
-    .addEventListener("click", function (e) {
-      // Tenta encontrar um botão de "Copiar"
-      const copyButton = e.target.closest(".copy-history-btn");
-      if (copyButton) {
-        const message = decodeURIComponent(copyButton.dataset.message);
-        copyToClipboard(message);
-        return; // Encontrou, não faz mais nada
-      }
-
-      // Tenta encontrar um botão de "Deletar"
-      const deleteButton = e.target.closest(".delete-history-btn");
-      if (deleteButton) {
-        const id = parseInt(deleteButton.dataset.id, 10);
-        deleteHistoryItem(id);
-        return; // Encontrou, não faz mais nada
-      }
-
-      // Tenta encontrar um botão de "Expandir/Recolher"
-      const expandButton = e.target.closest(".expand-history-btn");
-      if (expandButton) {
-        const content = expandButton
-          .closest(".border")
-          .querySelector(".history-message-content");
-
-        if (!content.style.maxHeight || content.style.maxHeight === "0px") {
-          // Se está recolhido, expande
-          content.style.maxHeight = content.scrollHeight + "px";
-          expandButton.innerHTML = svgIconCollapse; // Muda o SVG
-          expandButton.title = "Recolher"; // Muda o title
-        } else {
-          // Se está expandido, recolhe
-          content.style.maxHeight = null;
-          expandButton.innerHTML = svgIconExpand; // Muda o SVG
-          expandButton.title = "Expandir"; // Muda o title
-        }
-        return; // Encontrou, não faz mais nada
-      }
-    });
-
-  /**
-   * @functionality 308
-   * @category 3xx: Geração de Mensagens e Formulários
-   * @name Validação de Contato com Fornecedor e Toggle de Wrapper
-   * @description Mostra/oculta campos de nome/cargo se checkbox marcado.
-   */
   contactMadeCheckbox.addEventListener("change", () => {
-    contactDetailsWrapper.classList.toggle(
-      "hidden",
-      !contactMadeCheckbox.checked,
-    );
+    contactDetailsWrapper.classList.toggle("hidden", !contactMadeCheckbox.checked);
   });
 
-
-  // Listeners do Modal de WhatsApp
+  // --- WhatsApp ---
   sendWppBtn.addEventListener("click", openWppModal);
-  closeWppModalBtn.addEventListener("click", () =>
-    wppModal.classList.add("hidden"),
-  );
+  closeWppModalBtn.addEventListener("click", () => wppModal.classList.add("hidden"));
   wppModal.addEventListener("click", (e) => {
     if (e.target.id === "wppModal") wppModal.classList.add("hidden");
   });
   wppContactListContainer.addEventListener("click", handleWppContactClick);
+  wppSearchInput.addEventListener("input", renderWppList);
 
-  // Listeners do Modal de Gerenciamento de Contatos (Abre/Fecha)
-  openContactsModalBtn.addEventListener("click", () =>
-    contactsModal.classList.remove("hidden"),
-  );
-  closeContactsModalBtn.addEventListener("click", () =>
-    contactsModal.classList.add("hidden"),
-  );
+  // --- Contatos ---
+  openContactsModalBtn.addEventListener("click", () => {
+    resetContactForm();
+    contactsSearchInput.value = "";
+    renderContactsList();
+    contactsModal.classList.remove("hidden");
+    loadContacts().catch((e) => {
+      console.error(e);
+      showToast("Não foi possível atualizar a lista de contatos.", "error");
+    });
+  });
+  closeContactsModalBtn.addEventListener("click", () => contactsModal.classList.add("hidden"));
   contactsModal.addEventListener("click", (e) => {
     if (e.target.id === "contactsModal") contactsModal.classList.add("hidden");
   });
-
-  // Listeners do Gerenciador de Contatos (no dbModal)
-  addContactBtn.addEventListener("click", addContact);
-  exportContactsCsvBtn.addEventListener("click", exportContactsCsv);
-
+  addContactBtn.addEventListener("click", saveContact);
+  cancelEditContactBtn.addEventListener("click", resetContactForm);
+  [modalcontactNameInput, modalcontactRoleInput, modalcontactSectorInput, contactPhoneInputModal, modalcontactEmailInput].forEach((el) =>
+    el.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") saveContact();
+    }),
+  );
+  contactPhoneInputModal.addEventListener("input", (e) => {
+    e.target.value = maskBrPhone(e.target.value);
+  });
+  contactsSearchInput.addEventListener("input", renderContactsList);
   contactsListContainer.addEventListener("click", (e) => {
-    const deleteButton = e.target.closest(".delete-contact-btn");
-    if (deleteButton) {
-      const id = parseInt(deleteButton.dataset.id, 10);
-      deleteContact(id);
-    }
+    const btn = e.target.closest("button[data-action]");
+    if (!btn) return;
+    const id = btn.dataset.id;
+    if (btn.dataset.action === "edit") startEditContact(id);
+    else if (btn.dataset.action === "delete") deleteContact(id);
+    else if (btn.dataset.action === "fav") toggleFavorite(id);
   });
+  exportContactsCsvBtn.addEventListener("click", exportContactsCsv);
+  loadContactsCsvBtn.addEventListener("click", importContactsCsv);
 
-  loadContactsCsvBtn.addEventListener("click", () => {
-    const file = contactsCsvFileInput.files[0];
-    if (!file) {
-      showToast("Selecione um arquivo CSV de contatos.", "error");
-      return;
-    }
-    // Reusa a função loadCsvToDB
-    loadCsvToDB(file, "contacts", contactsDbStatus, contactsParser);
-    // Recarrega a lista após a importação
-    setTimeout(renderContactsList, 1000);
-  });
-
-  // --- LISTENERS DO DASHBOARD (NOVO) ---
-  openDashboardModalBtn.addEventListener("click", () => {
-    dashboardModal.classList.remove("hidden");
-    renderDashboard(); // Renderiza ao abrir
-  });
-
-  closeDashboardModalBtn.addEventListener("click", () => {
+  // --- Dashboard ---
+  const closeDashboard = () => {
     dashboardModal.classList.add("hidden");
-    // Destrói o gráfico para liberar memória
     if (statusChartInstance) {
       statusChartInstance.destroy();
       statusChartInstance = null;
     }
+  };
+  openDashboardModalBtn.addEventListener("click", () => {
+    dashboardModal.classList.remove("hidden");
+    renderDashboard();
   });
-
+  closeDashboardModalBtn.addEventListener("click", closeDashboard);
   dashboardModal.addEventListener("click", (e) => {
-    if (e.target.id === "dashboardModal") {
-      dashboardModal.classList.add("hidden");
-      if (statusChartInstance) {
-        statusChartInstance.destroy();
-        statusChartInstance = null;
-      }
-    }
+    if (e.target.id === "dashboardModal") closeDashboard();
   });
-
   refreshDashboardBtn.addEventListener("click", renderDashboard);
 
-  // Inicialização
-  /**
-   * @functionality 500
-   * @category 5xx: Utilitários e Validações
-   * @name Inicialização de Data Atual no Campo de Análise
-   * @description Define valor default como data de hoje em formato YYYY-MM-DD.
-   */
-  const today = new Date().toISOString().split("T")[0];
-  analysisDateInput.value = today;
+  // =====================================================================
+  // INICIALIZAÇÃO
+  // =====================================================================
+  analysisDateInput.value = todayLocalISO();
   populateDocNames();
-  initDb();
   renderFooter();
+  initializeAppLogic();
 
-
-
-  // Mostra o modal de boas-vindas apenas na primeira vez
   const dontShow = localStorage.getItem("dontShowWelcomeGerador");
   if (!dontShow) {
-      const modal = document.getElementById("welcomeModalGerador");
-      if (modal) {
-          // Pequeno delay para garantir que a UI já esteja visível
-          setTimeout(() => {
-              modal.classList.remove("hidden");
-          }, 300); // Opcional, mas recomendado para evitar flash
-      }
+    const modal = document.getElementById("welcomeModalGerador");
+    if (modal) setTimeout(() => modal.classList.remove("hidden"), 300);
   }
-
-    // Função para fechar o modal
-      window.closeWelcomeModalGerador = function () {
-            const modal = document.getElementById("welcomeModalGerador");
-            if (modal) {
-                modal.classList.add("hidden");
-
-                if (document.getElementById("dontShowGeradorAgain").checked) {
-                    localStorage.setItem("dontShowWelcomeGerador", "true");
-                }
-            }
-        }
-       
-
+  window.closeWelcomeModalGerador = function () {
+    const modal = document.getElementById("welcomeModalGerador");
+    if (modal) {
+      modal.classList.add("hidden");
+      if (document.getElementById("dontShowGeradorAgain").checked) {
+        localStorage.setItem("dontShowWelcomeGerador", "true");
+      }
+    }
+  };
 });
 
-
-
-// ==========================================================
-// INTEGRAÇÃO COM HOME (DASHBOARD)
-// Cole isso no FINAL do arquivo script.js
-// ==========================================================
-
+// =====================================================================
+// INTEGRAÇÃO COM HOME (estatísticas lidas do Supabase)
+// =====================================================================
 async function gerarEstatisticasGerador() {
-  if (!db) return { mensagens: 0, deferidas: 0, percentualDeferidas: 0 };
-
-  return new Promise((resolve) => {
-    const transaction = db.transaction(["history"], "readonly");
-    const store = transaction.objectStore("history");
-    const request = store.getAll();
-
-    request.onsuccess = function (event) {
-      const all = event.target.result || [];
-      const total = all.length;
-
-      // Conta quantas tiveram status 'Deferida'
-      // O regex verifica mensagens antigas, o .status verifica as novas (versão 3.0+)
-      const deferidas = all.filter((item) => {
-        if (item.status) return item.status === "Deferida";
-        return item.message && item.message.includes("*Deferida*");
-      }).length;
-
-      resolve({
-        mensagens: total,
-        deferidas: deferidas,
-        percentualDeferidas:
-          total > 0 ? ((deferidas / total) * 100).toFixed(0) : 0,
-      });
+  const vazio = { mensagens: 0, deferidas: 0, percentualDeferidas: 0 };
+  try {
+    await getCurrentUserId();
+    const base = () =>
+      supabaseClientCaf.from(TBL_HISTORY).select("id", { count: "exact", head: true }).is("deleted_at", null);
+    const [{ count: total, error: e1 }, { count: deferidas, error: e2 }] = await Promise.all([
+      base(),
+      base().eq("status", "Deferida"),
+    ]);
+    if (e1 || e2) throw e1 || e2;
+    const t = total || 0;
+    const d = deferidas || 0;
+    return {
+      mensagens: t,
+      deferidas: d,
+      percentualDeferidas: t > 0 ? ((d / t) * 100).toFixed(0) : 0,
     };
-
-    request.onerror = function () {
-      resolve({ mensagens: 0, deferidas: 0, percentualDeferidas: 0 });
-    };
-  });
+  } catch (e) {
+    console.warn("Stats do gerador indisponíveis:", e);
+    return vazio;
+  }
 }
 
 async function atualizarStatsExternos() {
   try {
     const stats = await gerarEstatisticasGerador();
-
-    // Salva no LocalStorage para a Home ler instantaneamente
     localStorage.setItem("stats_gerador", JSON.stringify(stats));
-    // console.log('Stats Gerador atualizados:', stats);
   } catch (e) {
     console.error("Erro ao atualizar stats do gerador:", e);
   }
 }
 
-// Listener para o PostMessage (Comunicação Iframe <-> Home)
 window.addEventListener("message", async (event) => {
   if (event.data && event.data.type === "GET_STATS") {
     const stats = await gerarEstatisticasGerador();
-    event.source.postMessage(
-      {
-        type: "STATS_RESPONSE",
-        app: "gerador",
-        data: stats,
-      },
-      event.origin,
-    );
+    if (event.source) {
+      event.source.postMessage({ type: "STATS_RESPONSE", app: "gerador", data: stats }, event.origin);
+    }
   }
 });
