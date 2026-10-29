@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerador de Mensagens CAF</title>
 <script src="https://cdn.tailwindcss.com"></script>
-
     <script>
       tailwind.config = {
-        darkMode: "class", 
+        darkMode: "class",
         theme: {
           extend: {
             colors: {
@@ -22,17 +20,14 @@
         },
       };
     </script>
-
     <script>
     (function() {
         // A. Segurança
         const isAuthenticated = sessionStorage.getItem("cockpit_auth_token") === "valid";
         if (!isAuthenticated) window.top.location.href = "../../index.html";
-
         // B. Tema Imediato
         var savedTheme = localStorage.getItem('cockpit_theme');
         var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        
         if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
             document.documentElement.classList.add('dark');
         } else {
@@ -40,18 +35,14 @@
         }
     })();
     </script>
-
     <style>
       html.dark body { background-color: #0f172a; color: #f3f4f6; }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <link rel="stylesheet" href="style.css">
-    
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -60,23 +51,30 @@
     <meta name="apple-mobile-web-app-title" content="Gerador CAF">
     <meta name="application-name" content="Gerador CAF">
 </head>
-
 <body class="bg-gray-100 dark:bg-slate-900 text-gray-800 dark:text-gray-100 transition-colors duration-300 min-h-screen flex flex-col">
-
     <!-- Container centralizado com limite de largura e respiro no topo -->
     <div class="w-full max-w-screen-2xl mx-auto p-4 sm:p-6 md:py-10 flex-grow">
         <header class="mb-8">
             <div class="flex justify-start">
-                
                 <h1 id="appTitle" class="text-3xl font-bold text-blue-700 dark:text-blue-400 cursor-pointer" title="Gerador de Mensagens - CAF">
                     Gerador de Mensagens - CAF
                 </h1>
             </div>
-            <p class="text-gray-600 dark:text-gray-400 dark:text-gray-300 mt-2 text-left">
+            <p class="text-gray-600 dark:text-gray-300 mt-2 text-left">
                 Preencha os campos abaixo para gerar a mensagem.
             </p>
         </header>
-
+        <!-- Banner de migração dos dados locais (exibido apenas quando houver dados no navegador ainda não migrados) -->
+        <div id="migrationBanner" class="hidden mb-6 p-4 rounded-xl border border-amber-300 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-700 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div class="text-sm text-amber-800 dark:text-amber-200">
+                <p class="font-semibold">Dados locais encontrados neste navegador</p>
+                <p id="migrationBannerText" class="mt-1"></p>
+            </div>
+            <div class="flex gap-2 shrink-0">
+                <button id="migrationDismissBtn" class="text-sm font-semibold py-2 px-4 rounded-lg bg-white dark:bg-slate-700 border border-amber-300 dark:border-slate-600 text-amber-800 dark:text-white hover:bg-amber-100 dark:hover:bg-slate-600 transition">Agora não</button>
+                <button id="migrationStartBtn" class="text-sm font-semibold py-2 px-4 rounded-lg bg-amber-600 text-white hover:bg-amber-700 transition shadow-md">Migrar para minha conta</button>
+            </div>
+        </div>
         <main class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-lg space-y-8">
             <section id="company-data">
                 <h2 class="text-xl font-semibold mb-4 border-b dark:border-slate-700 pb-2 text-gray-700 dark:text-white">1. Dados da Solicitação</h2>
@@ -134,7 +132,6 @@
                         <input type="radio" id="statusPendenteTermo" name="status" value="Pendente do Termo" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
                         <label for="statusPendenteTermo" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">Pendente do Termo</label>
                     </div>
-
                     <div class="flex items-center">
                         <input type="radio" id="statusApenasContato" name="status" value="Contato" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
                         <label for="statusApenasContato" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">Contato</label>
@@ -149,20 +146,17 @@
                     </select>
                 </div>
             </section>
-
             <section id="contact-section">
                 <h2 class="text-xl font-semibold mb-4 border-b dark:border-slate-700 pb-2 text-gray-700 dark:text-white">3. Contato com Fornecedor</h2>
                 <div class="flex items-center">
                     <input type="checkbox" id="contactMade" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                     <label for="contactMade" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">Houve contato com o fornecedor?</label>
                 </div>
-
                 <div id="contactDetailsWrapper" class="hidden mt-4 grid grid-cols-1 md:grid-cols-3 gap-6 bg-gray-50 dark:bg-slate-700 border dark:border-slate-600 p-4 rounded-lg">
                     <div>
                         <label for="contactName" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">Nome do Contato</label>
                         <input type="text" id="contactName" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Ex: Joelson Miranda">
                     </div>
-
                     <div>
                         <label for="contactRole" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cargo</label>
                         <select id="contactRole" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
@@ -174,13 +168,10 @@
                             <option>Responsável pelo cadastro</option>
                         </select>
                     </div>
-                    
-
                     <div>
                         <label for="contactPhone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Telefone (WhatsApp)</label>
                         <input type="text" id="contactPhone" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="(71) 9 9999-9999" maxlength="16">
                     </div>
-
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Gênero</label>
                         <div class="flex space-x-4 p-3 border border-gray-300 rounded-lg bg-white dark:bg-slate-800 items-center">
@@ -194,7 +185,6 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div class="md:col-span-2">
                         <label for="contactSuccess" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status do Contato</label>
                         <select id="contactSuccess" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
@@ -203,7 +193,6 @@
                         </select>
                     </div>
                 </div>
-
             </section>
             <section id="legal-flag-section" class="mt-4">
                 <div class="flex items-center">
@@ -239,7 +228,6 @@
                             <div id="familyResults"></div>
                         </div>
                     </div>
-
                     <div id="manualDocNameWrapper" class="hidden">
                         <label for="manualDocName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Outro</label>
                         <input type="text" id="manualDocName" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Documento de Qualificação Técnica">
@@ -268,162 +256,158 @@
             </div>
             <section id="result-section" class="hidden">
                 <h2 class="text-xl font-semibold mb-4 border-b dark:border-slate-700 pb-2 text-gray-700 dark:text-white">Mensagem Gerada</h2>
-                
                 <div>
                     <textarea id="resultText" readonly rows="15" class="w-full p-4 border bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-slate-600 dark:text-gray-200 rounded-lg text-sm leading-relaxed whitespace-pre-wrap"></textarea>
                 </div>
-                
             <div class="flex justify-end space-x-2 mt-3">
-                <button id="sendWppBtn" class="inline-flex items-center bg-green-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-600 transition text-sm shadow-md justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="currentColor" viewBox="0 0 512.005 512.005" xml:space="preserve" class="w-5 h-5">
-                        <g>
-                            <g>
-                                <path d="M502.549,5.745c-4.676-3.806-10.402-5.743-16.154-5.743c-4.608,0-9.225,1.237-13.346,3.755l-460.8,281.6    c-9.788,5.982-14.396,17.741-11.29,28.774c3.106,11.042,13.175,18.671,24.644,18.671h153.6v166.4    c0,5.726,3.789,10.752,9.284,12.297c1.169,0.35,2.355,0.503,3.516,0.503c4.335,0,8.491-2.227,10.871-6.05l81.135-130.526    l62.942,31.471c3.601,1.801,7.518,2.705,11.452,2.705c3.234,0,6.477-0.614,9.54-1.843c6.801-2.731,12.1-8.243,14.566-15.147    l128-358.4C514.163,23.998,510.972,12.589,502.549,5.745z M186.705,307.202H25.604L439.863,54.044L186.705,307.202z     M204.804,454.377V335.823l56.218,28.109L204.804,454.377z M358.404,384.002L216.87,313.235L476.343,53.762L358.404,384.002z"></path>
-                            </g>
-                        </g>
-                        <title>Enviar mensagem por Whatsapp</title>
+                <button id="sendWppBtn" title="Enviar mensagem por Whatsapp" class="inline-flex items-center bg-green-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-600 transition text-sm shadow-md justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 512.005 512.005" class="w-5 h-5">
+                        <path d="M502.549,5.745c-4.676-3.806-10.402-5.743-16.154-5.743c-4.608,0-9.225,1.237-13.346,3.755l-460.8,281.6    c-9.788,5.982-14.396,17.741-11.29,28.774c3.106,11.042,13.175,18.671,24.644,18.671h153.6v166.4    c0,5.726,3.789,10.752,9.284,12.297c1.169,0.35,2.355,0.503,3.516,0.503c4.335,0,8.491-2.227,10.871-6.050l81.135-130.526    l62.942,31.471c3.601,1.801,7.518,2.705,11.452,2.705c3.234,0,6.477-0.614,9.540-1.843c6.801-2.731,12.100-8.243,14.566-15.147    l128-358.4C514.163,23.998,510.972,12.589,502.549,5.745z M186.705,307.202H25.604L439.863,54.044L186.705,307.202z     M204.804,454.377V335.823l56.218,28.109L204.804,454.377z M358.404,384.002L216.870,313.235L476.343,53.762L358.404,384.002z"></path>
                     </svg></button>
-                <button id="copyBtn" class="inline-flex items-center bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition text-sm shadow-md justify-center">
+                <button id="copyBtn" title="Copiar mensagem" class="inline-flex items-center bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition text-sm shadow-md justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="w-5 h-5">
-                        <rect width="24" height="24" fill="none"></rect>
                         <rect x="4" y="8" width="12" height="12" rx="1" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></rect>
                         <path d="M8 6V5C8 4.44772 8.44772 4 9 4H19C19.5523 4 20 4.44772 20 5V15C20 15.5523 19.5523 16 19 16H18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 2"></path>
-                        <title>Copiar mensagem</title>
                     </svg></button>
             </div>
-
             </section>
-             
-            <div class="text-center pt-6 border-t mt-8 space-x-4">
-                
-                <button id="openDbModalBtn" class="text-sm text-blue-600 hover:text-blue-800 font-semibold py-2 px-4 rounded-lg transition hover:bg-blue-50 dark:text-blue-400 dark:hover:text-white dark:hover:bg-blue-900 inline-flex items-center justify-center">
+            <div class="text-center pt-6 border-t dark:border-slate-700 mt-8 space-x-4">
+                <button id="openDbModalBtn" title="Contatos, exportação e importação" class="text-sm text-blue-600 hover:text-blue-800 font-semibold py-2 px-4 rounded-lg transition hover:bg-blue-50 dark:text-blue-400 dark:hover:text-white dark:hover:bg-blue-900 inline-flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375"></path>
-                        <title>Gerenciar Banco de Dados</title>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.250c0 2.278-3.694 4.125-8.250 4.125s-8.250-1.847-8.250-4.125V6.375"></path>
                     </svg>
                 </button>
-
-                
-                <button id="openHistoryModalBtn" class="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-semibold py-2 px-4 rounded-lg transition hover:bg-blue-50 dark:text-blue-400 dark:hover:text-white dark:hover:bg-blue-900 justify-center">
+                <button id="openHistoryModalBtn" title="Ver Histórico de Mensagens" class="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-semibold py-2 px-4 rounded-lg transition hover:bg-blue-50 dark:text-blue-400 dark:hover:text-white dark:hover:bg-blue-900 justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18c-2.305 0-4.408.867-6 2.292m0-14.25v14.25"></path>
-                        <title>Ver Histórico de Mensagens</title>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.750c-1.052 0-2.062.18-3 .512v14.250A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.250a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.250A8.987 8.987 0 0 0 18 18c-2.305 0-4.408.867-6 2.292m0-14.250v14.250"></path>
                     </svg>
                 </button>
-
-                <button id="openDashboardModalBtn" class="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-semibold py-2 px-4 rounded-lg transition hover:bg-blue-50 dark:text-blue-400 dark:hover:text-white dark:hover:bg-blue-900 justify-center">
+                <button id="openDashboardModalBtn" title="Dashboard de Análises" class="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-semibold py-2 px-4 rounded-lg transition hover:bg-blue-50 dark:text-blue-400 dark:hover:text-white dark:hover:bg-blue-900 justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" />
-                        <title>Dashboard de Análises</title>
                     </svg>
                 </button>
-            
+                <span id="syncStatus" class="inline-flex items-center gap-1 text-xs font-medium text-gray-400 align-middle" title="Status da conexão com o banco de dados">
+                    <span id="syncDot" class="inline-block w-2 h-2 rounded-full bg-gray-400"></span>
+                    <span id="syncText">Conectando...</span>
+                </span>
             </div>
         </main>
     </div>
 
+    <!-- ============ MODAL: DADOS (Contatos / Exportar / Importar) ============ -->
     <div id="dbModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center p-4 z-50 overflow-y-auto">
-            <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-2xl relative max-h-[90vh] flex flex-col">
-                <button id="closeDbModalBtn" class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 hover:text-gray-700 text-3xl font-light leading-none">&times;</button>
-                
-                <div id="dbModalContent" class="space-y-6 overflow-y-auto pr-2">
-                    <h2 class="text-xl font-semibold mb-4 border-b dark:border-slate-700 pb-2 text-gray-700 dark:text-white">Base de Dados</h2>
-                    
-                    <p class="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-300 -mt-4">Gerencie sua base de dados aqui: carregue arquivos CSV para CNPJs/CPFs e Famílias (delimitador ';;'), realize backup e restauração completa ou gerencie seus contatos do WhatsApp.</p>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        
-                        <section id="backup-restore-setup">
-                            <div class="bg-gray-50 dark:bg-slate-700 p-4 rounded-lg space-y-3 border dark:border-slate-600 h-full flex flex-col">
-                                <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Backup e Restauração</h3>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Salve todos os dados em um arquivo ou restaure a partir de um backup.</p>
-                                
-                                <div class="mt-3">
-                                    <label for="backupReminderPeriod" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Frequência do Lembrete</label>
-                                    <select id="backupReminderPeriod" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm dark:bg-slate-900 dark:border-slate-600 dark:text-white">
-                                        <option value="86400000">Diariamente</option>
-                                        <option value="604800000">Semanalmente</option>
-                                        <option value="1209600000">Quinzenalmente</option>
-                                        <option value="0">Nunca</option>
-                                    </select>
-                                </div>
-
-                                <div class="flex justify-between items-center mt-auto pt-2 space-x-2"> 
-                                    <button id="exportDbBtn" class="bg-green-600 text-white font-semibold py-1 px-3 rounded-lg hover:bg-green-700 transition shadow-md text-xs">
-                                        Exportar (Backup)
-                                    </button>
-                                    
-                                    <div>
-                                        <label for="importDbFile" id="importDbLabel" class="inline-block bg-blue-600 text-white font-semibold py-1 px-3 rounded-lg hover:bg-blue-700 transition shadow-md cursor-pointer text-xs text-center">
-                                            Importar (Restaurar)
-                                        </label>
-                                        <input type="file" id="importDbFile" accept=".json" class="hidden">
-                                    </div>
-                                </div>
-                                <span id="importStatus" class="text-center block text-sm text-blue-600 font-semibold mt-2 min-h-[20px]"></span>
+        <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-2xl relative max-h-[90vh] flex flex-col">
+            <button id="closeDbModalBtn" class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 hover:text-gray-700 text-3xl font-light leading-none">&times;</button>
+            <div id="dbModalContent" class="space-y-6 overflow-y-auto pr-2">
+                <h2 class="text-xl font-semibold mb-4 border-b dark:border-slate-700 pb-2 text-gray-700 dark:text-white">Meus Dados</h2>
+                <p class="text-sm text-gray-600 dark:text-gray-300 -mt-4">Seus contatos e seu histórico de mensagens ficam salvos no banco de dados, vinculados ao seu usuário (não são compartilhados com outros usuários), e ficam disponíveis em qualquer computador em que você acessar o Cockpit.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <section id="backup-restore-setup">
+                        <div class="bg-gray-50 dark:bg-slate-700 p-4 rounded-lg space-y-3 border dark:border-slate-600 h-full flex flex-col">
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Exportar e Importar</h3>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Gere uma cópia (.json) dos seus dados ou importe um backup antigo. A importação <strong>soma</strong> os registros aos já existentes, sem duplicar e sem apagar nada.</p>
+                            <div id="localDataBox" class="hidden text-xs p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-200">
+                                <p id="localDataText"></p>
+                                <button id="migrationStartBtn2" class="mt-2 bg-amber-600 text-white font-semibold py-1 px-3 rounded-lg hover:bg-amber-700 transition shadow-md text-xs">Migrar para minha conta</button>
                             </div>
-                        </section>
-                        
-                        <section id="open-contacts-modal-section">
-                            <div class="bg-gray-50 dark:bg-slate-700 p-4 rounded-lg space-y-3 border dark:border-slate-600 h-full flex flex-col">
-                                <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Contatos Pessoais (WhatsApp)</h3>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Gerencie sua lista de contatos para envio rápido de mensagens via WhatsApp.</p>
-                                <div class="text-right mt-auto pt-2">
-                                    <button id="openContactsModalBtn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition shadow-md text-sm">
-                                        Gerenciar Contatos
-                                    </button>
+                            <div class="flex justify-between items-center mt-auto pt-2 space-x-2">
+                                <button id="exportDbBtn" class="bg-green-600 text-white font-semibold py-1 px-3 rounded-lg hover:bg-green-700 transition shadow-md text-xs">
+                                    Exportar (.json)
+                                </button>
+                                <div>
+                                    <label for="importDbFile" id="importDbLabel" class="inline-block bg-blue-600 text-white font-semibold py-1 px-3 rounded-lg hover:bg-blue-700 transition shadow-md cursor-pointer text-xs text-center">
+                                        Importar backup
+                                    </label>
+                                    <input type="file" id="importDbFile" accept=".json" class="hidden">
                                 </div>
                             </div>
-                        </section>
-                    
-                    </div> </div>
+                            <span id="importStatus" class="text-center block text-sm text-blue-600 font-semibold mt-2 min-h-[20px]"></span>
+                        </div>
+                    </section>
+                    <section id="open-contacts-modal-section">
+                        <div class="bg-gray-50 dark:bg-slate-700 p-4 rounded-lg space-y-3 border dark:border-slate-600 h-full flex flex-col">
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Contatos Pessoais (WhatsApp)</h3>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Gerencie sua lista de contatos para envio rápido de mensagens via WhatsApp.</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-300"><span id="contactsCountBadge" class="font-semibold">0</span> contato(s) salvo(s)</p>
+                            <div class="text-right mt-auto pt-2">
+                                <button id="openContactsModalBtn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition shadow-md text-sm">
+                                    Gerenciar Contatos
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
             </div>
         </div>
-        </div>
     </div>
+
+    <!-- ============ MODAL: HISTÓRICO ============ -->
     <div id="historyModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
         <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-3xl relative max-h-[90vh] flex flex-col">
             <button id="closeHistoryModalBtn" class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 hover:text-gray-700 text-3xl font-light leading-none">&times;</button>
-            <div class="flex justify-between items-center border-b pb-2">
+            <div class="flex justify-between items-center border-b dark:border-slate-700 pb-2 pr-8">
                 <h2 class="text-xl font-semibold text-gray-700 dark:text-white">Histórico de Mensagens</h2>
-                <button id="clearHistoryBtn" title="Limpar Histórico" class="text-red-500 hover:text-red-700 hover:bg-red-100 rounded-lg transition p-2">
+                <button id="clearHistoryBtn" title="Limpar todo o histórico" class="text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg transition p-2">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" class="w-5 h-5" fill="currentColor">
                         <path d="M216.001,203.833h-76l27.91015-27.90967.00684-.00635.00635-.00683,56.563-56.5625a28.03348,28.03348,0,0,0-.001-39.59766L179.23145,34.49512a28.03347,28.03347,0,0,0-39.59766,0L83.07471,91.0542l-.01026.00928-.00927.01025L26.49609,147.63281a28.03171,28.03171,0,0,0,0,39.59766L63.585,224.31836a12.00286,12.00286,0,0,0,8.48535,3.51465H216.001a12,12,0,0,0,0-24ZM156.60449,51.46582a4.00207,4.00207,0,0,1,5.65625,0L207.51562,96.7207a4.005,4.005,0,0,1,0,5.65723l-48.083,48.083L108.521,99.54932ZM106.05957,203.833H77.041L43.4668,170.25977a4.00385,4.00385,0,0,1,0-5.65625L91.55029,116.52l50.91114,50.91113Z"/>
                     </svg>
                 </button>
             </div>
-            <div id="historyFilterSection" class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-4 p-4 bg-gray-50 dark:bg-slate-700 rounded-lg border dark:border-slate-600">
-            <div class="sm:col-span-3">
-                <label for="historySearchCnpj" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Buscar por CNPJ/CPF</label>
-                <input type="text" id="historySearchCnpj" placeholder="Digite o CNPJ/CPF" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-900 dark:border-slate-600 dark:text-white" maxlength="18">
+            <div id="historyFilterSection" class="grid grid-cols-1 sm:grid-cols-6 gap-3 my-4 p-4 bg-gray-50 dark:bg-slate-700 rounded-lg border dark:border-slate-600">
+                <div class="sm:col-span-3">
+                    <label for="historySearchCnpj" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">CNPJ/CPF</label>
+                    <input type="text" id="historySearchCnpj" placeholder="Digite o CNPJ/CPF" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-900 dark:border-slate-600 dark:text-white" maxlength="18">
+                </div>
+                <div class="sm:col-span-3">
+                    <label for="historySearchName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Razão Social / Nome</label>
+                    <input type="text" id="historySearchName" placeholder="Parte do nome" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-900 dark:border-slate-600 dark:text-white">
+                </div>
+                <div class="sm:col-span-2">
+                    <label for="historyStatusFilter" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
+                    <select id="historyStatusFilter" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-900 dark:border-slate-600 dark:text-white">
+                        <option value="">Todos</option>
+                        <option>Deferida</option>
+                        <option>Deferida Parcial</option>
+                        <option>Indeferida</option>
+                        <option>Pendente de Envio</option>
+                        <option>Pendente do Termo</option>
+                        <option>Contato</option>
+                    </select>
+                </div>
+                <div class="sm:col-span-2">
+                    <label for="historyStartDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data Inicial</label>
+                    <input type="date" id="historyStartDate" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-900 dark:border-slate-600 dark:text-white">
+                </div>
+                <div class="sm:col-span-2">
+                    <label for="historyEndDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data Final</label>
+                    <input type="date" id="historyEndDate" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-900 dark:border-slate-600 dark:text-white">
+                </div>
+                <div class="sm:col-span-6 flex items-center justify-between gap-2">
+                    <span id="historyCount" class="text-xs text-gray-500 dark:text-gray-400"></span>
+                    <div class="flex gap-2">
+                        <button id="clearHistoryFilterBtn" title="Limpar Filtros" class="bg-gray-200 text-gray-700 dark:bg-slate-600 dark:text-white dark:hover:bg-slate-500 font-semibold py-2 px-3 rounded-md hover:bg-gray-300 transition">&#x21BA;</button>
+                        <button id="filterHistoryBtn" class="bg-blue-600 text-white font-semibold py-2 px-6 rounded-md hover:bg-blue-700 transition">Filtrar</button>
+                    </div>
+                </div>
             </div>
-            <div>
-                <label for="historyStartDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data Inicial</label>
-                <input type="date" id="historyStartDate" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-900 dark:border-slate-600 dark:text-white">
-            </div>
-            <div>
-                <label for="historyEndDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data Final</label>
-                <input type="date" id="historyEndDate" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-900 dark:border-slate-600 dark:text-white">
-            </div>
-            <div class="flex items-end space-x-2">
-                <button id="filterHistoryBtn" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700 transition">Filtrar</button>
-                <button id="clearHistoryFilterBtn" title="Limpar Filtros" class="bg-gray-200 text-gray-700 dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600 font-semibold p-2 rounded-md hover:bg-gray-300 transition">&#x21BA;</button>
-            </div>
-            </div>
-            <div id="historyListContainer" class="flex-1 overflow-y-auto space-y-3 mt-4 pr-2 min-h-0">
+            <div id="historyListContainer" class="flex-1 overflow-y-auto space-y-3 mt-2 pr-2 min-h-0">
                 <p class="text-gray-500 text-center">Nenhum histórico encontrado.</p>
+            </div>
+            <div class="text-center pt-3">
+                <button id="historyLoadMoreBtn" class="hidden text-sm font-semibold text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-700 py-2 px-4 rounded-lg transition">Carregar mais</button>
             </div>
         </div>
     </div>
 
+    <!-- ============ MODAL: DASHBOARD ============ -->
     <div id="dashboardModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center p-4 z-50 overflow-y-auto">
         <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-4xl relative max-h-[90vh] flex flex-col">
             <button id="closeDashboardModalBtn" class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 hover:text-gray-700 text-3xl font-light leading-none">&times;</button>
-            <div class="flex justify-between items-center border-b pb-2">
+            <div class="flex justify-between items-center border-b dark:border-slate-700 pb-2">
                 <h2 class="text-xl font-semibold text-gray-700 dark:text-white">Dashboard de Análises</h2>
             </div>
-            
             <div class="flex items-center space-x-4 my-4 p-4 bg-gray-50 dark:bg-slate-700 dark:border-slate-600 rounded-lg border">
                 <div>
                     <label for="dashboardPeriodFilter" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Período</label>
@@ -436,22 +420,18 @@
                     <button id="refreshDashboardBtn" class="bg-blue-600 text-white font-semibold py-1 px-3 rounded-md hover:bg-blue-700 transition">Atualizar</button>
                 </div>
             </div>
-
             <div class="text-center my-4">
                 <span class="text-lg text-gray-600 dark:text-gray-300">Total de Análises no Período:</span>
                 <span id="dashboardTotalCount" class="text-2xl font-bold text-blue-700 dark:text-blue-400 ml-2">-</span>
             </div>
-
             <div id="dashboardContainer" class="flex-1 overflow-y-auto space-y-8 mt-4 pr-2 min-h-0">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    
                     <section>
                         <h3 class="text-lg font-semibold text-gray-700 dark:text-white mb-3">Análises por Status</h3>
                         <div class="bg-gray-50 dark:bg-slate-700 dark:border-slate-600 p-4 rounded-lg border flex justify-center items-center" style="min-height: 300px;">
                             <canvas id="statusChart"></canvas>
                         </div>
                     </section>
-
                     <section class="space-y-6">
                         <div>
                             <h3 class="text-lg font-semibold text-gray-700 dark:text-white mb-3">Top 5 Documentos Indeferidos</h3>
@@ -465,109 +445,118 @@
                                 <p class="text-gray-500 text-center">Carregando...</p>
                             </div>
                         </div>
-                        <p class="hidden text-gray-400 dark:text-gray-300 italic text-center">
-                            * As listas "Top 5" consideram apenas análises salvas após a versão 3.0 (que incluem dados estruturados).
-                        </p>
                     </section>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- ============ MODAL: OPÇÕES DE EXPORTAÇÃO ============ -->
     <div id="exportModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
         <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-md relative">
-            <h2 class="text-xl font-semibold mb-6 border-b pb-2 text-gray-700 text-gray-700">Opções de Exportação</h2>
+            <h2 class="text-xl font-semibold mb-6 border-b dark:border-slate-700 pb-2 text-gray-700 dark:text-white">Opções de Exportação</h2>
             <div class="space-y-1">
-                <p class="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-300">Selecione quais dados você deseja incluir no arquivo de backup.</p>
-
+                <p class="text-sm text-gray-600 dark:text-gray-300">Selecione quais dados você deseja incluir no arquivo.</p>
                 <label class="flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 cursor-pointer">
-                    <input type="checkbox" id="exportContacts" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                    <span class="ml-3 block text-sm font-medium text-gray-700 dark:text-white">Contatos (Backup Pessoal)</span>
+                    <input type="checkbox" id="exportContacts" checked class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                    <span class="ml-3 block text-sm font-medium text-gray-700 dark:text-white">Contatos</span>
                 </label>
                 <label class="flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 cursor-pointer">
-                    <input type="checkbox" id="exportHistory" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                    <span class="ml-3 block text-sm font-medium text-gray-700 dark:text-white">Histórico de Mensagens (Backup Pessoal)</span>
+                    <input type="checkbox" id="exportHistory" checked class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                    <span class="ml-3 block text-sm font-medium text-gray-700 dark:text-white">Histórico de Mensagens</span>
                 </label>
+                <p class="text-xs text-amber-700 dark:text-amber-300 pt-2">O arquivo contém nomes, telefones e e-mails. Guarde-o em local seguro (LGPD).</p>
             </div>
             <div class="mt-8 flex justify-end space-x-4">
-                <button id="cancelExportBtn" class="bg-gray-200 text-gray-800 font-semibold py-2 px-5 rounded-lg hover:bg-gray-300 transition">Cancelar</button>
+                <button id="cancelExportBtn" class="bg-gray-200 text-gray-800 dark:bg-slate-700 dark:text-white font-semibold py-2 px-5 rounded-lg hover:bg-gray-300 transition">Cancelar</button>
                 <button id="confirmExportBtn" class="bg-blue-600 text-white font-semibold py-2 px-5 rounded-lg hover:bg-blue-700 transition shadow-md">Confirmar e Exportar</button>
             </div>
         </div>
     </div>
 
-<div id="wppModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <!-- ============ MODAL: ENVIAR PARA (WHATSAPP) ============ -->
+    <div id="wppModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
         <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-md relative">
             <button id="closeWppModalBtn" class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 hover:text-gray-700 text-3xl font-light leading-none">&times;</button>
-            <h2 class="text-xl font-semibold mb-6 border-b pb-2 text-gray-700 text-gray-700">Enviar para...</h2>
-            <div id="wppContactListContainer" class="space-y-2 max-h-60 overflow-y-auto">
-                </div>
-        </div> </div>
-        <div id="contactsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
-        <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-lg relative max-h-[90vh] flex flex-col">
-            <button id="closeContactsModalBtn" class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 hover:text-gray-700 text-3xl font-light leading-none">&times;</button>
-            <h2 class="text-xl font-semibold mb-4 border-b dark:border-slate-700 pb-2 text-gray-700 dark:text-white">Gerenciar Contatos Pessoais</h2>
-            
-            <div class="flex-1 overflow-y-auto pr-2 min-h-0">
-                <section id="contacts-management-setup">
-                    <div class="bg-gray-50 dark:bg-slate-700 p-4 rounded-lg space-y-3 border dark:border-slate-600">
-                        <p class="text-xs text-gray-500 dark:text-gray-400 -mt-2 mb-3">Adicione/remova contatos para envio rápido via WhatsApp. Estes contatos são salvos no backup pessoal.</p>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-2 items-end">
-                            <div class="md:col-span-1">
-                                <label for="contactNameInput" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome</label>
-                                <input type="text" id="contactNameInput" placeholder="Maria Silva" class="w-full p-2 border border-gray-300 rounded-md dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                            </div>
-                            <div class="md:col-span-1">
-                                <label for="contactRoleInput" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cargo</label>
-                                <input type="text" id="contactRoleInput" placeholder="Coordenadora" class="w-full p-2 border border-gray-300 rounded-md dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                            </div>
-                            <div class="md:col-span-1">
-                                <label for="contactPhoneInput" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">WhatsApp</label>
-                                <input type="tel" id="contactPhoneInput" placeholder="5571998000000" class="w-full p-2 border border-gray-300 rounded-md dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <button id="addContactBtn" class="bg-blue-600 text-white font-semibold py-2 px-5 rounded-lg hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 transition shadow-md">Adicionar Contato</button>
-                        </div>
-                        
-                        <h4 class="text-md font-semibold text-gray-700 dark:text-white pt-2 border-t dark:border-slate-600">Contatos Salvos</h4>
-                        <div id="contactsListContainer" class="space-y-2 max-h-40 overflow-y-auto pr-2">
-                            <p class="text-sm text-gray-500 text-center">Nenhum contato cadastrado.</p>
-                        </div>
+            <h2 class="text-xl font-semibold mb-4 border-b dark:border-slate-700 pb-2 text-gray-700 dark:text-white">Enviar para...</h2>
+            <input type="text" id="wppSearchInput" placeholder="Buscar por nome, cargo, setor..." class="w-full p-2 mb-3 border border-gray-300 rounded-md dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm">
+            <div id="wppContactListContainer" class="space-y-2 max-h-72 overflow-y-auto"></div>
+        </div>
+    </div>
 
-                        <div class="pt-4 border-t">
-                             <label for="contactsCsvFileInput" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Importar CSV de Contatos</label>
-                             <input type="file" id="contactsCsvFileInput" accept=".csv" class="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900/30 dark:file:text-blue-400 dark:hover:file:bg-blue-900/50 transition">
-                             <div id="contacts-db-status" class="text-sm font-medium text-center pt-2 min-h-[20px]"></div>
-                             <div class="flex justify-between items-center mt-2">
-                                <button id="loadContactsCsvBtn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 transition shadow-md text-sm">Carregar CSV</button>
-                                <button id="exportContactsCsvBtn" class="bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 dark:bg-green-600 dark:hover:bg-green-500 transition shadow-md text-sm">Exportar CSV</button>
-                             </div>
+    <!-- ============ MODAL: GERENCIAR CONTATOS ============ -->
+    <div id="contactsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
+        <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-3xl relative max-h-[90vh] flex flex-col">
+            <button id="closeContactsModalBtn" class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 hover:text-gray-700 text-3xl font-light leading-none">&times;</button>
+            <h2 class="text-xl font-semibold mb-1 text-gray-700 dark:text-white">Contatos Pessoais</h2>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-4 border-b dark:border-slate-700 pb-2">Sua lista é individual: somente você vê e altera os seus contatos.</p>
+            <div class="flex-1 overflow-y-auto pr-2 min-h-0 space-y-4">
+                <!-- Formulário (novo / edição) -->
+                <section id="contactFormSection" class="bg-gray-50 dark:bg-slate-700 p-4 rounded-lg border dark:border-slate-600 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h3 id="contactFormTitle" class="text-md font-semibold text-gray-700 dark:text-white">Novo contato</h3>
+                        <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer select-none">
+                            <input type="checkbox" id="contactFavoriteInput" class="h-4 w-4 text-yellow-500 border-gray-300 rounded focus:ring-yellow-500">
+                            ★ Favorito
+                        </label>
+                    </div>
+                    <input type="hidden" id="contactEditingId">
+                    <div class="grid grid-cols-1 md:grid-cols-6 gap-3 items-end">
+                        <div class="md:col-span-2">
+                            <label for="contactNameInput" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome *</label>
+                            <input type="text" id="contactNameInput" placeholder="Maria Silva" maxlength="120" class="w-full p-2 border border-gray-300 rounded-md dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="contactRoleInput" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cargo</label>
+                            <input type="text" id="contactRoleInput" placeholder="Coordenadora" maxlength="80" class="w-full p-2 border border-gray-300 rounded-md dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="contactSectorInput" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Setor</label>
+                            <input type="text" id="contactSectorInput" placeholder="CGCF / DSL" maxlength="120" class="w-full p-2 border border-gray-300 rounded-md dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                        </div>
+                        <div class="md:col-span-3">
+                            <label for="contactPhoneInput" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">WhatsApp (com DDD) *</label>
+                            <input type="tel" id="contactPhoneInput" placeholder="(71) 9 9999-9999" maxlength="16" class="w-full p-2 border border-gray-300 rounded-md dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                        </div>
+                        <div class="md:col-span-3">
+                            <label for="contactEmailInput" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">E-mail</label>
+                            <input type="email" id="contactEmailInput" placeholder="nome@saeb.ba.gov.br" maxlength="254" autocomplete="off" class="w-full p-2 border border-gray-300 rounded-md dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                         </div>
                     </div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">* Obrigatórios. O código do país (55) é incluído automaticamente.</p>
+                    <div class="flex justify-end gap-2">
+                        <button id="cancelEditContactBtn" class="hidden bg-gray-200 text-gray-800 dark:bg-slate-600 dark:text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition text-sm">Cancelar edição</button>
+                        <button id="addContactBtn" class="bg-blue-600 text-white font-semibold py-2 px-5 rounded-lg hover:bg-blue-700 transition shadow-md text-sm">Adicionar Contato</button>
+                    </div>
                 </section>
+                <!-- Lista -->
+                <section class="space-y-2">
+                    <div class="flex items-center justify-between gap-3">
+                        <h4 class="text-md font-semibold text-gray-700 dark:text-white whitespace-nowrap">Contatos salvos (<span id="contactsCount">0</span>)</h4>
+                        <input type="text" id="contactsSearchInput" placeholder="Buscar por nome, cargo, setor, telefone ou e-mail" class="w-full max-w-sm p-2 border border-gray-300 rounded-md dark:bg-slate-900 dark:border-slate-600 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm">
+                    </div>
+                    <div id="contactsListContainer" class="space-y-2 max-h-72 overflow-y-auto pr-1">
+                        <p class="text-sm text-gray-500 text-center">Nenhum contato cadastrado.</p>
+                    </div>
+                </section>
+                <!-- CSV -->
+                <details class="bg-gray-50 dark:bg-slate-700 p-4 rounded-lg border dark:border-slate-600">
+                    <summary class="cursor-pointer text-sm font-semibold text-gray-700 dark:text-white">Importar / Exportar CSV</summary>
+                    <div class="pt-3 space-y-2">
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Formato: <code>Nome;;Cargo;;Telefone;;Setor;;Email</code> (uma linha por contato; setor e e-mail são opcionais e arquivos antigos com 3 colunas continuam aceitos). A importação <strong>soma</strong> aos contatos existentes: telefones já cadastrados são atualizados; nada é apagado.</p>
+                        <input type="file" id="contactsCsvFileInput" accept=".csv" class="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900/30 dark:file:text-blue-400 dark:hover:file:bg-blue-900/50 transition">
+                        <div id="contacts-db-status" class="text-sm font-medium text-center min-h-[20px]"></div>
+                        <div class="flex justify-between items-center">
+                            <button id="loadContactsCsvBtn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition shadow-md text-sm">Carregar CSV</button>
+                            <button id="exportContactsCsvBtn" class="bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition shadow-md text-sm">Exportar CSV</button>
+                        </div>
+                    </div>
+                </details>
             </div>
         </div>
     </div>
 
-
-    <div id="backupReminderModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-    <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-md relative">
-        <button id="closeBackupReminderBtn" class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 hover:text-gray-700 text-3xl font-light leading-none">&times;</button>
-        <h2 class="text-xl font-semibold mb-4 text-gray-700 dark:text-white">Lembrete de Backup Pessoal</h2>
-        <p class="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-300 mb-6">
-            Seu último backup pessoal (histórico e contatos) está vencido. Deseja realizar um agora?
-            <br><br>
-            <span class="text-xs italic text-gray-500">(Você pode alterar a frequência desta mensagem em "Gerenciar Base de Dados" -> "Backup e Restauração".)</span>
-        </p>
-        <div class="mt-8 flex justify-end space-x-4">
-            <button id="cancelBackupReminderBtn" class="bg-gray-200 text-gray-800 dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600 font-semibold py-2 px-5 rounded-lg hover:bg-gray-300 transition">Não</button>
-            <button id="confirmBackupReminderBtn" class="bg-blue-600 text-white font-semibold py-2 px-5 rounded-lg hover:bg-blue-700 transition shadow-md">Sim, fazer backup</button>
-        </div>
-    </div>
-    </div>
-
+    <!-- ============ MODAL: BOAS-VINDAS ============ -->
     <div id="welcomeModalGerador" class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all border dark:border-slate-700">
             <div class="p-6">
@@ -576,26 +565,21 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                     </svg>
                 </div>
-                
                 <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Gerador de Mensagens CAF</h3>
-                
                 <div class="text-sm text-gray-600 dark:text-gray-300 space-y-4 leading-relaxed">
-                    <p>Gere mensagens padronizadas para análises de cadastros de forma rápida e segura, com criptografia de dados.</p>
-                    
+                    <p>Gere mensagens padronizadas para análises de cadastros de forma rápida, com histórico e contatos salvos no banco de dados e vinculados ao seu usuário.</p>
                     <ul class="space-y-2 border-l-2 border-blue-500/30 pl-4 py-1">
                         <li><strong class="text-blue-600 dark:text-blue-400">Busca Automática:</strong> Integração com banco de dados para CNPJ, CPF e famílias de empresas.</li>
                         <li><strong class="text-blue-600 dark:text-blue-400">Status Personalizados:</strong> Deferida, Indeferida, Pendente com lista de documentos rejeitados.</li>
-                        <li><strong class="text-blue-600 dark:text-blue-400">Histórico e Dashboard:</strong> Registre envios, filtre por data/CNPJ e visualize estatísticas em gráficos.</li>
-                        <li><strong class="text-blue-600 dark:text-blue-400">Envio Rápido:</strong> WhatsApp direto para contatos salvos ou gerenciados.</li>
+                        <li><strong class="text-blue-600 dark:text-blue-400">Histórico e Dashboard:</strong> Registre envios, filtre por data/CNPJ/status, reabra análises e visualize estatísticas.</li>
+                        <li><strong class="text-blue-600 dark:text-blue-400">Envio Rápido:</strong> WhatsApp direto para contatos salvos, com favoritos no topo.</li>
                     </ul>
                 </div>
-
                 <div class="mt-8 flex flex-col gap-4">
                     <label class="flex items-center gap-3 cursor-pointer group">
                         <input type="checkbox" id="dontShowGeradorAgain" class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 transition-all">
                         <span class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">Não mostrar novamente</span>
                     </label>
-                    
                     <button onclick="closeWelcomeModalGerador()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all shadow-lg active:scale-95">
                         Entendi e Abrir Gerador
                     </button>
@@ -603,20 +587,12 @@
             </div>
         </div>
     </div>
-
-
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col items-end space-y-2 pointer-events-none"></div>
-    
     <footer class="text-center text-xs text-gray-400 dark:text-gray-300 mt-8 pb-4">
         <p id="appVersionInfo" class="inline-block"></p>
-
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../../assets/auth.js"></script>
     <script src="script.js"></script>
-
 </body>
-
-
 </html>
