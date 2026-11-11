@@ -27,6 +27,8 @@
     .btn-s { background:#e2e8f0; color:#0f172a; } .btn-s:hover { background:#cbd5e1; }
     .dark .btn-s { background:#334155; color:#fff; } .dark .btn-s:hover { background:#475569; }
     .btn-d { background:#fee2e2; color:#b91c1c; } .btn-d:hover { background:#fecaca; }
+    .btn-r { background:#dc2626; color:#fff; } .btn-r:hover { background:#b91c1c; }
+    .dark .btn-d { background:#450a0a; color:#fca5a5; } .dark .btn-d:hover { background:#7f1d1d; }
     .btn:disabled { opacity:.5; cursor:not-allowed; }
   </style>
 </head>
@@ -38,12 +40,15 @@
 
     <!-- ===== LISTA ===== -->
     <section id="viewList">
-      <div class="flex items-center justify-between mb-5">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
         <div>
           <h1 class="text-xl font-bold">Páginas de Apresentação</h1>
           <p class="text-xs text-gray-500">Páginas públicas acessadas por QR Code, sem login.</p>
         </div>
-        <button id="btnNova" class="btn btn-p">+ Nova página</button>
+        <div class="flex gap-2">
+          <button id="btnLimparTudo" class="btn btn-s" title="Apaga do R2 os arquivos que nenhuma página usa (somente admin)">Limpar arquivos sem uso</button>
+          <button id="btnNova" class="btn btn-p">+ Nova página</button>
+        </div>
       </div>
       <div id="lista" class="grid gap-3 sm:grid-cols-2"></div>
     </section>
@@ -126,8 +131,10 @@
             </div>
           </div>
 
-          <div class="flex gap-3">
+          <div class="flex flex-wrap gap-3">
             <button id="btnSalvar" class="btn btn-p">Salvar alterações</button>
+            <button id="btnVisualizar" class="btn btn-s" title="Mostra como a página pública vai ficar, mesmo sem salvar">Visualizar</button>
+            <button id="btnLimparPag" class="btn btn-s" title="Apaga do R2 os arquivos desta página que não estão em uso">Limpar arquivos sem uso</button>
             <button id="btnExcluir" class="btn btn-d">Excluir página</button>
           </div>
         </div>
@@ -150,6 +157,34 @@
         </aside>
       </div>
     </section>
+  </div>
+
+  <!-- ===== MODAL: confirmação ===== -->
+  <div id="modalConfirm" class="hidden fixed inset-0 z-[60] bg-black/60 flex items-center justify-center p-4">
+    <div class="card w-full max-w-sm shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="cfTitulo">
+      <h3 id="cfTitulo" class="font-bold text-base mb-2"></h3>
+      <p id="cfTexto" class="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-line"></p>
+      <div class="flex justify-end gap-2 mt-5">
+        <button id="cfCancel" class="btn btn-s">Cancelar</button>
+        <button id="cfOk" class="btn btn-p">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: pré-visualização da página pública ===== -->
+  <div id="modalPrev" class="hidden fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-[430px] flex flex-col" style="max-height:100%">
+      <div class="flex items-start justify-between gap-3 px-4 py-3 border-b border-slate-200 dark:border-slate-700">
+        <div class="min-w-0">
+          <p class="font-bold text-sm">Pré-visualização</p>
+          <p id="prevAviso" class="hidden text-[11px] text-amber-600 mt-0.5"></p>
+        </div>
+        <button id="prevFechar" class="btn btn-s !px-2.5 !py-1" aria-label="Fechar">✕</button>
+      </div>
+      <div class="p-3">
+        <iframe id="prevFrame" title="Pré-visualização" class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white" style="height:min(72vh,720px)"></iframe>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -1449,12 +1484,15 @@ window.QRCode={
     const PUBLIC_BASE = "https://kwfroes.github.io/cockpit-gestao/p/";
     const linkOf = (slug) => PUBLIC_BASE + "?s=" + slug;
     const MAX_ARQ = 20 * 1048576;
+    // A pré-visualização abre a página pública que está junto do Cockpit (local ou publicado)
+    const PREVIEW_BASE = new URL("../../p/", location.href).href;
 
     const $ = (id) => document.getElementById(id);
     const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
     let cur = null;       // página em edição
-    let removals = [];    // arquivos do R2 a apagar ao salvar
+    let removals = [];    // arquivos salvos que serão apagados do R2 ao salvar
+    let novos = [];       // arquivos enviados nesta edição e ainda não salvos
 
     // ---------- utilidades ----------
     let msgTimer;
@@ -1463,7 +1501,7 @@ window.QRCode={
       m.textContent = text;
       m.className = "fixed top-4 right-4 z-50 px-4 py-2 rounded-lg text-sm font-medium shadow-lg " + (ok ? "bg-green-600 text-white" : "bg-red-600 text-white");
       clearTimeout(msgTimer);
-      msgTimer = setTimeout(() => m.classList.add("hidden"), 4000);
+      msgTimer = setTimeout(() => m.classList.add("hidden"), 5000);
     }
     function log(acao, detalhes = {}) {
       try { parent.postMessage({ type: "REGISTRAR_LOG", payload: { acao, detalhes, appOrigem: "APRESENTACOES" } }, "*"); } catch (e) {}
@@ -1474,6 +1512,73 @@ window.QRCode={
     const norm = (v) => { v = (v || "").trim(); return v || null; };
     const normUrl = (v) => { v = norm(v); return v && !/^https?:\/\//i.test(v) ? "https://" + v : v; };
 
+    // ---------- modal de confirmação (no lugar do confirm() nativo) ----------
+    function confirmar({ titulo, texto, ok = "Confirmar", perigo = false }) {
+      return new Promise((resolve) => {
+        const m = $("modalConfirm"), bOk = $("cfOk"), bNo = $("cfCancel");
+        $("cfTitulo").textContent = titulo;
+        $("cfTexto").textContent = texto || "";
+        bOk.textContent = ok;
+        bOk.className = "btn " + (perigo ? "btn-r" : "btn-p");
+        m.classList.remove("hidden");
+        (perigo ? bNo : bOk).focus();
+        const fim = (v) => {
+          m.classList.add("hidden");
+          document.removeEventListener("keydown", tecla, true);
+          m.onclick = bOk.onclick = bNo.onclick = null;
+          resolve(v);
+        };
+        const tecla = (e) => {
+          if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); fim(false); }
+        };
+        document.addEventListener("keydown", tecla, true);
+        bOk.onclick = () => fim(true);
+        bNo.onclick = () => fim(false);
+        m.onclick = (e) => { if (e.target === m) fim(false); };
+      });
+    }
+
+    // ---------- pré-visualização da página pública ----------
+    let prevData = null;
+    const PREVIEW_ORIGIN = new URL(PREVIEW_BASE).origin;
+    function dadosPublicos(p) {
+      return {
+        nome: p.nome, cargo: p.cargo, bio: p.bio, foto_path: p.foto_path,
+        email: p.email, telefone: p.telefone, whatsapp: p.whatsapp, linkedin: p.linkedin, site: p.site,
+        arquivos: Array.isArray(p.arquivos) ? p.arquivos : [], config: p.config || {},
+      };
+    }
+    function enviarPreview() {
+      try { $("prevFrame").contentWindow.postMessage({ type: "PREVIEW_DATA", data: prevData }, PREVIEW_ORIGIN); } catch (e) {}
+    }
+    function abrirPreview(p, aviso) {
+      prevData = dadosPublicos(p);
+      const av = $("prevAviso");
+      av.textContent = aviso || "";
+      av.classList.toggle("hidden", !aviso);
+      $("prevFrame").src = PREVIEW_BASE + "?preview=1";
+      $("modalPrev").classList.remove("hidden");
+    }
+    function fecharPreview() {
+      $("modalPrev").classList.add("hidden");
+      $("prevFrame").src = "about:blank";
+      prevData = null;
+    }
+    $("prevFrame").addEventListener("load", () => { if (prevData) enviarPreview(); });
+    window.addEventListener("message", (e) => {
+      if (e.data && e.data.type === "PREVIEW_READY" && e.source === $("prevFrame").contentWindow && prevData) enviarPreview();
+    });
+    $("prevFechar").onclick = fecharPreview;
+    $("modalPrev").addEventListener("click", (e) => { if (e.target === $("modalPrev")) fecharPreview(); });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !$("modalPrev").classList.contains("hidden") && $("modalConfirm").classList.contains("hidden")) fecharPreview();
+    });
+    $("btnVisualizar").onclick = () => {
+      if (!cur) return;
+      lerForm();
+      abrirPreview(cur, "Mostra o que está na tela agora, mesmo sem salvar.");
+    };
+
     // ---------- arquivos no R2 (via Worker) ----------
     async function authHeader() {
       const { data } = await sb.auth.getSession();
@@ -1481,22 +1586,81 @@ window.QRCode={
       if (!t) throw new Error("Sessão expirada. Entre novamente no Cockpit.");
       return "Bearer " + t;
     }
+    async function erroDoWorker(res, padrao) {
+      let m = "";
+      try { m = (await res.json()).error; } catch (e) {}
+      return new Error(m || padrao + " (" + res.status + ")");
+    }
     async function r2Put(path, body, contentType) {
       const res = await fetch(publicUrl(path), {
         method: "PUT",
         headers: { Authorization: await authHeader(), "Content-Type": contentType || "application/octet-stream" },
         body,
       });
-      if (!res.ok) {
-        let m = "";
-        try { m = (await res.json()).error; } catch (e) {}
-        throw new Error(m || "Falha no envio (" + res.status + ")");
-      }
+      if (!res.ok) throw await erroDoWorker(res, "Falha no envio");
     }
+    // Apaga vários arquivos e devolve quantos foram realmente apagados
     async function r2Del(paths) {
-      if (!paths.length) return;
+      paths = [...new Set(paths.filter(Boolean))];
+      if (!paths.length) return 0;
       const h = await authHeader();
-      await Promise.allSettled(paths.map((p) => fetch(publicUrl(p), { method: "DELETE", headers: { Authorization: h } })));
+      const rs = await Promise.allSettled(paths.map((p) => fetch(publicUrl(p), { method: "DELETE", headers: { Authorization: h } })));
+      return rs.filter((r) => r.status === "fulfilled" && r.value.ok).length;
+    }
+    // Lista os arquivos de uma página (id) ou de todas ("all", só admin)
+    async function r2List(alvo) {
+      const res = await fetch(FILES_URL + "/?list=" + encodeURIComponent(alvo), { headers: { Authorization: await authHeader() } });
+      if (!res.ok) throw await erroDoWorker(res, "Falha ao listar");
+      return (await res.json()).objects || [];
+    }
+
+    // Conjunto de arquivos que uma página usa (foto + anexos)
+    function emUso(p) {
+      const s = new Set();
+      if (p && p.foto_path) s.add(p.foto_path);
+      if (p && Array.isArray(p.arquivos)) p.arquivos.forEach((a) => a && a.path && s.add(a.path));
+      return s;
+    }
+    // Arquivo sem uso = existe no R2, mas a página não o referencia (ou a página nem existe mais)
+    function semUso(objetos, usoPorPagina) {
+      return objetos.filter((o) => {
+        const uso = usoPorPagina.get(o.key.split("/")[0]);
+        return !uso || !uso.has(o.key);
+      });
+    }
+
+    // Limpeza de arquivos sem uso. alvo = id da página ou "all"
+    async function limparSemUso(alvo) {
+      try {
+        const objetos = await r2List(alvo);
+        const uso = new Map();
+        if (alvo === "all") {
+          const { data, error } = await sb.from("apresentacoes").select("id,foto_path,arquivos");
+          if (error || !data) throw new Error("Não consegui ler as páginas: " + (error ? error.message : "sem dados"));
+          data.forEach((p) => uso.set(p.id, emUso(p)));
+        } else {
+          const { data, error } = await sb.from("apresentacoes").select("id,foto_path,arquivos").eq("id", alvo).maybeSingle();
+          if (error || !data) throw new Error("Não consegui ler a página no banco.");
+          const s = emUso(data);
+          // protege também o que está na tela e ainda não foi salvo
+          if (cur && cur.id === alvo) emUso(cur).forEach((x) => s.add(x));
+          uso.set(alvo, s);
+        }
+        const lista = semUso(objetos, uso);
+        if (!lista.length) return msg("Nenhum arquivo sem uso. Está tudo limpo.");
+        const total = lista.reduce((t, o) => t + (o.size || 0), 0);
+        const okLimpar = await confirmar({
+          titulo: "Apagar arquivos sem uso?",
+          texto: `Encontrei ${lista.length} arquivo(s) sem uso (${fmtSize(total) || "0 KB"}).\n\nEssa ação não pode ser desfeita.`,
+          ok: "Apagar", perigo: true,
+        });
+        if (!okLimpar) return;
+        const n = await r2Del(lista.map((o) => o.key));
+        log("APRESENTACAO_LIMPEZA_ARQUIVOS", { alvo, encontrados: lista.length, apagados: n });
+        msg(n === lista.length ? `${n} arquivo(s) apagado(s).` : `${n} de ${lista.length} apagado(s). Tente novamente.`, n === lista.length);
+      } catch (e) {
+        msg("Erro na limpeza: " + (e.message || e), false);
+      }
     }
 
     // Tema vindo do app pai
@@ -1507,9 +1671,20 @@ window.QRCode={
     });
 
     // ---------- lista ----------
+    function iniciais(p) {
+      const partes = String(p.nome || p.titulo || "?").trim().split(/\s+/).filter(Boolean);
+      return ((partes[0] || "?")[0] + (partes.length > 1 ? partes[partes.length - 1][0] : "")).toUpperCase();
+    }
+    // Foto redonda; se não houver foto (ou falhar ao carregar), ficam as iniciais
+    function avatar(p) {
+      const img = p.foto_path ? `<img src="${esc(publicUrl(p.foto_path))}" alt="" class="absolute inset-0 w-full h-full object-cover" />` : "";
+      return `<div class="relative w-12 h-12 flex-none rounded-full overflow-hidden bg-slate-300 dark:bg-slate-600 flex items-center justify-center text-sm font-bold text-slate-600 dark:text-slate-200">${esc(iniciais(p))}${img}</div>`;
+    }
+    $("lista").addEventListener("error", (e) => { if (e.target.tagName === "IMG") e.target.remove(); }, true);
+
     async function loadList() {
       const { data, error } = await sb.from("apresentacoes")
-        .select("id,titulo,nome,slug,ativo,updated_at")
+        .select("id,titulo,nome,slug,ativo,updated_at,foto_path")
         .order("updated_at", { ascending: false });
       if (error) return msg("Erro ao carregar: " + error.message, false);
       const box = $("lista");
@@ -1519,16 +1694,18 @@ window.QRCode={
       }
       box.innerHTML = data.map((p) => `
         <div class="card flex flex-col gap-3">
-          <div class="flex items-start justify-between gap-2">
-            <div class="min-w-0">
+          <div class="flex items-start gap-3">
+            ${avatar(p)}
+            <div class="min-w-0 flex-1">
               <p class="font-bold text-sm break-words">${esc(p.titulo)}</p>
-              <p class="text-xs text-gray-500 mt-1">${esc(p.nome || "Sem nome")}</p>
+              <p class="text-xs text-gray-500 mt-0.5">${esc(p.nome || "Sem nome")}</p>
             </div>
             <span class="text-[10px] font-bold px-2 py-0.5 rounded whitespace-nowrap ${p.ativo ? "bg-green-100 text-green-700" : "bg-slate-200 text-slate-600"}">${p.ativo ? "ATIVA" : "INATIVA"}</span>
           </div>
           <p class="text-[10px] text-gray-400">Atualizada em ${new Date(p.updated_at).toLocaleDateString("pt-BR")}</p>
           <div class="flex flex-wrap gap-2">
             <button data-act="edit" data-id="${p.id}" class="btn btn-p !py-1.5">Editar</button>
+            <button data-act="view" data-id="${p.id}" class="btn btn-s !py-1.5">Visualizar</button>
             <button data-act="toggle" data-id="${p.id}" data-ativo="${p.ativo}" class="btn btn-s !py-1.5">${p.ativo ? "Desativar" : "Ativar"}</button>
             <button data-act="del" data-id="${p.id}" data-titulo="${esc(p.titulo)}" class="btn btn-d !py-1.5">Excluir</button>
           </div>
@@ -1541,6 +1718,12 @@ window.QRCode={
       const id = b.dataset.id;
       if (b.dataset.act === "edit") return abrir(id);
 
+      if (b.dataset.act === "view") {
+        const { data, error } = await sb.from("apresentacoes").select("*").eq("id", id).single();
+        if (error || !data) return msg("Não foi possível abrir a pré-visualização.", false);
+        return abrirPreview(data, data.ativo ? "" : "Página inativa: o QR não abre, mas é assim que ela ficará quando for ativada.");
+      }
+
       if (b.dataset.act === "toggle") {
         const novo = b.dataset.ativo !== "true";
         const { data, error } = await sb.from("apresentacoes")
@@ -1552,20 +1735,26 @@ window.QRCode={
       }
 
       if (b.dataset.act === "del") {
-        if (!confirm(`Excluir "${b.dataset.titulo}" definitivamente?\n\nO QR Code dessa página deixará de funcionar e os arquivos serão apagados.\nPara só tirar do ar, use "Desativar".`)) return;
+        const okDel = await confirmar({
+          titulo: "Excluir página?",
+          texto: `"${b.dataset.titulo}" será excluída definitivamente.\n\nO QR Code dela deixará de funcionar e os arquivos serão apagados. Para só tirar do ar, use "Desativar".`,
+          ok: "Excluir", perigo: true,
+        });
+        if (!okDel) return;
         await excluirPagina(id);
         loadList();
       }
     });
 
-    // Confere permissão (select com RLS), apaga os arquivos no R2 e depois o registro
+    // Apaga TODOS os arquivos da página no R2 (inclusive os sem uso) e depois o registro
     async function excluirPagina(id) {
       const { data: reg, error: e0 } = await sb.from("apresentacoes").select("foto_path,arquivos").eq("id", id).maybeSingle();
       if (e0 || !reg) { msg("Não foi possível excluir: sem permissão ou página inexistente.", false); return false; }
-      const paths = [];
-      if (reg.foto_path) paths.push(reg.foto_path);
-      if (Array.isArray(reg.arquivos)) reg.arquivos.forEach((a) => a && a.path && paths.push(a.path));
-      try { await r2Del(paths); } catch (e) { msg("Erro ao apagar arquivos: " + e.message, false); return false; }
+      const paths = [...emUso(reg)];
+      try { (await r2List(id)).forEach((o) => paths.push(o.key)); } catch (e) { /* segue com os arquivos conhecidos */ }
+      const esperados = new Set(paths).size;
+      const apagados = await r2Del(paths);
+      if (apagados < esperados) { msg("Não consegui apagar todos os arquivos no R2. A página não foi excluída.", false); return false; }
       const { data: del, error } = await sb.from("apresentacoes").delete().eq("id", id).select("id");
       if (error) { msg("Erro ao excluir: " + error.message, false); return false; }
       if (!del || !del.length) { msg("Não foi excluída: sem permissão (confira as políticas do SQL).", false); return false; }
@@ -1580,6 +1769,8 @@ window.QRCode={
       log("APRESENTACAO_CRIADA", { id: data.id });
       preencher(data);
     };
+    $("btnLimparTudo").onclick = () => limparSemUso("all");
+    $("btnLimparPag").onclick = () => cur && limparSemUso(cur.id);
 
     async function abrir(id) {
       const { data, error } = await sb.from("apresentacoes").select("*").eq("id", id).single();
@@ -1587,16 +1778,18 @@ window.QRCode={
       preencher(data);
     }
 
-    $("btnVoltar").onclick = () => {
+    $("btnVoltar").onclick = async () => {
+      // Arquivos enviados nesta edição e não salvos não servem para nada: apaga para não acumular
+      if (novos.length) { try { await r2Del(novos); } catch (e) {} }
+      novos = []; removals = []; cur = null;
       $("viewEdit").classList.add("hidden");
       $("viewList").classList.remove("hidden");
-      cur = null; removals = [];
       loadList();
     };
 
     // ---------- formulário ----------
     function preencher(p) {
-      cur = p; removals = [];
+      cur = p; removals = []; novos = [];
       if (!Array.isArray(cur.arquivos)) cur.arquivos = [];
       const c = cur.config || {};
       $("f_titulo").value = p.titulo || "";
@@ -1663,6 +1856,7 @@ window.QRCode={
         const blob = await recorteQuadrado(f);
         const path = `${cur.id}/foto-${Date.now()}.jpg`;
         await r2Put(path, blob, "image/jpeg");
+        novos.push(path);
         if (cur.foto_path) removals.push(cur.foto_path);
         cur.foto_path = path;
         renderFoto();
@@ -1712,6 +1906,7 @@ window.QRCode={
         const path = `${cur.id}/arq-${crypto.randomUUID().slice(0, 8)}-${safeName(f.name)}`;
         try {
           await r2Put(path, f, f.type);
+          novos.push(path);
           cur.arquivos.push({ label: f.name.replace(/\.[^.]+$/, ""), path, size: f.size });
           enviados++;
         } catch (err) {
@@ -1735,6 +1930,8 @@ window.QRCode={
       }).eq("id", cur.id).select().single();
       btn.disabled = false;
       if (error) return msg("Erro ao salvar: " + error.message, false);
+      // Salvou: o que foi enviado agora é oficial; o que foi trocado/removido sai do R2
+      novos = [];
       if (removals.length) { await r2Del(removals); removals = []; }
       cur = data;
       renderFoto();
@@ -1743,10 +1940,14 @@ window.QRCode={
     };
 
     $("btnExcluir").onclick = async () => {
-      if (!confirm("Excluir esta página definitivamente? O QR Code impresso deixará de funcionar.\n\nDica: para só desativar, desmarque 'Página ativa' e salve.")) return;
-      const extras = removals.slice();
+      const okEx = await confirmar({
+        titulo: "Excluir esta página?",
+        texto: "Ela será excluída definitivamente e o QR Code impresso deixará de funcionar.\n\nPara só tirar do ar, desmarque \"Página ativa\" e salve.",
+        ok: "Excluir", perigo: true,
+      });
+      if (!okEx) return;
       if (await excluirPagina(cur.id)) {
-        try { await r2Del(extras); } catch (e) {}
+        novos = []; removals = [];
         $("btnVoltar").onclick();
       }
     };
