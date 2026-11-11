@@ -30,6 +30,12 @@
     .btn-r { background:#dc2626; color:#fff; } .btn-r:hover { background:#b91c1c; }
     .dark .btn-d { background:#450a0a; color:#fca5a5; } .dark .btn-d:hover { background:#7f1d1d; }
     .btn:disabled { opacity:.5; cursor:not-allowed; }
+    /* Botões só com ícone */
+    .btn.ibtn { display:inline-flex; align-items:center; justify-content:center; width:2.25rem; height:2.25rem; padding:0; }
+    .ibtn svg { width:1.125rem; height:1.125rem; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; pointer-events:none; }
+    .btn.ibtn.on { color:#16a34a; }
+    .dark .btn.ibtn.on { color:#4ade80; }
+    .ibtn:focus-visible { outline:2px solid #3b82f6; outline-offset:2px; }
   </style>
 </head>
 <body class="h-full bg-gray-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 overflow-y-auto">
@@ -113,7 +119,7 @@
                 <input type="file" id="f_arquivos" multiple class="hidden" />
               </label>
             </div>
-            <p class="text-xs text-gray-500">Até 20 MB por arquivo. O nome digitado é o que o visitante vê no botão.</p>
+            <p class="text-xs text-gray-500">Até 50 MB por arquivo. O nome digitado é o que o visitante vê no botão.</p>
             <div id="listaArquivos" class="space-y-2"></div>
           </div>
 
@@ -1483,12 +1489,25 @@ window.QRCode={
     // Endereço público fixo: o QR é o mesmo no local e no publicado
     const PUBLIC_BASE = "https://kwfroes.github.io/cockpit-gestao/p/";
     const linkOf = (slug) => PUBLIC_BASE + "?s=" + slug;
-    const MAX_ARQ = 20 * 1048576;
+    const MAX_ARQ = 50 * 1048576;
     // A pré-visualização abre a página pública que está junto do Cockpit (local ou publicado)
     const PREVIEW_BASE = new URL("../../p/", location.href).href;
+    const PREVIEW_ORIGIN = new URL(PREVIEW_BASE).origin;
 
     const $ = (id) => document.getElementById(id);
     const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+    // Ícones (traço, 24x24)
+    const ICON = {
+      edit: '<path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>',
+      view: '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',
+      power: '<path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/>',
+      trash: '<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>',
+    };
+    // Botão só com ícone: dica ao passar o mouse (title) e rótulo para leitores de tela (aria-label)
+    function ibtn(act, id, label, icon, cls, extra = "") {
+      return `<button type="button" data-act="${act}" data-id="${id}" ${extra} title="${esc(label)}" aria-label="${esc(label)}" class="btn ibtn ${cls}"><svg viewBox="0 0 24 24" aria-hidden="true">${ICON[icon]}</svg></button>`;
+    }
 
     let cur = null;       // página em edição
     let removals = [];    // arquivos salvos que serão apagados do R2 ao salvar
@@ -1540,7 +1559,6 @@ window.QRCode={
 
     // ---------- pré-visualização da página pública ----------
     let prevData = null;
-    const PREVIEW_ORIGIN = new URL(PREVIEW_BASE).origin;
     function dadosPublicos(p) {
       return {
         nome: p.nome, cargo: p.cargo, bio: p.bio, foto_path: p.foto_path,
@@ -1567,6 +1585,7 @@ window.QRCode={
     $("prevFrame").addEventListener("load", () => { if (prevData) enviarPreview(); });
     window.addEventListener("message", (e) => {
       if (e.data && e.data.type === "PREVIEW_READY" && e.source === $("prevFrame").contentWindow && prevData) enviarPreview();
+      if (e.data && e.data.type === "THEME_CHANGE") document.documentElement.classList.toggle("dark", e.data.theme === "dark");
     });
     $("prevFechar").onclick = fecharPreview;
     $("modalPrev").addEventListener("click", (e) => { if (e.target === $("modalPrev")) fecharPreview(); });
@@ -1663,13 +1682,6 @@ window.QRCode={
       }
     }
 
-    // Tema vindo do app pai
-    window.addEventListener("message", (e) => {
-      if (e.data && e.data.type === "THEME_CHANGE") {
-        document.documentElement.classList.toggle("dark", e.data.theme === "dark");
-      }
-    });
-
     // ---------- lista ----------
     function iniciais(p) {
       const partes = String(p.nome || p.titulo || "?").trim().split(/\s+/).filter(Boolean);
@@ -1703,11 +1715,12 @@ window.QRCode={
             <span class="text-[10px] font-bold px-2 py-0.5 rounded whitespace-nowrap ${p.ativo ? "bg-green-100 text-green-700" : "bg-slate-200 text-slate-600"}">${p.ativo ? "ATIVA" : "INATIVA"}</span>
           </div>
           <p class="text-[10px] text-gray-400">Atualizada em ${new Date(p.updated_at).toLocaleDateString("pt-BR")}</p>
-          <div class="flex flex-wrap gap-2">
-            <button data-act="edit" data-id="${p.id}" class="btn btn-p !py-1.5">Editar</button>
-            <button data-act="view" data-id="${p.id}" class="btn btn-s !py-1.5">Visualizar</button>
-            <button data-act="toggle" data-id="${p.id}" data-ativo="${p.ativo}" class="btn btn-s !py-1.5">${p.ativo ? "Desativar" : "Ativar"}</button>
-            <button data-act="del" data-id="${p.id}" data-titulo="${esc(p.titulo)}" class="btn btn-d !py-1.5">Excluir</button>
+          <div class="flex items-center gap-2">
+            ${ibtn("edit", p.id, "Editar", "edit", "btn-p")}
+            ${ibtn("view", p.id, "Visualizar", "view", "btn-s")}
+            ${ibtn("toggle", p.id, p.ativo ? "Desativar" : "Ativar", "power", "btn-s" + (p.ativo ? " on" : ""), `data-ativo="${p.ativo}"`)}
+            <span class="flex-1"></span>
+            ${ibtn("del", p.id, "Excluir", "trash", "btn-d", `data-titulo="${esc(p.titulo)}"`)}
           </div>
         </div>`).join("");
     }
@@ -1882,7 +1895,7 @@ window.QRCode={
         <div class="flex items-center gap-2">
           <input data-i="${i}" class="inp arq-label" value="${esc(a.label)}" />
           <span class="text-[11px] text-gray-500 whitespace-nowrap">${fmtSize(a.size)}</span>
-          <button data-rem="${i}" type="button" class="btn btn-d !px-2 !py-1">✕</button>
+          <button data-rem="${i}" type="button" title="Remover arquivo" aria-label="Remover arquivo" class="btn btn-d ibtn flex-none"><svg viewBox="0 0 24 24" aria-hidden="true">${ICON.trash}</svg></button>
         </div>`).join("");
     }
     $("listaArquivos").addEventListener("input", (e) => {
@@ -1901,7 +1914,7 @@ window.QRCode={
       e.target.value = "";
       let enviados = 0;
       for (const f of files) {
-        if (f.size > MAX_ARQ) { msg(`"${f.name}" passa de 20 MB.`, false); continue; }
+        if (f.size > MAX_ARQ) { msg(`"${f.name}" passa de 50 MB.`, false); continue; }
         if (!f.size) { msg(`"${f.name}" está vazio.`, false); continue; }
         const path = `${cur.id}/arq-${crypto.randomUUID().slice(0, 8)}-${safeName(f.name)}`;
         try {
