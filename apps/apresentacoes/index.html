@@ -1442,15 +1442,19 @@ window.QRCode={
   <script>
     // Cliente Supabase do app pai (mesma sessão do usuário logado)
     const sb = (window.parent && window.parent.supabaseClient) || window.supabaseClient;
-    const BUCKET = "apresentacoes";
-    const PUBLIC_BASE = "https://kwfroes.github.io/cockpit-gestao/p/"; // fixo: o QR é o mesmo no local e no publicado
+
+    // Worker do Cloudflare R2 (arquivos públicos). Sem barra no final.
+    const FILES_URL = "https://cockpit-public-files.kwfroes.workers.dev";
+    // Endereço público fixo: o QR é o mesmo no local e no publicado
+    const PUBLIC_BASE = "https://kwfroes.github.io/cockpit-gestao/p/";
     const linkOf = (slug) => PUBLIC_BASE + "?s=" + slug;
+    const MAX_ARQ = 20 * 1048576;
 
     const $ = (id) => document.getElementById(id);
     const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
     let cur = null;       // página em edição
-    let removals = [];    // arquivos do storage a apagar ao salvar
+    let removals = [];    // arquivos do R2 a apagar ao salvar
 
     // ---------- utilidades ----------
     let msgTimer;
@@ -1464,11 +1468,36 @@ window.QRCode={
     function log(acao, detalhes = {}) {
       try { parent.postMessage({ type: "REGISTRAR_LOG", payload: { acao, detalhes, appOrigem: "APRESENTACOES" } }, "*"); } catch (e) {}
     }
-    const publicUrl = (path) => sb.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
-    const safeName = (n) => n.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9._-]+/g, "-");
+    const publicUrl = (path) => FILES_URL + "/" + String(path).split("/").map(encodeURIComponent).join("/");
+    const safeName = (n) => n.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9._-]+/g, "-").slice(-80);
     const fmtSize = (b) => !b ? "" : b < 1048576 ? Math.max(1, Math.round(b / 1024)) + " KB" : (b / 1048576).toFixed(1) + " MB";
     const norm = (v) => { v = (v || "").trim(); return v || null; };
     const normUrl = (v) => { v = norm(v); return v && !/^https?:\/\//i.test(v) ? "https://" + v : v; };
+
+    // ---------- arquivos no R2 (via Worker) ----------
+    async function authHeader() {
+      const { data } = await sb.auth.getSession();
+      const t = data && data.session && data.session.access_token;
+      if (!t) throw new Error("Sessão expirada. Entre novamente no Cockpit.");
+      return "Bearer " + t;
+    }
+    async function r2Put(path, body, contentType) {
+      const res = await fetch(publicUrl(path), {
+        method: "PUT",
+        headers: { Authorization: await authHeader(), "Content-Type": contentType || "application/octet-stream" },
+        body,
+      });
+      if (!res.ok) {
+        let m = "";
+        try { m = (await res.json()).error; } catch (e) {}
+        throw new Error(m || "Falha no envio (" + res.status + ")");
+      }
+    }
+    async function r2Del(paths) {
+      if (!paths.length) return;
+      const h = await authHeader();
+      await Promise.allSettled(paths.map((p) => fetch(publicUrl(p), { method: "DELETE", headers: { Authorization: h } })));
+    }
 
     // Tema vindo do app pai
     window.addEventListener("message", (e) => {
@@ -1505,6 +1534,7 @@ window.QRCode={
           </div>
         </div>`).join("");
     }
+
     $("lista").addEventListener("click", async (e) => {
       const b = e.target.closest("button[data-act]");
       if (!b) return;
@@ -1528,16 +1558,17 @@ window.QRCode={
       }
     });
 
-    // Apaga arquivos do storage e depois o registro; confere se o banco realmente apagou
+    // Confere permissão (select com RLS), apaga os arquivos no R2 e depois o registro
     async function excluirPagina(id) {
-      const { data: reg } = await sb.from("apresentacoes").select("foto_path,arquivos").eq("id", id).single();
+      const { data: reg, error: e0 } = await sb.from("apresentacoes").select("foto_path,arquivos").eq("id", id).maybeSingle();
+      if (e0 || !reg) { msg("Não foi possível excluir: sem permissão ou página inexistente.", false); return false; }
+      const paths = [];
+      if (reg.foto_path) paths.push(reg.foto_path);
+      if (Array.isArray(reg.arquivos)) reg.arquivos.forEach((a) => a && a.path && paths.push(a.path));
+      try { await r2Del(paths); } catch (e) { msg("Erro ao apagar arquivos: " + e.message, false); return false; }
       const { data: del, error } = await sb.from("apresentacoes").delete().eq("id", id).select("id");
       if (error) { msg("Erro ao excluir: " + error.message, false); return false; }
       if (!del || !del.length) { msg("Não foi excluída: sem permissão (confira as políticas do SQL).", false); return false; }
-      const paths = [];
-      if (reg && reg.foto_path) paths.push(reg.foto_path);
-      if (reg && Array.isArray(reg.arquivos)) reg.arquivos.forEach((a) => a && a.path && paths.push(a.path));
-      if (paths.length) await sb.storage.from(BUCKET).remove(paths);
       log("APRESENTACAO_EXCLUIDA", { id });
       msg("Página excluída.");
       return true;
@@ -1631,8 +1662,7 @@ window.QRCode={
       try {
         const blob = await recorteQuadrado(f);
         const path = `${cur.id}/foto-${Date.now()}.jpg`;
-        const { error } = await sb.storage.from(BUCKET).upload(path, blob, { contentType: "image/jpeg", cacheControl: "3600" });
-        if (error) throw error;
+        await r2Put(path, blob, "image/jpeg");
         if (cur.foto_path) removals.push(cur.foto_path);
         cur.foto_path = path;
         renderFoto();
@@ -1675,15 +1705,21 @@ window.QRCode={
     $("f_arquivos").onchange = async (e) => {
       const files = [...e.target.files];
       e.target.value = "";
+      let enviados = 0;
       for (const f of files) {
-        if (f.size > 20 * 1048576) { msg(`"${f.name}" passa de 20 MB.`, false); continue; }
+        if (f.size > MAX_ARQ) { msg(`"${f.name}" passa de 20 MB.`, false); continue; }
+        if (!f.size) { msg(`"${f.name}" está vazio.`, false); continue; }
         const path = `${cur.id}/arq-${crypto.randomUUID().slice(0, 8)}-${safeName(f.name)}`;
-        const { error } = await sb.storage.from(BUCKET).upload(path, f, { contentType: f.type || "application/octet-stream" });
-        if (error) { msg(`Erro em "${f.name}": ${error.message}`, false); continue; }
-        cur.arquivos.push({ label: f.name.replace(/\.[^.]+$/, ""), path, size: f.size });
+        try {
+          await r2Put(path, f, f.type);
+          cur.arquivos.push({ label: f.name.replace(/\.[^.]+$/, ""), path, size: f.size });
+          enviados++;
+        } catch (err) {
+          msg(`Erro em "${f.name}": ${err.message}`, false);
+        }
       }
       renderArquivos();
-      msg("Arquivo(s) enviado(s). Clique em Salvar para publicar.");
+      if (enviados) msg("Arquivo(s) enviado(s). Clique em Salvar para publicar.");
     };
 
     // ---------- salvar / excluir ----------
@@ -1699,7 +1735,7 @@ window.QRCode={
       }).eq("id", cur.id).select().single();
       btn.disabled = false;
       if (error) return msg("Erro ao salvar: " + error.message, false);
-      if (removals.length) { await sb.storage.from(BUCKET).remove(removals); removals = []; }
+      if (removals.length) { await r2Del(removals); removals = []; }
       cur = data;
       renderFoto();
       log("APRESENTACAO_SALVA", { id: cur.id, ativo: cur.ativo });
@@ -1710,7 +1746,7 @@ window.QRCode={
       if (!confirm("Excluir esta página definitivamente? O QR Code impresso deixará de funcionar.\n\nDica: para só desativar, desmarque 'Página ativa' e salve.")) return;
       const extras = removals.slice();
       if (await excluirPagina(cur.id)) {
-        if (extras.length) await sb.storage.from(BUCKET).remove(extras);
+        try { await r2Del(extras); } catch (e) {}
         $("btnVoltar").onclick();
       }
     };
