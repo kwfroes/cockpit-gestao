@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Apresentação</title>
+  <style>
+    :root { --p:#1d4ed8; --a:#dc2626; --bg:#e2e8f0; --card:#ffffff; --tx:#0f172a; --mut:#64748b; --bd:#e2e8f0; }
+    body.escuro { --bg:#020617; --card:#0f172a; --tx:#f1f5f9; --mut:#94a3b8; --bd:#1e293b; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background:var(--bg); color:var(--tx); min-height:100vh; }
+    .wrap { max-width:480px; margin:0 auto; min-height:100vh; background:var(--card); box-shadow:0 0 40px rgba(0,0,0,.12); }
+    .state { padding:80px 24px; text-align:center; color:var(--mut); }
+    .banner { height:120px; background:linear-gradient(135deg, var(--p), var(--a)); }
+    .photo { width:128px; height:128px; object-fit:cover; display:block; margin:-64px auto 0; border:4px solid var(--card); background:var(--bd); }
+    .photo.redonda { border-radius:50%; }
+    .photo.quadrada { border-radius:22px; }
+    .content { padding:16px 20px 40px; text-align:center; }
+    .content.sem-foto { padding-top:28px; }
+    h1 { font-size:1.5rem; line-height:1.25; margin:12px 0 4px; word-break:break-word; }
+    .cargo { color:var(--a); font-weight:600; margin:0; }
+    .bio { white-space:pre-line; text-align:left; line-height:1.6; margin:20px 0 0; color:var(--tx); opacity:.9; word-break:break-word; }
+    .sec { font-size:.7rem; text-transform:uppercase; letter-spacing:.08em; color:var(--mut); font-weight:700; text-align:left; margin:28px 0 8px; }
+    .list { display:flex; flex-direction:column; gap:10px; }
+    .btn { display:flex; align-items:center; gap:12px; padding:14px 16px; border-radius:14px; border:1px solid var(--bd); background:var(--card); color:var(--tx); text-decoration:none; font-weight:500; text-align:left; word-break:break-all; transition:transform .1s, border-color .15s; }
+    .btn:active { transform:scale(.98); }
+    .btn:hover { border-color:var(--p); }
+    .btn svg { flex:none; width:20px; height:20px; stroke:var(--p); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+    .btn small { display:block; color:var(--mut); font-weight:400; font-size:.75rem; }
+    .btn.arquivo { border-color:var(--p); }
+    .btn .t { flex:1; min-width:0; }
+  </style>
+</head>
+<body>
+  <div class="wrap" id="app"><div class="state">Carregando…</div></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // >>> PREENCHA com os mesmos valores usados no assets/auth.js (URL e chave ANON/pública) <<<
+    const SUPABASE_URL = "COLE_AQUI_A_URL_DO_SUPABASE";
+    const SUPABASE_ANON_KEY = "COLE_AQUI_A_CHAVE_ANON";
+    const BUCKET = "apresentacoes";
+
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+    });
+
+    const app = document.getElementById("app");
+
+    const ICONS = {
+      email: '<path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><polyline points="22,6 12,13 2,6"/>',
+      phone: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>',
+      whatsapp: '<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>',
+      linkedin: '<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>',
+      site: '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+      download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
+    };
+
+    function el(tag, cls, text) {
+      const e = document.createElement(tag);
+      if (cls) e.className = cls;
+      if (text != null) e.textContent = text;
+      return e;
+    }
+
+    // Só aceita http/https (evita javascript: em links digitados no admin)
+    function safeUrl(v) {
+      if (!v) return null;
+      let s = String(v).trim();
+      if (!/^https?:\/\//i.test(s)) s = "https://" + s;
+      try {
+        const u = new URL(s);
+        return /^https?:$/.test(u.protocol) ? u.href : null;
+      } catch (e) { return null; }
+    }
+
+    function linkBtn(icon, titulo, sub, href, extraCls, newTab) {
+      const a = el("a", "btn" + (extraCls ? " " + extraCls : ""));
+      a.href = href;
+      if (newTab) { a.target = "_blank"; a.rel = "noopener noreferrer"; }
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("viewBox", "0 0 24 24");
+      svg.innerHTML = ICONS[icon]; // conteúdo fixo e interno
+      const t = el("span", "t");
+      t.appendChild(document.createTextNode(titulo));
+      if (sub) t.appendChild(el("small", "", sub));
+      a.append(svg, t);
+      return a;
+    }
+
+    function fmtSize(b) {
+      if (!b) return "";
+      if (b < 1024 * 1024) return Math.max(1, Math.round(b / 1024)) + " KB";
+      return (b / 1024 / 1024).toFixed(1).replace(".", ",") + " MB";
+    }
+
+    function notFound() {
+      app.innerHTML = "";
+      app.appendChild(el("div", "state", "Página não encontrada ou indisponível."));
+    }
+
+    function render(d) {
+      const cfg = d.config || {};
+      const hex = /^#[0-9a-f]{6}$/i;
+      if (hex.test(cfg.cor_principal)) document.documentElement.style.setProperty("--p", cfg.cor_principal);
+      if (hex.test(cfg.cor_destaque)) document.documentElement.style.setProperty("--a", cfg.cor_destaque);
+      if (cfg.tema === "escuro") document.body.classList.add("escuro");
+
+      app.innerHTML = "";
+      app.appendChild(el("div", "banner"));
+
+      if (d.foto_path) {
+        const img = el("img", "photo " + (cfg.foto_formato === "quadrada" ? "quadrada" : "redonda"));
+        img.src = sb.storage.from(BUCKET).getPublicUrl(d.foto_path).data.publicUrl;
+        img.alt = d.nome || "Foto";
+        app.appendChild(img);
+      }
+      const content = el("div", "content" + (d.foto_path ? "" : " sem-foto"));
+      app.appendChild(content);
+
+      if (d.nome) { content.appendChild(el("h1", "", d.nome)); document.title = d.nome; }
+      if (d.cargo) content.appendChild(el("p", "cargo", d.cargo));
+      if (d.bio) content.appendChild(el("p", "bio", d.bio));
+
+      // Contatos (só o que foi preenchido)
+      const contatos = [];
+      if (d.email) contatos.push(linkBtn("email", "E-mail", d.email, "mailto:" + encodeURIComponent(d.email).replace(/%40/g, "@")));
+      if (d.telefone) {
+        const tel = String(d.telefone).replace(/[^\d+]/g, "");
+        if (tel) contatos.push(linkBtn("phone", "Telefone", d.telefone, "tel:" + tel));
+      }
+      if (d.whatsapp) {
+        let n = String(d.whatsapp).replace(/\D/g, "");
+        if (n) {
+          if (n.length <= 11) n = "55" + n; // número brasileiro sem DDI
+          contatos.push(linkBtn("whatsapp", "WhatsApp", d.whatsapp, "https://wa.me/" + n, "", true));
+        }
+      }
+      const li = safeUrl(d.linkedin);
+      if (li) contatos.push(linkBtn("linkedin", "LinkedIn", null, li, "", true));
+      const st = safeUrl(d.site);
+      if (st) contatos.push(linkBtn("site", "Site", st.replace(/^https?:\/\//, "").replace(/\/$/, ""), st, "", true));
+
+      if (contatos.length) {
+        content.appendChild(el("div", "sec", "Contato"));
+        const list = el("div", "list");
+        contatos.forEach((c) => list.appendChild(c));
+        content.appendChild(list);
+      }
+
+      // Arquivos (só se houver)
+      const arqs = Array.isArray(d.arquivos) ? d.arquivos.filter((a) => a && a.path) : [];
+      if (arqs.length) {
+        content.appendChild(el("div", "sec", "Arquivos para download"));
+        const list = el("div", "list");
+        arqs.forEach((a) => {
+          const url = sb.storage.from(BUCKET).getPublicUrl(a.path).data.publicUrl;
+          list.appendChild(linkBtn("download", a.label || "Arquivo", fmtSize(a.size), url, "arquivo", true));
+        });
+        content.appendChild(list);
+      }
+    }
+
+    (async function init() {
+      const slug = new URLSearchParams(location.search).get("s") || "";
+      if (!/^[a-z0-9]{6,32}$/i.test(slug)) return notFound();
+      try {
+        const { data, error } = await sb.rpc("get_apresentacao", { p_slug: slug });
+        if (error || !data) return notFound();
+        render(data);
+      } catch (e) {
+        notFound();
+      }
+    })();
+  </script>
+</body>
+</html>
