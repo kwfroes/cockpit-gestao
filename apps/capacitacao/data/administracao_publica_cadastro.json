@@ -1,0 +1,538 @@
+[
+  {
+    "trilha": "Fundamentos Legais e Institucionais",
+    "modulo": "Administração Pública e Contratações",
+    "licoes": [
+      {
+        "titulo": "O cadastro dentro da Administração Pública",
+        "tipo": "teoria",
+        "xp_recompensa": 10,
+        "conteudo_texto": "O cadastro de fornecedores é uma atividade da Administração Pública e segue os princípios do art. 37 da Constituição: legalidade, impessoalidade, moralidade, publicidade e eficiência. Cada decisão do analista — aprovar, rejeitar, atualizar — é um ato administrativo e precisa respeitar esses princípios."
+      },
+      {
+        "titulo": "Teste: decisão do analista",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Quando o analista aprova ou rejeita um documento no CAF, ele pratica:",
+          "explicacao_feedback": "A validação produz efeitos para o fornecedor e para o Estado; por isso segue os princípios do art. 37.",
+          "opcoes": [
+            {
+              "texto": "Um ato administrativo, sujeito aos princípios da Administração Pública",
+              "correta": true
+            },
+            {
+              "texto": "Um ato particular, sem regras próprias",
+              "correta": false
+            },
+            {
+              "texto": "Uma opinião técnica sem efeito",
+              "correta": false
+            },
+            {
+              "texto": "Um ato do fornecedor",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Legalidade: só o que a norma permite",
+        "tipo": "teoria",
+        "xp_recompensa": 10,
+        "conteudo_texto": "Na Administração Pública, só se faz o que a norma autoriza. O analista exige os documentos previstos na Lei 14.133/2021, no Decreto Estadual nº 23.059/2024, na IN nº 017/2022 e no Guia do Fornecedor — nem mais, nem menos. Exigir documento sem base normativa, ou dispensar um documento exigido, fere a legalidade."
+      },
+      {
+        "titulo": "Prática: exigência sem previsão",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Um analista pede ao fornecedor um documento que nenhuma norma exige para o cadastro. Qual princípio foi afetado?",
+          "explicacao_feedback": "O analista só pode exigir o que a norma prevê.",
+          "opcoes": [
+            {
+              "texto": "Eficiência",
+              "correta": false
+            },
+            {
+              "texto": "Legalidade",
+              "correta": true
+            },
+            {
+              "texto": "Publicidade",
+              "correta": false
+            },
+            {
+              "texto": "Moralidade",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Prática: dispensa indevida",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Para agilizar, o analista aprova a regularidade fiscal sem a certidão municipal, que é exigida. O que ocorreu?",
+          "explicacao_feedback": "Eficiência atua dentro da lei, nunca contra ela.",
+          "opcoes": [
+            {
+              "texto": "Aplicação correta da eficiência",
+              "correta": false
+            },
+            {
+              "texto": "Simples falha de publicidade",
+              "correta": false
+            },
+            {
+              "texto": "Violação da legalidade: eficiência não autoriza dispensar exigência normativa",
+              "correta": true
+            },
+            {
+              "texto": "Nada, se a empresa for conhecida",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Impessoalidade e isonomia",
+        "tipo": "teoria",
+        "xp_recompensa": 10,
+        "conteudo_texto": "Todos os fornecedores recebem o mesmo tratamento, com os mesmos critérios, sem favorecimento nem perseguição. O tamanho da empresa, a insistência do representante ou o conhecimento pessoal não mudam a análise. A LC 123/2006 prevê tratamento diferenciado para ME/EPP, mas esse tratamento vem da lei, não da vontade do analista."
+      },
+      {
+        "titulo": "Prática: pedido de prioridade",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "O representante de uma empresa pede que o analista \"adiante\" sua solicitação, furando a fila. Qual a conduta adequada?",
+          "explicacao_feedback": "Prioridades devem seguir critérios objetivos, como o prazo de validação, nunca pedidos pessoais.",
+          "opcoes": [
+            {
+              "texto": "Atender, pois é cortesia",
+              "correta": false
+            },
+            {
+              "texto": "Atender se a empresa for grande",
+              "correta": false
+            },
+            {
+              "texto": "Atender se for ME",
+              "correta": false
+            },
+            {
+              "texto": "Manter a ordem de análise e os mesmos critérios para todos",
+              "correta": true
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Prática: empresa conhecida",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "O analista conhece os sócios de uma empresa e sabe que \"são sérios\". Isso permite aprovar um balanço com inconsistências?",
+          "explicacao_feedback": "Impessoalidade: o documento é o que importa, não quem é a empresa. Se houver vínculo pessoal relevante, o analista deve se declarar impedido.",
+          "opcoes": [
+            {
+              "texto": "Não, a análise é a mesma para todos, com base nos documentos",
+              "correta": true
+            },
+            {
+              "texto": "Sim, a confiança basta",
+              "correta": false
+            },
+            {
+              "texto": "Sim, se for alteração",
+              "correta": false
+            },
+            {
+              "texto": "Sim, se houver pressa",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Moralidade e veracidade",
+        "tipo": "teoria",
+        "xp_recompensa": 10,
+        "conteudo_texto": "A moralidade exige honestidade e boa-fé de todos: do analista e do fornecedor. Por isso o fornecedor assina o Termo de Concordância e Veracidade, declarando que as informações são verdadeiras. Documento falso não é erro formal: pode configurar crime e gerar sanção."
+      },
+      {
+        "titulo": "Teste: Termo de Veracidade",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Qual o sentido do Termo de Concordância e Veracidade?",
+          "explicacao_feedback": "O termo materializa a boa-fé e responsabiliza o declarante.",
+          "opcoes": [
+            {
+              "texto": "Mera formalidade sem efeito",
+              "correta": false
+            },
+            {
+              "texto": "O fornecedor assume responsabilidade pela veracidade do que apresenta e concorda com as regras do cadastro",
+              "correta": true
+            },
+            {
+              "texto": "Substituir os documentos de habilitação",
+              "correta": false
+            },
+            {
+              "texto": "Autorizar o analista a preencher dados",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Prática: indício de fraude",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "O analista percebe que uma certidão tem layout diferente do oficial e o código de controle não confere no site do emissor. O que fazer?",
+          "explicacao_feedback": "Indício de falsidade deve ser tratado com seriedade e levado ao conhecimento da coordenação.",
+          "opcoes": [
+            {
+              "texto": "Aprovar, pois a data está válida",
+              "correta": false
+            },
+            {
+              "texto": "Corrigir o código no sistema",
+              "correta": false
+            },
+            {
+              "texto": "Rejeitar e comunicar à chefia, pois há indício de documento adulterado",
+              "correta": true
+            },
+            {
+              "texto": "Ignorar, pois não é papel do analista",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Publicidade, motivação e proteção de dados",
+        "tipo": "teoria",
+        "xp_recompensa": 10,
+        "conteudo_texto": "Os critérios do cadastro são públicos (normas e Guia do Fornecedor), e o fornecedor tem direito de saber por que um documento foi rejeitado. Toda rejeição precisa de motivação clara. Ao mesmo tempo, dados pessoais de sócios e representantes (CPF, endereço, documentos) são protegidos pela LGPD e só podem ser usados para a finalidade do cadastro."
+      },
+      {
+        "titulo": "Prática: motivo da rejeição",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Qual é a melhor forma de registrar uma rejeição?",
+          "explicacao_feedback": "A motivação deve dizer o problema e o que corrigir. Isso evita retrabalho e respeita o direito do fornecedor.",
+          "opcoes": [
+            {
+              "texto": "\"Documento inválido.\"",
+              "correta": false
+            },
+            {
+              "texto": "Rejeitar sem texto, o fornecedor descobre",
+              "correta": false
+            },
+            {
+              "texto": "\"Ver legislação.\"",
+              "correta": false
+            },
+            {
+              "texto": "\"CRF vencido em 03/11/2026. Enviar certificado vigente.\"",
+              "correta": true
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Prática: pedido de documentos de sócio",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Um terceiro liga pedindo cópia do RG de um sócio de empresa cadastrada. O que fazer?",
+          "explicacao_feedback": "Publicidade dos critérios não significa divulgar dados pessoais. A LGPD limita o uso à finalidade.",
+          "opcoes": [
+            {
+              "texto": "Não fornecer: dados pessoais são protegidos e só servem à finalidade do cadastro",
+              "correta": true
+            },
+            {
+              "texto": "Enviar, pois o cadastro é público",
+              "correta": false
+            },
+            {
+              "texto": "Enviar se for outro órgão de qualquer esfera, sem formalidade",
+              "correta": false
+            },
+            {
+              "texto": "Enviar só o CPF",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Eficiência e prazo",
+        "tipo": "teoria",
+        "xp_recompensa": 10,
+        "conteudo_texto": "Eficiência é fazer bem e no tempo certo. A IN nº 017/2022 fixa 5 dias úteis para análise. Um cadastro lento atrasa contratações do Estado; um cadastro apressado deixa passar empresas irregulares. O analista equilibra os dois: prioriza prazos vencidos e não dispensa nenhuma verificação."
+      },
+      {
+        "titulo": "Teste: prazo de análise",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Qual o prazo de análise fixado pela IN nº 017/2022?",
+          "explicacao_feedback": "Por isso o filtro de prazo vencido é a primeira ferramenta de organização da fila.",
+          "opcoes": [
+            {
+              "texto": "2 dias úteis",
+              "correta": false
+            },
+            {
+              "texto": "5 dias úteis",
+              "correta": true
+            },
+            {
+              "texto": "10 dias corridos",
+              "correta": false
+            },
+            {
+              "texto": "30 dias",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Onde o cadastro entra na licitação",
+        "tipo": "teoria",
+        "xp_recompensa": 10,
+        "conteudo_texto": "Na Lei 14.133/2021, o registro cadastral é um procedimento auxiliar (art. 78). Ele não escolhe vencedores: verifica antes, e com calma, a documentação de habilitação. Quando o edital prevê, o certificado de registro cadastral pode substituir documentos de habilitação (art. 70, II), o que dá agilidade ao pregoeiro e segurança à contratação."
+      },
+      {
+        "titulo": "Teste: o cadastro e a habilitação",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Qual a principal contribuição do cadastro para a licitação?",
+          "explicacao_feedback": "O cadastro não julga propostas: ele dá segurança e agilidade à habilitação.",
+          "opcoes": [
+            {
+              "texto": "Definir o vencedor",
+              "correta": false
+            },
+            {
+              "texto": "Fixar o preço de referência",
+              "correta": false
+            },
+            {
+              "texto": "Antecipar e qualificar a verificação da habilitação, permitindo substituir documentos quando o edital prevê",
+              "correta": true
+            },
+            {
+              "texto": "Dispensar a licitação",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Teste: cadastro garante contrato?",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Estar cadastrado no CAF garante que a empresa será contratada?",
+          "explicacao_feedback": "Cadastro não é contrato. É uma condição que facilita e dá segurança à participação.",
+          "opcoes": [
+            {
+              "texto": "Sim, sempre",
+              "correta": false
+            },
+            {
+              "texto": "Sim, se for CRC",
+              "correta": false
+            },
+            {
+              "texto": "Sim, se a empresa for ME",
+              "correta": false
+            },
+            {
+              "texto": "Não. O cadastro comprova a habilitação; a contratação depende da licitação ou de contratação direta regular",
+              "correta": true
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Prática: erro do analista na licitação",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "O analista aprova uma certidão vencida e, com base no cadastro, uma empresa irregular é habilitada num pregão. Qual o efeito?",
+          "explicacao_feedback": "Como outros órgãos confiam no cadastro, a qualidade da validação afeta todas as contratações que o usam.",
+          "opcoes": [
+            {
+              "texto": "O erro no cadastro se transmite à licitação e pode comprometer a contratação",
+              "correta": true
+            },
+            {
+              "texto": "Nenhum, o cadastro é só informativo",
+              "correta": false
+            },
+            {
+              "texto": "O pregoeiro sempre corrige",
+              "correta": false
+            },
+            {
+              "texto": "A empresa perde o cadastro automaticamente",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Cadastro aberto e atualizado",
+        "tipo": "teoria",
+        "xp_recompensa": 10,
+        "conteudo_texto": "O registro cadastral deve ficar aberto permanentemente, com chamamento público pela internet no mínimo anual (art. 87, §1º; Decreto nº 23.059/2024). É vedado exigir registro cadastral complementar só para acessar edital e anexos (art. 87, §2º). O registro deve refletir a situação atual: pode ser alterado, suspenso ou cancelado quando o inscrito deixar de cumprir as exigências (art. 88, §5º), e o desempenho do contratado pode ser anotado nele (art. 88, §3º)."
+      },
+      {
+        "titulo": "Teste: acesso ao edital",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "A Administração pode exigir que a empresa esteja cadastrada só para acessar o edital?",
+          "explicacao_feedback": "Art. 87, §2º, da Lei 14.133/2021.",
+          "opcoes": [
+            {
+              "texto": "Sim, sempre",
+              "correta": false
+            },
+            {
+              "texto": "Não, é vedado exigir registro cadastral complementar para acesso ao edital e anexos",
+              "correta": true
+            },
+            {
+              "texto": "Sim, se for pregão",
+              "correta": false
+            },
+            {
+              "texto": "Sim, se o valor for alto",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Teste: registro desatualizado",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "O que pode ocorrer com o registro de quem deixa de cumprir as exigências?",
+          "explicacao_feedback": "Art. 88, §5º. Por isso o cadastro precisa estar sempre atualizado.",
+          "opcoes": [
+            {
+              "texto": "Nada até a renovação",
+              "correta": false
+            },
+            {
+              "texto": "Somente advertência",
+              "correta": false
+            },
+            {
+              "texto": "Alteração, suspensão ou cancelamento a qualquer tempo",
+              "correta": true
+            },
+            {
+              "texto": "Conversão automática em Candidato",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Teste: desempenho do contratado",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Segundo o art. 88, §3º, o que pode ser anotado no registro cadastral?",
+          "explicacao_feedback": "O cadastro também guarda o histórico de desempenho, que ajuda futuras contratações.",
+          "opcoes": [
+            {
+              "texto": "A opinião do analista sobre os sócios",
+              "correta": false
+            },
+            {
+              "texto": "O preço praticado",
+              "correta": false
+            },
+            {
+              "texto": "O lucro da empresa",
+              "correta": false
+            },
+            {
+              "texto": "A atuação do contratado no cumprimento de suas obrigações contratuais",
+              "correta": true
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "O papel do analista",
+        "tipo": "teoria",
+        "xp_recompensa": 10,
+        "conteudo_texto": "O analista do cadastro é o primeiro filtro de qualidade das contratações do Estado. Uma validação correta protege a Administração de contratar empresas irregulares e protege os fornecedores de exigências indevidas. Por isso, cada aprovação ou rejeição precisa estar apoiada em norma, documento e motivo claro."
+      },
+      {
+        "titulo": "Prática: síntese",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Qual atitude resume a postura esperada do analista?",
+          "explicacao_feedback": "Legalidade, impessoalidade, motivação e eficiência reunidas numa só conduta.",
+          "opcoes": [
+            {
+              "texto": "Decidir com base na norma e no documento, com o mesmo critério para todos e motivo registrado",
+              "correta": true
+            },
+            {
+              "texto": "Aprovar rápido para não atrasar",
+              "correta": false
+            },
+            {
+              "texto": "Rejeitar na dúvida, sem explicar",
+              "correta": false
+            },
+            {
+              "texto": "Seguir o que o fornecedor pedir",
+              "correta": false
+            }
+          ]
+        }
+      }
+    ]
+  }
+]
