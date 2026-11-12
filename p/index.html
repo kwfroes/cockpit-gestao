@@ -30,10 +30,45 @@
     .btn small { display:block; color:var(--mut); font-weight:400; font-size:.75rem; }
     .btn.arquivo { border-color:var(--p); }
     .btn .t { flex:1; min-width:0; }
+
+    /* Ícone do cartão de visita (canto do topo) */
+    .banner { position:relative; }
+    .cardbtn { position:absolute; top:12px; right:12px; width:40px; height:40px; padding:0; border-radius:12px; border:1px solid rgba(255,255,255,.6); background:rgba(255,255,255,.22); display:flex; align-items:center; justify-content:center; cursor:pointer; -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px); transition:background .15s, transform .1s; }
+    .cardbtn:hover { background:rgba(255,255,255,.38); }
+    .cardbtn:active { transform:scale(.95); }
+    .cardbtn:focus-visible { outline:2px solid #fff; outline-offset:2px; }
+    .cardbtn svg { width:22px; height:22px; stroke:#fff; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+    /* Janela do cartão */
+    .ov { position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center; padding:16px; background:rgba(2,6,23,.7); }
+    .ov.on { display:flex; }
+    .cartao-box { position:relative; width:100%; max-width:480px; }
+    .cartao-box canvas { display:block; width:100%; height:auto; border-radius:14px; background:#fff; box-shadow:0 20px 50px rgba(0,0,0,.45); }
+    .cartao-x { position:absolute; top:-48px; right:0; width:36px; height:36px; padding:0; border-radius:10px; border:0; background:rgba(255,255,255,.18); color:#fff; font-size:18px; cursor:pointer; }
+    .cartao-x:hover { background:rgba(255,255,255,.3); }
+    .cartao-acoes { display:flex; gap:10px; margin-top:14px; }
+    .cartao-acoes button { flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:13px 12px; border-radius:12px; border:0; font:inherit; font-weight:600; cursor:pointer; }
+    .cartao-acoes svg { width:18px; height:18px; flex:none; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+    .cartao-acoes .b-p { background:var(--p); color:#fff; }
+    .cartao-acoes .b-s { background:#fff; color:#0f172a; }
+    .cartao-acoes button:disabled { opacity:.55; cursor:default; }
+    .cartao-msg { min-height:1.2em; margin:10px 2px 0; color:#e2e8f0; font-size:.8rem; text-align:center; }
   </style>
 </head>
 <body>
   <div class="wrap" id="app"><div class="state">Carregando…</div></div>
+
+  <div class="ov" id="cartaoOv" role="dialog" aria-modal="true" aria-label="Cartão de visita">
+    <div class="cartao-box">
+      <button type="button" class="cartao-x" id="cartaoFechar" aria-label="Fechar">✕</button>
+      <canvas id="cartaoCv" role="img"></canvas>
+      <div class="cartao-acoes">
+        <button type="button" class="b-p" id="cartaoVcf"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg><span>Salvar contato</span></button>
+        <button type="button" class="b-s" id="cartaoPdf"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>Baixar PDF</span></button>
+      </div>
+      <p class="cartao-msg" id="cartaoMsg" aria-live="polite"></p>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
@@ -69,6 +104,7 @@
     }
 
     const ICONS = {
+      cartao: '<rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="11" r="2"/><path d="M5.5 16c.6-1.4 1.6-2 2.5-2s1.9.6 2.5 2"/><line x1="14" y1="10" x2="19" y2="10"/><line x1="14" y1="14" x2="18" y2="14"/>',
       email: '<path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><polyline points="22,6 12,13 2,6"/>',
       phone: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>',
       whatsapp: '<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>',
@@ -139,7 +175,10 @@
       document.body.classList.toggle("escuro", cfg.tema === "escuro");
 
       app.innerHTML = "";
-      app.appendChild(el("div", "banner"));
+      dadosAtuais = d;
+      const banner = el("div", "banner");
+      if (temCartao(d)) banner.appendChild(botaoCartao());
+      app.appendChild(banner);
 
       if (d.foto_path) {
         const img = el("img", "photo " + (cfg.foto_formato === "quadrada" ? "quadrada" : "redonda"));
@@ -195,6 +234,351 @@
       }
     }
 
+    // ---------- Contagem de acessos ----------
+    // Anônima: não guarda IP nem nome. O navegador guarda só um código aleatório, para a mesma
+    // pessoa não ser contada de novo ao recarregar. Não conta: pré-visualização do Cockpit e
+    // o parâmetro ?teste=1 (usado pelo botão "Abrir página" do módulo).
+    function idVisitante() {
+      try {
+        let v = localStorage.getItem("apres_visitante");
+        if (!v || !/^[0-9a-f-]{36}$/i.test(v)) {
+          v = crypto.randomUUID();
+          localStorage.setItem("apres_visitante", v);
+        }
+        return v;
+      } catch (e) { return null; } // navegador bloqueou o armazenamento: conta só no total
+    }
+    function registrarAcesso(slug) {
+      if (new URLSearchParams(location.search).get("teste") === "1") return;
+      try {
+        Promise.resolve(sb.rpc("registrar_acesso", { p_slug: slug, p_visitante: idVisitante() })).catch(() => {});
+      } catch (e) { /* a contagem nunca pode atrapalhar a página */ }
+    }
+
+    // ---------- Cartão de visita ----------
+    // Desenhado num canvas 90 x 50 mm (cartão de visita padrão). O mesmo desenho aparece na janela
+    // e vira o PDF, então o que a pessoa vê é exatamente o que baixa. Não usa nenhuma biblioteca externa.
+    const FONTE = '"Inter","Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif';
+    const CW = 1800, CH = 1000;            // pixels do desenho (proporção 90 x 50 mm)
+    const PDF_W = 255.12, PDF_H = 141.73;  // 90 x 50 mm em pontos
+    const CARD_ICONS = {
+      email: "M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z M22 6l-10 7L2 6",
+      phone: "M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z",
+      whatsapp: "M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z",
+      site: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z M2 12h20 M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z",
+      linkedin: "M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z M2 9h4v12H2z M4 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z",
+    };
+    let dadosAtuais = null;
+
+    const pathValido = (p) => typeof p === "string" && /^[0-9a-f-]{36}\/[A-Za-z0-9._-]{1,200}$/i.test(p);
+    const limpar = (s) => String(s == null ? "" : s).replace(/\s+/g, " ").trim();
+    const semProtocolo = (u) => String(u).replace(/^https?:\/\/(www\.)?/i, "").replace(/\/$/, "");
+    const soDigitos = (s) => String(s || "").replace(/\D/g, "");
+    function temCartao(d) { return !!(d && (d.nome || d.email || d.telefone || d.whatsapp)); }
+
+    function itensContato(d) {
+      const it = [];
+      if (d.email) it.push({ ic: "email", txt: limpar(d.email) });
+      if (d.telefone) it.push({ ic: "phone", txt: limpar(d.telefone) });
+      if (d.whatsapp && soDigitos(d.whatsapp) !== soDigitos(d.telefone)) it.push({ ic: "whatsapp", txt: limpar(d.whatsapp) });
+      const st = safeUrl(d.site); if (st) it.push({ ic: "site", txt: semProtocolo(st) });
+      const li = safeUrl(d.linkedin); if (li) it.push({ ic: "linkedin", txt: semProtocolo(li) });
+      return it;
+    }
+
+    // Baixa a imagem do worker como arquivo e a decodifica (assim o canvas não fica "contaminado" e pode virar PDF)
+    async function baixarImagem(path) {
+      const res = await fetch(fileUrl(path), { mode: "cors" });
+      if (!res.ok) throw new Error("imagem " + res.status);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      try {
+        const img = await new Promise((ok, err) => {
+          const i = new Image();
+          i.onload = () => ok(i);
+          i.onerror = () => err(new Error("imagem inválida"));
+          i.src = url;
+        });
+        return { blob, img };
+      } finally { setTimeout(() => URL.revokeObjectURL(url), 15000); }
+    }
+
+    function quebrar(ctx, texto, maxW) {
+      const linhas = []; let atual = "";
+      for (const p of texto.split(" ")) {
+        const t = atual ? atual + " " + p : p;
+        if (!atual || ctx.measureText(t).width <= maxW) atual = t; else { linhas.push(atual); atual = p; }
+      }
+      if (atual) linhas.push(atual);
+      return linhas;
+    }
+    function elipsar(ctx, t, maxW) {
+      if (ctx.measureText(t).width <= maxW) return t;
+      while (t.length > 1 && ctx.measureText(t + "…").width > maxW) t = t.slice(0, -1);
+      return t + "…";
+    }
+    // Reduz a fonte até o texto caber em maxL linhas; se ainda não couber, corta com reticências
+    function ajustar(ctx, texto, peso, tam, min, maxW, maxL) {
+      for (let s = tam; s >= min; s -= 4) {
+        const font = `${peso} ${s}px ${FONTE}`;
+        ctx.font = font;
+        const ls = quebrar(ctx, texto, maxW);
+        if (ls.length <= maxL && ls.every((l) => ctx.measureText(l).width <= maxW)) return { ls, s, font };
+      }
+      const font = `${peso} ${min}px ${FONTE}`;
+      ctx.font = font;
+      const todas = quebrar(ctx, texto, maxW);
+      const corte = Math.min(maxL - 1, todas.length - 1);
+      const ls = todas.slice(0, corte);
+      ls.push(elipsar(ctx, todas.slice(corte).join(" "), maxW));
+      return { ls, s: min, font };
+    }
+    function iconeCanvas(ctx, d, x, y, size, cor) {
+      ctx.save(); ctx.translate(x, y); ctx.scale(size / 24, size / 24);
+      ctx.lineWidth = 2; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.strokeStyle = cor;
+      ctx.stroke(new Path2D(d));
+      ctx.restore();
+    }
+
+    async function desenharCartao(canvas, d) {
+      const cfg = d.config || {};
+      const hex = /^#[0-9a-f]{6}$/i;
+      const P = hex.test(cfg.cor_principal) ? cfg.cor_principal : "#1d4ed8";
+      const A = hex.test(cfg.cor_destaque) ? cfg.cor_destaque : "#dc2626";
+      const querFoto = cfg.cartao_foto === "sim" && pathValido(d.foto_path);
+      const [logo, foto] = await Promise.all([
+        pathValido(cfg.logo_path) ? baixarImagem(cfg.logo_path).then((r) => r.img).catch(() => null) : null,
+        querFoto ? baixarImagem(d.foto_path).then((r) => r.img).catch(() => null) : null,
+      ]);
+      canvas.width = CW; canvas.height = CH;
+      const ctx = canvas.getContext("2d");
+      ctx.imageSmoothingQuality = "high";
+      ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, CW, CH);
+      const g = ctx.createLinearGradient(0, 0, CW, 0);
+      g.addColorStop(0, P); g.addColorStop(1, A);
+      ctx.fillStyle = g; ctx.fillRect(0, CH - 40, CW, 40);   // faixa inferior, igual ao topo da página
+
+      const M = 100, TOP = 70, BOT = CH - 40 - 70;
+      const contatos = itensContato(d);
+      const comPainel = contatos.length > 0;
+      const leftW = comPainel ? 840 : CW - 2 * M;
+      const rightX = 1010, rightW = CW - M - rightX;
+      ctx.textBaseline = "top"; ctx.textAlign = "left";
+
+      const usaFoto = querFoto && !!foto;
+      const nome = limpar(d.nome), cargo = limpar(d.cargo), empresa = limpar(cfg.cartao_empresa);
+      let cab = null;   // cabeçalho da coluna esquerda: foto (se pedida) ou logo
+      if (usaFoto) cab = { h: 260 };
+      else if (logo) { const k = Math.min(560 / logo.width, 190 / logo.height, 2); cab = { w: Math.round(logo.width * k), h: Math.round(logo.height * k) }; }
+
+      const tn = nome ? ajustar(ctx, nome, 700, 84, 44, leftW, 3) : null;
+      const tc = cargo ? ajustar(ctx, cargo, 600, 46, 28, leftW, 2) : null;
+      const te = empresa ? ajustar(ctx, empresa, 500, 38, 28, leftW, 2) : null;
+      const blocos = [
+        [tn, tn && Math.round(tn.s * 1.13), "#0f172a", 20],
+        [tc, tc && Math.round(tc.s * 1.22), A, 20],
+        [te, te && Math.round(te.s * 1.2), "#64748b", 16],
+      ].filter((b) => b[0]);
+      const gapAntes = (i) => (i === 0 ? (cab ? 52 : 0) : blocos[i][3]);
+      let total = cab ? cab.h : 0;
+      blocos.forEach((b, i) => { total += gapAntes(i) + b[0].ls.length * b[1]; });
+      let y = Math.max(TOP, TOP + (BOT - TOP - total) / 2);
+
+      if (cab) {
+        if (usaFoto) {
+          const r = 130, cx = M + r, cy = y + r, s = Math.min(foto.width, foto.height);
+          ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.clip();
+          ctx.drawImage(foto, (foto.width - s) / 2, (foto.height - s) / 2, s, s, cx - r, cy - r, 2 * r, 2 * r);
+          ctx.restore();
+          ctx.beginPath(); ctx.arc(cx, cy, r + 5, 0, Math.PI * 2); ctx.lineWidth = 8; ctx.strokeStyle = P; ctx.stroke();
+        } else {
+          ctx.drawImage(logo, M, y, cab.w, cab.h);
+        }
+        y += cab.h;
+      }
+      blocos.forEach((b, i) => {
+        y += gapAntes(i);
+        ctx.font = b[0].font; ctx.fillStyle = b[2];
+        b[0].ls.forEach((l) => { ctx.fillText(l, M, y); y += b[1]; });
+      });
+
+      // coluna da direita: logo (só quando a foto ocupa o cabeçalho da esquerda) e contatos
+      let topoDir = TOP;
+      if (usaFoto && logo) {
+        const k = Math.min(560 / logo.width, 120 / logo.height, 2);
+        const w = Math.round(logo.width * k), h = Math.round(logo.height * k);
+        ctx.drawImage(logo, CW - M - w, TOP, w, h);
+        topoDir = TOP + h + 50;
+      }
+      if (comPainel) {
+        ctx.strokeStyle = "#e2e8f0"; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(980, TOP + 20); ctx.lineTo(980, BOT - 20); ctx.stroke();
+        const ROW = 112, IC = 48;
+        const alt = (contatos.length - 1) * ROW + IC;
+        let cy = Math.max(topoDir, topoDir + (BOT - topoDir - alt) / 2);
+        contatos.forEach((c) => {
+          iconeCanvas(ctx, CARD_ICONS[c.ic], rightX, cy, IC, P);
+          const t = ajustar(ctx, c.txt, 500, 40, 28, rightW - IC - 28, 1);
+          ctx.font = t.font; ctx.fillStyle = "#0f172a"; ctx.textBaseline = "middle";
+          ctx.fillText(t.ls[0], rightX + IC + 28, cy + IC / 2);
+          ctx.textBaseline = "top";
+          cy += ROW;
+        });
+      }
+      canvas.setAttribute("aria-label", "Cartão de visita. " + [nome, cargo, empresa].concat(contatos.map((c) => c.txt)).filter(Boolean).join(". "));
+    }
+
+    // ----- arquivo de contato (.vcf, vCard 3.0): abre direto na agenda do celular -----
+    const vEsc = (s) => String(s).replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+    function dobrar(linha) {   // linhas de até 75 bytes, sem partir caractere acentuado
+      const enc = new TextEncoder(); const out = []; let atual = "", bytes = 0;
+      for (const ch of linha) {
+        const n = enc.encode(ch).length;
+        if (bytes + n > 75) { out.push(atual); atual = " " + ch; bytes = 1 + n; } else { atual += ch; bytes += n; }
+      }
+      out.push(atual);
+      return out.join("\r\n");
+    }
+    function partirNome(nome) {
+      const t = limpar(nome).split(" ").filter(Boolean);
+      if (t.length <= 1) return { fam: "", giv: t[0] || "" };
+      const SUF = ["filho", "filha", "junior", "júnior", "jr", "jr.", "neto", "neta", "sobrinho"];
+      const n = t.length > 2 && SUF.includes(t[t.length - 1].toLowerCase()) ? 2 : 1;
+      return { fam: t.slice(-n).join(" "), giv: t.slice(0, -n).join(" ") };
+    }
+    function telE164(v) {   // número brasileiro sem DDI ganha +55
+      const s = String(v || "").trim();
+      let n = soDigitos(s);
+      if (!n) return null;
+      if (s.startsWith("+")) return "+" + n;
+      if (n.length <= 11) n = "55" + n;
+      return "+" + n;
+    }
+    async function fotoBase64(path) {
+      const { img } = await baixarImagem(path);
+      const s = Math.min(img.width, img.height), T = 400;
+      const c = document.createElement("canvas"); c.width = c.height = T;
+      c.getContext("2d").drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, T, T);
+      return c.toDataURL("image/jpeg", 0.85).split(",")[1];
+    }
+    async function gerarVcf(d) {
+      const cfg = d.config || {};
+      const empresa = limpar(cfg.cartao_empresa);
+      const fn = limpar(d.nome) || empresa || limpar(d.email) || "Contato";
+      const { fam, giv } = d.nome ? partirNome(d.nome) : { fam: "", giv: fn };
+      const L = ["BEGIN:VCARD", "VERSION:3.0", "N:" + vEsc(fam) + ";" + vEsc(giv) + ";;;", "FN:" + vEsc(fn)];
+      if (empresa) L.push("ORG:" + vEsc(empresa));
+      if (limpar(d.cargo)) L.push("TITLE:" + vEsc(limpar(d.cargo)));
+      const tel = telE164(d.telefone), zap = telE164(d.whatsapp);
+      if (tel) L.push("TEL;TYPE=WORK,VOICE:" + tel);
+      if (zap && zap !== tel) L.push("TEL;TYPE=CELL,VOICE:" + zap);
+      if (limpar(d.email)) L.push("EMAIL;TYPE=INTERNET,WORK:" + limpar(d.email));
+      const st = safeUrl(d.site); if (st) L.push("URL:" + st);
+      const li = safeUrl(d.linkedin); if (li) L.push("URL:" + li);
+      if (pathValido(d.foto_path)) {   // a foto vai sempre no contato, para a pessoa ser reconhecida na agenda
+        try { L.push("PHOTO;ENCODING=b;TYPE=JPEG:" + (await fotoBase64(d.foto_path))); } catch (e) { /* sem foto, segue */ }
+      }
+      L.push("END:VCARD");
+      return L.map(dobrar).join("\r\n") + "\r\n";
+    }
+
+    // ----- PDF (uma página 90 x 50 mm com o desenho do cartão), montado aqui mesmo -----
+    function montarPdf(jpeg, w, h, titulo) {
+      const enc = new TextEncoder(); const partes = []; const pos = []; let tam = 0;
+      const add = (x) => { const u = typeof x === "string" ? enc.encode(x) : x; partes.push(u); tam += u.length; };
+      const obj = (n, corpo) => { pos[n] = tam; add(n + " 0 obj\n" + corpo + "\nendobj\n"); };
+      add("%PDF-1.4\n%\u00e2\u00e3\u00cf\u00d3\n");
+      obj(1, "<< /Type /Catalog /Pages 2 0 R >>");
+      obj(2, "<< /Type /Pages /Kids [3 0 R] /Count 1 >>");
+      obj(3, `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PDF_W} ${PDF_H}] /Resources << /XObject << /Im0 5 0 R >> /ProcSet [/PDF /ImageC] >> /Contents 4 0 R >>`);
+      const cont = `q ${PDF_W} 0 0 ${PDF_H} 0 0 cm /Im0 Do Q`;
+      obj(4, `<< /Length ${cont.length} >>\nstream\n${cont}\nendstream`);
+      pos[5] = tam;
+      add("5 0 obj\n");
+      add(`<< /Type /XObject /Subtype /Image /Width ${w} /Height ${h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpeg.length} >>\nstream\n`);
+      add(jpeg);
+      add("\nendstream\nendobj\n");
+      let hex = "";
+      for (let i = 0; i < titulo.length; i++) hex += titulo.charCodeAt(i).toString(16).padStart(4, "0");
+      obj(6, `<< /Title <FEFF${hex}> /Producer (Cockpit Gestao) >>`);
+      const xref = tam;
+      let x = "xref\n0 7\n0000000000 65535 f \n";
+      for (let i = 1; i <= 6; i++) x += String(pos[i]).padStart(10, "0") + " 00000 n \n";
+      add(x);
+      add(`trailer\n<< /Size 7 /Root 1 0 R /Info 6 0 R >>\nstartxref\n${xref}\n%%EOF\n`);
+      const out = new Uint8Array(tam); let o = 0;
+      for (const p of partes) { out.set(p, o); o += p.length; }
+      return out;
+    }
+
+    function nomeArquivo(d) {
+      return (limpar(d.nome) || "contato").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "contato";
+    }
+    function baixarBlob(blob, nome) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = nome; a.rel = "noopener";
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+    }
+
+    // ----- janela do cartão -----
+    const cOv = document.getElementById("cartaoOv"), cCv = document.getElementById("cartaoCv");
+    const cVcf = document.getElementById("cartaoVcf"), cPdf = document.getElementById("cartaoPdf");
+    const cMsg = document.getElementById("cartaoMsg"), cX = document.getElementById("cartaoFechar");
+    let focoAntes = null;
+
+    function botaoCartao() {
+      const b = el("button", "cardbtn");
+      b.type = "button"; b.title = "Cartão de visita"; b.setAttribute("aria-label", "Cartão de visita");
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("viewBox", "0 0 24 24");
+      svg.innerHTML = ICONS.cartao; // conteúdo fixo e interno
+      b.appendChild(svg);
+      b.addEventListener("click", abrirCartao);
+      return b;
+    }
+    async function abrirCartao() {
+      if (!dadosAtuais) return;
+      focoAntes = document.activeElement;
+      cMsg.textContent = ""; cVcf.disabled = cPdf.disabled = true;
+      cOv.classList.add("on");
+      cX.focus();
+      try {
+        await desenharCartao(cCv, dadosAtuais);
+        cVcf.disabled = cPdf.disabled = false;
+      } catch (e) {
+        console.error(e);
+        cMsg.textContent = "Não foi possível montar o cartão.";
+      }
+    }
+    function fecharCartao() {
+      cOv.classList.remove("on");
+      if (focoAntes && focoAntes.focus) focoAntes.focus();
+    }
+    cX.addEventListener("click", fecharCartao);
+    cOv.addEventListener("click", (e) => { if (e.target === cOv) fecharCartao(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && cOv.classList.contains("on")) fecharCartao(); });
+
+    async function comEspera(botao, textoEspera, fn) {
+      const span = botao.querySelector("span"), antes = span.textContent;
+      cVcf.disabled = cPdf.disabled = true; span.textContent = textoEspera;
+      try { await fn(); } catch (e) { console.error(e); cMsg.textContent = "Não foi possível gerar o arquivo."; }
+      span.textContent = antes; cVcf.disabled = cPdf.disabled = false;
+    }
+    cVcf.addEventListener("click", () => comEspera(cVcf, "Gerando…", async () => {
+      const txt = await gerarVcf(dadosAtuais);
+      baixarBlob(new Blob([txt], { type: "text/vcard;charset=utf-8" }), nomeArquivo(dadosAtuais) + ".vcf");
+      cMsg.textContent = "Contato baixado. Abra o arquivo para adicionar à agenda do celular.";
+    }));
+    cPdf.addEventListener("click", () => comEspera(cPdf, "Gerando…", async () => {
+      const blob = await new Promise((res) => cCv.toBlob(res, "image/jpeg", 0.92));
+      const bytes = new Uint8Array(await blob.arrayBuffer());
+      const pdf = montarPdf(bytes, CW, CH, "Cartão de visita - " + (limpar(dadosAtuais.nome) || "contato"));
+      baixarBlob(new Blob([pdf], { type: "application/pdf" }), "Cartao-de-visita-" + nomeArquivo(dadosAtuais) + ".pdf");
+      cMsg.textContent = "PDF baixado.";
+    }));
+
     async function init() {
       const slug = new URLSearchParams(location.search).get("s") || "";
       if (!/^[a-z0-9]{6,32}$/i.test(slug)) return notFound();
@@ -209,6 +593,7 @@
         if (error) { console.error(error); return showSetupError("Erro ao consultar: " + error.message); }
         if (!data) return notFound();
         render(data);
+        registrarAcesso(slug); // só depois de exibir a página, e só se ela existe e está ativa
       } catch (e) {
         console.error(e);
         notFound();
@@ -216,7 +601,7 @@
     }
 
     // Modo pré-visualização: o módulo do Cockpit abre esta página dentro de um iframe
-    // (?preview=1) e envia os dados por postMessage. Nada é consultado no banco.
+    // (?preview=1) e envia os dados por postMessage. Nada é consultado nem contado.
     const PREVIEW = new URLSearchParams(location.search).get("preview") === "1" && window.parent !== window;
     if (PREVIEW) {
       window.addEventListener("message", (e) => {
