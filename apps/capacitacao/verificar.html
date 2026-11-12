@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verificação de certificado – Academia CGCF</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Inter, system-ui, sans-serif; background: #f1f5f9; color: #0f172a; min-height: 100vh; }
+  header { background: #0b1f4b; color: #fff; padding: 14px 20px; display: flex; align-items: center; gap: 12px; }
+  header b { letter-spacing: .12em; font-size: 14px; }
+  header span { font-size: 11px; opacity: .75; letter-spacing: .06em; text-transform: uppercase; }
+  main { max-width: 1000px; margin: 0 auto; padding: 24px 16px 48px; }
+  .caixa { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+  form { display: flex; gap: 8px; flex-wrap: wrap; }
+  input { flex: 1; min-width: 240px; padding: 11px 12px; font: 600 15px/1 ui-monospace, Consolas, monospace; letter-spacing: .04em; text-transform: uppercase; border: 1px solid #cbd5e1; border-radius: 10px; }
+  button { padding: 11px 20px; border: 0; border-radius: 10px; background: #5b21b6; color: #fff; font: 700 12px/1 Inter, sans-serif; text-transform: uppercase; letter-spacing: .06em; cursor: pointer; }
+  button:disabled { opacity: .6; cursor: wait; }
+  .ok, .ruim, .aviso { margin-top: 16px; border-radius: 12px; padding: 16px 18px; }
+  .ok { background: #ecfdf5; border: 1px solid #6ee7b7; color: #065f46; }
+  .ruim { background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; }
+  .aviso { background: #fffbeb; border: 1px solid #fcd34d; color: #92400e; }
+  .ok h2, .ruim h2 { margin: 0 0 6px; font-size: 18px; }
+  dl { display: grid; grid-template-columns: 150px 1fr; gap: 6px 12px; margin: 12px 0 0; font-size: 14px; }
+  dt { color: #047857; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; padding-top: 2px; }
+  dd { margin: 0; font-weight: 600; color: #0f172a; }
+  #cert-box { margin-top: 18px; overflow: hidden; border-radius: 8px; box-shadow: 0 8px 30px rgba(0,0,0,.25); }
+  small { color: #64748b; display: block; margin-top: 10px; font-size: 12px; }
+</style>
+</head>
+<body>
+<header><b>ACADEMIA CGCF</b><span>Verificação de autenticidade de certificado</span></header>
+<main>
+  <div class="caixa">
+    <form id="f"><input id="codigo" placeholder="CGCF-0000-XXXX-XXXX" autocomplete="off" spellcheck="false" maxlength="32"><button id="btn" type="submit">Verificar</button></form>
+    <small>Informe o código impresso no certificado ou leia o QR Code.</small>
+    <div id="resultado"></div>
+  </div>
+  <div id="cert-box" hidden></div>
+</main>
+
+<script>
+  // >>> PREENCHA com os dados do seu projeto Supabase (Project Settings > API). A chave "anon" é pública por natureza;
+  // a página só consegue chamar a função de verificação, que não expõe e-mail nem dados internos.
+  window.VERIFICAR_CONFIG = {
+    SUPABASE_URL: 'https://whnzeysvqbtuecxmthht.supabase.co',        // ex.: https://abcdxyz.supabase.co
+    SUPABASE_ANON_KEY: 'sb_publishable_Gw4cFK56R9kms2ogg50UqA_ZhHi79qw'
+  };
+</script>
+<script type="module">
+  import { ensureRecursos, renderCertificado, esc, CERT_W, CERT_H } from './js/cert_render.js';
+  import { qrSvg } from './js/qr.js';
+
+  const cfg = window.VERIFICAR_CONFIG;
+  const $ = id => document.getElementById(id);
+  const res = $('resultado'), box = $('cert-box'), inp = $('codigo'), btn = $('btn');
+  ensureRecursos();
+
+  const configurado = /^https?:\/\//.test(cfg.SUPABASE_URL) && cfg.SUPABASE_ANON_KEY && !cfg.SUPABASE_ANON_KEY.startsWith('COLE_');
+  const cliente = configurado ? window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY, { auth: { persistSession: false } }) : null;
+  if (!configurado) res.innerHTML = '<div class="aviso"><b>Página ainda não configurada.</b> Edite o arquivo verificar.html e informe SUPABASE_URL e SUPABASE_ANON_KEY.</div>';
+
+  const dataBR = iso => { try { return new Date(iso).toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'America/Bahia' }); } catch { return ''; } };
+
+  function ajustar() {
+    if (box.hidden) return;
+    const k = Math.min(1, box.clientWidth / CERT_W);
+    const inner = box.firstElementChild;
+    box.style.height = Math.round(CERT_H * k) + 'px';
+    inner.style.transform = `scale(${k})`;
+  }
+  window.addEventListener('resize', ajustar);
+
+  async function verificar(codigo) {
+    box.hidden = true; box.innerHTML = '';
+    codigo = (codigo || '').trim().toUpperCase();
+    if (!codigo) { res.innerHTML = ''; return; }
+    if (!cliente) return;
+    btn.disabled = true; res.innerHTML = '<p style="color:#64748b">Verificando...</p>';
+    try {
+      const { data, error } = await cliente.rpc('academia_verificar_certificado', { p_codigo: codigo });
+      if (error) throw error;
+      if (!data?.encontrado) {
+        res.innerHTML = `<div class="ruim"><h2>Certificado não encontrado</h2>Nenhum certificado com o código <b>${esc(codigo)}</b>. Confira o código e tente novamente.</div>`;
+        return;
+      }
+      const s = data.snapshot || {};
+      if (!data.valido) {
+        res.innerHTML = `<div class="ruim"><h2>Certificado revogado</h2>O certificado <b>${esc(data.codigo)}</b> existe, mas foi revogado pela instituição e não é mais válido.</div>`;
+        return;
+      }
+      res.innerHTML = `<div class="ok"><h2>✔ Certificado autêntico</h2>Emitido pela Academia CGCF.
+        <dl>
+          <dt>Aluno</dt><dd>${esc(s.aluno)}</dd>
+          <dt>${s.tipo === 'referencia' ? 'Patente' : 'Trilha'}</dt><dd>${esc(s.tipo === 'referencia' ? s.patente : s.trilha)}</dd>
+          ${s.tipo === 'referencia' ? '' : `<dt>Patente</dt><dd>${esc(s.patente)}</dd>`}
+          <dt>Aproveitamento</dt><dd>${esc(s.media)}% · selo ${s.selo === 'OURO' ? 'Ouro' : 'Prata'}</dd>
+          <dt>Carga horária</dt><dd>${esc(s.carga)} horas</dd>
+          <dt>Emitido em</dt><dd>${esc(dataBR(data.emitido_em))}</dd>
+          <dt>Código</dt><dd style="font-family:ui-monospace,Consolas,monospace">${esc(data.codigo)}</dd>
+        </dl></div>`;
+      const url = location.origin + location.pathname + '?c=' + encodeURIComponent(data.codigo);
+      box.innerHTML = `<div style="width:${CERT_W}px;height:${CERT_H}px;transform-origin:0 0">${renderCertificado({ ...s, codigo: data.codigo }, { qr: qrSvg(url) })}</div>`;
+      box.hidden = false; ajustar();
+    } catch (e) {
+      console.error(e);
+      res.innerHTML = `<div class="aviso"><b>Não foi possível verificar agora.</b> Tente novamente em instantes.</div>`;
+    } finally { btn.disabled = false; }
+  }
+
+  $('f').addEventListener('submit', ev => { ev.preventDefault(); history.replaceState(null, '', '?c=' + encodeURIComponent(inp.value.trim())); verificar(inp.value); });
+  const c0 = new URLSearchParams(location.search).get('c');
+  if (c0) { inp.value = c0.toUpperCase(); verificar(c0); }
+</script>
+</body>
+</html>

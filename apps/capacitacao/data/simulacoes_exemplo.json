@@ -1,0 +1,228 @@
+[
+  {
+    "trilha": "Análise Avançada e Tomada de Decisão",
+    "modulo": "Simulações de Análise",
+    "licoes": [
+      {
+        "titulo": "Como funcionam as simulações",
+        "tipo": "teoria",
+        "xp_recompensa": 10,
+        "conteudo_texto": "Nas simulações você trabalha numa reprodução da tela do CAF Digital, com documentos fictícios. Abra cada anexo (⬇ Anexo), compare com os campos, use A✓ para aprovar ou ⊗ para rejeitar e, ao rejeitar, escolha o motivo. Depois clique em Concluir análise. O XP é proporcional às decisões corretas."
+      },
+      {
+        "titulo": "Simulação: Termo de Concordância e Veracidade",
+        "tipo": "simulacao",
+        "xp_recompensa": 50,
+        "conteudo_texto": null,
+        "cenario": {
+          "tela": "Termo de Concordância e Veracidade",
+          "data_referencia": "10/11/2026",
+          "contexto": "Você abriu o clipe (📎) de uma solicitação de inclusão. Confira os documentos do termo, decida cada um e, ao final, aceite ou rejeite o termo.",
+          "fornecedor": {
+            "Razão Social": "ALFA SERVIÇOS DE MANUTENÇÃO LTDA",
+            "CNPJ": "11.222.333/0001-81",
+            "Nº Solicitação": "202611100000000001"
+          },
+          "motivos": [
+            "Documento vencido",
+            "Informação divergente do documento",
+            "Documento de outra empresa",
+            "Situação não comprova regularidade",
+            "Signatário sem poderes de representação",
+            "Documento anexado no campo errado",
+            "Documento ilegível ou incompleto"
+          ],
+          "documentos": [
+            {
+              "id": "termo",
+              "titulo": "Termo de Concordância e Veracidade",
+              "tipo": "html",
+              "html": "<html><head><style>body{font-family:Arial;margin:0;padding:24px;color:#222;font-size:13px}.h{border-bottom:3px solid #1F4E79;padding-bottom:8px;margin-bottom:14px}.h b{font-size:15px;color:#1F4E79}.t{font-size:17px;font-weight:bold;text-align:center;margin:14px 0}.w{position:fixed;top:40%;left:10%;font-size:46px;color:rgba(200,0,0,.12);transform:rotate(-25deg);font-weight:bold}td{padding:4px 8px;border:1px solid #ccc}table{border-collapse:collapse;width:100%;margin:10px 0}.f{margin-top:20px;font-size:11px;color:#666}</style></head><body><div class='w'>DOCUMENTO FICTÍCIO</div><div class='h'><b>CADASTRO DE FORNECEDORES – SAEB</b></div><div class='t'>TERMO DE CONCORDÂNCIA E VERACIDADE</div><table><tr><td style='width:35%;background:#f3f3f3'><b>Empresa</b></td><td>ALFA SERVIÇOS DE MANUTENÇÃO LTDA</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>CNPJ</b></td><td>11.222.333/0001-81</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Signatário</b></td><td>CARLOS EDUARDO NUNES</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>CPF do signatário</b></td><td>123.456.789-09</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Assinatura</b></td><td>Assinado digitalmente em 10/11/2026</td></tr></table><p>Declaro, sob as penas da lei, a veracidade das informações e documentos apresentados e minha concordância com as normas do cadastro.</p><p class='f'>Documento fictício para treinamento – Academia CGCF.</p></body></html>"
+            },
+            {
+              "id": "rg",
+              "titulo": "Documento de identificação do signatário",
+              "tipo": "html",
+              "html": "<html><head><style>body{font-family:Arial;margin:0;padding:24px;color:#222;font-size:13px}.h{border-bottom:3px solid #1F4E79;padding-bottom:8px;margin-bottom:14px}.h b{font-size:15px;color:#1F4E79}.t{font-size:17px;font-weight:bold;text-align:center;margin:14px 0}.w{position:fixed;top:40%;left:10%;font-size:46px;color:rgba(200,0,0,.12);transform:rotate(-25deg);font-weight:bold}td{padding:4px 8px;border:1px solid #ccc}table{border-collapse:collapse;width:100%;margin:10px 0}.f{margin-top:20px;font-size:11px;color:#666}</style></head><body><div class='w'>DOCUMENTO FICTÍCIO</div><div class='h'><b>SECRETARIA DA SEGURANÇA PÚBLICA</b></div><div class='t'>CARTEIRA DE IDENTIDADE (simulação)</div><table><tr><td style='width:35%;background:#f3f3f3'><b>Nome</b></td><td>CARLOS EDUARDO NUNES</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>CPF</b></td><td>123.456.789-09</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Data de nascimento</b></td><td>01/01/1985</td></tr></table><p></p><p class='f'>Documento fictício para treinamento – Academia CGCF.</p></body></html>"
+            },
+            {
+              "id": "contrato",
+              "titulo": "Arquivo anexado no campo Contrato Social",
+              "tipo": "html",
+              "html": "<html><head><style>body{font-family:Arial;margin:0;padding:24px;color:#222;font-size:13px}.h{border-bottom:3px solid #1F4E79;padding-bottom:8px;margin-bottom:14px}.h b{font-size:15px;color:#1F4E79}.t{font-size:17px;font-weight:bold;text-align:center;margin:14px 0}.w{position:fixed;top:40%;left:10%;font-size:46px;color:rgba(200,0,0,.12);transform:rotate(-25deg);font-weight:bold}td{padding:4px 8px;border:1px solid #ccc}table{border-collapse:collapse;width:100%;margin:10px 0}.f{margin-top:20px;font-size:11px;color:#666}</style></head><body><div class='w'>DOCUMENTO FICTÍCIO</div><div class='h'><b>RECEITA FEDERAL DO BRASIL</b></div><div class='t'>COMPROVANTE DE INSCRIÇÃO E DE SITUAÇÃO CADASTRAL</div><table><tr><td style='width:35%;background:#f3f3f3'><b>Nome empresarial</b></td><td>ALFA SERVIÇOS DE MANUTENÇÃO LTDA</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>CNPJ</b></td><td>11.222.333/0001-81</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Situação</b></td><td>ATIVA</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Natureza jurídica</b></td><td>206-2 – Sociedade Empresária Limitada</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>QSA</b></td><td>MARIA HELENA SOUZA – Sócia-Administradora</td></tr></table><p>Este documento não substitui o contrato social.</p><p class='f'>Documento fictício para treinamento – Academia CGCF.</p></body></html>"
+            }
+          ],
+          "itens": [
+            {
+              "id": "rg",
+              "bloco": "RG, CPF ou documento equivalente",
+              "documento": "rg",
+              "campos": {
+                "Arquivo": "RG CARLOS EDUARDO NUNES.pdf"
+              },
+              "decisao_correta": "aprovar",
+              "explicacao": "O documento identifica corretamente quem assinou o termo."
+            },
+            {
+              "id": "contrato",
+              "bloco": "Contrato Social",
+              "documento": "contrato",
+              "campos": {
+                "Arquivo": "CARTAO CNPJ ALFA.pdf"
+              },
+              "decisao_correta": "rejeitar",
+              "motivo_correto": "Documento anexado no campo errado",
+              "explicacao": "Foi anexado o Cartão CNPJ no lugar do contrato social. Repare ainda que o QSA mostra outra pessoa como administradora."
+            },
+            {
+              "id": "procuracao",
+              "bloco": "Procuração",
+              "campos": {
+                "Arquivo": "(nenhum arquivo anexado)"
+              },
+              "decisao_correta": "rejeitar",
+              "motivo_correto": "Signatário sem poderes de representação",
+              "explicacao": "Carlos Eduardo Nunes não consta como sócio nem administrador, e não há procuração. Sem ela, ele não tem poderes para assinar."
+            }
+          ],
+          "decisao_final": {
+            "titulo": "Decisão sobre o termo",
+            "opcoes": [
+              "Termo Rejeitado",
+              "Termo Aceito"
+            ],
+            "correta": "Termo Rejeitado",
+            "explicacao": "O signatário não comprovou poderes e o contrato social não foi apresentado; o termo deve ser rejeitado com motivo claro."
+          }
+        }
+      },
+      {
+        "titulo": "Simulação: certidões de regularidade",
+        "tipo": "simulacao",
+        "xp_recompensa": 60,
+        "conteudo_texto": null,
+        "cenario": {
+          "tela": "Área Restrita",
+          "aba": "Regularidade Fiscal e Trabalhista",
+          "data_referencia": "10/11/2026",
+          "contexto": "Solicitação de inclusão. Abra o anexo de cada certidão, compare com os dados informados e decida. Em caso de rejeição, escolha o motivo.",
+          "fornecedor": {
+            "Razão Social": "ALFA SERVIÇOS DE MANUTENÇÃO LTDA",
+            "CNPJ": "11.222.333/0001-81",
+            "Cidade": "Salvador/BA"
+          },
+          "motivos": [
+            "Documento vencido",
+            "Informação divergente do documento",
+            "Documento de outra empresa",
+            "Situação não comprova regularidade",
+            "Signatário sem poderes de representação",
+            "Documento anexado no campo errado",
+            "Documento ilegível ou incompleto"
+          ],
+          "documentos": [
+            {
+              "id": "fed",
+              "titulo": "Certidão conjunta RFB/PGFN",
+              "tipo": "html",
+              "html": "<html><head><style>body{font-family:Arial;margin:0;padding:24px;color:#222;font-size:13px}.h{border-bottom:3px solid #1F4E79;padding-bottom:8px;margin-bottom:14px}.h b{font-size:15px;color:#1F4E79}.t{font-size:17px;font-weight:bold;text-align:center;margin:14px 0}.w{position:fixed;top:40%;left:10%;font-size:46px;color:rgba(200,0,0,.12);transform:rotate(-25deg);font-weight:bold}td{padding:4px 8px;border:1px solid #ccc}table{border-collapse:collapse;width:100%;margin:10px 0}.f{margin-top:20px;font-size:11px;color:#666}</style></head><body><div class='w'>DOCUMENTO FICTÍCIO</div><div class='h'><b>MINISTÉRIO DA FAZENDA – Receita Federal / PGFN</b></div><div class='t'>CERTIDÃO POSITIVA COM EFEITOS DE NEGATIVA DE DÉBITOS RELATIVOS AOS TRIBUTOS FEDERAIS E À DÍVIDA ATIVA DA UNIÃO</div><table><tr><td style='width:35%;background:#f3f3f3'><b>Nome</b></td><td>ALFA SERVIÇOS DE MANUTENÇÃO LTDA</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>CNPJ</b></td><td>11.222.333/0001-81</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Emissão</b></td><td>06/08/2026</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Válida até</b></td><td>02/02/2027</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Código de controle</b></td><td>A1B2.C3D4.E5F6.0001</td></tr></table><p>Constam débitos com exigibilidade suspensa, nos termos do art. 151 do CTN. Abrange as contribuições sociais previstas no art. 11 da Lei 8.212/1991.</p><p class='f'>Documento fictício para treinamento – Academia CGCF.</p></body></html>"
+            },
+            {
+              "id": "est",
+              "titulo": "Certidão da Fazenda Estadual",
+              "tipo": "html",
+              "html": "<html><head><style>body{font-family:Arial;margin:0;padding:24px;color:#222;font-size:13px}.h{border-bottom:3px solid #1F4E79;padding-bottom:8px;margin-bottom:14px}.h b{font-size:15px;color:#1F4E79}.t{font-size:17px;font-weight:bold;text-align:center;margin:14px 0}.w{position:fixed;top:40%;left:10%;font-size:46px;color:rgba(200,0,0,.12);transform:rotate(-25deg);font-weight:bold}td{padding:4px 8px;border:1px solid #ccc}table{border-collapse:collapse;width:100%;margin:10px 0}.f{margin-top:20px;font-size:11px;color:#666}</style></head><body><div class='w'>DOCUMENTO FICTÍCIO</div><div class='h'><b>SECRETARIA DA FAZENDA DO ESTADO</b></div><div class='t'>CERTIDÃO POSITIVA DE DÉBITOS TRIBUTÁRIOS</div><table><tr><td style='width:35%;background:#f3f3f3'><b>Razão Social</b></td><td>ALFA SERVIÇOS DE MANUTENÇÃO LTDA</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>CNPJ</b></td><td>11.222.333/0001-81</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Nº</b></td><td>20260001234</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Emissão</b></td><td>14/08/2026</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Validade</b></td><td>04/12/2026</td></tr></table><p>Certifica-se que constam débitos inscritos em dívida ativa, sem suspensão de exigibilidade, em nome do contribuinte acima.</p><p class='f'>Documento fictício para treinamento – Academia CGCF.</p></body></html>"
+            },
+            {
+              "id": "mun",
+              "titulo": "Certidão da Fazenda Municipal",
+              "tipo": "html",
+              "html": "<html><head><style>body{font-family:Arial;margin:0;padding:24px;color:#222;font-size:13px}.h{border-bottom:3px solid #1F4E79;padding-bottom:8px;margin-bottom:14px}.h b{font-size:15px;color:#1F4E79}.t{font-size:17px;font-weight:bold;text-align:center;margin:14px 0}.w{position:fixed;top:40%;left:10%;font-size:46px;color:rgba(200,0,0,.12);transform:rotate(-25deg);font-weight:bold}td{padding:4px 8px;border:1px solid #ccc}table{border-collapse:collapse;width:100%;margin:10px 0}.f{margin-top:20px;font-size:11px;color:#666}</style></head><body><div class='w'>DOCUMENTO FICTÍCIO</div><div class='h'><b>PREFEITURA MUNICIPAL – Secretaria da Fazenda</b></div><div class='t'>CERTIDÃO NEGATIVA DE DÉBITOS MUNICIPAIS</div><table><tr><td style='width:35%;background:#f3f3f3'><b>Contribuinte</b></td><td>ALFA SERVIÇOS DE MANUTENÇÃO LTDA</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>CNPJ</b></td><td>11.222.333/0001-81</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Nº</b></td><td>57883/2026</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Emissão</b></td><td>14/08/2026</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Validade</b></td><td>14/12/2026</td></tr></table><p>Certifica-se que não constam débitos em nome do contribuinte.</p><p class='f'>Documento fictício para treinamento – Academia CGCF.</p></body></html>"
+            },
+            {
+              "id": "fgts",
+              "titulo": "Certificado de Regularidade do FGTS – CRF",
+              "tipo": "html",
+              "html": "<html><head><style>body{font-family:Arial;margin:0;padding:24px;color:#222;font-size:13px}.h{border-bottom:3px solid #1F4E79;padding-bottom:8px;margin-bottom:14px}.h b{font-size:15px;color:#1F4E79}.t{font-size:17px;font-weight:bold;text-align:center;margin:14px 0}.w{position:fixed;top:40%;left:10%;font-size:46px;color:rgba(200,0,0,.12);transform:rotate(-25deg);font-weight:bold}td{padding:4px 8px;border:1px solid #ccc}table{border-collapse:collapse;width:100%;margin:10px 0}.f{margin-top:20px;font-size:11px;color:#666}</style></head><body><div class='w'>DOCUMENTO FICTÍCIO</div><div class='h'><b>CAIXA ECONÔMICA FEDERAL</b></div><div class='t'>CERTIFICADO DE REGULARIDADE DO FGTS – CRF</div><table><tr><td style='width:35%;background:#f3f3f3'><b>Razão Social</b></td><td>ALFA SERVIÇOS DE MANUTENÇÃO LTDA</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Inscrição</b></td><td>11.222.333/0001-81</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Certificação nº</b></td><td>2026100508231154805</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Validade</b></td><td>05/10/2026 a 03/11/2026</td></tr></table><p>O empregador acima encontra-se em situação regular perante o FGTS.</p><p class='f'>Documento fictício para treinamento – Academia CGCF.</p></body></html>"
+            },
+            {
+              "id": "cndt",
+              "titulo": "Certidão Negativa de Débitos Trabalhistas",
+              "tipo": "html",
+              "html": "<html><head><style>body{font-family:Arial;margin:0;padding:24px;color:#222;font-size:13px}.h{border-bottom:3px solid #1F4E79;padding-bottom:8px;margin-bottom:14px}.h b{font-size:15px;color:#1F4E79}.t{font-size:17px;font-weight:bold;text-align:center;margin:14px 0}.w{position:fixed;top:40%;left:10%;font-size:46px;color:rgba(200,0,0,.12);transform:rotate(-25deg);font-weight:bold}td{padding:4px 8px;border:1px solid #ccc}table{border-collapse:collapse;width:100%;margin:10px 0}.f{margin-top:20px;font-size:11px;color:#666}</style></head><body><div class='w'>DOCUMENTO FICTÍCIO</div><div class='h'><b>PODER JUDICIÁRIO – JUSTIÇA DO TRABALHO</b></div><div class='t'>CERTIDÃO NEGATIVA DE DÉBITOS TRABALHISTAS</div><table><tr><td style='width:35%;background:#f3f3f3'><b>Nome</b></td><td>BETA COMÉRCIO E DISTRIBUIÇÃO LTDA</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>CNPJ</b></td><td>99.888.777/0001-66</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Certidão nº</b></td><td>69517870/2026</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Expedição</b></td><td>14/08/2026</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Validade</b></td><td>10/02/2027</td></tr></table><p>Certifica-se que a pessoa jurídica acima NÃO CONSTA do Banco Nacional de Devedores Trabalhistas.</p><p class='f'>Documento fictício para treinamento – Academia CGCF.</p></body></html>"
+            }
+          ],
+          "itens": [
+            {
+              "id": "fed",
+              "bloco": "Regularidade Fazenda Federal e a Dívida Ativa e INSS",
+              "documento": "fed",
+              "campos": {
+                "Nº Documento": "A1B2.C3D4.E5F6.0001",
+                "Situação": "Positiva com efeito de Negativa",
+                "Data de Emissão": "06/08/2026",
+                "Data de Validade": "02/02/2027"
+              },
+              "decisao_correta": "aprovar",
+              "explicacao": "Positiva com efeito de negativa comprova regularidade; dados e validade conferem."
+            },
+            {
+              "id": "est",
+              "bloco": "Regularidade com a Fazenda Estadual",
+              "documento": "est",
+              "campos": {
+                "Nº Documento": "20260001234",
+                "Situação": "Negativa",
+                "Data de Emissão": "14/08/2026",
+                "Data de Validade": "04/12/2026"
+              },
+              "decisao_correta": "rejeitar",
+              "motivo_correto": "Informação divergente do documento",
+              "explicacao": "O fornecedor informou 'Negativa', mas o documento é uma certidão POSITIVA sem suspensão de exigibilidade. Sempre confira a situação no anexo, não só no campo."
+            },
+            {
+              "id": "mun",
+              "bloco": "Regularidade com a Fazenda Municipal",
+              "documento": "mun",
+              "campos": {
+                "Nº Documento": "57883/2026",
+                "Situação": "Negativa",
+                "Data de Emissão": "14/08/2026",
+                "Data de Validade": "14/12/2026"
+              },
+              "decisao_correta": "aprovar",
+              "explicacao": "Certidão negativa, da mesma empresa e dentro da validade."
+            },
+            {
+              "id": "fgts",
+              "bloco": "Regularidade com o FGTS – CEF",
+              "documento": "fgts",
+              "campos": {
+                "Nº Documento": "2026100508231154805",
+                "Data de Emissão": "05/10/2026",
+                "Data de Validade": "03/11/2026"
+              },
+              "decisao_correta": "rejeitar",
+              "motivo_correto": "Documento vencido",
+              "explicacao": "Em 10/11/2026 o CRF já estava vencido (validade até 03/11/2026). O CRF vale 30 dias."
+            },
+            {
+              "id": "cndt",
+              "bloco": "Certidão de Débitos Trabalhistas",
+              "documento": "cndt",
+              "campos": {
+                "Nº Documento": "69517870/2026",
+                "Situação": "Negativa",
+                "Data de Emissão": "14/08/2026",
+                "Data de Validade": "10/02/2027"
+              },
+              "decisao_correta": "rejeitar",
+              "motivo_correto": "Documento de outra empresa",
+              "explicacao": "A certidão é válida, mas foi emitida para outro CNPJ (99.888.777/0001-66). Confira sempre nome e CNPJ do anexo."
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

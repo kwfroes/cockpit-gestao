@@ -1,0 +1,689 @@
+[
+  {
+    "trilha": "Fundamentos Legais e Institucionais",
+    "modulo": "Responsabilidade do Analista",
+    "licoes": [
+      {
+        "titulo": "Por que a validação tem peso",
+        "tipo": "teoria",
+        "xp_recompensa": 10,
+        "conteudo_texto": "Quando o analista aprova um documento, outros órgãos passam a confiar nessa informação. Quando o edital prevê, o certificado de registro cadastral pode substituir documentos de habilitação (Lei 14.133/2021, art. 70, II). Por isso, um erro na validação não fica só no cadastro: ele segue para o pregão, para o contrato e, às vezes, para o pagamento. É daí que vem a responsabilidade do analista."
+      },
+      {
+        "titulo": "Teste: alcance da validação",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Por que um erro na validação do cadastro pode ter efeitos fora da CGCF?",
+          "explicacao_feedback": "O cadastro dá suporte à habilitação em todo o Estado. Uma aprovação indevida passa adiante para outros processos.",
+          "opcoes": [
+            {
+              "texto": "Porque outros órgãos usam o cadastro na habilitação das licitações",
+              "correta": true
+            },
+            {
+              "texto": "Porque o cadastro substitui o contrato",
+              "correta": false
+            },
+            {
+              "texto": "Porque o fornecedor cadastrado é obrigado a ser contratado",
+              "correta": false
+            },
+            {
+              "texto": "Não tem efeito fora da CGCF",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Prática: certidão vencida aprovada",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Um analista aprova uma certidão já vencida. Dias depois, a empresa é habilitada num pregão com base no cadastro. Qual a consequência mais provável?",
+          "explicacao_feedback": "Quem usa o cadastro confia nele. A falha pode afetar a licitação e ser apurada para identificar onde ocorreu.",
+          "opcoes": [
+            {
+              "texto": "Nenhuma, o pregoeiro sempre confere tudo de novo",
+              "correta": false
+            },
+            {
+              "texto": "A habilitação pode ser questionada e a falha na validação pode ser apurada",
+              "correta": true
+            },
+            {
+              "texto": "A empresa perde o contrato automaticamente, sem apuração",
+              "correta": false
+            },
+            {
+              "texto": "O sistema corrige o erro sozinho",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Teste: dever de cuidado",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "O que se espera do analista ao validar uma solicitação?",
+          "explicacao_feedback": "Cuidado e registro andam juntos: conferir com base na norma e deixar claro o que foi decidido e por quê.",
+          "opcoes": [
+            {
+              "texto": "Aprovar rápido e corrigir depois, se alguém reclamar",
+              "correta": false
+            },
+            {
+              "texto": "Confiar no que o fornecedor declarou",
+              "correta": false
+            },
+            {
+              "texto": "Conferir cada documento com base na norma e registrar a decisão",
+              "correta": true
+            },
+            {
+              "texto": "Rejeitar tudo que gerar dúvida, sem explicar",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Prática: pressa x cuidado",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "A fila está grande e o prazo de 5 dias úteis está no fim. Qual a postura correta?",
+          "explicacao_feedback": "O prazo importa, mas não autoriza dispensar a conferência. Se não der para cumprir, a coordenação precisa saber.",
+          "opcoes": [
+            {
+              "texto": "Aprovar sem conferir, para cumprir o prazo",
+              "correta": false
+            },
+            {
+              "texto": "Deixar o prazo vencer sem avisar ninguém",
+              "correta": false
+            },
+            {
+              "texto": "Aprovar primeiro as empresas conhecidas",
+              "correta": false
+            },
+            {
+              "texto": "Priorizar pelo prazo, sem pular verificações, e avisar a coordenação se não for possível cumprir",
+              "correta": true
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "As três esferas de responsabilidade",
+        "tipo": "teoria",
+        "xp_recompensa": 10,
+        "conteudo_texto": "O servidor pode responder em três esferas. Na administrativa, pelo descumprimento de deveres funcionais, apurado em sindicância ou processo disciplinar, conforme o Estatuto dos Servidores Públicos Civis do Estado da Bahia (Lei nº 6.677/1994). Na civil, pela obrigação de reparar dano causado ao erário ou a terceiros. Na penal, quando a conduta é crime. As esferas são independentes: a mesma conduta pode gerar consequências em uma, em duas ou nas três."
+      },
+      {
+        "titulo": "Teste: estatuto estadual",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Qual norma trata dos deveres e do regime disciplinar dos servidores civis do Estado da Bahia?",
+          "explicacao_feedback": "A Lei 6.677/1994 é o Estatuto dos servidores civis da Bahia. A Lei 8.112/1990 vale para os servidores federais.",
+          "opcoes": [
+            {
+              "texto": "Lei Estadual nº 6.677/1994",
+              "correta": true
+            },
+            {
+              "texto": "Lei Federal nº 8.112/1990",
+              "correta": false
+            },
+            {
+              "texto": "Lei Federal nº 14.133/2021",
+              "correta": false
+            },
+            {
+              "texto": "Lei Complementar nº 123/2006",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Teste: independência das esferas",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Um servidor responde a um processo penal pelo mesmo fato que está sendo apurado administrativamente. Em regra, uma apuração impede a outra?",
+          "explicacao_feedback": "As esferas correm de forma independente. Só em hipóteses específicas, como absolvição penal por inexistência do fato ou negativa de autoria, uma decisão repercute na outra.",
+          "opcoes": [
+            {
+              "texto": "Sim, só pode haver uma apuração por fato",
+              "correta": false
+            },
+            {
+              "texto": "Não. Em regra, as esferas administrativa, civil e penal são independentes",
+              "correta": true
+            },
+            {
+              "texto": "Sim, a administrativa sempre espera a penal terminar",
+              "correta": false
+            },
+            {
+              "texto": "Não existe apuração administrativa se houver crime",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Teste: responsabilidade civil",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "A responsabilidade civil do servidor está ligada a quê?",
+          "explicacao_feedback": "Responsabilidade civil é reparar o prejuízo causado ao erário ou a terceiros.",
+          "opcoes": [
+            {
+              "texto": "À aplicação de pena de prisão",
+              "correta": false
+            },
+            {
+              "texto": "À advertência por escrito",
+              "correta": false
+            },
+            {
+              "texto": "À obrigação de reparar um dano causado",
+              "correta": true
+            },
+            {
+              "texto": "À suspensão do cadastro do fornecedor",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Prática: identificar a esfera",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Por descuido, um analista deixa de conferir uma certidão, e a falha é descoberta numa verificação interna. Em princípio, em qual esfera isso será apurado?",
+          "explicacao_feedback": "Descuido pode configurar descumprimento de dever funcional, apurado administrativamente. A esfera penal exige que a conduta seja crime.",
+          "opcoes": [
+            {
+              "texto": "Penal, necessariamente",
+              "correta": false
+            },
+            {
+              "texto": "Em nenhuma, porque foi só descuido",
+              "correta": false
+            },
+            {
+              "texto": "Apenas na esfera do fornecedor",
+              "correta": false
+            },
+            {
+              "texto": "Administrativa",
+              "correta": true
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Deveres, vedações e impedimento",
+        "tipo": "teoria",
+        "xp_recompensa": 10,
+        "conteudo_texto": "O Estatuto dos servidores da Bahia prevê deveres, como cumprir as normas e guardar sigilo sobre assuntos da repartição, e proibições, como receber vantagem em razão do cargo. A Lei de Improbidade (Lei nº 8.429/1992, alterada pela Lei nº 14.230/2021) pune atos dolosos que geram enriquecimento ilícito, dano ao erário ou violação de princípios. E quem tem vínculo pessoal com a empresa não deve analisar o processo: as regras de impedimento e suspeição do processo administrativo (na Bahia, Lei nº 12.209/2011) existem para garantir a imparcialidade."
+      },
+      {
+        "titulo": "Teste: improbidade após 2021",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Depois da Lei nº 14.230/2021, o que é necessário para configurar ato de improbidade administrativa?",
+          "explicacao_feedback": "A reforma de 2021 passou a exigir dolo. Um erro sem intenção não é improbidade, mas pode ser apurado como falha funcional.",
+          "opcoes": [
+            {
+              "texto": "Dolo, ou seja, vontade consciente de praticar o ato ilícito",
+              "correta": true
+            },
+            {
+              "texto": "Basta qualquer erro, mesmo sem intenção",
+              "correta": false
+            },
+            {
+              "texto": "Basta o fornecedor reclamar",
+              "correta": false
+            },
+            {
+              "texto": "Apenas culpa leve",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Prática: o agradecimento",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Depois de ter o cadastro aprovado, o representante de uma empresa oferece um presente ao analista \"como agradecimento\". O que fazer?",
+          "explicacao_feedback": "Receber vantagem em razão do cargo é vedado, mesmo depois da decisão. Recusar e informar protege o analista.",
+          "opcoes": [
+            {
+              "texto": "Aceitar, já que o cadastro já foi aprovado",
+              "correta": false
+            },
+            {
+              "texto": "Recusar e comunicar à coordenação",
+              "correta": true
+            },
+            {
+              "texto": "Aceitar, se for de valor baixo",
+              "correta": false
+            },
+            {
+              "texto": "Aceitar e não comentar com ninguém",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Prática: empresa de parente",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Na fila do analista aparece a solicitação de uma empresa da qual seu irmão é sócio. Qual a conduta correta?",
+          "explicacao_feedback": "Vínculo familiar gera impedimento. Não se trata de rigor maior: quem tem vínculo não deve decidir.",
+          "opcoes": [
+            {
+              "texto": "Analisar com mais rigor, para evitar suspeitas",
+              "correta": false
+            },
+            {
+              "texto": "Analisar normalmente, se a documentação estiver correta",
+              "correta": false
+            },
+            {
+              "texto": "Não analisar e informar à coordenação para redistribuir",
+              "correta": true
+            },
+            {
+              "texto": "Aprovar logo, para não atrasar",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Prática: sigilo funcional",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Um colega de outro setor pergunta, por curiosidade, quais empresas tiveram documentos rejeitados hoje. O que fazer?",
+          "explicacao_feedback": "Ser servidor não dá acesso a tudo. A informação circula pela necessidade do serviço, não pela curiosidade.",
+          "opcoes": [
+            {
+              "texto": "Repassar, já que ele também é servidor",
+              "correta": false
+            },
+            {
+              "texto": "Repassar apenas os nomes das empresas",
+              "correta": false
+            },
+            {
+              "texto": "Comentar no grupo da equipe",
+              "correta": false
+            },
+            {
+              "texto": "Não repassar: informações dos processos só circulam por necessidade do serviço",
+              "correta": true
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Indício de fraude: identificar e reportar",
+        "tipo": "teoria",
+        "xp_recompensa": 10,
+        "conteudo_texto": "A Lei 14.133/2021 trata a apresentação de documentação ou declaração falsa como infração (art. 155, VIII), sujeita inclusive à declaração de inidoneidade. A conduta também pode configurar crime, como falsificação ou uso de documento falso (Código Penal, arts. 297 a 304). O papel do analista não é investigar nem acusar: é identificar o indício, registrar o que encontrou, rejeitar o documento e reportar à coordenação, que dará o encaminhamento necessário."
+      },
+      {
+        "titulo": "Teste: sinais de alerta",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Qual destes é um indício de documento adulterado?",
+          "explicacao_feedback": "Código que não confere, layout diferente do oficial e dados que não batem são sinais de alerta. Os demais itens são situações normais.",
+          "opcoes": [
+            {
+              "texto": "Código de controle que não confere no site do órgão emissor",
+              "correta": true
+            },
+            {
+              "texto": "Certidão positiva com efeito de negativa",
+              "correta": false
+            },
+            {
+              "texto": "Documento assinado digitalmente",
+              "correta": false
+            },
+            {
+              "texto": "Certidão emitida há poucos dias",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Teste: papel do analista",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Diante de um indício de fraude, qual é o papel do analista?",
+          "explicacao_feedback": "O analista identifica e reporta. Quem dá os encaminhamentos é a coordenação.",
+          "opcoes": [
+            {
+              "texto": "Investigar a empresa por conta própria",
+              "correta": false
+            },
+            {
+              "texto": "Registrar o que encontrou, rejeitar o documento e reportar à coordenação",
+              "correta": true
+            },
+            {
+              "texto": "Ligar para o representante e acusá-lo",
+              "correta": false
+            },
+            {
+              "texto": "Registrar ocorrência policial pessoalmente",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Prática: o que reportar",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Ao reportar o indício à coordenação, o que o analista deve informar?",
+          "explicacao_feedback": "Um relato objetivo e verificável permite que a coordenação decida com segurança.",
+          "opcoes": [
+            {
+              "texto": "Apenas que o documento \"parece falso\"",
+              "correta": false
+            },
+            {
+              "texto": "Sua opinião sobre os sócios da empresa",
+              "correta": false
+            },
+            {
+              "texto": "O documento, o que foi verificado, onde, quando e o resultado da consulta",
+              "correta": true
+            },
+            {
+              "texto": "Nada, basta rejeitar o documento",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Teste: consequência para o fornecedor",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Pela Lei 14.133/2021, qual sanção pode ser aplicada a quem apresenta documentação falsa?",
+          "explicacao_feedback": "A apresentação de documento falso está entre as infrações que podem levar à declaração de inidoneidade (arts. 155, VIII, e 156).",
+          "opcoes": [
+            {
+              "texto": "Apenas advertência",
+              "correta": false
+            },
+            {
+              "texto": "Nenhuma, se o documento for corrigido depois",
+              "correta": false
+            },
+            {
+              "texto": "Somente multa simbólica",
+              "correta": false
+            },
+            {
+              "texto": "Declaração de inidoneidade para licitar ou contratar",
+              "correta": true
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Como se proteger: motivação e registro",
+        "tipo": "teoria",
+        "xp_recompensa": 10,
+        "conteudo_texto": "A melhor proteção do analista é uma decisão bem documentada. Aprovar ou rejeitar com base na norma e no documento, registrar o motivo com clareza e guardar a evidência da conferência (número, data e resultado da consulta) mostram que o trabalho foi feito com cuidado. Na dúvida, a pergunta vai por escrito à coordenação. Decisão sem registro é difícil de defender."
+      },
+      {
+        "titulo": "Prática: o melhor registro",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Qual destes registros melhor protege o analista?",
+          "explicacao_feedback": "O bom registro diz o que foi conferido, onde, quando e qual foi o resultado.",
+          "opcoes": [
+            {
+              "texto": "\"CNDT nº 123/2026 conferida no site do TST em 10/11/2026: autêntica, válida até 10/02/2027.\"",
+              "correta": true
+            },
+            {
+              "texto": "\"Conferido.\"",
+              "correta": false
+            },
+            {
+              "texto": "\"Parece tudo certo.\"",
+              "correta": false
+            },
+            {
+              "texto": "\"Aprovado conforme combinado com o fornecedor.\"",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Prática: dúvida sobre exigência",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "O analista tem dúvida se um documento é exigível para determinada família. O que fazer?",
+          "explicacao_feedback": "A dúvida registrada e esclarecida protege o analista e padroniza o entendimento da equipe.",
+          "opcoes": [
+            {
+              "texto": "Decidir como achar melhor, sem registrar",
+              "correta": false
+            },
+            {
+              "texto": "Consultar a coordenação por escrito antes de decidir",
+              "correta": true
+            },
+            {
+              "texto": "Seguir o que o fornecedor disser",
+              "correta": false
+            },
+            {
+              "texto": "Aprovar, para não atrasar",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Prática: orientação verbal",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Um superior orienta verbalmente a aprovar um documento que tem pendência. Qual a postura mais segura?",
+          "explicacao_feedback": "Formalizar a orientação deixa claro quem decidiu e com base em quê.",
+          "opcoes": [
+            {
+              "texto": "Aprovar sem registrar nada",
+              "correta": false
+            },
+            {
+              "texto": "Ignorar a orientação sem falar com ninguém",
+              "correta": false
+            },
+            {
+              "texto": "Apontar a pendência e pedir que a orientação seja formalizada no processo",
+              "correta": true
+            },
+            {
+              "texto": "Aprovar e apagar o registro da pendência",
+              "correta": false
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Prática: síntese",
+        "tipo": "exercicio",
+        "xp_recompensa": 20,
+        "conteudo_texto": null,
+        "questao": {
+          "enunciado": "Qual atitude resume a responsabilidade do analista?",
+          "explicacao_feedback": "Norma, documento, registro e comunicação: é isso que sustenta uma decisão.",
+          "opcoes": [
+            {
+              "texto": "Aprovar rápido para não acumular fila",
+              "correta": false
+            },
+            {
+              "texto": "Rejeitar sempre que houver dúvida, sem explicar",
+              "correta": false
+            },
+            {
+              "texto": "Seguir o que o fornecedor pedir",
+              "correta": false
+            },
+            {
+              "texto": "Decidir com base na norma e no documento, registrar o motivo e reportar o que foge da sua alçada",
+              "correta": true
+            }
+          ]
+        }
+      },
+      {
+        "titulo": "Simulação: indício de documento falso",
+        "tipo": "simulacao",
+        "xp_recompensa": 60,
+        "conteudo_texto": null,
+        "cenario": {
+          "tela": "Área Restrita",
+          "aba": "Regularidade Fiscal e Trabalhista",
+          "data_referencia": "10/11/2026",
+          "contexto": "Solicitação de alteração. Você já consultou os códigos de controle nos sites dos órgãos emissores: o resultado está no campo \"Consulta no site\". Abra os anexos, decida cada certidão e, no final, escolha a conduta.",
+          "fornecedor": {
+            "Razão Social": "ALFA SERVIÇOS DE MANUTENÇÃO LTDA",
+            "CNPJ": "11.222.333/0001-81",
+            "Cidade": "Salvador/BA"
+          },
+          "motivos": [
+            "Documento vencido",
+            "Indício de documento falso",
+            "Documento de outra empresa",
+            "Situação não comprova regularidade"
+          ],
+          "documentos": [
+            {
+              "id": "fed",
+              "titulo": "Certidão conjunta RFB/PGFN",
+              "tipo": "html",
+              "html": "<html><head><style>body{font-family:Arial;margin:0;padding:24px;color:#222;font-size:13px}.h{border-bottom:3px solid #1F4E79;padding-bottom:8px;margin-bottom:14px}.h b{font-size:15px;color:#1F4E79}.t{font-size:17px;font-weight:bold;text-align:center;margin:14px 0}.w{position:fixed;top:40%;left:10%;font-size:46px;color:rgba(200,0,0,.12);transform:rotate(-25deg);font-weight:bold}td{padding:4px 8px;border:1px solid #ccc}table{border-collapse:collapse;width:100%;margin:10px 0}.f{margin-top:20px;font-size:11px;color:#666}</style></head><body><div class='w'>DOCUMENTO FICTÍCIO</div><div class='h'><b>MINISTÉRIO DA FAZENDA – Receita Federal / PGFN</b></div><div class='t'>CERTIDÃO NEGATIVA DE DÉBITOS RELATIVOS AOS TRIBUTOS FEDERAIS E À DÍVIDA ATIVA DA UNIÃO</div><table><tr><td style='width:35%;background:#f3f3f3'><b>Nome</b></td><td>ALFA SERVIÇOS DE MANUTENÇÃO LTDA</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>CNPJ</b></td><td>11.222.333/0001-81</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Emissão</b></td><td>06/11/2026</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Válida até</b></td><td>05/05/2027</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Código de controle</b></td><td>A1B2.C3D4.E5F6.0001</td></tr></table><p>Não constam pendências em nome do sujeito passivo.</p><p class='f'>Documento fictício para treinamento – Academia CGCF.</p></body></html>"
+            },
+            {
+              "id": "cndt",
+              "titulo": "Certidão Negativa de Débitos Trabalhistas",
+              "tipo": "html",
+              "html": "<html><head><style>body{font-family:Arial;margin:0;padding:24px;color:#222;font-size:13px}.h{border-bottom:3px solid #1F4E79;padding-bottom:8px;margin-bottom:14px}.h b{font-size:15px;color:#1F4E79}.t{font-size:17px;font-weight:bold;text-align:center;margin:14px 0}.w{position:fixed;top:40%;left:10%;font-size:46px;color:rgba(200,0,0,.12);transform:rotate(-25deg);font-weight:bold}td{padding:4px 8px;border:1px solid #ccc}table{border-collapse:collapse;width:100%;margin:10px 0}.f{margin-top:20px;font-size:11px;color:#666}.t{font-family:'Times New Roman';color:#333}</style></head><body><div class='w'>DOCUMENTO FICTÍCIO</div><div class='h'><b>PODER JUDICIÁRIO – JUSTIÇA DO TRABALHO</b></div><div class='t'>CERTIDAO NEGATIVA DE DEBITOS TRABALHISTA</div><table><tr><td style='width:35%;background:#f3f3f3'><b>Nome</b></td><td>ALFA SERVIÇOS DE MANUTENÇÃO LTDA</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>CNPJ</b></td><td>11.222.333/0001-81</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Certidão nº</b></td><td>00000000/2026</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Expedição</b></td><td>09/11/2026</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Validade</b></td><td>10/05/2027</td></tr></table><p>Certifica-se que a pessoa juridica acima NAO CONSTA do Banco Nacional de Devedores Trabalhistas.</p><p class='f'>Documento fictício para treinamento – Academia CGCF.</p></body></html>"
+            },
+            {
+              "id": "fgts",
+              "titulo": "Certificado de Regularidade do FGTS – CRF",
+              "tipo": "html",
+              "html": "<html><head><style>body{font-family:Arial;margin:0;padding:24px;color:#222;font-size:13px}.h{border-bottom:3px solid #1F4E79;padding-bottom:8px;margin-bottom:14px}.h b{font-size:15px;color:#1F4E79}.t{font-size:17px;font-weight:bold;text-align:center;margin:14px 0}.w{position:fixed;top:40%;left:10%;font-size:46px;color:rgba(200,0,0,.12);transform:rotate(-25deg);font-weight:bold}td{padding:4px 8px;border:1px solid #ccc}table{border-collapse:collapse;width:100%;margin:10px 0}.f{margin-top:20px;font-size:11px;color:#666}</style></head><body><div class='w'>DOCUMENTO FICTÍCIO</div><div class='h'><b>CAIXA ECONÔMICA FEDERAL</b></div><div class='t'>CERTIFICADO DE REGULARIDADE DO FGTS – CRF</div><table><tr><td style='width:35%;background:#f3f3f3'><b>Razão Social</b></td><td>ALFA SERVIÇOS DE MANUTENÇÃO LTDA</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Inscrição</b></td><td>11.222.333/0001-81</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Certificação nº</b></td><td>2026110608231154805</td></tr><tr><td style='width:35%;background:#f3f3f3'><b>Validade</b></td><td>06/11/2026 a 05/12/2026</td></tr></table><p>O empregador acima encontra-se em situação regular perante o FGTS.</p><p class='f'>Documento fictício para treinamento – Academia CGCF.</p></body></html>"
+            }
+          ],
+          "itens": [
+            {
+              "id": "fed",
+              "bloco": "Regularidade Fazenda Federal e a Dívida Ativa e INSS",
+              "documento": "fed",
+              "campos": {
+                "Situação": "Negativa",
+                "Validade": "05/05/2027",
+                "Consulta no site": "Autêntica"
+              },
+              "decisao_correta": "aprovar",
+              "explicacao": "Certidão negativa, dentro da validade e confirmada no site do emissor."
+            },
+            {
+              "id": "cndt",
+              "bloco": "Certidão de Débitos Trabalhistas",
+              "documento": "cndt",
+              "campos": {
+                "Situação": "Negativa",
+                "Validade": "10/05/2027",
+                "Consulta no site": "Código não localizado"
+              },
+              "decisao_correta": "rejeitar",
+              "motivo_correto": "Indício de documento falso",
+              "explicacao": "O número não foi localizado no site do TST, o título tem erros de grafia e a validade passa de 180 dias, que é o prazo da CNDT. São indícios de adulteração: rejeite e reporte."
+            },
+            {
+              "id": "fgts",
+              "bloco": "Regularidade com o FGTS – CEF",
+              "documento": "fgts",
+              "campos": {
+                "Validade": "05/12/2026",
+                "Consulta no site": "Autêntica"
+              },
+              "decisao_correta": "aprovar",
+              "explicacao": "CRF válido e confirmado no site da Caixa."
+            }
+          ],
+          "decisao_final": {
+            "titulo": "Conduta final",
+            "opcoes": [
+              "Aprovar a solicitação",
+              "Rejeitar sem comunicar",
+              "Rejeitar e reportar à coordenação"
+            ],
+            "correta": "Rejeitar e reportar à coordenação",
+            "explicacao": "Com indício de documento falso, a solicitação não pode ser aprovada, e o analista deve reportar à coordenação, que dará os encaminhamentos."
+          }
+        }
+      }
+    ]
+  }
+]
