@@ -67,6 +67,16 @@
         <!-- Formulário -->
         <div class="lg:col-span-2 space-y-5">
 
+          <div class="card space-y-3" id="cardAcessos">
+            <div class="flex items-center justify-between">
+              <h2 class="font-bold text-sm">Acessos</h2>
+              <span class="text-[11px] text-gray-400">últimos 30 dias</span>
+            </div>
+            <div id="acNumeros" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+            <div id="acGrafico"></div>
+            <p id="acAviso" class="text-[11px] text-gray-400"></p>
+          </div>
+
           <div class="card space-y-3">
             <h2 class="font-bold text-sm">Identificação</h2>
             <div>
@@ -134,6 +144,34 @@
               <div><label class="lbl">Foto</label>
                 <select id="c_foto" class="inp"><option value="redonda">Redonda</option><option value="quadrada">Quadrada</option></select>
               </div>
+            </div>
+          </div>
+
+          <div class="card space-y-3">
+            <h2 class="font-bold text-sm">Cartão de visita <span class="font-normal text-gray-500">(abre pelo ícone de cartão no topo da página pública)</span></h2>
+            <div>
+              <label class="lbl">Empresa / Órgão</label>
+              <input id="f_empresa" class="inp" maxlength="120" placeholder="Ex.: Secretaria da Administração do Estado da Bahia" />
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="w-28 h-16 rounded-lg border border-slate-300 flex items-center justify-center overflow-hidden flex-none" style="background:#fff">
+                <img id="logoPrev" class="max-w-full max-h-full object-contain hidden" alt="Logo" />
+                <span id="logoVazia" class="text-xs text-gray-500">Sem logo</span>
+              </div>
+              <div class="space-x-2">
+                <label class="btn btn-s cursor-pointer inline-block">Escolher logo
+                  <input type="file" id="f_logo" accept="image/png,image/jpeg,image/webp" class="hidden" />
+                </label>
+                <button id="btnLogoRem" type="button" class="btn btn-d hidden">Remover</button>
+              </div>
+            </div>
+            <div>
+              <label class="lbl">Foto no cartão</label>
+              <select id="c_cartao_foto" class="inp">
+                <option value="nao">Sem foto (recomendado)</option>
+                <option value="sim">Com foto</option>
+              </select>
+              <p class="text-[11px] text-gray-500 mt-1">Vale só para o cartão e o PDF. O arquivo de contato para a agenda do celular leva a foto sempre que ela existir.</p>
             </div>
           </div>
 
@@ -1489,7 +1527,8 @@ window.QRCode={
     // Endereço público fixo: o QR é o mesmo no local e no publicado
     const PUBLIC_BASE = "https://kwfroes.github.io/cockpit-gestao/p/";
     const linkOf = (slug) => PUBLIC_BASE + "?s=" + slug;
-    const MAX_ARQ = 50 * 1048576;
+    const MAX_MB = 50; // mesmo valor do MAX_MB no worker
+    const MAX_ARQ = MAX_MB * 1048576;
     // A pré-visualização abre a página pública que está junto do Cockpit (local ou publicado)
     const PREVIEW_BASE = new URL("../../p/", location.href).href;
     const PREVIEW_ORIGIN = new URL(PREVIEW_BASE).origin;
@@ -1503,6 +1542,7 @@ window.QRCode={
       view: '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',
       power: '<path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/>',
       trash: '<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>',
+      chart: '<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',
     };
     // Botão só com ícone: dica ao passar o mouse (title) e rótulo para leitores de tela (aria-label)
     function ibtn(act, id, label, icon, cls, extra = "") {
@@ -1633,10 +1673,11 @@ window.QRCode={
       return (await res.json()).objects || [];
     }
 
-    // Conjunto de arquivos que uma página usa (foto + anexos)
+    // Conjunto de arquivos que uma página usa (foto + logo do cartão + anexos)
     function emUso(p) {
       const s = new Set();
       if (p && p.foto_path) s.add(p.foto_path);
+      if (p && p.config && p.config.logo_path) s.add(p.config.logo_path);
       if (p && Array.isArray(p.arquivos)) p.arquivos.forEach((a) => a && a.path && s.add(a.path));
       return s;
     }
@@ -1654,11 +1695,11 @@ window.QRCode={
         const objetos = await r2List(alvo);
         const uso = new Map();
         if (alvo === "all") {
-          const { data, error } = await sb.from("apresentacoes").select("id,foto_path,arquivos");
+          const { data, error } = await sb.from("apresentacoes").select("id,foto_path,arquivos,config");
           if (error || !data) throw new Error("Não consegui ler as páginas: " + (error ? error.message : "sem dados"));
           data.forEach((p) => uso.set(p.id, emUso(p)));
         } else {
-          const { data, error } = await sb.from("apresentacoes").select("id,foto_path,arquivos").eq("id", alvo).maybeSingle();
+          const { data, error } = await sb.from("apresentacoes").select("id,foto_path,arquivos,config").eq("id", alvo).maybeSingle();
           if (error || !data) throw new Error("Não consegui ler a página no banco.");
           const s = emUso(data);
           // protege também o que está na tela e ainda não foi salvo
@@ -1682,6 +1723,55 @@ window.QRCode={
       }
     }
 
+    // ---------- acessos (estatísticas) ----------
+    let statsMap = null;   // null = função de estatísticas indisponível (SQL ainda não rodado)
+    const fmtN = (n) => Number(n || 0).toLocaleString("pt-BR");
+    const plural = (n, um, varios) => `${fmtN(n)} ${Number(n) === 1 ? um : varios}`;
+    async function carregarStats() {
+      try {
+        const { data, error } = await sb.rpc("estatisticas_apresentacoes");
+        if (error || !Array.isArray(data)) return null;
+        const m = {};
+        data.forEach((r) => { m[r.apresentacao_id] = r; });
+        return m;
+      } catch (e) { return null; }
+    }
+    function linhaAcessos(id) {
+      if (!statsMap) return "";
+      const st = statsMap[id] || {};
+      return `<p class="text-xs text-gray-500 flex items-center gap-1.5"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round">${ICON.chart}</svg>${plural(st.total, "acesso", "acessos")} · ${plural(st.unicos, "visitante único", "visitantes únicos")}</p>`;
+    }
+    async function carregarAcessos(id) {
+      const num = $("acNumeros"), gr = $("acGrafico"), av = $("acAviso");
+      num.innerHTML = ""; gr.innerHTML = ""; av.textContent = "Carregando…";
+      try {
+        const [r1, r2] = await Promise.all([
+          sb.rpc("estatisticas_apresentacoes"),
+          sb.rpc("acessos_por_dia", { p_id: id, p_dias: 30 }),
+        ]);
+        if (r1.error || r2.error || !Array.isArray(r1.data) || !Array.isArray(r2.data)) throw new Error("indisponível");
+        if (!cur || cur.id !== id) return; // saiu da página enquanto carregava
+        const st = r1.data.find((x) => x.apresentacao_id === id) || {};
+        const caixa = (rot, val, cls = "text-lg") => `<div class="rounded-lg bg-slate-100 dark:bg-slate-900/60 px-3 py-2"><p class="text-[10px] uppercase font-bold text-gray-500">${rot}</p><p class="${cls} font-bold mt-0.5">${val}</p></div>`;
+        const ultimo = st.ultimo_acesso ? new Date(st.ultimo_acesso).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }) : "—";
+        num.innerHTML = caixa("Acessos", fmtN(st.total)) + caixa("Visitantes únicos", fmtN(st.unicos)) +
+          caixa("Últimos 7 dias", fmtN(st.ultimos_7d)) + caixa("Último acesso", esc(ultimo), "text-sm");
+        const dias = r2.data;
+        const max = Math.max(1, ...dias.map((d) => Number(d.total)));
+        const fd = (d) => new Date(d + "T12:00:00").toLocaleDateString("pt-BR");
+        gr.innerHTML = `<div style="display:flex;align-items:flex-end;gap:2px;height:64px">` +
+          dias.map((d) => {
+            const t = Number(d.total);
+            const h = t ? Math.max(8, Math.round((t / max) * 100)) : 3;
+            return `<div class="acbar" title="${fd(d.dia)}: ${plural(t, "acesso", "acessos")}, ${plural(d.unicos, "único", "únicos")}" style="flex:1;height:${h}%;border-radius:2px;background:${t ? "#3b82f6" : "#cbd5e1"};opacity:${t ? 1 : 0.5}"></div>`;
+          }).join("") + `</div>` +
+          (dias.length ? `<div style="display:flex;justify-content:space-between" class="text-[10px] text-gray-400 mt-1"><span>${fd(dias[0].dia)}</span><span>${fd(dias[dias.length - 1].dia)}</span></div>` : "");
+        av.textContent = Number(st.total) === 0 ? "Nenhum acesso registrado ainda." : "";
+      } catch (e) {
+        if (cur && cur.id === id) av.textContent = "Contagem indisponível. Rode o SQL de acessos no Supabase.";
+      }
+    }
+
     // ---------- lista ----------
     function iniciais(p) {
       const partes = String(p.nome || p.titulo || "?").trim().split(/\s+/).filter(Boolean);
@@ -1695,9 +1785,11 @@ window.QRCode={
     $("lista").addEventListener("error", (e) => { if (e.target.tagName === "IMG") e.target.remove(); }, true);
 
     async function loadList() {
-      const { data, error } = await sb.from("apresentacoes")
-        .select("id,titulo,nome,slug,ativo,updated_at,foto_path")
-        .order("updated_at", { ascending: false });
+      const [{ data, error }, stats] = await Promise.all([
+        sb.from("apresentacoes").select("id,titulo,nome,slug,ativo,updated_at,foto_path").order("updated_at", { ascending: false }),
+        carregarStats(),
+      ]);
+      statsMap = stats;
       if (error) return msg("Erro ao carregar: " + error.message, false);
       const box = $("lista");
       if (!data.length) {
@@ -1715,6 +1807,7 @@ window.QRCode={
             <span class="text-[10px] font-bold px-2 py-0.5 rounded whitespace-nowrap ${p.ativo ? "bg-green-100 text-green-700" : "bg-slate-200 text-slate-600"}">${p.ativo ? "ATIVA" : "INATIVA"}</span>
           </div>
           <p class="text-[10px] text-gray-400">Atualizada em ${new Date(p.updated_at).toLocaleDateString("pt-BR")}</p>
+          ${linhaAcessos(p.id)}
           <div class="flex items-center gap-2">
             ${ibtn("edit", p.id, "Editar", "edit", "btn-p")}
             ${ibtn("view", p.id, "Visualizar", "view", "btn-s")}
@@ -1750,7 +1843,7 @@ window.QRCode={
       if (b.dataset.act === "del") {
         const okDel = await confirmar({
           titulo: "Excluir página?",
-          texto: `"${b.dataset.titulo}" será excluída definitivamente.\n\nO QR Code dela deixará de funcionar e os arquivos serão apagados. Para só tirar do ar, use "Desativar".`,
+          texto: `"${b.dataset.titulo}" será excluída definitivamente.\n\nO QR Code dela deixará de funcionar e os arquivos e o histórico de acessos serão apagados. Para só tirar do ar, use "Desativar".`,
           ok: "Excluir", perigo: true,
         });
         if (!okDel) return;
@@ -1761,7 +1854,7 @@ window.QRCode={
 
     // Apaga TODOS os arquivos da página no R2 (inclusive os sem uso) e depois o registro
     async function excluirPagina(id) {
-      const { data: reg, error: e0 } = await sb.from("apresentacoes").select("foto_path,arquivos").eq("id", id).maybeSingle();
+      const { data: reg, error: e0 } = await sb.from("apresentacoes").select("foto_path,arquivos,config").eq("id", id).maybeSingle();
       if (e0 || !reg) { msg("Não foi possível excluir: sem permissão ou página inexistente.", false); return false; }
       const paths = [...emUso(reg)];
       try { (await r2List(id)).forEach((o) => paths.push(o.key)); } catch (e) { /* segue com os arquivos conhecidos */ }
@@ -1804,7 +1897,8 @@ window.QRCode={
     function preencher(p) {
       cur = p; removals = []; novos = [];
       if (!Array.isArray(cur.arquivos)) cur.arquivos = [];
-      const c = cur.config || {};
+      cur.config = cur.config || {};
+      const c = cur.config;
       $("f_titulo").value = p.titulo || "";
       $("f_ativo").checked = !!p.ativo;
       $("f_nome").value = p.nome || "";
@@ -1819,7 +1913,9 @@ window.QRCode={
       $("c_destaque").value = c.cor_destaque || "#dc2626";
       $("c_tema").value = c.tema || "claro";
       $("c_foto").value = c.foto_formato || "redonda";
-      renderFoto(); renderArquivos(); renderQR();
+      $("f_empresa").value = c.cartao_empresa || "";
+      $("c_cartao_foto").value = c.cartao_foto === "sim" ? "sim" : "nao";
+      renderFoto(); renderLogo(); renderArquivos(); renderQR(); carregarAcessos(p.id);
       $("viewList").classList.add("hidden");
       $("viewEdit").classList.remove("hidden");
     }
@@ -1835,12 +1931,15 @@ window.QRCode={
       cur.whatsapp = norm($("f_whatsapp").value);
       cur.linkedin = normUrl($("f_linkedin").value);
       cur.site = normUrl($("f_site").value);
-      cur.config = {
+      // Mescla com o que já existe em config (por exemplo logo_path), sem perder nada
+      cur.config = Object.assign({}, cur.config, {
         cor_principal: $("c_principal").value,
         cor_destaque: $("c_destaque").value,
         tema: $("c_tema").value,
         foto_formato: $("c_foto").value,
-      };
+        cartao_empresa: norm($("f_empresa").value),
+        cartao_foto: $("c_cartao_foto").value,
+      });
     }
 
     // ---------- foto ----------
@@ -1884,6 +1983,52 @@ window.QRCode={
       renderFoto();
     };
 
+    // ---------- logo do cartão ----------
+    function renderLogo() {
+      const p = cur.config && cur.config.logo_path;
+      $("logoPrev").classList.toggle("hidden", !p);
+      $("logoVazia").classList.toggle("hidden", !!p);
+      $("btnLogoRem").classList.toggle("hidden", !p);
+      if (p) $("logoPrev").src = publicUrl(p);
+    }
+    // Reduz para no máximo 800x400, mantendo a proporção e a transparência (PNG). JPEG continua JPEG.
+    async function prepararLogo(file) {
+      const bmp = await createImageBitmap(file);
+      const k = Math.min(1, 800 / bmp.width, 400 / bmp.height);
+      const w = Math.max(1, Math.round(bmp.width * k)), h = Math.max(1, Math.round(bmp.height * k));
+      const c = document.createElement("canvas");
+      c.width = w; c.height = h;
+      c.getContext("2d").drawImage(bmp, 0, 0, w, h);
+      const jpeg = file.type === "image/jpeg";
+      const tipo = jpeg ? "image/jpeg" : "image/png";
+      const blob = await new Promise((res) => c.toBlob(res, tipo, 0.9));
+      return { blob, tipo, ext: jpeg ? "jpg" : "png" };
+    }
+    $("f_logo").onchange = async (e) => {
+      const f = e.target.files[0];
+      e.target.value = "";
+      if (!f) return;
+      if (!/^image\/(png|jpeg|webp)$/.test(f.type)) return msg("Use uma imagem PNG, JPG ou WEBP.", false);
+      try {
+        const { blob, tipo, ext } = await prepararLogo(f);
+        const path = `${cur.id}/logo-${Date.now()}.${ext}`;
+        await r2Put(path, blob, tipo);
+        novos.push(path);
+        cur.config = cur.config || {};
+        if (cur.config.logo_path) removals.push(cur.config.logo_path);
+        cur.config.logo_path = path;
+        renderLogo();
+        msg("Logo enviada. Clique em Salvar para publicar.");
+      } catch (err) {
+        msg("Erro na logo: " + (err.message || err), false);
+      }
+    };
+    $("btnLogoRem").onclick = () => {
+      if (cur.config && cur.config.logo_path) removals.push(cur.config.logo_path);
+      if (cur.config) cur.config.logo_path = null;
+      renderLogo();
+    };
+
     // ---------- arquivos ----------
     function renderArquivos() {
       const box = $("listaArquivos");
@@ -1914,7 +2059,7 @@ window.QRCode={
       e.target.value = "";
       let enviados = 0;
       for (const f of files) {
-        if (f.size > MAX_ARQ) { msg(`"${f.name}" passa de 50 MB.`, false); continue; }
+        if (f.size > MAX_ARQ) { msg(`"${f.name}" passa de ${MAX_MB} MB.`, false); continue; }
         if (!f.size) { msg(`"${f.name}" está vazio.`, false); continue; }
         const path = `${cur.id}/arq-${crypto.randomUUID().slice(0, 8)}-${safeName(f.name)}`;
         try {
@@ -1947,7 +2092,8 @@ window.QRCode={
       novos = [];
       if (removals.length) { await r2Del(removals); removals = []; }
       cur = data;
-      renderFoto();
+      cur.config = cur.config || {};
+      renderFoto(); renderLogo();
       log("APRESENTACAO_SALVA", { id: cur.id, ativo: cur.ativo });
       msg("Página salva.");
     };
@@ -1955,7 +2101,7 @@ window.QRCode={
     $("btnExcluir").onclick = async () => {
       const okEx = await confirmar({
         titulo: "Excluir esta página?",
-        texto: "Ela será excluída definitivamente e o QR Code impresso deixará de funcionar.\n\nPara só tirar do ar, desmarque \"Página ativa\" e salve.",
+        texto: "Ela será excluída definitivamente, junto com o histórico de acessos, e o QR Code impresso deixará de funcionar.\n\nPara só tirar do ar, desmarque \"Página ativa\" e salve.",
         ok: "Excluir", perigo: true,
       });
       if (!okEx) return;
@@ -1980,7 +2126,8 @@ window.QRCode={
       try { await navigator.clipboard.writeText($("linkTxt").value); msg("Link copiado."); }
       catch (e) { $("linkTxt").select(); msg("Selecione e copie o link (Ctrl+C).", false); }
     };
-    $("btnAbrir").onclick = () => window.open($("linkTxt").value, "_blank", "noopener");
+    // &teste=1 faz a página pública NÃO registrar este acesso. O link do QR e o botão "Copiar link" continuam sem esse parâmetro.
+    $("btnAbrir").onclick = () => window.open($("linkTxt").value + "&teste=1", "_blank", "noopener");
     $("btnPng").onclick = async () => {
       const d = await QRCode.toDataURL(linkOf(cur.slug), { width: 1024, margin: 2, errorCorrectionLevel: "M" });
       baixar(d, `qr-${cur.slug}.png`);
