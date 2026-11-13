@@ -11,7 +11,7 @@
 // - Bônus de sequência de acertos (ver gamification.js)
 // =====================================================================
 import { navigateTo } from './main.js';
-import { adicionarXP, registrarAtividade, getSequencia, setSequencia, setXP, contarAcerto, contarErro, mostrarSequencia, SEQ_PARA_REATIVAR } from './gamification.js';
+import { registrarAtividade, getSequencia, setSequencia, setXP, contarAcerto, contarErro, mostrarSequencia, SEQ_PARA_REATIVAR } from './gamification.js';
 import { renderSimulacao } from './simulation.js';
 import { estrelasDoScore, htmlEstrelas, MEDALHAS } from './medalha.js';
 import { esc, isAdmin, adminLivre, editarLicao } from './admin_editor.js';
@@ -80,6 +80,9 @@ export async function initLessonEngine(params, tituloAntigo) {
         if (confirm(msg)) sair();
     };
     document.getElementById('btn-acao-licao').onclick = () => acao();
+
+    // Módulo ainda sem lição curta ("modo legado"): o progresso agora só é gravado pelo servidor, por unidade.
+    if (S.modo === 'legado') return moduloNaoOrganizado();
 
     try { await Promise.all([carregar(), carregarFalas()]); }
     catch (err) { console.error('Erro ao carregar lições:', err); alert('Erro de conexão ao carregar a lição.'); return; }
@@ -298,8 +301,9 @@ function proximo() {
             if (!S.primeira.has(licao.id)) S.primeira.set(licao.id, ok);
             if (rodada === 'primeira') S.xp += Math.round((licao.xp_recompensa || XP.simulacao) * acertos / total);
             else S.refeitas++;
+            // user_email NÃO é enviado: o banco preenche com o e-mail do JWT (como em user_answers) e a nota é calculada com ele
             enviarRegistro('simulation_attempts', {
-                user_email: sessionStorage.getItem('cockpit_user_email'), lesson_id: licao.id, acertos, total, respostas,
+                lesson_id: licao.id, acertos, total, respostas,
                 sessao: S.sessao, rodada, teste: isAdmin()
             });
             // Simulação errada na 1ª rodada volta ao final da lição, como as questões
@@ -538,14 +542,6 @@ async function concluir() {
         if (S.pulou) {
             primeiraVez = false;    // conferência do admin: não grava progresso nem XP
             if (S.modo === 'licao') S.proxima = await proximaUnidade();
-        } else if (S.modo === 'legado') {
-            const { data: prog } = await window.supabase.from('user_progress')
-                .select('status').eq('user_email', sessionStorage.getItem('cockpit_user_email'))
-                .eq('module_id', S.moduleId).maybeSingle();
-            primeiraVez = prog?.status !== 'concluido';
-            await salvarModulo('concluido', score);
-            ativ = await registrarAtividade();
-            if (primeiraVez && S.xp + S.bonus > 0) await adicionarXP(S.xp + S.bonus);
         } else {
             if (!S.resultadoServidor) {
                 await sincronizarRegistros();
@@ -616,16 +612,12 @@ async function concluir() {
 }
 
 // (Status do módulo nas lições curtas/revisão agora é calculado no servidor: academia_concluir_unidade_v2)
-async function salvarModulo(status, score) {
-    const email = sessionStorage.getItem('cockpit_user_email');
-    const { data: atual } = await window.supabase.from('user_progress')
-        .select('status').eq('user_email', email).eq('module_id', S.moduleId).maybeSingle();
-    if (atual?.status === 'concluido') status = 'concluido';   // nunca rebaixa quem já concluiu
-    const { error } = await window.supabase.from('user_progress').upsert({
-        user_email: email, module_id: S.moduleId, status,
-        score: Math.round(score * 100), last_accessed: new Date().toISOString()
-    }, { onConflict: 'user_email,module_id' });
-    if (error) throw error;
+function moduloNaoOrganizado() {
+    larguraLicao(false);
+    document.getElementById('lesson-title').textContent = 'Módulo em preparação';
+    document.getElementById('lesson-body').innerHTML = '<p class="text-center text-amber-600 dark:text-amber-400 font-bold">Este módulo ainda não foi organizado em lições. Volte mais tarde!</p>';
+    document.getElementById('lesson-options').classList.add('hidden');
+    botao('Voltar ao mapa', 'azul');
 }
 
 function semConteudo() {

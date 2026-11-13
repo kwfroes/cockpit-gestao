@@ -4,12 +4,17 @@
 import { navigateTo, enviarLogAoPai } from './main.js';
 import { popularTrilhasEModulos } from './seed.js';
 import { popularLoteJSON } from './seed_lote.js';
-import { esc, isAdmin, editarLicao, editarUnidade, editarTrilha, editarModulo } from './admin_editor.js';
+import { esc, isAdmin, editarLicao, editarUnidade, editarTrilha, editarModulo, adminLivre } from './admin_editor.js';
+
 
 let CACHE = { trilhas: [], modulos: [], ativasPorModulo: {} };
 let moduloAtual = null;
+let licoesSelecionadas = new Set(); // Guarda os IDs selecionados para lote
 
 export async function initAdmin(params = {}) {
+    // Entrou no painel: descarta seleção e barra de lote que tenham sobrado de uma visita anterior
+    licoesSelecionadas.clear();
+    document.getElementById('barra-acoes-lote')?.remove();
     if (!isAdmin()) {
         document.getElementById('router-view').innerHTML = '<p class="text-center text-red-500 font-bold mt-10">Acesso restrito ao perfil admin.</p>';
         return;
@@ -20,7 +25,11 @@ export async function initAdmin(params = {}) {
 
     document.getElementById('btn-nova-trilha').onclick = () => editarTrilha(null, { onSalvo: carregarTrilhas });
 
-    document.getElementById('sel-modulo').onchange = e => { moduloAtual = e.target.value || null; carregarLicoes(); };
+    document.getElementById('sel-modulo').onchange = e => { 
+        moduloAtual = e.target.value || null; 
+        licoesSelecionadas.clear(); // Limpa seleção ao trocar módulo
+        carregarLicoes(); 
+    };
     document.getElementById('busca-licao').oninput = filtrarLicoes;
     document.getElementById('ver-inativas').onchange = filtrarLicoes;
     document.getElementById('btn-testar').onclick = () => {
@@ -30,6 +39,9 @@ export async function initAdmin(params = {}) {
     document.getElementById('btn-nova-unid').onclick = () => moduloAtual && editarUnidade(null, { moduleId: moduloAtual, onSalvo: carregarLicoes });
     document.getElementById('btn-nova-licao').onclick = () => moduloAtual && editarLicao(null, { moduleId: moduloAtual, onSalvo: carregarLicoes });
     document.getElementById('btn-organizar').onclick = organizar;
+    document.getElementById('btn-exportar-json').onclick = (e) => gerenciarExportacao(e, exportarBackupJSON);
+    document.getElementById('btn-exportar-csv').onclick = (e) => gerenciarExportacao(e, exportarBackupCSV);
+
 
     document.getElementById('btn-seed-trilhas').onclick = async () => {
         if (!confirm("Inserir as trilhas e módulos padrão que estiverem faltando?")) return;
@@ -68,7 +80,10 @@ function abrirAba(aba) {
         s.classList.toggle('hidden', !ativa);
         s.classList.toggle('flex', ativa);
     });
-    if (aba === 'licoes') carregarLicoes();
+    if (aba === 'licoes') {
+        licoesSelecionadas.clear();
+        carregarLicoes();
+    }
     if (aba === 'relatorios') carregarRelatorios();
 }
 
@@ -150,11 +165,11 @@ function preencherSelectModulos() {
 }
 
 // =====================================================================
-// LIÇÕES E QUESTÕES
+// LIÇÕES E QUESTÕES (Com Bulk Actions)
 // =====================================================================
 async function carregarLicoes() {
     const alvo = document.getElementById('lista-licoes');
-    if (!moduloAtual) { alvo.innerHTML = '<p class="text-center text-slate-400 italic py-8">Selecione um módulo.</p>'; return; }
+    if (!moduloAtual) { alvo.innerHTML = '<p class="text-center text-slate-400 italic py-8">Selecione um módulo.</p>'; atualizarBarraLote(); return; }
     alvo.innerHTML = '<p class="text-center text-slate-400 animate-pulse py-8">Carregando...</p>';
     const [{ data: unidades }, { data: licoes, error }] = await Promise.all([
         window.supabase.from('learning_units').select('id, titulo, ordem, tipo, config').eq('module_id', moduloAtual).order('ordem', { ascending: true }),
@@ -172,48 +187,75 @@ async function carregarLicoes() {
         const itens = (licoes || []).filter(l => (l.unit_id || null) === u.id);
         if (u.tipo === 'solto' && !itens.length) return;
         const nAtivas = itens.filter(ativa).length;
-        const alerta = u.tipo !== 'solto' && nAtivas === 0 ? '⚠ sem telas ativas: não aparece para os alunos'
-                     : u.tipo !== 'solto' && nAtivas < 3 ? `⚠ só ${nAtivas} tela(s) ativa(s)` : '';
+        const alerta = u.tipo !== 'solto' && nAtivas === 0 ? '⚠ sem telas ativas' : '';
         const bloco = document.createElement('div');
-        bloco.className = `rounded-xl border shadow-sm ${u.tipo === 'solto' ? 'border-amber-300 dark:border-amber-700 bg-amber-50/50 dark:bg-amber-900/10' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800'}`;
+        bloco.className = `rounded-xl border shadow-sm mb-4 ${u.tipo === 'solto' ? 'border-amber-300 dark:border-amber-700 bg-amber-50/50 dark:bg-amber-900/10' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800'}`;
         bloco.innerHTML = `
           <div class="flex flex-wrap items-center gap-3 px-5 py-3 border-b border-slate-200 dark:border-slate-700">
+            <input type="checkbox" data-selecionar-bloco class="w-4 h-4 rounded text-purple-600 bg-slate-100 border-slate-300 cursor-pointer">
             <span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black ${u.tipo === 'solto' ? 'bg-amber-400 text-white' : 'bg-blue-600 text-white'}">${u.tipo === 'solto' ? '!' : esc(u.ordem)}</span>
             <h4 class="flex-1 font-bold text-slate-800 dark:text-white">${esc(u.titulo)}
-              <span class="text-xs font-semibold text-slate-400">• ${nAtivas} ativas${itens.length > nAtivas ? `, ${itens.length - nAtivas} inativas` : ''}</span>
+              <span class="text-xs font-semibold text-slate-400">• ${nAtivas} ativas</span>
               ${alerta ? `<span class="ml-2 text-[11px] font-bold text-amber-600 dark:text-amber-400">${alerta}</span>` : ''}</h4>
             ${u.id ? `<button data-a="add" class="text-xs font-bold uppercase text-emerald-600 dark:text-emerald-400 hover:underline">+ Tela</button>
                       <button data-a="edit-u" class="text-xs font-bold uppercase text-purple-600 dark:text-purple-400 hover:underline">Editar</button>` : ''}
           </div>
           <div data-itens></div>`;
+        
+        const checkBloco = bloco.querySelector('[data-selecionar-bloco]');
+        checkBloco.onclick = (e) => {
+            const checks = bloco.querySelectorAll('[data-selecionar]');
+            checks.forEach(c => {
+                if (c.closest('.adm-linha').classList.contains('hidden')) return; // ignora invisiveis
+                c.checked = e.target.checked;
+                if (c.checked) licoesSelecionadas.add(c.value);
+                else licoesSelecionadas.delete(c.value);
+            });
+            atualizarBarraLote();
+        };
+
         const cont = bloco.querySelector('[data-itens]');
         itens.forEach((l, i) => {
             const q = l.questions?.[0];
             const certa = q?.question_options?.find(o => o.is_correta)?.texto_alternativa;
             const prev = l.tipo === 'teoria' ? l.conteudo_texto : l.tipo === 'exercicio' ? q?.enunciado : `${l.cenario?.itens?.length ?? 0} itens de análise`;
             const busca = [l.titulo, l.conteudo_texto, q?.enunciado, ...(q?.question_options || []).map(o => o.texto_alternativa)].join(' ').toLowerCase();
-            const cor = { teoria: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300', exercicio: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300', simulacao: 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300' }[l.tipo] || '';
+            const cor = { 
+                teoria: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300', 
+                exercicio: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300', 
+                simulacao: 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300' 
+            }[l.tipo] || '';
+
             const linha = document.createElement('div');
             linha.className = `adm-linha flex items-start gap-3 px-5 py-3 border-b last:border-0 border-slate-100 dark:border-slate-700/60 hover:bg-slate-50 dark:hover:bg-slate-900/40 ${ativa(l) ? '' : 'opacity-50'}`;
             linha.dataset.busca = busca;
             linha.dataset.inativa = ativa(l) ? '0' : '1';
             linha.innerHTML = `
-              <span class="text-xs text-slate-400 font-bold w-8 pt-0.5">${esc(l.ordem)}</span>
-              <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase ${cor}">${esc(l.tipo)}</span>
+            <div class="pt-1"><input type="checkbox" value="${esc(l.id)}" data-selecionar class="w-4 h-4 rounded text-purple-600 bg-slate-100 border-slate-300 cursor-pointer" ${licoesSelecionadas.has(l.id) ? 'checked' : ''}></div>
+            <span class="text-xs text-slate-400 font-bold w-8 pt-0.5">${esc(l.ordem)}</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase ${cor}">${esc(l.tipo)}</span>
               <div class="flex-1 min-w-0">
-                <p class="font-semibold text-slate-800 dark:text-slate-100 text-sm">${esc(l.titulo)}
-                  ${ativa(l) ? '' : '<span class="ml-1 px-1.5 py-0.5 rounded bg-slate-300 dark:bg-slate-600 text-slate-700 dark:text-slate-200 text-[9px] font-black uppercase">Inativa</span>'}
-                  ${l.versao_de ? '<span class="ml-1 px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 text-[9px] font-black uppercase">Nova versão</span>' : ''}</p>
-                <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">${esc(prev)}</p>
+                <p class="font-semibold text-slate-800 dark:text-slate-100 text-sm cursor-pointer hover:text-purple-600" data-trigger-edit>${esc(l.titulo)}
+                  ${ativa(l) ? '' : '<span class="ml-1 px-1.5 py-0.5 rounded bg-slate-300 dark:bg-slate-600 text-slate-700 dark:text-slate-200 text-[9px] font-black uppercase">Inativa</span>'}</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 mt-1">${esc(prev)}</p>
                 ${certa ? `<p class="text-xs text-emerald-700 dark:text-emerald-400 mt-0.5">✓ ${esc(certa)}</p>` : ''}
-                ${l.tipo === 'exercicio' && !q ? '<p class="text-xs font-bold text-red-600">⚠ Exercício sem questão (não aparece para o aluno)</p>' : ''}
               </div>
               <div class="whitespace-nowrap">
-                <button data-a="up" ${i === 0 ? 'disabled' : ''} class="px-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-white disabled:opacity-20">▲</button>
-                <button data-a="down" ${i === itens.length - 1 ? 'disabled' : ''} class="px-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-white disabled:opacity-20">▼</button>
+                <button data-a="up" ${i === 0 ? 'disabled' : ''} class="px-1.5 text-slate-400 hover:text-slate-700 disabled:opacity-20">▲</button>
+                <button data-a="down" ${i === itens.length - 1 ? 'disabled' : ''} class="px-1.5 text-slate-400 hover:text-slate-700 disabled:opacity-20">▼</button>
                 <button data-a="edit" class="ml-2 px-2 py-1 rounded bg-purple-600 hover:bg-purple-700 text-white text-[10px] font-bold uppercase">Editar</button>
               </div>`;
-            linha.querySelector('[data-a="edit"]').onclick = () => editarLicao(l.id, { onSalvo: carregarLicoes, onExcluido: carregarLicoes, onInativado: carregarLicoes });
+            
+            linha.querySelector('input[type="checkbox"]').onchange = (e) => {
+                if (e.target.checked) licoesSelecionadas.add(e.target.value);
+                else licoesSelecionadas.delete(e.target.value);
+                atualizarBarraLote();
+            };
+
+            const abrirEdicao = () => editarLicao(l.id, { onSalvo: carregarLicoes, onExcluido: carregarLicoes, onInativado: carregarLicoes });
+            linha.querySelector('[data-a="edit"]').onclick = abrirEdicao;
+            linha.querySelector('[data-trigger-edit]').onclick = abrirEdicao;
+            
             linha.querySelectorAll('[data-a="up"],[data-a="down"]').forEach(b => b.onclick = async () => {
                 const j = b.dataset.a === 'up' ? i - 1 : i + 1;
                 await trocarOrdem('lessons', l, itens[j], i, j);
@@ -227,28 +269,133 @@ async function carregarLicoes() {
         alvo.appendChild(bloco);
     });
 
-    if (revisao) {
-        const nEx = (licoes || []).filter(l => ativa(l) && l.tipo === 'exercicio' && l.questions?.length).length;
-        const qtd = revisao.config?.qtd ?? 8;
-        const r = document.createElement('div');
-        r.className = 'flex flex-wrap items-center gap-3 px-5 py-3 rounded-xl border border-amber-300 dark:border-amber-700 bg-white dark:bg-slate-800';
-        r.innerHTML = `<span class="text-xl">🏁</span>
-          <p class="flex-1 font-bold text-slate-800 dark:text-white">${esc(revisao.titulo)}
-            <span class="text-xs font-semibold text-slate-500"> • sorteia ${qtd} de ${nEx} questões ativas • mínimo ${Math.round((revisao.config?.min_acerto ?? 0.7) * 100)}%</span>
-            ${nEx < qtd ? `<span class="ml-2 text-[11px] font-bold text-amber-600 dark:text-amber-400">⚠ a revisão terá só ${nEx} questões</span>` : ''}</p>
-          <button class="text-xs font-bold uppercase text-purple-600 dark:text-purple-400 hover:underline">Configurar</button>`;
-        r.querySelector('button').onclick = () => editarUnidade(revisao, { moduleId: moduloAtual, onSalvo: carregarLicoes });
-        alvo.appendChild(r);
+    if (!(licoes || []).length && !(unidades || []).length) alvo.innerHTML = '<p class="text-center text-slate-400 italic py-8">Módulo vazio.</p>';
+    
+    // Anexa a barra de lote no DOM se não existir
+    if (!document.getElementById('barra-acoes-lote')) {
+        const barra = document.createElement('div');
+        barra.id = 'barra-acoes-lote';
+        barra.className = 'fixed bottom-4 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-4 transition-all duration-300 transform translate-y-24 opacity-0 z-50';
+        barra.innerHTML = `
+            <span id="txt-lote-count" class="font-bold text-sm">0 selecionadas</span>
+            <div class="h-6 w-px bg-slate-700"></div>
+            <button id="btn-lote-inativar" class="text-xs font-bold uppercase text-amber-400 hover:text-amber-300">Inativar</button>
+            <button id="btn-lote-excluir" class="text-xs font-bold uppercase text-red-400 hover:text-red-300">Excluir</button>
+            <button id="btn-lote-cancelar" class="ml-4 text-slate-400 hover:text-white">✕</button>
+        `;
+        document.body.appendChild(barra);
+        
+        document.getElementById('btn-lote-cancelar').onclick = () => {
+            licoesSelecionadas.clear();
+            document.querySelectorAll('[data-selecionar], [data-selecionar-bloco]').forEach(c => c.checked = false);
+            atualizarBarraLote();
+        };
+
+        document.getElementById('btn-lote-inativar').onclick = async () => {
+            const arr = Array.from(licoesSelecionadas);
+            if (!confirm(`Inativar as ${arr.length} telas selecionadas?\nElas deixarão de aparecer para os alunos.`)) return;
+            document.getElementById('btn-lote-inativar').innerText = 'Aguarde...';
+            const { error } = await window.supabase.from('lessons').update({ ativo: false, inativado_em: new Date().toISOString() }).in('id', arr);
+            if (error) alert('Erro ao inativar: ' + error.message);
+            else { licoesSelecionadas.clear(); carregarLicoes(); }
+            document.getElementById('btn-lote-inativar').innerText = 'Inativar';
+        };
+
+        document.getElementById('btn-lote-excluir').onclick = () => excluirTelasEmLote();
     }
-    if (!(licoes || []).length && !(unidades || []).length) alvo.innerHTML = '<p class="text-center text-slate-400 italic py-8">Módulo vazio. Use "+ Lição curta" e "+ Teoria / questão".</p>';
+    
     filtrarLicoes();
+    atualizarBarraLote();
+}
+
+// ---------------------------------------------------------------------
+// Exclusão em lote: só exclui telas SEM histórico de alunos.
+// Telas com respostas / tentativas de simulação são mantidas (o caminho para elas é "Inativar").
+// Se a contagem de histórico falhar, NADA é excluído (nunca se assume "zero respostas").
+// ---------------------------------------------------------------------
+async function historicoPorTela(ids) {
+    const mapa = new Map();
+    const lote = 8;
+    for (let i = 0; i < ids.length; i += lote) {
+        await Promise.all(ids.slice(i, i + lote).map(async id => {
+            const [a, s] = await Promise.all([
+                window.supabase.from('user_answers').select('id', { count: 'exact', head: true }).eq('lesson_id', id),
+                window.supabase.from('simulation_attempts').select('id', { count: 'exact', head: true }).eq('lesson_id', id)
+            ]);
+            const erro = a.error || s.error;
+            if (erro || a.count == null || s.count == null) throw new Error(erro?.message || 'contagem indisponível');
+            mapa.set(id, a.count + s.count);
+        }));
+    }
+    return mapa;
+}
+
+export async function excluirTelasEmLote() {
+    const btn = document.getElementById('btn-lote-excluir');
+    const rotulo = btn ? btn.innerText : 'Excluir';
+    const volta = () => { if (btn) btn.innerText = rotulo; };
+    const arr = Array.from(licoesSelecionadas);
+    if (!arr.length) return;
+
+    if (btn) btn.innerText = 'Verificando...';
+    let historico;
+    try { historico = await historicoPorTela(arr); }
+    catch (e) {
+        volta();
+        return alert('Não foi possível verificar o histórico de respostas. NADA foi excluído.\n' + (e.message || e));
+    }
+    volta();
+
+    const livres = arr.filter(id => !historico.get(id));
+    const comHistorico = arr.filter(id => historico.get(id));
+    if (!livres.length) {
+        return alert(`As ${arr.length} tela(s) selecionada(s) já têm respostas de alunos e não podem ser excluídas: isso apagaria o histórico.\n\nUse "Inativar": a tela some para os alunos e o histórico é preservado.`);
+    }
+    const aviso = comHistorico.length
+        ? `\n\n${comHistorico.length} tela(s) têm respostas de alunos e serão MANTIDAS. Para tirá-las do ar, use "Inativar".`
+        : '';
+    if (!confirm(`EXCLUIR PERMANENTEMENTE ${livres.length} tela(s) sem respostas de alunos?${aviso}`)) return;
+
+    if (btn) btn.innerText = 'Aguarde...';
+    try {
+        // Um único comando: as questões e alternativas saem junto (ON DELETE CASCADE) e, se algo falhar, nada fica pela metade.
+        const { error } = await window.supabase.from('lessons').delete().in('id', livres);
+        if (error) throw error;
+        livres.forEach(id => licoesSelecionadas.delete(id));
+        await carregarLicoes();
+        if (comHistorico.length) alert(`${livres.length} tela(s) excluída(s). ${comHistorico.length} mantida(s) por terem respostas de alunos.`);
+    } catch (e) {
+        console.error(e);
+        alert('Falha ao excluir: ' + (e.message || e));
+        await carregarLicoes();
+    } finally { volta(); }
+}
+
+function atualizarBarraLote() {
+    const barra = document.getElementById('barra-acoes-lote');
+    if (!barra) return;
+    const qtd = licoesSelecionadas.size;
+    if (qtd > 0) {
+        document.getElementById('txt-lote-count').innerText = `${qtd} selecionada${qtd > 1 ? 's' : ''}`;
+        barra.classList.remove('translate-y-24', 'opacity-0');
+    } else {
+        barra.classList.add('translate-y-24', 'opacity-0');
+    }
 }
 
 function filtrarLicoes() {
     const termo = document.getElementById('busca-licao').value.trim().toLowerCase();
     const verInativas = document.getElementById('ver-inativas').checked;
-    document.querySelectorAll('.adm-linha').forEach(l => l.classList.toggle('hidden',
-        (!!termo && !l.dataset.busca.includes(termo)) || (!verInativas && l.dataset.inativa === '1')));
+    document.querySelectorAll('.adm-linha').forEach(l => {
+        const esconde = (!!termo && !l.dataset.busca.includes(termo)) || (!verInativas && l.dataset.inativa === '1');
+        l.classList.toggle('hidden', esconde);
+        // Se a lição for ocultada pela busca, remove da seleção de lote para não afetar lições escondidas acidentalmente
+        if (esconde && licoesSelecionadas.has(l.querySelector('[data-selecionar]').value)) {
+            licoesSelecionadas.delete(l.querySelector('[data-selecionar]').value);
+            l.querySelector('[data-selecionar]').checked = false;
+        }
+    });
+    atualizarBarraLote();
 }
 
 async function organizar() {
@@ -260,10 +407,7 @@ async function organizar() {
 }
 
 // =====================================================================
-// RELATÓRIOS – agregados no banco (função academia_relatorio)
-//  - sem o teto de 1.000 linhas do PostgREST
-//  - ignora respostas de teste do admin (user_answers.teste = true)
-//  - "Questões com mais erros" só considera questões com amostra mínima
+// RELATÓRIOS
 // =====================================================================
 const AMOSTRA_MINIMA = 5;
 
@@ -307,4 +451,132 @@ async function carregarRelatorios() {
           <td class="text-center">${a.acerto == null ? '–' : a.acerto + '%'}</td>
           <td class="text-center text-xs text-slate-500">${a.ultima ? new Date(a.ultima).toLocaleString('pt-BR') : '–'}</td></tr>`).join('')}</tbody></table>`
         : '<p class="text-sm italic text-slate-400">Nenhum aluno com atividade ainda.</p>';
+}
+
+// =====================================================================
+// EXPORTAÇÃO (JSON e CSV)
+// =====================================================================
+
+// Mapear os cliques dos botões logo no início da sua função initAdmin()
+// Adicione estas duas linhas lá em cima:
+
+async function gerenciarExportacao(event, funcaoExportar) {
+    const btn = event.currentTarget;
+    const txtOriginal = btn.textContent;
+    btn.textContent = 'Gerando...';
+    btn.disabled = true;
+    try {
+        await funcaoExportar();
+    } catch (e) {
+        alert('Erro ao exportar: ' + e.message);
+    } finally {
+        btn.textContent = txtOriginal;
+        btn.disabled = false;
+    }
+}
+
+// 1. Exportação JSON (Estrutura de Lote)
+async function exportarBackupJSON() {
+    const [tRes, mRes, lRes] = await Promise.all([
+        window.supabase.from('learning_tracks').select('id, titulo').order('created_at'),
+        window.supabase.from('learning_modules').select('id, track_id, titulo').order('ordem'),
+        window.supabase.from('lessons').select('module_id, titulo, tipo, xp_recompensa, conteudo_texto, cenario, questions(enunciado, explicacao_feedback, question_options(texto_alternativa, is_correta))').eq('ativo', true).order('ordem')
+    ]);
+
+    if (tRes.error || mRes.error || lRes.error) throw new Error('Falha ao buscar dados no Supabase.');
+
+    const trilhas = tRes.data || [];
+    const modulos = mRes.data || [];
+    const licoes = lRes.data || [];
+    const exportData = [];
+
+    modulos.forEach(mod => {
+        const trilha = trilhas.find(t => t.id === mod.track_id);
+        if (!trilha) return;
+
+        const licoesModulo = licoes.filter(l => l.module_id === mod.id).map(l => {
+            const obj = { titulo: l.titulo, tipo: l.tipo, xp_recompensa: l.xp_recompensa, conteudo_texto: l.conteudo_texto };
+            if (l.tipo === 'simulacao' && l.cenario) obj.cenario = l.cenario;
+            
+            if (l.tipo === 'exercicio' && l.questions && l.questions.length > 0) {
+                const q = l.questions[0];
+                obj.questao = {
+                    enunciado: q.enunciado,
+                    explicacao_feedback: q.explicacao_feedback,
+                    opcoes: (q.question_options || []).map(o => ({ texto: o.texto_alternativa, correta: o.is_correta }))
+                };
+            }
+            return obj;
+        });
+
+        if (licoesModulo.length > 0) {
+            exportData.push({ trilha: trilha.titulo, modulo: mod.titulo, licoes: licoesModulo });
+        }
+    });
+
+    baixarArquivo(JSON.stringify(exportData, null, 2), `backup_academia_cgcf_${dataAtual()}.json`, 'application/json');
+}
+
+// 2. Exportação CSV (Para Excel) - Atualizada com a coluna Status
+async function exportarBackupCSV() {
+    const [mRes, lRes] = await Promise.all([
+        window.supabase.from('learning_modules').select('id, titulo'),
+        window.supabase.from('lessons').select('module_id, titulo, tipo, conteudo_texto, ativo, questions(enunciado, explicacao_feedback, question_options(texto_alternativa, is_correta, ordem))').order('module_id').order('ordem')
+    ]);
+
+    if (mRes.error || lRes.error) throw new Error('Falha ao buscar dados no Supabase.');
+
+    const modulos = Object.fromEntries((mRes.data || []).map(m => [m.id, m.titulo]));
+    
+    // Cabeçalho do CSV agora com a coluna Status
+    let csvContent = "Status;Módulo;Tipo;Título;Texto/Enunciado;Feedback;Alternativa 1;Alternativa 2;Alternativa 3;Alternativa 4;Alternativa 5;Alternativa Correta\n";
+
+    const escapeCSV = (str) => {
+        if (!str) return "";
+        let limpo = String(str).replace(/\r?\n|\r/g, " "); // Remove quebras de linha
+        if (limpo.includes(";") || limpo.includes('"')) {
+            limpo = `"${limpo.replace(/"/g, '""')}"`; // Escapa aspas e ponto-e-vírgula
+        }
+        return limpo;
+    };
+
+    (lRes.data || []).forEach(l => {
+        const moduloNome = modulos[l.module_id] || 'Desconhecido';
+        const statusTexto = l.ativo !== false ? 'Ativa' : 'Inativa';
+        const q = (l.questions && l.questions.length > 0) ? l.questions[0] : null;
+        
+        let textoBase = l.tipo === 'exercicio' ? (q?.enunciado || '') : (l.conteudo_texto || '');
+        let feedback = q?.explicacao_feedback || '';
+        let altCorreta = '';
+        let opcoes = ['', '', '', '', ''];
+
+        if (q && q.question_options) {
+            const opts = [...q.question_options].sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
+            opts.forEach((o, i) => {
+                if (i < 5) opcoes[i] = o.texto_alternativa;
+                if (o.is_correta) altCorreta = `Opção ${i + 1}`;
+            });
+        }
+
+        csvContent += `${escapeCSV(statusTexto)};${escapeCSV(moduloNome)};${escapeCSV(l.tipo)};${escapeCSV(l.titulo)};${escapeCSV(textoBase)};${escapeCSV(feedback)};${escapeCSV(opcoes[0])};${escapeCSV(opcoes[1])};${escapeCSV(opcoes[2])};${escapeCSV(opcoes[3])};${escapeCSV(opcoes[4])};${escapeCSV(altCorreta)}\n`;
+    });
+
+    // Usa UTF-8 com BOM para o Excel abrir os acentos corretamente
+    baixarArquivo("\uFEFF" + csvContent, `questoes_academia_cgcf_${dataAtual()}.csv`, 'text/csv;charset=utf-8;');
+}
+
+function baixarArquivo(conteudo, nomeArquivo, tipoMime) {
+    const blob = new Blob([conteudo], { type: tipoMime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = nomeArquivo;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function dataAtual() {
+    return new Date().toISOString().split('T')[0];
 }
