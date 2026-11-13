@@ -1,0 +1,75 @@
+<div class="animate-fade-in w-full mx-auto flex flex-col gap-6">
+    <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-4">
+        <h2 class="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-wide flex items-center gap-2">
+            <span class="px-2 py-1 rounded-lg bg-purple-600 text-white text-xs">ADMIN</span> Painel Pedagógico
+        </h2>
+        <button id="btn-voltar-admin" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors">Voltar ao mapa</button>
+    </div>
+
+    <div class="flex gap-2 border-b border-slate-200 dark:border-slate-700 overflow-x-auto">
+        <button data-tab="trilhas"    class="adm-tab px-4 py-2 border-b-2 font-bold text-sm uppercase tracking-wider whitespace-nowrap">Trilhas e Módulos</button>
+        <button data-tab="licoes"     class="adm-tab px-4 py-2 border-b-2 font-bold text-sm uppercase tracking-wider whitespace-nowrap">Lições e Questões</button>
+        <button data-tab="relatorios" class="adm-tab px-4 py-2 border-b-2 font-bold text-sm uppercase tracking-wider whitespace-nowrap">Relatórios</button>
+        <button data-tab="certificados" class="adm-tab px-4 py-2 border-b-2 font-bold text-sm uppercase tracking-wider whitespace-nowrap">Certificados</button>
+        <button data-tab="implantacao" class="adm-tab px-4 py-2 border-b-2 font-bold text-sm uppercase tracking-wider whitespace-nowrap">Implantação</button>
+    </div>
+
+    <!-- TRILHAS E MÓDULOS -->
+    <section id="adm-trilhas" class="adm-sec flex-col gap-4">
+        <div class="flex justify-end"><button id="btn-nova-trilha" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase rounded-lg shadow-sm">+ Nova trilha</button></div>
+        <div id="lista-trilhas" class="space-y-4"><p class="text-center text-slate-400 animate-pulse py-6">Carregando...</p></div>
+    </section>
+
+    <!-- LIÇÕES E QUESTÕES -->
+    <section id="adm-licoes" class="adm-sec flex-col gap-4">
+        <div class="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-wrap gap-2 items-center">
+            <select id="sel-modulo" class="flex-1 min-w-[240px] p-2.5 text-sm border rounded-lg bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white"></select>
+            <button id="btn-testar" class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] uppercase rounded-lg">▶ Testar como aluno</button>
+            <button id="btn-nova-unid" class="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-[11px] uppercase rounded-lg">+ Lição curta</button>
+            <button id="btn-nova-licao" class="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-[11px] uppercase rounded-lg">+ Teoria / questão</button>
+            <button id="btn-organizar" class="px-3 py-2 border border-purple-400 text-purple-700 dark:text-purple-300 font-bold text-[11px] uppercase rounded-lg hover:bg-purple-50 dark:hover:bg-purple-900/30" title="Distribui lições sem lição curta e cria a Revisão onde faltar">Organizar telas novas</button>
+        </div>
+        <div class="flex flex-wrap gap-3 items-center">
+            <input id="busca-licao" placeholder="Buscar no módulo (título, enunciado, alternativa)..." class="flex-1 min-w-[240px] p-2.5 text-sm border rounded-lg bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white">
+            <label class="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300"><input id="ver-inativas" type="checkbox" checked class="w-4 h-4 accent-purple-600"> Mostrar inativas</label>
+        </div>
+        <div id="lista-licoes" class="space-y-4"></div>
+    </section>
+
+    <!-- RELATÓRIOS -->
+    <section id="adm-relatorios" class="adm-sec flex-col gap-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 text-center"><div id="kpi-alunos" class="text-3xl font-black text-blue-600 dark:text-blue-400">–</div><div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Alunos ativos</div></div>
+            <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 text-center"><div id="kpi-licoes" class="text-3xl font-black text-emerald-600 dark:text-emerald-400">–</div><div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Lições concluídas</div></div>
+            <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 text-center"><div id="kpi-modulos" class="text-3xl font-black text-purple-600 dark:text-purple-400">–</div><div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Módulos concluídos</div></div>
+            <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 text-center"><div id="kpi-acerto" class="text-3xl font-black text-amber-500">–</div><div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Acerto de primeira</div></div>
+        </div>
+        <div class="bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-200 dark:border-slate-700">
+            <h3 class="font-bold text-slate-800 dark:text-white uppercase tracking-wider text-sm mb-3">Questões com mais erros de primeira</h3>
+            <div id="rel-questoes" class="overflow-x-auto"></div>
+        </div>
+        <div class="bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-200 dark:border-slate-700">
+            <h3 class="font-bold text-slate-800 dark:text-white uppercase tracking-wider text-sm mb-3">Progresso por aluno</h3>
+            <div id="rel-alunos" class="overflow-x-auto"></div>
+        </div>
+    </section>
+
+    <!-- CERTIFICADOS (conteúdo montado por js/cert_admin.js) -->
+    <section id="adm-certificados" class="adm-sec flex-col gap-4">
+        <p class="text-center text-slate-400 py-6">Carregando...</p>
+    </section>
+
+    <!-- IMPLANTAÇÃO -->
+    <section id="adm-implantacao" class="adm-sec flex-col gap-4">
+        <div class="bg-amber-50 dark:bg-amber-900/20 rounded-xl p-6 border border-amber-200 dark:border-amber-800">
+            <h3 class="font-bold text-amber-800 dark:text-amber-400 mb-2">Zona de implantação</h3>
+            <p class="text-sm text-amber-700 dark:text-amber-300 mb-4">Carga inicial e importação de lotes em JSON (pasta <code>data/</code>). Depois de importar, use "Organizar telas novas" na aba Lições.</p>
+            <div class="flex flex-wrap gap-3 items-center">
+                <button id="btn-seed-trilhas" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs uppercase rounded-lg">1. Popular trilhas e módulos</button>
+                <input id="caminho-lote" value="data/" class="flex-1 min-w-[220px] p-2 text-sm border rounded-lg bg-white dark:bg-slate-900 border-amber-300 dark:border-amber-700 text-slate-800 dark:text-white">
+                <button id="btn-importar-lote" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase rounded-lg">2. Importar lote JSON</button>
+            </div>
+            <div id="seed-log" class="mt-4 text-xs font-mono text-slate-600 dark:text-slate-400 h-40 overflow-y-auto bg-white/50 dark:bg-black/20 p-2 rounded border border-amber-200/50 dark:border-amber-800/50 hidden"></div>
+        </div>
+    </section>
+</div>
