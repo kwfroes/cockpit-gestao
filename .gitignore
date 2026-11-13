@@ -1,5 +1,5 @@
 node_modules/
-apps/admin/ 
-admin.html 
-admin1.html
+apps/admin/
+/admin.html
+/admin1.html
 repomix-output.xml
