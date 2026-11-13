@@ -31,6 +31,7 @@ export async function navigateTo(viewName, params = {}) {
     try {
         const response = await fetch(`views/${viewName}.html`);
         if (!response.ok) throw new Error("Tela não encontrada");
+        document.getElementById('barra-acoes-lote')?.remove();     // a barra de seleção do admin não deve sobrar em outras telas
         routerView.innerHTML = await response.text();
         telaAtual = { viewName, params };
         window.scrollTo(0, 0);

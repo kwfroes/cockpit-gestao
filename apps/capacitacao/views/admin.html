@@ -24,10 +24,32 @@
     <section id="adm-licoes" class="adm-sec flex-col gap-4">
         <div class="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-wrap gap-2 items-center">
             <select id="sel-modulo" class="flex-1 min-w-[240px] p-2.5 text-sm border rounded-lg bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white"></select>
+            
             <button id="btn-testar" class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] uppercase rounded-lg">▶ Testar como aluno</button>
-            <button id="btn-nova-unid" class="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-[11px] uppercase rounded-lg">+ Lição curta</button>
-            <button id="btn-nova-licao" class="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-[11px] uppercase rounded-lg">+ Teoria / questão</button>
-            <button id="btn-organizar" class="px-3 py-2 border border-purple-400 text-purple-700 dark:text-purple-300 font-bold text-[11px] uppercase rounded-lg hover:bg-purple-50 dark:hover:bg-purple-900/30" title="Distribui lições sem lição curta e cria a Revisão onde faltar">Organizar telas novas</button>
+            
+            <!-- DROPDOWN: NOVO -->
+            <div class="relative group">
+                <button class="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-[11px] uppercase rounded-lg inline-flex items-center gap-1 transition-colors">
+                    + Novo <span class="text-[8px] opacity-70">▼</span>
+                </button>
+                <div class="absolute left-0 mt-1 hidden group-hover:flex flex-col bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl z-50 overflow-hidden min-w-max">
+                    <button id="btn-nova-unid" class="px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-700 text-[11px] font-bold uppercase text-purple-700 dark:text-purple-400 border-b border-slate-100 dark:border-slate-700 transition-colors">+ Lição Curta</button>
+                    <button id="btn-nova-licao" class="px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-700 text-[11px] font-bold uppercase text-purple-700 dark:text-purple-400 transition-colors">+ Teoria / Questão</button>
+                </div>
+            </div>
+
+            <!-- DROPDOWN: EXPORTAR -->
+            <div class="relative group z-40">
+                <button class="px-3 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 font-bold text-[11px] uppercase rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 inline-flex items-center gap-1 transition-colors">
+                    ↓ Exportar <span class="text-[8px] opacity-70">▼</span>
+                </button>
+                <div class="absolute left-0 mt-1 hidden group-hover:flex flex-col bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl overflow-hidden min-w-max">
+                    <button id="btn-exportar-json" class="px-4 py-3 text-left hover:bg-blue-50 dark:hover:bg-blue-900/30 text-[11px] font-bold uppercase text-blue-700 dark:text-blue-400 border-b border-slate-100 dark:border-slate-700 transition-colors" title="Backup completo do banco (Trilhas, Módulos e Lições)">↓ Formato JSON</button>
+                    <button id="btn-exportar-csv" class="px-4 py-3 text-left hover:bg-green-50 dark:hover:bg-green-900/30 text-[11px] font-bold uppercase text-green-700 dark:text-green-400 transition-colors" title="Planilha para leitura rápida">↓ Formato CSV</button>
+                </div>
+            </div>
+
+            <button id="btn-organizar" class="px-3 py-2 border border-purple-400 text-purple-700 dark:text-purple-300 font-bold text-[11px] uppercase rounded-lg hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-colors" title="Distribui lições sem lição curta e cria a Revisão onde faltar">Organizar telas novas</button>
         </div>
         <div class="flex flex-wrap gap-3 items-center">
             <input id="busca-licao" placeholder="Buscar no módulo (título, enunciado, alternativa)..." class="flex-1 min-w-[240px] p-2.5 text-sm border rounded-lg bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white">

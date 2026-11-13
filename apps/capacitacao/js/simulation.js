@@ -163,9 +163,9 @@ export function renderSimulacao(cenario, container, onFinish) {
             fb.innerHTML = `${ok ? '✔ Correto.' : `✘ Esperado: <b>${esc(esperado)}</b>.`} ${esc(item.explicacao)}`;
         });
 
+        const tipoSel = container.querySelector('input[name="sim-tipo"]:checked')?.value;   // vai também ao banco: o servidor recalcula a nota
         if (cenario.decisao_final) {
             total++;
-            const tipoSel = container.querySelector('input[name="sim-tipo"]:checked')?.value;
             const df = cenario.decisao_final;
             const ok = decisaoFinal === df.correta && (!df.tipo_correto || tipoSel === df.tipo_correto);
             if (ok) acertos++;
@@ -179,6 +179,6 @@ export function renderSimulacao(cenario, container, onFinish) {
         res.classList.remove('hidden');
         res.className = 'rounded-xl p-4 text-center font-bold ' + (acertos === total ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800');
         res.textContent = `Você acertou ${acertos} de ${total} decisões.`;
-        onFinish({ acertos, total, respostas: { itens: respostas, final: decisaoFinal } });
+        onFinish({ acertos, total, respostas: { itens: respostas, final: decisaoFinal, tipo: tipoSel ?? null } });
     };
 }

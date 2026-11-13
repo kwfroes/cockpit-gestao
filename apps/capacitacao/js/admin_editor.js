@@ -69,6 +69,7 @@ function traduzErro(e) {
     const m = e?.message || '';
     if (/row-level security|permission denied/i.test(m)) return 'Sem permissão no banco. Confirme se seu perfil é admin e se o script 03_admin.sql foi executado.';
     if (/column .*(ativo|versao_de|inativado_em)/i.test(m)) return 'Faltam colunas no banco. Execute o script 04_inativacao.sql.';
+    if (/update or delete on table .* violates foreign key constraint/i.test(m)) return 'Há histórico de alunos ligado a este item (respostas, tentativas ou progresso), então ele não pode ser excluído. Use "Inativar" para tirá-lo do ar sem perder o histórico.';
     return m;
 }
 const ok = ({ error }) => { if (error) throw new Error(traduzErro(error)); };
@@ -324,6 +325,10 @@ export function editarUnidade(unit, { moduleId, onSalvo } = {}) {
     const cfg = unit?.config || {};
     const extras = nova ? [] : [{
         texto: 'Excluir', estilo: 'perigo', acao: async () => {
+            // Excluir a lição curta apagaria o progresso (e as medalhas) de quem já a concluiu. Se a contagem falhar, não exclui.
+            const { count, error } = await window.supabase.from('user_unit_progress').select('id', { count: 'exact', head: true }).eq('unit_id', unit.id);
+            if (error || count == null) throw new Error('Não foi possível verificar o progresso dos alunos. Nada foi excluído. ' + traduzErro(error));
+            if (count > 0) throw new Error(`${count} aluno(s) já concluíram "${unit.titulo}". Excluir apagaria esse progresso${unit.tipo === 'revisao' ? ' e as medalhas da Revisão' : ''}. Edite a lição em vez de excluí-la.`);
             if (!confirm(`Excluir "${unit.titulo}"? As telas dela NÃO serão apagadas: ficam "sem lição curta" até você movê-las ou organizar.`)) return false;
             ok(await window.supabase.from('lessons').update({ unit_id: null }).eq('unit_id', unit.id));
             ok(await window.supabase.from('learning_units').delete().eq('id', unit.id));
