@@ -129,7 +129,7 @@ async function generateCaptcha() {
         const link = document.querySelector(`aside a[href="${hash}"]`);
         const title = link
         ? (link.dataset.title || link.textContent.trim())
-        : hash;
+        : (hash === "#painel" ? "Painel Admin" : hash);
 
         const isAtiva = window.location.hash === hash;
 
@@ -194,6 +194,26 @@ async function generateCaptcha() {
   // INICIALIZAÇÃO DO SUPABASE
   // =========================================================
   const supabase = window.supabaseClient;
+
+    // =========================================================
+    // [SEGURANÇA] HELPERS
+    // =========================================================
+    // Escapa texto vindo do banco antes de montar HTML (evita XSS armazenado)
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+    // Só aceita mensagens da mesma origem E vindas de um iframe de app aberto pelo Cockpit
+    function isTrustedMessage(event) {
+      if (event.origin !== window.location.origin) return false;
+      return Object.values(openFrames).some(
+        (f) => f && f.contentWindow && f.contentWindow === event.source
+      );
+    }
 
   // =========================================================
   // SISTEMA CENTRAL DE LOGS
@@ -432,14 +452,13 @@ if (loginForm) {
       btn.disabled = true;
 
       // Chama a autenticação do Supabase
-      console.log("Tentando login com:", { email: inputEmail, password: inputPass });
       const { data, error } = await supabase.auth.signInWithPassword({
           email: inputEmail,
           password: inputPass,
       });
 
       if (error) {
-        console.log("O SUPABASE DISSE:", error); // Adicione isso antes do showError
+        console.warn("Falha no login:", error.message); // [SEGURANÇA] nunca logar e-mail/senha digitados
 
           supabase.from('sistema_logs').insert([{
           usuario_nome: "Tentativa de Acesso",
@@ -629,7 +648,8 @@ if (loginForm) {
     "#quiz": "apps/quiz/index.html",
     "#chatstorage": "apps/chatstorage/index.html",
     "#capacitacao": "apps/capacitacao/index.html",
-    "#apresentacoes": "apps/apresentacoes/index.html"
+    "#apresentacoes": "apps/apresentacoes/index.html",
+    "#painel": "apps/painel-admin/index.html"
   };
   const defaultHash = "#home";
 
@@ -686,35 +706,33 @@ if (loginForm) {
   }
 
   // Sidebar Toggle
+  // Sidebar como gaveta sobre o conteúdo (desktop e celular): começa oculta, não empurra o layout
   window.toggleSidebar = function () {
-    const isMobile = window.innerWidth < 768;
-    if (menuButton) menuButton.classList.toggle("rotate-90");
+    const isClosed = sidebar.classList.contains("-translate-x-full");
+    if (menuButton) menuButton.classList.toggle("rotate-90", isClosed);
 
-    if (isMobile) {
-      const isClosed = sidebar.classList.contains("-translate-x-full");
-      if (isClosed) {
-        sidebar.classList.remove("-translate-x-full");
-        overlay.classList.remove("hidden");
-        setTimeout(() => overlay.classList.remove("opacity-0"), 10);
-      } else {
-        sidebar.classList.add("-translate-x-full");
-        overlay.classList.add("opacity-0");
-        setTimeout(() => overlay.classList.add("hidden"), 300);
-      }
+    if (isClosed) {
+      sidebar.classList.remove("-translate-x-full");
+      overlay.classList.remove("hidden");
+      setTimeout(() => overlay.classList.remove("opacity-0"), 10);
     } else {
-      sidebar.classList.toggle("md:translate-x-0");
-      mainContent.classList.toggle("md:ml-64");
+      sidebar.classList.add("-translate-x-full");
+      overlay.classList.add("opacity-0");
+      setTimeout(() => overlay.classList.add("hidden"), 300);
     }
   };
 
+  // Mantém o nome original (usado em vários pontos), mas agora fecha em qualquer largura
   function closeSidebarOnMobile() {
-    if (
-      window.innerWidth < 768 &&
-      !sidebar.classList.contains("-translate-x-full")
-    ) {
+    if (!sidebar.classList.contains("-translate-x-full")) {
       window.toggleSidebar();
     }
   }
+
+  // Esc fecha a sidebar
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeSidebarOnMobile();
+  });
 
   // --- Função Central de Navegação ---
   function updateActiveLink(hash) {
@@ -739,6 +757,13 @@ if (loginForm) {
         allowedApps = JSON.parse(sessionStorage.getItem("cockpit_allowed_apps")) || ["#home"];
       } catch(e) {
         allowedApps = ["#home"];
+      }
+
+      // Painel Admin: exclusivo de administrador, mesmo que conste em allowed_apps
+      if (hash === "#painel" && role !== "admin") {
+        showError("Acesso Negado: o Painel Admin é exclusivo de administradores.");
+        navigate("#home");
+        return;
       }
 
       if (role !== "admin" && !allowedApps.includes(hash)) {
@@ -772,7 +797,7 @@ if (loginForm) {
         newIframe.addEventListener("load", () => {
             const currentTheme = document.documentElement.classList.contains("dark") ? "dark" : "light";
             if (newIframe.contentWindow) {
-                newIframe.contentWindow.postMessage({ type: "THEME_CHANGE", theme: currentTheme }, "*");
+                newIframe.contentWindow.postMessage({ type: "THEME_CHANGE", theme: currentTheme }, window.location.origin);
             }
         });
         
@@ -785,16 +810,12 @@ if (loginForm) {
     renderTabs();
 
     // --- LÓGICA DO FLOATING LINKS E SIDEBAR ---
+    // A sidebar não é mais aberta automaticamente: ao navegar, ela é fechada se estiver aberta.
+    closeSidebarOnMobile();
     if (window.innerWidth >= 768) {
       if (hash === "#home") {
-        sidebar.classList.remove("md:translate-x-0");
-        mainContent.classList.remove("md:ml-64");
-        if (menuButton) menuButton.classList.remove("rotate-90");
         if (floatingLinks) floatingLinks.classList.add("hidden");
       } else {
-        sidebar.classList.add("md:translate-x-0");
-        mainContent.classList.add("md:ml-64");
-        if (menuButton) menuButton.classList.add("rotate-90");
         if (floatingLinks) {
           floatingLinks.classList.remove("hidden");
           floatingLinks.classList.add("translate-x-full");
@@ -811,6 +832,18 @@ if (loginForm) {
   window.appNavigate = function(hash) {
     history.pushState(null, null, hash);
     navigate(hash);
+  };
+
+  // Painel Admin (opção do menu do usuário): fecha o menu e navega
+  window.abrirPainelAdmin = function () {
+    const dd = document.getElementById("userMenuDropdown");
+    if (dd) {
+      dd.classList.remove("scale-100", "opacity-100");
+      dd.classList.add("scale-95", "opacity-0", "hidden");
+    }
+    history.pushState(null, null, "#painel");
+    navigate("#painel");
+    closeSidebarOnMobile();
   };
 
   // Listeners de Navegação
@@ -1090,6 +1123,10 @@ async function performLogout() {
       { element: document.querySelector('a[href="#capacitacao"]'), route: "#capacitacao" },
       { element: document.querySelector('a[href="#apresentacoes"]'), route: "#apresentacoes" }
     ];
+
+    // Painel Admin: opção do menu do usuário, somente para administrador (não depende de allowed_apps)
+    const btnPainel = document.getElementById("menuPainelAdmin");
+    if (btnPainel) btnPainel.classList.toggle("hidden", role !== "admin");
 
     // 3. Varre e esconde usando a classe do Tailwind "hidden"
     menuLinks.forEach(item => {
@@ -1799,7 +1836,7 @@ async function performLogout() {
     if (iframe && iframe.contentWindow) {
       iframe.contentWindow.postMessage(
         { type: "THEME_CHANGE", theme: theme },
-        "*"
+        window.location.origin
       );
     }
   });
@@ -1819,8 +1856,8 @@ async function performLogout() {
 
   // Aguarda o app filho pedir os dados
   window.addEventListener("message", (event) => {
-    // É uma boa prática verificar a origem por segurança
-    if (event.data === "GET_USER_DATA") {
+    // [SEGURANÇA] origem + iframe conhecido
+    if (event.data === "GET_USER_DATA" && isTrustedMessage(event)) {
         const userData = {
             id: sessionStorage.getItem("cockpit_user_id"),
             name: sessionStorage.getItem("cockpit_user_realname"),
@@ -1832,7 +1869,7 @@ async function performLogout() {
         event.source.postMessage({
             type: "USER_DATA_RESPONSE",
             payload: userData
-        }, event.origin);
+        }, window.location.origin);
     }
   });
 
@@ -1846,11 +1883,18 @@ const globalNotificationState = {
 // Escuta os pedidos de LOG vindos dos iframes filhos
   window.addEventListener("message", (event) => {
       if (event.data && event.data.type === "REGISTRAR_LOG") {
-          const { acao, detalhes, appOrigem } = event.data.payload;
-          
-          // Repassa para a função global que criamos
+          // [SEGURANÇA] ignora mensagens que não vêm de um app do Cockpit
+          if (!isTrustedMessage(event)) return;
+          const { acao, detalhes, appOrigem } = event.data.payload || {};
+          if (!acao) return;
+
+          // Repassa para a função global que criamos (com limites de tamanho)
           if (typeof window.registrarLog === "function") {
-              window.registrarLog(acao, detalhes, appOrigem);
+              window.registrarLog(
+                  String(acao).slice(0, 80),
+                  (detalhes && typeof detalhes === "object") ? detalhes : {},
+                  String(appOrigem || "APP_FILHO").slice(0, 60)
+              );
           }
       }
   });
@@ -1858,7 +1902,11 @@ const globalNotificationState = {
 // Escuta as mensagens dos iframes filhos
 window.addEventListener("message", (event) => {
     if (event.data && event.data.type === "UPDATE_NOTIFICATIONS") {
-        const { appName, count } = event.data;
+        // [SEGURANÇA] origem confiável + validação dos campos
+        if (!isTrustedMessage(event)) return;
+        const appName = String(event.data.appName || "");
+        const count = Math.max(0, Math.floor(Number(event.data.count)));
+        if (!/^[a-z0-9_-]{1,40}$/i.test(appName) || appName === "__proto__" || !Number.isFinite(count)) return;
         
         // 1. Atualiza o estado daquele app específico
         globalNotificationState[appName] = count;
@@ -2007,8 +2055,8 @@ window.addEventListener("message", (event) => {
                   const dataFormatada = new Date(notif.data_criacao).toLocaleString('pt-BR');
                   htmlList += `
                       <div onclick="appNavigate('#demandas'); toggleNotificationsModal();" class="cursor-pointer p-2 rounded-lg bg-blue-50 dark:bg-slate-700/50 hover:bg-blue-100 dark:hover:bg-slate-600 text-xs transition-colors mb-1 border-l-2 border-blue-500">
-                          <p class="font-bold text-slate-800 dark:text-slate-200">${notif.ator_nome}</p>
-                          <p class="text-slate-600 dark:text-slate-300 mt-0.5 line-clamp-2">${notif.mensagem}</p>
+                          <p class="font-bold text-slate-800 dark:text-slate-200">${escapeHtml(notif.ator_nome)}</p>
+                          <p class="text-slate-600 dark:text-slate-300 mt-0.5 line-clamp-2">${escapeHtml(notif.mensagem)}</p>
                           <p class="text-[9px] text-slate-400 mt-1">${dataFormatada}</p>
                       </div>`;
               });
@@ -2031,8 +2079,8 @@ window.addEventListener("message", (event) => {
                       const dataFormatada = new Date(user.created_at).toLocaleDateString('pt-BR');
                       htmlList += `
                           <div onclick="appNavigate('#usuarios'); toggleNotificationsModal();" class="cursor-pointer p-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/10 hover:bg-emerald-100 dark:hover:bg-emerald-900/20 text-xs transition-colors mb-1 border-l-2 border-emerald-500">
-                              <p class="font-bold text-slate-800 dark:text-slate-200">${user.nome} solicitou acesso</p>
-                              <p class="text-slate-600 dark:text-slate-400 mt-0.5">${user.email}</p>
+                              <p class="font-bold text-slate-800 dark:text-slate-200">${escapeHtml(user.nome)} solicitou acesso</p>
+                              <p class="text-slate-600 dark:text-slate-400 mt-0.5">${escapeHtml(user.email)}</p>
                               <p class="text-[9px] text-slate-400 mt-1">${dataFormatada}</p>
                           </div>`;
                   });
@@ -2098,7 +2146,7 @@ window.addEventListener("message", (event) => {
                         alertasContratosHTML += `
                             <div onclick="appNavigate('#contratos'); toggleNotificationsModal();" class="cursor-pointer p-2 rounded-lg hover:brightness-95 text-xs transition-colors mb-1 border-l-2 ${nivelAlerta}">
                                 <div class="flex justify-between items-start gap-2">
-                                    <p class="font-bold text-[10px] break-all leading-tight mt-0.5">${icone} ${infoContratos[id]}</p>
+                                    <p class="font-bold text-[10px] break-all leading-tight mt-0.5">${icone} ${escapeHtml(infoContratos[id])}</p>
                                     <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider bg-white/50 shrink-0">${acao}</span>
                                 </div>
                                 <p class="mt-1 opacity-90 font-medium">Vence em ${diffDays} dias (${dataExibicao.toLocaleDateString('pt-BR')})</p>
@@ -2148,7 +2196,7 @@ window.addEventListener("message", (event) => {
                     // Verifica com quem está a demanda para exibir no card
                     const isMinha = d.responsavel_nome === userName;
                     const quemFaz = isMinha ? 'Você' : (d.responsavel_nome || 'Ninguém');
-                    const labelDelegada = isMinha ? '' : `<span class="block mt-1.5 text-[9px] text-slate-500 uppercase font-bold bg-white/40 dark:bg-black/20 inline-block px-1.5 py-0.5 rounded shadow-sm border border-slate-200/50">👤 Com: ${quemFaz}</span>`;
+                    const labelDelegada = isMinha ? '' : `<span class="block mt-1.5 text-[9px] text-slate-500 uppercase font-bold bg-white/40 dark:bg-black/20 inline-block px-1.5 py-0.5 rounded shadow-sm border border-slate-200/50">👤 Com: ${escapeHtml(quemFaz)}</span>`;
 
                     let nivelAlerta = '';
                     let icone = '';
@@ -2176,8 +2224,8 @@ window.addEventListener("message", (event) => {
                     alertasDemandasHTML += `
                         <div onclick="appNavigate('#demandas'); toggleNotificationsModal();" class="cursor-pointer p-2 rounded-lg hover:brightness-95 text-xs transition-all mb-1 border-l-4 ${nivelAlerta}">
                             <div class="flex justify-between items-start gap-2">
-                                <p class="font-bold text-[11px] break-all leading-tight mt-0.5">${icone} ${d.titulo}</p>
-                                <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider bg-white/60 shrink-0">${d.prioridade}</span>
+                                <p class="font-bold text-[11px] break-all leading-tight mt-0.5">${icone} ${escapeHtml(d.titulo)}</p>
+                                <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider bg-white/60 shrink-0">${escapeHtml(d.prioridade)}</span>
                             </div>
                             <p class="mt-1 opacity-90 font-medium">${textoPrazo} (${dataPrazo.toLocaleDateString('pt-BR')})</p>
                             ${labelDelegada}
@@ -2215,13 +2263,13 @@ window.addEventListener("message", (event) => {
                     htmlList += `
                         <div onclick="appNavigate('#qualificacao'); toggleNotificationsModal();" class="cursor-pointer p-2 rounded-lg bg-purple-50 dark:bg-purple-900/10 hover:bg-purple-100 dark:hover:bg-purple-900/20 text-xs transition-colors mb-1 border-l-2 border-purple-500">
                             <div class="flex justify-between items-start">
-                                <p class="font-bold text-slate-800 dark:text-slate-200">Família ${sug.familia_codigo}</p>
+                                <p class="font-bold text-slate-800 dark:text-slate-200">Família ${escapeHtml(sug.familia_codigo)}</p>
                                 <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-sm bg-purple-200 text-purple-800 dark:bg-purple-800 dark:text-purple-200 shadow-sm shrink-0">
-                                    ${sug.quantidade} Sugestão(ões)
+                                    ${escapeHtml(sug.quantidade)} Sugestão(ões)
                                 </span>
                             </div>
-                            <p class="text-slate-600 dark:text-slate-300 mt-0.5">Novo CNAE: <span class="font-mono">${sug.cnae_codigo}</span></p>
-                            <p class="text-[9px] text-slate-400 mt-1">${dataFormatada} • Por: ${primeiroSugeridor}</p>
+                            <p class="text-slate-600 dark:text-slate-300 mt-0.5">Novo CNAE: <span class="font-mono">${escapeHtml(sug.cnae_codigo)}</span></p>
+                            <p class="text-[9px] text-slate-400 mt-1">${dataFormatada} • Por: ${escapeHtml(primeiroSugeridor)}</p>
                         </div>`;
                 });
             }

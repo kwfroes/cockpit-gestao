@@ -35,6 +35,21 @@ const app = {
 
         document.getElementById('newAvatar').addEventListener('change', (e) => this.iniciarRecorte(e, 'newAvatar'));
         document.getElementById('editAvatar').addEventListener('change', (e) => this.iniciarRecorte(e, 'editAvatar'));
+
+        // --- Modal "Adicionar Novo Usuário": fechamento por Esc / clique no fundo e "selecionar todos" ---
+        document.addEventListener('keydown', (e) => {
+            if (e.key !== 'Escape') return;
+            if (document.getElementById('modal').classList.contains('hidden')) return;
+            if (!document.getElementById('cropperModal').classList.contains('hidden')) return;
+            if (!document.getElementById('confirmStatusModal').classList.contains('hidden')) return;
+            this.fecharNovoUsuario();
+        });
+        document.getElementById('modal').addEventListener('mousedown', (e) => {
+            if (e.target === e.currentTarget) this.fecharNovoUsuario();
+        });
+        document.querySelectorAll('input[name="new_app_permission"]').forEach(cb => {
+            cb.addEventListener('change', () => this.atualizarSelecionarTodosNovo());
+        });
     },
 
     // --- LÓGICA DE HIERARQUIA SRL ---
@@ -111,6 +126,9 @@ const app = {
                 });
 
             if (uploadError) throw uploadError;
+
+            // Guarda o caminho enviado (permite remover o arquivo se a criação do usuário falhar)
+            this._ultimoAvatarPath = filePath;
 
             // Retorna a URL pública gerada
             const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
@@ -380,7 +398,7 @@ const app = {
             
             if (role === 'admin') {
                 // Se virar Admin (ou continuar Admin), recebe o pacote completo
-                allowed_apps = ['#home', '#dashboard', '#gerador', '#contratos', '#legislacao', '#qualificacao', '#regmap', '#demandas', '#conversor', '#usuarios', '#vistoria', '#quiz', '#chatstorage'];
+                allowed_apps = ['#home', '#dashboard', '#gerador', '#contratos', '#legislacao', '#qualificacao', '#regmap', '#demandas', '#conversor', '#usuarios', '#vistoria', '#quiz', '#chatstorage', '#capacitacao', '#apresentacoes'];
             } else {
                 // Se for User (ou rebaixado para User), pega os marcados e mescla garantindo a Home
                 const checkedBoxes = Array.from(document.querySelectorAll('input[name="app_permission"]:checked'));
@@ -627,10 +645,27 @@ const app = {
 
 // 2A. ABRIR MODAL LIMPANDO CACHES ANTIGOS
     abrirNovoUsuario() {
+        // Guarda quem abriu o modal para devolver o foco ao fechar
+        this._elementoFocoNovo = document.activeElement;
+
         document.getElementById('newName').value = '';
         document.getElementById('newEmail').value = '';
         document.getElementById('newAvatar').value = '';
         document.getElementById('newRole').value = 'user';
+
+        // Limpa foto recortada/prévia e caminho de upload de aberturas anteriores
+        this.croppedBlob = null;
+        this.currentFileInputId = null;
+        this._ultimoAvatarPath = null;
+        this.atualizarPreviewNovo(null);
+
+        // Reseta cota de armazenamento para o padrão
+        document.getElementById('newStorageQuota').value = 500;
+        this.atualizarRotuloCotaNovo();
+
+        // Reseta memória de permissões e checkboxes
+        this._novoEraAdmin = false;
+        this._appsSalvosNovo = [];
         this.handleNewRoleChange('user'); // Reseta os checkboxes
         document.getElementById('newResponsavel').checked = false;
         
@@ -644,15 +679,163 @@ const app = {
         const setorSelect = document.getElementById('newSetor');
         setorSelect.innerHTML = '<option value="">Nenhum</option>';
         setorSelect.disabled = true;
+        this.atualizarResponsavelNovo();
 
         this.popularSelectUserDash('newUserDash');
         document.getElementById('modal').classList.remove('hidden');
+        setTimeout(() => document.getElementById('newName').focus(), 50);
+    },
+
+    // 2A-1. FECHAR MODAL (limpa estado; pede confirmação se houver dados preenchidos)
+    fecharNovoUsuario(forcar = false) {
+        const modal = document.getElementById('modal');
+        if (modal.classList.contains('hidden')) return;
+
+        if (!forcar && this._novoUsuarioTemDados()) {
+            this.confirmarDescarteNovoUsuario();
+            return;
+        }
+
+        this.croppedBlob = null;
+        this.currentFileInputId = null;
+        this._ultimoAvatarPath = null;
+        document.getElementById('newAvatar').value = '';
+        this.atualizarPreviewNovo(null);
+        modal.classList.add('hidden');
+
+        const opener = this._elementoFocoNovo;
+        this._elementoFocoNovo = null;
+        if (opener && document.body.contains(opener)) opener.focus();
+    },
+
+    _novoUsuarioTemDados() {
+        const val = (id) => document.getElementById(id).value.trim();
+        const algumApp = Array.from(document.querySelectorAll('input[name="new_app_permission"]'))
+            .some(cb => cb.checked && !cb.disabled);
+        return !!(
+            val('newName') ||
+            val('newEmail') ||
+            this.croppedBlob ||
+            val('newDiretoria') ||
+            val('newUserDash') ||
+            val('newRole') !== 'user' ||
+            val('newStorageQuota') !== '500' ||
+            algumApp
+        );
+    },
+
+    confirmarDescarteNovoUsuario() {
+        const modal = document.getElementById('confirmStatusModal');
+        const content = document.getElementById('confirmStatusContent');
+        const btnConfirm = document.getElementById('btnConfirmAction');
+        const iconDiv = document.getElementById('confirmIcon');
+
+        document.getElementById('confirmTitle').textContent = "Descartar cadastro?";
+        iconDiv.className = "w-14 h-14 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4";
+        iconDiv.innerHTML = '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>';
+        btnConfirm.className = "flex-1 px-4 py-2 font-medium rounded-lg text-white shadow-md transition-colors bg-amber-600 hover:bg-amber-700 shadow-amber-500/30";
+        btnConfirm.textContent = "Sim, descartar";
+        document.getElementById('confirmMessage').textContent = "Há dados preenchidos que serão perdidos. Deseja fechar mesmo assim?";
+        btnConfirm.disabled = false;
+        btnConfirm.onclick = () => {
+            this.fecharConfirmacao();
+            this.fecharNovoUsuario(true);
+        };
+
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+        }, 10);
+    },
+
+    // 2A-2. PRÉVIA DA FOTO (novo usuário)
+    atualizarPreviewNovo(blob) {
+        const img = document.getElementById('newAvatarPreview');
+        if (!img) return;
+        if (this._previewUrlNovo) {
+            URL.revokeObjectURL(this._previewUrlNovo);
+            this._previewUrlNovo = null;
+        }
+        if (blob) {
+            this._previewUrlNovo = URL.createObjectURL(blob);
+            img.src = this._previewUrlNovo;
+            img.classList.remove('hidden');
+        } else {
+            img.removeAttribute('src');
+            img.classList.add('hidden');
+        }
+    },
+
+    // 2A-3. LOTAÇÃO (novo usuário): mantém Setor e "Responsável" consistentes
+    async aoMudarDiretoriaNovo() {
+        await this.filtrarCoordenacoes('new');
+        const setorSelect = document.getElementById('newSetor');
+        setorSelect.innerHTML = '<option value="">Nenhum</option>';
+        setorSelect.disabled = true;
+        this.atualizarResponsavelNovo();
+    },
+
+    async aoMudarCoordenacaoNovo() {
+        await this.filtrarSetores('new');
+        this.atualizarResponsavelNovo();
+    },
+
+    atualizarResponsavelNovo() {
+        const temCoord = !!document.getElementById('newCoordenacao').value;
+        const cb = document.getElementById('newResponsavel');
+        const label = document.getElementById('newResponsavelLabel');
+        cb.disabled = !temCoord;
+        if (!temCoord) cb.checked = false;
+        label.classList.toggle('opacity-50', !temCoord);
+        label.classList.toggle('cursor-not-allowed', !temCoord);
+        label.classList.toggle('cursor-pointer', temCoord);
+    },
+
+    // 2A-4. COTA DE ARMAZENAMENTO (novo usuário)
+    _alocadoPoolBytes() {
+        if (!this._usuariosPorId) return null;
+        let total = 0;
+        this._usuariosPorId.forEach(u => {
+            if (u.status !== 'inativo') total += (u.storage_quota_bytes || 524288000);
+        });
+        return total;
+    },
+
+    _formatarMB(mb) {
+        if (mb >= 1024) return `${(mb / 1024).toFixed(2).replace(/\.?0+$/, '')} GB`;
+        return `${mb} MB`;
+    },
+
+    atualizarRotuloCotaNovo() {
+        const el = document.getElementById('newStorageQuotaLabel');
+        if (!el) return;
+        const mb = Number(document.getElementById('newStorageQuota').value);
+        if (!Number.isFinite(mb) || mb <= 0) { el.textContent = ''; return; }
+
+        let texto = `Cota: ${this._formatarMB(mb)}`;
+        let excede = false;
+        const alocado = this._alocadoPoolBytes();
+        if (alocado !== null) {
+            const restanteMB = Math.floor((10 * 1024 * 1024 * 1024 - alocado) / (1024 * 1024));
+            excede = mb > restanteMB;
+            texto += ` · Restam ${this._formatarMB(Math.max(restanteMB, 0))} no pool`;
+        }
+        el.textContent = texto;
+        el.classList.toggle('text-red-500', excede);
+        el.classList.toggle('text-slate-500', !excede);
     },
 
     // 2B. GERENCIA CONGELAMENTO DOS CHECKBOXES SE FOR ADMIN
     handleNewRoleChange(role) {
         const checkboxes = document.querySelectorAll('input[name="new_app_permission"]');
         const isAdmin = role === 'admin';
+
+        // Ao virar Admin, memoriza a seleção manual para restaurá-la se voltar a Usuário Comum
+        if (isAdmin && !this._novoEraAdmin) {
+            this._appsSalvosNovo = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+        }
         
         checkboxes.forEach(cb => {
             if (isAdmin) {
@@ -660,20 +843,43 @@ const app = {
                 cb.disabled = true;
                 cb.parentElement.classList.add('opacity-50', 'cursor-not-allowed');
             } else {
-                cb.checked = false; 
+                cb.checked = (this._appsSalvosNovo || []).includes(cb.value);
                 cb.disabled = false;
                 cb.parentElement.classList.remove('opacity-50', 'cursor-not-allowed');
             }
         });
+        this._novoEraAdmin = isAdmin;
+        this.atualizarSelecionarTodosNovo();
+    },
+
+    // 2B-1. "SELECIONAR TODOS" (novo usuário)
+    toggleTodosAppsNovo(marcado) {
+        document.querySelectorAll('input[name="new_app_permission"]').forEach(cb => {
+            if (!cb.disabled) cb.checked = marcado;
+        });
+        this.atualizarSelecionarTodosNovo();
+    },
+
+    atualizarSelecionarTodosNovo() {
+        const todos = document.getElementById('newAppsSelectAll');
+        const label = document.getElementById('newAppsSelectAllLabel');
+        if (!todos) return;
+        const cbs = Array.from(document.querySelectorAll('input[name="new_app_permission"]'));
+        const isAdmin = document.getElementById('newRole').value === 'admin';
+        todos.checked = cbs.length > 0 && cbs.every(cb => cb.checked);
+        todos.disabled = isAdmin;
+        label.classList.toggle('opacity-50', isAdmin);
+        label.classList.toggle('cursor-not-allowed', isAdmin);
+        label.classList.toggle('cursor-pointer', !isAdmin);
     },
 
     // 2C. ADICIONAR USUÁRIO
     async salvarUsuario() {
             const btn = document.getElementById('btnSaveUser');
             const name = document.getElementById('newName').value.trim();
-            const email = document.getElementById('newEmail').value.trim();
+            const emailInput = document.getElementById('newEmail');
+            const email = emailInput.value.trim().toLowerCase();
             const role = document.getElementById('newRole').value;
-            const responsavel = document.getElementById('newResponsavel').checked;
 
             // 1. Coleta os valores diretamente dos 3 selects do modal de NOVO usuário
             const dir = document.getElementById('newDiretoria').value;
@@ -682,7 +888,11 @@ const app = {
             
             // 2. Junta tudo em um único texto (ex: "DSL/CGCF" ou "DSL/CSA/GESTAO_FROTA")
             // Se o setor for vazio ou "Nenhum", ele ignora o setor para não salvar lixo
-            const coordenacao = `${dir}/${coord}${setor && setor !== 'Nenhum' ? '/'+setor : ''}`;
+            // Só monta a lotação quando diretoria E coordenação foram escolhidas (evita salvar "/" ou "DSL/")
+            const coordenacao = (dir && coord)
+                ? `${dir}/${coord}${setor && setor !== 'Nenhum' ? '/'+setor : ''}`
+                : '';
+            const responsavel = !!coordenacao && document.getElementById('newResponsavel').checked;
 
             // A senha não é mais necessária aqui no front-end!
             if (!name || !email) {
@@ -690,16 +900,48 @@ const app = {
                 return;
             }
 
+            if (!emailInput.checkValidity()) {
+                this.showToast("Informe um endereço de e-mail válido.", "error");
+                emailInput.focus();
+                return;
+            }
+
+            if (dir && !coord) {
+                this.showToast("Selecione a coordenação da diretoria escolhida.", "error");
+                document.getElementById('newCoordenacao').focus();
+                return;
+            }
+
+            // Validação da cota de armazenamento (mín. 50 MB, múltiplos de 50 MB, dentro do pool de 10 GB)
+            const quotaInput = document.getElementById('newStorageQuota');
+            const storageQuotaMB = Number(quotaInput.value);
+            if (quotaInput.value.trim() === '' || !Number.isInteger(storageQuotaMB) || storageQuotaMB < 50 || storageQuotaMB % 50 !== 0) {
+                this.showToast("A cota deve ser de pelo menos 50 MB, em múltiplos de 50 MB.", "error");
+                quotaInput.focus();
+                return;
+            }
+            const alocadoBytes = this._alocadoPoolBytes();
+            if (alocadoBytes !== null && alocadoBytes + storageQuotaMB * 1024 * 1024 > 10 * 1024 * 1024 * 1024) {
+                this.showToast("A cota informada excede o espaço restante do pool de 10 GB.", "error");
+                quotaInput.focus();
+                return;
+            }
+
             btn.disabled = true;
-            btn.textContent = "Criando e Enviando E-mail...";
+            btn.textContent = "Criando usuário...";
+
+            let avatarPath = null;
+            const blobOriginal = this.croppedBlob; // permite reenviar a foto se a criação falhar
 
             try {
+                this._ultimoAvatarPath = null;
                 const avatarUrl = await this.uploadAvatar('newAvatar');
+                if (avatarUrl) avatarPath = this._ultimoAvatarPath;
 
                 // Ler apps permitidos baseados nos checkboxes
                 let allowed_apps = ["#home", "#demandas"];
                 if (role === 'admin') {
-                    allowed_apps = ['#home', '#dashboard', '#gerador', '#contratos', '#legislacao', '#qualificacao', '#regmap', '#demandas', '#conversor', '#usuarios', '#vistoria', '#quiz', '#chatstorage'];
+                    allowed_apps = ['#home', '#dashboard', '#gerador', '#contratos', '#legislacao', '#qualificacao', '#regmap', '#demandas', '#conversor', '#usuarios', '#vistoria', '#quiz', '#chatstorage', '#capacitacao', '#apresentacoes'];
                 } else {
                     const checkedBoxes = Array.from(document.querySelectorAll('input[name="new_app_permission"]:checked'));
                     const customApps = checkedBoxes.map(cb => cb.value);
@@ -707,7 +949,6 @@ const app = {
                 }
 
                 const user_dash = document.getElementById('newUserDash').value;
-                const storageQuotaMB = parseInt(document.getElementById('newStorageQuota').value) || 500;
                 const storage_quota_bytes = storageQuotaMB * 1024 * 1024;
                 // Envia para a Edge Function incluindo a coordenação montada
                 const { error } = await supabase.functions.invoke('gerenciar-usuarios', {
@@ -739,10 +980,20 @@ const app = {
                         coordenacao: coordenacao 
                     });
 
-                document.getElementById('modal').classList.add('hidden');
+                this.fecharNovoUsuario(true);
                 
                 await this.carregarUsuarios();
             } catch (err) {
+                // Remove a foto enviada que ficaria órfã no Storage e devolve o recorte para nova tentativa
+                if (avatarPath) {
+                    try {
+                        await supabase.storage.from('avatars').remove([avatarPath]);
+                    } catch (e) {
+                        console.warn("Não foi possível remover a foto órfã:", avatarPath, e);
+                    }
+                    this._ultimoAvatarPath = null;
+                    this.croppedBlob = blobOriginal;
+                }
                 this.showToast("Erro: " + err.message, "error");
             } finally {
                 btn.disabled = false;
@@ -792,6 +1043,7 @@ const app = {
         if (this.currentFileInputId) {
             document.getElementById(this.currentFileInputId).value = ''; // Reseta o input
         }
+        if (this.currentFileInputId === 'newAvatar') this.atualizarPreviewNovo(null);
         this.croppedBlob = null;
         if (this.cropperInstance) this.cropperInstance.destroy();
     },
@@ -810,6 +1062,7 @@ const app = {
         // Converte o canvas para um arquivo Blob (JPEG com 80% de qualidade - comprime muito e mantém a beleza!)
         canvas.toBlob((blob) => {
             this.croppedBlob = blob;
+            if (this.currentFileInputId === 'newAvatar') this.atualizarPreviewNovo(blob);
             document.getElementById('cropperModal').classList.add('hidden');
             this.showToast("Imagem recortada e otimizada!");
         }, 'image/jpeg', 0.8);

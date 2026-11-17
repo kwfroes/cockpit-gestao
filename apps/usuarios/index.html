@@ -155,28 +155,33 @@
     </div>
 
     <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div class="bg-white dark:bg-slate-900 rounded-lg w-full max-w-lg shadow-xl border border-slate-200 dark:border-slate-700 max-h-[90vh] flex flex-col">
+        <div class="bg-white dark:bg-slate-900 rounded-lg w-full max-w-2xl shadow-xl border border-slate-200 dark:border-slate-700 max-h-[90vh] flex flex-col">
             <div class="p-6 pb-4 border-b border-slate-100 dark:border-slate-800">
                 <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100">Adicionar Novo Usuário</h2>
             </div>
             
             <div class="p-6 py-4 overflow-y-auto flex-1 space-y-4">
+                <p class="text-[11px] font-black uppercase tracking-wider text-slate-400 border-b border-slate-100 dark:border-slate-800 pb-1">Dados pessoais</p>
                 <div>
                     <label class="block text-xs font-bold text-slate-500 mb-1">Foto de Perfil (Opcional)</label>
+                    <div class="flex items-center gap-3">
+                        <img id="newAvatarPreview" alt="Prévia da foto" class="hidden w-12 h-12 rounded-full object-cover border border-slate-200 dark:border-slate-700 shrink-0">
                     <input id="newAvatar" type="file" accept="image/*" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-500 p-[5px] rounded outline-none file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+                    </div>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-1">Nome</label>
-                        <input id="newName" type="text" placeholder="Kevin Fróes" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
+                        <label class="block text-xs font-bold text-slate-500 mb-1">Nome <span class="text-red-500">*</span></label>
+                        <input id="newName" type="text" autocomplete="off" placeholder="Kevin Fróes" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-1">E-mail</label>
-                        <input id="newEmail" type="email" placeholder="E-mail de acesso" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
+                        <label class="block text-xs font-bold text-slate-500 mb-1">E-mail <span class="text-red-500">*</span></label>
+                        <input id="newEmail" type="email" autocomplete="off" placeholder="E-mail de acesso" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                 </div>
                 
+                <p class="text-[11px] font-black uppercase tracking-wider text-slate-400 border-b border-slate-100 dark:border-slate-800 pb-1 pt-2">Perfil e vínculo</p>
                 <div>
                     <label class="block text-xs font-bold text-slate-500 mb-1">Nível de Acesso</label>
                     <select id="newRole" onchange="app.handleNewRoleChange(this.value)" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
@@ -193,18 +198,19 @@
                     <p class="text-[10px] text-slate-400 mt-1 italic">Selecione o nome idêntico ao do relatório para carregar o painel corretamente.</p>
                 </div>
 
+                <p class="text-[11px] font-black uppercase tracking-wider text-slate-400 border-b border-slate-100 dark:border-slate-800 pb-1 pt-2">Lotação</p>
                 <div>
                         <label class="block text-xs font-bold text-slate-500 mb-1">Coordenação</label>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
                                 <div>
                                     <label class="block text-xs font-bold text-slate-500 mb-1">Diretoria</label>
-                                    <select id="newDiretoria" onchange="app.filtrarCoordenacoes('new')" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
+                                    <select id="newDiretoria" onchange="app.aoMudarDiretoriaNovo()" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
                                         <option value="">Selecione...</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-slate-500 mb-1">Coordenação</label>
-                                    <select id="newCoordenacao" onchange="app.filtrarSetores('new')" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500" disabled>
+                                    <select id="newCoordenacao" onchange="app.aoMudarCoordenacaoNovo()" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500" disabled>
                                         <option value="">Selecione a diretoria...</option>
                                     </select>
                                 </div>
@@ -217,15 +223,23 @@
                             </div>
                     </div>
                 <div class="mt-2 mb-4">
-                    <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer w-max">
-                        <input id="newResponsavel" type="checkbox" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900 w-4 h-4">
+                    <label id="newResponsavelLabel" class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-not-allowed opacity-50 w-max">
+                        <input id="newResponsavel" type="checkbox" disabled class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900 w-4 h-4">
                         <span class="font-bold">Responsável pela Coordenação</span>
                     </label>
+                    <p class="text-[10px] text-slate-400 mt-1 italic">Disponível após selecionar diretoria e coordenação.</p>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wide">Aplicações Permitidas</label>
-                    <div class="grid grid-cols-2 gap-2 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+                    <p class="text-[11px] font-black uppercase tracking-wider text-slate-400 border-b border-slate-100 dark:border-slate-800 pb-1 mb-3">Acessos e armazenamento</p>
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide">Aplicações Permitidas</label>
+                        <label id="newAppsSelectAllLabel" class="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300 cursor-pointer">
+                            <input id="newAppsSelectAll" type="checkbox" onchange="app.toggleTodosAppsNovo(this.checked)" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
+                            Selecionar todos
+                        </label>
+                    </div>
+                    <div id="newAppsGrid" class="grid grid-cols-2 gap-2 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
                         <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
                             <input type="checkbox" name="new_app_permission" value="#vistoria" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
                             Vistoria Física
@@ -274,19 +288,28 @@
                             <input type="checkbox" name="new_app_permission" value="#chatstorage" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
                             Cockpit Drive
                         </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
+                            <input type="checkbox" name="new_app_permission" value="#capacitacao" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
+                            Capacitação Validador
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
+                            <input type="checkbox" name="new_app_permission" value="#apresentacoes" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
+                            Apresentações
+                        </label>
                     </div>
                     <p class="text-[10px] text-slate-400 mt-1 italic">* Administradores possuem acesso automático a todas as ferramentas.</p>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Armazenamento (Cockpit Drive) — MB</label>
+                    <input id="newStorageQuota" type="number" min="50" step="50" value="500" oninput="app.atualizarRotuloCotaNovo()" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
+                    <p class="text-[10px] text-slate-400 mt-1">Padrão: 500MB. O pool total do Cockpit é de 10GB entre todos os usuários.</p>
+                    <p id="newStorageQuotaLabel" class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 mt-1"></p>
                 </div>
             </div>
 
             <div class="p-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex gap-3">
-                <button onclick="document.getElementById('modal').classList.add('hidden')" class="flex-1 bg-gray-200 dark:bg-slate-800 text-slate-800 dark:text-white py-2.5 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-700 transition font-medium">Cancelar</button>
+                <button onclick="app.fecharNovoUsuario()" class="flex-1 bg-gray-200 dark:bg-slate-800 text-slate-800 dark:text-white py-2.5 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-700 transition font-medium">Cancelar</button>
                 <button onclick="app.salvarUsuario()" id="btnSaveUser" class="flex-1 bg-green-600 text-white py-2.5 rounded-lg hover:bg-green-700 transition font-medium shadow-md">Criar Usuário</button>
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-500 mb-1">Armazenamento (Cockpit Drive) — MB</label>
-                <input id="newStorageQuota" type="number" min="50" step="50" value="500" class="w-full border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-2 rounded outline-none focus:ring-2 focus:ring-blue-500">
-                <p class="text-[10px] text-slate-400 mt-1">Padrão: 500MB. O pool total do Cockpit é de 10GB entre todos os usuários.</p>
             </div>
         </div>
     </div>
@@ -429,6 +452,14 @@
                             <input type="checkbox" name="app_permission" value="#chatstorage" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
                             Cockpit Drive
                         </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
+                            <input type="checkbox" name="app_permission" value="#capacitacao" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
+                            Capacitação Validador
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400">
+                            <input type="checkbox" name="app_permission" value="#apresentacoes" class="rounded text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-900">
+                            Apresentações
+                        </label>
                     </div>
                     <p class="text-[10px] text-slate-400 mt-1 italic">* Administradores possuem acesso automático a todas as ferramentas.</p>
                 </div>
@@ -518,6 +549,9 @@
                     </label>
                     <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
                         <input type="checkbox" name="approve_app_permission" value="#chatstorage" class="rounded text-blue-600 focus:ring-blue-500"> Cockpit Drive
+                    </label>
+                    <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
+                        <input type="checkbox" name="approve_app_permission" value="#vistoria" class="rounded text-blue-600 focus:ring-blue-500"> Vistoria Física
                     </label>
                 </div>
             </div>
