@@ -3,3 +3,4 @@ apps/admin/
 /admin.html
 /admin1.html
 repomix-output.xml
+repomix-*.xml
