@@ -4279,11 +4279,20 @@ const statusBadge = document.getElementById("telegramStatusBadge");
               const qrContainer = document.getElementById("qrcodeContainer");
               const linkBtn = document.getElementById("telegramLinkBtn");
 
-              // Codificação Base64 para compatibilidade com o Telegram
-              const emailCodificado = btoa(data.email).replace(/=/g, '');
-              const botUrl = `https://t.me/kf_cockpit_bot?start=auth_${emailCodificado}`;
+              // Link com CÓDIGO DE USO ÚNICO (vale 15 minutos), gerado no servidor para o usuário logado.
+              // Antes o link levava o e-mail em Base64: quem soubesse o e-mail de alguém conseguia vincular
+              // o próprio Telegram à conta dele e passar a receber os relatórios dele.
+              let botUrl = "";
+              try {
+                  const { data: codigoVinculo, error: erroCodigo } = await supabaseClient.rpc('telegram_gerar_codigo');
+                  if (erroCodigo || !/^[0-9a-f]{32}$/i.test(codigoVinculo || "")) throw (erroCodigo || new Error("código inválido"));
+                  botUrl = `https://t.me/kf_cockpit_bot?start=vinc_${codigoVinculo}`;
+              } catch (e) {
+                  console.error("Erro ao gerar o link do Telegram:", e);
+              }
 
-              linkBtn.href = botUrl;
+              if (botUrl) linkBtn.href = botUrl;
+              else linkBtn.removeAttribute("href");
 
               if (data.telegram_chat_id) {
                   if (statusBadge) {
@@ -4301,6 +4310,10 @@ const statusBadge = document.getElementById("telegramStatusBadge");
                   statusText.textContent = "Aponte a câmera e toque em 'Iniciar' no Telegram:";
                   linkBtn.textContent = "Abrir no Telegram";
 
+                  if (!botUrl) {
+                      statusText.textContent = "Não foi possível gerar o link do Telegram agora. Feche esta janela e tente de novo em instantes.";
+                      qrContainer.innerHTML = "";
+                  } else {
                   // 1. Exibe o loader temporário
                   qrContainer.innerHTML = `
                       <div id="qrLoading" class="flex flex-col items-center justify-center h-[120px] w-[120px] bg-gray-50 dark:bg-slate-800 border rounded-lg border-gray-200 dark:border-slate-700">
@@ -4321,6 +4334,7 @@ const statusBadge = document.getElementById("telegramStatusBadge");
                   };
 
                   qrContainer.appendChild(imgQr);
+                  }
               }
             }
           }

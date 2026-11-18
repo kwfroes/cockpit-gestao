@@ -262,11 +262,10 @@ async function converterExcelEMerge() {
         });
       }
 
-      // --- PASSO 2: Carregar Base Estática (JSON) ---
-      document.getElementById("convertStatus").innerText = "Buscando base de dados...";
-      const response = await fetch("./arquives/banco_dados_estatico.json");
-      if (!response.ok) throw new Error("Não foi possível carregar o banco_dados_estatico.json");
-      const listaEstatica = await response.json();
+      // --- PASSO 2: Base Estática (REMOVIDA) ---
+      // O arquivo arquives/banco_dados_estatico.json saiu do repositório (site público; continha CPF de pessoas físicas).
+      // A ferramenta passa a converter somente o Excel enviado, nos dois modos (padrão e geográfico).
+      const listaEstatica = [];
 
       // --- PASSO 3: Deduplicação Inteligente ---
       document.getElementById("convertStatus").innerText = "Cruzando dados...";
@@ -308,7 +307,7 @@ async function converterExcelEMerge() {
       link.download = fileName;
 
       document.getElementById("resultConvert").classList.remove("hidden");
-      showToast(`Sucesso! ${listaEstatica.length - listaEstaticaFiltrada.length} duplicados removidos.`);
+      showToast(`Sucesso! ${listaFinal.length.toLocaleString()} linhas geradas.`);
     } catch (error) {
       console.error(error);
       alert("Erro no processo: " + error.message);

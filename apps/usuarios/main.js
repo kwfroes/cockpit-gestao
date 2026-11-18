@@ -1,5 +1,26 @@
 var supabase = window.supabaseClient;
 
+// =========================================================
+// [SEGURANÇA] Helpers contra injeção de HTML/JS
+// Nome, e-mail, logs e pedidos de acesso são digitados por usuários (inclusive sem login, no formulário de acesso).
+// Nada disso pode entrar em innerHTML sem passar por aqui.
+// =========================================================
+// Texto (ou valor de atributo) seguro dentro de HTML
+function escapeHtml(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+// Argumento de texto para onclick="app.metodo(...)": vira um literal JavaScript (JSON) e depois é escapado
+// para ficar seguro dentro do atributo HTML. O navegador desfaz o escape do HTML e o JavaScript recebe o texto original,
+// mesmo com apóstrofo, aspas, barras ou &#39; no valor.
+function jsq(value) {
+    return escapeHtml(JSON.stringify(String(value ?? '')));
+}
+
 const app = {
     theme: 'light',
     cropperInstance: null, // Guarda a ferramenta de recorte
@@ -26,7 +47,9 @@ const app = {
 
     setupGlobalEvents() {
         window.addEventListener("message", (e) => {
-            if (e.data && e.data.type === "THEME_CHANGE") {
+            // [SEGURANÇA] só aceita o Cockpit (janela pai, mesma origem)
+            if (e.origin !== window.location.origin || e.source !== window.parent) return;
+            if (e.data && e.data.type === "THEME_CHANGE" && (e.data.theme === "dark" || e.data.theme === "light")) {
                 this.theme = e.data.theme;
                 localStorage.setItem('cockpit_theme', this.theme);
                 document.documentElement.classList.toggle("dark", this.theme === "dark");
@@ -68,7 +91,7 @@ const app = {
         const select = document.getElementById(`${pref}Diretoria`);
         select.innerHTML = '<option value="">Selecione...</option>';
         data.superintendencia.subordinados.forEach(d => {
-            select.innerHTML += `<option value="${d.sigla}">${d.nome}</option>`;
+            select.innerHTML += `<option value="${escapeHtml(d.sigla)}">${escapeHtml(d.nome)}</option>`;
         });
     },
 
@@ -83,7 +106,7 @@ const app = {
         if (dirSigla) {
             const dir = data.superintendencia.subordinados.find(s => s.sigla === dirSigla);
             dir.subordinados.forEach(c => {
-                coordSelect.innerHTML += `<option value="${c.sigla}">${c.nome}</option>`;
+                coordSelect.innerHTML += `<option value="${escapeHtml(c.sigla)}">${escapeHtml(c.nome)}</option>`;
             });
         }
     },
@@ -101,7 +124,7 @@ const app = {
         
         if (coord && coord.subordinados) {
             coord.subordinados.forEach(s => {
-                setorSelect.innerHTML += `<option value="${s.sigla}">${s.nome}</option>`;
+                setorSelect.innerHTML += `<option value="${escapeHtml(s.sigla)}">${escapeHtml(s.nome)}</option>`;
             });
             setorSelect.disabled = false;
         } else {
@@ -212,21 +235,21 @@ const app = {
             return `
             <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors ${isInativo ? 'opacity-70 bg-gray-50 dark:bg-slate-800/30' : ''}">
                 <td class="p-4 flex items-center gap-3">
-                    <img src="${u.avatar_url || defaultAvatar + (u.name || 'U')}" class="w-10 h-10 rounded-full object-cover shadow-sm border border-slate-200 dark:border-slate-700">
-                    <span class="text-slate-800 dark:text-slate-200 font-bold">${u.name || 'Sem nome'}</span>
+                    <img src="${escapeHtml(u.avatar_url || defaultAvatar + encodeURIComponent(u.name || 'U'))}" class="w-10 h-10 rounded-full object-cover shadow-sm border border-slate-200 dark:border-slate-700">
+                    <span class="text-slate-800 dark:text-slate-200 font-bold">${escapeHtml(u.name || 'Sem nome')}</span>
                 </td>
                 <td class="p-4 text-slate-600 dark:text-slate-400 font-medium">
-                    ${u.email || '<span class="text-xs opacity-50 italic">Sem e-mail</span>'}
+                    ${u.email ? escapeHtml(u.email) : '<span class="text-xs opacity-50 italic">Sem e-mail</span>'}
                 </td>
                 <td class="p-4 text-center">
                     <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${u.role === 'admin' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' : 'bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-400'}">
-                        ${u.role}
+                        ${escapeHtml(u.role)}
                     </span>
                 </td>
                 <td class="p-4 text-center">
                     ${coord !== '-' 
                         ? `<span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider cursor-default ${coordBadgeClass}" title="${u.responsavel ? 'Responsável pela Coordenação' : 'Membro da Equipe'}">
-                            ${coord}
+                            ${escapeHtml(coord)}
                         </span>`
                         : `<span class="text-slate-400 dark:text-slate-600 text-xs">-</span>`
                     }
@@ -237,7 +260,7 @@ const app = {
                     </span>
                 </td>
                 <td class="p-4 text-right">
-                    <button onclick="app.abrirEdicao('${u.id}', '${u.name}', '${u.email}', '${u.role}', '${appsJsonString}', '${safeCoord}', ${isResp}, '${safeUserDash}', ${isEmailAtivo}, ${isTelegramAtivo})"
+                    <button onclick="app.abrirEdicao(${jsq(u.id)}, ${jsq(u.name)}, ${jsq(u.email)}, ${jsq(u.role)}, ${jsq(appsJsonString)}, ${jsq(safeCoord)}, ${isResp}, ${jsq(safeUserDash)}, ${isEmailAtivo}, ${isTelegramAtivo})"
                         class="text-blue-500 hover:text-blue-700 mr-3" title="Editar Usuário">
                         <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 3C7.74882 3 5.62323 3 4.30256 4.31802C3.298 5.32056 3.05755 6.78787 3 9.3M21 9.3C20.9424 6.78787 20.702 5.32056 19.6974 4.31802C18.8789 3.50116 17.7513 3.19056 16 3.07246M21 14.7C20.9424 17.2121 20.702 18.6794 19.6974 19.682C18.3768 21 16.2512 21 12 21C7.74882 21 5.62323 21 4.30256 19.682C3.29801 18.6794 3.05756 17.2121 3 14.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -249,20 +272,20 @@ const app = {
                     </button>
 
                     ${!isInativo && u.email ? `
-                    <button onclick="app.resetarSenhaAdmin('${u.id}', '${(u.name || 'usuário').replace(/'/g, "\\'")}', '${u.email}')"
+                    <button onclick="app.resetarSenhaAdmin(${jsq(u.id)}, ${jsq(u.name || 'usuário')}, ${jsq(u.email)})"
                         class="text-amber-500 hover:text-amber-700 mr-3" title="Reenviar senha / Forçar redefinição no próximo login">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
                     </button>
                     ` : ''}
 
                     ${isInativo ? `
-                    <button onclick="app.limparArmazenamento('${u.id}', '${(u.name || 'usuário').replace(/'/g, "\\'")}')"
+                    <button onclick="app.limparArmazenamento(${jsq(u.id)}, ${jsq(u.name || 'usuário')})"
                         class="text-amber-500 hover:text-amber-700 mr-3" title="Limpar armazenamento (Cockpit Drive)">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                     </button>
                     ` : ''}
 
-                    <button onclick="${isMe ? `app.showToast('Segurança: Você não pode alterar o seu próprio status.', 'error')` : `app.alternarStatus('${u.id}', '${u.status || 'ativo'}')`}"
+                    <button onclick="${isMe ? `app.showToast('Segurança: Você não pode alterar o seu próprio status.', 'error')` : `app.alternarStatus(${jsq(u.id)}, ${jsq(u.status || 'ativo')})`}"
                         class="${isInativo ? 'text-green-500 hover:text-green-700' : 'text-red-500 hover:text-red-700'} ${isMe ? 'opacity-30 cursor-not-allowed' : ''}"
                         title="${isMe ? 'Proteção de Conta Ativa' : (isInativo ? 'Ativar Usuário' : 'Inativar Usuário')}">
                             ${isInativo 
@@ -384,6 +407,10 @@ const app = {
             const password = document.getElementById('editPass').value.trim();
             const responsavel = document.getElementById('editResponsavel').checked;
             const recebeEmail = document.getElementById('editRecebeEmail').checked;
+            // [REGRA] O e-mail de boas-vindas só é enviado quando a opção "recebe e-mail" PASSA de desmarcada para marcada.
+            // Antes saía a cada salvamento com a opção marcada. Se o perfil não for encontrado na lista, não envia.
+            const perfilAntes = this._usuariosPorId ? this._usuariosPorId.get(id) : null;
+            const emailEstavaAtivo = perfilAntes ? !!perfilAntes.recebe_email_semanal : true;
             
             // Pegando os valores dos novos selects
             const dir = document.getElementById('editDiretoria').value;
@@ -438,12 +465,12 @@ const app = {
                 if (password !== '') payload.password = password;
 
                 // 3. Chama a Edge Function que agora faz todo o trabalho duro e seguro
-                const { error } = await supabase.functions.invoke('gerenciar-usuarios', { body: payload });
+                const { error } = await invocarFn('gerenciar-usuarios', { body: payload });
 
                 if (error) throw error;
 
-                if (recebeEmail) {
-                    await supabase.functions.invoke('envio-relatorios', { 
+                if (recebeEmail && !emailEstavaAtivo) {
+                    await invocarFn('envio-relatorios', { 
                         body: { tipo: 'boas_vindas', userId: id } 
                     });
                 }
@@ -545,7 +572,7 @@ const app = {
             btnConfirm.disabled = true;
             
             try {
-                const { error } = await supabase.functions.invoke('gerenciar-usuarios', {
+                const { error } = await invocarFn('gerenciar-usuarios', {
                     body: { acao: 'status', idUsuario: id, status: novoStatus }
                 });
 
@@ -599,7 +626,7 @@ const app = {
             btnConfirm.disabled = true;
 
             try {
-                const { error } = await supabase.functions.invoke('gerenciar-usuarios', {
+                const { error } = await invocarFn('gerenciar-usuarios', {
                     body: { acao: 'resetar_senha_admin', idUsuario: id }
                 });
 
@@ -951,7 +978,7 @@ const app = {
                 const user_dash = document.getElementById('newUserDash').value;
                 const storage_quota_bytes = storageQuotaMB * 1024 * 1024;
                 // Envia para a Edge Function incluindo a coordenação montada
-                const { error } = await supabase.functions.invoke('gerenciar-usuarios', {
+                const { error } = await invocarFn('gerenciar-usuarios', {
                     body: { 
                         acao: 'criar', 
                         email: email, 
@@ -1140,7 +1167,7 @@ const app = {
         if (selectApp) {
             const valAtual = selectApp.value;
             selectApp.innerHTML = '<option value="">Todos os Apps</option>' + 
-                appsUnicos.map(app => `<option value="${app}">${app}</option>`).join('');
+                appsUnicos.map(app => `<option value="${escapeHtml(app)}">${escapeHtml(app)}</option>`).join('');
             selectApp.value = valAtual;
         }
 
@@ -1190,19 +1217,19 @@ const app = {
             const dataHora = new Date(log.created_at).toLocaleString('pt-BR');
             
             const detalhesFormatados = Object.entries(log.detalhes || {}).map(([k, v]) => 
-                `<span class="font-semibold text-blue-600 dark:text-blue-400 capitalize">${k.replace(/_/g, ' ')}:</span> ${v}`
+                `<span class="font-semibold text-blue-600 dark:text-blue-400 capitalize">${escapeHtml(String(k).replace(/_/g, ' '))}:</span> ${escapeHtml(v)}`
             ).join(' <span class="text-slate-300 dark:text-slate-600 mx-1">|</span> ');
 
             // Separado Nome e E-mail em duas TDs
             return `
             <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors border-t border-slate-100 dark:border-slate-800/50">
                 <td class="p-4 text-slate-500 dark:text-slate-400 align-top">${dataHora}</td>
-                <td class="p-4 text-slate-800 dark:text-slate-200 font-bold align-top">${log.usuario_nome}</td>
-                <td class="p-4 text-slate-500 dark:text-slate-400 align-top">${log.usuario_email}</td>
+                <td class="p-4 text-slate-800 dark:text-slate-200 font-bold align-top">${escapeHtml(log.usuario_nome)}</td>
+                <td class="p-4 text-slate-500 dark:text-slate-400 align-top">${escapeHtml(log.usuario_email)}</td>
                 <td class="p-4 text-center align-top">
-                    <span class="px-2 py-1 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[9px] font-black uppercase tracking-wider">${log.app_origem}</span>
+                    <span class="px-2 py-1 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[9px] font-black uppercase tracking-wider">${escapeHtml(log.app_origem)}</span>
                 </td>
-                <td class="p-4 font-bold text-slate-700 dark:text-slate-300 align-top">${log.acao.replace(/_/g, ' ')}</td>
+                <td class="p-4 font-bold text-slate-700 dark:text-slate-300 align-top">${escapeHtml(String(log.acao ?? '').replace(/_/g, ' '))}</td>
                 <td class="p-4 text-slate-600 dark:text-slate-400 text-[11px] whitespace-normal min-w-[300px] leading-relaxed align-top">
                     ${detalhesFormatados || '<span class="italic opacity-50">Sem detalhes adicionais</span>'}
                 </td>
@@ -1239,12 +1266,12 @@ const app = {
             const dataPed = new Date(p.created_at).toLocaleDateString('pt-BR');
             return `
             <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                <td class="p-4 text-slate-800 dark:text-slate-200 font-bold">${p.nome}</td>
-                <td class="p-4 text-slate-600 dark:text-slate-400">${p.email}</td>
+                <td class="p-4 text-slate-800 dark:text-slate-200 font-bold">${escapeHtml(p.nome)}</td>
+                <td class="p-4 text-slate-600 dark:text-slate-400">${escapeHtml(p.email)}</td>
                 <td class="p-4 text-slate-500 text-center text-sm">${dataPed}</td>
                 <td class="p-4 text-right flex justify-end gap-3 items-center h-full">
                     
-                    <button onclick="app.aprovarPendente('${p.id}', '${p.nome}', '${p.email}')" 
+                    <button onclick="app.aprovarPendente(${jsq(p.id)}, ${jsq(p.nome)}, ${jsq(p.email)})" 
                         class="text-green-500 hover:text-green-700 transition-colors" 
                         title="Aprovar Solicitação">
                         
@@ -1255,7 +1282,7 @@ const app = {
 
                     </button>
 
-                    <button onclick="app.rejeitarPendente('${p.id}', '${p.nome}')" 
+                    <button onclick="app.rejeitarPendente(${jsq(p.id)}, ${jsq(p.nome)})" 
                         class="text-red-500 hover:text-red-700 transition-colors" 
                         title="Rejeitar Solicitação">
                         
@@ -1312,7 +1339,7 @@ const app = {
             btnConfirm.disabled = true;
             const user_dash = document.getElementById('approveUserDash').value;
             try {
-                const { error } = await supabase.functions.invoke('gerenciar-usuarios', {
+                const { error } = await invocarFn('gerenciar-usuarios', {
                     body: { 
                         acao: 'aprovar', 
                         idPedido: id, 
@@ -1375,7 +1402,7 @@ const app = {
             btnConfirm.textContent = "Excluindo...";
             btnConfirm.disabled = true;
             try {
-                const { error } = await supabase.functions.invoke('gerenciar-usuarios', {
+                const { error } = await invocarFn('gerenciar-usuarios', {
                     body: { acao: 'rejeitar', idPedido: id }
                 });
 
@@ -1464,12 +1491,51 @@ const app = {
         select.innerHTML = '<option value="">Não vincular</option>';
         nomes.forEach(nome => {
             const isSelected = (nome === selectedValue) ? 'selected' : '';
-            select.innerHTML += `<option value="${nome}" ${isSelected}>${nome}</option>`;
+            select.innerHTML += `<option value="${escapeHtml(nome)}" ${isSelected}>${escapeHtml(nome)}</option>`;
         });
     },
 
     
 };
+
+// =========================================================
+// [MONITOR DE APIs] Chama uma Edge Function e informa o resultado ao monitor (aba APIs do Painel Admin).
+// Devolve exatamente o mesmo que supabase.functions.invoke ({ data, error }); o registro é "dispara e esquece".
+// Só conta como falha do serviço: erro de rede ou HTTP 5xx. Erros 4xx (ex.: e-mail já cadastrado,
+// sessão expirada) são do usuário e não derrubam o status. Nunca envia nome, e-mail nem senha.
+// =========================================================
+const MONITOR_FN = { 'gerenciar-usuarios': 'fn-gerenciar-usuarios', 'envio-relatorios': 'fn-envio-relatorios' };
+let monitorAtivo = true; // vira false se o SQL do monitor ainda não foi aplicado
+
+async function invocarFn(nome, opcoes) {
+    const t0 = performance.now();
+    let resultado;
+    try {
+        resultado = await supabase.functions.invoke(nome, opcoes);
+    } catch (e) {
+        resultado = { data: null, error: e };
+    }
+    try {
+        const api = MONITOR_FN[nome];
+        if (api && monitorAtivo) {
+            const erro = resultado && resultado.error;
+            const status = erro ? Number(erro.context && erro.context.status) : 200;
+            const falhouServico = !!erro && (!Number.isFinite(status) || status >= 500);
+            const corpo = (opcoes && opcoes.body) || {};
+            Promise.resolve(supabase.rpc('api_registrar_evento', {
+                p_api: api,
+                p_ok: !falhouServico,
+                p_status: Number.isFinite(status) ? Math.round(status) : null,
+                p_latencia_ms: Math.round(performance.now() - t0),
+                p_erro: falhouServico ? String((erro && erro.name) || 'Erro').slice(0, 120) : null,
+                p_detalhes: { acao: String(corpo.acao || corpo.tipo || '').slice(0, 40) },
+            })).then((r) => {
+                if (r && r.error && (r.error.code === 'PGRST202' || r.error.code === '42883')) monitorAtivo = false;
+            }).catch(() => {});
+        }
+    } catch (_e) { /* a telemetria nunca derruba o app */ }
+    return resultado;
+}
 
 // Função padrão para jogar no JS dos apps filhos
 function enviarLogAoPai(acao, detalhes = {}) {
@@ -1482,7 +1548,7 @@ function enviarLogAoPai(acao, detalhes = {}) {
                 detalhes: detalhes,
                 appOrigem: "GESTAO_USUARIOS"
             }
-        }, "*");
+        }, window.location.origin); // [SEGURANÇA] antes era "*": qualquer página que embutisse o app receberia a mensagem
     } else {
         console.warn("Log não enviado: rodando fora do iframe.", acao);
     }

@@ -114,6 +114,145 @@
       .dark .cockpit-markdown th, .dark .cockpit-markdown td { border-color: #475569; }
       .dark .cockpit-markdown th { background-color: #334155; }
       .cockpit-markdown h1, .cockpit-markdown h2, .cockpit-markdown h3 { font-weight: bold; margin: 1rem 0 0.5rem 0; }
+      /* ===== Céu do relógio (barra superior): dia, noite e tempo ===== */
+      .sky-trigger {
+        position: relative; overflow: hidden; isolation: isolate;
+        background: linear-gradient(180deg, var(--sky-top, #1e293b), var(--sky-bot, #334155));
+        color: var(--sky-ink, #fff);
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,.14), 0 1px 2px rgba(0,0,0,.25);
+        transition: filter .2s ease, box-shadow .2s ease;
+      }
+      .sky-trigger:hover { filter: brightness(1.08) saturate(1.1); }
+      .sky-trigger:focus-visible { outline: 2px solid #60a5fa; outline-offset: 2px; }
+      .sky-trigger #infoText {
+        color: var(--sky-ink, #fff); text-shadow: var(--sky-halo, none);
+        background: var(--sky-pill, transparent); border-radius: 6px; padding: 0 6px; margin: 0 -6px;
+        transition-property: opacity, color, background-color;
+      }
+      /* Camadas (de trás para frente): estrelas, sol/lua, nuvens, névoa, chuva, relâmpago */
+      .sky-scene { position: absolute; inset: 0; z-index: 0; overflow: hidden; border-radius: inherit; pointer-events: none; }
+      .sky-stars { position: absolute; inset: 0; opacity: var(--sky-stars, 0); transition: opacity 1.5s ease; }
+      .sky-star {
+        position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #fff;
+        animation: skyTwinkle 3.2s ease-in-out infinite;
+      }
+      .sky-body {
+        position: absolute; width: 12px; height: 12px; border-radius: 50%;
+        left: 8%; top: 96%; transform: translate(-50%, -50%);
+        transition: left 1.2s linear, top 1.2s linear, opacity 1.5s ease, filter 1.5s ease;
+      }
+      .sky-body.sun {
+        background: radial-gradient(circle at 35% 35%, #fff7c2, #ffd23f 55%, #ffab1f);
+        box-shadow: 0 0 6px 2px rgba(255,210,63,.75), 0 0 14px 6px rgba(255,170,31,.35);
+        animation: skySun 4s ease-in-out infinite;
+      }
+      .sky-body.moon {
+        background: transparent; transform: translate(-50%, -50%) rotate(-25deg);
+        box-shadow: inset -4px 0 0 0 #eef2ff, 0 0 8px 2px rgba(170,190,255,.35);
+      }
+      .sky-clouds { position: absolute; inset: 0; }
+      .sky-cloud {
+        position: absolute; left: 0; width: 3em; height: .85em; border-radius: 1em;
+        background: rgb(var(--sky-cloud, 255, 255, 255)); opacity: 0;
+        transition: opacity 1.5s ease;
+        animation: skyDrift calc(var(--sky-dur, 62s) * var(--f, 1)) linear infinite;
+        animation-delay: calc(var(--d, 0) * -1s);
+      }
+      .sky-cloud::before, .sky-cloud::after { content: ""; position: absolute; border-radius: 50%; background: inherit; }
+      .sky-cloud::before { width: 1.25em; height: 1.25em; left: .35em; top: -.6em; }
+      .sky-cloud::after  { width: 1.6em;  height: 1.6em;  left: 1em;   top: -.85em; }
+      .sky-fog {
+        position: absolute; inset: 0; opacity: var(--sky-fog-op, 0); transition: opacity 1.5s ease;
+        background:
+          linear-gradient(90deg, transparent 0, rgba(var(--sky-fog-rgb, 230, 235, 245), .8) 22%, transparent 45%, rgba(var(--sky-fog-rgb, 230, 235, 245), .7) 70%, transparent 100%),
+          linear-gradient(180deg, transparent 10%, rgba(var(--sky-fog-rgb, 230, 235, 245), .55));
+        background-size: 200% 100%, 100% 100%;
+        animation: skyFog 26s linear infinite;
+      }
+      .sky-rain { position: absolute; inset: 0; }
+      .sky-drop {
+        position: absolute; top: -10px; width: 1.5px; height: 8px;
+        background: linear-gradient(180deg, rgba(210,225,255,0), rgba(225,236,255,.95));
+        animation: skyRain calc((.55s + var(--j, 0) * .12s) * var(--sky-rain-k, 1)) linear infinite;
+      }
+      .sky-rain.snow .sky-drop {
+        width: 2px; height: 2px; border-radius: 50%; background: #fff;
+        animation-name: skySnow;
+        animation-duration: calc((2.2s + var(--j, 0) * .5s) * var(--sky-rain-k, 1));
+      }
+      .sky-flash { position: absolute; inset: 0; opacity: 0; }
+      .sky-flash.on { background: rgba(255,255,255,.55); animation: skyFlash 9s linear infinite; }
+      .sky-bolt {
+        display: none; position: absolute; left: 72%; top: 0; width: 8px; height: 22px; background: #fff6c8;
+        clip-path: polygon(55% 0, 20% 55%, 45% 55%, 25% 100%, 80% 40%, 52% 40%, 80% 0);
+      }
+      .sky-flash.on .sky-bolt { display: block; }
+      @keyframes skySun { 0%,100% { box-shadow: 0 0 6px 2px rgba(255,210,63,.75), 0 0 14px 6px rgba(255,170,31,.30); } 50% { box-shadow: 0 0 8px 3px rgba(255,210,63,.9), 0 0 18px 8px rgba(255,170,31,.45); } }
+      @keyframes skyTwinkle { 0%,100% { opacity: .25; } 50% { opacity: 1; } }
+      @keyframes skyDrift { from { left: -35%; } to { left: 105%; } }
+      @keyframes skyFog { from { background-position: 0 0, 0 0; } to { background-position: 200% 0, 0 0; } }
+      @keyframes skyRain { from { transform: translate(0, -10px) rotate(12deg); } to { transform: translate(-8px, var(--sky-fall, 46px)) rotate(12deg); } }
+      @keyframes skySnow { 0% { transform: translate(0, -6px); } 50% { transform: translate(4px, calc(var(--sky-fall, 46px) * .42)); } 100% { transform: translate(-2px, calc(var(--sky-fall, 46px) * .91)); } }
+      @keyframes skyFlash { 0%, 57% { opacity: 0; } 58% { opacity: .9; } 60% { opacity: .05; } 62% { opacity: .7; } 65%, 100% { opacity: 0; } }
+      @media (prefers-reduced-motion: reduce) {
+        .sky-star, .sky-body.sun, .sky-cloud, .sky-fog { animation: none; }
+        .sky-body { transition: none; }
+        .sky-flash.on { animation: none; opacity: 0; }
+      }
+
+      /* ===== Cartão do modal do clima: o céu atrás do cabeçalho do modal ===== */
+      .sky-banner { --sky-fall: 104px; cursor: default; }
+      .sky-banner:hover { filter: none; }
+      .sky-banner .sky-body { width: 20px; height: 20px; }
+      .sky-banner .sky-body.moon { box-shadow: inset -6px 0 0 0 #eef2ff, 0 0 10px 3px rgba(170,190,255,.35); }
+      .sky-banner .sky-cloud { transform: scale(1.7); transform-origin: 0 50%; filter: opacity(.75); }
+      .sky-banner .sky-star { width: 3px; height: 3px; }
+      .sky-banner .sky-drop { height: 12px; }
+      .sb-t {
+        display: block; width: fit-content; color: var(--sky-b-ink, #fff); text-shadow: var(--sky-b-halo, none);
+        border-radius: 6px; padding: 0 6px; margin-left: -6px;
+        -webkit-backdrop-filter: blur(2.5px) brightness(var(--sky-b-bri, 1)); backdrop-filter: blur(2.5px) brightness(var(--sky-b-bri, 1)); /* vidro fosco: apaga estrelas e gotas e ajusta o brilho do fundo atrás das letras */
+        transition: color .6s ease, background-color .6s ease;
+      }
+      .sb-s { background: var(--sky-b-pill, transparent); }
+      .sb-l { background: var(--sky-b-pill-l, transparent); }
+      /* ===== Cabeçalho no celular (< 640 px): o título se alterna com o céu ===== */
+      .brand-sky { display: none; }
+      @media (max-width: 639.98px) {
+        #weatherTrigger { display: none; }  /* o céu da barra superior não cabe aqui: no celular ele vira o do cabeçalho */
+        .wx-wrap { display: contents; }     /* sem caixa, mas o modal do clima continua funcionando */
+        /* <mobile-only-header> */
+        .brand-swap h1 { transition: opacity .6s ease; }
+        .brand-swap[data-mode="sky"] h1 { opacity: 0; }  /* continua no HTML (leitores de tela), só some da vista */
+        .brand-sky {
+          display: flex; align-items: center; justify-content: center;
+          position: absolute; top: 50%; left: 3.25rem; right: .5rem; height: 2.25rem; transform: translateY(-50%);
+          padding: 0 .5rem; border: 0; border-radius: .5rem; cursor: pointer;
+          opacity: 0; pointer-events: none; transition: opacity .6s ease, filter .2s ease;
+        }
+        .brand-swap[data-mode="sky"] .brand-sky { opacity: 1; pointer-events: auto; }
+        .brand-swap:not([data-mode="sky"]) .brand-sky * { animation-play-state: paused; }  /* não gasta bateria quando está invisível */
+        .brand-sky-text {
+          position: relative; z-index: 10; display: block; max-width: 100%;
+          overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+          font-family: inherit; font-size: 12px; line-height: 1.35; font-weight: 500;
+          color: var(--sky-ink, #fff); text-shadow: var(--sky-halo, none);
+          background: var(--sky-pill, transparent); border-radius: 6px; padding: 0 6px;
+          transition: opacity .25s ease, color .6s ease, background-color .6s ease;
+        }
+        /* Celulares muito estreitos (<= 350 px): o céu cobre também o logo, para os textos caberem */
+        @media (max-width: 350px) {
+          .brand-sky { left: 0; }
+          .brand-swap img { transition: opacity .6s ease; }
+          .brand-swap[data-mode="sky"] img { opacity: 0; }  /* o logo some junto, para não aparecer atrás do cartão */
+        }
+        /* </mobile-only-header> */
+        /* Modal do clima: cartão centralizado, com margem nos dois lados */
+        #weatherModal { position: fixed; top: 4.25rem; left: .75rem; right: .75rem; width: auto; margin-top: 0; transform-origin: top center; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .brand-swap h1, .brand-sky, .brand-sky-text { transition: none; }
+      }
     </style>
   </head>
   <body class="h-full bg-gray-100 dark:bg-slate-900 overflow-hidden relative">
@@ -326,11 +465,11 @@
     <header
       class="fixed top-0 left-0 right-0 h-16 bg-white dark:bg-slate-800 dark:border-b dark:border-slate-700 shadow-md z-50 flex items-center justify-between px-4 md:px-6"
     >
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-3 flex-1 min-w-0 sm:flex-none">
         <button
           id="menuButton"
           onclick="toggleSidebar()"
-          class="p-2 mr-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors transition-transform duration-300"
+          class="shrink-0 p-2 mr-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors transition-transform duration-300"
           title="Alternar Menu"
         >
           <svg
@@ -348,25 +487,49 @@
           </svg>
         </button>
 
-        <a
-          href="#home"
-          class="flex items-center gap-3 hover:opacity-80 transition-opacity select-none"
-          title="Ir para o Início"
-        >
-          <img
-            src="icons/android-chrome-192x192.png"
-            alt="Logo Cockpit"
-            class="w-10 h-10 md:w-12 md:h-12 rounded-xl"
-          />
-          <h1
-            class="text-xl md:text-2xl font-bold text-[var(--primary)] dark:text-blue-400 tracking-tight truncate"
+        <div id="brandSwap" class="brand-swap relative flex items-center min-w-0 flex-1 sm:flex-none" data-mode="title">
+          <a
+            href="#home"
+            class="flex items-center gap-3 min-w-0 hover:opacity-80 transition-opacity select-none"
+            title="Ir para o Início"
           >
-            Cockpit
-            <span class="font-normal text-gray-600 dark:text-gray-300"
-              >Gestão</span
+            <img
+              src="icons/android-chrome-192x192.png"
+              alt="Logo Cockpit"
+              class="w-10 h-10 md:w-12 md:h-12 rounded-xl shrink-0"
+            />
+            <h1
+              id="brandTitle"
+              class="min-w-0 text-xl md:text-2xl font-bold text-[var(--primary)] dark:text-blue-400 tracking-tight truncate"
             >
-          </h1>
-        </a>
+              Cockpit
+              <span class="font-normal text-gray-600 dark:text-gray-300"
+                >Gestão</span
+              >
+            </h1>
+          </a>
+
+          <!-- Céu do cabeçalho no celular (< 640 px): aparece no lugar do título, de tempos em tempos -->
+          <button
+            id="weatherTriggerM"
+            type="button"
+            onclick="toggleWeatherModal()"
+            class="sky-trigger brand-sky"
+            aria-label="Clima em Salvador. Abrir detalhes"
+            aria-hidden="true"
+            tabindex="-1"
+          >
+            <span id="skySceneM" class="sky-scene" aria-hidden="true">
+              <span class="sky-stars"></span>
+              <span id="skyBodyM" class="sky-body"></span>
+              <span class="sky-clouds"></span>
+              <span class="sky-fog"></span>
+              <span class="sky-rain"></span>
+              <span class="sky-flash"><i class="sky-bolt"></i></span>
+            </span>
+            <span id="infoTextM" class="brand-sky-text"></span>
+          </button>
+        </div>
       </div>
 
       <div class="flex items-center gap-4">
@@ -392,16 +555,24 @@
             </div>
         </div>
 
-        <div class="relative hidden sm:block">
+        <div class="relative sm:block wx-wrap">
           <button
             id="weatherTrigger"
             onclick="toggleWeatherModal()"
-            class="text-xs md:text-sm text-gray-600 dark:text-gray-300 text-right min-w-[140px] hover:bg-gray-100 dark:hover:bg-slate-700 px-3 py-1.5 rounded-lg transition-colors flex flex-col items-end group"
+            class="sky-trigger text-xs md:text-sm text-right min-w-[140px] sm:min-w-[250px] px-3 py-1.5 rounded-lg flex flex-col items-end group"
             title="Clique para ver detalhes"
           >
+            <span id="skyScene" class="sky-scene" aria-hidden="true">
+              <span id="skyStars" class="sky-stars"></span>
+              <span id="skyBody" class="sky-body"></span>
+              <span class="sky-clouds"></span>
+              <span class="sky-fog"></span>
+              <span class="sky-rain"></span>
+              <span class="sky-flash"><i class="sky-bolt"></i></span>
+            </span>
             <span
               id="infoText"
-              class="block transition-opacity duration-500 opacity-100 font-medium group-hover:text-blue-600"
+              class="relative z-10 block transition-opacity duration-500 opacity-100 font-medium"
             >
               Carregando...
             </span>
@@ -411,27 +582,31 @@
             id="weatherModal"
             class="hidden absolute top-full right-0 mt-2 w-64 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 p-4 z-50 transform origin-top-right transition-all duration-200 opacity-0 scale-95"
           >
-            <div
-              class="flex items-center justify-between border-b border-gray-100 dark:border-slate-700 pb-2 mb-2"
-            >
-              <span
-                class="text-xs font-bold text-gray-400 uppercase tracking-wider"
-                >Previsão Agora</span
-              >
-              <span class="text-[10px] text-gray-400">Salvador, BA</span>
-            </div>
-
-            <div class="flex items-center gap-3 mb-4">
-              <div id="wm-icon" class="text-4xl">☀️</div>
-              <div>
-                <div
-                  id="wm-temp"
-                  class="text-2xl font-bold text-slate-800 dark:text-white"
-                >
-                  --°C
+            <!-- Cartão com o céu atrás do cabeçalho (mesmo céu do botão da barra superior) -->
+            <div id="skyBanner" class="sky-trigger sky-banner -mx-4 -mt-4 mb-4 px-4 pt-3 pb-3 rounded-t-[11px]">
+              <span id="skySceneB" class="sky-scene" aria-hidden="true">
+                <span class="sky-stars"></span>
+                <span id="skyBodyB" class="sky-body"></span>
+                <span class="sky-clouds"></span>
+                <span class="sky-fog"></span>
+                <span class="sky-rain"></span>
+                <span class="sky-flash"><i class="sky-bolt"></i></span>
+              </span>
+              <div class="relative z-10">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="sb-t sb-s text-xs font-bold uppercase tracking-wider">Previsão Agora</span>
+                  <span class="sb-t sb-s text-[10px]">Salvador, BA</span>
                 </div>
-                <div id="wm-desc" class="text-xs text-gray-500 capitalize">
-                  Céu Limpo
+                <div class="flex items-center gap-3">
+                  <div id="wm-icon" class="text-4xl">☀️</div>
+                  <div>
+                    <div id="wm-temp" class="sb-t sb-l text-2xl font-bold">
+                      --°C
+                    </div>
+                    <div id="wm-desc" class="sb-t sb-s text-xs capitalize">
+                      Céu Limpo
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -514,6 +689,7 @@
                 </div>
               </div>
             </div>
+            <p class="mt-3 pt-2 border-t border-gray-100 dark:border-slate-700 text-[10px] text-gray-400 text-center">Dados: <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer" class="underline hover:text-blue-500">Open-Meteo.com</a> (CC BY 4.0)</p>
           </div>
         </div>
       </div>

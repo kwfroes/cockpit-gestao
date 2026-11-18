@@ -240,6 +240,50 @@ async function generateCaptcha() {
       }
   };
 
+  // =========================================================
+  // [MONITOR DE APIs] Telemetria das chamadas a APIs externas
+  // Informa ao Supabase (api_registrar_evento) o resultado de cada consulta real.
+  // Nunca atrapalha o app: é "dispara e esquece" e qualquer erro é ignorado.
+  // Eventos gerados antes do login ficam numa fila curta e saem após o login.
+  // =========================================================
+  const apiTelFila = [];
+  let apiTelAtiva = true;      // vira false se o SQL do monitor ainda não foi aplicado
+  let apiTelEnviando = false;
+
+  function apiTel(api, ok, status, latenciaMs, erro, detalhes) {
+    if (!apiTelAtiva) return;
+    const st = Number(status);
+    if (apiTelFila.length >= 20) apiTelFila.shift();
+    apiTelFila.push({
+      p_api: api,
+      p_ok: !!ok,
+      p_status: status != null && Number.isFinite(st) ? Math.round(st) : null,
+      p_latencia_ms: Number.isFinite(latenciaMs) ? Math.round(latenciaMs) : null,
+      p_erro: erro ? String(erro).slice(0, 300) : null,
+      p_detalhes: detalhes || {},
+    });
+    apiTelFlush();
+  }
+
+  async function apiTelFlush() {
+    if (apiTelEnviando || !apiTelAtiva || !apiTelFila.length) return;
+    apiTelEnviando = true;
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return; // ainda sem login: mantém na fila
+      while (apiTelFila.length) {
+        const ev = apiTelFila.shift();
+        const { error } = await supabase.rpc("api_registrar_evento", ev);
+        if (error && (error.code === "PGRST202" || error.code === "42883")) {
+          apiTelAtiva = false; // função não existe: para de tentar nesta sessão
+          apiTelFila.length = 0;
+          break;
+        }
+      }
+    } catch (e) { /* telemetria nunca derruba o app */ }
+    finally { apiTelEnviando = false; }
+  }
+
 
   // --- Funções de Criptografia ---
   async function sha256(message) {
@@ -430,6 +474,7 @@ async function generateCaptcha() {
         loginOverlay.style.display = "none";
       }, 500);
     }
+    apiTelFlush(); // [MONITOR] envia eventos de API que ficaram na fila antes do login
   }
 
   // --- Formulário de Login ---
@@ -873,6 +918,379 @@ if (loginForm) {
   checkSession();
 
   // =========================================================
+  // CÉU DO RELÓGIO: sol/lua, cor do fundo e TEMPO (nuvens, chuva, neblina, trovoada)
+  // seguem o horário e a previsão reais de Salvador
+  // =========================================================
+  /* <sky> */
+  // Horários aproximados, usados só até a API informar o nascer/pôr do sol de hoje
+  const SKY_FALLBACK = { sunrise: 330, sunset: 1065 };
+  let skyTimes = { sunrise: SKY_FALLBACK.sunrise, sunset: SKY_FALLBACK.sunset, real: false, srTxt: "", ssTxt: "" };
+  // Previsão atual vinda da API: { code (WMO), cloud (%), wind (km/h) }
+  let skyRaw = null;
+
+  const skyLerp = (a, b, k) => a + (b - a) * k;
+  const skyMix = (c1, c2, k) => c1.map((v, i) => Math.round(skyLerp(v, c2[i], k)));
+  const skyRgb = (c) => "rgb(" + c[0] + ", " + c[1] + ", " + c[2] + ")";
+  const skyClamp = (v, a, b) => Math.min(b, Math.max(a, v));
+
+  // "2026-11-17T05:08" -> minutos desde 00:00 (null se o formato não vier como esperado)
+  function skyParseTime(iso) {
+    const m = /T(\d{2}):(\d{2})/.exec(String(iso || ""));
+    return m ? Number(m[1]) * 60 + Number(m[2]) : null;
+  }
+  function skyValid(sr, ss) {
+    return Number.isFinite(sr) && Number.isFinite(ss) && sr >= 0 && ss < 1440 && ss - sr >= 360 && ss - sr <= 1080;
+  }
+
+  // Paleta ao longo do dia, ancorada no nascer (sr) e no pôr do sol (ss), em minutos
+  function skyKeyframes(sr, ss) {
+    const mid = (sr + ss) / 2;
+    return [
+      { t: sr - 90,  top: [10, 14, 38],   bot: [24, 34, 82] },     // noite
+      { t: sr - 35,  top: [44, 38, 96],   bot: [226, 112, 92] },   // alvorada
+      { t: sr + 20,  top: [88, 150, 214], bot: [255, 190, 120] },  // nascer do sol
+      { t: sr + 120, top: [74, 160, 232], bot: [170, 214, 250] },  // manhã
+      { t: mid,      top: [56, 150, 236], bot: [150, 208, 252] },  // meio-dia
+      { t: ss - 110, top: [70, 150, 222], bot: [186, 214, 238] },  // tarde
+      { t: ss - 30,  top: [96, 128, 196], bot: [255, 176, 96] },   // fim de tarde
+      { t: ss + 10,  top: [74, 56, 130],  bot: [240, 108, 72] },   // pôr do sol
+      { t: ss + 50,  top: [34, 30, 84],   bot: [120, 66, 120] },   // crepúsculo
+      { t: ss + 100, top: [10, 14, 38],   bot: [24, 34, 82] },     // noite
+    ];
+  }
+  function skyColors(min, sr, ss) {
+    const kf = skyKeyframes(sr, ss);
+    const first = kf[0], last = kf[kf.length - 1];
+    if (min <= first.t || min >= last.t) return { top: first.top, bot: first.bot };
+    for (let i = 0; i < kf.length - 1; i++) {
+      const a = kf[i], b = kf[i + 1];
+      if (min >= a.t && min <= b.t) {
+        const k = (min - a.t) / (b.t - a.t);
+        return { top: skyMix(a.top, b.top, k), bot: skyMix(a.bot, b.bot, k) };
+      }
+    }
+    return { top: first.top, bot: first.bot };
+  }
+
+  // Contraste (WCAG) para escolher texto claro ou escuro sobre o fundo atual
+  function skyLum(c) {
+    const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+    return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]);
+  }
+  function skyContrast(l1, l2) {
+    const hi = Math.max(l1, l2), lo = Math.min(l1, l2);
+    return (hi + 0.05) / (lo + 0.05);
+  }
+  const SKY_DARK_INK = [11, 25, 52];
+  // veil (opcional): cor e opacidade média das nuvens/névoa que ficam por cima do fundo
+  function skyInk(top, bot, veil) {
+    let mid = skyMix(top, bot, 0.5);
+    if (veil) mid = skyMix(mid, veil.c, veil.a);
+    const L = skyLum(mid);
+    const white = skyContrast(1, L), dark = skyContrast(skyLum(SKY_DARK_INK), L);
+    return white >= dark
+      ? { color: "#ffffff", halo: "0 1px 2px rgba(0,0,0,.55)", ratio: white, mid }
+      : { color: skyRgb(SKY_DARK_INK), halo: "0 0 3px rgba(255,255,255,.55)", ratio: dark, mid };
+  }
+
+  // Sol durante o dia, lua à noite; p vai de 0 (horizonte esquerdo) a 1 (horizonte direito)
+  function skyBody(min, sr, ss) {
+    if (min >= sr && min <= ss) return { kind: "sun", p: skyClamp((min - sr) / (ss - sr), 0, 1) };
+    const night = 1440 - ss + sr;
+    return { kind: "moon", p: skyClamp((((min - ss) % 1440) + 1440) % 1440 / night, 0, 1) };
+  }
+  // Posição em % do quadro: sobe do horizonte (embaixo), encosta no alto ao meio-dia e desce
+  function skyBodyPos(p) {
+    return { x: 8 + 84 * p, y: 96 - 82 * Math.sin(Math.PI * p) };
+  }
+  function skyStarsOpacity(top) {
+    return skyClamp((0.08 - skyLum(top)) / 0.07, 0, 1);
+  }
+  function skyPhaseLabel(min, t) {
+    if (!t.real) return "";
+    if (min < t.sunrise) return "🌅 Nascer do sol às " + t.srTxt;
+    if (min <= t.sunset) return "🌇 Pôr do sol às " + t.ssTxt;
+    return "🌙 Noite em Salvador";
+  }
+
+  // ---------- TEMPO: código WMO da previsão + cobertura de nuvens ----------
+  const SKY_DROPS = [0, 4, 8, 12, 16]; // gotas visíveis por intensidade (0 a 4)
+  function skyWeather(code, cloudPct, wind, night) {
+    const c = Number(code);
+    const pct = Number.isFinite(cloudPct) ? skyClamp(cloudPct, 0, 100) / 100 : null;
+    const dur = skyClamp(95 - 2.2 * (Number.isFinite(wind) ? wind : 15), 28, 95); // vento mais forte = nuvens mais rápidas
+    // Céu com nuvens (sem chuva): tudo deriva da cobertura
+    const cov = (id, label, icon, cover) => {
+      const k = Math.max(0, cover - 0.1) / 0.9; // até ~10% de nuvens o céu fica exatamente como no céu limpo
+      return {
+      id, label, icon, cover, drops: 0, snow: false, fog: 0, storm: false,
+      desat: 0.6 * k, dark: 0.12 * k, cloudDark: 0,
+      bodyVis: skyClamp(1.1 - 0.9 * cover * cover, 0, 1),
+      starVis: skyClamp(1.15 - 1.35 * cover * cover, 0, 1), // estrelas somem antes do sol (nuvens as cobrem primeiro)
+      rainK: 1, dur,
+      };
+    };
+    // Precipitação: tier 1 (fraca) a 4 (forte)
+    const wet = (id, label, icon, tier, o) => Object.assign({
+      id, label, icon, cover: 0.8 + 0.05 * tier, drops: SKY_DROPS[tier], snow: false, fog: 0, storm: false,
+      desat: 0.45 + 0.06 * tier, dark: 0.1 + 0.07 * tier, cloudDark: 0.25 + 0.08 * tier,
+      bodyVis: Math.max(0, 0.14 - 0.04 * tier), starVis: Math.max(0, 0.1 - 0.03 * tier),
+      rainK: 1.15 - 0.12 * tier, dur,
+    }, o || {});
+
+    if (c === 1) return cov("mostly-clear", "Predominantemente Limpo", night ? "🌙" : "🌤️", pct == null ? 0.25 : skyClamp(pct, 0.1, 0.45));
+    if (c === 2) return cov("partly", "Parcialmente Nublado", night ? "☁️" : "⛅", pct == null ? 0.55 : skyClamp(pct, 0.4, 0.75));
+    if (c === 3) return cov("overcast", "Nublado", "☁️", pct == null ? 0.95 : skyClamp(pct, 0.85, 1));
+    if (c === 45 || c === 48) {
+      const w = cov("fog", "Nevoeiro", "🌫️", 0.35);
+      return Object.assign(w, { fog: 1, desat: 0.5, dark: 0.05, bodyVis: 0.35, starVis: 0.2 });
+    }
+    if (c >= 51 && c <= 57) return wet("drizzle", "Garoa", "🌦️", c === 55 || c === 57 ? 2 : 1);
+    if (c === 61) return wet("rain", "Chuva Fraca", "🌧️", 2);
+    if (c === 63) return wet("rain", "Chuva", "🌧️", 3);
+    if (c === 65) return wet("heavy-rain", "Chuva Forte", "🌧️", 4);
+    if (c === 66 || c === 67) return wet("rain", "Chuva Congelante", "🌧️", 3);
+    if (c === 80) return wet("showers", "Pancadas de Chuva", "🌧️", 2);
+    if (c === 81) return wet("showers", "Pancadas de Chuva", "🌧️", 3);
+    if (c === 82) return wet("heavy-rain", "Pancadas Fortes", "🌧️", 4);
+    if (c === 95) return wet("storm", "Trovoada", "⛈️", 3, { storm: true, dark: 0.45, cloudDark: 0.65, desat: 0.7 });
+    if (c === 96 || c === 99) return wet("storm", "Trovoada com Granizo", "⛈️", 4, { storm: true, dark: 0.45, cloudDark: 0.65, desat: 0.7 });
+    if (c === 71 || c === 73 || c === 75 || c === 77 || c === 85 || c === 86) {
+      return wet("snow", "Neve", "🌨️", c === 73 ? 3 : c === 75 || c === 86 ? 4 : 2, { snow: true, dark: 0.08, desat: 0.5, cloudDark: 0.1, bodyVis: 0.1, starVis: 0.1 });
+    }
+    return cov("clear", "Céu Limpo", night ? "🌙" : "☀️", pct == null ? 0.05 : skyClamp(pct, 0, 0.25));
+  }
+
+  // Escurece e tira a cor do céu conforme o tempo (nublado e chuva são mais cinzas)
+  function skyTint(c, w) {
+    const g = Math.round(0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]);
+    return skyMix(skyMix(c, [g, g, g], w.desat), [0, 0, 0], w.dark);
+  }
+
+  // Nuvens: limiar de cobertura em que cada uma aparece, posição, tamanho e velocidade relativa
+  const SKY_CLOUDS = [
+    { t: 0.08, top: 8,  size: 9,  left: 62, f: 1.0,  d: 0 },
+    { t: 0.2,  top: 54, size: 8,  left: 18, f: 1.35, d: 23 },
+    { t: 0.32, top: 28, size: 11, left: 80, f: 0.8,  d: 41 },
+    { t: 0.46, top: 66, size: 9,  left: 40, f: 1.15, d: 9 },
+    { t: 0.6,  top: 14, size: 10, left: 8,  f: 0.9,  d: 57 },
+    { t: 0.75, top: 42, size: 12, left: 55, f: 1.5,  d: 33 },
+  ];
+
+  // Tudo que a cena precisa, calculado sem tocar no DOM (por isso é testável)
+  // Texto sobre o cartão do modal: o céu aparece inteiro atrás das letras (degradê, nuvens, névoa).
+  // Entra na conta o pior fundo possível e a cor do texto é a que melhor se sai nele; a pastilha cobre o resto.
+  function skyBannerInk(top, bot, veil, cloudRgb, cover, fogRgb, fog, corpo) {
+    // Pior caso de verdade: as cores puras do degradê (o topo é a faixa mais escura, onde fica o título do cartão)
+    // e, sobre cada uma, uma nuvem ou a névoa. A "média de nuvens" não serve: ela clareia um fundo que, naquele ponto, pode estar limpo.
+    const mid = skyMix(top, bot, 0.5);
+    const fundos = [top, mid, bot];
+    if (cover > 0.08) {
+      const k = 0.8 * skyClamp(cover * 1.5, 0, 1); // várias nuvens sobrepostas
+      fundos.push(skyMix(top, cloudRgb, k), skyMix(mid, cloudRgb, k), skyMix(bot, cloudRgb, k));
+    }
+    if (fog > 0) {
+      const k = 0.6 * fog;
+      fundos.push(skyMix(top, fogRgb, k), skyMix(mid, fogRgb, k), skyMix(bot, fogRgb, k));
+    }
+    if (corpo) fundos.push(corpo); // o sol ou a lua passando por trás do texto
+    // O vidro atrás do texto escurece o fundo quando o texto é branco e o clareia quando é escuro (backdrop-filter: brightness)
+    const bri = (c, b) => c.map((x) => Math.min(255, Math.round(x * b)));
+    const pior = (inkL, tgt, a, b) =>
+      Math.min(...fundos.map((c) => skyContrast(inkL, skyLum(a > 0 ? skyMix(bri(c, b), tgt, a) : bri(c, b)))));
+    const darkL = skyLum(SKY_DARK_INK);
+    const BRI_B = 0.6, BRI_D = 1.35; // limites do brilho do vidro para texto branco / texto escuro
+    const branco = pior(1, [0, 0, 0], 0, BRI_B) >= pior(darkL, [255, 255, 255], 0, BRI_D);
+    const inkL = branco ? 1 : darkL;
+    const tgt = branco ? [0, 0, 0] : [255, 255, 255];
+    const BRIS = branco ? [1, 0.85, 0.7, BRI_B] : [1, 1.1, 1.22, BRI_D];
+    // Menor intervenção que atinge a meta: o vidro só muda o brilho, e a pastilha só aparece, quando é preciso
+    const achar = (meta, fixo) => {
+      let melhor = null;
+      for (const br of fixo ? [fixo] : BRIS) {
+        for (let a = 0; a <= 0.6001; a += 0.04) {
+          if (pior(inkL, tgt, a, br) < meta) continue;
+          const custo = (Math.abs(br - 1) / 0.4) * 0.3 + a / 0.6; // o brilho do vidro é discreto; a pastilha é uma caixa: pesa mais
+          if (!melhor || custo < melhor.custo) melhor = { br, a, custo };
+          break; // para este brilho, a menor pastilha que serve
+        }
+      }
+      return melhor || { br: fixo || BRIS[BRIS.length - 1], a: 0.6, custo: 9 };
+    };
+    const P = achar(5.0); // texto pequeno
+    const G = achar(3.4, P.br); // texto grande/negrito: mesmo vidro, pastilha própria
+    const brilho = P.br, aP = P.a, aG = G.a;
+    const rgba = (a) => (a > 0.01 ? "rgba(" + tgt.join(",") + "," + a.toFixed(2) + ")" : "transparent");
+    return {
+      color: branco ? "#ffffff" : skyRgb(SKY_DARK_INK),
+      halo: branco ? "0 1px 2px rgba(0,0,0,.55)" : "0 0 3px rgba(255,255,255,.55)",
+      pill: rgba(aP), pillL: rgba(aG), bri: brilho, ratio: pior(inkL, tgt, aP, brilho), ratioL: pior(inkL, tgt, aG, brilho),
+    };
+  }
+
+  function skyCompute(min, sr, ss, wx) {
+    const base = skyColors(min, sr, ss);
+    const top = skyTint(base.top, wx), bot = skyTint(base.bot, wx);
+    const mid = skyMix(top, bot, 0.5);
+    const L = skyLum(mid);
+    let cloud = skyMix(mid, [255, 255, 255], 0.35 + 0.4 * skyClamp(L * 3, 0, 1));
+    cloud = skyMix(cloud, [58, 64, 80], wx.cloudDark);
+    const fogRgb = skyMix(mid, [235, 240, 248], 0.4 + 0.4 * skyClamp(L * 3, 0, 1));
+    const veil = { c: cloud, a: 0.28 * skyClamp(wx.cover + 0.5 * wx.fog, 0, 1) };
+    const ink = skyInk(top, bot, veil);
+    const b = skyBody(min, sr, ss);
+    const pos = skyBodyPos(b.p);
+    // Pastilha atrás do texto: aparece de forma gradual só quando o contraste fica abaixo de ~5,5:1
+    const pillA = skyClamp((5.5 - ink.ratio) / 1.5, 0, 1) * 0.42;
+    const pillTarget = ink.color === "#ffffff" ? [0, 0, 0] : [255, 255, 255];
+    const inkLum = ink.color === "#ffffff" ? 1 : skyLum(SKY_DARK_INK);
+    const inkRatio = pillA > 0 ? skyContrast(inkLum, skyLum(skyMix(ink.mid, pillTarget, pillA))) : ink.ratio;
+    const pill = pillA > 0.01 ? "rgba(" + pillTarget.join(",") + "," + pillA.toFixed(2) + ")" : "transparent";
+    return {
+      top, bot, ink, pill, inkRatio,
+      banner: skyBannerInk(top, bot, veil, cloud, wx.cover, fogRgb, wx.fog, wx.bodyVis > 0.5 ? (b.kind === "sun" ? [255, 210, 63] : [238, 242, 255]) : null),
+      body: { kind: b.kind, x: pos.x, y: pos.y, vis: wx.bodyVis, blur: (1 - wx.bodyVis) * 1.4 },
+      stars: skyStarsOpacity(base.top) * wx.starVis,
+      cloudRgb: cloud,
+      cloudOps: SKY_CLOUDS.map((c) => skyClamp((wx.cover - c.t) / 0.18, 0, 1) * (0.45 + 0.3 * wx.cover)),
+      fogRgb, fogOp: 0.85 * wx.fog,
+      drops: wx.drops, snow: wx.snow, storm: wx.storm,
+      rainK: wx.rainK, dur: wx.dur,
+    };
+  }
+
+  const SKY_STARS = [[12, 22], [27, 62], [41, 18], [55, 70], [66, 30], [78, 58], [88, 20], [93, 66]];
+  function skyBuildStars(box) {
+    if (!box || box.childNodes.length) return;
+    SKY_STARS.forEach((s, i) => {
+      const el = document.createElement("i");
+      el.className = "sky-star";
+      el.style.left = s[0] + "%";
+      el.style.top = s[1] + "%";
+      el.style.animationDelay = (i * 0.45).toFixed(2) + "s";
+      box.appendChild(el);
+    });
+  }
+  // Cria estrelas, nuvens e gotas (uma só vez) dentro da cena
+  function skyBuildLayers(scene) {
+    if (!scene) return;
+    skyBuildStars(scene.querySelector(".sky-stars"));
+    const cb = scene.querySelector(".sky-clouds");
+    if (cb && !cb.childNodes.length) {
+      SKY_CLOUDS.forEach((c) => {
+        const el = document.createElement("i");
+        el.className = "sky-cloud";
+        el.style.top = c.top + "%";
+        el.style.left = c.left + "%";
+        el.style.fontSize = c.size + "px";
+        el.style.setProperty("--f", String(c.f));
+        el.style.setProperty("--d", String(c.d));
+        cb.appendChild(el);
+      });
+    }
+    const rb = scene.querySelector(".sky-rain");
+    if (rb && !rb.childNodes.length) {
+      for (let i = 0; i < SKY_DROPS[4]; i++) {
+        const el = document.createElement("i");
+        el.className = "sky-drop";
+        el.style.left = ((i * 37 + 11) % 97 + 1) + "%";
+        el.style.setProperty("--j", String(i % 4));
+        el.style.animationDelay = "-" + ((i * 0.173) % 1).toFixed(2) + "s";
+        el.style.display = "none";
+        rb.appendChild(el);
+      }
+    }
+  }
+
+  function applySky(trigger, body, min, sr, ss, wx) {
+    if (!trigger || !body) return;
+    const w = wx || skyWeather(0, NaN, NaN, false);
+    const s = skyCompute(min, sr, ss, w);
+    const set = (k, v) => trigger.style.setProperty(k, v);
+    set("--sky-top", skyRgb(s.top));
+    set("--sky-bot", skyRgb(s.bot));
+    set("--sky-ink", s.ink.color);
+    set("--sky-halo", s.ink.halo);
+    set("--sky-stars", s.stars.toFixed(2));
+    set("--sky-cloud", s.cloudRgb.join(", "));
+    set("--sky-fog-rgb", s.fogRgb.join(", "));
+    set("--sky-fog-op", s.fogOp.toFixed(2));
+    set("--sky-dur", s.dur.toFixed(0) + "s");
+    set("--sky-rain-k", s.rainK.toFixed(2));
+    set("--sky-pill", s.pill);
+    set("--sky-b-ink", s.banner.color);
+    set("--sky-b-halo", s.banner.halo);
+    set("--sky-b-pill", s.banner.pill);
+    set("--sky-b-pill-l", s.banner.pillL);
+    set("--sky-b-bri", s.banner.bri.toFixed(2));
+
+    // Sol/lua: ao trocar um pelo outro não deve haver deslize atravessando o quadro
+    const troca = body.dataset.kind !== s.body.kind;
+    if (troca) body.style.transition = "none";
+    body.className = "sky-body " + s.body.kind;
+    body.dataset.kind = s.body.kind;
+    body.style.left = s.body.x.toFixed(1) + "%";
+    body.style.top = s.body.y.toFixed(1) + "%";
+    body.style.opacity = s.body.vis.toFixed(2);
+    body.style.filter = s.body.blur > 0.05 ? "blur(" + s.body.blur.toFixed(1) + "px)" : "";
+    if (troca) { void body.offsetWidth; body.style.transition = ""; }
+
+    // Camadas do tempo
+    trigger.querySelectorAll(".sky-cloud").forEach((el, i) => { el.style.opacity = (s.cloudOps[i] || 0).toFixed(2); });
+    trigger.querySelectorAll(".sky-drop").forEach((el, i) => { el.style.display = i < s.drops ? "block" : "none"; });
+    const rain = trigger.querySelector(".sky-rain");
+    if (rain) rain.classList.toggle("snow", s.snow);
+    const flash = trigger.querySelector(".sky-flash");
+    if (flash) flash.classList.toggle("on", s.storm);
+    if (w.label && !(trigger.classList && trigger.classList.contains("sky-banner"))) trigger.title = "Salvador: " + w.label + " • clique para ver detalhes";
+  }
+
+  // Horário de Salvador (fixo), mesmo que o computador esteja em outro fuso
+  const skyFmt = (() => {
+    try {
+      return new Intl.DateTimeFormat("en-GB", { timeZone: "America/Bahia", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+    } catch (e) { return null; }
+  })();
+  function skyNow(d) {
+    const dt = d || new Date();
+    if (skyFmt) {
+      const p = skyFmt.formatToParts(dt);
+      const h = Number((p.find((x) => x.type === "hour") || {}).value);
+      const mi = Number((p.find((x) => x.type === "minute") || {}).value);
+      if (Number.isFinite(h) && Number.isFinite(mi)) return { h, m: mi, min: h * 60 + mi };
+    }
+    return { h: dt.getHours(), m: dt.getMinutes(), min: dt.getHours() * 60 + dt.getMinutes() };
+  }
+  // Data de hoje em Salvador (AAAA-MM-DD), para validar o cache da previsão
+  function skyToday() {
+    try {
+      return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Bahia", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+    } catch (e) {
+      const d = new Date();
+      return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    }
+  }
+
+  // Tempo "agora": a previsão da API + o horário atual (dia ou noite)
+  function skyWxNow() {
+    const min = skyNow().min;
+    const night = min < skyTimes.sunrise || min > skyTimes.sunset;
+    const r = skyRaw || { code: 0, cloud: NaN, wind: NaN };
+    return skyWeather(r.code, r.cloud, r.wind, night);
+  }
+
+  function skyTick() {
+    const min = skyNow().min, wx = skyWxNow();
+    // Céu da barra superior (computador/tablet) e céu do cabeçalho no celular
+    applySky(document.getElementById("weatherTrigger"), document.getElementById("skyBody"), min, skyTimes.sunrise, skyTimes.sunset, wx);
+    applySky(document.getElementById("weatherTriggerM"), document.getElementById("skyBodyM"), min, skyTimes.sunrise, skyTimes.sunset, wx);
+    // Cartão do modal do clima
+    applySky(document.getElementById("skyBanner"), document.getElementById("skyBodyB"), min, skyTimes.sunrise, skyTimes.sunset, wx);
+  }
+  /* </sky> */
+
+
+  // =========================================================
   // 3. MONITORAMENTO CLIMÁTICO AVANÇADO (CORRIGIDO)
   // =========================================================
   const infoText = document.getElementById("infoText");
@@ -886,53 +1304,295 @@ if (loginForm) {
   let infoItems = ["Iniciando...", "Carregando Clima..."];
   let currentIndex = 0;
 
-  async function updateWeather() {
+  /* <info> */
+  // ---- Textos do relógio: saudação com data, chuva provável, sensação térmica ----
+  // Cada texto aceita short=true: versão curta para o cabeçalho do celular
+  const INFO_WEEKDAYS = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
+  const INFO_MONTHS = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+  let wxProb = null; // chance de chuva por hora (0..23) do dia da última previsão
+  let wxProbDay = ""; // dia (AAAA-MM-DD) a que essa previsão se refere
+
+  // O texto rotativo usa innerHTML, então tudo que vem do usuário é escapado
+  const infoEsc = (v) =>
+    String(v).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  // "ter, 17 nov" (data de hoje em Salvador, independente do fuso do computador)
+  function infoDateLabel() {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(skyToday());
+    if (!m) return "";
+    const mo = Number(m[2]) - 1, d = Number(m[3]);
+    const wd = new Date(Date.UTC(Number(m[1]), mo, d)).getUTCDay();
+    return INFO_WEEKDAYS[wd] + ", " + d + " " + INFO_MONTHS[mo];
+  }
+
+  // "Bom dia, Kevin • ter, 17 nov"  (sem nome, vira "Bom dia • ter, 17 nov"). maxLen = tamanho máximo do nome
+  function infoGreeting(hour, nome, dataTxt, maxLen) {
+    const saud = hour >= 5 && hour < 12 ? "Bom dia" : hour >= 12 && hour < 18 ? "Boa tarde" : "Boa noite";
+    const max = maxLen || 18;
+    let n = String(nome || "").trim();
+    if (n.length > max) {
+      const corte = n.slice(0, max - 1);
+      const esp = corte.lastIndexOf(" ");
+      n = (esp > 3 ? corte.slice(0, esp) : corte) + "…"; // corta no último espaço, não no meio de uma palavra
+    }
+    return infoEsc(saud + (n ? ", " + n : "") + (dataTxt ? " • " + dataTxt : ""));
+  }
+  // Mesmo critério do menu do usuário: apelido, senão o primeiro nome
+  function infoGreetingNow(short) {
+    let ap = "", real = "";
     try {
-      const response = await fetch(
-        "https://api.open-meteo.com/v1/forecast?latitude=-12.9756&longitude=-38.491&hourly=temperature_2m,weathercode,uv_index,wind_speed_10m,apparent_temperature,relative_humidity_2m,precipitation_probability&timezone=America%2FSao_Paulo&forecast_days=1",
-      );
-      const data = await response.json();
-      const h = new Date().getHours();
+      ap = sessionStorage.getItem("cockpit_user_apelido") || "";
+      real = sessionStorage.getItem("cockpit_user_realname") || "";
+    } catch (e) {}
+    const nome = ap.trim() || real.trim().split(/\s+/)[0] || "";
+    // No celular a data vira um item separado e o nome é mais curto
+    return short ? infoGreeting(skyNow().h, nome, "", 11) : infoGreeting(skyNow().h, nome, infoDateLabel());
+  }
+
+  // Chuva provável: 1ª hora (agora até +6 h) com chance >= 50%. Vazio se já está chovendo.
+  function infoRainText(prob, probDay, today, h, jaChovendo, short) {
+    if (jaChovendo || !Array.isArray(prob) || probDay !== today) return "";
+    for (let i = h; i <= Math.min(h + 6, 23); i++) {
+      const p = Number(prob[i]);
+      if (Number.isFinite(p) && p >= 50) {
+        return "🌂 Chuva " + (short ? "" : "provável ") + (i === h ? "agora" : "às " + i + "h") + " (" + Math.round(p) + "%)";
+      }
+    }
+    return "";
+  }
+
+  // Sensação térmica: só quando difere da temperatura em 4° ou mais
+  function infoFeelsLike(temp, feels, short) {
+    if (!Number.isFinite(temp) || !Number.isFinite(feels)) return "";
+    const d = feels - temp;
+    if (d >= 4) return "🥵 Sensação " + (short ? "" : "de ") + feels + "°";
+    if (d <= -4) return "🥶 Sensação " + (short ? "" : "de ") + feels + "°";
+    return "";
+  }
+
+  // Lista de textos da rotação (cada item é um texto ou uma função(short) que devolve texto; vazio = pula)
+  function infoBuildItems(weather, year) {
+    const items = [
+      `Kevin Fróes • ${year}`,
+      (s) => `${skyWxNow().icon} Salvador${s ? "" : ":"} ${weather.temp}°C`,
+      (s) => infoFeelsLike(weather.temp, weather.sensacao, s), // só se a sensação diferir em 4° ou mais
+      weather.uv >= 8 ? `🟣 UV ${weather.uv} (Alto)` : `🟢 UV ${weather.uv}`,
+      (s) => infoRainText(wxProb, wxProbDay, skyToday(), skyNow().h, skyWxNow().drops > 0, s), // só se houver chuva provável
+      (s) => infoGreetingNow(s),
+      (s) => (s ? "📅 " + infoDateLabel() : ""), // no computador a data já vai na saudação
+    ];
+    // Fase do dia (calculada na hora de exibir, para acompanhar o relógio)
+    if (skyTimes.real) {
+      items.push((s) => {
+        const t = skyPhaseLabel(skyNow().min, skyTimes);
+        return s ? t.replace(" às ", " ") : t;
+      });
+    }
+    return items;
+  }
+
+  // Próximo texto da rotação; itens sem conteúdo no momento são pulados. Devolve "" se nenhum tiver.
+  function infoNext(short) {
+    let txt = "";
+    for (let tentativa = 0; tentativa < infoItems.length; tentativa++) {
+      if (currentIndex >= infoItems.length) currentIndex = 0;
+      const item = infoItems[currentIndex];
+      currentIndex = (currentIndex + 1) % infoItems.length;
+      let v = "";
+      try { v = typeof item === "function" ? item(!!short) : item; } catch (e) { v = ""; }
+      if (v) { txt = v; break; }
+    }
+    return txt;
+  }
+  /* </info> */
+
+  /* <mobhead> */
+  // ---- Cabeçalho no celular (< 640 px): o título "Cockpit Gestão" se alterna com o céu animado ----
+  const MH_TITLE_MS = 6000; // título visível
+  const MH_SKY_MS = 12000; // céu visível
+  const MH_ITEM_MS = 4000; // cada texto do céu (3 por fase)
+  let mhWxReady = false; // só mostra o céu quando há previsão; sem ela o título fica fixo
+  let mhMode = "title";
+  let mhTimers = [];
+
+  // Mesmo ponto de corte do Tailwind "sm" (640 px)
+  function mhIsMobile() {
+    try {
+      if (typeof window.matchMedia === "function") return window.matchMedia("(max-width: 639.98px)").matches;
+    } catch (e) {}
+    return window.innerWidth < 640;
+  }
+  // Instantes (ms, desde a entrada do céu) em que cada texto aparece: 0, 4000 e 8000
+  function mhItemTimes(skyMs, itemMs) {
+    const t = [];
+    for (let x = 0; x < skyMs; x += itemMs) t.push(x);
+    return t;
+  }
+  function mhClear() { mhTimers.forEach(clearTimeout); mhTimers = []; }
+  function mhLater(fn, ms) { mhTimers.push(setTimeout(fn, ms)); }
+
+  function mhApply(mode) {
+    mhMode = mode;
+    const box = document.getElementById("brandSwap");
+    const btn = document.getElementById("weatherTriggerM");
+    if (box) box.setAttribute("data-mode", mode);
+    if (btn) {
+      const on = mode === "sky";
+      btn.tabIndex = on ? 0 : -1; // invisível = fora da ordem de Tab
+      btn.setAttribute("aria-hidden", on ? "false" : "true");
+    }
+  }
+  function mhShowItem(fade) {
+    const el = document.getElementById("infoTextM");
+    if (!el) return;
+    const txt = infoNext(true);
+    if (!txt) return;
+    if (!fade) { el.innerHTML = txt; return; }
+    el.style.opacity = "0";
+    mhLater(() => { el.innerHTML = txt; el.style.opacity = "1"; }, 250);
+  }
+  function mhTitlePhase() {
+    mhApply("title");
+    mhLater(mhSkyPhase, MH_TITLE_MS);
+  }
+  function mhSkyPhase() {
+    if (!mhIsMobile()) { mhStop(); return; }
+    if (!mhWxReady) { mhTitlePhase(); return; } // sem previsão: o título fica e tenta de novo no próximo ciclo
+    skyTick();
+    mhShowItem(false);
+    mhApply("sky");
+    mhItemTimes(MH_SKY_MS, MH_ITEM_MS).slice(1).forEach((t) => mhLater(() => mhShowItem(true), t));
+    mhLater(mhTitlePhase, MH_SKY_MS);
+  }
+  function mhStart() {
+    mhClear();
+    mhApply("title");
+    if (mhIsMobile()) mhTitlePhase();
+  }
+  function mhStop() { mhClear(); mhApply("title"); }
+  // Girou o celular ou redimensionou a janela: reinicia o ciclo (ou desliga no computador)
+  function mhWatch() {
+    try {
+      const mq = window.matchMedia("(max-width: 639.98px)");
+      const on = () => mhStart();
+      if (typeof mq.addEventListener === "function") mq.addEventListener("change", on);
+      else if (typeof mq.addListener === "function") mq.addListener(on);
+    } catch (e) {}
+  }
+  /* </mobhead> */
+
+  // ---- Previsão (Open-Meteo): cache de 15 min, bloco "current" e fallback ----
+  const WX_BASE = "https://api.open-meteo.com/v1/forecast?latitude=-12.9756&longitude=-38.491";
+  const WX_HOURLY = "temperature_2m,weathercode,uv_index,wind_speed_10m,apparent_temperature,relative_humidity_2m,precipitation_probability,cloud_cover";
+  const WX_CURRENT = "temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code,cloud_cover";
+  const WX_TAIL = "&daily=sunrise,sunset&timezone=America%2FSao_Paulo&forecast_days=1";
+  const WX_CACHE_KEY = "cockpit_weather_cache";
+  const WX_TTL = 15 * 60 * 1000;
+
+  // Só aceita dados que sejam de hoje (a resposta traz as 24 horas do dia em que foi pedida)
+  function wxIsToday(data) {
+    const t = data && data.hourly && data.hourly.time && data.hourly.time[0];
+    return typeof t === "string" && t.slice(0, 10) === skyToday();
+  }
+  function wxReadCache() {
+    try {
+      const c = JSON.parse(localStorage.getItem(WX_CACHE_KEY));
+      if (c && c.data && Number.isFinite(c.t) && wxIsToday(c.data)) return c;
+    } catch (e) {}
+    return null;
+  }
+  // Se já existe uma consulta em andamento, todos reaproveitam a mesma (evita chamadas duplicadas)
+  let wxInflight = null;
+  function wxLoad(force) {
+    if (wxInflight) return wxInflight;
+    wxInflight = wxFetch(force).finally(() => { wxInflight = null; });
+    return wxInflight;
+  }
+  async function wxFetch(force) {
+    const c = wxReadCache();
+    if (c && !force && Date.now() - c.t < WX_TTL) return c.data;
+    // 1ª tentativa com "current"; se a API recusar, 2ª tentativa só com a previsão por hora
+    const urls = [
+      WX_BASE + "&hourly=" + WX_HOURLY + "&current=" + WX_CURRENT + WX_TAIL,
+      WX_BASE + "&hourly=" + WX_HOURLY + WX_TAIL,
+    ];
+    // [MONITOR] um evento por ciclo de consulta (não por tentativa): resultado, tempo total e se precisou do plano B
+    const t0 = performance.now();
+    let tentativas = 0, ultimoStatus = null, ultimoErro = null;
+    for (const url of urls) {
+      tentativas++;
+      try {
+        const r = await fetch(url);
+        ultimoStatus = r.status;
+        if (!r.ok) { ultimoErro = "HTTP " + r.status; continue; }
+        const j = await r.json();
+        if (j && !j.error && j.hourly && wxIsToday(j)) {
+          try { localStorage.setItem(WX_CACHE_KEY, JSON.stringify({ t: Date.now(), data: j })); } catch (e) {}
+          apiTel("open-meteo", true, r.status, performance.now() - t0,
+            null, { tentativas, fallback: tentativas > 1, tem_current: !!j.current });
+          return j;
+        }
+        ultimoErro = j && j.error ? "API: " + String(j.reason || "erro").slice(0, 120)
+          : (j && j.hourly ? "dado não é de hoje" : "resposta sem previsão");
+      } catch (e) {
+        ultimoStatus = null;
+        ultimoErro = (e && e.message) || "falha de rede";
+      }
+    }
+    apiTel("open-meteo", false, ultimoStatus, performance.now() - t0,
+      ultimoErro, { tentativas, stale: !!c });
+    return c ? c.data : null; // sem rede: usa o último clima de hoje, se houver
+  }
+
+  async function updateWeather(force) {
+    try {
+      const data = await wxLoad(force === true);
+      if (!data) return;
+      const h = skyNow().h;
+      const cur = data.current || {};
+      // Prefere o valor "agora" (current); se não vier, usa a previsão da hora cheia
+      const num = (v, arr) => (Number.isFinite(Number(v)) && v !== null && v !== undefined ? Number(v) : Number(arr && arr[h]));
 
       // Extraindo dados
       const weather = {
-        temp: Math.round(data.hourly.temperature_2m[h]),
-        sensacao: Math.round(data.hourly.apparent_temperature[h]),
-        uv: Math.round(data.hourly.uv_index[h]),
-        vento: Math.round(data.hourly.wind_speed_10m[h]),
-        umidade: Math.round(data.hourly.relative_humidity_2m[h]),
-        chuvaProb: Math.round(data.hourly.precipitation_probability[h]),
-        code: data.hourly.weathercode[h],
+        temp: Math.round(num(cur.temperature_2m, data.hourly.temperature_2m)),
+        sensacao: Math.round(num(cur.apparent_temperature, data.hourly.apparent_temperature)),
+        uv: Math.round(Number(data.hourly.uv_index[h])),
+        vento: Math.round(num(cur.wind_speed_10m, data.hourly.wind_speed_10m)),
+        umidade: Math.round(num(cur.relative_humidity_2m, data.hourly.relative_humidity_2m)),
+        chuvaProb: Math.round(Number(data.hourly.precipitation_probability[h])),
+        code: num(cur.weather_code, data.hourly.weathercode),
       };
 
-      // Ícone
-      let icon = "☀️";
-      let desc = "Céu Limpo";
-      if (weather.code >= 1 && weather.code <= 3) {
-        icon = "⛅";
-        desc = "Parcialmente Nublado";
-      } else if (weather.code >= 45 && weather.code <= 48) {
-        icon = "🌫️";
-        desc = "Nevoeiro";
-      } else if (weather.code >= 51 && weather.code <= 67) {
-        icon = "🌧️";
-        desc = "Chuva Leve";
-      } else if (weather.code >= 80 && weather.code <= 99) {
-        icon = "⛈️";
-        desc = "Tempestade";
+      // Nascer e pôr do sol de hoje (alimentam o céu da barra e o texto da fase do dia)
+      const sr = skyParseTime(data.daily && data.daily.sunrise && data.daily.sunrise[0]);
+      const ss = skyParseTime(data.daily && data.daily.sunset && data.daily.sunset[0]);
+      if (skyValid(sr, ss)) {
+        skyTimes = {
+          sunrise: sr,
+          sunset: ss,
+          real: true,
+          srTxt: String(data.daily.sunrise[0]).slice(11, 16),
+          ssTxt: String(data.daily.sunset[0]).slice(11, 16),
+        };
       }
 
-      weather.icon = icon;
-      weather.desc = desc;
+      // Tempo atual: código WMO + cobertura de nuvens + vento (alimentam ícone, descrição e a cena do céu)
+      const nuvens = Number.isFinite(Number(cur.cloud_cover)) && cur.cloud_cover !== null && cur.cloud_cover !== undefined
+        ? Number(cur.cloud_cover)
+        : (data.hourly.cloud_cover ? Number(data.hourly.cloud_cover[h]) : NaN);
+      skyRaw = { code: weather.code, cloud: nuvens, wind: weather.vento };
+      const wx = skyWxNow();
+      weather.icon = wx.icon;
+      weather.desc = wx.label;
       currentWeatherData = weather;
+      wxProb = data.hourly.precipitation_probability;
+      wxProbDay = String((data.hourly.time && data.hourly.time[0]) || "").slice(0, 10);
+      skyTick();
+      mhWxReady = true; // a partir daqui o céu pode aparecer no cabeçalho do celular
 
       // Texto rotativo
-      const currentYear = new Date().getFullYear();
-      infoItems = [
-        `Kevin Fróes • ${currentYear}`,
-        `${icon} Salvador: ${weather.temp}°C`,
-        weather.uv >= 8 ? `🟣 UV ${weather.uv} (Alto)` : `🟢 UV ${weather.uv}`,
-      ];
+      infoItems = infoBuildItems(weather, new Date().getFullYear());
 
       if (currentIndex === 0) renderInfo();
     } catch (e) {
@@ -941,16 +1601,15 @@ if (loginForm) {
   }
 
   function renderInfo() {
-    if (!infoText) return;
+    if (!infoText || mhIsMobile()) return; // no celular, quem alterna o texto é o cabeçalho (mhStart)
     infoText.classList.remove("opacity-100");
     infoText.classList.add("opacity-0");
 
     setTimeout(() => {
-      if (currentIndex >= infoItems.length) currentIndex = 0;
-      infoText.innerHTML = infoItems[currentIndex];
+      const txt = infoNext(false);
+      if (txt) infoText.innerHTML = txt;
       infoText.classList.remove("opacity-0");
       infoText.classList.add("opacity-100");
-      currentIndex = (currentIndex + 1) % infoItems.length;
     }, 500);
   }
 
@@ -1000,9 +1659,17 @@ if (loginForm) {
   };
 
   // Inicia
+  skyBuildLayers(document.getElementById("skyScene"));
+  skyBuildLayers(document.getElementById("skySceneM"));
+  skyBuildLayers(document.getElementById("skySceneB"));
+  skyTick();
+  setInterval(skyTick, 60000);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) { skyTick(); updateWeather(); mhStart(); } });
   updateWeather();
-  setInterval(updateWeather, 1800000);
+  setInterval(updateWeather, 15 * 60 * 1000);
   setTimeout(() => setInterval(renderInfo, 5000), 1000);
+  mhWatch();
+  mhStart();
 
   // =========================================================
   // LOGOUT COM MODAL PERSONALIZADO
